@@ -27,6 +27,19 @@ function update_chat_command_description(command, description)
     -- ...
 end
 
+--- @param command string The command to run. Should be easy to type
+--- @param description string Should describe what the command does and how to use it
+--- @param func fun(msg:string): boolean Run upon activating the command. Return `true` to confirm the command has succeeded
+function hook_console_command(command, description, func)
+    -- ...
+end
+
+--- @param command string The command to change the description of
+--- @param description string The description to change to
+function update_console_command_description(command, description)
+    -- ...
+end
+
 --- @param hookEventType LuaHookedEventType When a function should run
 --- @param func fun(...: any): any?, any? The function to run
 --- Different hooks can pass in different parameters and have different return values. Be sure to read the hooks guide for more information.
