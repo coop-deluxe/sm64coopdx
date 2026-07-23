@@ -57,6 +57,7 @@
     - [enum MarioCapGSCId](#enum-MarioCapGSCId)
     - [enum MarioGrabPosGSCId](#enum-MarioGrabPosGSCId)
 - [mod_fs.h](#mod_fsh)
+    - [enum ModFsErrorCode](#enum-ModFsErrorCode)
     - [enum ModFsFileIntType](#enum-ModFsFileIntType)
     - [enum ModFsFileFloatType](#enum-ModFsFileFloatType)
     - [enum ModFsFileSeek](#enum-ModFsFileSeek)
@@ -1184,6 +1185,7 @@
 <br />
 
 ## [djui_console.h](#djui_console.h)
+- MAX_CONSOLE_INPUT_LENGTH
 
 ### [enum ConsoleMessageLevel](#ConsoleMessageLevel)
 | Identifier | Value |
@@ -2231,6 +2233,33 @@
 - MOD_FS_MAX_PATH
 - MOD_FS_URI_PREFIX
 - MOD_FS_URI_FORMAT
+
+### [enum ModFsErrorCode](#ModFsErrorCode)
+| Identifier | Value |
+| :--------- | :---- |
+| MOD_FS_ERR_NONE | 0 |
+| MOD_FS_ERR_ALLOC_FAILED | 1 |
+| MOD_FS_ERR_ALREADY_EXISTS | 2 |
+| MOD_FS_ERR_NOT_FOUND | 3 |
+| MOD_FS_ERR_INVALID_POINTER | 4 |
+| MOD_FS_ERR_INVALID_PARAMETER | 5 |
+| MOD_FS_ERR_FILE_INVALID_INDEX | 6 |
+| MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED | 7 |
+| MOD_FS_ERR_TOTAL_SIZE_EXCEEDED | 8 |
+| MOD_FS_ERR_NUM_FILES_EXCEEDED | 9 |
+| MOD_FS_ERR_FILEPATH_EMPTY | 10 |
+| MOD_FS_ERR_FILEPATH_LEN_EXCEEDED | 11 |
+| MOD_FS_ERR_FILEPATH_RESERVED | 12 |
+| MOD_FS_ERR_FILEPATH_INVALID_CHAR | 13 |
+| MOD_FS_ERR_FILEPATH_MALFORMED | 14 |
+| MOD_FS_ERR_FILEPATH_INVALID_EXTENSION | 15 |
+| MOD_FS_ERR_READ_INVALID_MODPATH | 16 |
+| MOD_FS_ERR_READ_ZIP | 17 |
+| MOD_FS_ERR_READ_PROPERTIES | 18 |
+| MOD_FS_ERR_READ_FILE_TRUNCATED | 19 |
+| MOD_FS_ERR_READ_EOF | 20 |
+| MOD_FS_ERR_WRITE_ZIP | 21 |
+| MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD | 22 |
 
 ### [enum ModFsFileIntType](#ModFsFileIntType)
 | Identifier | Value |

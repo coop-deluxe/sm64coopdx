@@ -7,6 +7,8 @@ Hooks are a way for the game to trigger Lua code, whereas the functions listed i
 - [hook_behavior](#hook_behavior)
 - [hook_chat_command](#hook_chat_command)
 - [update_chat_command_description](#update_chat_command_description)
+- [hook_console_command](#hook_console_command)
+- [update_console_command_description](#update_console_command_description)
 - [hook_event](#hook_event)
 - [hook_mario_action](#hook_mario_action)
 - [hook_on_sync_table_change](#hook_on_sync_table_change)
@@ -104,6 +106,64 @@ Updates the description of a chat command.
 ### Lua Example
 ```lua
 update_chat_command_description("command", "description")
+```
+
+### Parameters
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| command | `string` | The command to change the description of |
+| description | `string` | The description to change to |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_console_command](#hook_console_command)
+
+### Description
+Allows Lua mods to react and respond to console commands. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. You should use `command_message_create` to show any messages to the user. Console messages only appear in the console and terminal.
+
+### Lua Example
+```lua
+function on_test_command(msg)
+    if msg == "on" then
+        command_message_create("Test: enabled")
+        return true
+    elseif msg == "off" then
+        command_message_create("Test: disabled")
+        return true
+    end
+    return false
+end
+
+hook_console_command("test", "[on|off] turn test on or off", on_test_command)
+```
+
+### Parameters
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| command | `string` | The command to run. Should be easy to type |
+| description | `string` | Should describe what the command does and how to use it |
+| func | `function` | Run upon activating the command. Return `true` to confirm the command has succeeded |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_console_command_description](#update_console_command_description)
+
+### Description
+Updates the description of a console command.
+
+### Lua Example
+```lua
+update_console_command_description("command", "description")
 ```
 
 ### Parameters

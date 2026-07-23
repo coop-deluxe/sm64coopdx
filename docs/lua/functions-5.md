@@ -1336,7 +1336,7 @@ Linearly interpolates `res` between `a` and `b` with `delta`
 Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 
 ### Lua Example
-`local booleanValue = mod_fs_exists(modPath)`
+`local booleanValue, err = mod_fs_exists(modPath)`
 
 ### Parameters
 | Field | Type |
@@ -1345,9 +1345,10 @@ Checks the existence of a modfs at path `modPath` or for the active mod if not p
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_exists(OPTIONAL const char *modPath);`
+`bool mod_fs_exists(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1359,7 +1360,7 @@ Checks the existence of a modfs at path `modPath` or for the active mod if not p
 Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 
 ### Lua Example
-`local modFsValue = mod_fs_get(modPath)`
+`local modFsValue, err = mod_fs_get(modPath)`
 
 ### Parameters
 | Field | Type |
@@ -1368,9 +1369,10 @@ Gets the modfs object at path `modPath` or the active mod one if not provided. T
 
 ### Returns
 - [ModFs](structs.md#ModFs)
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`struct ModFs *mod_fs_get(OPTIONAL const char *modPath);`
+`struct ModFs *mod_fs_get(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1382,7 +1384,7 @@ Gets the modfs object at path `modPath` or the active mod one if not provided. T
 Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
 
 ### Lua Example
-`local modFsValue = mod_fs_reload(modPath)`
+`local modFsValue, err = mod_fs_reload(modPath)`
 
 ### Parameters
 | Field | Type |
@@ -1391,9 +1393,10 @@ Reloads the modfs object at path `modPath`. This function will return nil for a 
 
 ### Returns
 - [ModFs](structs.md#ModFs)
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`struct ModFs *mod_fs_reload(OPTIONAL const char *modPath);`
+`struct ModFs *mod_fs_reload(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1405,16 +1408,17 @@ Reloads the modfs object at path `modPath`. This function will return nil for a 
 Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 
 ### Lua Example
-`local modFsValue = mod_fs_create()`
+`local modFsValue, err = mod_fs_create()`
 
 ### Parameters
 - None
 
 ### Returns
 - [ModFs](structs.md#ModFs)
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`struct ModFs *mod_fs_create();`
+`struct ModFs *mod_fs_create(RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1426,7 +1430,7 @@ Creates a modfs object for the active mod if it doesn't exist. Returns the modfs
 Gets the filename at position `index` of the provided `modFs`
 
 ### Lua Example
-`local stringValue = mod_fs_get_filename(modFs, index)`
+`local stringValue, err = mod_fs_get_filename(modFs, index)`
 
 ### Parameters
 | Field | Type |
@@ -1436,9 +1440,10 @@ Gets the filename at position `index` of the provided `modFs`
 
 ### Returns
 - `string`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`const char *mod_fs_get_filename(struct ModFs *modFs, u16 index);`
+`const char *mod_fs_get_filename(struct ModFs *modFs, u16 index, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1450,7 +1455,7 @@ Gets the filename at position `index` of the provided `modFs`
 Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
 
 ### Lua Example
-`local modFsFileValue = mod_fs_get_file(modFs, filepath)`
+`local modFsFileValue, err = mod_fs_get_file(modFs, filepath)`
 
 ### Parameters
 | Field | Type |
@@ -1460,9 +1465,10 @@ Gets the file object at path `filepath` of the provided `modFs`. This function w
 
 ### Returns
 - [ModFsFile](structs.md#ModFsFile)
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath);`
+`struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1474,7 +1480,7 @@ Gets the file object at path `filepath` of the provided `modFs`. This function w
 Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 
 ### Lua Example
-`local modFsFileValue = mod_fs_create_file(modFs, filepath, text)`
+`local modFsFileValue, err = mod_fs_create_file(modFs, filepath, text)`
 
 ### Parameters
 | Field | Type |
@@ -1485,9 +1491,10 @@ Creates a new file at path `filepath` for the provided `modFs`. Set `text` to tr
 
 ### Returns
 - [ModFsFile](structs.md#ModFsFile)
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text);`
+`struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1499,7 +1506,7 @@ Creates a new file at path `filepath` for the provided `modFs`. Set `text` to tr
 Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
+`local booleanValue, err = mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)`
 
 ### Parameters
 | Field | Type |
@@ -1511,9 +1518,10 @@ Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `over
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);`
+`bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1525,7 +1533,7 @@ Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `over
 Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
+`local booleanValue, err = mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)`
 
 ### Parameters
 | Field | Type |
@@ -1537,9 +1545,10 @@ Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `ove
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);`
+`bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1551,7 +1560,7 @@ Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `ove
 Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_delete_file(modFs, filepath)`
+`local booleanValue, err = mod_fs_delete_file(modFs, filepath)`
 
 ### Parameters
 | Field | Type |
@@ -1561,9 +1570,10 @@ Deletes the file at path `filepath` of the provided `modFs`. Returns true on suc
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath);`
+`bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1575,7 +1585,7 @@ Deletes the file at path `filepath` of the provided `modFs`. Returns true on suc
 Deletes all files of the provided `modFs`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_clear(modFs)`
+`local booleanValue, err = mod_fs_clear(modFs)`
 
 ### Parameters
 | Field | Type |
@@ -1584,9 +1594,10 @@ Deletes all files of the provided `modFs`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_clear(struct ModFs *modFs);`
+`bool mod_fs_clear(struct ModFs *modFs, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1598,7 +1609,7 @@ Deletes all files of the provided `modFs`. Returns true on success
 Saves the provided `modFs` to persistent storage. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_save(modFs)`
+`local booleanValue, err = mod_fs_save(modFs)`
 
 ### Parameters
 | Field | Type |
@@ -1607,9 +1618,10 @@ Saves the provided `modFs` to persistent storage. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_save(struct ModFs *modFs);`
+`bool mod_fs_save(struct ModFs *modFs, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1621,7 +1633,7 @@ Saves the provided `modFs` to persistent storage. Returns true on success
 Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_delete(modFs)`
+`local booleanValue, err = mod_fs_delete(modFs)`
 
 ### Parameters
 | Field | Type |
@@ -1630,9 +1642,10 @@ Removes the provided `modFs` from persistent storage and deletes its object. Ret
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_delete(struct ModFs *modFs);`
+`bool mod_fs_delete(struct ModFs *modFs, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1644,7 +1657,7 @@ Removes the provided `modFs` from persistent storage and deletes its object. Ret
 Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_set_public(modFs, pub)`
+`local booleanValue, err = mod_fs_set_public(modFs, pub)`
 
 ### Parameters
 | Field | Type |
@@ -1654,9 +1667,10 @@ Marks the provided `modFs` as public (i.e. readable by other mods). Returns true
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_set_public(struct ModFs *modFs, bool pub);`
+`bool mod_fs_set_public(struct ModFs *modFs, bool pub, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1668,7 +1682,7 @@ Marks the provided `modFs` as public (i.e. readable by other mods). Returns true
 Reads a boolean from a binary modfs `file`
 
 ### Lua Example
-`local booleanValue = mod_fs_file_read_bool(file)`
+`local booleanValue, err = mod_fs_file_read_bool(file)`
 
 ### Parameters
 | Field | Type |
@@ -1677,9 +1691,10 @@ Reads a boolean from a binary modfs `file`
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_read_bool(struct ModFsFile *file);`
+`bool mod_fs_file_read_bool(struct ModFsFile *file, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1691,7 +1706,7 @@ Reads a boolean from a binary modfs `file`
 Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 
 ### Lua Example
-`local integerValue = mod_fs_file_read_integer(file, intType)`
+`local integerValue, err = mod_fs_file_read_integer(file, intType)`
 
 ### Parameters
 | Field | Type |
@@ -1701,9 +1716,10 @@ Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_T
 
 ### Returns
 - `integer`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType);`
+`lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1715,7 +1731,7 @@ Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_T
 Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
 
 ### Lua Example
-`local numberValue = mod_fs_file_read_number(file, floatType)`
+`local numberValue, err = mod_fs_file_read_number(file, floatType)`
 
 ### Parameters
 | Field | Type |
@@ -1725,9 +1741,10 @@ Reads an floating-point number from a binary modfs `file`. `floatType` must be o
 
 ### Returns
 - `number`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType);`
+`lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1739,7 +1756,7 @@ Reads an floating-point number from a binary modfs `file`. `floatType` must be o
 Reads a bytestring of `length` bytes from a binary modfs `file`
 
 ### Lua Example
-`local stringValue = mod_fs_file_read_bytes(file, length)`
+`local stringValue, err = mod_fs_file_read_bytes(file, length)`
 
 ### Parameters
 | Field | Type |
@@ -1749,9 +1766,10 @@ Reads a bytestring of `length` bytes from a binary modfs `file`
 
 ### Returns
 - `string`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length);`
+`ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1763,7 +1781,7 @@ Reads a bytestring of `length` bytes from a binary modfs `file`
 Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 
 ### Lua Example
-`local stringValue = mod_fs_file_read_string(file)`
+`local stringValue, err = mod_fs_file_read_string(file)`
 
 ### Parameters
 | Field | Type |
@@ -1772,9 +1790,10 @@ Reads a string from a binary modfs `file`, or read the whole content of a text m
 
 ### Returns
 - `string`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`const char *mod_fs_file_read_string(struct ModFsFile *file);`
+`const char *mod_fs_file_read_string(struct ModFsFile *file, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1786,7 +1805,7 @@ Reads a string from a binary modfs `file`, or read the whole content of a text m
 Reads a line from a text modfs `file`
 
 ### Lua Example
-`local stringValue = mod_fs_file_read_line(file)`
+`local stringValue, err = mod_fs_file_read_line(file)`
 
 ### Parameters
 | Field | Type |
@@ -1795,9 +1814,10 @@ Reads a line from a text modfs `file`
 
 ### Returns
 - `string`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`const char *mod_fs_file_read_line(struct ModFsFile *file);`
+`const char *mod_fs_file_read_line(struct ModFsFile *file, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1809,7 +1829,7 @@ Reads a line from a text modfs `file`
 Writes a boolean to a binary modfs `file`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_bool(file, value)`
+`local booleanValue, err = mod_fs_file_write_bool(file, value)`
 
 ### Parameters
 | Field | Type |
@@ -1819,9 +1839,10 @@ Writes a boolean to a binary modfs `file`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_bool(struct ModFsFile *file, bool value);`
+`bool mod_fs_file_write_bool(struct ModFsFile *file, bool value, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1833,7 +1854,7 @@ Writes a boolean to a binary modfs `file`. Returns true on success
 Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_integer(file, value, intType)`
+`local booleanValue, err = mod_fs_file_write_integer(file, value, intType)`
 
 ### Parameters
 | Field | Type |
@@ -1844,9 +1865,10 @@ Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TY
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);`
+`bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1858,7 +1880,7 @@ Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TY
 Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_number(file, value, floatType)`
+`local booleanValue, err = mod_fs_file_write_number(file, value, floatType)`
 
 ### Parameters
 | Field | Type |
@@ -1869,9 +1891,10 @@ Writes an floating-point number to a binary modfs `file`. `floatType` must be on
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);`
+`bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1883,7 +1906,7 @@ Writes an floating-point number to a binary modfs `file`. `floatType` must be on
 Writes a bytestring to a modfs `file`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_bytes(file, bytestring)`
+`local booleanValue, err = mod_fs_file_write_bytes(file, bytestring)`
 
 ### Parameters
 | Field | Type |
@@ -1893,9 +1916,10 @@ Writes a bytestring to a modfs `file`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring);`
+`bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1907,7 +1931,7 @@ Writes a bytestring to a modfs `file`. Returns true on success
 Writes a string to a modfs `file`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_string(file, str)`
+`local booleanValue, err = mod_fs_file_write_string(file, str)`
 
 ### Parameters
 | Field | Type |
@@ -1917,9 +1941,10 @@ Writes a string to a modfs `file`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_string(struct ModFsFile *file, const char *str);`
+`bool mod_fs_file_write_string(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1931,7 +1956,7 @@ Writes a string to a modfs `file`. Returns true on success
 Writes a line to a text modfs `file`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_write_line(file, str)`
+`local booleanValue, err = mod_fs_file_write_line(file, str)`
 
 ### Parameters
 | Field | Type |
@@ -1941,9 +1966,10 @@ Writes a line to a text modfs `file`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_write_line(struct ModFsFile *file, const char *str);`
+`bool mod_fs_file_write_line(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1959,7 +1985,7 @@ If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`.
 Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_seek(file, offset, origin)`
+`local booleanValue, err = mod_fs_file_seek(file, offset, origin)`
 
 ### Parameters
 | Field | Type |
@@ -1970,9 +1996,10 @@ Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);`
+`bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -1985,7 +2012,7 @@ Sets the current position of a modfs `file` to its beginning.
 Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_rewind(file)`
+`local booleanValue, err = mod_fs_file_rewind(file)`
 
 ### Parameters
 | Field | Type |
@@ -1994,9 +2021,10 @@ Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_rewind(struct ModFsFile *file);`
+`bool mod_fs_file_rewind(struct ModFsFile *file, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2008,7 +2036,7 @@ Returns true on success
 Returns true if the provided modfs `file` has reached its end of file
 
 ### Lua Example
-`local booleanValue = mod_fs_file_is_eof(file)`
+`local booleanValue, err = mod_fs_file_is_eof(file)`
 
 ### Parameters
 | Field | Type |
@@ -2017,9 +2045,10 @@ Returns true if the provided modfs `file` has reached its end of file
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_is_eof(struct ModFsFile *file);`
+`bool mod_fs_file_is_eof(struct ModFsFile *file, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2031,7 +2060,7 @@ Returns true if the provided modfs `file` has reached its end of file
 Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_fill(file, byte, length)`
+`local booleanValue, err = mod_fs_file_fill(file, byte, length)`
 
 ### Parameters
 | Field | Type |
@@ -2042,9 +2071,10 @@ Fills a modfs `file` with `byte` repeated `length` times. Returns true on succes
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length);`
+`bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2056,7 +2086,7 @@ Fills a modfs `file` with `byte` repeated `length` times. Returns true on succes
 Erases `length` bytes or characters from a modfs `file`. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_erase(file, length)`
+`local booleanValue, err = mod_fs_file_erase(file, length)`
 
 ### Parameters
 | Field | Type |
@@ -2066,9 +2096,10 @@ Erases `length` bytes or characters from a modfs `file`. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_erase(struct ModFsFile *file, u32 length);`
+`bool mod_fs_file_erase(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2080,7 +2111,7 @@ Erases `length` bytes or characters from a modfs `file`. Returns true on success
 Marks the provided modfs `file` as text. Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_set_text_mode(file, text)`
+`local booleanValue, err = mod_fs_file_set_text_mode(file, text)`
 
 ### Parameters
 | Field | Type |
@@ -2090,9 +2121,10 @@ Marks the provided modfs `file` as text. Returns true on success
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text);`
+`bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2104,7 +2136,7 @@ Marks the provided modfs `file` as text. Returns true on success
 Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_set_public(file, pub)`
+`local booleanValue, err = mod_fs_file_set_public(file, pub)`
 
 ### Parameters
 | Field | Type |
@@ -2114,9 +2146,10 @@ Marks the provided modfs `file` as public (i.e. readable by other mods). Returns
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);`
+`bool mod_fs_file_set_public(struct ModFsFile *file, bool pub, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2125,10 +2158,10 @@ Marks the provided modfs `file` as public (i.e. readable by other mods). Returns
 ## [mod_fs_file_set_compression](#mod_fs_file_set_compression)
 
 ### Description
-Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
 
 ### Lua Example
-`local booleanValue = mod_fs_file_set_compression(file, level)`
+`local booleanValue, err = mod_fs_file_set_compression(file, level)`
 
 ### Parameters
 | Field | Type |
@@ -2138,9 +2171,10 @@ Sets the compression level of the provided modfs `file`. Must be between 0 (no c
 
 ### Returns
 - `boolean`
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
 
 ### C Prototype
-`bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);`
+`bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level, RET enum ModFsErrorCode *err);`
 
 [:arrow_up_small:](#)
 
@@ -2164,6 +2198,27 @@ Hides script errors raised by `mod_fs` functions. Errors messages are still gene
 
 ### C Prototype
 `void mod_fs_hide_errors(bool hide);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_fs_get_last_error_code](#mod_fs_get_last_error_code)
+
+### Description
+Returns the last error code raised by `mod_fs` functions
+
+### Lua Example
+`local enumValue = mod_fs_get_last_error_code()`
+
+### Parameters
+- None
+
+### Returns
+- [enum ModFsErrorCode](constants.md#enum-ModFsErrorCode)
+
+### C Prototype
+`enum ModFsErrorCode mod_fs_get_last_error_code();`
 
 [:arrow_up_small:](#)
 

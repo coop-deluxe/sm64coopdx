@@ -12,6 +12,7 @@
 #include "src/game/mario_step.h"
 #include "src/game/mario.h"
 #include "src/game/rumble_init.h"
+#include "src/pc/commands.h"
 #include "src/pc/djui/djui_popup.h"
 #include "src/pc/network/network_utils.h"
 #include "src/pc/djui/djui_console.h"
@@ -11447,6 +11448,32 @@ int smlua_func_update_character_anim_offset(lua_State* L) {
     return 1;
 }
 
+  ////////////////
+ // commands.h //
+////////////////
+
+int smlua_func_command_message_create(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "command_message_create", 1, 2, top);
+        return 0;
+    }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "command_message_create"); return 0; }
+    enum ConsoleMessageLevel level = (enum ConsoleMessageLevel) 0;
+    if (top >= 2) {
+        level = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "command_message_create"); return 0; }
+    }
+
+    command_message_create(message, level);
+
+    return 1;
+}
+
   /////////////////////////
  // djui_chat_message.h //
 /////////////////////////
@@ -11471,6 +11498,20 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
   ////////////////////
  // djui_console.h //
 ////////////////////
+
+int smlua_func_djui_console_clear(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_console_clear", 0, top);
+        return 0;
+    }
+
+    djui_console_clear();
+
+    return 1;
+}
 
 int smlua_func_djui_console_toggle(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -21352,9 +21393,13 @@ int smlua_func_mod_fs_exists(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_exists"); return 0; }
     }
 
-    lua_pushboolean(L, mod_fs_exists(modPath));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_exists(modPath, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_get(lua_State* L) {
@@ -21372,9 +21417,13 @@ int smlua_func_mod_fs_get(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_get"); return 0; }
     }
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_get(modPath), NULL);
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_object(L, LOT_MODFS, mod_fs_get(modPath, &err), NULL);
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_reload(lua_State* L) {
@@ -21392,9 +21441,13 @@ int smlua_func_mod_fs_reload(lua_State* L) {
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_reload"); return 0; }
     }
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_reload(modPath), NULL);
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_object(L, LOT_MODFS, mod_fs_reload(modPath, &err), NULL);
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_create(lua_State* L) {
@@ -21406,9 +21459,13 @@ int smlua_func_mod_fs_create(lua_State* L) {
         return 0;
     }
 
-    smlua_push_object(L, LOT_MODFS, mod_fs_create(), NULL);
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_object(L, LOT_MODFS, mod_fs_create(&err), NULL);
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_get_filename(lua_State* L) {
@@ -21425,9 +21482,13 @@ int smlua_func_mod_fs_get_filename(lua_State* L) {
     u16 index = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_get_filename"); return 0; }
 
-    lua_pushstring(L, mod_fs_get_filename(modFs, index));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushstring(L, mod_fs_get_filename(modFs, index, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_get_file(lua_State* L) {
@@ -21444,9 +21505,13 @@ int smlua_func_mod_fs_get_file(lua_State* L) {
     const char* filepath = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_get_file"); return 0; }
 
-    smlua_push_object(L, LOT_MODFSFILE, mod_fs_get_file(modFs, filepath), NULL);
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_get_file(modFs, filepath, &err), NULL);
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_create_file(lua_State* L) {
@@ -21465,9 +21530,13 @@ int smlua_func_mod_fs_create_file(lua_State* L) {
     bool text = smlua_to_boolean(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_create_file"); return 0; }
 
-    smlua_push_object(L, LOT_MODFSFILE, mod_fs_create_file(modFs, filepath, text), NULL);
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_object(L, LOT_MODFSFILE, mod_fs_create_file(modFs, filepath, text, &err), NULL);
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_move_file(lua_State* L) {
@@ -21488,9 +21557,13 @@ int smlua_func_mod_fs_move_file(lua_State* L) {
     bool overwriteExisting = smlua_to_boolean(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_move_file"); return 0; }
 
-    lua_pushboolean(L, mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_copy_file(lua_State* L) {
@@ -21511,9 +21584,13 @@ int smlua_func_mod_fs_copy_file(lua_State* L) {
     bool overwriteExisting = smlua_to_boolean(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mod_fs_copy_file"); return 0; }
 
-    lua_pushboolean(L, mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_delete_file(lua_State* L) {
@@ -21530,9 +21607,13 @@ int smlua_func_mod_fs_delete_file(lua_State* L) {
     const char* filepath = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_delete_file"); return 0; }
 
-    lua_pushboolean(L, mod_fs_delete_file(modFs, filepath));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_delete_file(modFs, filepath, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_clear(lua_State* L) {
@@ -21547,9 +21628,13 @@ int smlua_func_mod_fs_clear(lua_State* L) {
     struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_clear"); return 0; }
 
-    lua_pushboolean(L, mod_fs_clear(modFs));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_clear(modFs, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_save(lua_State* L) {
@@ -21564,9 +21649,13 @@ int smlua_func_mod_fs_save(lua_State* L) {
     struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_save"); return 0; }
 
-    lua_pushboolean(L, mod_fs_save(modFs));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_save(modFs, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_delete(lua_State* L) {
@@ -21581,9 +21670,13 @@ int smlua_func_mod_fs_delete(lua_State* L) {
     struct ModFs* modFs = (struct ModFs*)smlua_to_cobject(L, 1, LOT_MODFS);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_delete"); return 0; }
 
-    lua_pushboolean(L, mod_fs_delete(modFs));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_delete(modFs, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_set_public(lua_State* L) {
@@ -21600,9 +21693,13 @@ int smlua_func_mod_fs_set_public(lua_State* L) {
     bool pub = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_set_public"); return 0; }
 
-    lua_pushboolean(L, mod_fs_set_public(modFs, pub));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_set_public(modFs, pub, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_bool(lua_State* L) {
@@ -21617,9 +21714,13 @@ int smlua_func_mod_fs_file_read_bool(lua_State* L) {
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_bool"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_read_bool(file));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_read_bool(file, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_integer(lua_State* L) {
@@ -21636,9 +21737,13 @@ int smlua_func_mod_fs_file_read_integer(lua_State* L) {
     enum ModFsFileIntType intType = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_integer"); return 0; }
 
-    lua_pushinteger(L, mod_fs_file_read_integer(file, intType));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushinteger(L, mod_fs_file_read_integer(file, intType, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_number(lua_State* L) {
@@ -21655,9 +21760,13 @@ int smlua_func_mod_fs_file_read_number(lua_State* L) {
     enum ModFsFileFloatType floatType = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_number"); return 0; }
 
-    lua_pushnumber(L, mod_fs_file_read_number(file, floatType));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushnumber(L, mod_fs_file_read_number(file, floatType, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_bytes(lua_State* L) {
@@ -21674,9 +21783,13 @@ int smlua_func_mod_fs_file_read_bytes(lua_State* L) {
     u32 length = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_read_bytes"); return 0; }
 
-    smlua_push_bytestring(L, mod_fs_file_read_bytes(file, length));
+    enum ModFsErrorCode err;
 
-    return 1;
+    smlua_push_bytestring(L, mod_fs_file_read_bytes(file, length, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_string(lua_State* L) {
@@ -21691,9 +21804,13 @@ int smlua_func_mod_fs_file_read_string(lua_State* L) {
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_string"); return 0; }
 
-    lua_pushstring(L, mod_fs_file_read_string(file));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushstring(L, mod_fs_file_read_string(file, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_read_line(lua_State* L) {
@@ -21708,9 +21825,13 @@ int smlua_func_mod_fs_file_read_line(lua_State* L) {
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_read_line"); return 0; }
 
-    lua_pushstring(L, mod_fs_file_read_line(file));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushstring(L, mod_fs_file_read_line(file, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_bool(lua_State* L) {
@@ -21727,9 +21848,13 @@ int smlua_func_mod_fs_file_write_bool(lua_State* L) {
     bool value = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_bool"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_bool(file, value));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_bool(file, value, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_integer(lua_State* L) {
@@ -21748,9 +21873,13 @@ int smlua_func_mod_fs_file_write_integer(lua_State* L) {
     enum ModFsFileIntType intType = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_integer"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_integer(file, value, intType));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_integer(file, value, intType, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_number(lua_State* L) {
@@ -21769,9 +21898,13 @@ int smlua_func_mod_fs_file_write_number(lua_State* L) {
     enum ModFsFileFloatType floatType = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_write_number"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_number(file, value, floatType));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_number(file, value, floatType, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_bytes(lua_State* L) {
@@ -21788,9 +21921,13 @@ int smlua_func_mod_fs_file_write_bytes(lua_State* L) {
     ByteString bytestring = smlua_to_bytestring(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_bytes"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_bytes(file, bytestring));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_bytes(file, bytestring, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_string(lua_State* L) {
@@ -21807,9 +21944,13 @@ int smlua_func_mod_fs_file_write_string(lua_State* L) {
     const char* str = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_string"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_string(file, str));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_string(file, str, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_write_line(lua_State* L) {
@@ -21826,9 +21967,13 @@ int smlua_func_mod_fs_file_write_line(lua_State* L) {
     const char* str = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_write_line"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_write_line(file, str));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_write_line(file, str, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_seek(lua_State* L) {
@@ -21847,9 +21992,13 @@ int smlua_func_mod_fs_file_seek(lua_State* L) {
     enum ModFsFileSeek origin = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_seek"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_seek(file, offset, origin));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_seek(file, offset, origin, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_rewind(lua_State* L) {
@@ -21864,9 +22013,13 @@ int smlua_func_mod_fs_file_rewind(lua_State* L) {
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_rewind"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_rewind(file));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_rewind(file, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_is_eof(lua_State* L) {
@@ -21881,9 +22034,13 @@ int smlua_func_mod_fs_file_is_eof(lua_State* L) {
     struct ModFsFile* file = (struct ModFsFile*)smlua_to_cobject(L, 1, LOT_MODFSFILE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_file_is_eof"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_is_eof(file));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_is_eof(file, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_fill(lua_State* L) {
@@ -21902,9 +22059,13 @@ int smlua_func_mod_fs_file_fill(lua_State* L) {
     u32 length = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_fs_file_fill"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_fill(file, byte, length));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_fill(file, byte, length, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_erase(lua_State* L) {
@@ -21921,9 +22082,13 @@ int smlua_func_mod_fs_file_erase(lua_State* L) {
     u32 length = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_erase"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_erase(file, length));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_erase(file, length, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_set_text_mode(lua_State* L) {
@@ -21940,9 +22105,13 @@ int smlua_func_mod_fs_file_set_text_mode(lua_State* L) {
     bool text = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_text_mode"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_set_text_mode(file, text));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_set_text_mode(file, text, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_set_public(lua_State* L) {
@@ -21959,9 +22128,13 @@ int smlua_func_mod_fs_file_set_public(lua_State* L) {
     bool pub = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_public"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_set_public(file, pub));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_set_public(file, pub, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_file_set_compression(lua_State* L) {
@@ -21978,9 +22151,13 @@ int smlua_func_mod_fs_file_set_compression(lua_State* L) {
     s32 level = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_fs_file_set_compression"); return 0; }
 
-    lua_pushboolean(L, mod_fs_file_set_compression(file, level));
+    enum ModFsErrorCode err;
 
-    return 1;
+    lua_pushboolean(L, mod_fs_file_set_compression(file, level, &err));
+
+    lua_pushinteger(L, err);
+
+    return 2;
 }
 
 int smlua_func_mod_fs_hide_errors(lua_State* L) {
@@ -21996,6 +22173,20 @@ int smlua_func_mod_fs_hide_errors(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_fs_hide_errors"); return 0; }
 
     mod_fs_hide_errors(hide);
+
+    return 1;
+}
+
+int smlua_func_mod_fs_get_last_error_code(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_fs_get_last_error_code", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, mod_fs_get_last_error_code());
 
     return 1;
 }
@@ -36658,10 +36849,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_character_anim", smlua_func_get_character_anim);
     smlua_bind_function(L, "update_character_anim_offset", smlua_func_update_character_anim_offset);
 
+    // commands.h
+    smlua_bind_function(L, "command_message_create", smlua_func_command_message_create);
+
     // djui_chat_message.h
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
     // djui_console.h
+    smlua_bind_function(L, "djui_console_clear", smlua_func_djui_console_clear);
     smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
     smlua_bind_function(L, "djui_console_is_open", smlua_func_djui_console_is_open);
 
@@ -37267,6 +37462,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_file_set_public", smlua_func_mod_fs_file_set_public);
     smlua_bind_function(L, "mod_fs_file_set_compression", smlua_func_mod_fs_file_set_compression);
     smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
+    smlua_bind_function(L, "mod_fs_get_last_error_code", smlua_func_mod_fs_get_last_error_code);
     smlua_bind_function(L, "mod_fs_get_last_error", smlua_func_mod_fs_get_last_error);
 
     // mod_storage.h

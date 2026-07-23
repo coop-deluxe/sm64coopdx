@@ -2744,6 +2744,9 @@ DIALOG_COUNT = 170 --- @type DialogId
 --- | `DIALOG_169`
 --- | `DIALOG_COUNT`
 
+--- @type integer
+MAX_CONSOLE_INPUT_LENGTH = 500
+
 CONSOLE_MESSAGE_INFO    = 0 --- @type ConsoleMessageLevel
 CONSOLE_MESSAGE_WARNING = 1 --- @type ConsoleMessageLevel
 CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
@@ -4667,10 +4670,10 @@ MOD_FS_COMPRESSION_MAX = 9
 MOD_FS_COMPRESSION_DEFAULT = 1
 
 --- @type integer
-MOD_FS_MAX_SIZE = 0x2000000
+MOD_FS_MAX_SIZE = 0x8000000
 
 --- @type integer
-MOD_FS_MAX_FILES = 0x200
+MOD_FS_MAX_FILES = 0x400
 
 --- @type integer
 MOD_FS_MAX_PATH = 0x100
@@ -4680,6 +4683,55 @@ MOD_FS_URI_PREFIX = "modfs:/"
 
 --- @type string
 MOD_FS_URI_FORMAT = "modfs:/%s/%s"
+
+MOD_FS_ERR_NONE                       =  0 --- @type ModFsErrorCode
+MOD_FS_ERR_ALLOC_FAILED               =  1 --- @type ModFsErrorCode
+MOD_FS_ERR_ALREADY_EXISTS             =  2 --- @type ModFsErrorCode
+MOD_FS_ERR_NOT_FOUND                  =  3 --- @type ModFsErrorCode
+MOD_FS_ERR_INVALID_POINTER            =  4 --- @type ModFsErrorCode
+MOD_FS_ERR_INVALID_PARAMETER          =  5 --- @type ModFsErrorCode
+MOD_FS_ERR_FILE_INVALID_INDEX         =  6 --- @type ModFsErrorCode
+MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED      =  7 --- @type ModFsErrorCode
+MOD_FS_ERR_TOTAL_SIZE_EXCEEDED        =  8 --- @type ModFsErrorCode
+MOD_FS_ERR_NUM_FILES_EXCEEDED         =  9 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_EMPTY             = 10 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_LEN_EXCEEDED      = 11 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_RESERVED          = 12 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_INVALID_CHAR      = 13 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_MALFORMED         = 14 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_INVALID_EXTENSION = 15 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_INVALID_MODPATH       = 16 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_ZIP                   = 17 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_PROPERTIES            = 18 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_FILE_TRUNCATED        = 19 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_EOF                   = 20 --- @type ModFsErrorCode
+MOD_FS_ERR_WRITE_ZIP                  = 21 --- @type ModFsErrorCode
+MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD       = 22 --- @type ModFsErrorCode
+
+--- @alias ModFsErrorCode
+--- | `MOD_FS_ERR_NONE`
+--- | `MOD_FS_ERR_ALLOC_FAILED`
+--- | `MOD_FS_ERR_ALREADY_EXISTS`
+--- | `MOD_FS_ERR_NOT_FOUND`
+--- | `MOD_FS_ERR_INVALID_POINTER`
+--- | `MOD_FS_ERR_INVALID_PARAMETER`
+--- | `MOD_FS_ERR_FILE_INVALID_INDEX`
+--- | `MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED`
+--- | `MOD_FS_ERR_TOTAL_SIZE_EXCEEDED`
+--- | `MOD_FS_ERR_NUM_FILES_EXCEEDED`
+--- | `MOD_FS_ERR_FILEPATH_EMPTY`
+--- | `MOD_FS_ERR_FILEPATH_LEN_EXCEEDED`
+--- | `MOD_FS_ERR_FILEPATH_RESERVED`
+--- | `MOD_FS_ERR_FILEPATH_INVALID_CHAR`
+--- | `MOD_FS_ERR_FILEPATH_MALFORMED`
+--- | `MOD_FS_ERR_FILEPATH_INVALID_EXTENSION`
+--- | `MOD_FS_ERR_READ_INVALID_MODPATH`
+--- | `MOD_FS_ERR_READ_ZIP`
+--- | `MOD_FS_ERR_READ_PROPERTIES`
+--- | `MOD_FS_ERR_READ_FILE_TRUNCATED`
+--- | `MOD_FS_ERR_READ_EOF`
+--- | `MOD_FS_ERR_WRITE_ZIP`
+--- | `MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD`
 
 INT_TYPE_U8  = 0 --- @type ModFsFileIntType
 INT_TYPE_U16 = 1 --- @type ModFsFileIntType
@@ -11352,7 +11404,7 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.5.2"
+SM64COOPDX_VERSION = "v1.6"
 
 --- @type string
 VERSION_TEXT = "v"

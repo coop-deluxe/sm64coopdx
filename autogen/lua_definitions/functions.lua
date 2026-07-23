@@ -3907,8 +3907,18 @@ function update_character_anim_offset(m)
 end
 
 --- @param message string
+--- @param level? ConsoleMessageLevel
+function command_message_create(message, level)
+    -- ...
+end
+
+--- @param message string
 --- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
+    -- ...
+end
+
+function djui_console_clear()
     -- ...
 end
 
@@ -7854,6 +7864,7 @@ end
 
 --- @param modPath? string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 function mod_fs_exists(modPath)
     -- ...
@@ -7861,6 +7872,7 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 function mod_fs_get(modPath)
     -- ...
@@ -7868,12 +7880,14 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
 function mod_fs_reload(modPath)
     -- ...
 end
 
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 function mod_fs_create()
     -- ...
@@ -7882,6 +7896,7 @@ end
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Gets the filename at position `index` of the provided `modFs`
 function mod_fs_get_filename(modFs, index)
     -- ...
@@ -7890,6 +7905,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
 function mod_fs_get_file(modFs, filepath)
     -- ...
@@ -7899,6 +7915,7 @@ end
 --- @param filepath string
 --- @param text boolean
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 function mod_fs_create_file(modFs, filepath, text)
     -- ...
@@ -7909,6 +7926,7 @@ end
 --- @param newpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
 function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
     -- ...
@@ -7919,6 +7937,7 @@ end
 --- @param dstpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
 function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
     -- ...
@@ -7927,6 +7946,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
 function mod_fs_delete_file(modFs, filepath)
     -- ...
@@ -7934,6 +7954,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
     -- ...
@@ -7941,6 +7962,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Saves the provided `modFs` to persistent storage. Returns true on success
 function mod_fs_save(modFs)
     -- ...
@@ -7948,6 +7970,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
 function mod_fs_delete(modFs)
     -- ...
@@ -7956,6 +7979,7 @@ end
 --- @param modFs ModFs
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_set_public(modFs, pub)
     -- ...
@@ -7963,6 +7987,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Reads a boolean from a binary modfs `file`
 function mod_fs_file_read_bool(file)
     -- ...
@@ -7971,6 +7996,7 @@ end
 --- @param file ModFsFile
 --- @param intType ModFsFileIntType
 --- @return integer
+--- @return ModFsErrorCode err
 --- Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 function mod_fs_file_read_integer(file, intType)
     -- ...
@@ -7979,6 +8005,7 @@ end
 --- @param file ModFsFile
 --- @param floatType ModFsFileFloatType
 --- @return number
+--- @return ModFsErrorCode err
 --- Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
 function mod_fs_file_read_number(file, floatType)
     -- ...
@@ -7987,6 +8014,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a bytestring of `length` bytes from a binary modfs `file`
 function mod_fs_file_read_bytes(file, length)
     -- ...
@@ -7994,6 +8022,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 function mod_fs_file_read_string(file)
     -- ...
@@ -8001,6 +8030,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a line from a text modfs `file`
 function mod_fs_file_read_line(file)
     -- ...
@@ -8009,6 +8039,7 @@ end
 --- @param file ModFsFile
 --- @param value boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a boolean to a binary modfs `file`. Returns true on success
 function mod_fs_file_write_bool(file, value)
     -- ...
@@ -8018,6 +8049,7 @@ end
 --- @param value integer
 --- @param intType ModFsFileIntType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_integer(file, value, intType)
     -- ...
@@ -8027,6 +8059,7 @@ end
 --- @param value number
 --- @param floatType ModFsFileFloatType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_number(file, value, floatType)
     -- ...
@@ -8035,6 +8068,7 @@ end
 --- @param file ModFsFile
 --- @param bytestring string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a bytestring to a modfs `file`. Returns true on success
 function mod_fs_file_write_bytes(file, bytestring)
     -- ...
@@ -8043,6 +8077,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a string to a modfs `file`. Returns true on success
 function mod_fs_file_write_string(file, str)
     -- ...
@@ -8051,6 +8086,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a line to a text modfs `file`. Returns true on success
 function mod_fs_file_write_line(file, str)
     -- ...
@@ -8060,6 +8096,7 @@ end
 --- @param offset integer
 --- @param origin ModFsFileSeek
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file`.<br>
 --- If `origin` is `FILE_SEEK_SET`, file position is set to `offset`.<br>
 --- If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.<br>
@@ -8071,6 +8108,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file` to its beginning.<br>
 --- Returns true on success
 function mod_fs_file_rewind(file)
@@ -8079,6 +8117,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -8088,6 +8127,7 @@ end
 --- @param byte integer
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
 function mod_fs_file_fill(file, byte, length)
     -- ...
@@ -8096,6 +8136,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
     -- ...
@@ -8104,6 +8145,7 @@ end
 --- @param file ModFsFile
 --- @param text boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as text. Returns true on success
 function mod_fs_file_set_text_mode(file, text)
     -- ...
@@ -8112,6 +8154,7 @@ end
 --- @param file ModFsFile
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_file_set_public(file, pub)
     -- ...
@@ -8120,7 +8163,8 @@ end
 --- @param file ModFsFile
 --- @param level integer
 --- @return boolean
---- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+--- @return ModFsErrorCode err
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
 function mod_fs_file_set_compression(file, level)
     -- ...
 end
@@ -8128,6 +8172,12 @@ end
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
+    -- ...
+end
+
+--- @return ModFsErrorCode
+--- Returns the last error code raised by `mod_fs` functions
+function mod_fs_get_last_error_code()
     -- ...
 end
 

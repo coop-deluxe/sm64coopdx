@@ -69,6 +69,43 @@ function update_chat_command_description(command, description)
     -- ...
 end
 
+--- @param command string The command to run. Should be easy to type
+--- @param description string Should describe what the command does and how to use it
+--- @param func fun(msg:string): boolean Run upon activating the command. Return `true` to confirm the command has succeeded
+--- Allows Lua mods to react and respond to console commands. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. You should use `command_message_create` to show any messages to the user. Console messages only appear in the console and terminal.
+---
+--- ### Lua Example
+--- 
+--- ```lua
+--- function on_test_command(msg)
+---     if msg == "on" then
+---         command_message_create("Test: enabled")
+---         return true
+---     elseif msg == "off" then
+---         command_message_create("Test: disabled")
+---         return true
+---     end
+---     return false
+--- end
+--- 
+--- hook_console_command("test", "[on|off] turn test on or off", on_test_command)
+--- ```
+function hook_console_command(command, description, func)
+    -- ...
+end
+
+--- @param command string The command to change the description of
+--- @param description string The description to change to
+--- Updates the description of a console command.
+--- 
+--- ### Lua Example
+--- ```lua
+--- update_console_command_description("command", "description")
+--- ```
+function update_console_command_description(command, description)
+    -- ...
+end
+
 --- @param hookEventType LuaHookedEventType When a function should run
 --- @param func fun(...: any): any?, any? The function to run
 --- Assigns a callback function to a game hook [event](hook-events.md#Hook-Event-Types). This function will be automatically called by the game when this kind of event occurs.

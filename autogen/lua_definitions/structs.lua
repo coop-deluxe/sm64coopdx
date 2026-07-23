@@ -1218,16 +1218,16 @@
 --- @field public numFiles integer
 --- @field public totalSize integer
 --- @field public isPublic boolean
---- @field public get_filename fun(modFs: ModFs, index: integer): string
---- @field public get_file fun(modFs: ModFs, filepath: string): ModFsFile
---- @field public create_file fun(modFs: ModFs, filepath: string, text: boolean): ModFsFile
---- @field public move_file fun(modFs: ModFs, oldpath: string, newpath: string, overwriteExisting: boolean): boolean
---- @field public copy_file fun(modFs: ModFs, srcpath: string, dstpath: string, overwriteExisting: boolean): boolean
---- @field public delete_file fun(modFs: ModFs, filepath: string): boolean
---- @field public clear fun(modFs: ModFs): boolean
---- @field public save fun(modFs: ModFs): boolean
---- @field public delete fun(modFs: ModFs): boolean
---- @field public set_public fun(modFs: ModFs, pub: boolean): boolean
+--- @field public get_filename fun(modFs: ModFs, index: integer): string, ModFsErrorCode
+--- @field public get_file fun(modFs: ModFs, filepath: string): ModFsFile, ModFsErrorCode
+--- @field public create_file fun(modFs: ModFs, filepath: string, text: boolean): ModFsFile, ModFsErrorCode
+--- @field public move_file fun(modFs: ModFs, oldpath: string, newpath: string, overwriteExisting: boolean): boolean, ModFsErrorCode
+--- @field public copy_file fun(modFs: ModFs, srcpath: string, dstpath: string, overwriteExisting: boolean): boolean, ModFsErrorCode
+--- @field public delete_file fun(modFs: ModFs, filepath: string): boolean, ModFsErrorCode
+--- @field public clear fun(modFs: ModFs): boolean, ModFsErrorCode
+--- @field public save fun(modFs: ModFs): boolean, ModFsErrorCode
+--- @field public delete fun(modFs: ModFs): boolean, ModFsErrorCode
+--- @field public set_public fun(modFs: ModFs, pub: boolean): boolean, ModFsErrorCode
 
 --- @class ModFsFile
 --- @field public modFs ModFs
@@ -1237,26 +1237,26 @@
 --- @field public compressionLevel integer
 --- @field public isText boolean
 --- @field public isPublic boolean
---- @field public read_bool fun(file: ModFsFile): boolean
---- @field public read_integer fun(file: ModFsFile, intType: ModFsFileIntType): integer
---- @field public read_number fun(file: ModFsFile, floatType: ModFsFileFloatType): number
---- @field public read_bytes fun(file: ModFsFile, length: integer): string
---- @field public read_string fun(file: ModFsFile): string
---- @field public read_line fun(file: ModFsFile): string
---- @field public write_bool fun(file: ModFsFile, value: boolean): boolean
---- @field public write_integer fun(file: ModFsFile, value: integer, intType: ModFsFileIntType): boolean
---- @field public write_number fun(file: ModFsFile, value: number, floatType: ModFsFileFloatType): boolean
---- @field public write_bytes fun(file: ModFsFile, bytestring: string): boolean
---- @field public write_string fun(file: ModFsFile, str: string): boolean
---- @field public write_line fun(file: ModFsFile, str: string): boolean
---- @field public seek fun(file: ModFsFile, offset: integer, origin: ModFsFileSeek): boolean
---- @field public rewind fun(file: ModFsFile): boolean
---- @field public is_eof fun(file: ModFsFile): boolean
---- @field public fill fun(file: ModFsFile, byte: integer, length: integer): boolean
---- @field public erase fun(file: ModFsFile, length: integer): boolean
---- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean
---- @field public set_public fun(file: ModFsFile, pub: boolean): boolean
---- @field public set_compression fun(file: ModFsFile, level: integer): boolean
+--- @field public read_bool fun(file: ModFsFile): boolean, ModFsErrorCode
+--- @field public read_integer fun(file: ModFsFile, intType: ModFsFileIntType): integer, ModFsErrorCode
+--- @field public read_number fun(file: ModFsFile, floatType: ModFsFileFloatType): number, ModFsErrorCode
+--- @field public read_bytes fun(file: ModFsFile, length: integer): string, ModFsErrorCode
+--- @field public read_string fun(file: ModFsFile): string, ModFsErrorCode
+--- @field public read_line fun(file: ModFsFile): string, ModFsErrorCode
+--- @field public write_bool fun(file: ModFsFile, value: boolean): boolean, ModFsErrorCode
+--- @field public write_integer fun(file: ModFsFile, value: integer, intType: ModFsFileIntType): boolean, ModFsErrorCode
+--- @field public write_number fun(file: ModFsFile, value: number, floatType: ModFsFileFloatType): boolean, ModFsErrorCode
+--- @field public write_bytes fun(file: ModFsFile, bytestring: string): boolean, ModFsErrorCode
+--- @field public write_string fun(file: ModFsFile, str: string): boolean, ModFsErrorCode
+--- @field public write_line fun(file: ModFsFile, str: string): boolean, ModFsErrorCode
+--- @field public seek fun(file: ModFsFile, offset: integer, origin: ModFsFileSeek): boolean, ModFsErrorCode
+--- @field public rewind fun(file: ModFsFile): boolean, ModFsErrorCode
+--- @field public is_eof fun(file: ModFsFile): boolean, ModFsErrorCode
+--- @field public fill fun(file: ModFsFile, byte: integer, length: integer): boolean, ModFsErrorCode
+--- @field public erase fun(file: ModFsFile, length: integer): boolean, ModFsErrorCode
+--- @field public set_text_mode fun(file: ModFsFile, text: boolean): boolean, ModFsErrorCode
+--- @field public set_public fun(file: ModFsFile, pub: boolean): boolean, ModFsErrorCode
+--- @field public set_compression fun(file: ModFsFile, level: integer): boolean, ModFsErrorCode
 
 --- @class NametagsSettings
 --- @field public showHealth boolean

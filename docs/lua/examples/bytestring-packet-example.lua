@@ -27,12 +27,12 @@ function send_example_1(byte_param, short_param, long_param, float_param, double
 
     network_send_bytestring(true, bytestring)
 
-    djui_chat_message_create('Sent bytestring packet example 1:')
-    djui_chat_message_create('    byte_param:   ' .. byte_param)
-    djui_chat_message_create('    short_param:  ' .. short_param)
-    djui_chat_message_create('    long_param:   ' .. long_param)
-    djui_chat_message_create('    float_param:  ' .. float_param)
-    djui_chat_message_create('    double_param: ' .. double_param)
+    command_message_create('Sent bytestring packet example 1:')
+    command_message_create('    byte_param:   ' .. byte_param)
+    command_message_create('    short_param:  ' .. short_param)
+    command_message_create('    long_param:   ' .. long_param)
+    command_message_create('    float_param:  ' .. float_param)
+    command_message_create('    double_param: ' .. double_param)
 end
 
 function on_packet_bytestring_receive_example_1(bytestring)
@@ -55,11 +55,17 @@ function on_packet_bytestring_receive_example_1(bytestring)
     ---------------------------------------
 
     djui_chat_message_create('Received bytestring packet example 1:')
+    log_to_console('Received bytestring packet example 1:')
     djui_chat_message_create('    byte_param:   ' .. byte_param)
+    log_to_console('    byte_param:   ' .. byte_param)
     djui_chat_message_create('    short_param:  ' .. short_param)
+    log_to_console('    short_param:  ' .. short_param)
     djui_chat_message_create('    long_param:   ' .. long_param)
+    log_to_console('    long_param:   ' .. long_param)
     djui_chat_message_create('    float_param:  ' .. float_param)
+    log_to_console('    float_param:  ' .. float_param)
     djui_chat_message_create('    double_param: ' .. double_param)
+    log_to_console('    double_param: ' .. double_param)
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -76,9 +82,9 @@ function send_example_2(long_param, string_param)
 
     network_send_bytestring(true, bytestring)
 
-    djui_chat_message_create('Sent bytestring packet example 2:')
-    djui_chat_message_create('    byte_param:   ' .. long_param)
-    djui_chat_message_create('    string_param: ' .. string_param)
+    command_message_create('Sent bytestring packet example 2:')
+    command_message_create('    byte_param:   ' .. long_param)
+    command_message_create('    string_param: ' .. string_param)
 end
 
 function on_packet_bytestring_receive_example_2(bytestring)
@@ -98,8 +104,11 @@ function on_packet_bytestring_receive_example_2(bytestring)
     ---------------------------------------
 
     djui_chat_message_create('Received bytestring packet example 2:')
+    log_to_console('Received bytestring packet example 2:')
     djui_chat_message_create('    long_param:   ' .. long_param)
+    log_to_console('    long_param:   ' .. long_param)
     djui_chat_message_create('    string_param: ' .. string_param)
+    log_to_console('    string_param: ' .. string_param)
 end
 
 ---------------------------------------------------------------------------------------------------
