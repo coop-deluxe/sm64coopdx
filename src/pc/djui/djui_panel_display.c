@@ -79,7 +79,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
                 "DirectX 11",
 #endif
 #if !defined(OSX_BUILD)
-                "Vulkan",
+                "[EXPERIMENTAL] Vulkan",
 #endif
             };
             djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GFX_WINDOW_BACKEND_MAX, &configGraphicsBackend, djui_panel_display_update_restart_text);
