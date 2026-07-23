@@ -49,6 +49,7 @@ struct Mod {
     bool showedScriptWarning;
     size_t size;
     u16 customBehaviorIndex;
+    struct GrowingArray *customObjectFields;
 };
 
 size_t mod_get_lua_size(struct Mod* mod);

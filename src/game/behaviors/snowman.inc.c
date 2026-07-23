@@ -100,7 +100,7 @@ void snowmans_bottom_act_2(void) {
 
         o->parentObj->oAction = 2;
         o->parentObj->oVelY = 100.0f;
-        cur_obj_play_sound_2(SOUND_OBJ_SNOWMAN_BOUNCE);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNOWMAN_BOUNCE);
     }
 
     if (o->oTimer == 200) {
@@ -151,13 +151,13 @@ void bhv_snowmans_bottom_loop(void) {
         case 1:
             snowmans_bottom_act_1();
             adjust_rolling_face_pitch(o->oSnowmansBottomUnkF4);
-            cur_obj_play_sound_1(SOUND_ENV_UNKNOWN2);
+            cur_obj_play_sound_if_visible(SOUND_ENV_UNKNOWN2);
             break;
 
         case 2:
             snowmans_bottom_act_2();
             adjust_rolling_face_pitch(o->oSnowmansBottomUnkF4);
-            cur_obj_play_sound_1(SOUND_ENV_UNKNOWN2);
+            cur_obj_play_sound_if_visible(SOUND_ENV_UNKNOWN2);
             break;
 
         case 3:
@@ -233,7 +233,7 @@ void bhv_snowmans_head_loop(void) {
             if (o->oPosY < -994.0f) {
                 o->oPosY = -994.0f;
                 o->oAction = 4;
-                cur_obj_play_sound_2(SOUND_OBJ_SNOWMAN_EXPLODE);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNOWMAN_EXPLODE);
                 play_puzzle_jingle();
             }
             break;

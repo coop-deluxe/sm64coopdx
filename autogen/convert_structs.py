@@ -1,42 +1,21 @@
-import os
 import re
 import sys
 from extract_structs import *
 from extract_object_fields import *
 from common import *
 from vec_types import *
-
-in_files = [
-    "include/types.h",
-    "src/game/area.h",
-    "src/game/camera.h",
-    "src/game/characters.h",
-    "src/engine/surface_collision.h",
-    "src/pc/network/network_player.h",
-    "src/pc/djui/djui_hud_utils.h",
-    "src/pc/djui/djui_theme.h",
-    "src/game/object_helpers.h",
-    "src/game/mario_step.h",
-    "src/game/ingame_menu.h",
-    "src/pc/lua/utils/smlua_anim_utils.h",
-    "src/pc/lua/utils/smlua_misc_utils.h",
-    "src/pc/lua/utils/smlua_camera_utils.h",
-    "src/pc/lua/utils/smlua_collision_utils.h",
-    "src/pc/lua/utils/smlua_level_utils.h",
-    "src/game/spawn_sound.h",
-    "src/pc/network/network.h",
-    "src/game/hardcoded.h",
-    "src/pc/mods/mod.h",
-    "src/pc/mods/mod_fs.h",
-    "src/pc/lua/utils/smlua_audio_utils.h",
-    "src/game/paintings.h",
-    "src/pc/djui/djui_types.h",
-    "src/game/level_update.h",
-    "src/game/first_person_cam.h",
-    "src/game/player_palette.h",
-    "src/engine/graph_node.h",
-    "include/PR/gbi.h",
-]
+from exposed_lists import \
+    structs_files, \
+    structs_whitelist, \
+    structs_blacklist, \
+    structs_excluded, \
+    structs_fields_whitelist, \
+    structs_fields_blacklist, \
+    structs_fields_hidden, \
+    structs_fields_version_excludes, \
+    structs_fields_types, \
+    structs_fields_mutable, \
+    structs_fields_immutable
 
 out_filename_c = 'src/pc/lua/smlua_cobject_autogen.c'
 out_filename_h = 'src/pc/lua/smlua_cobject_autogen.h'
@@ -73,97 +52,7 @@ struct LuaObjectField* smlua_get_object_field_autogen(u16 lot, const char* key);
 #endif
 """
 
-override_field_types = {
-    "Surface": { "normal": "Vec3f" },
-    "Object": { "oAnimations": "ObjectAnimPointer*" },
-}
-
-override_field_mutable = {
-    "NetworkPlayer": [
-        "overrideModelIndex",
-        "overridePalette",
-        "overridePaletteIndex",
-    ],
-}
-
-override_field_invisible = {
-    "Mod": [ "files", "showedScriptWarning" ],
-    "Camera": [ "paletteEditorCapState" ],
-    "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
-    "GraphNode": [ "_guard1", "_guard2", "padding" ],
-    "GraphNodeRoot": ["unk15", "views"],
-    "GraphNodeMasterList": [ "listHeads", "listTails" ],
-    "FnGraphNode": [ "luaTokenIndex" ],
-    "Object": [ "firstSurface" ],
-    "Animation": [ "unusedBoneCount" ],
-    "ModAudio": [ "alive", "sound", "decoder", "buffer", "bufferSize", "sampleCopiesTail", "volChannel" ],
-    "Painting": [ "normalDisplayList", "textureMaps", "rippleDisplayList", "ripples" ],
-    "DialogEntry": [ "str" ],
-    "ModFsFile": [ "data", "capacity" ],
-    "ModFs": [ "files" ],
-}
-
-override_field_deprecated = {
-    "NetworkPlayer": [ "paletteIndex", "overridePaletteIndex", "overridePaletteIndexLp" ],
-    "ModAudio": [ "file", "relativePath" ], # compatibility band-aid
-}
-
-override_field_immutable = {
-    "MarioState": [ "playerIndex", "controller", "marioObj", "marioBodyState", "statusForCamera", "area", "dialogId" ],
-    "MarioAnimation": [ "animDmaTable" ],
-    "ObjectNode": [ "next", "prev" ],
-    "Character": [ "*" ],
-    "NetworkPlayer": [ "*" ],
-    "TextureInfo": [ "*" ],
-    "Object": ["oSyncID", "coopFlags", "oChainChompSegments", "oWigglerSegments", "oHauntedChairUnk100", "oTTCTreadmillBigSurface", "oTTCTreadmillSmallSurface", "bhvStackIndex", "respawnInfoType", "numSurfaces", "bhvStack" ],
-    "Surface": [ "poolType", "socId" ],
-    "GlobalObjectAnimations": [ "*"],
-    "SpawnParticlesInfo": [ "model" ],
-    "WaterDropletParams": [ "model" ],
-    "MarioBodyState": [ "updateTorsoTime", "updateHeadPosTime", "animPartsPos", "animPartsRot", "currAnimPart" ],
-    "Area": [ "localAreaTimer", "nextSyncID", "objectSpawnInfos", "paintingWarpNodes", "warpNodes" ],
-    "Mod": [ "*" ],
-    "ModFile": [ "*" ],
-    "Painting": [ "id", "imageCount", "textureType", "textureWidth", "textureHeight" ],
-    "SpawnInfo": [ "syncID", "next", "unk18" ],
-    "CustomLevelInfo": [ "next" ],
-    "GraphNode": [ "children", "next", "parent", "prev", "type" ],
-    "GraphNodeBackground": [ "prevCameraTimestamp", "unused" ],
-    "GraphNodeCamera": [ "matrixPtrPrev", "prevTimestamp" ],
-    "GraphNodeHeldObject": [ "prevShadowPosTimestamp" ],
-    "GraphNodeObject": [ "angle", "animInfo", "cameraToObject", "node", "pos", "prevAngle", "prevPos", "prevScale", "prevScaleTimestamp", "prevShadowPos", "prevShadowPosTimestamp", "prevThrowMatrix", "prevThrowMatrixTimestamp", "prevTimestamp", "scale", "shadowPos", "sharedChild", "skipInterpolationTimestamp", "throwMatrixPrev", "unk4C", ],
-    "GraphNodeObjectParent": [ "sharedChild" ],
-    "GraphNodePerspective": [ "unused" ],
-    "GraphNodeSwitchCase": [ "fnNode", "unused" ],
-    "GraphNodeRoot": ["node", "areaIndex", "numViews"],
-    "ObjectWarpNode": [ "next" ],
-    "Animation": [ "*" ],
-    "AnimationTable": [ "*" ],
-    "Controller": [ "controllerData", "statusData" ],
-    "FirstPersonCamera": [ "enabled" ],
-    "ModAudio": [ "isStream", "loaded" ],
-    "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
-    "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text", "replaced"],
-    "ModFsFile": [ "*" ],
-    "ModFs": [ "*" ],
-    "StaticObjectCollision": [ "*" ],
-}
-
-override_field_version_excludes = {
-    "oCameraLakituMusicPlayed": "VERSION_JP",
-    "oCoinUnk1B0": "VERSION_JP",
-}
-
-override_allowed_structs = {
-    "src/pc/network/network.h": [ "ServerSettings", "NametagsSettings" ],
-    "src/pc/djui/djui_types.h": [ "DjuiColor" ],
-    "src/game/level_update.h": [ "HudDisplay" ],
-    "src/game/player_palette.h": [ "PlayerPalette" ],
-    "src/game/ingame_menu.h" : [ "DialogEntry" ],
-    "include/PR/gbi.h": [ "Gfx", "Vtx" ],
-}
-
-sLuaManuallyDefinedStructs = [{
+lua_manually_defined_structs = [{
     'path': 'n/a',
     'structs': [
         *['struct %s { %s }' % (
@@ -315,6 +204,13 @@ def parse_struct(struct_str, sortFields = False):
     for field_str in field_strs:
         if len(field_str.strip()) == 0:
             continue
+        if ':' in field_str:
+            continue
+
+        is_c_array = False
+        if cobject_c_array_identifier in field_str:
+            field_str = field_str.replace(cobject_c_array_identifier, '').strip()
+            is_c_array = True
 
         if '*' in field_str:
             field_type, field_id = field_str.strip().rsplit('*', 1)
@@ -334,6 +230,7 @@ def parse_struct(struct_str, sortFields = False):
         field['type'] = field_type.strip()
         field['identifier'] = field_id.strip()
         field['field_str'] = field_str
+        field['is_c_array'] = is_c_array
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
@@ -367,10 +264,8 @@ def parse_structs(extracted, sortFields = False):
     for e in extracted:
         for struct in e['structs']:
             parsed = parse_struct(struct, sortFields)
-            if e['path'] in override_allowed_structs:
-                if parsed['identifier'] not in override_allowed_structs[e['path']]:
-                    continue
-            structs.append(parsed)
+            if allowed_identifier(structs_whitelist, structs_blacklist, e['path'], parsed['identifier']):
+                structs.append(parsed)
     return structs
 
 ############################################################################
@@ -404,12 +299,12 @@ def output_fuzz_struct(struct):
 
     s_out += '    local funcs = {\n'
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
 
         if '(' in fid or '[' in fid or ']' in fid:
             continue
@@ -498,8 +393,8 @@ def get_struct_field_info(struct, field):
     ftype = field['type']
     size = 1
 
-    if sid in override_field_types and fid in override_field_types[sid]:
-        ftype = override_field_types[sid][fid]
+    if sid in structs_fields_types and fid in structs_fields_types[sid]:
+        ftype = structs_fields_types[sid][fid]
 
     lvt = translate_type_to_lvt(ftype, allowArrays=True)
     lot = translate_type_to_lot(ftype, allowArrays=True)
@@ -510,12 +405,12 @@ def get_struct_field_info(struct, field):
     if field.get('get') and field['set'] == 'NULL':
         fimmutable = 'true'
 
-    if sid in override_field_immutable:
-        if fid in override_field_immutable[sid] or '*' in override_field_immutable[sid]:
+    if sid in structs_fields_immutable:
+        if fid in structs_fields_immutable[sid] or '*' in structs_fields_immutable[sid]:
             fimmutable = 'true'
 
-    if sid in override_field_mutable:
-        if fid in override_field_mutable[sid] or '*' in override_field_mutable[sid]:
+    if sid in structs_fields_mutable:
+        if fid in structs_fields_mutable[sid] or '*' in structs_fields_mutable[sid]:
             fimmutable = 'false'
 
     if not ('char' in ftype and '[' in ftype and 'unsigned' not in ftype):
@@ -531,7 +426,7 @@ def get_struct_field_info(struct, field):
             else:
                 lvt, lot = 'LVT_???', "LOT_???" # array size not provided, so not supported
 
-    return fid, ftype, fimmutable, lvt, lot, size
+    return fid, ftype, fimmutable, lvt, lot, size, field.get('is_c_array', False)
 
 def build_struct(struct):
     # debug print out lua fuzz functions
@@ -544,14 +439,13 @@ def build_struct(struct):
     field_table = []
     field_functions = []
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
+
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
 
         if re.search(r'\[([^\]]+)\]', ftype):
             ftype = re.sub(r'\[[^\]]*\]', '', ftype).strip()
-
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
 
         name = sid
         if sid in reversed_override_types:
@@ -564,8 +458,8 @@ def build_struct(struct):
         struct_str = "struct " if not struct['typedef'] else ""
         startStr = ''
         endStr = ' },'
-        if fid in override_field_version_excludes:
-            startStr += '#ifndef ' + override_field_version_excludes[fid] + '\n'
+        if fid in structs_fields_version_excludes:
+            startStr += '#ifndef ' + structs_fields_version_excludes[fid] + '\n'
             endStr += '\n#endif'
         startStr += '    { '
         row.append(startStr)
@@ -583,10 +477,13 @@ def build_struct(struct):
             row.append('%s, '       % fimmutable)
             row.append('%s, '       % lot       )
             if size != 1:
-                row.append('%s, '       % size      )
-                row.append('sizeof(%s)' % ftype     )
+                row.append('%s, '         % size )
+                row.append('sizeof(%s), ' % ftype)
+                if is_c_array:
+                    row.append('true')
+                else: row[-1] = row[-1][:-2]
             else: row[-1] = row[-1][:-2]
-        row.extend(['\\'] * (8 - len(row)))
+        row.extend(['\\'] * (9 - len(row)))
         row.append(endStr)
         if field.get('function'):
             field_functions.append(field['function'])
@@ -628,7 +525,7 @@ def build_structs(structs):
 
     s = ''
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         oldFields = struct['fields']
         struct['fields'] = sorted(struct['fields'], key=lambda d: d['identifier'])
@@ -648,18 +545,18 @@ def build_body(parsed):
 
     lot_names = '\nconst char *sLuaLotNames[] = {\n'
     for type_name in VEC_TYPES.keys():
-        lot_names += f'\t[LOT_{type_name.upper()}] = "{type_name}",\n'
+        lot_names += f'    [LOT_{type_name.upper()}] = "{type_name}",\n'
 
-    lot_names += f'\t[LOT_ARRAY] = "Array",\n'
-    lot_names += f'\t[LOT_POINTER] = "Pointer",\n'
-    lot_names += f'\t[LOT_MAX] = "Max",\n'
+    lot_names += '    [LOT_ARRAY] = "Array",\n'
+    lot_names += '    [LOT_POINTER] = "Pointer",\n'
+    lot_names += '    [LOT_MAX] = "Max",\n'
     lot_names += '\n'
 
     for struct in parsed:
         sid = struct['identifier']
-        if sid in exclude_structs:
+        if sid in structs_excluded:
             continue
-        lot_names += f'\t[LOT_{sid.upper()}] = "{sid}",\n'
+        lot_names += f'    [LOT_{sid.upper()}] = "{sid}",\n'
     lot_names += '};\n'
 
     return built + obj_table_built + lot_names
@@ -691,7 +588,7 @@ def build_lot_enum():
 
 def build_includes():
     s = '#include "smlua.h"\n'
-    for in_file in in_files:
+    for in_file in structs_files:
         s += '#include "%s"\n' % in_file
     return s
 
@@ -717,7 +614,7 @@ def doc_struct_index(structs):
     s = '# Supported Structs\n'
     for struct in structs:
         sid = struct['identifier']
-        if sid in exclude_structs:
+        if sid in structs_excluded:
             continue
         s += '- [%s](#%s)\n' % (sid, sid)
         global total_structs
@@ -726,16 +623,14 @@ def doc_struct_index(structs):
     return s
 
 def doc_struct_field(struct, field):
-    fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
-
+    fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
     sid = struct['identifier']
-    if sid in override_field_invisible:
-        if fid in override_field_invisible[sid]:
-            return '', False
 
-    if sid in override_field_deprecated:
-        if fid in override_field_deprecated[sid]:
-            return '', False
+    if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+        return '', False
+
+    if not allowed_identifier(None, structs_fields_hidden, sid, fid):
+        return '', False
 
     if '???' in lvt or '???' in lot:
         return '', False
@@ -747,10 +642,14 @@ def doc_struct_field(struct, field):
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
     if ftype == cobject_property_identifier:
-        ftype = get_function_signature(field['get'])
-        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
+        ftype = get_return_signature(field['get'])
 
-    restrictions = ('', 'read-only')[fimmutable == 'true']
+    restrictions = []
+
+    if fimmutable == 'true': restrictions.append('read-only')
+    if is_c_array: restrictions.append('starts at index 0')
+
+    restrictions = ", ".join(restrictions)
 
     global total_fields
     total_fields += 1
@@ -811,13 +710,13 @@ def doc_struct(struct):
     return s
 
 def doc_structs(structs):
-    structs.extend(parse_structs(sLuaManuallyDefinedStructs, False)) # Don't sort fields for vec types in the documentation
+    structs.extend(parse_structs(lua_manually_defined_structs, False)) # Don't sort fields for vec types in the documentation
     structs = sorted(structs, key=lambda d: d['identifier'])
 
     s = '## [:rewind: Lua Reference](lua.md)\n\n'
     s += doc_struct_index(structs)
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         s += doc_struct(struct) + '\n'
 
@@ -836,23 +735,29 @@ def get_function_signature(function):
         with open('autogen/lua_definitions/functions.lua') as f:
             lines = f.readlines()
         function_params = []
-        function_return = None
+        function_returns = []
         for line in lines:
             if line.startswith('--- @param'):
                 function_params.append(line.split()[2:4])
             elif line.startswith('--- @return'):
-                function_return = line.split()[2]
+                function_returns.append(line.split()[2])
             elif line.startswith('function'):
                 sig = 'fun('
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
-                if function_return:
-                    sig += ': %s' % (function_return)
+                if function_returns:
+                    sig += ': %s' % (", ".join(function_returns))
                 function_name = line.replace('(', ' ').split()[1]
-                function_signatures[function_name] = sig
+                if function_signatures.get(function_name) is None:
+                    function_signatures[function_name] = []
+                function_signatures[function_name].append(sig)
                 function_params.clear()
-                function_return = None
-    return function_signatures.get(function, 'function')
+                function_returns = []
+
+    return function_signatures.get(function, ['function'])
+
+def get_return_signature(function):
+    return f"{'): '.join(get_function_signature(function)[0].split('): ')[1:])}"
 
 def def_struct(struct):
     sid = struct['identifier']
@@ -864,15 +769,13 @@ def def_struct(struct):
     s = '\n--- @class %s\n' % stype
 
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
 
-        if sid in override_field_invisible:
-            if fid in override_field_invisible[sid]:
-                continue
+        if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
+            continue
 
-        if sid in override_field_deprecated:
-            if fid in override_field_deprecated[sid]:
-                continue
+        if not allowed_identifier(None, structs_fields_hidden, sid, fid):
+            continue
 
         if '???' in lvt or '???' in lot:
             continue
@@ -883,15 +786,15 @@ def def_struct(struct):
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
         elif ftype == cobject_property_identifier:
-            ftype = get_function_signature(field['get'])
-            ftype = f"{ftype[ftype.rfind(':')+2:]}"
+            ftype = [get_return_signature(field['get'])]
         else:
-            ftype = translate_to_def(ftype)
+            ftype = [translate_to_def(ftype)]
 
-        if ftype.startswith('Pointer_') and ftype not in def_pointers:
-            def_pointers.append(ftype)
+        if ftype[0].startswith('Pointer_') and ftype[0] not in def_pointers:
+            def_pointers.append(ftype[0])
 
-        s += '--- @field public %s %s\n' % (fid, ftype)
+        for field_type in ftype:
+            s += '--- @field public %s %s\n' % (fid, field_type)
 
     return s
 
@@ -899,7 +802,7 @@ def def_structs(structs):
     s = '-- AUTOGENERATED FOR CODE EDITORS --\n'
 
     for struct in structs:
-        if struct['identifier'] in exclude_structs:
+        if struct['identifier'] in structs_excluded:
             continue
         s += def_struct(struct)
 
@@ -914,7 +817,7 @@ def def_structs(structs):
 
 def build_files():
     extracted = []
-    for in_file in in_files:
+    for in_file in structs_files:
         path = get_path(in_file)
         extracted.append({
             'path': in_file,

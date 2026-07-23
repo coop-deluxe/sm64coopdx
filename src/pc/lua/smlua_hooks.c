@@ -15,7 +15,7 @@
 #include "pc/network/network.h"
 #include "pc/network/network_player.h"
 #include "pc/network/socket/socket.h"
-#include "pc/chat_commands.h"
+#include "pc/commands.h"
 #include "pc/pc_main.h"
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/djui/djui_panel.h"
@@ -853,15 +853,18 @@ int smlua_hook_behavior(lua_State *L) {
 
     // Can't hook Mario
     if (id == id_bhvMario) {
-        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE.");
+        LOG_LUA_LINE("Hook behavior: cannot hook Mario's behavior. Use HOOK_MARIO_UPDATE and HOOK_BEFORE_MARIO_UPDATE instead");
         return 0;
     }
 
     // Get object list
-    enum ObjectList objectList = (enum ObjectList) (u8) smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess || objectList >= NUM_OBJ_LISTS) {
-        LOG_LUA_LINE("Hook behavior: tried use invalid object list: %d, %u", objectList, gSmLuaConvertSuccess);
-        return 0;
+    enum ObjectList objectList = NUM_OBJ_LISTS;
+    if (lua_type(L, 2) != LUA_TNIL) {
+        objectList = (enum ObjectList) (u8) smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess || objectList >= NUM_OBJ_LISTS) {
+            LOG_LUA_LINE("Hook behavior: tried to use invalid object list: %d", objectList);
+            return 0;
+        }
     }
 
     // Check replace if it's a vanilla behavior hook
@@ -944,6 +947,16 @@ int smlua_hook_behavior(lua_State *L) {
             return 0;
         }
 
+        // Find object list if not provided
+        if (objectList == NUM_OBJ_LISTS) {
+            if (!isVanillaId) {
+                LOG_LUA_LINE("Hook behavior: object list must be provided for non-vanilla behaviors");
+                return 0;
+            }
+
+            objectList = get_object_list_from_behavior(get_vanilla_behavior_from_id(id));
+        }
+
         enum BehaviorId customId = LUA_BEHAVIOR_START + gHookedBehaviors->count;
 
         hooked = smlua_create_hooked_behavior();
@@ -963,7 +976,9 @@ int smlua_hook_behavior(lua_State *L) {
             switch (hooked->type) {
                 case LUA_BEHAVIOR_TYPE_CALLBACKS: {
                     hooked->type = LUA_BEHAVIOR_TYPE_LUA;
-                    hooked->script[0] = (BehaviorScript) BEGIN(objectList); // Override object list
+                    if (objectList != NUM_OBJ_LISTS) {
+                        hooked->script[0] = (BehaviorScript) BEGIN(objectList); // Override object list
+                    }
                 } break;
 
                 case LUA_BEHAVIOR_TYPE_LUA: {
@@ -977,9 +992,11 @@ int smlua_hook_behavior(lua_State *L) {
         }
 
         // Warn user if trying to change the object list
-        enum ObjectList hookedObjectList = get_object_list_from_behavior(hooked->script);
-        if (hookedObjectList != objectList) {
-            LOG_LUA_WARNING("Hook behavior: trying to change the object list of the existing hooked behavior %s: %d (should be %d)", (const char *) hooked->bhvNames->buffer[hooked->bhvNames->count - 1], objectList, hookedObjectList);
+        if (objectList != NUM_OBJ_LISTS) {
+            enum ObjectList hookedObjectList = get_object_list_from_behavior(hooked->script);
+            if (hookedObjectList != objectList) {
+                LOG_LUA_WARNING("Hook behavior: trying to change the object list of the existing hooked behavior %s: %d (should be %d)", (const char *) hooked->bhvNames->buffer[hooked->bhvNames->count - 1], objectList, hookedObjectList);
+            }
         }
     }
 
@@ -987,25 +1004,39 @@ int smlua_hook_behavior(lua_State *L) {
     // - <ModName> is the mod name in CamelCase format, alphanumeric chars only
     // - <Index> is in 3-digit numeric format (from 001 to 999, no longer applies for index greater than 1000)
     // For example, the 4th unnamed behavior of the mod "my-great_MOD" will be named "bhvMyGreatMODCustom004"
+    // If it's a vanilla behavior, use the vanilla name + "Custom"
     if (!bhvName && hooked->bhvNames->count == 0) {
-        static char sGenericBhvName[MOD_NAME_MAX_LENGTH + 16];
-        s32 i = 3;
-        snprintf(sGenericBhvName, 4, "bhv");
-        for (char caps = TRUE, *c = gLuaLoadingMod->name; *c && i < MOD_NAME_MAX_LENGTH + 3; ++c) {
-            if ('0' <= *c && *c <= '9') {
-                sGenericBhvName[i++] = *c;
-                caps = TRUE;
-            } else if ('A' <= *c && *c <= 'Z') {
-                sGenericBhvName[i++] = *c;
-                caps = FALSE;
-            } else if ('a' <= *c && *c <= 'z') {
-                sGenericBhvName[i++] = *c + (caps ? 'A' - 'a' : 0);
-                caps = FALSE;
-            } else {
-                caps = TRUE;
+        static char sGenericBhvName[MOD_NAME_SIZE + 16];
+
+        if (isVanillaId) {
+            snprintf(sGenericBhvName, sizeof(sGenericBhvName), "%sCustom", get_behavior_name_from_id(id));
+        } else {
+
+            // Remove color codes
+            char uncoloredName[MOD_NAME_SIZE];
+            snprintf(uncoloredName, sizeof(uncoloredName), "%s", gLuaLoadingMod->name);
+            djui_text_remove_colors(uncoloredName);
+
+            // Generate name from a reduced char set
+            s32 i = 3;
+            snprintf(sGenericBhvName, 4, "bhv");
+            for (char caps = TRUE, *c = uncoloredName; *c && i < MOD_NAME_SIZE + 3; ++c) {
+                if ('0' <= *c && *c <= '9') {
+                    sGenericBhvName[i++] = *c;
+                    caps = TRUE;
+                } else if ('A' <= *c && *c <= 'Z') {
+                    sGenericBhvName[i++] = *c;
+                    caps = FALSE;
+                } else if ('a' <= *c && *c <= 'z') {
+                    sGenericBhvName[i++] = *c + (caps ? 'A' - 'a' : 0);
+                    caps = FALSE;
+                } else {
+                    caps = TRUE;
+                }
             }
+            snprintf(sGenericBhvName + i, 12, "Custom%03u", (u32) (gLuaLoadingMod->customBehaviorIndex++) + 1);
         }
-        snprintf(sGenericBhvName + i, 12, "Custom%03u", (u32) (gLuaLoadingMod->customBehaviorIndex++) + 1);
+
         bhvName = sGenericBhvName;
     }
 
@@ -1086,81 +1117,93 @@ void smlua_call_behavior_hook(struct Object* object) {
  // hooked chat command //
 /////////////////////////
 
-struct LuaHookedChatCommand {
+struct LuaHookedCommand {
     char* command;
     char* description;
     int reference;
     struct Mod* mod;
     struct ModFile* modFile;
+    bool isConsoleCommand;
 };
 
 #define MAX_HOOKED_CHAT_COMMANDS 512
 
-static struct LuaHookedChatCommand sHookedChatCommands[MAX_HOOKED_CHAT_COMMANDS] = { 0 };
+static struct LuaHookedCommand sHookedChatCommands[MAX_HOOKED_CHAT_COMMANDS] = { 0 };
 static int sHookedChatCommandsCount = 0;
 
-int smlua_hook_chat_command(lua_State* L) {
+int smlua_hook_command_internal(lua_State* L, bool isConsoleCommand) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 3)) { return 0; }
 
     if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("hook_chat_command() can only be called on load.");
+        LOG_LUA_LINE("%s can only be called on load.", isConsoleCommand ? "hook_console_command()" : "hook_chat_command()");
         return 0;
     }
 
     if (sHookedChatCommandsCount >= MAX_HOOKED_CHAT_COMMANDS) {
-        LOG_LUA_LINE("Hooked chat command exceeded maximum references!");
+        LOG_LUA_LINE("Hooked command exceeded maximum references!");
         return 0;
     }
 
     const char* command = smlua_to_string(L, 1);
     if (command == NULL || strlen(command) == 0 || !gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Hook chat command: tried to hook invalid command");
+        LOG_LUA_LINE("Hook command: tried to hook invalid command");
         return 0;
     }
 
     const char* description = smlua_to_string(L, 2);
     if (description == NULL || strlen(description) == 0 || !gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Hook chat command: tried to hook invalid description");
+        LOG_LUA_LINE("Hook command: tried to hook invalid description");
         return 0;
     }
 
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     if (ref == -1) {
-        LOG_LUA_LINE("Hook chat command: tried to hook undefined function '%s'", command);
+        LOG_LUA_LINE("Hook command: tried to hook undefined function '%s'", command);
         return 0;
     }
 
-    struct LuaHookedChatCommand* hooked = &sHookedChatCommands[sHookedChatCommandsCount];
+    struct LuaHookedCommand* hooked = &sHookedChatCommands[sHookedChatCommandsCount];
     hooked->command = strdup(command);
     hooked->description = strdup(description);
     hooked->reference = ref;
     hooked->mod = gLuaActiveMod;
     hooked->modFile = gLuaActiveModFile;
+    hooked->isConsoleCommand = isConsoleCommand;
 
     sHookedChatCommandsCount++;
     return 1;
 }
 
-int smlua_update_chat_command_description(lua_State* L) {
+int smlua_hook_chat_command(lua_State* L) {
+    return smlua_hook_command_internal(L, false);
+}
+
+int smlua_hook_console_command(lua_State* L) {
+    return smlua_hook_command_internal(L, true);
+}
+
+int smlua_update_command_description(lua_State* L, bool onConsole) {
+    const char *funcName = onConsole ? "update_console_command_description"  : "update_chat_command_description";
+
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
     const char* command = smlua_to_string(L, 1);
     if (command == NULL || strlen(command) == 0 || !gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Update chat command: tried to update invalid command");
+        LOG_LUA_LINE("%s: tried to update invalid command", funcName);
         return 0;
     }
 
     const char* description = smlua_to_string(L, 2);
     if (description == NULL || strlen(description) == 0 || !gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Update chat command: tried to update invalid description");
+        LOG_LUA_LINE("%s: tried to update invalid description", funcName);
         return 0;
     }
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
-        if (!strcmp(hook->command, command)) {
+        struct LuaHookedCommand *hook = &sHookedChatCommands[i];
+        if (hook->isConsoleCommand == onConsole && !strcmp(hook->command, command)) {
             if (hook->description) {
                 free(hook->description);
             }
@@ -1169,23 +1212,31 @@ int smlua_update_chat_command_description(lua_State* L) {
         }
     }
 
-    LOG_LUA_LINE("Update chat command: could not find command to update");
+    LOG_LUA_LINE("%s: could not find command to update", funcName);
     return 0;
 }
 
-bool smlua_call_chat_command_hook(char* command) {
+int smlua_update_chat_command_description(lua_State* L) {
+    return smlua_update_command_description(L, false);
+}
+
+int smlua_update_console_command_description(lua_State* L) {
+    return smlua_update_command_description(L, true);
+}
+
+bool smlua_call_chat_command_hook(char* command, bool onConsole) {
     lua_State* L = gLuaState;
     if (L == NULL) { return false; }
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hook = &sHookedChatCommands[i];
+        // compare strings
         size_t commandLength = strlen(hook->command);
-        for (size_t j = 0; j < commandLength; j++) {
-            if (hook->command[j] != command[j + 1]) {
-                goto NEXT_HOOK;
-            }
-        }
+        if (strncmp(hook->command, command, commandLength) != 0) { goto NEXT_HOOK; }
 
-        char* params = &command[commandLength + 1];
+        // make sure we aren't running a console command if we are in chat
+        if (hook->isConsoleCommand && !onConsole) { goto NEXT_HOOK; }
+
+        char* params = &command[commandLength];
         if (*params != '\0' && *params != ' ') {
             goto NEXT_HOOK;
         }
@@ -1222,12 +1273,13 @@ NEXT_HOOK:;
     return false;
 }
 
-void smlua_display_chat_commands(void) {
+void smlua_display_chat_commands(bool isConsole) {
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hook = &sHookedChatCommands[i];
+        if (!isConsole && hook->isConsoleCommand) continue;
         char msg[256] = { 0 };
         snprintf(msg, 256, "/%s %s", hook->command, hook->description);
-        djui_chat_message_create(msg);
+        command_message_create(msg, CONSOLE_MESSAGE_INFO);
     }
 }
 
@@ -1284,13 +1336,14 @@ char** smlua_get_chat_player_list(void) {
     return sortedPlayers;
 }
 
+// this needs a rewrite, actually all these funcs needs a rewrite, actually, the whole autocomplete system needs a rewrite
 char** smlua_get_chat_maincommands_list(void) {
 #if defined(DEVELOPMENT)
     s32 defaultCmdsCount = 11;
-    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", "warp", "lua", "luaf", NULL};
+    static char* defaultCmds[] = { "players", "kick", "ban", "permban", "moderator", "help", "?", "warp", "lua", "luaf", NULL };
 #else
     s32 defaultCmdsCount = 8;
-    static char* defaultCmds[] = {"players", "kick", "ban", "permban", "moderator", "help", "?", NULL};
+    static char* defaultCmds[] = { "players", "kick", "ban", "permban", "moderator", "help", "?", NULL };
 #endif
     s32 defaultCmdsCountNew = 0;
     for (s32 i = 0; i < defaultCmdsCount; i++) {
@@ -1302,9 +1355,13 @@ char** smlua_get_chat_maincommands_list(void) {
             break;
         }
     }
-    char** commands = (char**) malloc((sHookedChatCommandsCount + defaultCmdsCountNew + 1) * sizeof(char*));
+    char** commands = malloc((sHookedChatCommandsCount + defaultCmdsCountNew + 1) * sizeof(char*));
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hook = &sHookedChatCommands[i];
+        if (hook->isConsoleCommand) {
+            commands[i] = NULL;
+            continue;
+        }
         commands[i] = strdup(hook->command);
     }
     for (s32 i = 0; i < defaultCmdsCount; i++) {
@@ -1328,7 +1385,7 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
     }
 
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hook = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hook = &sHookedChatCommands[i];
         if (strcmp(hook->command, maincommand) == 0) {
             char* noColorsDesc = djui_text_get_uncolored_string(NULL, strlen(hook->description) + 1, hook->description);
             char* startSubcommands = strstr(noColorsDesc, "[");
@@ -1870,7 +1927,7 @@ void smlua_hook_replace_function_references(lua_State* L, int oldReference, int 
     }
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hooked = &sHookedChatCommands[i];
         smlua_hook_replace_function_reference(L, &hooked->reference, oldReference, newReference);
     }
 
@@ -1910,7 +1967,7 @@ void smlua_clear_hooks(void) {
     memset(gLuaMarioActionIndex, 0, sizeof(gLuaMarioActionIndex));
 
     for (int i = 0; i < sHookedChatCommandsCount; i++) {
-        struct LuaHookedChatCommand* hooked = &sHookedChatCommands[i];
+        struct LuaHookedCommand* hooked = &sHookedChatCommands[i];
         if (hooked->command != NULL) { free(hooked->command); }
         hooked->command = NULL;
 
@@ -1963,6 +2020,7 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_event", smlua_hook_event);
     smlua_bind_function(L, "hook_mario_action", smlua_hook_mario_action);
     smlua_bind_function(L, "hook_chat_command", smlua_hook_chat_command);
+    smlua_bind_function(L, "hook_console_command", smlua_hook_console_command);
     smlua_bind_function(L, "hook_on_sync_table_change", smlua_hook_on_sync_table_change);
     smlua_bind_function(L, "hook_behavior", smlua_hook_behavior);
     smlua_bind_function(L, "hook_mod_menu_text", smlua_hook_mod_menu_text);
@@ -1971,6 +2029,7 @@ void smlua_bind_hooks(void) {
     smlua_bind_function(L, "hook_mod_menu_slider", smlua_hook_mod_menu_slider);
     smlua_bind_function(L, "hook_mod_menu_inputbox", smlua_hook_mod_menu_inputbox);
     smlua_bind_function(L, "update_chat_command_description", smlua_update_chat_command_description);
+    smlua_bind_function(L, "update_console_command_description", smlua_update_console_command_description);
     smlua_bind_function(L, "update_mod_menu_element_name", smlua_update_mod_menu_element_name);
     smlua_bind_function(L, "update_mod_menu_element_checkbox", smlua_update_mod_menu_element_checkbox);
     smlua_bind_function(L, "update_mod_menu_element_slider", smlua_update_mod_menu_element_slider);

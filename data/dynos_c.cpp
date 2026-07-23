@@ -109,6 +109,24 @@ void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
 
+// -- audio -- //
+
+void dynos_audio_reset_mods() {
+    DynOS_Audio_ResetMods();
+}
+
+bool dynos_audio_override(u8 sequenceId, s32* bankId, void** seqData) {
+    return DynOS_Audio_Override(sequenceId, bankId, seqData);
+}
+
+void dynos_audio_create_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath) {
+    DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, filepath, false);
+}
+
+u8 dynos_audio_alloc_sequence(void) {
+    return DynOS_Audio_AllocSequence();
+}
+
 // -- geos -- //
 
 void dynos_actor_override(struct Object* obj, void** aSharedChild) {
@@ -226,6 +244,10 @@ void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8,
 
 void* dynos_level_get_script(s32 level) {
     return (void *) DynOS_Level_GetScript(level);
+}
+
+const void *dynos_level_get_vanilla_script(s32 level) {
+    return DynOS_Level_GetVanillaScript(level);
 }
 
 s32 dynos_level_get_mod_index(s32 level) {

@@ -65,19 +65,19 @@ Overrides the current room Mario is in. Set to -1 to reset override
 Updates an object's position based on a parent transformation matrix
 
 ### Lua Example
-`obj_update_pos_from_parent_transformation(a0, a1)`
+`obj_update_pos_from_parent_transformation(mtx, obj)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Mat4](structs.md#Mat4) |
-| a1 | [Object](structs.md#Object) |
+| mtx | [Mat4](structs.md#Mat4) |
+| obj | [Object](structs.md#Object) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_update_pos_from_parent_transformation(Mat4 a0, struct Object *a1);`
+`void obj_update_pos_from_parent_transformation(Mat4 mtx, struct Object *obj);`
 
 [:arrow_up_small:](#)
 
@@ -114,20 +114,20 @@ Applies an object's scale to a transformation matrix
 Combines two transformation matrices into a single result matrix
 
 ### Lua Example
-`create_transformation_from_matrices(a0, a1, a2)`
+`create_transformation_from_matrices(dest, src1, src2)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Mat4](structs.md#Mat4) |
-| a1 | [Mat4](structs.md#Mat4) |
-| a2 | [Mat4](structs.md#Mat4) |
+| dest | [Mat4](structs.md#Mat4) |
+| src1 | [Mat4](structs.md#Mat4) |
+| src2 | [Mat4](structs.md#Mat4) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void create_transformation_from_matrices(VEC_OUT Mat4 a0, Mat4 a1, Mat4 a2);`
+`void create_transformation_from_matrices(VEC_OUT Mat4 dest, Mat4 src1, Mat4 src2);`
 
 [:arrow_up_small:](#)
 
@@ -1329,27 +1329,6 @@ Sets the current object's position relative to its parent's facing direction
 
 <br />
 
-## [cur_obj_enable_rendering_2](#cur_obj_enable_rendering_2)
-
-### Description
-Alternative function that enables rendering for the current object
-
-### Lua Example
-`cur_obj_enable_rendering_2()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void cur_obj_enable_rendering_2(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
 
 ### Description
@@ -1896,19 +1875,19 @@ Checks if Mario is performing a dive slide action
 Sets the current object's vertical velocity and initializes an animation
 
 ### Lua Example
-`cur_obj_set_y_vel_and_animation(sp18, sp1C)`
+`cur_obj_set_y_vel_and_animation(velY, animIndex)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `number` |
-| sp1C | `integer` |
+| velY | `number` |
+| animIndex | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_set_y_vel_and_animation(f32 sp18, s32 sp1C);`
+`void cur_obj_set_y_vel_and_animation(f32 velY, s32 animIndex);`
 
 [:arrow_up_small:](#)
 
@@ -1917,22 +1896,22 @@ Sets the current object's vertical velocity and initializes an animation
 ## [cur_obj_unrender_and_reset_state](#cur_obj_unrender_and_reset_state)
 
 ### Description
-Disables rendering, makes intangible, and resets action and animation
+Disables rendering, makes intangible, and resets animation and action
 
 ### Lua Example
-`cur_obj_unrender_and_reset_state(sp18, sp1C)`
+`cur_obj_unrender_and_reset_state(animIndex, action)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `integer` |
-| sp1C | `integer` |
+| animIndex | `integer` |
+| action | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_unrender_and_reset_state(s32 sp18, s32 sp1C);`
+`void cur_obj_unrender_and_reset_state(s32 animIndex, s32 action);`
 
 [:arrow_up_small:](#)
 
@@ -2831,23 +2810,23 @@ Starts a camera event and makes the current object the secondary camera focus
 ## [set_mario_interact_hoot_if_in_range](#set_mario_interact_hoot_if_in_range)
 
 ### Description
-Sets Mario's interact status to hoot-grabbed if Mario is within range
+Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`
 
 ### Lua Example
-`set_mario_interact_hoot_if_in_range(sp0, sp4, sp8)`
+`set_mario_interact_hoot_if_in_range(unused1, unused2, maxDistanceToMario)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp0 | `integer` |
-| sp4 | `integer` |
-| sp8 | `number` |
+| unused1 | `integer` |
+| unused2 | `integer` |
+| maxDistanceToMario | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void set_mario_interact_hoot_if_in_range(UNUSED s32 sp0, UNUSED s32 sp4, f32 sp8);`
+`void set_mario_interact_hoot_if_in_range(UNUSED s32 unused1, UNUSED s32 unused2, f32 maxDistanceToMario);`
 
 [:arrow_up_small:](#)
 
@@ -3024,14 +3003,14 @@ Sets the current object's hurtbox radius and height
 Spawns loot coins from an object using the specified behavior, jitter, and model
 
 ### Lua Example
-`obj_spawn_loot_coins(obj, numCoins, sp30, coinBehavior, posJitter, model)`
+`obj_spawn_loot_coins(obj, numCoins, baseYVel, coinBehavior, posJitter, model)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp30 | `number` |
+| baseYVel | `number` |
 | coinBehavior | `Pointer` <`BehaviorScript`> |
 | posJitter | `integer` |
 | model | `integer` |
@@ -3040,7 +3019,7 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 - None
 
 ### C Prototype
-`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 sp30, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
+`void obj_spawn_loot_coins(struct Object *obj, s32 numCoins, f32 baseYVel, const BehaviorScript *coinBehavior, s16 posJitter, s16 model);`
 
 [:arrow_up_small:](#)
 
@@ -3052,21 +3031,21 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 Spawns blue loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_blue_coins(obj, numCoins, sp28, posJitter)`
+`obj_spawn_loot_blue_coins(obj, numCoins, baseYVel, posJitter)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 | posJitter | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 sp28, s16 posJitter);`
+`void obj_spawn_loot_blue_coins(struct Object *obj, s32 numCoins, f32 baseYVel, s16 posJitter);`
 
 [:arrow_up_small:](#)
 
@@ -3078,20 +3057,20 @@ Spawns blue loot coins from an object
 Spawns yellow loot coins from an object
 
 ### Lua Example
-`obj_spawn_loot_yellow_coins(obj, numCoins, sp28)`
+`obj_spawn_loot_yellow_coins(obj, numCoins, baseYVel)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | obj | [Object](structs.md#Object) |
 | numCoins | `integer` |
-| sp28 | `number` |
+| baseYVel | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 sp28);`
+`void obj_spawn_loot_yellow_coins(struct Object *obj, s32 numCoins, f32 baseYVel);`
 
 [:arrow_up_small:](#)
 
@@ -3759,18 +3738,18 @@ Applies a random translation to an object on the X and Z axes
 Builds the object's world velocity from its transform basis vectors
 
 ### Lua Example
-`obj_build_vel_from_transform(a0)`
+`obj_build_vel_from_transform(obj)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | [Object](structs.md#Object) |
+| obj | [Object](structs.md#Object) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_build_vel_from_transform(struct Object *a0);`
+`void obj_build_vel_from_transform(struct Object *obj);`
 
 [:arrow_up_small:](#)
 
@@ -4069,51 +4048,27 @@ Behavior loop function for dust smoke
 
 <br />
 
-## [stub_obj_helpers_3](#stub_obj_helpers_3)
-
-### Description
-Placeholder function with no behavior
-
-### Lua Example
-`stub_obj_helpers_3(sp0, sp4)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| sp0 | `integer` |
-| sp4 | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void stub_obj_helpers_3(UNUSED s32 sp0, UNUSED s32 sp4);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [cur_obj_scale_over_time](#cur_obj_scale_over_time)
 
 ### Description
-Smoothly scales the current object over time using enabled axes
+Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)
 
 ### Lua Example
-`cur_obj_scale_over_time(a0, a1, sp10, sp14)`
+`cur_obj_scale_over_time(axes, duration, minScale, maxScale)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
-| sp10 | `number` |
-| sp14 | `number` |
+| axes | `integer` |
+| duration | `integer` |
+| minScale | `number` |
+| maxScale | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void cur_obj_scale_over_time(s32 a0, s32 a1, f32 sp10, f32 sp14);`
+`void cur_obj_scale_over_time(s32 axes, s32 duration, f32 minScale, f32 maxScale);`
 
 [:arrow_up_small:](#)
 
@@ -4135,27 +4090,6 @@ Moves an object to its home position while applying debug position offsets
 
 ### C Prototype
 `void cur_obj_set_pos_to_home_with_debug(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [stub_obj_helpers_4](#stub_obj_helpers_4)
-
-### Description
-Placeholder function with no behavior
-
-### Lua Example
-`stub_obj_helpers_4()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void stub_obj_helpers_4(void);`
 
 [:arrow_up_small:](#)
 
@@ -4233,18 +4167,18 @@ Oscillates the current object vertically until a specified number of cycles pass
 Moves the current object up and down along a preset displacement table
 
 ### Lua Example
-`local integerValue = cur_obj_move_up_and_down(a0)`
+`local integerValue = cur_obj_move_up_and_down(index)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
+| index | `integer` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_move_up_and_down(s32 a0);`
+`s32 cur_obj_move_up_and_down(s32 index);`
 
 [:arrow_up_small:](#)
 
@@ -4256,19 +4190,19 @@ Moves the current object up and down along a preset displacement table
 Spawns a star object without triggering level exit behavior
 
 ### Lua Example
-`local objectValue = spawn_star_with_no_lvl_exit(sp20, sp24)`
+`local objectValue = spawn_star_with_no_lvl_exit(setHomeToMario, unused)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp20 | `integer` |
-| sp24 | `integer` |
+| setHomeToMario | `integer` |
+| unused | `integer` |
 
 ### Returns
 - [Object](structs.md#Object)
 
 ### C Prototype
-`struct Object *spawn_star_with_no_lvl_exit(s32 sp20, s32 sp24);`
+`struct Object *spawn_star_with_no_lvl_exit(s32 setHomeToMario, s32 unused);`
 
 [:arrow_up_small:](#)
 
@@ -4290,29 +4224,6 @@ Spawns a base star with default parameters and no level exit behavior
 
 ### C Prototype
 `void spawn_base_star_with_no_lvl_exit(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [bit_shift_left](#bit_shift_left)
-
-### Description
-Returns the value at index a0 from a behavior-specific left-shift table
-
-### Lua Example
-`local integerValue = bit_shift_left(a0)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a0 | `integer` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 bit_shift_left(s32 a0);`
 
 [:arrow_up_small:](#)
 
@@ -4459,19 +4370,19 @@ Gives the current object a hitbox and kills it if attacked, with optional loot s
 Explodes the current object, spawns particles, and optionally spawns coins
 
 ### Lua Example
-`obj_explode_and_spawn_coins(sp18, sp1C)`
+`obj_explode_and_spawn_coins(mistSize, coinType)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp18 | `number` |
-| sp1C | `integer` |
+| mistSize | `number` |
+| coinType | [enum CoinType](constants.md#enum-CoinType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void obj_explode_and_spawn_coins(f32 sp18, s32 sp1C);`
+`void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType);`
 
 [:arrow_up_small:](#)
 
@@ -4696,32 +4607,7 @@ Checks whether Mario can activate the current object's textbox within a vertical
 - `integer`
 
 ### C Prototype
-`s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, UNUSED s32 unused);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cur_obj_can_mario_activate_textbox_2](#cur_obj_can_mario_activate_textbox_2)
-
-### Description
-Wrapper that checks Mario textbox activation using a fixed unused parameter value
-
-### Lua Example
-`local integerValue = cur_obj_can_mario_activate_textbox_2(m, radius, height)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| m | [MarioState](structs.md#MarioState) |
-| radius | `number` |
-| height | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 cur_obj_can_mario_activate_textbox_2(struct MarioState* m, f32 radius, f32 height);`
+`s32 cur_obj_can_mario_activate_textbox(struct MarioState* m, f32 radius, f32 height, OPTIONAL UNUSED s32 unused);`
 
 [:arrow_up_small:](#)
 
@@ -5273,22 +5159,22 @@ Apply one frame of platform rotation to the object using the given platform
 ## [queue_rumble_data](#queue_rumble_data)
 
 ### Description
-Queues rumble data
+Queues rumble data with `time` and `level`
 
 ### Lua Example
-`queue_rumble_data(a0, a1)`
+`queue_rumble_data(time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data(s16 a0, s16 a1);`
+`void queue_rumble_data(s16 time, s16 level);`
 
 [:arrow_up_small:](#)
 
@@ -5297,23 +5183,23 @@ Queues rumble data
 ## [queue_rumble_data_object](#queue_rumble_data_object)
 
 ### Description
-Queues rumble data for object, factoring in its distance from Mario
+Queues rumble data for object with `time` and `level`, factoring in its distance from Mario
 
 ### Lua Example
-`queue_rumble_data_object(object, a0, a1)`
+`queue_rumble_data_object(object, time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | object | [Object](structs.md#Object) |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data_object(struct Object* object, s16 a0, s16 a1);`
+`void queue_rumble_data_object(struct Object* object, s16 time, s16 level);`
 
 [:arrow_up_small:](#)
 
@@ -5322,23 +5208,67 @@ Queues rumble data for object, factoring in its distance from Mario
 ## [queue_rumble_data_mario](#queue_rumble_data_mario)
 
 ### Description
-Queues rumble data for Mario
+Queues rumble data with `time` and `level` only if `m` is the local Mario
 
 ### Lua Example
-`queue_rumble_data_mario(m, a0, a1)`
+`queue_rumble_data_mario(m, time, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
-| a1 | `integer` |
+| time | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void queue_rumble_data_mario(struct MarioState* m, s16 a0, s16 a1);`
+`void queue_rumble_data_mario(struct MarioState* m, s16 time, s16 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_decay](#queue_rumble_decay)
+
+### Description
+Queues rumble `decay`
+
+### Lua Example
+`queue_rumble_decay(decay)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| decay | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_decay(s16 decay);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_rumble_finished_and_queue_empty](#is_rumble_finished_and_queue_empty)
+
+### Description
+Checks if rumble is finished and there is no rumble queued
+
+### Lua Example
+`local integerValue = is_rumble_finished_and_queue_empty()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u8 is_rumble_finished_and_queue_empty(void);`
 
 [:arrow_up_small:](#)
 
@@ -5347,7 +5277,7 @@ Queues rumble data for Mario
 ## [reset_rumble_timers](#reset_rumble_timers)
 
 ### Description
-Resets rumble timers
+Resets rumble timers only if `m` is the local Mario
 
 ### Lua Example
 `reset_rumble_timers(m)`
@@ -5367,25 +5297,67 @@ Resets rumble timers
 
 <br />
 
-## [reset_rumble_timers_2](#reset_rumble_timers_2)
+## [reset_rumble_timers_vibrate](#reset_rumble_timers_vibrate)
 
 ### Description
-Resets rumble timers and sets a field based on `a0`
+Resets rumble timers and sets vibrate based on `level`
 
 ### Lua Example
-`reset_rumble_timers_2(m, a0)`
+`reset_rumble_timers_vibrate(m, level)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | m | [MarioState](structs.md#MarioState) |
-| a0 | `integer` |
+| level | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void reset_rumble_timers_2(struct MarioState* m, s32 a0);`
+`void reset_rumble_timers_vibrate(struct MarioState* m, s32 level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [queue_rumble_submerged](#queue_rumble_submerged)
+
+### Description
+Queues rumble data for submerged actions
+
+### Lua Example
+`queue_rumble_submerged()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void queue_rumble_submerged(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cancel_rumble](#cancel_rumble)
+
+### Description
+Cancels all currently queued rumble data
+
+### Lua Example
+`cancel_rumble()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void cancel_rumble(void);`
 
 [:arrow_up_small:](#)
 
@@ -6293,59 +6265,37 @@ Allocates a new sequence ID
 
 <br />
 
-## [audio_stream_load](#audio_stream_load)
+## [audio_load](#audio_load)
 
 ### Description
-Loads an `audio` stream by `filename` (with extension)
+Loads an `audio` by `filename` (with extension)
 
 ### Lua Example
-`local modAudioValue = audio_stream_load(filename)`
+`local modAudioValue = audio_load(filename, type)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | filename | `string` |
+| type | [enum ModAudioType](constants.md#enum-ModAudioType) |
 
 ### Returns
 - [ModAudio](structs.md#ModAudio)
 
 ### C Prototype
-`struct ModAudio* audio_stream_load(const char* filename);`
+`struct ModAudio* audio_load(const char* filename, OPTIONAL enum ModAudioType type);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_destroy](#audio_stream_destroy)
-
-### Description
-Destroys an `audio` stream
-
-### Lua Example
-`audio_stream_destroy(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_play](#audio_stream_play)
+## [audio_play](#audio_play)
 
 ### Description
 Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
 
 ### Lua Example
-`audio_stream_play(audio, restart, volume)`
+`audio_play(audio, restart, volume)`
 
 ### Parameters
 | Field | Type |
@@ -6360,17 +6310,32 @@ Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0
 ### C Prototype
 `void audio_stream_play(struct ModAudio* audio, bool restart, f32 volume);`
 
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_pause](#audio_stream_pause)
-
+---
 ### Description
-Pauses an `audio` stream
+Plays an `audio` sample at `position` with `volume`
 
 ### Lua Example
-`audio_stream_pause(audio)`
+`local modAudioValue = audio_play(audio, position, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| position | [Vec3f](structs.md#Vec3f) |
+| volume | `number` |
+
+### Returns
+- [ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+
+---
+### Description
+Plays an `audio`
+
+### Lua Example
+`audio_play(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6381,19 +6346,19 @@ Pauses an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_pause(struct ModAudio* audio);`
+`void audio_play(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_stop](#audio_stream_stop)
+## [audio_pause](#audio_pause)
 
 ### Description
-Stops an `audio` stream
+Pauses an `audio`
 
 ### Lua Example
-`audio_stream_stop(audio)`
+`audio_pause(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6404,19 +6369,111 @@ Stops an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_stop(struct ModAudio* audio);`
+`void audio_pause(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_position](#audio_stream_get_position)
+## [audio_stop](#audio_stop)
 
 ### Description
-Gets the position of an `audio` stream in seconds
+Stops an `audio`
 
 ### Lua Example
-`local numberValue = audio_stream_get_position(audio)`
+`audio_stop(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_stop(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_destroy](#audio_destroy)
+
+### Description
+Destroys an `audio`
+
+### Lua Example
+`audio_destroy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_destroy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_reload](#audio_reload)
+
+### Description
+Reloads a destroyed `audio`
+
+### Lua Example
+`audio_reload(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_reload(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_copy](#audio_copy)
+
+### Description
+Copies an `audio`
+
+### Lua Example
+`local modAudioValue = audio_copy(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- [ModAudio](structs.md#ModAudio)
+
+### C Prototype
+`struct ModAudio* audio_copy(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_volume](#audio_get_volume)
+
+### Description
+Gets the volume of an `audio`
+
+### Lua Example
+`local numberValue = audio_get_volume(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6427,19 +6484,136 @@ Gets the position of an `audio` stream in seconds
 - `number`
 
 ### C Prototype
-`f32 audio_stream_get_position(struct ModAudio* audio);`
+`f32 audio_get_volume(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_position](#audio_stream_set_position)
+## [audio_set_volume](#audio_set_volume)
 
 ### Description
-Sets the position of an `audio` stream in seconds
+Sets the volume of an `audio`
 
 ### Lua Example
-`audio_stream_set_position(audio, pos)`
+`audio_set_volume(audio, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_set_volume(struct ModAudio* audio, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_pan](#audio_get_pan)
+
+### Description
+Gets the pan of an `audio`
+
+### Lua Example
+`local numberValue = audio_get_pan(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 audio_get_pan(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_pan](#audio_set_pan)
+
+### Description
+Sets the pan of an `audio`
+
+### Lua Example
+`audio_set_pan(audio, pan)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| pan | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_set_pan(struct ModAudio* audio, f32 pan);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_length](#audio_get_length)
+
+### Description
+Gets the length of an `audio` in seconds
+
+### Lua Example
+`local length = audio_get_length(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`void audio_get_length(struct ModAudio* audio, RET f32 *length);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_position](#audio_get_position)
+
+### Description
+Gets the position of an `audio` in seconds
+
+### Lua Example
+`local position = audio_get_position(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `number`
+
+### C Prototype
+`void audio_get_position(struct ModAudio* audio, RET f32 *position);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_position](#audio_set_position)
+
+### Description
+Sets the position of an `audio` in seconds
+
+### Lua Example
+`audio_set_position(audio, pos)`
 
 ### Parameters
 | Field | Type |
@@ -6451,19 +6625,19 @@ Sets the position of an `audio` stream in seconds
 - None
 
 ### C Prototype
-`void audio_stream_set_position(struct ModAudio* audio, f32 pos);`
+`void audio_set_position(struct ModAudio* audio, f32 pos);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_looping](#audio_stream_get_looping)
+## [audio_get_looping](#audio_get_looping)
 
 ### Description
-Gets if an `audio` stream is looping or not
+Gets if an `audio` is looping or not
 
 ### Lua Example
-`local booleanValue = audio_stream_get_looping(audio)`
+`local booleanValue = audio_get_looping(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6474,19 +6648,19 @@ Gets if an `audio` stream is looping or not
 - `boolean`
 
 ### C Prototype
-`bool audio_stream_get_looping(struct ModAudio* audio);`
+`bool audio_get_looping(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_looping](#audio_stream_set_looping)
+## [audio_set_looping](#audio_set_looping)
 
 ### Description
-Sets if an `audio` stream is looping or not
+Sets if an `audio` is looping or not
 
 ### Lua Example
-`audio_stream_set_looping(audio, looping)`
+`audio_set_looping(audio, looping)`
 
 ### Parameters
 | Field | Type |
@@ -6498,19 +6672,90 @@ Sets if an `audio` stream is looping or not
 - None
 
 ### C Prototype
-`void audio_stream_set_looping(struct ModAudio* audio, bool looping);`
+`void audio_set_looping(struct ModAudio* audio, bool looping);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_loop_points](#audio_stream_set_loop_points)
+## [audio_get_playing](#audio_get_playing)
 
 ### Description
-Sets an `audio` stream's loop points in samples
+Gets if an `audio` is playing
 
 ### Lua Example
-`audio_stream_set_loop_points(audio, loopStart, loopEnd)`
+`local booleanValue = audio_get_playing(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool audio_get_playing(struct ModAudio* audio);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_playing](#audio_set_playing)
+
+### Description
+Sets if an `audio` is playing
+
+### Lua Example
+`audio_set_playing(audio, playing)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+| playing | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void audio_set_playing(struct ModAudio* audio, bool playing);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_get_loop_points](#audio_get_loop_points)
+
+### Description
+Gets an `audio`'s loop points in samples
+
+### Lua Example
+`local loopStart, loopEnd = audio_get_loop_points(audio)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| audio | [ModAudio](structs.md#ModAudio) |
+
+### Returns
+- `integer`
+- `integer`
+
+### C Prototype
+`void audio_get_loop_points(struct ModAudio* audio, RET u64 *loopStart, RET u64 *loopEnd);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [audio_set_loop_points](#audio_set_loop_points)
+
+### Description
+Sets an `audio`'s loop points in samples
+
+### Lua Example
+`audio_set_loop_points(audio, loopStart, loopEnd)`
 
 ### Parameters
 | Field | Type |
@@ -6523,19 +6768,19 @@ Sets an `audio` stream's loop points in samples
 - None
 
 ### C Prototype
-`void audio_stream_set_loop_points(struct ModAudio* audio, s64 loopStart, s64 loopEnd);`
+`void audio_set_loop_points(struct ModAudio* audio, s64 loopStart, OPTIONAL s64 loopEnd);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_frequency](#audio_stream_get_frequency)
+## [audio_get_frequency](#audio_get_frequency)
 
 ### Description
-Gets the frequency of an `audio` stream
+Gets the frequency of an `audio`
 
 ### Lua Example
-`local numberValue = audio_stream_get_frequency(audio)`
+`local numberValue = audio_get_frequency(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6546,19 +6791,19 @@ Gets the frequency of an `audio` stream
 - `number`
 
 ### C Prototype
-`f32 audio_stream_get_frequency(struct ModAudio* audio);`
+`f32 audio_get_frequency(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_frequency](#audio_stream_set_frequency)
+## [audio_set_frequency](#audio_set_frequency)
 
 ### Description
-Sets the frequency of an `audio` stream
+Sets the frequency of an `audio`
 
 ### Lua Example
-`audio_stream_set_frequency(audio, freq)`
+`audio_set_frequency(audio, freq)`
 
 ### Parameters
 | Field | Type |
@@ -6570,66 +6815,19 @@ Sets the frequency of an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_set_frequency(struct ModAudio* audio, f32 freq);`
+`void audio_set_frequency(struct ModAudio* audio, f32 freq);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_get_volume](#audio_stream_get_volume)
+## [audio_get_volume_channel](#audio_get_volume_channel)
 
 ### Description
-Gets the volume of an `audio` stream
+Gets the volume channel of an `audio`
 
 ### Lua Example
-`local numberValue = audio_stream_get_volume(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 audio_stream_get_volume(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_set_volume](#audio_stream_set_volume)
-
-### Description
-Sets the volume of an `audio` stream
-
-### Lua Example
-`audio_stream_set_volume(audio, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_stream_set_volume(struct ModAudio* audio, f32 volume);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_stream_get_volume_channel](#audio_stream_get_volume_channel)
-
-### Description
-Gets the volume channel of an `audio` stream
-
-### Lua Example
-`local integerValue = audio_stream_get_volume_channel(audio)`
+`local integerValue = audio_get_volume_channel(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6640,19 +6838,19 @@ Gets the volume channel of an `audio` stream
 - `integer`
 
 ### C Prototype
-`u8 audio_stream_get_volume_channel(struct ModAudio *audio);`
+`u8 audio_get_volume_channel(struct ModAudio *audio);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_stream_set_volume_channel](#audio_stream_set_volume_channel)
+## [audio_set_volume_channel](#audio_set_volume_channel)
 
 ### Description
-Sets the volume channel of an `audio` stream
+Sets the volume channel of an `audio`
 
 ### Lua Example
-`audio_stream_set_volume_channel(audio, channel)`
+`audio_set_volume_channel(audio, channel)`
 
 ### Parameters
 | Field | Type |
@@ -6664,42 +6862,19 @@ Sets the volume channel of an `audio` stream
 - None
 
 ### C Prototype
-`void audio_stream_set_volume_channel(struct ModAudio *audio, u8 channel);`
+`void audio_set_volume_channel(struct ModAudio *audio, u8 channel);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [audio_sample_load](#audio_sample_load)
+## [audio_get_sample_rate](#audio_get_sample_rate)
 
 ### Description
-Loads an `audio` sample
+Gets the sample rate of an `audio`
 
 ### Lua Example
-`local modAudioValue = audio_sample_load(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-- [ModAudio](structs.md#ModAudio)
-
-### C Prototype
-`struct ModAudio* audio_sample_load(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_destroy](#audio_sample_destroy)
-
-### Description
-Destroys an `audio` sample
-
-### Lua Example
-`audio_sample_destroy(audio)`
+`local integerValue = audio_get_sample_rate(audio)`
 
 ### Parameters
 | Field | Type |
@@ -6707,58 +6882,10 @@ Destroys an `audio` sample
 | audio | [ModAudio](structs.md#ModAudio) |
 
 ### Returns
-- None
+- `integer`
 
 ### C Prototype
-`void audio_sample_destroy(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_stop](#audio_sample_stop)
-
-### Description
-Stops an `audio` sample
-
-### Lua Example
-`audio_sample_stop(audio)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_stop(struct ModAudio* audio);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [audio_sample_play](#audio_sample_play)
-
-### Description
-Plays an `audio` sample at `position` with `volume`
-
-### Lua Example
-`audio_sample_play(audio, position, volume)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| audio | [ModAudio](structs.md#ModAudio) |
-| position | [Vec3f](structs.md#Vec3f) |
-| volume | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void audio_sample_play(struct ModAudio* audio, Vec3f position, f32 volume);`
+`u32 audio_get_sample_rate(struct ModAudio* audio);`
 
 [:arrow_up_small:](#)
 

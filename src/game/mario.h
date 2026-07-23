@@ -6,7 +6,6 @@
 #include "macros.h"
 #include "types.h"
 
-extern u16 gLocalBubbleCounter;
 struct WallCollisionData;
 
 /* |description|
@@ -140,9 +139,9 @@ Checks whether Mario can become bubbled under certain game conditions (multiplay
 bool mario_can_bubble(struct MarioState* m);
 
 /* |description|
-Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
+Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
 |descriptionEnd| */
-void mario_set_bubbled(struct MarioState* m);
+void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive);
 
 /* |description|
 Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`.

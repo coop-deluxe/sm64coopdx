@@ -44,9 +44,15 @@
 #define GREATEST_RIPPLE 3
 
 typedef struct {
-	float		ob[3];	/* x, y, z */
-	signed char	n[3];	/* normal */
+    float       ob[3];  /* x, y, z */
+    signed char n[3];   /* normal */
 } Vtx_Interp;
+
+#define DEFINE_PAINTING(name, ...) \
+struct Painting name = __VA_ARGS__; \
+const struct Painting default_ ## name = __VA_ARGS__
+
+#define RESTORE_PAINTING(name) name = default_ ## name
 
 struct Painting
 {

@@ -27,7 +27,7 @@ static void fire_spitter_act_spit_fire(void) {
             o->oAction = FIRE_SPITTER_ACT_IDLE;
         } else {
             if (sync_object_is_owned_locally(o->oSyncID)) {
-                cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_FLAME_BLOWN);
 
                 struct Object* fire = obj_spit_fire(0, 0, 0, 5.0f, MODEL_RED_FLAME_SHADOW, 20.0f, 15.0f, 0x1000);
                 struct Object* spawn_objects[] = { fire };
@@ -41,7 +41,7 @@ static void fire_spitter_act_spit_fire(void) {
 }
 
 static void bhv_fire_spitter_on_received_post(UNUSED u8 localIndex) {
-    cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_FLAME_BLOWN);
 }
 
 void bhv_fire_spitter_update(void) {

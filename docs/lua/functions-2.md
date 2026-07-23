@@ -158,22 +158,22 @@ Spawns wind particles around the current object
 ## [check_if_moving_over_floor](#check_if_moving_over_floor)
 
 ### Description
-Checks if the current object is moving `a1` units over a floor and within a threshold of `a0`
+Checks if the current object is moving `distance` units over a floor and within a max distance to floor of `maxDistToFloor`
 
 ### Lua Example
-`local integerValue = check_if_moving_over_floor(a0, a1)`
+`local integerValue = check_if_moving_over_floor(maxDistToFloor, distance)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| a0 | `number` |
-| a1 | `number` |
+| maxDistToFloor | `number` |
+| distance | `number` |
 
 ### Returns
 - `integer`
 
 ### C Prototype
-`s32 check_if_moving_over_floor(f32 a0, f32 a1);`
+`s32 check_if_moving_over_floor(f32 maxDistToFloor, f32 distance);`
 
 [:arrow_up_small:](#)
 
@@ -305,13 +305,13 @@ Spawns strong wind particles relative to the current object
 
 <br />
 
-## [bhv_star_door_loop_2](#bhv_star_door_loop_2)
+## [bhv_star_door_loop_update_render_state](#bhv_star_door_loop_update_render_state)
 
 ### Description
-Behavior loop function for Star Door
+Behavior loop function for Star Door, which updates its render state
 
 ### Lua Example
-`bhv_star_door_loop_2()`
+`bhv_star_door_loop_update_render_state()`
 
 ### Parameters
 - None
@@ -320,7 +320,7 @@ Behavior loop function for Star Door
 - None
 
 ### C Prototype
-`void bhv_star_door_loop_2(void);`
+`void bhv_star_door_loop_update_render_state(void);`
 
 [:arrow_up_small:](#)
 
@@ -1043,23 +1043,23 @@ Behavior loop function for cannon base unused
 ## [common_anchor_mario_behavior](#common_anchor_mario_behavior)
 
 ### Description
-Common behavior for when Mario's anchoring when grabbed
+Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuckya anchor objects. When Mario is thrown, sets `forwardVel`, `upwardsVel` and `interactStatusFlags` to him
 
 ### Lua Example
-`common_anchor_mario_behavior(sp28, sp2C, sp30)`
+`common_anchor_mario_behavior(forwardVel, upwardsVel, interactStatusFlags)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| sp28 | `number` |
-| sp2C | `number` |
-| sp30 | `integer` |
+| forwardVel | `number` |
+| upwardsVel | `number` |
+| interactStatusFlags | `integer` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void common_anchor_mario_behavior(f32 sp28, f32 sp2C, s32 sp30);`
+`void common_anchor_mario_behavior(f32 forwardVel, f32 upwardsVel, s32 interactStatusFlags);`
 
 [:arrow_up_small:](#)
 

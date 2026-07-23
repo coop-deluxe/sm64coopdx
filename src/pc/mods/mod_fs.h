@@ -7,13 +7,47 @@
 #define MOD_FS_COMPRESSION_MIN 0
 #define MOD_FS_COMPRESSION_MAX 9
 #define MOD_FS_COMPRESSION_DEFAULT 1
-#define MOD_FS_MAX_SIZE     0x2000000 // 32 MB
-#define MOD_FS_MAX_FILES    0x200
+#define MOD_FS_MAX_SIZE     0x8000000 // 128 MB
+#define MOD_FS_MAX_FILES    0x400
 #define MOD_FS_MAX_PATH     0x100
 #define MOD_FS_URI_PREFIX   "modfs:/"
 #define MOD_FS_URI_FORMAT   "modfs:/%s/%s" // modPath, filepath
 
 #define is_mod_fs_file(filepath) (memcmp(filepath, MOD_FS_URI_PREFIX, sizeof(MOD_FS_URI_PREFIX) - 1) == 0)
+
+enum ModFsErrorCode {
+    MOD_FS_ERR_NONE,
+
+    // Common errors
+    MOD_FS_ERR_ALLOC_FAILED,                // Memory allocation failed
+    MOD_FS_ERR_ALREADY_EXISTS,              // Tried to create, move or copy an existing ModFS or ModFS file
+    MOD_FS_ERR_NOT_FOUND,                   // Tried to move, copy or delete a non-existent ModFS file
+    MOD_FS_ERR_INVALID_POINTER,             // Passed an invalid ModFS or ModFS file pointer
+    MOD_FS_ERR_INVALID_PARAMETER,           // Passed an invalid parameter value
+    MOD_FS_ERR_FILE_INVALID_INDEX,          // Tried to get the filename of an out-of-bounds file index
+    MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED,       // Tried to use a read/write function on a non-supported file type
+    MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,         // Tried to read, copy or write past the maximum size of a ModFS
+    MOD_FS_ERR_NUM_FILES_EXCEEDED,          // Tried to read or create more files than allowed for a ModFS
+
+    // Filepath errors
+    MOD_FS_ERR_FILEPATH_EMPTY,              // Empty filepath
+    MOD_FS_ERR_FILEPATH_LEN_EXCEEDED,       // Filepath too long
+    MOD_FS_ERR_FILEPATH_RESERVED,           // Filepath is reserved and cannot be used for ModFS files
+    MOD_FS_ERR_FILEPATH_INVALID_CHAR,       // Filepath contains invalid characters (non-ASCII, control characters, asterisk or backslash)
+    MOD_FS_ERR_FILEPATH_MALFORMED,          // Filepath is malformed (leading/trailing whitespaces/slashes, consecutive slashes)
+    MOD_FS_ERR_FILEPATH_INVALID_EXTENSION,  // Filepath extension is not in whitelist
+
+    // Read errors
+    MOD_FS_ERR_READ_INVALID_MODPATH,        // Modpath couldn't be resolved
+    MOD_FS_ERR_READ_ZIP,                    // ZIP decompression failed
+    MOD_FS_ERR_READ_PROPERTIES,             // Properties file JSON is malformed
+    MOD_FS_ERR_READ_FILE_TRUNCATED,         // Read data didn't match the expected size
+    MOD_FS_ERR_READ_EOF,                    // Reached end of file while reading
+
+    // Write errors
+    MOD_FS_ERR_WRITE_ZIP,                   // ZIP compression failed
+    MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD,        // Tried to perform a write operation (create, delete, move, copy, write, set) on another mod ModFS or ModFS file
+};
 
 enum ModFsFileIntType {
     INT_TYPE_U8,
@@ -104,132 +138,132 @@ struct ModFs {
 /* |description|
 Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 |descriptionEnd| */
-bool mod_fs_exists(OPTIONAL const char *modPath);
+bool mod_fs_exists(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);
 
 /* |description|
 Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 |descriptionEnd| */
-struct ModFs *mod_fs_get(OPTIONAL const char *modPath);
+struct ModFs *mod_fs_get(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
 |descriptionEnd| */
-struct ModFs *mod_fs_reload(OPTIONAL const char *modPath);
+struct ModFs *mod_fs_reload(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err);
 
 /* |description|
 Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 |descriptionEnd| */
-struct ModFs *mod_fs_create();
+struct ModFs *mod_fs_create(RET enum ModFsErrorCode *err);
 
 /* |description|
 Gets the filename at position `index` of the provided `modFs`
 |descriptionEnd| */
-const char *mod_fs_get_filename(struct ModFs *modFs, u16 index);
+const char *mod_fs_get_filename(struct ModFs *modFs, u16 index, RET enum ModFsErrorCode *err);
 
 /* |description|
 Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
 |descriptionEnd| */
-struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath);
+struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err);
 
 /* |description|
 Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 |descriptionEnd| */
-struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text);
+struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text, RET enum ModFsErrorCode *err);
 
 /* |description|
 Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
 |descriptionEnd| */
-bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting);
+bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting, RET enum ModFsErrorCode *err);
 
 /* |description|
 Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
 |descriptionEnd| */
-bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting);
+bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting, RET enum ModFsErrorCode *err);
 
 /* |description|
 Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath);
+bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err);
 
 /* |description|
 Deletes all files of the provided `modFs`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_clear(struct ModFs *modFs);
+bool mod_fs_clear(struct ModFs *modFs, RET enum ModFsErrorCode *err);
 
 /* |description|
 Saves the provided `modFs` to persistent storage. Returns true on success
 |descriptionEnd| */
-bool mod_fs_save(struct ModFs *modFs);
+bool mod_fs_save(struct ModFs *modFs, RET enum ModFsErrorCode *err);
 
 /* |description|
 Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
 |descriptionEnd| */
-bool mod_fs_delete(struct ModFs *modFs);
+bool mod_fs_delete(struct ModFs *modFs, RET enum ModFsErrorCode *err);
 
 /* |description|
 Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
 |descriptionEnd| */
-bool mod_fs_set_public(struct ModFs *modFs, bool pub);
+bool mod_fs_set_public(struct ModFs *modFs, bool pub, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads a boolean from a binary modfs `file`
 |descriptionEnd| */
-bool mod_fs_file_read_bool(struct ModFsFile *file);
+bool mod_fs_file_read_bool(struct ModFsFile *file, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 |descriptionEnd| */
-lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType);
+lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
 |descriptionEnd| */
-lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType);
+lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads a bytestring of `length` bytes from a binary modfs `file`
 |descriptionEnd| */
-ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length);
+ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 |descriptionEnd| */
-const char *mod_fs_file_read_string(struct ModFsFile *file);
+const char *mod_fs_file_read_string(struct ModFsFile *file, RET enum ModFsErrorCode *err);
 
 /* |description|
 Reads a line from a text modfs `file`
 |descriptionEnd| */
-const char *mod_fs_file_read_line(struct ModFsFile *file);
+const char *mod_fs_file_read_line(struct ModFsFile *file, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes a boolean to a binary modfs `file`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_bool(struct ModFsFile *file, bool value);
+bool mod_fs_file_write_bool(struct ModFsFile *file, bool value, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType);
+bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType);
+bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes a bytestring to a modfs `file`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring);
+bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes a string to a modfs `file`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_string(struct ModFsFile *file, const char *str);
+bool mod_fs_file_write_string(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err);
 
 /* |description|
 Writes a line to a text modfs `file`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_write_line(struct ModFsFile *file, const char *str);
+bool mod_fs_file_write_line(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err);
 
 /* |description|
 Sets the current position of a modfs `file`.
@@ -238,48 +272,53 @@ If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.
 If `origin` is `FILE_SEEK_END`, file position is set to `end of file + offset`.
 Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin);
+bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin, RET enum ModFsErrorCode *err);
 
 /* |description|
 Sets the current position of a modfs `file` to its beginning.
 Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_rewind(struct ModFsFile *file);
+bool mod_fs_file_rewind(struct ModFsFile *file, RET enum ModFsErrorCode *err);
 
 /* |description|
 Returns true if the provided modfs `file` has reached its end of file
 |descriptionEnd| */
-bool mod_fs_file_is_eof(struct ModFsFile *file);
+bool mod_fs_file_is_eof(struct ModFsFile *file, RET enum ModFsErrorCode *err);
 
 /* |description|
 Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length);
+bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length, RET enum ModFsErrorCode *err);
 
 /* |description|
 Erases `length` bytes or characters from a modfs `file`. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_erase(struct ModFsFile *file, u32 length);
+bool mod_fs_file_erase(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err);
 
 /* |description|
 Marks the provided modfs `file` as text. Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text);
+bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text, RET enum ModFsErrorCode *err);
 
 /* |description|
 Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_set_public(struct ModFsFile *file, bool pub);
+bool mod_fs_file_set_public(struct ModFsFile *file, bool pub, RET enum ModFsErrorCode *err);
 
 /* |description|
-Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
 |descriptionEnd| */
-bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level);
+bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level, RET enum ModFsErrorCode *err);
 
 /* |description|
 Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 |descriptionEnd| */
 void mod_fs_hide_errors(bool hide);
+
+/* |description|
+Returns the last error code raised by `mod_fs` functions
+|descriptionEnd| */
+enum ModFsErrorCode mod_fs_get_last_error_code();
 
 /* |description|
 Returns the last error message generated by `mod_fs` functions or nil if no error occurred

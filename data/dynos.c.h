@@ -35,6 +35,12 @@ bool dynos_pack_get_exists(s32 index);
 void dynos_generate_mod_pack(char* modPath);
 void dynos_generate_packs(const char* directory);
 
+// -- audio -- //
+void dynos_audio_reset_mods();
+bool dynos_audio_override(u8 sequenceId, s32* bankId, void** seqData);
+void dynos_audio_create_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath);
+u8 dynos_audio_alloc_sequence(void);
+
 // -- geos -- //
 void dynos_actor_override(struct Object* obj, void** aSharedChild);
 bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath, const char* geoName);
@@ -68,6 +74,7 @@ u64 dynos_level_cmd_get(void *cmd, u64 offset);
 void dynos_level_cmd_next(void *cmd);
 void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *));
 void* dynos_level_get_script(s32 level);
+const void *dynos_level_get_vanilla_script(s32 level);
 s32 dynos_level_get_mod_index(s32 level);
 bool dynos_level_is_vanilla_level(s32 level);
 Collision *dynos_level_get_collision(u32 level, u16 area);

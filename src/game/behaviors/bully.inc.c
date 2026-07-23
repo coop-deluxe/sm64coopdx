@@ -109,9 +109,9 @@ void bully_check_mario_collision(void) {
 #endif
     o->oInteractStatus & INT_STATUS_INTERACTED) {
         if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL) {
-            cur_obj_play_sound_2(SOUND_OBJ2_BULLY_ATTACKED);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_BULLY_ATTACKED);
         } else {
-            cur_obj_play_sound_2(SOUND_OBJ2_LARGE_BULLY_ATTACKED);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_LARGE_BULLY_ATTACKED);
         }
 
         o->oInteractStatus &= ~INT_STATUS_INTERACTED;
@@ -216,9 +216,9 @@ void bully_play_stomping_sound(void) {
         case BULLY_ACT_PATROL:
             if (sp26 == 0 || sp26 == 12) {
                 if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL)
-                    cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALK);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BULLY_WALK);
                 else
-                    cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALKING);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BULLY_WALKING);
             }
             break;
 
@@ -226,9 +226,9 @@ void bully_play_stomping_sound(void) {
         case BULLY_ACT_BACK_UP:
             if (sp26 == 0 || sp26 == 5) {
                 if (o->oBehParams2ndByte == BULLY_BP_SIZE_SMALL)
-                    cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALK);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BULLY_WALK);
                 else
-                    cur_obj_play_sound_2(SOUND_OBJ_BULLY_WALKING);
+                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BULLY_WALKING);
             }
             break;
     }
@@ -251,11 +251,11 @@ void bully_step(void) {
 void bully_spawn_coin(void) {
     struct Object *coin = spawn_object(o, MODEL_YELLOW_COIN, bhvMovingYellowCoin);
 #ifdef VERSION_JP // TODO: maybe move this ifdef logic to the header?
-    cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT);
 #elif defined(VERSION_EU) || defined(VERSION_SH)
-    cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_EU);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT_EU);
 #else
-    cur_obj_play_sound_2(SOUND_GENERAL_COIN_SPURT_2);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_COIN_SPURT_2);
 #endif
     if (coin == NULL) { return; }
     coin->oForwardVel = 10.0f;
@@ -429,7 +429,7 @@ void bhv_big_bully_with_minions_loop(void) {
                 o->oAction = BULLY_ACT_PATROL;
 
             if (collisionFlags == 1) {
-                cur_obj_play_sound_2(SOUND_OBJ_THWOMP);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_THWOMP);
                 set_camera_shake_from_point(SHAKE_POS_SMALL, o->oPosX, o->oPosY, o->oPosZ);
                 spawn_mist_particles();
             }

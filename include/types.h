@@ -8,6 +8,7 @@
 #include "macros.h"
 #include "pc/network/version.h"
 #include "pc/platform.h"
+#include "pc/lua/smlua_autogen.h"
 
 struct Controller
 {
@@ -229,10 +230,8 @@ struct ObjectNode
 // whether some of these pointers point to ObjectNode or Object.
 
 #define OBJECT_MAX_BHV_STACK        16
-#define OBJECT_NUM_REGULAR_FIELDS   0x50
-#define OBJECT_NUM_CUSTOM_FIELDS    0x40
-#define OBJECT_CUSTOM_FIELDS_START  (OBJECT_NUM_REGULAR_FIELDS)
-#define OBJECT_NUM_FIELDS           (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+#define OBJECT_NUM_FIELDS           0x50
+#define OBJECT_CUSTOM_FIELDS_START  (OBJECT_NUM_FIELDS)
 
 struct Object
 {
@@ -315,6 +314,9 @@ struct Object
         void *asVoidPtr[OBJECT_NUM_FIELDS];
         const void *asConstVoidPtr[OBJECT_NUM_FIELDS];
     } ptrData;
+
+    // custom object fields
+    void *customFields;
 };
 
 struct ObjectHitbox
@@ -416,8 +418,9 @@ struct MarioBodyState
     Vec3f torsoPos;
     Vec3f heldObjLastPosition; /// also known as HOLP
 
-    Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
-    Vec3s animPartsRot[MARIO_ANIM_PART_MAX];
+    C_ARRAY Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
+    C_ARRAY Vec3s animPartsRot[MARIO_ANIM_PART_MAX];
+    C_ARRAY Mat4 animPartsMtx[MARIO_ANIM_PART_MAX];
     u32 currAnimPart;
 
     u32 updateTorsoTime;

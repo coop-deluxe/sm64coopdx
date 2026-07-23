@@ -20,7 +20,7 @@ void bhv_spawned_star_init(void) {
     if (bit_shift_left(gLevelValues.useGlobalStarIds ? starId % 7 : starId) & save_file_get_star_flags(gCurrSaveFileNum - 1, (gLevelValues.useGlobalStarIds ? (starId / 7) - 1 : gCurrCourseNum - 1))) {
         cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
     }
-    cur_obj_play_sound_2(SOUND_GENERAL2_STAR_APPEARS);
+    cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL2_STAR_APPEARS);
 
     // exclamation box stars are not sent through the normal exclamation box
     // path due to jankiness in oBehParams. Send the spawn event here instead.
@@ -39,7 +39,7 @@ void bhv_spawned_star_init(void) {
 void set_sparkle_spawn_star_hitbox(void) {
     obj_set_hitbox(o, &sSparkleSpawnStarHitbox);
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
-        mark_obj_for_deletion(o);
+        obj_mark_for_deletion(o);
         o->oInteractStatus = 0;
     }
 }
@@ -113,7 +113,7 @@ void bhv_spawned_star_loop(void) {
             o->oGravity = -4.0f;
             spawn_mist_particles();
         }
-        cur_obj_play_sound_1(SOUND_ENV_STAR);
+        cur_obj_play_sound_if_visible(SOUND_ENV_STAR);
         spawn_object(o, MODEL_NONE, bhvSparkleSpawn);
         if (o->oVelY < 0 && o->oPosY < o->oHomeY) {
             o->oAction++;

@@ -211,7 +211,7 @@ static void monty_mole_act_select_hole(void) {
         o->oMontyMoleHoleY = o->oMontyMoleCurrentHole->oPosY;
         o->oMontyMoleHoleZ = o->oMontyMoleCurrentHole->oPosZ;
 
-        cur_obj_play_sound_2(SOUND_OBJ2_MONTY_MOLE_APPEAR);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_MONTY_MOLE_APPEAR);
 
         // Mark hole as unavailable
         o->oMontyMoleCurrentHole->oMontyMoleHoleCooldown = -1;
@@ -311,7 +311,7 @@ static void monty_mole_act_begin_jump_into_hole(void) {
  */
 static void monty_mole_act_throw_rock(void) {
     if (cur_obj_init_anim_check_frame(8, 10)) {
-        cur_obj_play_sound_2(SOUND_OBJ_MONTY_MOLE_ATTACK);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_MONTY_MOLE_ATTACK);
         o->prevObj = NULL;
     }
 

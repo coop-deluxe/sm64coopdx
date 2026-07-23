@@ -128,21 +128,29 @@ u8 djui_hud_get_mouse_buttons_released(void);
 f32 djui_hud_get_mouse_scroll_x(void);
 /* |description|Returns the amount scrolled vertically (-down/up+)|descriptionEnd| */
 f32 djui_hud_get_mouse_scroll_y(void);
-/* |description|Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics|descriptionEnd| */
-void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);
+/* |description|Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics|descriptionEnd| */
+void djui_hud_set_viewport(f32 ulx, f32 uly, f32 lrx, f32 lry);
+/* |description|Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics|descriptionEnd| */
+void djui_hud_set_viewport_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);
 /* |description|Resets the viewport to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_viewport(void);
-/* |description|Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
-void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);
+/* |description|Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
+void djui_hud_set_scissor(f32 ulx, f32 uly, f32 lrx, f32 lry);
+/* |description|Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle|descriptionEnd| */
+void djui_hud_set_scissor_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);
 /* |description|Resets the scissor rectangle to a fullscreen state|descriptionEnd| */
 void djui_hud_reset_scissor(void);
 
 /* |description|Measures the width and height of `message` in the current font|descriptionEnd| */
 void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);
 /* |description|Prints DJUI HUD text onto the screen|descriptionEnd| */
-void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);
+OVERLOAD(djui_hud_print_text) void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);
+/* |description|Prints DJUI HUD text onto the screen|descriptionEnd| */
+OVERLOAD(djui_hud_print_text) void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale);
 /* |description|Prints interpolated DJUI HUD text onto the screen|descriptionEnd| */
-void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);
+OVERLOAD(djui_hud_print_text_interpolated) void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);
+/* |description|Prints interpolated DJUI HUD text onto the screen|descriptionEnd| */
+OVERLOAD(djui_hud_print_text_interpolated) void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);
 /* |description|Renders a DJUI HUD texture onto the screen|descriptionEnd| */
 void djui_hud_render_texture(struct TextureInfo* texInfo, f32 x, f32 y, f32 scaleW, f32 scaleH);
 /* |description|Renders a DJUI HUD texture tile onto the screen|descriptionEnd| */

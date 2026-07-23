@@ -19,7 +19,7 @@ void bhv_end_birds_1_loop(void) {
             if (gCurrentObject->oTimer < 100)
                 obj_rotate_towards_point(gCurrentObject, sp34, 0, 0, 0x20, 0x20);
             if ((gCurrentObject->oEndBirdUnk104 == 0.f) && (gCurrentObject->oTimer == 0))
-                cur_obj_play_sound_2(SOUND_GENERAL_BIRDS_FLY_AWAY);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BIRDS_FLY_AWAY);
             if (gCutsceneTimer == 0)
                 obj_mark_for_deletion(gCurrentObject);
             break;

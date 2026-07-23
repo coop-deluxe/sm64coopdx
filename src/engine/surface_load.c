@@ -1137,7 +1137,7 @@ void remove_static_object_collision(struct StaticObjectCollision *col) {
     col->index = 0;
 
     // reclaim the SOC metadata from the pool
-    smlua_cobject_invalidate(col, LOT_STATICOBJECTCOLLISION);
+    smlua_invalidate_soc(col);
     growing_array_swap_and_pop(sSOCPool, col);
 }
 

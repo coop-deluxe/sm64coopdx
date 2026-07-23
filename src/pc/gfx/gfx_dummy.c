@@ -11,79 +11,28 @@
 #include <PR/ultratypes.h>
 
 #include "macros.h"
-#include "gfx_window_manager_api.h"
+#include "gfx_window_manager.h"
 #include "gfx_rendering_api.h"
 
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
-// TODO: figure out if this shit even works
-#ifdef VERSION_EU
-# define FRAMERATE 25
-#else
-# define FRAMERATE 30
-#endif
-
-static void sleep_ms(int milliseconds) { // cross-platform sleep function
-    // from StackOverflow user Bernardo Ramos: https://stackoverflow.com/a/28827188
-#ifdef WIN32
-    Sleep(milliseconds);
-#elif _POSIX_C_SOURCE >= 199309L
-    struct timespec ts;
-    ts.tv_sec = milliseconds / 1000;
-    ts.tv_nsec = (milliseconds % 1000) * 1000000;
-    nanosleep(&ts, NULL);
-#else
-    if (milliseconds >= 1000)
-        sleep(milliseconds / 1000);
-    usleep((milliseconds % 1000) * 1000);
-#endif
-}
-
 static void gfx_dummy_wm_init(UNUSED const char *game_name) {
 }
 
-static void gfx_dummy_wm_set_keyboard_callbacks(UNUSED kb_callback_t on_key_down, UNUSED kb_callback_t on_key_up, UNUSED void (*on_all_keys_up)(void),
-                                                UNUSED void (*on_text_input)(char*), UNUSED void (*on_text_editing)(char*, int)) {
+static void gfx_dummy_wm_set_fullscreen(void) {
 }
 
-static void gfx_dummy_wm_set_scroll_callback(UNUSED void (*on_scroll)(float, float)) {
-}
-
-UNUSED static void gfx_dummy_wm_set_fullscreen(UNUSED bool enable) {
-}
-
-static void gfx_dummy_wm_main_loop(void (*run_one_game_iter)(void)) {
-    while (1) {
-        run_one_game_iter();
-    }
-}
-
-static void gfx_dummy_wm_get_dimensions(uint32_t *width, uint32_t *height) {
-    *width = 320;
-    *height = 240;
-}
-
-static void gfx_dummy_wm_handle_events(void) {
+static void gfx_dummy_wm_handle_events(UNUSED SDL_Event event) {
 }
 
 static bool gfx_dummy_wm_start_frame(void) {
     return true;
 }
 
-static void gfx_dummy_wm_delay(u32 ms) {
-    sleep_ms(ms);
-}
-
 static int gfx_dummy_wm_get_max_msaa(void) {
     return 0;
-}
-
-static void gfx_dummy_wm_set_window_title(UNUSED const char* title) {
-}
-
-static void gfx_dummy_wm_reset_window_title(void) {
 }
 
 static void gfx_dummy_wm_swap_buffers_begin(void) {
@@ -94,29 +43,6 @@ static void gfx_dummy_wm_swap_buffers_end(void) {
 
 static double gfx_dummy_wm_get_time(void) {
     return 0.0;
-}
-
-static char* gfx_dummy_wm_get_clipboard_text(void) {
-    return "";
-}
-
-static void gfx_dummy_wm_shutdown(void) {
-}
-
-static void gfx_dummy_wm_start_text_input(void) {
-}
-
-static void gfx_dummy_wm_stop_text_input(void) {
-}
-
-static void gfx_dummy_wm_set_clipboard_text(UNUSED const char* text) {
-}
-
-static void gfx_dummy_wm_set_cursor_visible(UNUSED bool visible) {
-}
-
-static bool gfx_dummy_wm_has_focus(void) {
-    return true;
 }
 
 static bool gfx_dummy_renderer_z_is_from_0_to_1(void) {
@@ -199,28 +125,15 @@ static const char* gfx_dummy_renderer_get_name(void) {
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
-struct GfxWindowManagerAPI gfx_dummy_wm_api = {
+struct GfxWindowBackendAPI gfx_window_dummy = {
     gfx_dummy_wm_init,
-    gfx_dummy_wm_set_keyboard_callbacks,
-    gfx_dummy_wm_set_scroll_callback,
-    gfx_dummy_wm_main_loop,
-    gfx_dummy_wm_get_dimensions,
+    gfx_dummy_wm_set_fullscreen,
     gfx_dummy_wm_handle_events,
     gfx_dummy_wm_start_frame,
     gfx_dummy_wm_swap_buffers_begin,
     gfx_dummy_wm_swap_buffers_end,
     gfx_dummy_wm_get_time,
-    gfx_dummy_wm_shutdown,
-    gfx_dummy_wm_start_text_input,
-    gfx_dummy_wm_stop_text_input,
-    gfx_dummy_wm_get_clipboard_text,
-    gfx_dummy_wm_set_clipboard_text,
-    gfx_dummy_wm_set_cursor_visible,
-    gfx_dummy_wm_delay,
-    gfx_dummy_wm_get_max_msaa,
-    gfx_dummy_wm_set_window_title,
-    gfx_dummy_wm_reset_window_title,
-    gfx_dummy_wm_has_focus
+    gfx_dummy_wm_get_max_msaa
 };
 
 struct GfxRenderingAPI gfx_dummy_renderer_api = {

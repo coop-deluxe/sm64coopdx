@@ -2807,6 +2807,40 @@ Useful for keeping Mario's animations visually aligned, particularly when transi
 <br />
 
 ---
+# functions from commands.h
+
+<br />
+
+
+## [command_message_create](#command_message_create)
+
+### Description
+Creates a message that goes into either the chat, console, or terminal.
+It decides by checking where you entered the command, and will output to that source directly.
+
+It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.
+If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
+
+### Lua Example
+`command_message_create(message, level)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| level | [enum ConsoleMessageLevel](constants.md#enum-ConsoleMessageLevel) |
+
+### Returns
+- None
+
+### C Prototype
+`void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLevel level);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_chat_message.h
 
 <br />
@@ -3610,24 +3644,54 @@ Returns the amount scrolled vertically (-down/up+)
 ## [djui_hud_set_viewport](#djui_hud_set_viewport)
 
 ### Description
-Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
+Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
 
 ### Lua Example
-`djui_hud_set_viewport(x, y, width, height)`
+`djui_hud_set_viewport(ulx, uly, lrx, lry)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `number` |
-| y | `number` |
-| width | `number` |
-| height | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_viewport(f32 x, f32 y, f32 width, f32 height);`
+`void djui_hud_set_viewport(f32 ulx, f32 uly, f32 lrx, f32 lry);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_viewport_interpolated](#djui_hud_set_viewport_interpolated)
+
+### Description
+Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+
+### Lua Example
+`djui_hud_set_viewport_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pulx | `number` |
+| puly | `number` |
+| plrx | `number` |
+| plry | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_viewport_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);`
 
 [:arrow_up_small:](#)
 
@@ -3657,24 +3721,54 @@ Resets the viewport to a fullscreen state
 ## [djui_hud_set_scissor](#djui_hud_set_scissor)
 
 ### Description
-Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
+Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
 
 ### Lua Example
-`djui_hud_set_scissor(x, y, width, height)`
+`djui_hud_set_scissor(ulx, uly, lrx, lry)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| x | `number` |
-| y | `number` |
-| width | `number` |
-| height | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_scissor(f32 x, f32 y, f32 width, f32 height);`
+`void djui_hud_set_scissor(f32 ulx, f32 uly, f32 lrx, f32 lry);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_set_scissor_interpolated](#djui_hud_set_scissor_interpolated)
+
+### Description
+Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+
+### Lua Example
+`djui_hud_set_scissor_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pulx | `number` |
+| puly | `number` |
+| plrx | `number` |
+| plry | `number` |
+| ulx | `number` |
+| uly | `number` |
+| lrx | `number` |
+| lry | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_set_scissor_interpolated(f32 pulx, f32 puly, f32 plrx, f32 plry, f32 ulx, f32 uly, f32 lrx, f32 lry);`
 
 [:arrow_up_small:](#)
 
@@ -3720,6 +3814,109 @@ Measures the width and height of `message` in the current font
 
 ### C Prototype
 `void djui_hud_measure_text(const char* message, RET f32 *width, RET f32 *height);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text](#djui_hud_print_text)
+
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+---
+### Description
+Prints DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text(message, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_uniform(const char* message, f32 x, f32 y, f32 scale);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScaleX | `number` |
+| prevScaleY | `number` |
+| x | `number` |
+| y | `number` |
+| scaleX | `number` |
+| scaleY | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
+
+---
+### Description
+Prints interpolated DJUI HUD text onto the screen
+
+### Lua Example
+`djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+| prevX | `number` |
+| prevY | `number` |
+| prevScale | `number` |
+| x | `number` |
+| y | `number` |
+| scale | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_hud_print_text_interpolated_uniform(const char* message, f32 prevX, f32 prevY, f32 prevScale, f32 x, f32 y, f32 scale);`
 
 [:arrow_up_small:](#)
 

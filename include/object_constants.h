@@ -146,6 +146,13 @@
     #define BOBOMB_ACT_LAVA_DEATH 100
     #define BOBOMB_ACT_DEATH_PLANE_DEATH 101
 
+/* Coin Type */
+enum CoinType { // coinType
+    COIN_TYPE_NONE,
+    COIN_TYPE_YELLOW,
+    COIN_TYPE_BLUE
+};
+
 /* Hidden Blue Coin */
     /* oAction */
     #define HIDDEN_BLUE_COIN_ACT_INACTIVE 0

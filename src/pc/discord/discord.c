@@ -25,9 +25,6 @@ static void discord_sdk_log_callback(UNUSED void* hook_data, enum EDiscordLogLev
 
 void discord_fatal_message(int rc) { // Discord usually does this because of loss of connection to Discord
     LOG_ERROR("Discord fatal: %d", rc);
-    /*char errorMessage[132] = { 0 };
-    snprintf(errorMessage, 132, "%s\nRC: %d", DLANG(NOTIF, DISCORD_ERROR), rc);
-    djui_popup_create(errorMessage, 6);*/
 }
 
 void discord_fatal(int rc) {
@@ -46,7 +43,7 @@ void discord_fatal(int rc) {
 }
 
 UNUSED static void get_oauth2_token_callback(UNUSED void* data, enum EDiscordResult result, struct DiscordOAuth2Token* token) {
-    LOG_INFO("> get_oauth2_token_callback returned %d", result);
+    LOG_INFO("get_oauth2_token_callback returned %d", result);
     if (result != DiscordResult_Ok) { return; }
     LOG_INFO("OAuth2 token: %s", token->access_token);
 }
@@ -72,7 +69,7 @@ static void register_launch_command(void) {
 }
 
 static void on_current_user_update(UNUSED void* data) {
-    LOG_INFO("> on_current_user_update");
+    LOG_INFO("on_current_user_update");
     struct DiscordUser user = { 0 };
     app.users->get_current_user(app.users, &user);
 
@@ -95,7 +92,7 @@ static void on_current_user_update(UNUSED void* data) {
 }
 
 struct IDiscordUserEvents* discord_user_initialize(void) {
-    LOG_INFO("> discord_user_intitialize");
+    LOG_INFO("discord_user_intitialize");
     static struct IDiscordUserEvents events = { 0 };
     events.on_current_user_update = on_current_user_update;
     return &events;
@@ -130,7 +127,6 @@ static void discord_initialize(void) {
 
     if (rc) {
         LOG_ERROR("DiscordCreate failed: %d", rc);
-        //djui_popup_create(DLANG(NOTIF, DISCORD_DETECT), 3);
         sDiscordFailed = true;
         return;
     }

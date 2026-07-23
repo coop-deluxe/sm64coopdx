@@ -11,6 +11,7 @@ extern "C" {
 #include "game/moving_texture.h"
 #include "pc/djui/djui_console.h"
 #include "pc/fs/fmem.h"
+#include "pc/debuglog.h"
 }
 
 #define FUNCTION_CODE   (u32) 0x434E5546
@@ -648,6 +649,17 @@ struct ActorGfx {
     s32 mPackIndex = 0;
 };
 
+struct AudioOverrideEntry {
+    u8 sequenceId;
+    bool enabled;
+    bool loaded;
+    char* filename;
+    u64 length;
+    u8 bank;
+    u8 defaultVolume;
+    u8* buffer;
+};
+
 struct PackData {
     s32 mIndex;
     bool mEnabled;
@@ -655,6 +667,7 @@ struct PackData {
     String mDisplayName;
     std::vector<std::pair<std::string, GfxData *>> mGfxData;
     std::vector<DataNode<TexData>*> mTextures;
+    std::vector<struct AudioOverrideEntry *> mAudioOverrides;
     bool mLoaded;
 };
 
@@ -724,14 +737,14 @@ T *CopyBytes(const T *aPtr, u64 aSize) {
 
 template <typename... Args>
 void PrintNoNewLine(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
+    log_to_terminal(aFmt, aArgs...);
     fflush(stdout);
 }
 
 template <typename... Args>
 void Print(const char *aFmt, Args... aArgs) {
-    printf(aFmt, aArgs...);
-    printf("\r\n");
+    log_to_terminal(aFmt, aArgs...);
+    log_to_terminal("\r\n");
     fflush(stdout);
 }
 
@@ -798,6 +811,7 @@ void DynOS_UpdateGfx();
 bool DynOS_IsTransitionActive();
 void DynOS_Mod_Update();
 void DynOS_Mod_Shutdown();
+bool DynOS_Mod_IsShuttingDown();
 
 //
 // Gfx
@@ -829,6 +843,7 @@ s8 DynOS_Level_GetCourse(s32 aLevel);
 void DynOS_Level_Override(void* originalScript, void* newScript, s32 modIndex);
 void DynOS_Level_Unoverride();
 const void *DynOS_Level_GetScript(s32 aLevel);
+const void *DynOS_Level_GetVanillaScript(s32 aLevel);
 s32 DynOS_Level_GetModIndex(s32 aLevel);
 bool DynOS_Level_IsVanillaLevel(s32 aLevel);
 Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea);
@@ -897,6 +912,17 @@ std::pair<std::string, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, cons
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
 void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
+
+//
+// Audio Manager
+//
+
+void DynOS_Audio_ResetMods();
+bool DynOS_Audio_Override(u8 aSequenceId, s32* aBankId, void** aSeqData);
+void DynOS_Audio_ActivatePackOverride(AudioOverrideEntry* aOverride);
+void DynOS_Audio_DeactivatePackOverride(AudioOverrideEntry* aOverride);
+AudioOverrideEntry* DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aDefaultVolume, const char *aFilepath, bool aIsPack);
+u8 DynOS_Audio_AllocSequence();
 
 //
 // Actor Manager

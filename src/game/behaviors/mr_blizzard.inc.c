@@ -114,7 +114,7 @@ static void mr_blizzard_act_hide_unhide(void) {
     if (distanceToPlayer < 1000.0f) {
         // If Mario is in range, move to rising action, make Mr. Blizzard visible,
         // make Mr. Blizzard tangible, and initialize GraphYVel.
-        cur_obj_play_sound_2(SOUND_OBJ_SNOW_SAND2);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNOW_SAND2);
         o->oAction = MR_BLIZZARD_ACT_RISE_FROM_GROUND;
         o->oMoveAngleYaw = angleToPlayer;
         o->oMrBlizzardGraphYVel = 42.0f;
@@ -240,7 +240,7 @@ static void mr_blizzard_act_death(void) {
 
     if (clamp_f32(&o->oMrBlizzardDizziness, -0x4000, 0x4000)) {
         if (o->oMrBlizzardChangeInDizziness != 0.0f) {
-            cur_obj_play_sound_2(SOUND_OBJ_SNOW_SAND1);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNOW_SAND1);
             // If Mr. Blizzard is wearing Mario's cap, clear
             // the save flag and spawn Mario's cap.
             if (o->oAnimState) {
@@ -273,7 +273,7 @@ static void mr_blizzard_act_death(void) {
     // at .03 units per frame. Spawn coins and set the coins to not respawn.
     if (o->oTimer >= 30) {
         if (o->oTimer == 30) {
-            cur_obj_play_sound_2(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
         }
 
         if (o->oMrBlizzardScale != 0.0f) {
@@ -305,7 +305,7 @@ static void mr_blizzard_act_throw_snowball(void) {
 
     // Play a sound and set HeldObj to NULL. Then set action to 0.
     if (cur_obj_init_anim_check_frame(1, 7)) {
-        cur_obj_play_sound_2(SOUND_OBJ2_SCUTTLEBUG_ALERT);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ2_SCUTTLEBUG_ALERT);
         o->prevObj = o->oMrBlizzardHeldObj = NULL;
     } else if (cur_obj_check_if_near_animation_end()) {
         o->oAction = MR_BLIZZARD_ACT_SPAWN_SNOWBALL;
@@ -347,7 +347,7 @@ static void mr_blizzard_act_jump(void) {
         cur_obj_rotate_yaw_toward(o->oMrBlizzardTargetMoveYaw, 3400);
 
         if (--o->oMrBlizzardTimer == 0) {
-            cur_obj_play_sound_2(SOUND_OBJ_MR_BLIZZARD_ALERT);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_MR_BLIZZARD_ALERT);
 
             // If Mr. Blizzard is more than 700 units from its home, change its target yaw
             // by 180 degrees, jump in the air, set distance from home to 0.
@@ -370,7 +370,7 @@ static void mr_blizzard_act_jump(void) {
         // set its timer to 15. If Mr. Blizzard's DistFromHome is not 0,
         // set DistFromHome to its current distance from its home.
         // Otherwise, set DistFromHome to 700.
-        cur_obj_play_sound_2(SOUND_OBJ_SNOW_SAND1);
+        cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_SNOW_SAND1);
         if (o->oMrBlizzardDistFromHome != 0) {
             o->oMrBlizzardDistFromHome = (s32) cur_obj_lateral_dist_to_home();
         } else {

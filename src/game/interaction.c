@@ -2455,7 +2455,7 @@ void check_death_barrier(struct MarioState *m) {
                         break;
                     }
                 default:
-                    mario_set_bubbled(m);
+                    mario_set_bubbled(m, false);
                     return;
             }
         }

@@ -36,7 +36,7 @@ void DynOS_Bhv_Activate(s32 modIndex, const SysPath &aFilename, const char *aBeh
 void DynOS_Bhv_ModShutdown() {
     auto &_CustomBehaviorScripts = DynOS_Bhv_GetArray();
     for (auto &pair : _CustomBehaviorScripts) {
-        Delete(pair.second);
+        DynOS_Gfx_Free(pair.second);
     }
     _CustomBehaviorScripts.clear();
 }

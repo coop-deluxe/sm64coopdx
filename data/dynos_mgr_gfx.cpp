@@ -350,7 +350,7 @@ void DynOS_Gfx_ModShutdown() {
     sModsDisplayLists.Clear();
     sModsVertexBuffers.Clear();
 
-    // Restore vanilla display lists
+    // Restore vanilla display lists and vertices
     for (auto &it : sRomToRamGfxVtxMap) {
         const void *original = it.second.gfxCopy ? it.second.gfxCopy : it.first;
         void *duplicate = it.second.duplicate;

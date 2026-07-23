@@ -11,7 +11,7 @@ extern "C" {
 #include <set>
 #include "pc/utils/json.hpp"
 
-#define C_DEFINE extern "C"
+namespace modfs {
 
 using json = nlohmann::json;
 static const json sEmptyJson = {};
@@ -46,18 +46,23 @@ static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
 // - the function that raised it usually returns false or nil
 
 static bool sModFsHideErrors = false;
+static enum ModFsErrorCode sModFsLastErrorCode;
 static char sModFsLastError[1024];
 static char sModFsErrorFunction[256];
 
 #define mod_fs_reset_last_error() { \
-    memset(sModFsLastError, 0, sizeof(sModFsLastError)); \
-    snprintf(sModFsErrorFunction, sizeof(sModFsErrorFunction), "%s", __FUNCTION__); \
+    *err = modfs::sModFsLastErrorCode = MOD_FS_ERR_NONE; \
+    memset(modfs::sModFsLastError, 0, sizeof(modfs::sModFsLastError)); \
+    snprintf(modfs::sModFsErrorFunction, sizeof(modfs::sModFsErrorFunction), "%s", __FUNCTION__); \
 }
 
-#define mod_fs_raise_error(fmt, ...) { \
-    snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, ##__VA_ARGS__); \
-    if (!sModFsHideErrors) { \
-        LOG_LUA_LINE("%s", sModFsLastError); \
+#define mod_fs_raise_error(errcode, fmt, ...) { \
+    if (!*err) { \
+        sModFsLastErrorCode = *err = errcode; \
+        snprintf(sModFsLastError, sizeof(sModFsLastError), "%s: " fmt, sModFsErrorFunction, ##__VA_ARGS__); \
+        if (!sModFsHideErrors) { \
+            LOG_LUA_LINE("%s", sModFsLastError); \
+        } \
     } \
 }
 
@@ -147,19 +152,21 @@ static int mod_fs_compare_filepaths(const void *l, const void *r) {
     return strcmp(lfile->filepath, rfile->filepath);
 }
 
-static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
+static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath, enum ModFsErrorCode *err) {
 
     // check length
     u32 filepathLength = strlen(filepath);
     if (filepathLength == 0) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - filepath length cannot be 0", modFs->modPath, filepath
+            MOD_FS_ERR_FILEPATH_EMPTY,
+            "modPath: %s, filepath: %s - Filepath cannot be empty", modFs->modPath, filepath
         );
         return false;
     }
     if (filepathLength > MOD_FS_MAX_PATH - 1) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - exceeded filepath length: %u (max is: %u)", modFs->modPath, filepath, filepathLength, MOD_FS_MAX_PATH - 1
+            MOD_FS_ERR_FILEPATH_LEN_EXCEEDED,
+            "modPath: %s, filepath: %s - Exceeded filepath length: %u (max is: %u)", modFs->modPath, filepath, filepathLength, MOD_FS_MAX_PATH - 1
         );
         return false;
     }
@@ -167,27 +174,48 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     // cannot be called properties.json
     if (strcmp(filepath, MOD_FS_PROPERTIES) == 0) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - forbidden filepath: \"" MOD_FS_PROPERTIES "\" is reserved", modFs->modPath, filepath
+            MOD_FS_ERR_FILEPATH_RESERVED,
+            "modPath: %s, filepath: %s - Forbidden filepath: \"" MOD_FS_PROPERTIES "\" is reserved", modFs->modPath, filepath
         );
         return false;
     }
 
     // check character validity
-    // only ascii chars, no control chars, no star, no backslash
+    // only ascii chars, no control chars, no asterisk, no backslash
     for (u32 i = 0; i != filepathLength; ++i) {
         char c = filepath[i];
         if (!isascii(c) || iscntrl(c) || c == '*' || c == '\\') {
             mod_fs_raise_error(
-                "modPath: %s, filepath: %s - invalid character at position %d: '%c' (%02X)", modFs->modPath, filepath, i, c, (u8) c
+                MOD_FS_ERR_FILEPATH_INVALID_CHAR,
+                "modPath: %s, filepath: %s - Invalid character at position %d: '%c' (%02X)", modFs->modPath, filepath, i, c, (u8) c
             );
             return false;
         }
     }
 
+    // cannot start with a whitespace
+    if (isspace(filepath[0])) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_FILEPATH_MALFORMED,
+            "modPath: %s, filepath: %s - Filepath cannot start with a whitespace", modFs->modPath, filepath
+        );
+        return false;
+    }
+
+    // cannot end with a whitespace
+    if (isspace(filepath[filepathLength - 1])) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_FILEPATH_MALFORMED,
+            "modPath: %s, filepath: %s - Filepath cannot end with a whitespace", modFs->modPath, filepath
+        );
+        return false;
+    }
+
     // cannot start with a slash
     if (filepath[0] == '/') {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - filepath cannot start with a slash '/'", modFs->modPath, filepath
+            MOD_FS_ERR_FILEPATH_MALFORMED,
+            "modPath: %s, filepath: %s - Filepath cannot start with a slash '/'", modFs->modPath, filepath
         );
         return false;
     }
@@ -195,7 +223,8 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     // cannot end with a slash
     if (filepath[filepathLength - 1] == '/') {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - filepath cannot end with a slash '/'", modFs->modPath, filepath
+            MOD_FS_ERR_FILEPATH_MALFORMED,
+            "modPath: %s, filepath: %s - Filepath cannot end with a slash '/'", modFs->modPath, filepath
         );
         return false;
     }
@@ -203,7 +232,8 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     // no two consecutive slashes
     if (strstr(filepath, "//")) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - two or more consecutive slashes '/' are not allowed", modFs->modPath, filepath
+            MOD_FS_ERR_FILEPATH_MALFORMED,
+            "modPath: %s, filepath: %s - Two or more consecutive slashes '/' are not allowed", modFs->modPath, filepath
         );
         return false;
     }
@@ -221,6 +251,7 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
         }
         if (!allowedExtension) {
             mod_fs_raise_error(
+                MOD_FS_ERR_FILEPATH_INVALID_EXTENSION,
                 "modPath: %s, filepath: %s - file extension not allowed: %s", modFs->modPath, filepath, lastDot
             );
             return false;
@@ -230,40 +261,17 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath) {
     return true;
 }
 
-static bool mod_fs_check_file_content(struct ModFs *modFs, struct ModFsFile *file) {
-    if (!file->data.bin || file->size < 4) {
-        return true;
-    }
-
-    // Reject Windows executable files
-    if (memcmp(file->data.bin, "MZ", 2) == 0) {
-        mod_fs_raise_error(
-            "modPath: %s, filepath: %s - Binary file cannot start with \"MZ\" bytes", modFs->modPath, file->filepath
-        );
-        return false;
-    }
-
-    // Reject ELF files
-    if (memcmp(file->data.bin, "\177ELF", 4) == 0) {
-        mod_fs_raise_error(
-            "modPath: %s, filepath: %s - Binary file cannot start with \"\\x7fELF\" bytes", modFs->modPath, file->filepath
-        );
-        return false;
-    }
-
-    return true;
-}
-
 //
 // ctor, dtor
 //
 
-static struct ModFs *mod_fs_new() {
+static struct ModFs *mod_fs_new(enum ModFsErrorCode *err) {
     if (gLuaActiveMod) {
         struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
         if (!modFs) {
             mod_fs_raise_error(
-                "failed to allocate modfs object"
+                MOD_FS_ERR_ALLOC_FAILED,
+                "Failed to allocate ModFS object"
             );
             return NULL;
         }
@@ -423,7 +431,10 @@ static bool mod_fs_file_detect_text_mode(struct ModFsFile *file) {
 }
 
 #define mod_fs_read_raise_error_zip() { \
-    mod_fs_read_raise_error("modPath: %s - cannot read zip file: %s", modFs->modPath, mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
+    mod_fs_read_raise_error( \
+        MOD_FS_ERR_READ_ZIP, \
+        "modPath: %s - Cannot read zip file: %s", modFs->modPath, mz_zip_get_error_string(mz_zip_get_last_error(zip)) \
+    ); \
 }
 
 static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::string &error) {
@@ -439,7 +450,7 @@ static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::s
     size_t fileSize;
     void *fileBuf = mz_zip_reader_extract_to_heap(zip, fileIndex, &fileSize, 0);
     if (!fileBuf) {
-        error = "cannot read file \"" MOD_FS_PROPERTIES "\": " + std::string(mz_zip_get_error_string(mz_zip_get_last_error(zip)));
+        error = "Cannot read file \"" MOD_FS_PROPERTIES "\": " + std::string(mz_zip_get_error_string(mz_zip_get_last_error(zip)));
         return false;
     }
     std::string textBuf((const char *) fileBuf, fileSize);
@@ -449,7 +460,7 @@ static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::s
     try {
         properties = json::parse(textBuf);
     } catch (const json::parse_error& e) {
-        error = e.what();
+        error = "Cannot read file \"" MOD_FS_PROPERTIES "\": " + std::string(e.what());
         return false;
     }
 
@@ -457,7 +468,7 @@ static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::s
     return true;
 }
 
-static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExistenceOnly) {
+static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExistenceOnly, enum ModFsErrorCode *err) {
     FILE *f = mod_fs_get_file_handle(modPath, "rb");
     if (f) {
         mz_zip_archive zip[1] = {0};
@@ -466,7 +477,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
         // get true modPath and mod
         if (!mod_fs_get_modpath(modPath, modFs->modPath)) {
             mod_fs_read_raise_error(
-                "unable to retrieve modPath from %s", modPath
+                MOD_FS_ERR_READ_INVALID_MODPATH,
+                "Unable to retrieve modPath from: %s", modPath
             );
         }
         char activeModPath[SYS_MAX_PATH];
@@ -483,7 +495,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
         zipBuf = malloc(zipSize);
         if (!zipBuf || fread(zipBuf, 1, zipSize, f) < zipSize) {
             mod_fs_read_raise_error(
-                "modPath: %s - cannot read zip file", modFs->modPath
+                MOD_FS_ERR_READ_ZIP,
+                "modPath: %s - Cannot read zip file", modFs->modPath
             );
         }
         fclose(f);
@@ -499,14 +512,15 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
         std::string error;
         if (!mod_fs_read_properties(zip, properties, error)) {
             mod_fs_read_raise_error(
+                MOD_FS_ERR_READ_PROPERTIES,
                 "modPath: %s - %s", modFs->modPath, error.c_str()
             );
         }
 
-        // check if modfs is public
+        // check if ModFS is public
         modFs->isPublic = mod_fs_read_property<bool>(properties, { "isPublic" }, MOD_FS_IS_PUBLIC_DEFAULT);
         if (!mod_fs_is_active_mod(modFs) && !modFs->isPublic) {
-            // don't raise an error, user should not know if a private modfs file exists
+            // don't raise an error, user should not know if a private ModFS file exists
             mod_fs_read_return (false);
         }
         if (checkExistenceOnly) {
@@ -531,17 +545,17 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
 
                 // check filepath
                 const char *filepath = fileStat.m_filename;
-                if (!mod_fs_check_filepath(modFs, filepath)) {
-                    mod_fs_read_raise_error(
-                        "modPath: %s - invalid filepath: %s", modFs->modPath, filepath
-                    );
+                if (!mod_fs_check_filepath(modFs, filepath, err)) {
+                    // mod_fs_check_filepath already sets the error
+                    mod_fs_read_return (false);
                 }
                 memcpy(file.filepath, filepath, strlen(filepath));
 
                 // check file size
                 if (fileStat.m_uncomp_size > MOD_FS_MAX_SIZE) {
                     mod_fs_read_raise_error(
-                        "modPath: %s, filepath: %s - exceeded file size: %llu (max is: %u)", modFs->modPath, file.filepath, (u64) fileStat.m_uncomp_size, MOD_FS_MAX_SIZE
+                        MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+                        "modPath: %s, filepath: %s - Exceeded file size: %llu (max is: %u)", modFs->modPath, file.filepath, (u64) fileStat.m_uncomp_size, MOD_FS_MAX_SIZE
                     );
                 }
                 file.size = file.capacity = fileStat.m_uncomp_size;
@@ -550,7 +564,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 modFs->totalSize += file.size;
                 if (modFs->totalSize > MOD_FS_MAX_SIZE) {
                     mod_fs_read_raise_error(
-                        "modPath: %s - exceeded total size: %u (max is: %u)", modFs->modPath, modFs->totalSize, MOD_FS_MAX_SIZE
+                        MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+                        "modPath: %s - Exceeded total size: %u (max is: %u)", modFs->modPath, modFs->totalSize, MOD_FS_MAX_SIZE
                     );
                 }
 
@@ -569,7 +584,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 // check number of files
                 if (modFs->numFiles > MOD_FS_MAX_FILES) {
                     mod_fs_read_raise_error(
-                        "modPath: %s - exceeded number of files: %u (max is: %u)", modFs->modPath, numFiles, MOD_FS_MAX_FILES
+                        MOD_FS_ERR_NUM_FILES_EXCEEDED,
+                        "modPath: %s - Exceeded number of files: %u (max is: %u)", modFs->modPath, numFiles, MOD_FS_MAX_FILES
                     );
                 }
             }
@@ -580,7 +596,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             modFs->files = (struct ModFsFile **) calloc(modFs->numFiles, sizeof(struct ModFsFile *));
             if (!modFs->files) {
                 mod_fs_read_raise_error(
-                    "modPath: %s - failed to allocate buffer for modfs files", modFs->modPath
+                    MOD_FS_ERR_ALLOC_FAILED,
+                    "modPath: %s - Failed to allocate buffer for ModFS files", modFs->modPath
                 );
             }
         } else {
@@ -599,15 +616,17 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             // check file size
             if (fileSize != fileRef.size) {
                 mod_fs_read_raise_error(
-                    "modPath: %s, filepath: %s - truncated data: read size is %llu (expected: %u)", modFs->modPath, fileRef.filepath, (u64) fileSize, fileRef.size
+                    MOD_FS_ERR_READ_FILE_TRUNCATED,
+                    "modPath: %s, filepath: %s - Truncated data: read size is %llu (expected: %u)", modFs->modPath, fileRef.filepath, (u64) fileSize, fileRef.size
                 );
             }
 
-            // create modfs file
+            // create ModFS file
             struct ModFsFile *file = modFs->files[i] = mod_fs_alloc<struct ModFsFile>();
             if (!file) {
                 mod_fs_read_raise_error(
-                    "modPath: %s, filepath: %s - failed to allocate modfs file object", modFs->modPath, file->filepath
+                    MOD_FS_ERR_ALLOC_FAILED,
+                    "modPath: %s, filepath: %s - Failed to allocate ModFS file object", modFs->modPath, fileRef.filepath
                 );
             }
             memcpy(file, &fileRef, sizeof(struct ModFsFile));
@@ -616,7 +635,8 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
                 file->data.bin = (u8 *) malloc(file->capacity);
                 if (!file->data.bin) {
                     mod_fs_read_raise_error(
-                        "modPath: %s, filepath: %s - failed to allocate buffer for modfs file data", modFs->modPath, file->filepath
+                        MOD_FS_ERR_ALLOC_FAILED,
+                        "modPath: %s, filepath: %s - Failed to allocate buffer for ModFS file data", modFs->modPath, file->filepath
                     );
                 }
                 memcpy(file->data.bin, fileBuf, file->size);
@@ -627,13 +647,6 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
             const bool isText = mod_fs_file_detect_text_mode(file);
             const json &fileProperties = mod_fs_read_properties_for_filepath(properties, file->filepath);
             file->isText = mod_fs_read_property<bool>(fileProperties, { "isText" }, isText);
-
-            // check file content if binary
-            if (!isText && !mod_fs_check_file_content(modFs, file)) {
-                mod_fs_read_raise_error(
-                    "modPath: %s, filepath: %s - Invalid file data", modFs->modPath, file->filepath
-                );
-            }
 
             // read compressionLevel property
             file->compressionLevel = mod_fs_read_property<s32>(fileProperties, { "compressionLevel" }, MOD_FS_COMPRESSION_DEFAULT);
@@ -652,18 +665,21 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
 // Write
 //
 
-#define mod_fs_write_raise_error(...) { \
-    mod_fs_raise_error("cannot save modfs for the active mod: " __VA_ARGS__); \
+#define mod_fs_write_raise_error(errcode, ...) { \
+    mod_fs_raise_error(errcode, "Cannot save ModFS for the active mod: " __VA_ARGS__); \
     mz_zip_writer_end(zip); \
     fclose(f); \
     return false; \
 }
 
 #define mod_fs_write_raise_error_zip() { \
-    mod_fs_write_raise_error("%s", mz_zip_get_error_string(mz_zip_get_last_error(zip))); \
+    mod_fs_write_raise_error( \
+        MOD_FS_ERR_WRITE_ZIP, \
+        "%s", mz_zip_get_error_string(mz_zip_get_last_error(zip)) \
+    ); \
 }
 
-static bool mod_fs_write(struct ModFs *modFs) {
+static bool mod_fs_write(struct ModFs *modFs, enum ModFsErrorCode *err) {
     FILE *f = mod_fs_get_file_handle(modFs->modPath, "wb");
     if (f) {
         mz_zip_archive zip[1] = {0};
@@ -673,18 +689,9 @@ static bool mod_fs_write(struct ModFs *modFs) {
             mod_fs_write_raise_error_zip();
         }
 
-        // add each modfs file to the zip archive
+        // add each ModFS file to the zip archive
         for (u16 i = 0; i != modFs->numFiles; ++i) {
             struct ModFsFile *file = modFs->files[i];
-
-            // check file content before writing if binary
-            const bool isText = mod_fs_file_detect_text_mode(file);
-            if (!isText && !mod_fs_check_file_content(modFs, file)) {
-                mod_fs_write_raise_error(
-                    "filepath: %s - Invalid file data", file->filepath
-                );
-            }
-
             if (!mz_zip_writer_add_mem(zip, file->filepath, file->data.bin, file->size, file->compressionLevel)) {
                 mod_fs_write_raise_error_zip();
             }
@@ -719,40 +726,44 @@ static bool mod_fs_write(struct ModFs *modFs) {
 //
 
 template <typename T>
-static bool mod_fs_check_pointer(T *ptr, const char *typeName) {
+static bool mod_fs_check_pointer(T *ptr, const char *typeName, enum ModFsErrorCode *err) {
     if (!mod_fs_is_valid_pointer(ptr)) {
         mod_fs_raise_error(
-            "pointer is not a valid %s object", typeName
+            MOD_FS_ERR_INVALID_POINTER,
+            "Pointer is not a valid %s object", typeName
         );
         return false;
     }
     return true;
 }
 
-static bool mod_fs_check_write(struct ModFs *modFs, const char *action) {
+static bool mod_fs_check_write(struct ModFs *modFs, const char *action, enum ModFsErrorCode *err) {
     if (!mod_fs_is_active_mod(modFs)) {
         mod_fs_raise_error(
-            "modPath: %s - %s other mods modfs is not allowed", modFs->modPath, action
+            MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD,
+            "modPath: %s - %s other mods ModFS is not allowed", modFs->modPath, action
         );
         return false;
     }
     return true;
 }
 
-static bool mod_fs_file_check_write(struct ModFsFile *file) {
+static bool mod_fs_file_check_write(struct ModFsFile *file, enum ModFsErrorCode *err) {
     if (!mod_fs_is_active_mod(file->modFs)) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - writing to files in other mods modfs is not allowed", file->modFs->modPath, file->filepath
+            MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD,
+            "modPath: %s, filepath: %s - Writing to files in other mods ModFS is not allowed", file->modFs->modPath, file->filepath
         );
         return false;
     }
     return true;
 }
 
-static bool mod_fs_file_check_file_type(struct ModFsFile *file, bool isText, bool write, const char *dataName) {
+static bool mod_fs_file_check_file_type(struct ModFsFile *file, bool isText, bool write, const char *dataName, enum ModFsErrorCode *err) {
     if (file->isText != isText) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - cannot %s %s %s a %s file", file->modFs->modPath, file->filepath,
+            MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED,
+            "modPath: %s, filepath: %s - Cannot %s %s %s a %s file", file->modFs->modPath, file->filepath,
             (write ? "write" : "read"),
             dataName,
             (write ? "to" : "from"),
@@ -763,12 +774,15 @@ static bool mod_fs_file_check_file_type(struct ModFsFile *file, bool isText, boo
     return true;
 }
 
-static bool mod_fs_file_check_parameter(struct ModFsFile *file, u8 parameter, u8 parameterMax, const char *parameterName) {
-    if (parameter >= parameterMax) {
+static bool mod_fs_file_check_parameter(struct ModFsFile *file, int parameter, int parameterMin, int parameterMax, const char *parameterName, enum ModFsErrorCode *err) {
+    if (parameter < parameterMin || parameter > parameterMax) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - invalid %s: %u", file->modFs->modPath, file->filepath,
+            MOD_FS_ERR_INVALID_PARAMETER,
+            "modPath: %s, filepath: %s - Invalid %s: %d (must be between %d and %d inclusive)", file->modFs->modPath, file->filepath,
             parameterName,
-            parameter
+            parameter,
+            parameterMin,
+            parameterMax
         );
         return false;
     }
@@ -779,7 +793,7 @@ static bool mod_fs_file_check_parameter(struct ModFsFile *file, u8 parameter, u8
 // FS management
 //
 
-static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound) {
+static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound, enum ModFsErrorCode *err) {
     for (auto &item : sModFsList) {
 
         // active mod fs
@@ -795,11 +809,12 @@ static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound
     // try to load it
     if (loadIfNotFound) {
         struct ModFs temp = {0};
-        if (mod_fs_read(modPath, &temp, false)) {
+        if (mod_fs_read(modPath, &temp, false, err)) {
             struct ModFs *modFs = mod_fs_alloc<struct ModFs>();
             if (!modFs) {
                 mod_fs_raise_error(
-                    "failed to allocate modfs object"
+                    MOD_FS_ERR_ALLOC_FAILED,
+                    "Failed to allocate ModFS object"
                 );
                 return NULL;
             }
@@ -815,33 +830,28 @@ static struct ModFs *mod_fs_get_or_load(const char *modPath, bool loadIfNotFound
     return NULL;
 }
 
-C_DEFINE bool mod_fs_exists(OPTIONAL const char *modPath) {
-    mod_fs_reset_last_error();
-
-    struct ModFs *modFs = mod_fs_get_or_load(modPath, false);
+static bool mod_fs_exists(const char *modPath, enum ModFsErrorCode *err) {
+    struct ModFs *modFs = mod_fs_get_or_load(modPath, false, err);
     if (modFs) {
         return true;
     }
 
     struct ModFs header = {0};
-    if (!mod_fs_read(modPath, &header, true)) {
+    if (!mod_fs_read(modPath, &header, true, err)) {
         return false;
     }
 
     return true;
 }
 
-C_DEFINE struct ModFs *mod_fs_get(OPTIONAL const char *modPath) {
-    mod_fs_reset_last_error();
-
-    return mod_fs_get_or_load(modPath, true);
+static struct ModFs *mod_fs_get(const char *modPath, enum ModFsErrorCode *err) {
+    return mod_fs_get_or_load(modPath, true, err);
 }
 
-C_DEFINE struct ModFs *mod_fs_reload(OPTIONAL const char *modPath) {
-    mod_fs_reset_last_error();
+static struct ModFs *mod_fs_reload(const char *modPath, enum ModFsErrorCode *err) {
 
-    // remove modfs object if already loaded
-    struct ModFs *modFs = mod_fs_get_or_load(modPath, false);
+    // remove ModFS object if already loaded
+    struct ModFs *modFs = mod_fs_get_or_load(modPath, false, err);
     if (modFs) {
         sModFsList.erase(std::find(sModFsList.begin(), sModFsList.end(), modFs));
         mod_fs_destroy(modFs);
@@ -849,17 +859,16 @@ C_DEFINE struct ModFs *mod_fs_reload(OPTIONAL const char *modPath) {
     }
 
     // reload
-    return mod_fs_get(modPath);
+    return modfs::mod_fs_get(modPath, err);
 }
 
-C_DEFINE struct ModFs *mod_fs_create() {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_exists(NULL)) {
-        struct ModFs *modFs = mod_fs_new();
+static struct ModFs *mod_fs_create(enum ModFsErrorCode *err) {
+    if (!modfs::mod_fs_exists(NULL, err)) {
+        struct ModFs *modFs = mod_fs_new(err);
         if (!modFs) {
             mod_fs_raise_error(
-                "cannot create modfs for the active mod"
+                MOD_FS_ERR_ALLOC_FAILED,
+                "Cannot create ModFS for the active mod"
             );
             return NULL;
         }
@@ -869,7 +878,8 @@ C_DEFINE struct ModFs *mod_fs_create() {
     }
 
     mod_fs_raise_error(
-        "a modfs already exists for the active mod; use `mod_fs_get()` instead"
+        MOD_FS_ERR_ALREADY_EXISTS,
+        "A ModFS already exists for the active mod; use `mod_fs_get()` instead"
     );
     return NULL;
 }
@@ -878,16 +888,15 @@ C_DEFINE struct ModFs *mod_fs_create() {
 // File management
 //
 
-C_DEFINE const char *mod_fs_get_filename(struct ModFs *modFs, u16 index) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static const char *mod_fs_get_filename(struct ModFs *modFs, u16 index, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return NULL;
     }
 
     if (index >= modFs->numFiles) {
         mod_fs_raise_error(
-            "modPath: %s - file index out of bounds: %u (num files: %u)", modFs->modPath, index, modFs->numFiles
+            MOD_FS_ERR_FILE_INVALID_INDEX,
+            "modPath: %s - File index out of bounds: %u (num files: %u)", modFs->modPath, index, modFs->numFiles
         );
         return NULL;
     }
@@ -895,10 +904,8 @@ C_DEFINE const char *mod_fs_get_filename(struct ModFs *modFs, u16 index) {
     return modFs->files[index]->filepath;
 }
 
-C_DEFINE struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return NULL;
     }
 
@@ -911,35 +918,35 @@ C_DEFINE struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *file
     return NULL;
 }
 
-C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return NULL;
     }
 
-    // cannot create new files in other mods modfs
-    if (!mod_fs_check_write(modFs, "creating files in")) {
+    // cannot create new files in other mods ModFS
+    if (!mod_fs_check_write(modFs, "Creating files in", err)) {
         return NULL;
     }
 
     // check number of files
     if (modFs->numFiles == MOD_FS_MAX_FILES) {
         mod_fs_raise_error(
-            "modPath: %s - reached max number of files: %u", modFs->modPath, MOD_FS_MAX_FILES
+            MOD_FS_ERR_NUM_FILES_EXCEEDED,
+            "modPath: %s - Reached max number of files: %u", modFs->modPath, MOD_FS_MAX_FILES
         );
         return NULL;
     }
 
     // check filepath
-    if (!mod_fs_check_filepath(modFs, filepath)) {
+    if (!mod_fs_check_filepath(modFs, filepath, err)) {
         return NULL;
     }
 
     // check existing file
-    if (mod_fs_get_file(modFs, filepath)) {
+    if (modfs::mod_fs_get_file(modFs, filepath, err)) {
         mod_fs_raise_error(
-            "modPath: %s - file %s already exists; use `mod_fs_get_file` instead", modFs->modPath, filepath
+            MOD_FS_ERR_ALREADY_EXISTS,
+            "modPath: %s - File %s already exists; use `mod_fs_get_file` instead", modFs->modPath, filepath
         );
         return NULL;
     }
@@ -948,7 +955,8 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     struct ModFsFile *file = mod_fs_alloc<struct ModFsFile>();
     if (!file) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - failed to allocate modfs file object", modFs->modPath, filepath
+            MOD_FS_ERR_ALLOC_FAILED,
+            "modPath: %s, filepath: %s - Failed to allocate ModFS file object", modFs->modPath, filepath
         );
         return NULL;
     }
@@ -966,7 +974,8 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     struct ModFsFile **files = (struct ModFsFile **) realloc(modFs->files, (modFs->numFiles + 1) * sizeof(struct ModFsFile *));
     if (!files) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - failed to reallocate buffer of modfs files", modFs->modPath, filepath
+            MOD_FS_ERR_ALLOC_FAILED,
+            "modPath: %s, filepath: %s - Failed to reallocate buffer of ModFS files", modFs->modPath, filepath
         );
         mod_fs_free<struct ModFsFile>(file);
         return NULL;
@@ -979,132 +988,13 @@ C_DEFINE struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *f
     return file;
 }
 
-C_DEFINE bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return false;
     }
 
-    // cannot move files in other mods modfs
-    if (!mod_fs_check_write(modFs, "moving files in")) {
-        return false;
-    }
-
-    // check new filepath
-    if (!mod_fs_check_filepath(modFs, newpath)) {
-        return false;
-    }
-
-    // get file
-    struct ModFsFile *oldfile = mod_fs_get_file(modFs, oldpath);
-    if (!oldfile) {
-        mod_fs_raise_error(
-            "modPath: %s - file %s doesn't exist", modFs->modPath, oldpath
-        );
-        return false;
-    }
-
-    // if overwriteExisting is not set, check if the newpath points to an existing file
-    struct ModFsFile *newfile = mod_fs_get_file(modFs, newpath);
-    if (newfile && !overwriteExisting) {
-        mod_fs_raise_error(
-            "modPath: %s - file %s already exists; set `overwriteExisting` to true to replace this file", modFs->modPath, newpath
-        );
-        return false;
-    }
-
-    // rename file
-    if (newfile && !mod_fs_delete_file(modFs, newpath)) {
-        return false;
-    }
-    snprintf(oldfile->filepath, MOD_FS_MAX_PATH, "%s", newpath);
-    return true;
-}
-
-C_DEFINE bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
-        return false;
-    }
-
-    // cannot copy files in other mods modfs
-    if (!mod_fs_check_write(modFs, "copying files in")) {
-        return false;
-    }
-
-    // check dest filepath
-    if (!mod_fs_check_filepath(modFs, dstpath)) {
-        return false;
-    }
-
-    // get file
-    struct ModFsFile *srcfile = mod_fs_get_file(modFs, srcpath);
-    if (!srcfile) {
-        mod_fs_raise_error(
-            "modPath: %s - file %s doesn't exist", modFs->modPath, srcpath
-        );
-        return false;
-    }
-
-    // if overwriteExisting is not set, check if the newpath points to an existing file
-    struct ModFsFile *dstfile = mod_fs_get_file(modFs, dstpath);
-    if (dstfile && !overwriteExisting) {
-        mod_fs_raise_error(
-            "modPath: %s - file %s already exists; set `overwriteExisting` to true to replace this file", modFs->modPath, dstpath
-        );
-        return false;
-    }
-
-    // compute new total size
-    u32 newTotalSize = modFs->totalSize + srcfile->size;
-    if (dstfile) {
-        newTotalSize -= dstfile->size;
-    }
-    if (newTotalSize > MOD_FS_MAX_SIZE) {
-        mod_fs_raise_error(
-            "modPath: %s - cannot copy file %s: exceeding total size: %u (max is: %u)", modFs->modPath, srcpath, newTotalSize, MOD_FS_MAX_SIZE
-        );
-        return false;
-    }
-    modFs->totalSize = newTotalSize;
-
-    // copy file
-    u8 *buffer = (u8 *) malloc(srcfile->size);
-    if (!buffer) {
-        mod_fs_raise_error(
-            "modPath: %s, filepath: %s - failed to allocate buffer for modfs file data", modFs->modPath, dstfile->filepath
-        );
-        return false;
-    }
-    if (dstfile) {
-        free(dstfile->data.bin);
-    } else {
-        dstfile = mod_fs_create_file(modFs, dstpath, srcfile->isText);
-        if (!dstfile) {
-            free(buffer);
-            return false;
-        }
-    }
-    memcpy(dstfile, srcfile, sizeof(struct ModFsFile));
-    snprintf(dstfile->filepath, MOD_FS_MAX_PATH, "%s", dstpath);
-    memcpy(buffer, srcfile->data.bin, srcfile->size);
-    dstfile->size = dstfile->capacity = srcfile->size;
-    dstfile->data.bin = buffer;
-    dstfile->offset = 0;
-    return true;
-}
-
-C_DEFINE bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
-        return false;
-    }
-
-    // cannot delete files in other mods modfs
-    if (!mod_fs_check_write(modFs, "deleting files in")) {
+    // cannot delete files in other mods ModFS
+    if (!mod_fs_check_write(modFs, "Deleting files in", err)) {
         return false;
     }
 
@@ -1126,20 +1016,148 @@ C_DEFINE bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath) {
     }
 
     mod_fs_raise_error(
-        "modPath: %s - file %s doesn't exist", modFs->modPath, filepath
+        MOD_FS_ERR_NOT_FOUND,
+        "modPath: %s - File %s doesn't exist", modFs->modPath, filepath
     );
     return false;
 }
 
-C_DEFINE bool mod_fs_clear(struct ModFs *modFs) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return false;
     }
 
-    // cannot delete files in other mods modfs
-    if (!mod_fs_check_write(modFs, "deleting files in")) {
+    // cannot move files in other mods ModFS
+    if (!mod_fs_check_write(modFs, "Moving files in", err)) {
+        return false;
+    }
+
+    // check new filepath
+    if (!mod_fs_check_filepath(modFs, newpath, err)) {
+        return false;
+    }
+
+    // Do nothing if old and new paths are the same
+    if (strcmp(oldpath, newpath) == 0) {
+        return true;
+    }
+
+    // get file
+    struct ModFsFile *oldfile = modfs::mod_fs_get_file(modFs, oldpath, err);
+    if (!oldfile) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_NOT_FOUND,
+            "modPath: %s - File %s doesn't exist", modFs->modPath, oldpath
+        );
+        return false;
+    }
+
+    // if overwriteExisting is not set, check if the newpath points to an existing file
+    struct ModFsFile *newfile = modfs::mod_fs_get_file(modFs, newpath, err);
+    if (newfile && !overwriteExisting) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_ALREADY_EXISTS,
+            "modPath: %s - File %s already exists; set `overwriteExisting` to true to replace this file", modFs->modPath, newpath
+        );
+        return false;
+    }
+
+    // rename file
+    if (newfile && !modfs::mod_fs_delete_file(modFs, newpath, err)) {
+        return false;
+    }
+    snprintf(oldfile->filepath, MOD_FS_MAX_PATH, "%s", newpath);
+    return true;
+}
+
+static bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
+        return false;
+    }
+
+    // cannot copy files in other mods ModFS
+    if (!mod_fs_check_write(modFs, "copying files in", err)) {
+        return false;
+    }
+
+    // check dest filepath
+    if (!mod_fs_check_filepath(modFs, dstpath, err)) {
+        return false;
+    }
+
+    // Do nothing if src and dst paths are the same
+    if (strcmp(srcpath, dstpath) == 0) {
+        return true;
+    }
+
+    // get file
+    struct ModFsFile *srcfile = modfs::mod_fs_get_file(modFs, srcpath, err);
+    if (!srcfile) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_NOT_FOUND,
+            "modPath: %s - File %s doesn't exist", modFs->modPath, srcpath
+        );
+        return false;
+    }
+
+    // if overwriteExisting is not set, check if the newpath points to an existing file
+    struct ModFsFile *dstfile = modfs::mod_fs_get_file(modFs, dstpath, err);
+    if (dstfile && !overwriteExisting) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_ALREADY_EXISTS,
+            "modPath: %s - File %s already exists; set `overwriteExisting` to true to replace this file", modFs->modPath, dstpath
+        );
+        return false;
+    }
+
+    // compute new total size
+    u32 newTotalSize = modFs->totalSize + srcfile->size;
+    if (dstfile) {
+        newTotalSize -= dstfile->size;
+    }
+    if (newTotalSize > MOD_FS_MAX_SIZE) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+            "modPath: %s - Cannot copy file %s: exceeding total size: %u (max is: %u)", modFs->modPath, srcpath, newTotalSize, MOD_FS_MAX_SIZE
+        );
+        return false;
+    }
+
+    // copy file
+    u8 *buffer = (u8 *) malloc(srcfile->size);
+    if (!buffer) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_ALLOC_FAILED,
+            "modPath: %s, filepath: %s - Failed to allocate buffer for ModFS file data", modFs->modPath, dstpath
+        );
+        return false;
+    }
+    if (dstfile) {
+        free(dstfile->data.bin);
+    } else {
+        dstfile = modfs::mod_fs_create_file(modFs, dstpath, srcfile->isText, err);
+        if (!dstfile) {
+            free(buffer);
+            return false;
+        }
+    }
+    memcpy(dstfile, srcfile, sizeof(struct ModFsFile));
+    snprintf(dstfile->filepath, MOD_FS_MAX_PATH, "%s", dstpath);
+    memcpy(buffer, srcfile->data.bin, srcfile->size);
+    dstfile->size = dstfile->capacity = srcfile->size;
+    dstfile->data.bin = buffer;
+    dstfile->offset = 0;
+    modFs->totalSize = newTotalSize;
+    return true;
+}
+
+static bool mod_fs_clear(struct ModFs *modFs, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
+        return false;
+    }
+
+    // cannot delete files in other mods ModFS
+    if (!mod_fs_check_write(modFs, "Deleting files in", err)) {
         return false;
     }
 
@@ -1156,30 +1174,26 @@ C_DEFINE bool mod_fs_clear(struct ModFs *modFs) {
     return true;
 }
 
-C_DEFINE bool mod_fs_save(struct ModFs *modFs) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static bool mod_fs_save(struct ModFs *modFs, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return false;
     }
 
-    // cannot save other mods modfs
-    if (!mod_fs_check_write(modFs, "saving over")) {
+    // cannot save other mods ModFS
+    if (!mod_fs_check_write(modFs, "Saving over", err)) {
         return false;
     }
 
-    return mod_fs_write(modFs);
+    return mod_fs_write(modFs, err);
 }
 
-C_DEFINE bool mod_fs_delete(struct ModFs *modFs) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static bool mod_fs_delete(struct ModFs *modFs, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return false;
     }
 
-    // cannot delete other mods modfs
-    if (!mod_fs_check_write(modFs, "deleting")) {
+    // cannot delete other mods ModFS
+    if (!mod_fs_check_write(modFs, "Deleting", err)) {
         return false;
     }
 
@@ -1194,15 +1208,13 @@ C_DEFINE bool mod_fs_delete(struct ModFs *modFs) {
     return true;
 }
 
-C_DEFINE bool mod_fs_set_public(struct ModFs *modFs, bool pub) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(modFs, "modfs")) {
+static bool mod_fs_set_public(struct ModFs *modFs, bool pub, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(modFs, "ModFS", err)) {
         return false;
     }
 
-    // cannot change public flag of other mods modfs
-    if (!mod_fs_check_write(modFs, "changing public flag of")) {
+    // cannot change public flag of other mods ModFS
+    if (!mod_fs_check_write(modFs, "Changing public flag of", err)) {
         return false;
     }
 
@@ -1214,11 +1226,12 @@ C_DEFINE bool mod_fs_set_public(struct ModFs *modFs, bool pub) {
 // Read data
 //
 
-static bool mod_fs_file_read_check_eof(struct ModFsFile *file, u32 size) {
+static bool mod_fs_file_read_check_eof(struct ModFsFile *file, u32 size, enum ModFsErrorCode *err) {
     if (file->offset + size > file->size) {
         file->offset = file->size;
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - reached end of file", file->modFs->modPath, file->filepath
+            MOD_FS_ERR_READ_EOF,
+            "modPath: %s, filepath: %s - Reached end of file", file->modFs->modPath, file->filepath
         );
         return true;
     }
@@ -1226,8 +1239,8 @@ static bool mod_fs_file_read_check_eof(struct ModFsFile *file, u32 size) {
 }
 
 template <typename T>
-static T mod_fs_file_read_data(struct ModFsFile *file, T defaultValue) {
-    if (mod_fs_file_read_check_eof(file, sizeof(T))) {
+static T mod_fs_file_read_data(struct ModFsFile *file, T defaultValue, enum ModFsErrorCode *err) {
+    if (mod_fs_file_read_check_eof(file, sizeof(T), err)) {
         return defaultValue;
     }
     T value;
@@ -1236,7 +1249,7 @@ static T mod_fs_file_read_data(struct ModFsFile *file, T defaultValue) {
     return value;
 }
 
-static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 length, bool skipNextChar) {
+static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 length, bool skipNextChar, enum ModFsErrorCode *err) {
     static char *sModFsFileReadStringBuf = NULL;
     static u32 sModFsFileReadStringBufLength = 0;
 
@@ -1247,7 +1260,8 @@ static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 le
         if (!sModFsFileReadStringBuf) {
             sModFsFileReadStringBufLength = 0;
             mod_fs_raise_error(
-                "modPath: %s, filepath: %s - unable to allocate temporary buffer of length: %u",
+                MOD_FS_ERR_ALLOC_FAILED,
+                "modPath: %s, filepath: %s - Unable to allocate temporary buffer of length: %u",
                 file->modFs->modPath, file->filepath, length
             );
             return NULL;
@@ -1261,90 +1275,83 @@ static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 le
     return sModFsFileReadStringBuf;
 }
 
-C_DEFINE bool mod_fs_file_read_bool(struct ModFsFile *file) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_read_bool(struct ModFsFile *file, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, false, "bool")) {
+    if (!mod_fs_file_check_file_type(file, false, false, "bool", err)) {
         return false;
     }
 
-    return mod_fs_file_read_data<bool>(file, false);
+    return mod_fs_file_read_data<bool>(file, false, err);
 }
 
-C_DEFINE lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return 0;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, false, "integer")) {
+    if (!mod_fs_file_check_file_type(file, false, false, "integer", err)) {
         return 0;
     }
 
     // check intType
-    if (!mod_fs_file_check_parameter(file, intType, INT_TYPE_MAX, "intType")) {
+    if (!mod_fs_file_check_parameter(file, intType, 0, INT_TYPE_MAX - 1, "intType", err)) {
         return 0;
     }
 
     switch (intType) {
-        case INT_TYPE_U8:  return mod_fs_file_read_data<u8>(file, 0);
-        case INT_TYPE_U16: return mod_fs_file_read_data<u16>(file, 0);
-        case INT_TYPE_U32: return mod_fs_file_read_data<u32>(file, 0);
-        case INT_TYPE_U64: return mod_fs_file_read_data<u64>(file, 0);
-        case INT_TYPE_S8:  return mod_fs_file_read_data<s8>(file, 0);
-        case INT_TYPE_S16: return mod_fs_file_read_data<s16>(file, 0);
-        case INT_TYPE_S32: return mod_fs_file_read_data<s32>(file, 0);
-        case INT_TYPE_S64: return mod_fs_file_read_data<s64>(file, 0);
+        case INT_TYPE_U8:  return mod_fs_file_read_data<u8>(file, 0, err);
+        case INT_TYPE_U16: return mod_fs_file_read_data<u16>(file, 0, err);
+        case INT_TYPE_U32: return mod_fs_file_read_data<u32>(file, 0, err);
+        case INT_TYPE_U64: return mod_fs_file_read_data<u64>(file, 0, err);
+        case INT_TYPE_S8:  return mod_fs_file_read_data<s8>(file, 0, err);
+        case INT_TYPE_S16: return mod_fs_file_read_data<s16>(file, 0, err);
+        case INT_TYPE_S32: return mod_fs_file_read_data<s32>(file, 0, err);
+        case INT_TYPE_S64: return mod_fs_file_read_data<s64>(file, 0, err);
         default:           return 0;
     }
 }
 
-C_DEFINE lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return 0;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, false, "number")) {
+    if (!mod_fs_file_check_file_type(file, false, false, "number", err)) {
         return 0;
     }
 
     // check intType
-    if (!mod_fs_file_check_parameter(file, floatType, FLOAT_TYPE_MAX, "floatType")) {
+    if (!mod_fs_file_check_parameter(file, floatType, 0, FLOAT_TYPE_MAX - 1, "floatType", err)) {
         return 0;
     }
 
     switch (floatType) {
-        case FLOAT_TYPE_F32: return mod_fs_file_read_data<f32>(file, 0);
-        case FLOAT_TYPE_F64: return mod_fs_file_read_data<f64>(file, 0);
+        case FLOAT_TYPE_F32: return mod_fs_file_read_data<f32>(file, 0, err);
+        case FLOAT_TYPE_F64: return mod_fs_file_read_data<f64>(file, 0, err);
         default:             return 0;
     }
 }
 
-C_DEFINE ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length) {
-    mod_fs_reset_last_error();
+static ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length, enum ModFsErrorCode *err) {
     ByteString bytestring = { NULL, 0 };
 
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return bytestring;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, false, "bytes")) {
+    if (!mod_fs_file_check_file_type(file, false, false, "bytes", err)) {
         return bytestring;
     }
 
     // check eof
-    if (mod_fs_file_read_check_eof(file, length)) {
+    if (mod_fs_file_read_check_eof(file, length, err)) {
         return bytestring;
     }
 
@@ -1354,20 +1361,18 @@ C_DEFINE ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length) {
     return bytestring;
 }
 
-C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static const char *mod_fs_file_read_string(struct ModFsFile *file, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return NULL;
     }
 
-    if (mod_fs_file_read_check_eof(file, 1)) {
+    if (mod_fs_file_read_check_eof(file, 1, err)) {
         return NULL;
     }
 
     // for text files, returns the whole content from offset
     if (file->isText) {
-        return mod_fs_file_read_string_buffer(file, file->size - file->offset, false);
+        return mod_fs_file_read_string_buffer(file, file->size - file->offset, false, err);
     }
 
     // for binary, stops at the first NUL char or at the end of the file
@@ -1377,22 +1382,20 @@ C_DEFINE const char *mod_fs_file_read_string(struct ModFsFile *file) {
     for (const char *c = start; *c && c < end; c++) {
         length++;
     }
-    return mod_fs_file_read_string_buffer(file, length, true);
+    return mod_fs_file_read_string_buffer(file, length, true, err);
 }
 
-C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static const char *mod_fs_file_read_line(struct ModFsFile *file, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return NULL;
     }
 
     // text only
-    if (!mod_fs_file_check_file_type(file, true, false, "line")) {
+    if (!mod_fs_file_check_file_type(file, true, false, "line", err)) {
         return 0;
     }
 
-    if (mod_fs_file_read_check_eof(file, 1)) {
+    if (mod_fs_file_read_check_eof(file, 1, err)) {
         return NULL;
     }
 
@@ -1403,14 +1406,14 @@ C_DEFINE const char *mod_fs_file_read_line(struct ModFsFile *file) {
     for (const char *c = start; *c != '\n' && c < end; c++) {
         length++;
     }
-    return mod_fs_file_read_string_buffer(file, length, true);
+    return mod_fs_file_read_string_buffer(file, length, true, err);
 }
 
 //
 // Write data
 //
 
-static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
+static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size, enum ModFsErrorCode *err) {
 
     // compute and check new sizes
     file->offset = MIN(file->offset, file->size);
@@ -1418,7 +1421,8 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
     u32 newTotalSize = file->modFs->totalSize + (newFileSize - file->size);
     if (newTotalSize > MOD_FS_MAX_SIZE) {
         mod_fs_raise_error(
-            "modPath: %s, filepath: %s - cannot write to file: exceeding total size: %u (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
+            MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+            "modPath: %s, filepath: %s - Cannot write to file: exceeding total size: %u (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
         );
         return false;
     }
@@ -1429,7 +1433,8 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
         u8 *buffer = (u8 *) realloc(file->data.bin, newCapacity);
         if (!buffer) {
             mod_fs_raise_error(
-                "modPath: %s, filepath: %s - failed to reallocate buffer of modfs file data", file->modFs->modPath, file->filepath
+                MOD_FS_ERR_ALLOC_FAILED,
+                "modPath: %s, filepath: %s - Failed to reallocate buffer of ModFS file data", file->modFs->modPath, file->filepath
             );
             return false;
         }
@@ -1442,8 +1447,8 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size) {
 }
 
 template <typename T>
-static bool mod_fs_file_write_data(struct ModFsFile *file, T value) {
-    if (mod_fs_file_write_resize_buffer(file, sizeof(T))) {
+static bool mod_fs_file_write_data(struct ModFsFile *file, T value, enum ModFsErrorCode *err) {
+    if (mod_fs_file_write_resize_buffer(file, sizeof(T), err)) {
         memcpy(file->data.bin + file->offset, &value, sizeof(T));
         file->offset += sizeof(T);
         return true;
@@ -1451,109 +1456,101 @@ static bool mod_fs_file_write_data(struct ModFsFile *file, T value) {
     return false;
 }
 
-C_DEFINE bool mod_fs_file_write_bool(struct ModFsFile *file, bool value) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_bool(struct ModFsFile *file, bool value, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, true, "bool")) {
+    if (!mod_fs_file_check_file_type(file, false, true, "bool", err)) {
         return false;
     }
 
-    return mod_fs_file_write_data<bool>(file, value);
+    return mod_fs_file_write_data<bool>(file, value, err);
 }
 
-C_DEFINE bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, true, "integer")) {
+    if (!mod_fs_file_check_file_type(file, false, true, "integer", err)) {
         return false;
     }
 
     // check intType
-    if (!mod_fs_file_check_parameter(file, intType, INT_TYPE_MAX, "intType")) {
+    if (!mod_fs_file_check_parameter(file, intType, 0, INT_TYPE_MAX - 1, "intType", err)) {
         return false;
     }
 
     switch (intType) {
-        case INT_TYPE_U8:  return mod_fs_file_write_data<u8>(file, value);
-        case INT_TYPE_U16: return mod_fs_file_write_data<u16>(file, value);
-        case INT_TYPE_U32: return mod_fs_file_write_data<u32>(file, value);
-        case INT_TYPE_U64: return mod_fs_file_write_data<u64>(file, value);
-        case INT_TYPE_S8:  return mod_fs_file_write_data<s8>(file, value);
-        case INT_TYPE_S16: return mod_fs_file_write_data<s16>(file, value);
-        case INT_TYPE_S32: return mod_fs_file_write_data<s32>(file, value);
-        case INT_TYPE_S64: return mod_fs_file_write_data<s64>(file, value);
+        case INT_TYPE_U8:  return mod_fs_file_write_data<u8>(file, value, err);
+        case INT_TYPE_U16: return mod_fs_file_write_data<u16>(file, value, err);
+        case INT_TYPE_U32: return mod_fs_file_write_data<u32>(file, value, err);
+        case INT_TYPE_U64: return mod_fs_file_write_data<u64>(file, value, err);
+        case INT_TYPE_S8:  return mod_fs_file_write_data<s8>(file, value, err);
+        case INT_TYPE_S16: return mod_fs_file_write_data<s16>(file, value, err);
+        case INT_TYPE_S32: return mod_fs_file_write_data<s32>(file, value, err);
+        case INT_TYPE_S64: return mod_fs_file_write_data<s64>(file, value, err);
         default:           return false;
     }
 }
 
-C_DEFINE bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, true, "number")) {
+    if (!mod_fs_file_check_file_type(file, false, true, "number", err)) {
         return false;
     }
 
     // check floatType
-    if (!mod_fs_file_check_parameter(file, floatType, FLOAT_TYPE_MAX, "floatType")) {
+    if (!mod_fs_file_check_parameter(file, floatType, 0, FLOAT_TYPE_MAX - 1, "floatType", err)) {
         return false;
     }
 
     switch (floatType) {
-        case FLOAT_TYPE_F32: return mod_fs_file_write_data<f32>(file, value);
-        case FLOAT_TYPE_F64: return mod_fs_file_write_data<f64>(file, value);
+        case FLOAT_TYPE_F32: return mod_fs_file_write_data<f32>(file, value, err);
+        case FLOAT_TYPE_F64: return mod_fs_file_write_data<f64>(file, value, err);
         default:             return false;
     }
 }
 
-C_DEFINE bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     // binary only
-    if (!mod_fs_file_check_file_type(file, false, true, "bytes")) {
+    if (!mod_fs_file_check_file_type(file, false, true, "bytes", err)) {
         return false;
     }
 
     u32 length = bytestring.length;
-    if (mod_fs_file_write_resize_buffer(file, length)) {
+    if (mod_fs_file_write_resize_buffer(file, length, err)) {
         memcpy(file->data.bin + file->offset, bytestring.bytes, length);
         file->offset += length;
         return true;
@@ -1561,20 +1558,18 @@ C_DEFINE bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestr
     return false;
 }
 
-C_DEFINE bool mod_fs_file_write_string(struct ModFsFile *file, const char *str) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_string(struct ModFsFile *file, const char *str, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     u32 length = strlen(str) + (file->isText ? 0 : 1); // binary writes the NULL char
-    if (mod_fs_file_write_resize_buffer(file, length)) {
+    if (mod_fs_file_write_resize_buffer(file, length, err)) {
         memcpy(file->data.bin + file->offset, str, length);
         file->offset += length;
         return true;
@@ -1582,25 +1577,23 @@ C_DEFINE bool mod_fs_file_write_string(struct ModFsFile *file, const char *str) 
     return false;
 }
 
-C_DEFINE bool mod_fs_file_write_line(struct ModFsFile *file, const char *str) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_write_line(struct ModFsFile *file, const char *str, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
     // text only
-    if (!mod_fs_file_check_file_type(file, true, true, "line")) {
+    if (!mod_fs_file_check_file_type(file, true, true, "line", err)) {
         return false;
     }
 
     u32 length = strlen(str);
-    if (mod_fs_file_write_resize_buffer(file, length + 1)) { // '\n'
+    if (mod_fs_file_write_resize_buffer(file, length + 1, err)) { // '\n'
         memcpy(file->data.text + file->offset, str, length);
         file->offset += length;
         file->data.text[file->offset++] = '\n';
@@ -1613,15 +1606,13 @@ C_DEFINE bool mod_fs_file_write_line(struct ModFsFile *file, const char *str) {
 // File misc
 //
 
-C_DEFINE bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
     // check origin
-    if (!mod_fs_file_check_parameter(file, origin, FILE_SEEK_MAX, "origin")) {
+    if (!mod_fs_file_check_parameter(file, origin, 0, FILE_SEEK_MAX - 1, "origin", err)) {
         return false;
     }
 
@@ -1636,10 +1627,8 @@ C_DEFINE bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFil
     return true;
 }
 
-C_DEFINE bool mod_fs_file_rewind(struct ModFsFile *file) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_rewind(struct ModFsFile *file, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
@@ -1647,29 +1636,25 @@ C_DEFINE bool mod_fs_file_rewind(struct ModFsFile *file) {
     return true;
 }
 
-C_DEFINE bool mod_fs_file_is_eof(struct ModFsFile *file) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_is_eof(struct ModFsFile *file, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
     return file->offset >= file->size;
 }
 
-C_DEFINE bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot write to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot write to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
-    if (mod_fs_file_write_resize_buffer(file, length)) {
+    if (mod_fs_file_write_resize_buffer(file, length, err)) {
         memset(file->data.bin + file->offset, byte, length);
         file->offset += length;
         return true;
@@ -1677,15 +1662,13 @@ C_DEFINE bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length) {
     return false;
 }
 
-C_DEFINE bool mod_fs_file_erase(struct ModFsFile *file, u32 length) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_erase(struct ModFsFile *file, u32 length, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot erase data from files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot erase data from files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
@@ -1696,10 +1679,8 @@ C_DEFINE bool mod_fs_file_erase(struct ModFsFile *file, u32 length) {
     return true;
 }
 
-C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
@@ -1707,15 +1688,13 @@ C_DEFINE bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text) {
     return true;
 }
 
-C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_set_public(struct ModFsFile *file, bool pub, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot change public flag to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot change public flag to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
@@ -1723,22 +1702,18 @@ C_DEFINE bool mod_fs_file_set_public(struct ModFsFile *file, bool pub) {
     return true;
 }
 
-C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level) {
-    mod_fs_reset_last_error();
-
-    if (!mod_fs_check_pointer(file, "modfs file")) {
+static bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level, enum ModFsErrorCode *err) {
+    if (!mod_fs_check_pointer(file, "ModFS file", err)) {
         return false;
     }
 
-    // cannot change compress level to files in other mods modfs
-    if (!mod_fs_file_check_write(file)) {
+    // cannot change compress level to files in other mods ModFS
+    if (!mod_fs_file_check_write(file, err)) {
         return false;
     }
 
-    if (level < MOD_FS_COMPRESSION_MIN || level > MOD_FS_COMPRESSION_MAX) {
-        mod_fs_raise_error(
-            "compress level must be between %d and %d inclusive", MOD_FS_COMPRESSION_MIN, MOD_FS_COMPRESSION_MAX
-        );
+    // check level
+    if (!mod_fs_file_check_parameter(file, level, MOD_FS_COMPRESSION_MIN, MOD_FS_COMPRESSION_MAX, "level", err)) {
         return false;
     }
 
@@ -1750,11 +1725,15 @@ C_DEFINE bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level) {
 // Errors
 //
 
-C_DEFINE void mod_fs_hide_errors(bool hide) {
+static void mod_fs_hide_errors(bool hide) {
     sModFsHideErrors = hide;
 }
 
-C_DEFINE const char *mod_fs_get_last_error() {
+static enum ModFsErrorCode mod_fs_get_last_error_code() {
+    return sModFsLastErrorCode;
+}
+
+static const char *mod_fs_get_last_error() {
     return *sModFsLastError ? sModFsLastError : NULL;
 }
 
@@ -1783,19 +1762,20 @@ static bool mod_fs_extract_modpath_and_filepath(const char *uri, char *modPath, 
     return true;
 }
 
-C_DEFINE bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length) {
+static bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length) {
     char modPath[SYS_MAX_PATH];
     char filepath[MOD_FS_MAX_PATH];
     if (!mod_fs_extract_modpath_and_filepath(uri, modPath, filepath)) {
         return false;
     }
 
-    struct ModFs *modFs = mod_fs_get(modPath);
+    enum ModFsErrorCode err = MOD_FS_ERR_NONE;
+    struct ModFs *modFs = modfs::mod_fs_get(modPath, &err);
     if (!modFs) {
         return false;
     }
 
-    struct ModFsFile *file = mod_fs_get_file(modFs, filepath);
+    struct ModFsFile *file = modfs::mod_fs_get_file(modFs, filepath, &err);
     if (!file || !file->data.bin || !file->size) {
         return false;
     }
@@ -1809,9 +1789,9 @@ C_DEFINE bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *len
     return true;
 }
 
-C_DEFINE void mod_fs_shutdown() {
+static void mod_fs_shutdown() {
 
-    // Close all modfs
+    // Close all ModFS
     for (auto &modFs : sModFsList) {
         mod_fs_destroy(modFs);
         mod_fs_free<struct ModFs>(modFs);
@@ -1819,6 +1799,207 @@ C_DEFINE void mod_fs_shutdown() {
     sModFsList.clear();
 
     // Reset error state
-    mod_fs_reset_last_error();
+    sModFsLastErrorCode = MOD_FS_ERR_NONE;
+    memset(sModFsLastError, 0, sizeof(sModFsLastError));
     sModFsHideErrors = false;
+}
+
+}
+
+//
+// C API
+//
+
+extern "C" {
+
+bool mod_fs_exists(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_exists(modPath, err);
+}
+
+struct ModFs *mod_fs_get(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_get(modPath, err);
+}
+
+struct ModFs *mod_fs_reload(OPTIONAL const char *modPath, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_reload(modPath, err);
+}
+
+struct ModFs *mod_fs_create(RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_create(err);
+}
+
+const char *mod_fs_get_filename(struct ModFs *modFs, u16 index, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_get_filename(modFs, index, err);
+}
+
+struct ModFsFile *mod_fs_get_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_get_file(modFs, filepath, err);
+}
+
+struct ModFsFile *mod_fs_create_file(struct ModFs *modFs, const char *filepath, bool text, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_create_file(modFs, filepath, text, err);
+}
+
+bool mod_fs_move_file(struct ModFs *modFs, const char *oldpath, const char *newpath, bool overwriteExisting, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting, err);
+}
+
+bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const char *dstpath, bool overwriteExisting, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting, err);
+}
+
+bool mod_fs_delete_file(struct ModFs *modFs, const char *filepath, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_delete_file(modFs, filepath, err);
+}
+
+bool mod_fs_clear(struct ModFs *modFs, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_clear(modFs, err);
+}
+
+bool mod_fs_save(struct ModFs *modFs, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_save(modFs, err);
+}
+
+bool mod_fs_delete(struct ModFs *modFs, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_delete(modFs, err);
+}
+
+bool mod_fs_set_public(struct ModFs *modFs, bool pub, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_set_public(modFs, pub, err);
+}
+
+bool mod_fs_file_read_bool(struct ModFsFile *file, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_bool(file, err);
+}
+
+lua_Integer mod_fs_file_read_integer(struct ModFsFile *file, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_integer(file, intType, err);
+}
+
+lua_Number mod_fs_file_read_number(struct ModFsFile *file, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_number(file, floatType, err);
+}
+
+ByteString mod_fs_file_read_bytes(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_bytes(file, length, err);
+}
+
+const char *mod_fs_file_read_string(struct ModFsFile *file, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_string(file, err);
+}
+
+const char *mod_fs_file_read_line(struct ModFsFile *file, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_read_line(file, err);
+}
+
+bool mod_fs_file_write_bool(struct ModFsFile *file, bool value, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_bool(file, value, err);
+}
+
+bool mod_fs_file_write_integer(struct ModFsFile *file, lua_Integer value, enum ModFsFileIntType intType, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_integer(file, value, intType, err);
+}
+
+bool mod_fs_file_write_number(struct ModFsFile *file, lua_Number value, enum ModFsFileFloatType floatType, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_number(file, value, floatType, err);
+}
+
+bool mod_fs_file_write_bytes(struct ModFsFile *file, ByteString bytestring, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_bytes(file, bytestring, err);
+}
+
+bool mod_fs_file_write_string(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_string(file, str, err);
+}
+
+bool mod_fs_file_write_line(struct ModFsFile *file, const char *str, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_write_line(file, str, err);
+}
+
+bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileSeek origin, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_seek(file, offset, origin, err);
+}
+
+bool mod_fs_file_rewind(struct ModFsFile *file, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_rewind(file, err);
+}
+
+bool mod_fs_file_is_eof(struct ModFsFile *file, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_is_eof(file, err);
+}
+
+bool mod_fs_file_fill(struct ModFsFile *file, u8 byte, u32 length, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_fill(file, byte, length, err);
+}
+
+bool mod_fs_file_erase(struct ModFsFile *file, u32 length, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_erase(file, length, err);
+}
+
+bool mod_fs_file_set_text_mode(struct ModFsFile *file, bool text, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_set_text_mode(file, text, err);
+}
+
+bool mod_fs_file_set_public(struct ModFsFile *file, bool pub, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_set_public(file, pub, err);
+}
+
+bool mod_fs_file_set_compression(struct ModFsFile *file, s32 level, RET enum ModFsErrorCode *err) {
+    mod_fs_reset_last_error();
+    return modfs::mod_fs_file_set_compression(file, level, err);
+}
+
+void mod_fs_hide_errors(bool hide) {
+    return modfs::mod_fs_hide_errors(hide);
+}
+
+enum ModFsErrorCode mod_fs_get_last_error_code() {
+    return modfs::mod_fs_get_last_error_code();
+}
+
+const char *mod_fs_get_last_error() {
+    return modfs::mod_fs_get_last_error();
+}
+
+bool mod_fs_read_file_from_uri(const char *uri, void **buffer, u32 *length) {
+    return modfs::mod_fs_read_file_from_uri(uri, buffer, length);
+}
+
+void mod_fs_shutdown() {
+    return modfs::mod_fs_shutdown();
+}
+
 }

@@ -81,72 +81,6 @@ function SOUND_ARG_LOAD(bank, soundID, priority, flags)
     )
 end
 
--------------
--- courses --
--------------
-
---- @type integer
-COURSE_NONE     = 0
---- @type integer
-COURSE_BOB      = 1
---- @type integer
-COURSE_WF       = 2
---- @type integer
-COURSE_JRB      = 3
---- @type integer
-COURSE_CCM      = 4
---- @type integer
-COURSE_BBH      = 5
---- @type integer
-COURSE_HMC      = 6
---- @type integer
-COURSE_LLL      = 7
---- @type integer
-COURSE_SSL      = 8
---- @type integer
-COURSE_DDD      = 9
---- @type integer
-COURSE_SL       = 10
---- @type integer
-COURSE_WDW      = 11
---- @type integer
-COURSE_TTM      = 12
---- @type integer
-COURSE_THI      = 13
---- @type integer
-COURSE_TTC      = 14
---- @type integer
-COURSE_RR       = 15
---- @type integer
-COURSE_BITDW    = 16
---- @type integer
-COURSE_BITFS    = 17
---- @type integer
-COURSE_BITS     = 18
---- @type integer
-COURSE_PSS      = 19
---- @type integer
-COURSE_COTMC    = 20
---- @type integer
-COURSE_TOTWC    = 21
---- @type integer
-COURSE_VCUTM    = 22
---- @type integer
-COURSE_WMOTR    = 23
---- @type integer
-COURSE_SA       = 24
---- @type integer
-COURSE_CAKE_END = 25
---- @type integer
-COURSE_END = 26
---- @type integer
-COURSE_MAX = 25
---- @type integer
-COURSE_COUNT = 25
---- @type integer
-COURSE_MIN = 1
-
-
 ------------------------------
 -- player palette functions --
 ------------------------------
@@ -177,15 +111,11 @@ function network_player_get_override_palette_color(np, part)
     return color
 end
 
---------------------------
--- local math functions --
---------------------------
 local __math_min, __math_max, __math_sqrt, __math_floor, __math_ceil, __math_cos, __math_sin, __math_pi  = math.min, math.max, math.sqrt, math.floor, math.ceil, math.cos, math.sin, math.pi
 
 ------------
 -- tweens --
 ------------
--- Unrelated to SM64, but these are for `math.tween`
 
 ---@param x number
 ---@return number
@@ -2404,6 +2334,69 @@ M_MOUSE_BUTTON = MOUSE_BUTTON_2
 --- @type integer
 R_MOUSE_BUTTON = MOUSE_BUTTON_3
 
+COURSE_NONE     =              0 --- @type CourseNum
+COURSE_BOB      =              1 --- @type CourseNum
+COURSE_WF       =              2 --- @type CourseNum
+COURSE_JRB      =              3 --- @type CourseNum
+COURSE_CCM      =              4 --- @type CourseNum
+COURSE_BBH      =              5 --- @type CourseNum
+COURSE_HMC      =              6 --- @type CourseNum
+COURSE_LLL      =              7 --- @type CourseNum
+COURSE_SSL      =              8 --- @type CourseNum
+COURSE_DDD      =              9 --- @type CourseNum
+COURSE_SL       =             10 --- @type CourseNum
+COURSE_WDW      =             11 --- @type CourseNum
+COURSE_TTM      =             12 --- @type CourseNum
+COURSE_THI      =             13 --- @type CourseNum
+COURSE_TTC      =             14 --- @type CourseNum
+COURSE_RR       =             15 --- @type CourseNum
+COURSE_BITDW    =             16 --- @type CourseNum
+COURSE_BITFS    =             17 --- @type CourseNum
+COURSE_BITS     =             18 --- @type CourseNum
+COURSE_PSS      =             19 --- @type CourseNum
+COURSE_COTMC    =             20 --- @type CourseNum
+COURSE_TOTWC    =             21 --- @type CourseNum
+COURSE_VCUTM    =             22 --- @type CourseNum
+COURSE_WMOTR    =             23 --- @type CourseNum
+COURSE_SA       =             24 --- @type CourseNum
+COURSE_CAKE_END =             25 --- @type CourseNum
+COURSE_END      =             26 --- @type CourseNum
+COURSE_COUNT    = COURSE_END - 1 --- @type CourseNum
+COURSE_MAX      =   COURSE_COUNT --- @type CourseNum
+COURSE_MIN      =              1 --- @type CourseNum
+
+--- @alias CourseNum
+--- | `COURSE_NONE`
+--- | `COURSE_BOB`
+--- | `COURSE_WF`
+--- | `COURSE_JRB`
+--- | `COURSE_CCM`
+--- | `COURSE_BBH`
+--- | `COURSE_HMC`
+--- | `COURSE_LLL`
+--- | `COURSE_SSL`
+--- | `COURSE_DDD`
+--- | `COURSE_SL`
+--- | `COURSE_WDW`
+--- | `COURSE_TTM`
+--- | `COURSE_THI`
+--- | `COURSE_TTC`
+--- | `COURSE_RR`
+--- | `COURSE_BITDW`
+--- | `COURSE_BITFS`
+--- | `COURSE_BITS`
+--- | `COURSE_PSS`
+--- | `COURSE_COTMC`
+--- | `COURSE_TOTWC`
+--- | `COURSE_VCUTM`
+--- | `COURSE_WMOTR`
+--- | `COURSE_SA`
+--- | `COURSE_CAKE_END`
+--- | `COURSE_END`
+--- | `COURSE_COUNT`
+--- | `COURSE_MAX`
+--- | `COURSE_MIN`
+
 DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId
@@ -2750,6 +2743,9 @@ DIALOG_COUNT = 170 --- @type DialogId
 --- | `DIALOG_168`
 --- | `DIALOG_169`
 --- | `DIALOG_COUNT`
+
+--- @type integer
+MAX_CONSOLE_INPUT_LENGTH = 500
 
 CONSOLE_MESSAGE_INFO    = 0 --- @type ConsoleMessageLevel
 CONSOLE_MESSAGE_WARNING = 1 --- @type ConsoleMessageLevel
@@ -4674,10 +4670,10 @@ MOD_FS_COMPRESSION_MAX = 9
 MOD_FS_COMPRESSION_DEFAULT = 1
 
 --- @type integer
-MOD_FS_MAX_SIZE = 0x2000000
+MOD_FS_MAX_SIZE = 0x8000000
 
 --- @type integer
-MOD_FS_MAX_FILES = 0x200
+MOD_FS_MAX_FILES = 0x400
 
 --- @type integer
 MOD_FS_MAX_PATH = 0x100
@@ -4687,6 +4683,55 @@ MOD_FS_URI_PREFIX = "modfs:/"
 
 --- @type string
 MOD_FS_URI_FORMAT = "modfs:/%s/%s"
+
+MOD_FS_ERR_NONE                       =  0 --- @type ModFsErrorCode
+MOD_FS_ERR_ALLOC_FAILED               =  1 --- @type ModFsErrorCode
+MOD_FS_ERR_ALREADY_EXISTS             =  2 --- @type ModFsErrorCode
+MOD_FS_ERR_NOT_FOUND                  =  3 --- @type ModFsErrorCode
+MOD_FS_ERR_INVALID_POINTER            =  4 --- @type ModFsErrorCode
+MOD_FS_ERR_INVALID_PARAMETER          =  5 --- @type ModFsErrorCode
+MOD_FS_ERR_FILE_INVALID_INDEX         =  6 --- @type ModFsErrorCode
+MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED      =  7 --- @type ModFsErrorCode
+MOD_FS_ERR_TOTAL_SIZE_EXCEEDED        =  8 --- @type ModFsErrorCode
+MOD_FS_ERR_NUM_FILES_EXCEEDED         =  9 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_EMPTY             = 10 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_LEN_EXCEEDED      = 11 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_RESERVED          = 12 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_INVALID_CHAR      = 13 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_MALFORMED         = 14 --- @type ModFsErrorCode
+MOD_FS_ERR_FILEPATH_INVALID_EXTENSION = 15 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_INVALID_MODPATH       = 16 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_ZIP                   = 17 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_PROPERTIES            = 18 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_FILE_TRUNCATED        = 19 --- @type ModFsErrorCode
+MOD_FS_ERR_READ_EOF                   = 20 --- @type ModFsErrorCode
+MOD_FS_ERR_WRITE_ZIP                  = 21 --- @type ModFsErrorCode
+MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD       = 22 --- @type ModFsErrorCode
+
+--- @alias ModFsErrorCode
+--- | `MOD_FS_ERR_NONE`
+--- | `MOD_FS_ERR_ALLOC_FAILED`
+--- | `MOD_FS_ERR_ALREADY_EXISTS`
+--- | `MOD_FS_ERR_NOT_FOUND`
+--- | `MOD_FS_ERR_INVALID_POINTER`
+--- | `MOD_FS_ERR_INVALID_PARAMETER`
+--- | `MOD_FS_ERR_FILE_INVALID_INDEX`
+--- | `MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED`
+--- | `MOD_FS_ERR_TOTAL_SIZE_EXCEEDED`
+--- | `MOD_FS_ERR_NUM_FILES_EXCEEDED`
+--- | `MOD_FS_ERR_FILEPATH_EMPTY`
+--- | `MOD_FS_ERR_FILEPATH_LEN_EXCEEDED`
+--- | `MOD_FS_ERR_FILEPATH_RESERVED`
+--- | `MOD_FS_ERR_FILEPATH_INVALID_CHAR`
+--- | `MOD_FS_ERR_FILEPATH_MALFORMED`
+--- | `MOD_FS_ERR_FILEPATH_INVALID_EXTENSION`
+--- | `MOD_FS_ERR_READ_INVALID_MODPATH`
+--- | `MOD_FS_ERR_READ_ZIP`
+--- | `MOD_FS_ERR_READ_PROPERTIES`
+--- | `MOD_FS_ERR_READ_FILE_TRUNCATED`
+--- | `MOD_FS_ERR_READ_EOF`
+--- | `MOD_FS_ERR_WRITE_ZIP`
+--- | `MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD`
 
 INT_TYPE_U8  = 0 --- @type ModFsFileIntType
 INT_TYPE_U16 = 1 --- @type ModFsFileIntType
@@ -5178,6 +5223,15 @@ BOBOMB_ACT_LAVA_DEATH = 100
 
 --- @type integer
 BOBOMB_ACT_DEATH_PLANE_DEATH = 101
+
+COIN_TYPE_NONE   = 0 --- @type CoinType
+COIN_TYPE_YELLOW = 1 --- @type CoinType
+COIN_TYPE_BLUE   = 2 --- @type CoinType
+
+--- @alias CoinType
+--- | `COIN_TYPE_NONE`
+--- | `COIN_TYPE_YELLOW`
+--- | `COIN_TYPE_BLUE`
 
 --- @type integer
 HIDDEN_BLUE_COIN_ACT_INACTIVE = 0
@@ -8195,17 +8249,32 @@ VALID_BUTTONS = (A_BUTTON | B_BUTTON | Z_TRIG | START_BUTTON | U_JPAD | D_JPAD |
 --- @type integer
 C_BUTTONS = (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS )
 
---- @type integer
-MOD_AUDIO_CHANNEL_MASTER = 0
+MA_TYPE_NONE   = 0 --- @type ModAudioType
+MA_TYPE_SAMPLE = 1 --- @type ModAudioType
+MA_TYPE_STREAM = 2 --- @type ModAudioType
 
---- @type integer
-MOD_AUDIO_CHANNEL_MUSIC = 1
+--- @alias ModAudioType
+--- | `MA_TYPE_NONE`
+--- | `MA_TYPE_SAMPLE`
+--- | `MA_TYPE_STREAM`
 
---- @type integer
-MOD_AUDIO_CHANNEL_SFX = 2
+MA_FLAGS_LOADED = (1 << 2) --- @type ModAudioFlags
+MA_FLAGS_COPY   = (1 << 6) --- @type ModAudioFlags
 
---- @type integer
-MOD_AUDIO_CHANNEL_ENV = 3
+--- @alias ModAudioFlags
+--- | `MA_FLAGS_LOADED`
+--- | `MA_FLAGS_COPY`
+
+MA_CHANNEL_MUSIC  = 0 --- @type ModAudioChannel
+MA_CHANNEL_SFX    = 1 --- @type ModAudioChannel
+MA_CHANNEL_ENV    = 2 --- @type ModAudioChannel
+MA_CHANNEL_MASTER = 3 --- @type ModAudioChannel
+
+--- @alias ModAudioChannel
+--- | `MA_CHANNEL_MUSIC`
+--- | `MA_CHANNEL_SFX`
+--- | `MA_CHANNEL_ENV`
+--- | `MA_CHANNEL_MASTER`
 
 HOOK_UPDATE                                 =  0 --- @type LuaHookedEventType
 HOOK_MARIO_UPDATE                           =  1 --- @type LuaHookedEventType
@@ -11252,16 +11321,10 @@ ANIM_FLAG_BONE_SCALE = (1 << 9)
 OBJECT_MAX_BHV_STACK = 16
 
 --- @type integer
-OBJECT_NUM_REGULAR_FIELDS = 0x50
+OBJECT_NUM_FIELDS = 0x50
 
 --- @type integer
-OBJECT_NUM_CUSTOM_FIELDS = 0x40
-
---- @type integer
-OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_REGULAR_FIELDS)
-
---- @type integer
-OBJECT_NUM_FIELDS = (OBJECT_CUSTOM_FIELDS_START + OBJECT_NUM_CUSTOM_FIELDS)
+OBJECT_CUSTOM_FIELDS_START = (OBJECT_NUM_FIELDS)
 
 MARIO_ANIM_PART_NONE          =  0 --- @type MarioAnimPart
 MARIO_ANIM_PART_ROOT          =  1 --- @type MarioAnimPart
@@ -11341,7 +11404,7 @@ COOP_OBJ_FLAG_NON_SYNC = (1 << 2)
 COOP_OBJ_FLAG_INITIALIZED = (1 << 3)
 
 --- @type string
-SM64COOPDX_VERSION = "v1.5.1"
+SM64COOPDX_VERSION = "v1.6"
 
 --- @type string
 VERSION_TEXT = "v"
@@ -11350,7 +11413,7 @@ VERSION_TEXT = "v"
 VERSION_NUMBER = 42
 
 --- @type integer
-MINOR_VERSION_NUMBER = 1
+MINOR_VERSION_NUMBER = 2
 
 --- @type string
 GAME_NAME = "sm64coopdx"

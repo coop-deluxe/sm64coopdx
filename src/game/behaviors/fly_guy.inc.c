@@ -172,7 +172,7 @@ static void fly_guy_act_shoot_fire(void) {
             } else {
                 // We have reached below scale 1.2 in the shrinking portion
                 s16 fireMovePitch = marioState ? obj_turn_pitch_toward_mario(marioState, 0.0f, 0) : 0;
-                cur_obj_play_sound_2(SOUND_OBJ_FLAME_BLOWN);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_FLAME_BLOWN);
                 clamp_s16(&fireMovePitch, 0x800, 0x3000);
 
                 if (sync_object_is_owned_locally(o->oSyncID)) {

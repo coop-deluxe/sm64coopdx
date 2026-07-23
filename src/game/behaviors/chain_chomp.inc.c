@@ -183,7 +183,7 @@ static void chain_chomp_sub_act_turn(void) {
                     if (o->oTimer > 40) {
                         // Increase the maximum distance from the pivot and enter
                         // the lunging sub-action.
-                        cur_obj_play_sound_2(SOUND_GENERAL_CHAIN_CHOMP2);
+                        cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_CHAIN_CHOMP2);
 
                         o->oSubAction = CHAIN_CHOMP_SUB_ACT_LUNGE;
                         o->oChainChompMaxDistFromPivotPerChainPart = 900.0f / 5;
@@ -200,7 +200,7 @@ static void chain_chomp_sub_act_turn(void) {
                 o->oForwardVel = 0.0f;
             }
         } else {
-            cur_obj_play_sound_2(SOUND_GENERAL_CHAIN_CHOMP1);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_CHAIN_CHOMP1);
             o->oForwardVel = 10.0f;
             o->oVelY = 20.0f;
         }
@@ -296,7 +296,7 @@ static void chain_chomp_released_lunge_around(void) {
                 o->oWallHitboxRadius = 200.0f;
         } else {
             if (++o->oChainChompNumLunges <= 5) {
-                cur_obj_play_sound_2(SOUND_GENERAL_CHAIN_CHOMP1);
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_CHAIN_CHOMP1);
                 o->oMoveAngleYaw = cur_obj_angle_to_home() + random_sign() * 0x2000;
                 o->oForwardVel = 30.0f;
                 o->oVelY = 50.0f;
@@ -517,7 +517,7 @@ void bhv_wooden_post_update(void) {
     // When ground pounded by mario, drop by -45 + -20
     if (!o->oWoodenPostMarioPounding) {
         if ((o->oWoodenPostMarioPounding = cur_obj_is_mario_ground_pounding_platform())) {
-            cur_obj_play_sound_2(SOUND_GENERAL_POUND_WOOD_POST);
+            cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_POUND_WOOD_POST);
             o->oWoodenPostSpeedY = -70.0f;
             network_send_object(o);
         }

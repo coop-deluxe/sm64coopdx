@@ -16,7 +16,7 @@
 extern bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 static bool sTrue = true;
 static bool sFalse = false;
-static bool sLanguageChanged = false;
+static const char *sLastLang = NULL;
 static struct DjuiBase* sLayoutBase = NULL;
 bool gPanelLanguageOnStartup = false;
 
@@ -34,24 +34,21 @@ static void select_language(struct DjuiBase* caller) {
         child = child->next;
     }
 
-    char* langName = checkbox->text->message;
-    char* key = djui_language_find_key("LANGUAGE",langName);
-    if (key) langName = key;
-
-    if (strcmp(configLanguage, langName)) {
-        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", langName);
-        sLanguageChanged = true;
-        smlua_call_event_hooks(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
-    }
+    sLastLang = checkbox->text->message;
+    const char *key = djui_language_find_key("LANGUAGE", sLastLang);
+    if (key) sLastLang = key;
 
     checkbox->value = &sTrue;
     checkbox->base.interactable->update_style(caller);
 }
 
-static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
+static bool djui_panel_language_set(UNUSED struct DjuiBase* caller) {
     // god this is so hacky and terrible
-    if (sLanguageChanged) {
-        sLanguageChanged = false;
+    if (sLastLang != NULL && strcmp(configLanguage, sLastLang)) {
+        snprintf(configLanguage, MAX_CONFIG_STRING, "%s", sLastLang);
+        smlua_call_event_hooks(HOOK_ON_LANGUAGE_CHANGED, configLanguage);
+        sLastLang = NULL;
+
         if (!djui_language_init(configLanguage)) {
             snprintf(configLanguage, MAX_CONFIG_STRING, "%s", "");
         }
@@ -84,12 +81,13 @@ static void djui_panel_language_destroy(UNUSED struct DjuiBase* caller) {
     }
     newcam_init_settings();
     gPanelLanguageOnStartup = false;
+    return sLastLang == NULL;
 }
 
 void djui_panel_language_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LANGUAGE, LANGUAGE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
-    sLanguageChanged = false;
+    sLastLang = configLanguage;
 
     {
         // construct lang path
@@ -105,7 +103,7 @@ void djui_panel_language_create(struct DjuiBase* caller) {
 
             char buffer[512] = "";
             sys_swap_backslashes(lpath);
-            snprintf(buffer, 512, "\\#ffa0a0\\Failed to load language folder:\n\\#dcdcdc\\%s", lpath);
+            snprintf(buffer, 512, "\\#ffa0a0\\Failed to load language folder:\n\\#\\%s", lpath);
             struct DjuiText* text = djui_text_create(body, buffer);
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
             djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
@@ -169,6 +167,5 @@ skip_langs:
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);
     if (!p) { return; }
-    p->on_panel_destroy = djui_panel_language_destroy;
-
+    p->on_back = djui_panel_language_set;
 }
