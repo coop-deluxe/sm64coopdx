@@ -2461,7 +2461,7 @@ void play_dialog_sound(s32 dialogID) {
     smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, dialogID, &speaker);
 
     // Hook returned a sound id
-    if (speaker > 0xFF) {
+    if (speaker < 0 || speaker > 0xFF) {
         play_sound(speaker, gGlobalSoundSource);
     }
 
