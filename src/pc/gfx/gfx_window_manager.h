@@ -18,7 +18,7 @@ enum GfxWindowBackend {
 #if defined(_WIN32)
     GFX_WINDOW_BACKEND_DIRECTX,
 #endif
-#if defined(ENABLE_VULKAN)
+#if !defined(OSX_BUILD)
     GFX_WINDOW_BACKEND_VULKAN,
 #endif
     GFX_WINDOW_BACKEND_DUMMY,

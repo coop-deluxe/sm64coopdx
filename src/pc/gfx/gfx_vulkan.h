@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_H
 #define GFX_VULKAN_H
 
@@ -23,5 +21,3 @@ bool gfx_vulkan_probe_support(void);
 bool gfx_vulkan_start_frame(void);
 
 #endif // GFX_VULKAN_H
-
-#endif // ENABLE_VULKAN

@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -676,5 +674,3 @@ struct ShaderProgram *gfx_vulkan_shader_create_and_load(struct ColorCombiner *cc
 
     return prg;
 }
-
-#endif // ENABLE_VULKAN

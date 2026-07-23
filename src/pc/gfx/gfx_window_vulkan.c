@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <SDL2/SDL.h>
 
 #include "gfx_window_manager.h"
@@ -84,5 +82,3 @@ struct GfxWindowBackendAPI gfx_window_vulkan = {
     gfx_window_vulkan_get_time,
     gfx_window_vulkan_get_max_msaa,
 };
-
-#endif // ENABLE_VULKAN

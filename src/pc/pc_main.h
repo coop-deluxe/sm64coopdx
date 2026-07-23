@@ -7,10 +7,8 @@ extern "C" {
 
 #include "gfx/gfx_pc.h"
 
-#if !defined(ENABLE_VULKAN)
 #include "gfx/gfx_opengl.h"
 #include "gfx/gfx_window_opengl.h"
-#endif
 #include "gfx/gfx_direct3d11.h"
 
 #include "gfx/gfx_window_dxgi.h"

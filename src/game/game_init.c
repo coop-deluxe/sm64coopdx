@@ -277,14 +277,6 @@ void rendering_init(void) {
     clear_frame_buffer(0);
     end_master_display_list();
     send_display_list(&gGfxPool->spTask);
-    // send_display_list() -> gfx_run() opens a frame (GfxRenderingAPI::start_frame,
-    // and for Vulkan specifically, acquires a swapchain image) that nothing here
-    // used to close. GL/D3D11 don't track acquire/present state so a "swap" that
-    // never happens is a silent no-op for them, but Vulkan does: an acquired
-    // image that's never submitted+presented leaves its frame-in-flight slot's
-    // semaphore signaled with nothing waiting on it, corrupting the next real
-    // acquire on that same slot.
-    gfx_end_frame();
 
     frameBufferIndex++;
     gGlobalTimer++;

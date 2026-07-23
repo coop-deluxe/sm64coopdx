@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -423,5 +421,3 @@ void gfx_vulkan_context_destroy(void) {
     gfxVkQueue = VK_NULL_HANDLE;
     gfxVkQueueFamily = UINT32_MAX;
 }
-
-#endif // ENABLE_VULKAN

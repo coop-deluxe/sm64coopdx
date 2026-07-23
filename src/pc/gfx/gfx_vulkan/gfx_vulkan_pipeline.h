@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_PIPELINE_H
 #define GFX_VULKAN_PIPELINE_H
 
@@ -53,5 +51,3 @@ void gfx_vulkan_pipeline_push_draw_constants(const GfxVulkanDrawPushConstants *p
 extern VkPipelineLayout gfxVkPipelineLayout;
 
 #endif // GFX_VULKAN_PIPELINE_H
-
-#endif // ENABLE_VULKAN

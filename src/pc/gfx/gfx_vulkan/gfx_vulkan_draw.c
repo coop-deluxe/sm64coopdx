@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdio.h>
 #include <string.h>
 
@@ -240,5 +238,3 @@ void gfx_vulkan_draw_set_use_alpha(bool use_alpha) {
     sUseAlpha = use_alpha;
     apply_blend_state();
 }
-
-#endif // ENABLE_VULKAN

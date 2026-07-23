@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -320,5 +318,3 @@ bool gfx_vulkan_texture_get_bound_info(int tile, float outSize[2], bool *outLine
     *outLinearFilter = tex->linearFilter;
     return true;
 }
-
-#endif // ENABLE_VULKAN

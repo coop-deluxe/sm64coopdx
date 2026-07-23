@@ -55,8 +55,6 @@ COOPNET ?= 1
 UPDATER ?= 1
 # Enable docker build workarounds
 DOCKERBUILD ?= 0
-# Enable the (WIP) Vulkan graphics backend. Off by default: MVP still in progress.
-ENABLE_VULKAN ?= 0
 # Sets your optimization level for building.
 # A choice is made by default for you.
 OPT_LEVEL ?= -1
@@ -119,6 +117,13 @@ ifeq ($(HOST_OS),Darwin)
   ifndef BREW_PREFIX
     BREW_PREFIX := $(shell brew --prefix)
   endif
+endif
+
+# Apple can't run this backend reliably.
+ifeq ($(OSX_BUILD),1)
+  ENABLE_VULKAN := 0
+else
+  ENABLE_VULKAN := 1
 endif
 
 ifeq ($(HOST_OS),Linux)
@@ -514,11 +519,11 @@ include dynos.mk
 # Source code files
 LEVEL_C_FILES     := $(wildcard levels/*/leveldata.c) $(wildcard levels/*/script.c) $(wildcard levels/*/geo.c)
 C_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)) $(LEVEL_C_FILES)
-ifeq ($(ENABLE_VULKAN),1)
-  # ENABLE_VULKAN builds run Vulkan exclusively (see pc_main.c's
-  # select_graphics_backend) and never call into the OpenGL backend, so drop
-  # it from the build entirely - this is what lets us skip linking -lGL below.
-  C_FILES         := $(filter-out src/pc/gfx/gfx_opengl.c src/pc/gfx/gfx_window_opengl.c,$(C_FILES))
+ifneq ($(ENABLE_VULKAN),1)
+  # gfx_vulkan.c/gfx_window_vulkan.c live directly in src/pc/gfx (not the
+  # gfx_vulkan/ subfolder gated by SRC_DIRS above), so they need their own
+  # filter-out here to stay unbuilt on OSX_BUILD.
+  C_FILES         := $(filter-out src/pc/gfx/gfx_vulkan.c src/pc/gfx/gfx_window_vulkan.c,$(C_FILES))
 endif
 CPP_FILES         := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
 S_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.s))
@@ -765,31 +770,18 @@ ifeq ($(ENABLE_VULKAN),1)
 endif
 
 # SDL2 Flags
-# The OpenGL libs below are skipped entirely under ENABLE_VULKAN, since
-# gfx_opengl.c/gfx_window_opengl.c are excluded from C_FILES for that build
-# (see above) and no longer need anything they'd provide.
 ifeq ($(WINDOWS_BUILD),1)
-  ifneq ($(ENABLE_VULKAN),1)
-    BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
-  endif
+  BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
 else ifeq ($(TARGET_RPI),1)
-  ifneq ($(ENABLE_VULKAN),1)
-    BACKEND_LDFLAGS += -lGLESv2
-  endif
+  BACKEND_LDFLAGS += -lGLESv2
 else ifeq ($(TARGET_RK3588),1)
-  ifneq ($(ENABLE_VULKAN),1)
-    BACKEND_LDFLAGS += -lGLESv2
-  endif
+  BACKEND_LDFLAGS += -lGLESv2
 else ifeq ($(OSX_BUILD),1)
-  ifneq ($(ENABLE_VULKAN),1)
-    BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
-  endif
+  BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew`
   BACKEND_LDFLAGS += -mmacosx-version-min=$(MIN_MACOS_VERSION)
   EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
 else
-  ifneq ($(ENABLE_VULKAN),1)
-    BACKEND_LDFLAGS += -lGL
-  endif
+  BACKEND_LDFLAGS += -lGL
 endif
 
 # SDL can be used by different systems, so we consolidate all of that shit into this
@@ -1071,15 +1063,12 @@ endif
 
 # Check for Vulkan backend option
 ifeq ($(ENABLE_VULKAN),1)
-  CC_CHECK_CFLAGS += -DENABLE_VULKAN
-  CFLAGS += -DENABLE_VULKAN
   ifeq ($(DEVELOPMENT),1)
     CC_CHECK_CFLAGS += -DVULKAN_DEBUG
     CFLAGS += -DVULKAN_DEBUG
   endif
   # vendored glslang (src/pc/gfx/gfx_vulkan/glslang) requires C++17; vma_impl.cpp is fine with
-  # it too. Scoped to ENABLE_VULKAN builds only, same pattern as the macOS
-  # -std=c++17 branch above.
+  # it too.
   EXTRA_CPP_FLAGS += -std=c++17
 endif
 

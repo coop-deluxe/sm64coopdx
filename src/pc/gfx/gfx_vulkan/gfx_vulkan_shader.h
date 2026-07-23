@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_SHADER_H
 #define GFX_VULKAN_SHADER_H
 
@@ -48,5 +46,3 @@ struct ShaderProgram *gfx_vulkan_shader_lookup(struct ColorCombiner *cc);
 void gfx_vulkan_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]);
 
 #endif // GFX_VULKAN_SHADER_H
-
-#endif // ENABLE_VULKAN

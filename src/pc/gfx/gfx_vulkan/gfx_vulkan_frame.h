@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_FRAME_H
 #define GFX_VULKAN_FRAME_H
 
@@ -42,5 +40,3 @@ uint32_t gfx_vulkan_frame_get_current_slot(void);
 extern VkCommandBuffer gfxVkCurrentCommandBuffer;
 
 #endif // GFX_VULKAN_FRAME_H
-
-#endif // ENABLE_VULKAN

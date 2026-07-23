@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,6 +12,7 @@ typedef struct {
     VkCommandBuffer commandBuffer;
     VkSemaphore imageAvailable;
     uint64_t signalValue; // timeline value this slot's last submission signals; 0 = never submitted
+    bool pendingAcquire; // true between a successful acquire and its matching present
 } GfxVulkanFrameSlot;
 
 static GfxVulkanFrameSlot sFrames[GFX_VULKAN_FRAMES_IN_FLIGHT];
@@ -212,6 +211,17 @@ bool gfx_vulkan_frame_start(void) {
 
     GfxVulkanFrameSlot *slot = &sFrames[sCurrentFrame];
 
+    // Nothing presented this slot's previous acquire (e.g. a caller that opens
+    // a frame via GfxRenderingAPI::start_frame without a matching end_frame,
+    // such as the loading-screen-to-gameplay transition) - imageAvailable is
+    // still signaled with nothing waiting on it, so a fresh acquire on it
+    // would violate VUID-vkAcquireNextImageKHR-semaphore-01286. Recreate it
+    // before reusing this slot, same remedy as the failed-acquire path below.
+    if (slot->pendingAcquire) {
+        recreate_image_available_semaphore(slot);
+        slot->pendingAcquire = false;
+    }
+
     if (slot->signalValue > 0) {
         VkSemaphoreWaitInfo waitInfo = {
             .sType = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO,
@@ -242,6 +252,7 @@ bool gfx_vulkan_frame_start(void) {
     }
 
     gfxVkCurrentCommandBuffer = slot->commandBuffer;
+    slot->pendingAcquire = true;
     return true;
 }
 
@@ -408,6 +419,7 @@ bool gfx_vulkan_frame_present(void) {
     };
     VkResult res = vkQueuePresentKHR(gfxVkQueue, &presentInfo);
 
+    sFrames[sCurrentFrame].pendingAcquire = false;
     sCurrentFrame = (sCurrentFrame + 1) % GFX_VULKAN_FRAMES_IN_FLIGHT;
 
     if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR) {
@@ -424,5 +436,3 @@ bool gfx_vulkan_frame_present(void) {
 uint32_t gfx_vulkan_frame_get_current_slot(void) {
     return sCurrentFrame;
 }
-
-#endif // ENABLE_VULKAN

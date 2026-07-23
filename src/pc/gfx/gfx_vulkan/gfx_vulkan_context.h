@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_CONTEXT_H
 #define GFX_VULKAN_CONTEXT_H
 
@@ -24,5 +22,3 @@ extern VkQueue gfxVkQueue;
 extern uint32_t gfxVkQueueFamily;
 
 #endif // GFX_VULKAN_CONTEXT_H
-
-#endif // ENABLE_VULKAN

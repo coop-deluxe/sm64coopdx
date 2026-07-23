@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_DRAW_H
 #define GFX_VULKAN_DRAW_H
 
@@ -35,5 +33,3 @@ void gfx_vulkan_draw_set_scissor(int x, int y, int width, int height);
 void gfx_vulkan_draw_set_use_alpha(bool use_alpha);
 
 #endif // GFX_VULKAN_DRAW_H
-
-#endif // ENABLE_VULKAN

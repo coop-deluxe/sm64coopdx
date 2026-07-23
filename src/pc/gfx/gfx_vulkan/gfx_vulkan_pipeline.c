@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -462,5 +460,3 @@ void gfx_vulkan_pipeline_bind_textures(const bool usedTextures[2]) {
 void gfx_vulkan_pipeline_push_draw_constants(const GfxVulkanDrawPushConstants *pc) {
     vkCmdPushConstants(gfxVkCurrentCommandBuffer, gfxVkPipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(*pc), pc);
 }
-
-#endif // ENABLE_VULKAN

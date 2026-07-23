@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_TEXTURE_H
 #define GFX_VULKAN_TEXTURE_H
 
@@ -32,5 +30,3 @@ bool gfx_vulkan_texture_get_bound(int tile, VkImageView *outView, VkSampler *out
 bool gfx_vulkan_texture_get_bound_info(int tile, float outSize[2], bool *outLinearFilter);
 
 #endif // GFX_VULKAN_TEXTURE_H
-
-#endif // ENABLE_VULKAN

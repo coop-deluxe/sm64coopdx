@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -45,7 +43,7 @@ static bool device_has_extension(VkPhysicalDevice device, const char* extensionN
 }
 
 // Same suitability rules as gfx_vulkan_context.c::pick_physical_device, kept
-// in sync even though this probe isn't invoked from ENABLE_VULKAN builds today.
+// in sync even though this probe isn't invoked from Vulkan-enabled builds today.
 static bool device_is_suitable(VkPhysicalDevice device) {
     VkPhysicalDeviceProperties props;
     vkGetPhysicalDeviceProperties(device, &props);
@@ -393,5 +391,3 @@ struct GfxRenderingAPI gfx_vulkan_api = {
     gfx_vulkan_renderer_get_name,
     gfx_vulkan_renderer_shutdown
 };
-
-#endif // ENABLE_VULKAN

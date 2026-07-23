@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_SWAPCHAIN_H
 #define GFX_VULKAN_SWAPCHAIN_H
 
@@ -42,5 +40,3 @@ extern VkImageView gfxVkDepthImageView;
 extern VkFormat gfxVkDepthFormat;
 
 #endif // GFX_VULKAN_SWAPCHAIN_H
-
-#endif // ENABLE_VULKAN

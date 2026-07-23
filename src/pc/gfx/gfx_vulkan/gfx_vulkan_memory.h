@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_MEMORY_H
 #define GFX_VULKAN_MEMORY_H
 
@@ -44,5 +42,3 @@ bool gfx_vulkan_memory_create_image(uint32_t width, uint32_t height, VkFormat fo
 void gfx_vulkan_memory_destroy_image(GfxVulkanImage *img);
 
 #endif // GFX_VULKAN_MEMORY_H
-
-#endif // ENABLE_VULKAN

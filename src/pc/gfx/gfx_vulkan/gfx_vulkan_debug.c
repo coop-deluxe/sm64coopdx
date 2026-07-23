@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include "macros.h"
 #include "gfx_vulkan_debug.h"
 
@@ -35,5 +33,3 @@ void gfx_vulkan_debug_end_label(UNUSED VkCommandBuffer cmd) {
 }
 
 #endif // DEVELOPMENT
-
-#endif // ENABLE_VULKAN

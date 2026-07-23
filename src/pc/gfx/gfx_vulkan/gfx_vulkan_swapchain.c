@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -285,5 +283,3 @@ bool gfx_vulkan_swapchain_create(struct SDL_Window *window) {
 
     return true;
 }
-
-#endif // ENABLE_VULKAN

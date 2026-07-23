@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #include <string.h>
 
 #include "gfx_vulkan_context.h"
@@ -138,5 +136,3 @@ void gfx_vulkan_memory_destroy_image(GfxVulkanImage *img) {
     vmaDestroyImage(sAllocator, img->image, (VmaAllocation)img->allocation);
     memset(img, 0, sizeof(*img));
 }
-
-#endif // ENABLE_VULKAN

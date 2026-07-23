@@ -1,5 +1,3 @@
-#if defined(ENABLE_VULKAN)
-
 #ifndef GFX_VULKAN_DEBUG_H
 #define GFX_VULKAN_DEBUG_H
 
@@ -19,5 +17,3 @@ void gfx_vulkan_debug_begin_label(VkCommandBuffer cmd, const char *name);
 void gfx_vulkan_debug_end_label(VkCommandBuffer cmd);
 
 #endif // GFX_VULKAN_DEBUG_H
-
-#endif // ENABLE_VULKAN
