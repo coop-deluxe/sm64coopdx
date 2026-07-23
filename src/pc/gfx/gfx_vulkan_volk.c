@@ -1,6 +1,6 @@
 /* This file is part of volk library; see volk.h for version/license details */
 /* clang-format off */
-#include "volk.h"
+#include "gfx_vulkan_volk.h"
 
 #ifdef _WIN32
 	typedef const char* LPCSTR;

@@ -119,11 +119,14 @@ ifeq ($(HOST_OS),Darwin)
   endif
 endif
 
-# Apple can't run this backend reliably.
+# Internal only - not a user-facing flag. Vulkan is on by default everywhere
+# except macOS (Apple can't run this backend reliably); `override` ignores
+# any ENABLE_VULKAN= passed on the command line so it can't be toggled from
+# outside this Makefile.
 ifeq ($(OSX_BUILD),1)
-  ENABLE_VULKAN := 0
+  override ENABLE_VULKAN := 0
 else
-  ENABLE_VULKAN := 1
+  override ENABLE_VULKAN := 1
 endif
 
 ifeq ($(HOST_OS),Linux)
@@ -486,15 +489,14 @@ endif
 SRC_DIRS += src/pc/mumble
 
 ifeq ($(ENABLE_VULKAN),1)
-  # Vulkan backend internals (gfx_vulkan_context.c etc.) - gfx_vulkan.c/.h
-  # stay directly in src/pc/gfx, alongside the other GfxRenderingAPI backends.
-  # Vendored volk/VMA/glslang live under the same gfx_vulkan/ folder, not lib/,
-  # since they're only ever used by this backend.
-  SRC_DIRS += src/pc/gfx/gfx_vulkan
-  SRC_DIRS += src/pc/gfx/gfx_vulkan/volk src/pc/gfx/gfx_vulkan/vma
+  # Vulkan backend (gfx_vulkan.c/.h, gfx_window_vulkan.c/.h, gfx_vulkan_volk.c/.h,
+  # gfx_vulkan_vma.cpp/.h) lives directly in src/pc/gfx, alongside the other
+  # GfxRenderingAPI backends - already covered by the src/pc/gfx SRC_DIR above.
   # Vendored glslang (GLSL->SPIR-V, runtime shader compiler for the Color
-  # Combiner generator) - .cpp files live in several subdirectories, each
-  # needs to be listed since SRC_DIRS globbing isn't recursive.
+  # Combiner generator) is the one dependency still vendored under its own
+  # folder (src/pc/gfx/gfx_vulkan/glslang), pending upstream changes; its
+  # .cpp files live in several subdirectories, each needs to be listed since
+  # SRC_DIRS globbing isn't recursive.
   SRC_DIRS += src/pc/gfx/gfx_vulkan/glslang/glslang/GenericCodeGen src/pc/gfx/gfx_vulkan/glslang/glslang/MachineIndependent \
               src/pc/gfx/gfx_vulkan/glslang/glslang/MachineIndependent/preprocessor src/pc/gfx/gfx_vulkan/glslang/glslang/ResourceLimits \
               src/pc/gfx/gfx_vulkan/glslang/glslang/CInterface src/pc/gfx/gfx_vulkan/glslang/SPIRV src/pc/gfx/gfx_vulkan/glslang/SPIRV/CInterface
@@ -519,13 +521,14 @@ include dynos.mk
 # Source code files
 LEVEL_C_FILES     := $(wildcard levels/*/leveldata.c) $(wildcard levels/*/script.c) $(wildcard levels/*/geo.c)
 C_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)) $(LEVEL_C_FILES)
-ifneq ($(ENABLE_VULKAN),1)
-  # gfx_vulkan.c/gfx_window_vulkan.c live directly in src/pc/gfx (not the
-  # gfx_vulkan/ subfolder gated by SRC_DIRS above), so they need their own
-  # filter-out here to stay unbuilt on OSX_BUILD.
-  C_FILES         := $(filter-out src/pc/gfx/gfx_vulkan.c src/pc/gfx/gfx_window_vulkan.c,$(C_FILES))
-endif
 CPP_FILES         := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
+ifneq ($(ENABLE_VULKAN),1)
+  # gfx_vulkan.c/gfx_window_vulkan.c/gfx_vulkan_volk.c/gfx_vulkan_vma.cpp live
+  # directly in src/pc/gfx (not gated by their own SRC_DIRS entry), so they
+  # need their own filter-out here to stay unbuilt when Vulkan is off.
+  C_FILES         := $(filter-out src/pc/gfx/gfx_vulkan.c src/pc/gfx/gfx_window_vulkan.c src/pc/gfx/gfx_vulkan_volk.c,$(C_FILES))
+  CPP_FILES       := $(filter-out src/pc/gfx/gfx_vulkan_vma.cpp,$(CPP_FILES))
+endif
 S_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.s))
 ULTRA_C_FILES     := $(foreach dir,$(ULTRA_SRC_DIRS),$(wildcard $(dir)/*.c))
 GODDARD_C_FILES   := $(foreach dir,$(GODDARD_SRC_DIRS),$(wildcard $(dir)/*.c))
@@ -743,8 +746,12 @@ ifeq ($(TARGET_N64),1)
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
   ifeq ($(ENABLE_VULKAN),1)
-    INCLUDE_DIRS += src/pc/gfx/gfx_vulkan/volk src/pc/gfx/gfx_vulkan/volk/include \
-                    src/pc/gfx/gfx_vulkan/vma src/pc/gfx/gfx_vulkan/glslang
+    # gfx_vulkan_volk.h/gfx_vulkan_vma.h are same-directory quoted includes
+    # from gfx_vulkan.c (src/pc/gfx), so they need no -I of their own; system
+    # Vulkan headers (<vulkan/vulkan.h> etc., pulled in by both) resolve via
+    # the default include path once libvulkan-dev (or equivalent) is
+    # installed. glslang is still vendored, so it still needs its own -I.
+    INCLUDE_DIRS += src/pc/gfx/gfx_vulkan/glslang
   endif
 endif
 
@@ -1067,8 +1074,8 @@ ifeq ($(ENABLE_VULKAN),1)
     CC_CHECK_CFLAGS += -DVULKAN_DEBUG
     CFLAGS += -DVULKAN_DEBUG
   endif
-  # vendored glslang (src/pc/gfx/gfx_vulkan/glslang) requires C++17; vma_impl.cpp is fine with
-  # it too.
+  # vendored glslang (src/pc/gfx/gfx_vulkan/glslang) requires C++17; gfx_vulkan_vma.cpp is
+  # fine with it too.
   EXTRA_CPP_FLAGS += -std=c++17
 endif
 
