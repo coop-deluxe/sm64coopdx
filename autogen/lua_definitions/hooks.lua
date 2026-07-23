@@ -51,7 +51,7 @@ end
 ---     return false
 --- end
 --- 
---- hook_chat_command("test", "[on|off] turn test on or off", on_hide_and_seek_command)
+--- hook_chat_command("test", "[on|off] turn test on or off", on_test_command)
 --- ```
 function hook_chat_command(command, description, func)
     -- ...
@@ -340,7 +340,7 @@ end
 ---     network_player_set_description(gNetworkPlayers[0], value, 255, 255, 255, 255)
 --- end
 --- 
---- indexInputbox = hook_mod_menu_inputbox("Network Player Description", on_set_network_player_description)
+--- indexInputbox = hook_mod_menu_inputbox("Network Player Description", "", 100, on_set_network_player_description)
 --- ```
 function hook_mod_menu_inputbox(name, defaultValue, stringLength, func)
     -- ...
@@ -353,46 +353,46 @@ end
 --- ### Lua Example
 ---
 --- ```lua
---- update_mod_menu_element_name(elementIndex, "new name")
+--- update_mod_menu_element_name(index, "new name")
 --- ```
 function update_mod_menu_element_name(index, name)
     -- ...
 end
 
---- @param index integer The index of the element returned by `hook_mod_menu` functions
+--- @param index integer The index of the element returned by `hook_mod_menu_checkbox`
 --- @param value boolean The boolean value to change to
 --- Updates a mod menu checkbox element's boolean value.
 --- 
 --- ### Lua Example
 ---
 --- ```lua
---- update_mod_menu_element_checkbox(elementIndex, booleanValue)
+--- update_mod_menu_element_checkbox(indexCheckbox, booleanValue)
 --- ```
 function update_mod_menu_element_checkbox(index, value)
     -- ...
 end
 
---- @param index integer The index of the element returned by `hook_mod_menu` functions
+--- @param index integer The index of the element returned by `hook_mod_menu_slider`
 --- @param value number The number value to change to
 --- Updates a mod menu slider element's numerical value.
 --- 
 --- ### Lua Example
 ---
 --- ```lua
---- update_mod_menu_element_slider(elementIndex, numberValue)
+--- update_mod_menu_element_slider(indexSlider, numberValue)
 --- ```
 function update_mod_menu_element_slider(index, value)
     -- ...
 end
 
---- @param index integer The index of the element returned by `hook_mod_menu` functions
+--- @param index integer The index of the element returned by `hook_mod_menu_inputbox`
 --- @param value string The text to change to
 --- Updates a mod menu inputbox element's string value.
 --- 
 --- ### Lua Example
 ---
 --- ```lua
---- update_mod_menu_element_inputbox(elementIndex, stringValue)
+--- update_mod_menu_element_inputbox(indexInputbox, stringValue)
 --- ```
 function update_mod_menu_element_inputbox(index, value)
     -- ...
