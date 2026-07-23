@@ -81,6 +81,10 @@ void network_send_join(struct Packet* joinRequestPacket) {
     // figure out id
     u8 globalIndex = joinRequestPacket->localIndex;
     u8 connectedCount = 1;
+    if (globalIndex != UNKNOWN_LOCAL_INDEX && globalIndex >= MAX_PLAYERS) {
+        LOG_ERROR("join request used invalid local index %u", globalIndex);
+        return;
+    }
     if (globalIndex == UNKNOWN_LOCAL_INDEX) {
         for (u32 i = 1; i < MAX_PLAYERS; i++) {
             if (!gNetworkPlayers[i].connected) {
@@ -98,7 +102,19 @@ void network_send_join(struct Packet* joinRequestPacket) {
     LOG_INFO("chose globalIndex: %d", globalIndex);
 
     // do connection event
-    network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName, sJoinRequestDiscordId);
+    u8 localIndex = network_player_connected(
+        NPT_CLIENT,
+        globalIndex,
+        sJoinRequestPlayerModel,
+        &sJoinRequestPlayerPalette,
+        sJoinRequestPlayerName,
+        sJoinRequestDiscordId
+    );
+    if (localIndex == UNKNOWN_LOCAL_INDEX) {
+        LOG_ERROR("failed to connect player at global index %u", globalIndex);
+        network_send_kick(0, EKT_CLOSE_CONNECTION);
+        return;
+    }
 
     fs_file_t* fp = fs_open(SAVE_FILENAME);
     if (fp != NULL) {
@@ -180,6 +196,22 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));
     packet_read(p, eeprom, sizeof(u8) * 512);
+
+    if (
+        p->error
+        || myGlobalIndex >= MAX_PLAYERS
+        || gServerSettings.maxPlayers < 1
+        || gServerSettings.maxPlayers > MAX_PLAYERS
+    ) {
+        LOG_ERROR(
+            "invalid join packet: global=%u maxPlayers=%u error=%u",
+            myGlobalIndex,
+            gServerSettings.maxPlayers,
+            p->error
+        );
+        network_shutdown(true, false, false, false);
+        return;
+    }
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
     network_player_connected(NPT_LOCAL, myGlobalIndex, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());

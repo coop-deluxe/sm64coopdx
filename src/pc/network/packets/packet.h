@@ -8,8 +8,16 @@
 #include <stdbool.h>
 
 #define PACKET_LENGTH 3000
+#define PACKET_HASH_LENGTH ((u16)sizeof(u32))
+#define PACKET_DATA_LENGTH (PACKET_LENGTH - PACKET_HASH_LENGTH)
+#define PACKET_BASE_HEADER_LENGTH \
+    ((u16)(sizeof(u8) + sizeof(u16) + sizeof(u8) + sizeof(u8)))
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 #define PACKET_DESTINATION_SERVER ((u8)-2)
+
+#if MAX_PLAYERS > 254
+#error "MAX_PLAYERS must remain at or below 254 while player IDs use u8"
+#endif
 
 struct NetworkPlayer;
 
@@ -164,7 +172,9 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
 void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
 void packet_set_flags(struct Packet* packet);
 void packet_set_destination(struct Packet* packet, u8 destGlobalId);
-void packet_write(struct Packet* packet, void* data, u16 length);
+void packet_write(struct Packet* packet, const void* data, u16 length);
+u16 packet_write_remaining(const struct Packet* packet);
+u16 packet_read_remaining(const struct Packet* packet);
 u8 packet_initial_read(struct Packet* packet);
 void packet_read(struct Packet* packet, void* data, u16 length);
 u32 packet_hash(struct Packet* packet);
@@ -269,6 +279,7 @@ void network_send_save_remove_flag(s32 fileIndex, s32 courseIndex, u8 courseStar
 void network_receive_save_remove_flag(struct Packet* p);
 
 // packet_network_players.c
+void network_reset_network_players_roster(void);
 void network_send_network_players_request(void);
 void network_receive_network_players_request(struct Packet* p);
 void network_send_network_players(u8 exceptLocalIndex);

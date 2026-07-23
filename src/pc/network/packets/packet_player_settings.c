@@ -35,7 +35,7 @@ void network_receive_player_settings(struct Packet* p) {
     packet_read(p, &playerModel, sizeof(u8));
     packet_read(p, &playerPalette, sizeof(struct PlayerPalette));
 
-    if (globalId == gNetworkPlayers[0].globalIndex || globalId > MAX_PLAYERS) {
+    if (globalId == gNetworkPlayers[0].globalIndex || globalId >= MAX_PLAYERS) {
         LOG_ERROR("Received player settings from improper player.");
         return;
     }

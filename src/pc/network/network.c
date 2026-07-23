@@ -2,6 +2,7 @@
 #include "coopnet/coopnet.h"
 #include <stdio.h>
 #include "network.h"
+#include "network_metrics.h"
 #include "object_fields.h"
 #include "game/level_update.h"
 #include "object_constants.h"
@@ -159,6 +160,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
 
     // set network type
     gNetworkType = inNetworkType;
+    network_metrics_reset();
 
     if (gNetworkType == NT_SERVER) {
         extern s16 gCurrSaveFileNum;
@@ -308,19 +310,31 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         packet_set_ordered_data(p);
     }
 
+    if (p->writeError || p->dataLength > PACKET_DATA_LENGTH) {
+        LOG_ERROR(
+            "refusing oversized packet %u: dataLength=%u capacity=%u",
+            p->packetType,
+            p->dataLength,
+            PACKET_DATA_LENGTH
+        );
+        return;
+    }
+
     // remember reliable packets
     network_remember_reliable(p);
 
     // save inside packet buffer
     u32 hash = packet_hash(p);
-    memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
+    memcpy(&p->buffer[p->dataLength], &hash, PACKET_HASH_LENGTH);
+
+    u8 metricsLocalIndex = localIndex;
 
     // redirect to server if required
     if (localIndex != 0 && gNetworkType != NT_SERVER && gNetworkSystem->requireServerBroadcast && gNetworkPlayerServer != NULL) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
 
-    SOFT_ASSERT(p->dataLength < PACKET_LENGTH);
+    SOFT_ASSERT(p->dataLength <= PACKET_DATA_LENGTH);
 
     // rate limit packets
     bool tooManyPackets = false;
@@ -348,13 +362,29 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         }
         u8* buffer = NULL;
         u32 len = 0;
+        f64 compressionStart = clock_elapsed_f64();
         packet_compress(p, &buffer, &len);
+        f64 compressionSeconds = clock_elapsed_f64() - compressionStart;
         if (!buffer || len == 0) {
+            network_metrics_record_send_error(p->packetType);
             LOG_ERROR("Failed to compress!");
         } else {
             int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
-            if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+            if (rc == SOCKET_ERROR) {
+                network_metrics_record_send_error(p->packetType);
+                LOG_ERROR("send error %d", rc);
+                return;
+            }
+            network_metrics_record_send(
+                p->packetType,
+                metricsLocalIndex,
+                p->dataLength + PACKET_HASH_LENGTH,
+                len,
+                compressionSeconds
+            );
         }
+    } else {
+        network_metrics_record_send_drop(p->packetType, true);
     }
     p->sent = true;
 
@@ -390,6 +420,26 @@ void network_send(struct Packet* p) {
         }
     }
 
+    u32 metricsRecipients = 0;
+    if (gNetworkType == NT_SERVER) {
+        for (s32 i = 1; i < MAX_PLAYERS; i++) {
+            struct NetworkPlayer* np = &gNetworkPlayers[i];
+            if (!np->connected) { continue; }
+            if (p->levelAreaMustMatch) {
+                if (p->courseNum != np->currCourseNum) { continue; }
+                if (p->actNum    != np->currActNum)    { continue; }
+                if (p->levelNum  != np->currLevelNum)  { continue; }
+                if (p->areaIndex != np->currAreaIndex) { continue; }
+            } else if (p->levelMustMatch) {
+                if (p->courseNum != np->currCourseNum) { continue; }
+                if (p->actNum    != np->currActNum)    { continue; }
+                if (p->levelNum  != np->currLevelNum)  { continue; }
+            }
+            metricsRecipients++;
+        }
+        network_metrics_record_broadcast(p->packetType, metricsRecipients);
+    }
+
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
@@ -413,6 +463,10 @@ void network_send(struct Packet* p) {
 }
 
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
+    if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex >= MAX_PLAYERS) {
+        LOG_ERROR("refusing packet from invalid local index %u", localIndex);
+        return;
+    }
 
     // receive packet
     struct Packet p = {
@@ -422,10 +476,21 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         .buffer = { 0 },
         .dataLength = dataLength,
     };
+    f64 decompressionStart = clock_elapsed_f64();
     if (!packet_decompress(&p, data, dataLength)) {
+        f64 decompressionSeconds = clock_elapsed_f64() - decompressionStart;
+        network_metrics_record_receive_error(dataLength, decompressionSeconds);
         LOG_ERROR("Failed to decompress!");
         return;
     }
+    f64 decompressionSeconds = clock_elapsed_f64() - decompressionStart;
+    network_metrics_record_receive(
+        (enum PacketType)p.buffer[0],
+        localIndex,
+        dataLength,
+        p.dataLength + PACKET_HASH_LENGTH,
+        decompressionSeconds
+    );
 
     if (localIndex != UNKNOWN_LOCAL_INDEX && localIndex != 0) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
@@ -604,6 +669,7 @@ void network_update(void) {
     }
 
     sync_objects_update();
+    network_metrics_update();
 
     // update level/area request timers
     /*struct NetworkPlayer* np = gNetworkPlayerLocal;
@@ -672,6 +738,9 @@ void network_mod_dev_mode_reload(void) {
 
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
+    if (gNetworkType != NT_NONE) {
+        network_metrics_report(true);
+    }
     smlua_call_event_hooks(HOOK_ON_EXIT);
 
     if (gDjuiChatBox != NULL) {
