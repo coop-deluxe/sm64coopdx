@@ -5,7 +5,9 @@
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
+#include "djui_hud_utils.h"
 
+#define DJUI_POPUP_WIDTH 400.0f
 #define DJUI_POPUP_LIFETIME 6.0f
 
 struct DjuiPopupList {
@@ -35,7 +37,7 @@ static void djui_popup_destroy(struct DjuiBase* base) {
     free(popup);
 }
 
-void djui_popup_create(const char* message, int lines) {
+void djui_popup_create(const char* message, OPTIONAL int lines) {
     if (djui_is_popup_disabled()) { return; }
     struct DjuiPopup* popup = calloc(1, sizeof(struct DjuiPopup));
     struct DjuiBase* base = &popup->base;
@@ -44,7 +46,7 @@ void djui_popup_create(const char* message, int lines) {
     djui_base_init(&gDjuiRoot->base, base, djui_popup_render, djui_popup_destroy);
     djui_base_set_alignment(base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
     djui_base_set_location(base, 8, -height);
-    djui_base_set_size(base, 400, height);
+    djui_base_set_size(base, DJUI_POPUP_WIDTH, height);
     djui_base_set_border_width(base, 4);
     djui_base_set_color(base, 0, 0, 0, 220);
     djui_base_set_border_color(base, 0, 0, 0, 180);
@@ -55,6 +57,15 @@ void djui_popup_create(const char* message, int lines) {
     djui_base_set_color(&text->base, 220, 220, 220, 255);
     djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
     djui_text_set_drop_shadow(text, 0, 0, 0, 64);
+    // recompute height for dynamic scaling if necessary
+    if (lines == 0) {
+        djui_base_compute_tree(&text->base);
+        f32 textHeight = text->fontScale * text->font->lineHeight * djui_text_count_lines(text, 64) + 8;
+        f32 rectHeight = textHeight + 32;
+        djui_base_set_location(base, 8, -rectHeight);
+        djui_base_set_size(base, DJUI_POPUP_WIDTH, rectHeight);
+        height = rectHeight;
+    }
     popup->text = text;
 
     sPopupListY -= height + 4;

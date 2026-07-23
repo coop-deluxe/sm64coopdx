@@ -12626,15 +12626,18 @@ int smlua_func_djui_popup_create(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_popup_create", 2, top);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "djui_popup_create", 1, 2, top);
         return 0;
     }
 
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_popup_create"); return 0; }
-    int lines = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_popup_create"); return 0; }
+    int lines = (int) 0;
+    if (top >= 2) {
+        lines = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_popup_create"); return 0; }
+    }
 
     djui_popup_create(message, lines);
 
@@ -22563,6 +22566,23 @@ int smlua_func_network_get_player_text_color_string(lua_State* L) {
     return 1;
 }
 
+int smlua_func_network_get_complete_player_name(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "network_get_complete_player_name", 1, top);
+        return 0;
+    }
+
+    u8 localIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_get_complete_player_name"); return 0; }
+
+    lua_pushstring(L, network_get_complete_player_name(localIndex));
+
+    return 1;
+}
+
 int smlua_func_network_check_singleplayer_pause(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -22590,6 +22610,31 @@ int smlua_func_network_discord_id_from_local_index(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_discord_id_from_local_index"); return 0; }
 
     lua_pushstring(L, network_discord_id_from_local_index(localIndex));
+
+    return 1;
+}
+
+int smlua_func_network_disconnect(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 0 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "network_disconnect", 0, 2, top);
+        return 0;
+    }
+
+    int dcType = (int) 0;
+    if (top >= 1) {
+        dcType = smlua_to_integer(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "network_disconnect"); return 0; }
+    }
+    const char* reason = (const char*) NULL;
+    if (top >= 2) {
+        reason = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "network_disconnect"); return 0; }
+    }
+
+    network_disconnect(dcType, reason);
 
     return 1;
 }
@@ -32227,15 +32272,18 @@ int smlua_func_djui_popup_create_global(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_popup_create_global", 2, top);
+    if (top < 1 || top > 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "djui_popup_create_global", 1, 2, top);
         return 0;
     }
 
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_popup_create_global"); return 0; }
-    int lines = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_popup_create_global"); return 0; }
+    int lines = (int) 0;
+    if (top >= 2) {
+        lines = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_popup_create_global"); return 0; }
+    }
 
     djui_popup_create_global(message, lines);
 
@@ -37303,8 +37351,10 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_is_server", smlua_func_network_is_server);
     smlua_bind_function(L, "network_is_moderator", smlua_func_network_is_moderator);
     smlua_bind_function(L, "network_get_player_text_color_string", smlua_func_network_get_player_text_color_string);
+    smlua_bind_function(L, "network_get_complete_player_name", smlua_func_network_get_complete_player_name);
     smlua_bind_function(L, "network_check_singleplayer_pause", smlua_func_network_check_singleplayer_pause);
     smlua_bind_function(L, "network_discord_id_from_local_index", smlua_func_network_discord_id_from_local_index);
+    smlua_bind_function(L, "network_disconnect", smlua_func_network_disconnect);
 
     // obj_behaviors.c
     smlua_bind_function(L, "set_yoshi_as_not_dead", smlua_func_set_yoshi_as_not_dead);

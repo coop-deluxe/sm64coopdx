@@ -51,7 +51,6 @@ struct DateTime {
     s32 second;
 };
 
-
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
 /* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
@@ -63,7 +62,7 @@ s32* get_temp_s32_pointer(s32 initialValue);
 s32 deref_s32_pointer(s32* pointer);
 
 /* |description|Creates a DJUI popup that is broadcasted to every client|descriptionEnd| */
-void djui_popup_create_global(const char* message, int lines);
+void djui_popup_create_global(const char* message, OPTIONAL int lines);
 /* |description|Returns if popups are disabled|descriptionEnd| */
 bool djui_is_popup_disabled(void);
 /* |description|Sets if popups are disabled|descriptionEnd| */

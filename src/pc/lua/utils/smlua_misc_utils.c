@@ -31,6 +31,7 @@
 #include "game/rumble_init.h"
 #include "game/sound_init.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
+#include "pc/network/moderation.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -70,7 +71,7 @@ s32 deref_s32_pointer(s32* pointer) {
 
 ///
 
-void djui_popup_create_global(const char* message, int lines) {
+void djui_popup_create_global(const char* message, OPTIONAL int lines) {
     djui_popup_create(message, lines);
     network_send_global_popup(message, lines);
 }

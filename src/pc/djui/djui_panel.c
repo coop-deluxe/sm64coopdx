@@ -11,6 +11,7 @@
 
 static struct DjuiPanel* sPanelList = NULL;
 static struct DjuiPanel* sPanelRemoving = NULL;
+static int sPanelBackQueue = 0;
 static f32 sMoveAmount = 0;
 
 bool gDjuiPanelDisableBack = false;
@@ -136,6 +137,18 @@ void djui_panel_back(void) {
     gDjuiPanelJoinMessageVisible = false;
 }
 
+void djui_panel_back_by(int amount) {
+    if (amount <= 0) { return; }
+    if (sPanelList == NULL) { return; }
+    if (gDjuiPanelDisableBack) { return; }
+
+    sPanelBackQueue = amount - 1;
+
+    if (sPanelRemoving == NULL) {
+        djui_panel_back();
+    }
+}
+
 void djui_panel_update(void) {
     if (sPanelList == NULL) { return; }
     if (sPanelList->base == NULL) { return; }
@@ -175,6 +188,10 @@ void djui_panel_update(void) {
             djui_base_destroy(removingBase);
             free(panel);
             removingBase = NULL;
+            if (sPanelBackQueue > 0) {
+                sPanelBackQueue--;
+                djui_panel_back();
+            }
             return;
         }
     }
@@ -220,6 +237,7 @@ void djui_panel_shutdown(void) {
     sPanelList = NULL;
     sPanelRemoving = NULL;
     sMoveAmount = 0;
+    sPanelBackQueue = 0;
     gInteractableOverridePad = false;
     gDjuiPanelJoinMessageVisible = false;
     gDjuiPanelMainCreated = false;

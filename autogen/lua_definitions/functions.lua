@@ -4375,8 +4375,8 @@ function djui_menu_get_rainbow_string_color(color)
 end
 
 --- @param message string
---- @param lines integer
---- Creates a popup that says `message` and has `lines`
+--- @param lines? integer
+--- Creates a popup that says `message`. The line count may be decided automatically or be set manually
 function djui_popup_create(message, lines)
     -- ...
 end
@@ -8337,6 +8337,13 @@ function network_get_player_text_color_string(localIndex)
     -- ...
 end
 
+--- @param localIndex integer
+--- @return string
+--- Gets the complete player name, including the player's starting hex code.
+function network_get_complete_player_name(localIndex)
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the game can currently be paused in singleplayer
 function network_check_singleplayer_pause()
@@ -8347,6 +8354,13 @@ end
 --- @return string
 --- Gets a Discord ID corresponding to the network player with `localIndex`
 function network_discord_id_from_local_index(localIndex)
+    -- ...
+end
+
+--- @param dcType? DisconnectType
+--- @param reason? string
+--- Disconnects the local player with DisconnectType `dcType` (default is DC_LEAVE) because of `reason` (optional).
+function network_disconnect(dcType, reason)
     -- ...
 end
 
@@ -11963,7 +11977,7 @@ function deref_s32_pointer(pointer)
 end
 
 --- @param message string
---- @param lines integer
+--- @param lines? integer
 --- Creates a DJUI popup that is broadcasted to every client
 function djui_popup_create_global(message, lines)
     -- ...

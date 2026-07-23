@@ -43,7 +43,9 @@ struct DjuiBase {
     bool abandonAfterChildRenderFail;
     bool gradient;
     s64 tag;
+    u64 uTag;
     bool bTag;
+    char* cTag;
     void (*get_cursor_hover_location)(struct DjuiBase*, f32* x, f32* y);
     void (*on_child_render)(struct DjuiBase*, struct DjuiBase*);
     void (*on_render_pre)(struct DjuiBase*, bool*);

@@ -4271,7 +4271,7 @@ Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
 ## [djui_popup_create](#djui_popup_create)
 
 ### Description
-Creates a popup that says `message` and has `lines`
+Creates a popup that says `message`. The line count may be decided automatically or be set manually
 
 ### Lua Example
 `djui_popup_create(message, lines)`
@@ -4286,7 +4286,7 @@ Creates a popup that says `message` and has `lines`
 - None
 
 ### C Prototype
-`void djui_popup_create(const char* message, int lines);`
+`void djui_popup_create(const char* message, OPTIONAL int lines);`
 
 [:arrow_up_small:](#)
 

@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include "network_utils.h"
+#include "moderation.h"
 #include "game/camera.h"
 #include "game/level_update.h"
 #include "game/mario_misc.h"
 #include "pc/mods/mods.h"
+#include "pc/debuglog.h"
+#include "pc/lua/smlua.h"
 
 u8 network_global_index_from_local(u8 localIndex) {
     if (gNetworkType == NT_SERVER) { return localIndex; }
@@ -53,6 +56,14 @@ const char* network_get_player_text_color_string(u8 localIndex) {
     return sColorString;
 }
 
+const char* network_get_complete_player_name(u8 localIndex) {
+    if (localIndex >= MAX_PLAYERS) { localIndex = 0; }
+    static char buffer[MAX_CONFIG_STRING + 10];
+    const char* colorString = network_get_player_text_color_string(localIndex);
+    snprintf(buffer, MAX_CONFIG_STRING + 10, "%s%s", colorString, gNetworkPlayers[localIndex].name);
+    return buffer;
+}
+
 extern s16 gMenuMode;
 bool network_check_singleplayer_pause(void) {
     return ((gMenuMode != -1) || (gCameraMovementFlags & CAM_MOVE_PAUSE_SCREEN)) &&
@@ -62,4 +73,26 @@ bool network_check_singleplayer_pause(void) {
 const char* network_discord_id_from_local_index(u8 localIndex) {
     if (localIndex >= MAX_PLAYERS) { return "0"; }
     return gNetworkPlayers[localIndex].discordId;
+}
+
+void network_disconnect(OPTIONAL enum DisconnectType dcType, OPTIONAL const char* reason) {
+    switch (dcType) {
+        case DC_KICK:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot kick the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_KICK, 0, (char*)reason, false);
+            break;
+        case DC_BAN:
+            if (gNetworkType == NT_SERVER) {
+                LOG_LUA("network_disconnect: Cannot ban the server!");
+                return;
+            }
+            network_send_moderation_action(MODERATION_ACTION_BAN, 0, (char*)reason, false);
+            break;
+        default:
+            gQueuedDisconnect = dcType;
+            break;
+    }
 }

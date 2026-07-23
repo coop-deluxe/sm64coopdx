@@ -60,7 +60,7 @@ struct DialogEntry* dialog_table_get(s32 dialogId) {
 void dialog_table_reset(void) {
     DialogTable *table = gDialogTable;
 
-    if (!table) return;
+    if (!table) { return; }
 
     for (u32 i = 0; i < table->count; i++) {
         struct DialogEntry *dialog = table->buffer[i];

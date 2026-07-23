@@ -42,7 +42,7 @@ bool gUpdateMessage = false;
 
 void show_update_popup(void) {
     if (sVersionUpdateTextBuffer[0] == '\0') { return; }
-    djui_popup_create(sVersionUpdateTextBuffer, 3);
+    djui_popup_create(sVersionUpdateTextBuffer, 0);
 }
 
 #if !(defined(_WIN32) || defined(_WIN64))

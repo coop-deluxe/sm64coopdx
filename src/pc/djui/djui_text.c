@@ -501,10 +501,10 @@ static bool djui_text_render(struct DjuiBase* base) {
     f32 vOffset = 0;
     if (text->textVAlign == DJUI_VALIGN_CENTER) {
         vOffset += (comp->height / text->fontScale) / 2.0f;
-        vOffset -= (lineCount * text->font->charHeight) / 2.0f;
+        vOffset -= (lineCount - 1) * text->font->lineHeight + text->font->charHeight / 2.0f;
     } else if (text->textVAlign == DJUI_VALIGN_BOTTOM) {
         vOffset += (comp->height / text->fontScale);
-        vOffset -= (lineCount * text->font->charHeight);
+        vOffset -= (lineCount - 1) * text->font->lineHeight + text->font->charHeight;
     }
     djui_text_translate(0, vOffset);
 

@@ -6,6 +6,9 @@ struct DjuiPopup {
     struct DjuiText* text;
 };
 
-/* |description|Creates a popup that says `message` and has `lines`|descriptionEnd| */
-void djui_popup_create(const char* message, int lines);
+/* |description|
+Creates a popup that says `message`. The line count may be decided automatically or be set manually
+|descriptionEnd| */
+void djui_popup_create(const char* message, OPTIONAL int lines);
+
 void djui_popup_update(void);

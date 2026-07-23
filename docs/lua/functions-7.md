@@ -2037,7 +2037,7 @@ Creates a DJUI popup that is broadcasted to every client
 - None
 
 ### C Prototype
-`void djui_popup_create_global(const char* message, int lines);`
+`void djui_popup_create_global(const char* message, OPTIONAL int lines);`
 
 [:arrow_up_small:](#)
 

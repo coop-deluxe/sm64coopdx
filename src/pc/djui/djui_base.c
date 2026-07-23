@@ -353,6 +353,11 @@ void djui_base_destroy(struct DjuiBase* base) {
         gInteractableBinding = NULL;
     }
 
+    // remove input controlled base
+    if (gInputControlledBase == base) {
+        gInputControlledBase = NULL;
+    }
+
     // remove myself from parent's linked list
     if (base->parent != NULL) {
         struct DjuiBaseChild* child     = base->parent->child;
@@ -391,10 +396,12 @@ void djui_base_destroy(struct DjuiBase* base) {
     }
 
     // deallocate interactable
-    if (base->interactable != NULL) {
-        free(base->interactable);
-        base->interactable = NULL;
-    }
+    free(base->interactable);
+    base->interactable = NULL;
+
+    // deallocate ctag
+    free(base->cTag);
+    base->cTag = NULL;
 
     // remove from interactable variable
     if (base == gDjuiHovered)           { gDjuiHovered = NULL; }
