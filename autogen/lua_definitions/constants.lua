@@ -548,6 +548,31 @@ WARP_TRANSITION_FADE_FROM_BOWSER = 0x12
 --- @type integer
 WARP_TRANSITION_FADE_INTO_BOWSER = 0x13
 
+MENU_OPT_NONE               =                                  0 --- @type MenuOption
+MENU_OPT_1                  =                                  1 --- @type MenuOption
+MENU_OPT_2                  =                                  2 --- @type MenuOption
+MENU_OPT_3                  =                                  3 --- @type MenuOption
+MENU_OPT_DEFAULT            =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_CONTINUE           =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_EXIT_COURSE        =          ((MENU_OPT_CONTINUE) + 1) --- @type MenuOption
+MENU_OPT_CAMERA_ANGLE_R     =          ((MENU_OPT_CONTINUE) + 2) --- @type MenuOption
+MENU_OPT_EXIT_TO_CASTLE     =          ((MENU_OPT_CONTINUE) + 3) --- @type MenuOption
+MENU_OPT_SAVE_AND_CONTINUE  =                         MENU_OPT_1 --- @type MenuOption
+MENU_OPT_CONTINUE_DONT_SAVE = ((MENU_OPT_SAVE_AND_CONTINUE) + 1) --- @type MenuOption
+
+--- @alias MenuOption
+--- | `MENU_OPT_NONE`
+--- | `MENU_OPT_1`
+--- | `MENU_OPT_2`
+--- | `MENU_OPT_3`
+--- | `MENU_OPT_DEFAULT`
+--- | `MENU_OPT_CONTINUE`
+--- | `MENU_OPT_EXIT_COURSE`
+--- | `MENU_OPT_CAMERA_ANGLE_R`
+--- | `MENU_OPT_EXIT_TO_CASTLE`
+--- | `MENU_OPT_SAVE_AND_CONTINUE`
+--- | `MENU_OPT_CONTINUE_DONT_SAVE`
+
 --- @type string
 VERSION_REGION = "US"
 
@@ -3205,6 +3230,23 @@ GEO_CONTEXT_AREA_INIT = 4
 --- @type integer
 GEO_CONTEXT_HELD_OBJ = 5
 
+PAUSE_EXIT_VANILLA   = 0 --- @type PauseExitMode
+PAUSE_EXIT_COURSE    = 1 --- @type PauseExitMode
+PAUSE_EXIT_TO_CASTLE = 2 --- @type PauseExitMode
+PAUSE_EXIT_BOTH      = 3 --- @type PauseExitMode
+
+--- @alias PauseExitMode
+--- | `PAUSE_EXIT_VANILLA`
+--- | `PAUSE_EXIT_COURSE`
+--- | `PAUSE_EXIT_TO_CASTLE`
+--- | `PAUSE_EXIT_BOTH`
+
+--- @type integer
+STARS_NEEDED_FOR_DIALOG_COUNT = 6
+
+--- @type integer
+EXCLAMATION_BOX_MAX_SIZE = 99
+
 INTERACT_HOOT           =  (1 << 0) --- @type InteractionType
 INTERACT_GRABBABLE      =  (1 << 1) --- @type InteractionType
 INTERACT_DOOR           =  (1 << 2) --- @type InteractionType
@@ -3522,86 +3564,85 @@ LEVEL_COUNT            = 39 --- @type LevelNum
 --- | `LEVEL_UNKNOWN_38`
 --- | `LEVEL_COUNT`
 
---- @type integer
-TIMER_CONTROL_SHOW = 0
+TIMER_CONTROL_SHOW  = 0 --- @type TimerControl
+TIMER_CONTROL_START = 1 --- @type TimerControl
+TIMER_CONTROL_STOP  = 2 --- @type TimerControl
+TIMER_CONTROL_HIDE  = 3 --- @type TimerControl
 
---- @type integer
-TIMER_CONTROL_START = 1
+--- @alias TimerControl
+--- | `TIMER_CONTROL_SHOW`
+--- | `TIMER_CONTROL_START`
+--- | `TIMER_CONTROL_STOP`
+--- | `TIMER_CONTROL_HIDE`
 
---- @type integer
-TIMER_CONTROL_STOP = 2
+WARP_OP_NONE                  =    0 --- @type WarpOperation
+WARP_OP_LOOK_UP               =    1 --- @type WarpOperation
+WARP_OP_SPIN_SHRINK           =    2 --- @type WarpOperation
+WARP_OP_WARP_DOOR             =    3 --- @type WarpOperation
+WARP_OP_WARP_OBJECT           =    4 --- @type WarpOperation
+WARP_OP_TELEPORT              =    5 --- @type WarpOperation
+WARP_OP_TRIGGERS_LEVEL_SELECT = 0x10 --- @type WarpOperation
+WARP_OP_STAR_EXIT             =   17 --- @type WarpOperation
+WARP_OP_DEATH                 =   18 --- @type WarpOperation
+WARP_OP_WARP_FLOOR            =   19 --- @type WarpOperation
+WARP_OP_GAME_OVER             =   20 --- @type WarpOperation
+WARP_OP_CREDITS_END           =   21 --- @type WarpOperation
+WARP_OP_DEMO_NEXT             =   22 --- @type WarpOperation
+WARP_OP_CREDITS_START         =   23 --- @type WarpOperation
+WARP_OP_CREDITS_NEXT          =   24 --- @type WarpOperation
+WARP_OP_DEMO_END              =   25 --- @type WarpOperation
+WARP_OP_FORCE_SYNC            =   26 --- @type WarpOperation
+WARP_OP_EXIT                  =   27 --- @type WarpOperation
 
---- @type integer
-TIMER_CONTROL_HIDE = 3
+--- @alias WarpOperation
+--- | `WARP_OP_NONE`
+--- | `WARP_OP_LOOK_UP`
+--- | `WARP_OP_SPIN_SHRINK`
+--- | `WARP_OP_WARP_DOOR`
+--- | `WARP_OP_WARP_OBJECT`
+--- | `WARP_OP_TELEPORT`
+--- | `WARP_OP_TRIGGERS_LEVEL_SELECT`
+--- | `WARP_OP_STAR_EXIT`
+--- | `WARP_OP_DEATH`
+--- | `WARP_OP_WARP_FLOOR`
+--- | `WARP_OP_GAME_OVER`
+--- | `WARP_OP_CREDITS_END`
+--- | `WARP_OP_DEMO_NEXT`
+--- | `WARP_OP_CREDITS_START`
+--- | `WARP_OP_CREDITS_NEXT`
+--- | `WARP_OP_DEMO_END`
+--- | `WARP_OP_FORCE_SYNC`
+--- | `WARP_OP_EXIT`
 
---- @type integer
-WARP_OP_NONE = 0x00
+WARP_SPECIAL_LEVEL_SELECT        = -9 --- @type SpecialWarpDestination
+WARP_SPECIAL_INTRO_SPLASH_SCREEN = -8 --- @type SpecialWarpDestination
+WARP_SPECIAL_SWITCH_FILE         = -7 --- @type SpecialWarpDestination
+WARP_SPECIAL_MARIO_HEAD_DIZZY    = -3 --- @type SpecialWarpDestination
+WARP_SPECIAL_MARIO_HEAD_REGULAR  = -2 --- @type SpecialWarpDestination
+WARP_SPECIAL_ENDING              = -1 --- @type SpecialWarpDestination
+WARP_SPECIAL_NONE                =  0 --- @type SpecialWarpDestination
 
---- @type integer
-WARP_OP_LOOK_UP = 0x01
+--- @alias SpecialWarpDestination
+--- | `WARP_SPECIAL_LEVEL_SELECT`
+--- | `WARP_SPECIAL_INTRO_SPLASH_SCREEN`
+--- | `WARP_SPECIAL_SWITCH_FILE`
+--- | `WARP_SPECIAL_MARIO_HEAD_DIZZY`
+--- | `WARP_SPECIAL_MARIO_HEAD_REGULAR`
+--- | `WARP_SPECIAL_ENDING`
+--- | `WARP_SPECIAL_NONE`
 
---- @type integer
-WARP_OP_SPIN_SHRINK = 0x02
+WARP_FLAG_NONE            = (0 << 0) --- @type WarpFlags
+WARP_FLAG_DOOR_PULLED     = (1 << 0) --- @type WarpFlags
+WARP_FLAG_DOOR_FLIP_MARIO = (1 << 1) --- @type WarpFlags
+WARP_FLAG_DOOR_IS_WARP    = (1 << 2) --- @type WarpFlags
+WARP_FLAG_EXIT_COURSE     = (1 << 3) --- @type WarpFlags
 
---- @type integer
-WARP_OP_WARP_DOOR = 0x03
-
---- @type integer
-WARP_OP_WARP_OBJECT = 0x04
-
---- @type integer
-WARP_OP_TELEPORT = 0x05
-
---- @type integer
-WARP_OP_STAR_EXIT = 0x11
-
---- @type integer
-WARP_OP_DEATH = 0x12
-
---- @type integer
-WARP_OP_WARP_FLOOR = 0x13
-
---- @type integer
-WARP_OP_GAME_OVER = 0x14
-
---- @type integer
-WARP_OP_CREDITS_END = 0x15
-
---- @type integer
-WARP_OP_DEMO_NEXT = 0x16
-
---- @type integer
-WARP_OP_CREDITS_START = 0x17
-
---- @type integer
-WARP_OP_CREDITS_NEXT = 0x18
-
---- @type integer
-WARP_OP_DEMO_END = 0x19
-
---- @type integer
-WARP_OP_FORCE_SYNC = 0x20
-
---- @type integer
-WARP_OP_EXIT = 0x21
-
---- @type integer
-WARP_OP_TRIGGERS_LEVEL_SELECT = 0x10
-
---- @type integer
-SPECIAL_WARP_CAKE = -1
-
---- @type integer
-SPECIAL_WARP_GODDARD = -2
-
---- @type integer
-SPECIAL_WARP_GODDARD_GAMEOVER = -3
-
---- @type integer
-SPECIAL_WARP_TITLE = -8
-
---- @type integer
-SPECIAL_WARP_LEVEL_SELECT = -9
+--- @alias WarpFlags
+--- | `WARP_FLAG_NONE`
+--- | `WARP_FLAG_DOOR_PULLED`
+--- | `WARP_FLAG_DOOR_FLIP_MARIO`
+--- | `WARP_FLAG_DOOR_IS_WARP`
+--- | `WARP_FLAG_EXIT_COURSE`
 
 MARIO_SPAWN_NONE                  =    0 --- @type MarioSpawnType
 MARIO_SPAWN_DOOR_WARP             =    1 --- @type MarioSpawnType
@@ -3648,53 +3689,37 @@ MARIO_SPAWN_FADE_FROM_BLACK       =   39 --- @type MarioSpawnType
 --- | `MARIO_SPAWN_UNUSED_38`
 --- | `MARIO_SPAWN_FADE_FROM_BLACK`
 
---- @type integer
-MARIO_SPAWN_UNKNOWN_02 = 0x02
+WARP_NODE_MAIN_ENTRY    = 0x0A --- @type WarpNodes
+WARP_NODE_DEFAULT       = 0xF0 --- @type WarpNodes
+WARP_NODE_DEATH         = 0xF1 --- @type WarpNodes
+WARP_NODE_LOOK_UP       = 0xF2 --- @type WarpNodes
+WARP_NODE_WARP_FLOOR    = 0xF3 --- @type WarpNodes
+WARP_NODE_CREDITS_MIN   = 0xF8 --- @type WarpNodes
+WARP_NODE_CREDITS_START = 0xF8 --- @type WarpNodes
+WARP_NODE_CREDITS_NEXT  = 0xF9 --- @type WarpNodes
+WARP_NODE_CREDITS_END   = 0xFA --- @type WarpNodes
 
---- @type integer
-MARIO_SPAWN_UNKNOWN_03 = 0x03
+--- @alias WarpNodes
+--- | `WARP_NODE_MAIN_ENTRY`
+--- | `WARP_NODE_DEFAULT`
+--- | `WARP_NODE_DEATH`
+--- | `WARP_NODE_LOOK_UP`
+--- | `WARP_NODE_WARP_FLOOR`
+--- | `WARP_NODE_CREDITS_MIN`
+--- | `WARP_NODE_CREDITS_START`
+--- | `WARP_NODE_CREDITS_NEXT`
+--- | `WARP_NODE_CREDITS_END`
 
---- @type integer
-MARIO_SPAWN_UNKNOWN_27 = 0x27
+WARP_TYPE_NOT_WARPING  = 0 --- @type WarpType
+WARP_TYPE_CHANGE_LEVEL = 1 --- @type WarpType
+WARP_TYPE_CHANGE_AREA  = 2 --- @type WarpType
+WARP_TYPE_SAME_AREA    = 3 --- @type WarpType
 
---- @type integer
-WARP_NODE_F0 = 0xF0
-
---- @type integer
-WARP_NODE_DEATH = 0xF1
-
---- @type integer
-WARP_NODE_F2 = 0xF2
-
---- @type integer
-WARP_NODE_WARP_FLOOR = 0xF3
-
---- @type integer
-WARP_NODE_CREDITS_START = 0xF8
-
---- @type integer
-WARP_NODE_CREDITS_NEXT = 0xF9
-
---- @type integer
-WARP_NODE_CREDITS_END = 0xFA
-
---- @type integer
-WARP_NODE_CREDITS_MIN = 0xF8
-
---- @type integer
-WARP_TYPE_NOT_WARPING = 0
-
---- @type integer
-WARP_TYPE_CHANGE_LEVEL = 1
-
---- @type integer
-WARP_TYPE_CHANGE_AREA = 2
-
---- @type integer
-WARP_TYPE_SAME_AREA = 3
-
---- @type integer
-WARP_ARG_EXIT_COURSE = -1
+--- @alias WarpType
+--- | `WARP_TYPE_NOT_WARPING`
+--- | `WARP_TYPE_CHANGE_LEVEL`
+--- | `WARP_TYPE_CHANGE_AREA`
+--- | `WARP_TYPE_SAME_AREA`
 
 --- @type integer
 PRESS_START_DEMO_TIMER = 800

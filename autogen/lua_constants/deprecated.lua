@@ -4,6 +4,12 @@ FONT_TINY = -1
 --- @type integer
 ANIM_FLAG_FORWARD = (1 << 1)
 
+SPECIAL_WARP_CAKE             = -1 --- @type integer
+SPECIAL_WARP_GODDARD          = -2 --- @type integer
+SPECIAL_WARP_GODDARD_GAMEOVER = -3 --- @type integer
+SPECIAL_WARP_TITLE            = -8 --- @type integer
+SPECIAL_WARP_LEVEL_SELECT     = -9 --- @type integer
+
 -----------------------
 -- Renamed functions --
 -----------------------

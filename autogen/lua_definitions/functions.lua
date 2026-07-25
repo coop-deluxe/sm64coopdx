@@ -3908,6 +3908,11 @@ end
 
 --- @param message string
 --- @param level? ConsoleMessageLevel
+--- Creates a message that goes into either the chat, console, or terminal.<br>
+--- It decides by checking where you entered the command, and will output to that source directly.<br>
+--- <br>
+--- It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.<br>
+--- If ran independently of any of these hooks, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
 function command_message_create(message, level)
     -- ...
 end
@@ -3915,10 +3920,6 @@ end
 --- @param message string
 --- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
-    -- ...
-end
-
-function djui_console_clear()
     -- ...
 end
 
@@ -5311,7 +5312,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg integer
+--- @param arg SpecialWarpDestination
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
@@ -5338,15 +5339,15 @@ function initiate_painting_warp(paintingIndex)
 end
 
 --- @param m MarioState
---- @param warpOp integer
+--- @param warpOp WarpOperation
 --- @return integer
 --- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg integer
---- Special warps to arg (`SPECIAL_WARP_*`)
+--- @param arg SpecialWarpDestination
+--- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
     -- ...
 end
@@ -5354,9 +5355,9 @@ end
 --- @param destLevel integer
 --- @param destArea integer
 --- @param destWarpNode integer
---- @param arg integer
---- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-function initiate_warp(destLevel, destArea, destWarpNode, arg)
+--- @param warpFlags integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, warpFlags)
     -- ...
 end
 

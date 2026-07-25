@@ -395,6 +395,8 @@ void smlua_init(void) {
 
     smlua_index_custom_fields();
 
+    dynos_behavior_hook_all_custom_behaviors();
+
     smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
 

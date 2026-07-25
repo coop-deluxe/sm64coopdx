@@ -41,6 +41,15 @@ struct StarPositions {
     Vec3f JetstreamRingStarPos;
 };
 
+#define PAUSE_EXIT_MODE gLevelValues.pauseExitMode
+
+enum PauseExitMode {
+    PAUSE_EXIT_VANILLA,   // 0b00 // "EXIT COURSE"    exits to castle
+    PAUSE_EXIT_COURSE,    // 0b01 // "EXIT COURSE"    exits the course
+    PAUSE_EXIT_TO_CASTLE, // 0b10 // "EXIT TO CASTLE" exits to castle
+    PAUSE_EXIT_BOTH       // 0b11 // "EXIT COURSE" and "EXIT TO CASTLE"
+};
+
 struct LevelValues {
     u8 fixCollisionBugs;
     u8 fixCollisionBugsRoundedCorners;
@@ -61,6 +70,7 @@ struct LevelValues {
     u8 showStarNumber;
     u8 extendedPauseDisplay;
     u8 pauseExitAnywhere;
+    enum PauseExitMode pauseExitMode;
     u8 disableActs;
     u8 bubbleOnDeathBarrierInCapStages;
     enum LevelNum entryLevel;

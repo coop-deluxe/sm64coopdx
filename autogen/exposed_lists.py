@@ -54,6 +54,7 @@ constants_files = [
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
+    "src/game/hardcoded.h",
 ]
 
 # For each file, expose only these constants
@@ -242,7 +243,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],
-    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_clear", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],

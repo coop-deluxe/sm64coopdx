@@ -11499,20 +11499,6 @@ int smlua_func_djui_chat_message_create(lua_State* L) {
  // djui_console.h //
 ////////////////////
 
-int smlua_func_djui_console_clear(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 0) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_console_clear", 0, top);
-        return 0;
-    }
-
-    djui_console_clear();
-
-    return 1;
-}
-
 int smlua_func_djui_console_toggle(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -14828,7 +14814,7 @@ int smlua_func_fade_into_special_warp(lua_State* L) {
         return 0;
     }
 
-    u32 arg = smlua_to_integer(L, 1);
+    enum SpecialWarpDestination arg = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "fade_into_special_warp"); return 0; }
     u32 color = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "fade_into_special_warp"); return 0; }
@@ -14897,7 +14883,7 @@ int smlua_func_level_trigger_warp(lua_State* L) {
 
     struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_trigger_warp"); return 0; }
-    s32 warpOp = smlua_to_integer(L, 2);
+    enum WarpOperation warpOp = smlua_to_integer(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "level_trigger_warp"); return 0; }
 
     lua_pushinteger(L, level_trigger_warp(m, warpOp));
@@ -14914,7 +14900,7 @@ int smlua_func_warp_special(lua_State* L) {
         return 0;
     }
 
-    s32 arg = smlua_to_integer(L, 1);
+    enum SpecialWarpDestination arg = smlua_to_integer(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_special"); return 0; }
 
     warp_special(arg);
@@ -14937,10 +14923,10 @@ int smlua_func_initiate_warp(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "initiate_warp"); return 0; }
     s16 destWarpNode = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "initiate_warp"); return 0; }
-    s32 arg = smlua_to_integer(L, 4);
+    s32 warpFlags = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "initiate_warp"); return 0; }
 
-    initiate_warp(destLevel, destArea, destWarpNode, arg);
+    initiate_warp(destLevel, destArea, destWarpNode, warpFlags);
 
     return 1;
 }
@@ -36909,7 +36895,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_chat_message_create", smlua_func_djui_chat_message_create);
 
     // djui_console.h
-    smlua_bind_function(L, "djui_console_clear", smlua_func_djui_console_clear);
     smlua_bind_function(L, "djui_console_toggle", smlua_func_djui_console_toggle);
     smlua_bind_function(L, "djui_console_is_open", smlua_func_djui_console_is_open);
 

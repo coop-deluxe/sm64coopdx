@@ -18,6 +18,13 @@ struct Command {
 
 struct Command *get_command(const char *name);
 void run_command(char *command, bool onConsole);
+/* |description|
+Creates a message that goes into either the chat, console, or terminal.
+It decides by checking where you entered the command, and will output to that source directly.
+
+It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.
+If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
+|descriptionEnd| */
 void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLevel level);
 
 extern enum ChatConfirmCommand gConfirmingCommandType;
