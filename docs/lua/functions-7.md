@@ -1636,6 +1636,140 @@ Deletes all vertex buffers created by `vtx_create`
 <br />
 
 ---
+# functions from smlua_input_utils.h
+
+<br />
+
+
+## [get_current_gamepad_index](#get_current_gamepad_index)
+
+### Description
+Returns the current gamepad index in the config file
+
+### Lua Example
+`local integerValue = get_current_gamepad_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_current_gamepad_index(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_clipboard_text](#get_clipboard_text)
+
+### Description
+Returns the clipboard text
+
+### Lua Example
+`local stringValue = get_clipboard_text()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *get_clipboard_text(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [set_clipboard_text](#set_clipboard_text)
+
+### Description
+Sets the clipboard text
+
+### Lua Example
+`set_clipboard_text(text)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| text | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void set_clipboard_text(const char *text);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [start_text_input](#start_text_input)
+
+### Description
+Starts text input and grabs input focus
+
+### Lua Example
+`start_text_input()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void start_text_input(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [stop_text_input](#stop_text_input)
+
+### Description
+Stops text input and loses input focus
+
+### Lua Example
+`stop_text_input()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void stop_text_input(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [is_text_input_active](#is_text_input_active)
+
+### Description
+Checks if text input is active and if you have input focus
+
+### Lua Example
+`local booleanValue = is_text_input_active()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool is_text_input_active(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_level_utils.h
 
 <br />

@@ -42,8 +42,6 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 #endif
         djui_checkbox_create(body, DLANG(MISC, USE_STANDARD_KEY_BINDINGS_CHAT), &configUseStandardKeyBindingsChat, NULL);
 
-        djui_checkbox_create(body, DLANG(CONTROLS, EXTENDED_REPORTS), &configExtendedReports, NULL);
-
         int numJoys = SDL_NumJoysticks();
         if (numJoys == 0) { numJoys = 1; }
 

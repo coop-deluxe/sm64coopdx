@@ -96,7 +96,7 @@ def extract_constants(filename):
     tmp = txt
     txt = ''
     for line in tmp.splitlines():
-        line = line.strip()
+        line = line.replace('typedef', '').strip()
         if line.startswith('enum '):
             txt += line + '\n'
         if line.startswith('#define '):

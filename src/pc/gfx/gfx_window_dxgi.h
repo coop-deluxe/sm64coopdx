@@ -1,5 +1,4 @@
-#ifndef GFX_WINDOW_DXGI_H
-#define GFX_WINDOW_DXGI_H
+#pragma once
 
 #include "gfx_rendering_api.h"
 
@@ -12,5 +11,3 @@ void ThrowIfFailed(HRESULT res, HWND h_wnd, const char *message);
 #endif
 
 extern struct GfxWindowBackendAPI gfx_window_dxgi;
-
-#endif

@@ -3912,7 +3912,7 @@ end
 --- It decides by checking where you entered the command, and will output to that source directly.<br>
 --- <br>
 --- It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.<br>
---- If ran independently of any of these hooks, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
+--- If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
 function command_message_create(message, level)
     -- ...
 end
@@ -11891,6 +11891,40 @@ end
 
 --- Deletes all vertex buffers created by `vtx_create`
 function vtx_delete_all()
+    -- ...
+end
+
+--- @return integer
+--- Returns the current gamepad index in the config file
+function get_current_gamepad_index()
+    -- ...
+end
+
+--- @return string
+--- Returns the clipboard text
+function get_clipboard_text()
+    -- ...
+end
+
+--- @param text string
+--- Sets the clipboard text
+function set_clipboard_text(text)
+    -- ...
+end
+
+--- Starts text input and grabs input focus
+function start_text_input()
+    -- ...
+end
+
+--- Stops text input and loses input focus
+function stop_text_input()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if text input is active and if you have input focus
+function is_text_input_active()
     -- ...
 end
 

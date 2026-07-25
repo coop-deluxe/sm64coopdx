@@ -51,6 +51,7 @@ double gfx_wm_get_time(void); // For debug
 void gfx_wm_shutdown(void);
 void gfx_wm_start_text_input(void);
 void gfx_wm_stop_text_input(void);
+bool gfx_wm_is_text_input_active(void);
 char* gfx_wm_get_clipboard_text(void);
 void gfx_wm_set_clipboard_text(const char*);
 void gfx_wm_set_cursor_visible(bool);

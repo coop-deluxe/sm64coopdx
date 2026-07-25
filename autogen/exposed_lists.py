@@ -22,8 +22,10 @@ constants_files = [
     "include/behavior_table.h",
     "src/pc/lua/utils/smlua_model_utils.h",
     "src/pc/lua/utils/smlua_misc_utils.h",
-    "include/object_constants.h",
+    "src/pc/lua/utils/smlua_input_utils.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
     "include/mario_geo_switch_case_ids.h",
+    "include/object_constants.h",
     "src/game/object_list_processor.h",
     "src/engine/graph_node.h",
     "levels/level_defines.h",
@@ -52,8 +54,9 @@ constants_files = [
     "include/PR/gbi_extension.h",
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
-    "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/hardcoded.h",
+    "lib/sdl2/include/SDL2/SDL_scancode.h",
+    "lib/sdl2/include/SDL2/SDL_gamecontroller.h",
 ]
 
 # For each file, expose only these constants
@@ -104,6 +107,7 @@ constants_whitelist = { "__name__": "constants_whitelist",
         "^G_SETENVRGB$",
         "^G_STATE_EXT$",
     ],
+    "lib/sdl2/include/SDL2/SDL_gamecontroller.h": [ "SDL_CONTROLLER_BUTTON" ],
 }
 
 # For each file, do not expose these constants
@@ -179,6 +183,7 @@ functions_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
+    "src/pc/lua/utils/smlua_input_utils.h",
     "src/pc/lua/utils/smlua_deprecated.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",
@@ -261,6 +266,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified"],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
+    "src/pc/lua/utils/smlua_input_utils.h":     [ "clear_gamepad_input_data", "controller_maps_load" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
@@ -311,6 +317,7 @@ structs_files = [
     "src/pc/lua/utils/smlua_camera_utils.h",
     "src/pc/lua/utils/smlua_collision_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
+    "src/pc/lua/utils/smlua_input_utils.h",
     "src/game/spawn_sound.h",
     "src/pc/network/network.h",
     "src/game/hardcoded.h",
@@ -397,6 +404,7 @@ structs_fields_blacklist = { "__name__": "structs_fields_blacklist",
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],
+    "Gamepad": [ "controller" ],
 }
 
 # For each struct, expose these fields, but hide them from the documentation or VSCode autocomplete
@@ -469,4 +477,5 @@ structs_fields_immutable = {
     "ModFsFile": [ "*" ],
     "ModFs": [ "*" ],
     "StaticObjectCollision": [ "*" ],
+    "Gamepad": [ "accelerometer", "buttons", "gyro", "index", "leftAccelerometer", "leftGyro", "leftStick", "leftTrigger", "name", "rightAccelerometer", "rightGyro", "rightStick", "rightTrigger", "touchpad" ],
 }

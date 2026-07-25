@@ -8,14 +8,17 @@
 #include "../configfile.h"
 #include "controller_keyboard.h"
 
-#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 #include "engine/math_util.h"
 #include "menu/file_select.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_pause.h"
+#include "pc/lua/smlua.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 
 static int keyboard_buttons_down;
+
+bool kb_keys_curr_down[SDL_NUM_SCANCODES];
 
 #define MAX_KEYBINDS 64
 static int keyboard_mapping[MAX_KEYBINDS][2];
@@ -60,14 +63,26 @@ bool keyboard_on_key_up(int scancode) {
 
 void keyboard_on_all_keys_up(void) {
     keyboard_buttons_down = 0;
+    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+        kb_keys_curr_down[scancode] = false;
+        gKeyboard[scancode].down = false;
+        gKeyboard[scancode].pressed = false;
+        gKeyboard[scancode].released = false;
+    }
 }
 
 void keyboard_on_text_input(char* text) {
     djui_interactable_on_text_input(text);
+    if (gModHasInputFocus) {
+        smlua_call_event_hooks(HOOK_ON_TEXT_INPUT, text);
+    }
 }
 
 void keyboard_on_text_editing(char* text, int cursorPos) {
     djui_interactable_on_text_editing(text, cursorPos);
+    if (gModHasInputFocus) {
+        smlua_call_event_hooks(HOOK_ON_TEXT_EDITING, text, cursorPos);
+    }
 }
 
 static void keyboard_add_binds(int mask, unsigned int *scancode) {
@@ -111,6 +126,15 @@ static void keyboard_init(void) {
 }
 
 static void keyboard_read(OSContPad *pad) {
+    for (int scancode = 0; scancode < SDL_NUM_SCANCODES; ++scancode) {
+        bool prev = gKeyboard[scancode].down;
+        bool curr = kb_keys_curr_down[scancode];
+
+        gKeyboard[scancode].down = curr;
+        gKeyboard[scancode].pressed = (!prev && curr);
+        gKeyboard[scancode].released = (prev && !curr);
+    }
+
     pad->button |= keyboard_buttons_down;
     const u32 xstick = keyboard_buttons_down & STICK_XMASK;
     const u32 ystick = keyboard_buttons_down & STICK_YMASK;

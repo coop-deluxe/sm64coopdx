@@ -96,7 +96,6 @@ extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
-extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 extern bool         configSmoothScrolling;

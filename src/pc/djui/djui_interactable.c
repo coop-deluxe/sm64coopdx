@@ -10,6 +10,7 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 
 #include "sounds.h"
 #include "audio/external.h"
@@ -232,7 +233,7 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
+    if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus && !gModHasInputFocus) {
         bool pressChat = false;
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyChat[i]) {
@@ -247,7 +248,7 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
+    if ((gDjuiPlayerList != NULL || gDjuiModList != NULL) && !gModHasInputFocus) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyPlayerList[i] && !gDjuiInMainMenu && gNetworkType != NT_NONE) {
                 if (gServerSettings.enablePlayerList) {
@@ -297,7 +298,7 @@ bool djui_interactable_on_key_down(int scancode) {
 
 void djui_interactable_on_key_up(int scancode) {
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
-        if (!gDjuiChatBoxFocus) {
+        if (!gDjuiChatBoxFocus && !gModHasInputFocus) {
             djui_console_toggle();
         }
         sPendingConsoleToggleScancode = -1;

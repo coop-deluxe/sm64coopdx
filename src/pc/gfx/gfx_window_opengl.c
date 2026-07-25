@@ -47,8 +47,8 @@
 #define GL_MAX_SAMPLES 0x8D57
 #endif
 
-static SDL_Window *sSdlWindow;
-static SDL_GLContext sGlContext = NULL;
+static SDL_Window *sSDLWindow;
+static SDL_GLContext sGLContext = NULL;
 
 static inline void gfx_window_opengl_set_vsync(const bool enabled) {
     SDL_GL_SetSwapInterval(enabled);
@@ -81,14 +81,14 @@ static void gfx_window_opengl_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    sSdlWindow = SDL_CreateWindow(
+    sSDLWindow = SDL_CreateWindow(
         window_title,
         xpos, ypos, configWindow.w, configWindow.h,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
-    sGlContext = SDL_GL_CreateContext(sSdlWindow);
+    sGLContext = SDL_GL_CreateContext(sSDLWindow);
 
-    gfx_wm_set_window(sSdlWindow);
+    gfx_wm_set_window(sSDLWindow);
     gfx_window_opengl_set_vsync(configWindow.vsync);
 }
 
@@ -137,7 +137,7 @@ static bool gfx_window_opengl_start_frame(void) {
 }
 
 static void gfx_window_opengl_swap_buffers_begin(void) {
-    SDL_GL_SwapWindow(sSdlWindow);
+    SDL_GL_SwapWindow(sSDLWindow);
 }
 
 static void gfx_window_opengl_swap_buffers_end(void) {

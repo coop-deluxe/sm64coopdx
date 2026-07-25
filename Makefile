@@ -590,6 +590,11 @@ PALETTES_DIR := palettes
 # Remove old palettes dir
 _ := $(shell rm -rf ./$(BUILD_DIR)/$(PALETTES_DIR))
 
+DATABASES_DIR := databases
+
+# Remove old databases dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(DATABASES_DIR))
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 
@@ -713,6 +718,11 @@ ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
+  ifeq ($(WINDOWS_BUILD),0)
+    ifeq ($(OSX_BUILD),0)
+      INCLUDE_DIRS += lib/sdl2/include
+    endif
+  endif
 endif
 
 # Configure backend flags
@@ -749,8 +759,17 @@ ifeq ($(OSX_BUILD),1)
   # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
   OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
   BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
-else
+else ifeq ($(WINDOWS_BUILD),1)
   BACKEND_CFLAGS += `$(SDLCONFIG) --cflags`
+else
+  BACKEND_CFLAGS += -Ilib/sdl2/include
+  BACKEND_LDFLAGS += lib/sdl2/linux/libSDL2.a
+endif
+
+ifeq ($(WINDOWS_BUILD),0)
+  ifeq ($(OSX_BUILD),0)
+    BACKEND_LDFLAGS += -lm -ldl -lpthread
+  endif
 endif
 
 ifeq ($(WINDOWS_BUILD),1)
@@ -819,7 +838,7 @@ else ifeq ($(TARGET_RK3588),1)
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
+  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread -lbsd
 endif
 
 # used by crash handler and loading screen on linux
@@ -1175,6 +1194,9 @@ $(BUILD_DIR)/$(MOD_DIR):
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
 
+$(BUILD_DIR)/$(DATABASES_DIR):
+	@$(CP) -f -r $(DATABASES_DIR) $(BUILD_DIR)
+
 # Extra object file dependencies
 
 ifeq ($(TARGET_N64),1)
@@ -1514,7 +1536,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(UPDATER_EXEC) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(UPDATER_EXEC) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR) $(BUILD_DIR)/$(DATABASES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
@@ -1549,6 +1571,7 @@ all:
     cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/palettes $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/databases $(APP_RESOURCES_DIR); \
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
