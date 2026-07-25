@@ -3,6 +3,7 @@
 
 #include "platform.h"
 #include "pc/configfile.h"
+#include "pc/gfx/gfx_window_manager.h"
 
 enum NetworkType {
     NT_NONE,
@@ -38,7 +39,7 @@ struct CLIOptions {
     char** enableMods;
     bool headless;
 #if defined(_WIN32)
-    int backend;
+    enum GfxWindowBackend backend;
 #endif
 };
 

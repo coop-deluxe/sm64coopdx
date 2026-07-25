@@ -26,16 +26,16 @@ u32 get_current_gamepad_index(void) {
 }
 
 const char *get_clipboard_text(void) {
-    return gWindowApi->get_clipboard_text();
+    return gfx_wm_get_clipboard_text();
 }
 
 void set_clipboard_text(const char *text) {
-    gWindowApi->set_clipboard_text(text);
+    gfx_wm_set_clipboard_text(text);
 }
 
 void start_text_input(void) {
     gModHasInputFocus = true;
-    gWindowApi->start_text_input();
+    gfx_wm_start_text_input();
 }
 
 void stop_text_input(void) {
@@ -43,7 +43,7 @@ void stop_text_input(void) {
 }
 
 bool is_text_input_active(void) {
-    return gWindowApi->is_text_input_active() && gModHasInputFocus;
+    return gfx_wm_is_text_input_active() && gModHasInputFocus;
 }
 
 void clear_gamepad_input_data(void) {

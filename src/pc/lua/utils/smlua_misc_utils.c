@@ -321,7 +321,7 @@ void game_unpause(void) {
     level_set_transition(0, NULL);
     gMenuMode = -1;
     gDialogBoxState = 0;
-    gPauseScreenMode = 1;
+    gMenuOptSelectIndex = MENU_OPT_DEFAULT;
 }
 
 ///
@@ -671,11 +671,11 @@ LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory) {
 ///
 
 void set_window_title(const char* title) {
-    gWindowApi->set_window_title(title);
+    gfx_wm_set_window_title(title);
 }
 
 void reset_window_title(void) {
-    gWindowApi->reset_window_title();
+    gfx_wm_reset_window_title();
 }
 
 ///

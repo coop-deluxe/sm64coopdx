@@ -742,6 +742,11 @@
 
 <br />
 
+- commands.h
+   - [command_message_create](functions-3.md#command_message_create)
+
+<br />
+
 - djui_chat_message.h
    - [djui_chat_message_create](functions-3.md#djui_chat_message_create)
 
@@ -791,8 +796,10 @@
    - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
    - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
    - [djui_hud_set_viewport](functions-3.md#djui_hud_set_viewport)
+   - [djui_hud_set_viewport_interpolated](functions-3.md#djui_hud_set_viewport_interpolated)
    - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
+   - [djui_hud_set_scissor_interpolated](functions-3.md#djui_hud_set_scissor_interpolated)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
    - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
@@ -1411,6 +1418,7 @@
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
    - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error_code](functions-5.md#mod_fs_get_last_error_code)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
