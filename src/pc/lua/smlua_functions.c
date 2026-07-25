@@ -41,6 +41,54 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
 }
 
   ///////////
+ // print //
+///////////
+
+int smlua_func_print(lua_State *L) {
+    int top = lua_gettop(L);
+
+    // calculate total length first
+    size_t totalLen = 0;
+    for (int i = 1; i <= top; i++) {
+        size_t len;
+        luaL_tolstring(L, i, &len);
+        totalLen += len;
+        if (i > 1) totalLen += 1;
+        lua_pop(L, 1);
+    }
+
+    // allocate string
+    char* completeString = malloc(totalLen + 1);
+    if (!completeString) return 0;
+
+    size_t pos = 0;
+
+    // copy string
+    for (int i = 1; i <= top; i++) {
+        size_t len;
+        const char* str = luaL_tolstring(L, i, &len);
+
+        if (i > 1) {
+            completeString[pos] = '\t';
+            pos += 1;
+        }
+
+        memcpy(completeString + pos, str, len);
+        pos += len;
+        lua_pop(L, 1);
+    }
+
+    completeString[pos] = '\0';
+
+    // print to terminal and console
+    log_to_terminal("%s\n", completeString);
+    djui_console_message_create(completeString, CONSOLE_MESSAGE_INFO);
+
+    free(completeString);
+    return 0;
+}
+
+  ///////////
  // table //
 ///////////
 
@@ -806,6 +854,13 @@ int smlua_func_log_to_console(lua_State* L) {
     }
 
     djui_console_message_create(message, level);
+    char* colorCode;
+    switch (level) {
+        case CONSOLE_MESSAGE_WARNING: colorCode = "\x1b[33m"; break;
+        case CONSOLE_MESSAGE_ERROR:   colorCode = "\x1b[31m"; break;
+        default:                      colorCode = "\x1b[0m"; break;
+    }
+    log_to_terminal("%s%s\x1b[0m\n", colorCode, message);
 
     return 1;
 }
@@ -815,10 +870,6 @@ int smlua_func_log_to_console(lua_State* L) {
 ////////////////////
 
 int smlua_func_add_scroll_target(lua_State* L) {
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("add_scroll_target() can only be called on load.");
-        return 0;
-    }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
     int paramCount = lua_gettop(L);
@@ -1009,77 +1060,6 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
-  /////////
- // hud //
-/////////
-
-
-int smlua_func_djui_hud_print_text(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 4 && top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_print_text", 4, top);
-        return 0;
-    }
-
-    const char* message = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_print_text"); return 0; }
-    f32 x = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_print_text"); return 0; }
-    f32 y = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_print_text"); return 0; }
-    f32 scaleX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_print_text"); return 0; }
-    f32 scaleY = top == 5 ? smlua_to_number(L, 5) : scaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_print_text"); return 0; }
-
-    djui_hud_print_text(message, x, y, scaleX, scaleY);
-
-    return 1;
-}
-
-int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 7 && top != 9) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_print_text_interpolated", 7, top);
-        return 0;
-    }
-
-    const char* message = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevX = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevY = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevScaleX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevScaleY = top == 9 ? smlua_to_number(L, 5) : prevScaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_print_text_interpolated"); return 0; }
-    f32 x = top == 9 ? smlua_to_number(L, 6) : smlua_to_number(L, 5); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_print_text_interpolated"); return 0; }
-    f32 y = top == 9 ? smlua_to_number(L, 7) : smlua_to_number(L, 6); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_print_text_interpolated"); return 0; }
-    f32 scaleX = top == 9 ? smlua_to_number(L, 8) : smlua_to_number(L, 7); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_print_text_interpolated"); return 0; }
-    f32 scaleY = top == 9 ? smlua_to_number(L, 9) : scaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_print_text_interpolated"); return 0; }
-
-    djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY);
-
-    return 1;
-}
-
-// compatibility band-aid
-int smlua_func_return_self(lua_State* L) {
-    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    lua_pushvalue(L, 1);
-    return 1;
-}
-
   //////////
  // bind //
 //////////
@@ -1088,6 +1068,7 @@ void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 
     // misc
+    smlua_bind_function(L, "print", smlua_func_print);
     smlua_bind_function(L, "table_copy", smlua_func_table_copy);
     smlua_bind_function(L, "table_deepcopy", smlua_func_table_deepcopy);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
@@ -1111,7 +1092,4 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
-    smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
-    smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
-    smlua_bind_function(L, "return_self", smlua_func_return_self); // compatibility band-aid
 }

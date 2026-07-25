@@ -27,23 +27,30 @@ SMLUA_CALL_EVENT_HOOKS_DEFINE_HOOK_RESULT = """
 SMLUA_CALL_EVENT_HOOKS_SET_HOOK_RESULT = """
         hookResult = true;"""
 
+SMLUA_CALL_EVENT_HOOKS_DEFINE_OUTPUT_SET = """
+        bool outputSet = false;"""
+
 SMLUA_CALL_EVENT_HOOKS_CALLBACK = """
         // call the callback
         if (0 != smlua_call_hook(L, {n_inputs}, {n_outputs}, 0, hook->mod[i], hook->modFile[i])) {{
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[{hook_type}], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
-        }}{set_hook_result}
+        }}{set_hook_result}{define_output_set}
 """
 
+SMLUA_CALL_EVENT_HOOKS_SET_OUTPUT_SET = """
+            outputSet = true;"""
+
 SMLUA_CALL_EVENT_HOOKS_RETURN_ON_OUTPUT_SET = """
-            lua_settop(L, prevTop);
-            return true;"""
+        if (outputSet) {
+            return true;
+        }"""
 
 SMLUA_CALL_EVENT_HOOKS_RETURN_ON_SUCCESSFUL_CALL = """
         return true;"""
 
 SMLUA_CALL_EVENT_HOOKS_END = """
-        lua_settop(L, prevTop);{return_on_successful_call}
+        lua_settop(L, prevTop);{return_on_successful_call}{return_on_output_set}
     }}
     return {hook_result};
 }}
@@ -60,7 +67,7 @@ SMLUA_INTEGER_TYPES = {
 "output": """
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TNUMBER) {{
-            *{name} = smlua_to_integer(L, -{output_index});{return_on_output_set}
+            *{name} = smlua_to_integer(L, -{output_index});{set_output_set}
         }}
 """
 }
@@ -73,7 +80,7 @@ SMLUA_FLOAT_TYPES = {
 "output": """
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TNUMBER) {{
-            *{name} = smlua_to_number(L, -{output_index});{return_on_output_set}
+            *{name} = smlua_to_number(L, -{output_index});{set_output_set}
         }}
 """
 }
@@ -90,7 +97,7 @@ SMLUA_TYPES = {
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TTABLE) {{
             extern void smlua_get_%s(%s dest, int index);
-            smlua_get_%s(*{name}, -{output_index});{return_on_output_set}
+            smlua_get_%s(*{name}, -{output_index});{set_output_set}
         }}
 """ % (type_name.lower(), type_name, type_name.lower())
         }
@@ -114,7 +121,7 @@ SMLUA_TYPES = {
 "output": """
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TBOOLEAN) {{
-            *{name} = smlua_to_boolean(L, -{output_index});{return_on_output_set}
+            *{name} = smlua_to_boolean(L, -{output_index});{set_output_set}
         }}
 """
     },
@@ -126,7 +133,7 @@ SMLUA_TYPES = {
 "output": """
         // return {name}
         if (lua_type(L, -{output_index}) == LUA_TSTRING) {{
-            *{name} = smlua_to_string(L, -{output_index});{return_on_output_set}
+            *{name} = smlua_to_string(L, -{output_index});{set_output_set}
         }}
 """
     },
@@ -161,7 +168,7 @@ SMLUA_TYPES = {
                 {name}->nodeId = smlua_to_integer(L, -1);
             }}
             lua_pop(L, 1);
-{return_on_output_set}
+{set_output_set}
         }}
 """
     },
@@ -282,6 +289,8 @@ def main():
         hook_return = hook_event["return"]
         define_hook_result = SMLUA_CALL_EVENT_HOOKS_DEFINE_HOOK_RESULT if hook_return == HOOK_RETURN_NEVER else ""
         set_hook_result = SMLUA_CALL_EVENT_HOOKS_SET_HOOK_RESULT if hook_return == HOOK_RETURN_NEVER else ""
+        define_output_set = SMLUA_CALL_EVENT_HOOKS_DEFINE_OUTPUT_SET if hook_return == HOOK_RETURN_ON_OUTPUT_SET else ""
+        set_output_set = SMLUA_CALL_EVENT_HOOKS_SET_OUTPUT_SET if hook_return == HOOK_RETURN_ON_OUTPUT_SET else ""
         return_on_successful_call = SMLUA_CALL_EVENT_HOOKS_RETURN_ON_SUCCESSFUL_CALL if hook_return == HOOK_RETURN_ON_SUCCESSFUL_CALL else ""
         return_on_output_set = SMLUA_CALL_EVENT_HOOKS_RETURN_ON_OUTPUT_SET if hook_return == HOOK_RETURN_ON_OUTPUT_SET else ""
         hook_result = "hookResult" if hook_return == HOOK_RETURN_NEVER else "false"
@@ -314,7 +323,8 @@ def main():
             n_inputs=len(hook_event["inputs"]) - mod_index_found,
             n_outputs=n_outputs,
             hook_type=hook_event["type"],
-            set_hook_result=set_hook_result
+            set_hook_result=set_hook_result,
+            define_output_set=define_output_set
         )
 
         # Note: relative indexes for return values are reversed in the Lua stack
@@ -323,11 +333,12 @@ def main():
             generated += SMLUA_TYPES[output["type"]]["output"].format(
                 name=output["name"],
                 output_index=n_outputs - i,
-                return_on_output_set=return_on_output_set
+                set_output_set=set_output_set
             )
 
         generated += SMLUA_CALL_EVENT_HOOKS_END.format(
             return_on_successful_call=return_on_successful_call,
+            return_on_output_set=return_on_output_set,
             hook_result=hook_result
         )
 

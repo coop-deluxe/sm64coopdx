@@ -31,7 +31,7 @@ void smlua_mod_error(void) {
     if (mod == NULL) { mod = gLuaLastHookMod; }
     if (mod == NULL) { return; }
     char txt[255] = { 0 };
-    snprintf(txt, 254, "'%s\\#ff0000\\' has script errors!", mod->name);
+    snprintf(txt, 254, "'%s\\#f00\\' has script errors!", mod->name);
     static const struct DjuiColor color = { 255, 0, 0, 255 };
     djui_lua_error(txt, color);
 }
@@ -395,6 +395,8 @@ void smlua_init(void) {
 
     smlua_index_custom_fields();
 
+    dynos_behavior_hook_all_custom_behaviors();
+
     smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
 }
 
@@ -404,7 +406,7 @@ void smlua_update(void) {
 
     if (network_allow_mod_dev_mode()) { smlua_live_reload_update(L); }
 
-    audio_sample_destroy_pending_copies();
+    audio_destroy_pending_copies();
 
     smlua_call_event_hooks(HOOK_UPDATE);
 

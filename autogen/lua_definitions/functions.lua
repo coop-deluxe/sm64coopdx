@@ -3907,6 +3907,17 @@ function update_character_anim_offset(m)
 end
 
 --- @param message string
+--- @param level? ConsoleMessageLevel
+--- Creates a message that goes into either the chat, console, or terminal.<br>
+--- It decides by checking where you entered the command, and will output to that source directly.<br>
+--- <br>
+--- It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.<br>
+--- If ran independently of any of these hooks, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
+function command_message_create(message, level)
+    -- ...
+end
+
+--- @param message string
 --- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
     -- ...
@@ -4133,12 +4144,25 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
-function djui_hud_set_viewport(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+function djui_hud_set_viewport(ulx, uly, lrx, lry)
+    -- ...
+end
+
+--- @param pulx number
+--- @param puly number
+--- @param plrx number
+--- @param plry number
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+function djui_hud_set_viewport_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)
     -- ...
 end
 
@@ -4147,12 +4171,25 @@ function djui_hud_reset_viewport()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
-function djui_hud_set_scissor(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+function djui_hud_set_scissor(ulx, uly, lrx, lry)
+    -- ...
+end
+
+--- @param pulx number
+--- @param puly number
+--- @param plrx number
+--- @param plry number
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+function djui_hud_set_scissor_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)
     -- ...
 end
 
@@ -4166,6 +4203,51 @@ end
 --- @return number height
 --- Measures the width and height of `message` in the current font
 function djui_hud_measure_text(message)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints DJUI HUD text onto the screen
+function djui_hud_print_text(message, x, y, scale)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScaleX number
+--- @param prevScaleY number
+--- @param x number
+--- @param y number
+--- @param scaleX number
+--- @param scaleY number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
+    -- ...
+end
+
+--- @param message string
+--- @param prevX number
+--- @param prevY number
+--- @param prevScale number
+--- @param x number
+--- @param y number
+--- @param scale number
+--- Prints interpolated DJUI HUD text onto the screen
+function djui_hud_print_text_interpolated(message, prevX, prevY, prevScale, x, y, scale)
     -- ...
 end
 
@@ -5230,7 +5312,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg integer
+--- @param arg SpecialWarpDestination
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
@@ -5257,15 +5339,15 @@ function initiate_painting_warp(paintingIndex)
 end
 
 --- @param m MarioState
---- @param warpOp integer
+--- @param warpOp WarpOperation
 --- @return integer
 --- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg integer
---- Special warps to arg (`SPECIAL_WARP_*`)
+--- @param arg SpecialWarpDestination
+--- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
     -- ...
 end
@@ -5273,9 +5355,9 @@ end
 --- @param destLevel integer
 --- @param destArea integer
 --- @param destWarpNode integer
---- @param arg integer
---- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-function initiate_warp(destLevel, destArea, destWarpNode, arg)
+--- @param warpFlags integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, warpFlags)
     -- ...
 end
 
@@ -5663,8 +5745,9 @@ function mario_can_bubble(m)
 end
 
 --- @param m MarioState
---- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives and preventing normal movement
-function mario_set_bubbled(m)
+--- @param stayAlive? boolean
+--- Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
+function mario_set_bubbled(m, stayAlive)
     -- ...
 end
 
@@ -7082,6 +7165,14 @@ function get_pos_from_transform_mtx(dest, objMtx, camMtx)
     -- ...
 end
 
+--- @param dest Mat4
+--- @param objMtx Mat4
+--- @param camMtx Mat4
+--- Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
+function get_world_mtx_from_transform(dest, objMtx, camMtx)
+    -- ...
+end
+
 --- @param value number
 --- @param replacement number
 --- @return number
@@ -7774,6 +7865,7 @@ end
 
 --- @param modPath? string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 function mod_fs_exists(modPath)
     -- ...
@@ -7781,6 +7873,7 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 function mod_fs_get(modPath)
     -- ...
@@ -7788,12 +7881,14 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
 function mod_fs_reload(modPath)
     -- ...
 end
 
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 function mod_fs_create()
     -- ...
@@ -7802,6 +7897,7 @@ end
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Gets the filename at position `index` of the provided `modFs`
 function mod_fs_get_filename(modFs, index)
     -- ...
@@ -7810,6 +7906,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
 function mod_fs_get_file(modFs, filepath)
     -- ...
@@ -7819,6 +7916,7 @@ end
 --- @param filepath string
 --- @param text boolean
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 function mod_fs_create_file(modFs, filepath, text)
     -- ...
@@ -7829,6 +7927,7 @@ end
 --- @param newpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
 function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
     -- ...
@@ -7839,6 +7938,7 @@ end
 --- @param dstpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
 function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
     -- ...
@@ -7847,6 +7947,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
 function mod_fs_delete_file(modFs, filepath)
     -- ...
@@ -7854,6 +7955,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
     -- ...
@@ -7861,6 +7963,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Saves the provided `modFs` to persistent storage. Returns true on success
 function mod_fs_save(modFs)
     -- ...
@@ -7868,6 +7971,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
 function mod_fs_delete(modFs)
     -- ...
@@ -7876,6 +7980,7 @@ end
 --- @param modFs ModFs
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_set_public(modFs, pub)
     -- ...
@@ -7883,6 +7988,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Reads a boolean from a binary modfs `file`
 function mod_fs_file_read_bool(file)
     -- ...
@@ -7891,6 +7997,7 @@ end
 --- @param file ModFsFile
 --- @param intType ModFsFileIntType
 --- @return integer
+--- @return ModFsErrorCode err
 --- Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 function mod_fs_file_read_integer(file, intType)
     -- ...
@@ -7899,6 +8006,7 @@ end
 --- @param file ModFsFile
 --- @param floatType ModFsFileFloatType
 --- @return number
+--- @return ModFsErrorCode err
 --- Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
 function mod_fs_file_read_number(file, floatType)
     -- ...
@@ -7907,6 +8015,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a bytestring of `length` bytes from a binary modfs `file`
 function mod_fs_file_read_bytes(file, length)
     -- ...
@@ -7914,6 +8023,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 function mod_fs_file_read_string(file)
     -- ...
@@ -7921,6 +8031,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a line from a text modfs `file`
 function mod_fs_file_read_line(file)
     -- ...
@@ -7929,6 +8040,7 @@ end
 --- @param file ModFsFile
 --- @param value boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a boolean to a binary modfs `file`. Returns true on success
 function mod_fs_file_write_bool(file, value)
     -- ...
@@ -7938,6 +8050,7 @@ end
 --- @param value integer
 --- @param intType ModFsFileIntType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_integer(file, value, intType)
     -- ...
@@ -7947,6 +8060,7 @@ end
 --- @param value number
 --- @param floatType ModFsFileFloatType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_number(file, value, floatType)
     -- ...
@@ -7955,6 +8069,7 @@ end
 --- @param file ModFsFile
 --- @param bytestring string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a bytestring to a modfs `file`. Returns true on success
 function mod_fs_file_write_bytes(file, bytestring)
     -- ...
@@ -7963,6 +8078,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a string to a modfs `file`. Returns true on success
 function mod_fs_file_write_string(file, str)
     -- ...
@@ -7971,6 +8087,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a line to a text modfs `file`. Returns true on success
 function mod_fs_file_write_line(file, str)
     -- ...
@@ -7980,6 +8097,7 @@ end
 --- @param offset integer
 --- @param origin ModFsFileSeek
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file`.<br>
 --- If `origin` is `FILE_SEEK_SET`, file position is set to `offset`.<br>
 --- If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.<br>
@@ -7991,6 +8109,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file` to its beginning.<br>
 --- Returns true on success
 function mod_fs_file_rewind(file)
@@ -7999,6 +8118,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -8008,6 +8128,7 @@ end
 --- @param byte integer
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
 function mod_fs_file_fill(file, byte, length)
     -- ...
@@ -8016,6 +8137,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
     -- ...
@@ -8024,6 +8146,7 @@ end
 --- @param file ModFsFile
 --- @param text boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as text. Returns true on success
 function mod_fs_file_set_text_mode(file, text)
     -- ...
@@ -8032,6 +8155,7 @@ end
 --- @param file ModFsFile
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_file_set_public(file, pub)
     -- ...
@@ -8040,7 +8164,8 @@ end
 --- @param file ModFsFile
 --- @param level integer
 --- @return boolean
---- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+--- @return ModFsErrorCode err
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
 function mod_fs_file_set_compression(file, level)
     -- ...
 end
@@ -8048,6 +8173,12 @@ end
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
+    -- ...
+end
+
+--- @return ModFsErrorCode
+--- Returns the last error code raised by `mod_fs` functions
+function mod_fs_get_last_error_code()
     -- ...
 end
 
@@ -10774,15 +10905,10 @@ function smlua_audio_utils_allocate_sequence()
 end
 
 --- @param filename string
+--- @param type? ModAudioType
 --- @return ModAudio
---- Loads an `audio` stream by `filename` (with extension)
-function audio_stream_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` stream
-function audio_stream_destroy(audio)
+--- Loads an `audio` by `filename` (with extension)
+function audio_load(filename, type)
     -- ...
 end
 
@@ -10790,124 +10916,181 @@ end
 --- @param restart boolean
 --- @param volume number
 --- Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
-function audio_stream_play(audio, restart, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- Pauses an `audio` stream
-function audio_stream_pause(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` stream
-function audio_stream_stop(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the position of an `audio` stream in seconds
-function audio_stream_get_position(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param pos number
---- Sets the position of an `audio` stream in seconds
-function audio_stream_set_position(audio, pos)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return boolean
---- Gets if an `audio` stream is looping or not
-function audio_stream_get_looping(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param looping boolean
---- Sets if an `audio` stream is looping or not
-function audio_stream_set_looping(audio, looping)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param loopStart integer
---- @param loopEnd integer
---- Sets an `audio` stream's loop points in samples
-function audio_stream_set_loop_points(audio, loopStart, loopEnd)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the frequency of an `audio` stream
-function audio_stream_get_frequency(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param freq number
---- Sets the frequency of an `audio` stream
-function audio_stream_set_frequency(audio, freq)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return number
---- Gets the volume of an `audio` stream
-function audio_stream_get_volume(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param volume number
---- Sets the volume of an `audio` stream
-function audio_stream_set_volume(audio, volume)
-    -- ...
-end
-
---- @param audio ModAudio
---- @return integer
---- Gets the volume channel of an `audio` stream
-function audio_stream_get_volume_channel(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- @param channel integer
---- Sets the volume channel of an `audio` stream
-function audio_stream_set_volume_channel(audio, channel)
-    -- ...
-end
-
---- @param filename string
---- @return ModAudio
---- Loads an `audio` sample
-function audio_sample_load(filename)
-    -- ...
-end
-
---- @param audio ModAudio
---- Destroys an `audio` sample
-function audio_sample_destroy(audio)
-    -- ...
-end
-
---- @param audio ModAudio
---- Stops an `audio` sample
-function audio_sample_stop(audio)
+function audio_play(audio, restart, volume)
     -- ...
 end
 
 --- @param audio ModAudio
 --- @param position Vec3f
 --- @param volume number
+--- @return ModAudio
 --- Plays an `audio` sample at `position` with `volume`
-function audio_sample_play(audio, position, volume)
+function audio_play(audio, position, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Plays an `audio`
+function audio_play(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Pauses an `audio`
+function audio_pause(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Stops an `audio`
+function audio_stop(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Destroys an `audio`
+function audio_destroy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- Reloads a destroyed `audio`
+function audio_reload(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return ModAudio
+--- Copies an `audio`
+function audio_copy(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the volume of an `audio`
+function audio_get_volume(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param volume number
+--- Sets the volume of an `audio`
+function audio_set_volume(audio, volume)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the pan of an `audio`
+function audio_get_pan(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pan number
+--- Sets the pan of an `audio`
+function audio_set_pan(audio, pan)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number length
+--- Gets the length of an `audio` in seconds
+function audio_get_length(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number position
+--- Gets the position of an `audio` in seconds
+function audio_get_position(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param pos number
+--- Sets the position of an `audio` in seconds
+function audio_set_position(audio, pos)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is looping or not
+function audio_get_looping(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param looping boolean
+--- Sets if an `audio` is looping or not
+function audio_set_looping(audio, looping)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return boolean
+--- Gets if an `audio` is playing
+function audio_get_playing(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param playing boolean
+--- Sets if an `audio` is playing
+function audio_set_playing(audio, playing)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer loopStart
+--- @return integer loopEnd
+--- Gets an `audio`'s loop points in samples
+function audio_get_loop_points(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param loopStart integer
+--- @param loopEnd? integer
+--- Sets an `audio`'s loop points in samples
+function audio_set_loop_points(audio, loopStart, loopEnd)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return number
+--- Gets the frequency of an `audio`
+function audio_get_frequency(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param freq number
+--- Sets the frequency of an `audio`
+function audio_set_frequency(audio, freq)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the volume channel of an `audio`
+function audio_get_volume_channel(audio)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @param channel integer
+--- Sets the volume channel of an `audio`
+function audio_set_volume_channel(audio, channel)
+    -- ...
+end
+
+--- @param audio ModAudio
+--- @return integer
+--- Gets the sample rate of an `audio`
+function audio_get_sample_rate(audio)
     -- ...
 end
 
@@ -12151,6 +12334,15 @@ function get_mario_anim_part_rot(m, animPart, rot)
     -- ...
 end
 
+--- @param m MarioState
+--- @param animPart integer
+--- @param mtx Mat4
+--- @return boolean
+--- Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
+function get_mario_anim_part_mtx(m, animPart, mtx)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current save file number (1-indexed)
 function get_current_save_file_num()
@@ -12267,49 +12459,49 @@ function get_coopnet_id(localIndex)
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the master volume level
 function get_volume_master()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of music
 function get_volume_level()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of sound effects
 function get_volume_sfx()
     -- ...
 end
 
---- @return number
+--- @return integer
 --- Gets the volume level of environment sounds effects
 function get_volume_env()
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the master volume level
 function set_volume_master(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of music
 function set_volume_level(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of sound effects
 function set_volume_sfx(volume)
     -- ...
 end
 
---- @param volume number
+--- @param volume integer
 --- Sets the volume level of environment sounds effects
 function set_volume_env(volume)
     -- ...

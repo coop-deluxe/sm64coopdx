@@ -204,6 +204,13 @@ def parse_struct(struct_str, sortFields = False):
     for field_str in field_strs:
         if len(field_str.strip()) == 0:
             continue
+        if ':' in field_str:
+            continue
+
+        is_c_array = False
+        if cobject_c_array_identifier in field_str:
+            field_str = field_str.replace(cobject_c_array_identifier, '').strip()
+            is_c_array = True
 
         if '*' in field_str:
             field_type, field_id = field_str.strip().rsplit('*', 1)
@@ -223,6 +230,7 @@ def parse_struct(struct_str, sortFields = False):
         field['type'] = field_type.strip()
         field['identifier'] = field_id.strip()
         field['field_str'] = field_str
+        field['is_c_array'] = is_c_array
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
@@ -291,7 +299,7 @@ def output_fuzz_struct(struct):
 
     s_out += '    local funcs = {\n'
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
         if fimmutable == 'true':
             continue
 
@@ -418,7 +426,7 @@ def get_struct_field_info(struct, field):
             else:
                 lvt, lot = 'LVT_???', "LOT_???" # array size not provided, so not supported
 
-    return fid, ftype, fimmutable, lvt, lot, size
+    return fid, ftype, fimmutable, lvt, lot, size, field.get('is_c_array', False)
 
 def build_struct(struct):
     # debug print out lua fuzz functions
@@ -431,7 +439,7 @@ def build_struct(struct):
     field_table = []
     field_functions = []
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
 
         if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
             continue
@@ -469,10 +477,13 @@ def build_struct(struct):
             row.append('%s, '       % fimmutable)
             row.append('%s, '       % lot       )
             if size != 1:
-                row.append('%s, '       % size      )
-                row.append('sizeof(%s)' % ftype     )
+                row.append('%s, '         % size )
+                row.append('sizeof(%s), ' % ftype)
+                if is_c_array:
+                    row.append('true')
+                else: row[-1] = row[-1][:-2]
             else: row[-1] = row[-1][:-2]
-        row.extend(['\\'] * (8 - len(row)))
+        row.extend(['\\'] * (9 - len(row)))
         row.append(endStr)
         if field.get('function'):
             field_functions.append(field['function'])
@@ -534,18 +545,18 @@ def build_body(parsed):
 
     lot_names = '\nconst char *sLuaLotNames[] = {\n'
     for type_name in VEC_TYPES.keys():
-        lot_names += f'\t[LOT_{type_name.upper()}] = "{type_name}",\n'
+        lot_names += f'    [LOT_{type_name.upper()}] = "{type_name}",\n'
 
-    lot_names += f'\t[LOT_ARRAY] = "Array",\n'
-    lot_names += f'\t[LOT_POINTER] = "Pointer",\n'
-    lot_names += f'\t[LOT_MAX] = "Max",\n'
+    lot_names += '    [LOT_ARRAY] = "Array",\n'
+    lot_names += '    [LOT_POINTER] = "Pointer",\n'
+    lot_names += '    [LOT_MAX] = "Max",\n'
     lot_names += '\n'
 
     for struct in parsed:
         sid = struct['identifier']
         if sid in structs_excluded:
             continue
-        lot_names += f'\t[LOT_{sid.upper()}] = "{sid}",\n'
+        lot_names += f'    [LOT_{sid.upper()}] = "{sid}",\n'
     lot_names += '};\n'
 
     return built + obj_table_built + lot_names
@@ -612,7 +623,7 @@ def doc_struct_index(structs):
     return s
 
 def doc_struct_field(struct, field):
-    fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+    fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
     sid = struct['identifier']
 
     if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
@@ -631,10 +642,14 @@ def doc_struct_field(struct, field):
         return '| %s | [`%s`](%s) |\n' % (fid, field['function'], flink), True
 
     if ftype == cobject_property_identifier:
-        ftype = get_function_signature(field['get'])
-        ftype = f"`{ftype[ftype.rfind(':')+2:]}`"
+        ftype = get_return_signature(field['get'])
 
-    restrictions = ('', 'read-only')[fimmutable == 'true']
+    restrictions = []
+
+    if fimmutable == 'true': restrictions.append('read-only')
+    if is_c_array: restrictions.append('starts at index 0')
+
+    restrictions = ", ".join(restrictions)
 
     global total_fields
     total_fields += 1
@@ -720,23 +735,29 @@ def get_function_signature(function):
         with open('autogen/lua_definitions/functions.lua') as f:
             lines = f.readlines()
         function_params = []
-        function_return = None
+        function_returns = []
         for line in lines:
             if line.startswith('--- @param'):
                 function_params.append(line.split()[2:4])
             elif line.startswith('--- @return'):
-                function_return = line.split()[2]
+                function_returns.append(line.split()[2])
             elif line.startswith('function'):
                 sig = 'fun('
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
-                if function_return:
-                    sig += ': %s' % (function_return)
+                if function_returns:
+                    sig += ': %s' % (", ".join(function_returns))
                 function_name = line.replace('(', ' ').split()[1]
-                function_signatures[function_name] = sig
+                if function_signatures.get(function_name) is None:
+                    function_signatures[function_name] = []
+                function_signatures[function_name].append(sig)
                 function_params.clear()
-                function_return = None
-    return function_signatures.get(function, 'function')
+                function_returns = []
+
+    return function_signatures.get(function, ['function'])
+
+def get_return_signature(function):
+    return f"{'): '.join(get_function_signature(function)[0].split('): ')[1:])}"
 
 def def_struct(struct):
     sid = struct['identifier']
@@ -748,7 +769,7 @@ def def_struct(struct):
     s = '\n--- @class %s\n' % stype
 
     for field in struct['fields']:
-        fid, ftype, fimmutable, lvt, lot, size = get_struct_field_info(struct, field)
+        fid, ftype, fimmutable, lvt, lot, size, is_c_array = get_struct_field_info(struct, field)
 
         if not allowed_identifier(structs_fields_whitelist, structs_fields_blacklist, sid, fid):
             continue
@@ -765,15 +786,15 @@ def def_struct(struct):
         if ftype == cobject_function_identifier:
             ftype = get_function_signature(field['function'])
         elif ftype == cobject_property_identifier:
-            ftype = get_function_signature(field['get'])
-            ftype = f"{ftype[ftype.rfind(':')+2:]}"
+            ftype = [get_return_signature(field['get'])]
         else:
-            ftype = translate_to_def(ftype)
+            ftype = [translate_to_def(ftype)]
 
-        if ftype.startswith('Pointer_') and ftype not in def_pointers:
-            def_pointers.append(ftype)
+        if ftype[0].startswith('Pointer_') and ftype[0] not in def_pointers:
+            def_pointers.append(ftype[0])
 
-        s += '--- @field public %s %s\n' % (fid, ftype)
+        for field_type in ftype:
+            s += '--- @field public %s %s\n' % (fid, field_type)
 
     return s
 

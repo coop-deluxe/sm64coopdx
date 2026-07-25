@@ -10,9 +10,9 @@ char gLastRemoteBhv[256] = "";
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 #include "config.h"
-#include "pc/gfx/gfx_window_manager_api.h"
-#include "pc/gfx/gfx_dxgi.h"
-#include "pc/gfx/gfx_sdl.h"
+#include "pc/gfx/gfx_window_manager.h"
+#include "pc/gfx/gfx_window_opengl.h"
+#include "pc/gfx/gfx_window_dxgi.h"
 #include "pc/gfx/gfx_pc.h"
 #include "game/game_init.h"
 #include "game/ingame_menu.h"
@@ -655,16 +655,16 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
 
     // In case the game crashed before the game window opened
     if (!gGfxInited) {
-        gfx_init(gWindowApi, gRenderApi, TITLE);
-        gWindowApi->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(gRenderApi, TITLE);
+        gfx_wm_set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        gWindowApi->set_scroll_callback(mouse_on_scroll);
+        gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
     if (!gGameInited) djui_unicode_init();
 
     // Main loop
     while (true) {
-        gWindowApi->main_loop(crash_handler_produce_one_frame);
+        gfx_wm_main_loop(crash_handler_produce_one_frame);
     }
     exit(0);
 }

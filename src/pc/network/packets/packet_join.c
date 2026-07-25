@@ -161,7 +161,7 @@ void network_receive_join(struct Packet* p) {
         network_shutdown(true, false, false, false);
         LOG_ERROR("version mismatch");
         char mismatchMessage[256] = { 0 };
-        snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#dcdcdc\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#dcdcdc\\\nTheir version: \\#a0a0ff\\%s\\#dcdcdc\\\n\nSomeone is out of date!\n", version, remoteVersion);
+        snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#\\\nTheir version: \\#a0a0ff\\%s\\#\\\n\nSomeone is out of date!\n", version, remoteVersion);
         djui_panel_join_message_error(mismatchMessage);
         return;
     }
@@ -195,7 +195,6 @@ void network_receive_join(struct Packet* p) {
     mods_activate(&gRemoteMods);
     djui_panel_modlist_create(NULL);
     smlua_init();
-    dynos_behavior_hook_all_custom_behaviors();
 
     network_send_network_players_request();
     network_send_lua_sync_table_request();

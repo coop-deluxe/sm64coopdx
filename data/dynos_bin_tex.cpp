@@ -462,6 +462,13 @@ static void DynOS_Tex_GeneratePack_Recursive(const SysPath &aPackFolder, SysPath
         } else {
             _BaseName = _PackEnt->d_name;
             _BaseName = _BaseName.SubString(0, nameLen - 4);
+
+            // Check filename, to allow stuff like "texture_hud_char_mario_head.png" to be generated properly
+            const struct TextureInfo *_TextureInfo = DynOS_Builtin_Tex_GetInfoFromName(_BaseName.begin());
+            if (_TextureInfo) {
+                _OverrideName = _TextureInfo->name;
+                _BaseName = _OverrideName;
+            }
         }
 
         // if we aren't overriding a texture, only generate textures in the output directory

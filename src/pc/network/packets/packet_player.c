@@ -398,7 +398,7 @@ void network_receive_player(struct Packet* p) {
     }
 
     // inform of player death
-    if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED) {
+    if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED && !data.actionArg) {
         construct_player_popup(np, DLANG(NOTIF, DIED), NULL);
     }
 

@@ -62,6 +62,8 @@
 #include "pc/discord/discord.h"
 #endif
 
+#include "pc/terminal.h"
+
 #include "pc/mumble/mumble.h"
 
 #if defined(_WIN32)
@@ -105,7 +107,6 @@ u8 gLuaVolumeSfx = 127;
 u8 gLuaVolumeEnv = 127;
 
 struct AudioAPI* gAudioApi = &audio_null;
-struct GfxWindowManagerAPI* gWindowApi = &gfx_dummy_wm_api;
 struct GfxRenderingAPI* gRenderApi = &gfx_dummy_renderer_api;
 
 extern void gfx_run(Gfx *commands);
@@ -222,32 +223,29 @@ static void select_graphics_backend(void) {
     }
 
 #if defined(_WIN32)
-    if (configGraphicsBackend == GAPI_GL && !gfx_sdl_check_opengl_compatibility()) {
-        configGraphicsBackend = GAPI_D3D11;
+    if (configGraphicsBackend == GFX_WINDOW_BACKEND_OPENGL && !gfx_window_opengl_check_compatibility()) {
+        configGraphicsBackend = GFX_WINDOW_BACKEND_DIRECTX;
     }
 #endif
-    int backend = configGraphicsBackend;
+    enum GfxWindowBackend backend = configGraphicsBackend;
 #if defined(_WIN32)
-    if (gCLIOpts.backend != -1) { backend = gCLIOpts.backend; }
+    if (gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
 #endif
 
     switch (backend) {
-        case GAPI_GL:
-            gWindowApi = &gfx_sdl;
+        case GFX_WINDOW_BACKEND_OPENGL:
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
             break;
 #if defined(_WIN32)
-        case GAPI_D3D11:
-            gWindowApi = &gfx_dxgi;
+        case GFX_WINDOW_BACKEND_DIRECTX:
             gRenderApi = &gfx_direct3d11_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif
         default:
-            gWindowApi = &gfx_sdl;
-            gRenderApi = &gfx_opengl_api;
-            gAudioApi  = &audio_sdl;
+            gRenderApi = &gfx_dummy_renderer_api;
+            gAudioApi  = &audio_null;
             break;
     }
 
@@ -331,7 +329,9 @@ void produce_interpolation_frames_and_delay(void) {
 static s16 sAudioBuffer[SAMPLES_HIGH * 2 * 2] = { 0 };
 
 inline static void buffer_audio(void) {
-    bool shouldMute = (configMuteFocusLoss && !gWindowApi->has_focus()) || (gMasterVolume == 0);
+    bool shouldMute = (configMuteFocusLoss && !gfx_wm_has_focus()) || (gMasterVolume == 0);
+    audio_custom_update_volume();
+
     if (!shouldMute) {
         set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f);
         set_sequence_player_volume(SEQ_PLAYER_SFX,   (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
@@ -369,7 +369,7 @@ void *audio_thread(UNUSED void *arg) {
         f64 actualDelta = now - curTime;
         if (actualDelta < targetDelta) {
             f64 delay = ((targetDelta - actualDelta) * 1000.0);
-            gWindowApi->delay((u32)delay);
+            gfx_wm_delay((u32)delay);
         }
     }
 
@@ -435,7 +435,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     f64 elapsed = frameEnd - frameStart;
     f64 remaining = targetFrameTime - elapsed;
     if (remaining > 0) {
-        gWindowApi->delay((u32)(remaining * 1000.0));
+        gfx_wm_delay((u32)(remaining * 1000.0));
     }
 
     gfx_end_frame();
@@ -534,10 +534,10 @@ int main(int argc, char *argv[]) {
 
     // create the window almost straight away
     if (!gGfxInited) {
-        gfx_init(gWindowApi, gRenderApi, TITLE);
-        gWindowApi->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
+        gfx_init(gRenderApi, TITLE);
+        gfx_wm_set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up,
             keyboard_on_text_input, keyboard_on_text_editing);
-        gWindowApi->set_scroll_callback(mouse_on_scroll);
+        gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
 
     // render the rom setup screen
@@ -545,7 +545,7 @@ int main(int argc, char *argv[]) {
         if (!gCLIOpts.hideLoadingScreen) {
             render_rom_setup_screen(); // holds the game load until a valid rom is provided
         } else {
-            printf("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
+            log_to_terminal("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
             return 0;
         }
     }
@@ -610,15 +610,19 @@ int main(int argc, char *argv[]) {
         network_init(NT_NONE, false);
     }
 
+    // initialize terminal
+    terminal_init();
+
     // main loop
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
-        gWindowApi->main_loop(produce_one_frame);
+        gfx_wm_main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
 #endif
         mumble_update();
+        terminal_update();
 #ifdef DEBUG
         fflush(stdout);
         fflush(stderr);

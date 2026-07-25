@@ -342,7 +342,7 @@ function on_arena_player_death(victimGlobalId, attackerGlobalId)
     local sVictim = gPlayerSyncTable[npVictim.localIndex]
     local sAttacker = nil
     if npAttacker ~= nil then sAttacker = gPlayerSyncTable[npAttacker.localIndex] end
-    local normalColor = '\\#dcdcdc\\'
+    local normalColor = '\\#\\'
 
     if npAttacker == nil or npVictim == npAttacker then
         -- create popup
@@ -378,7 +378,7 @@ function on_arena_player_death(victimGlobalId, attackerGlobalId)
             if sAttacker.team ~= 0 then
                 local teamScore = calculate_team_score(sAttacker.team)
                 if teamScore >= gGameModes[gGlobalSyncTable.gameMode].scoreCap then
-                    round_end()                    
+                    round_end()
                 end
             end
         end
@@ -472,7 +472,7 @@ function on_gamemode_command(msg)
     end
 
     if msg == 'random' then
-        djui_chat_message_create("[Arena] Setting to random gamemode.")
+        command_message_create("[Arena] Setting to random gamemode.")
         sRandomizeMode = true
         round_end()
         sWaitTimer = 1
@@ -481,7 +481,7 @@ function on_gamemode_command(msg)
     end
 
     if setMode ~= nil then
-        djui_chat_message_create("[Arena] Setting game mode.")
+        command_message_create("[Arena] Setting game mode.")
         gGlobalSyncTable.gameMode = setMode
         sRandomizeMode = false
         round_end()
@@ -490,7 +490,7 @@ function on_gamemode_command(msg)
         return true
     end
 
-    djui_chat_message_create("/arena \\#00ffff\\gamemode\\#ffff00\\ " .. string.format("[%s|random]\\#dcdcdc\\ sets gamemode", sGameModeShortTimes))
+    command_message_create("/arena \\#0ff\\gamemode\\#ff0\\ " .. string.format("[%s|random]\\#\\ sets gamemode", sGameModeShortTimes))
     return true
 end
 
@@ -512,21 +512,21 @@ function on_level_command(msg)
         return true
     end
 
-    djui_chat_message_create("/arena \\#00ffff\\level\\#ffff00\\ " .. string.format("[%s]\\#dcdcdc\\ sets level", get_level_choices()))
+    command_message_create("/arena \\#0ff\\level\\#ff0\\ " .. string.format("[%s]\\#\\ sets level", get_level_choices()))
     return true
 end
 
 function on_jump_leniency_command(msg)
     local num = tonumber(msg)
-    if not network_is_server and not network_is_moderator() then
-        djui_chat_message_create("\\#ffa0a0\\[Arena] You need to be a moderator to use this command.")
+    if not network_is_server() and not network_is_moderator() then
+        command_message_create("\\#ffa0a0\\[Arena] You need to be a moderator to use this command.")
         return true
     elseif num == nil then
-        djui_chat_message_create("\\#ffa0a0\\[Arena] Invalid number!")
+        command_message_create("\\#ffa0a0\\[Arena] Invalid number!")
         return true
     else
         gGlobalSyncTable.jumpLeniency = num
-        djui_chat_message_create("[Arena] The number of jump leniency frames has been set to " .. num)
+        command_message_create("[Arena] The number of jump leniency frames has been set to " .. num)
         return true
     end
 end
@@ -545,7 +545,7 @@ local function on_arena_command(msg)
         return on_jump_leniency_command(args[2] or "")
     end
 
-    djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency]")
+    command_message_create("/arena \\#0ff\\[gamemode|level|jump-leniency]")
     return true
 end
 
@@ -573,7 +573,7 @@ function get_level_choices()
 end
 
 if network_is_server() then
-    hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
+    hook_chat_command("arena", "\\#0ff\\[gamemode|level|jump-leniency]", on_arena_command)
 end
 
 if _G.dayNightCycleApi ~= nil then

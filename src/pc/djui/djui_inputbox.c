@@ -3,7 +3,7 @@
 #include "djui.h"
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"
-#include "pc/gfx/gfx_window_manager_api.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
@@ -275,7 +275,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
     if (!gDjuiInputHeldAlt &&
         ((!gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_V) ||
         (!gDjuiInputHeldControl && gDjuiInputHeldShift && scancode == SCANCODE_INSERT))) {
-        djui_interactable_on_text_input(gWindowApi->get_clipboard_text());
+        djui_interactable_on_text_input(gfx_wm_get_clipboard_text());
         sCursorBlink = 0;
         return true;
     }
@@ -288,7 +288,7 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
             char* cs1 = djui_unicode_at_index(msg, s1);
             char* cs2 = djui_unicode_at_index(msg, s2);
             snprintf(clipboardText, fmin(256, 1 + cs2 - cs1), "%s", cs1);
-            gWindowApi->set_clipboard_text(clipboardText);
+            gfx_wm_set_clipboard_text(clipboardText);
             if (scancode == SCANCODE_X) {
                 djui_inputbox_delete_selection(inputbox);
                 sCursorBlink = 0;
@@ -341,11 +341,11 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     gDjuiInputHeldShift   = 0;
     gDjuiInputHeldControl = 0;
     gDjuiInputHeldAlt     = 0;
-    gWindowApi->start_text_input();
+    gfx_wm_start_text_input();
 }
 
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
-    gWindowApi->stop_text_input();
+    gfx_wm_stop_text_input();
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
@@ -498,6 +498,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
+
             struct DjuiColor *textColor = &inputbox->textColor;
             gDPSetEnvColor(gDisplayListHead++, textColor->r, textColor->g, textColor->b, textColor->a);
             gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
