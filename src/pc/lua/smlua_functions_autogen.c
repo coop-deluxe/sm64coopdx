@@ -32352,6 +32352,20 @@ int smlua_func_get_network_area_timer(lua_State* L) {
     return 1;
 }
 
+int smlua_func_get_network_area_random_seed(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "get_network_area_random_seed", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, get_network_area_random_seed());
+
+    return 1;
+}
+
 int smlua_func_get_area_update_counter(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -36073,6 +36087,23 @@ int smlua_func_surface_has_force(lua_State* L) {
  // sync_object.h //
 ///////////////////
 
+int smlua_func_sync_object_get_random_seed(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sync_object_get_random_seed", 1, top);
+        return 0;
+    }
+
+    u32 syncId = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sync_object_get_random_seed"); return 0; }
+
+    lua_pushinteger(L, sync_object_get_random_seed(syncId));
+
+    return 1;
+}
+
 int smlua_func_sync_object_get_object(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38036,6 +38067,7 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);
+    smlua_bind_function(L, "get_network_area_random_seed", smlua_func_get_network_area_random_seed);
     smlua_bind_function(L, "get_area_update_counter", smlua_func_get_area_update_counter);
     smlua_bind_function(L, "get_temp_s32_pointer", smlua_func_get_temp_s32_pointer);
     smlua_bind_function(L, "deref_s32_pointer", smlua_func_deref_s32_pointer);
@@ -38264,6 +38296,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "surface_has_force", smlua_func_surface_has_force);
 
     // sync_object.h
+    smlua_bind_function(L, "sync_object_get_random_seed", smlua_func_sync_object_get_random_seed);
     smlua_bind_function(L, "sync_object_get_object", smlua_func_sync_object_get_object);
     smlua_bind_function(L, "sync_object_is_initialized", smlua_func_sync_object_is_initialized);
     smlua_bind_function(L, "sync_object_is_owned_locally", smlua_func_sync_object_is_owned_locally);

@@ -1952,6 +1952,27 @@ Gets the current area's networked timer
 
 <br />
 
+## [get_network_area_random_seed](#get_network_area_random_seed)
+
+### Description
+Gets the current area's networked random seed
+
+### Lua Example
+`local integerValue = get_network_area_random_seed()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_network_area_random_seed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [get_area_update_counter](#get_area_update_counter)
 
 ### Description
@@ -6836,6 +6857,29 @@ Checks if a surface has force
 
 <br />
 
+
+## [sync_object_get_random_seed](#sync_object_get_random_seed)
+
+### Description
+Retrieves the random seed of a sync object from its sync ID
+
+### Lua Example
+`local integerValue = sync_object_get_random_seed(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sync_object_get_random_seed(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [sync_object_get_object](#sync_object_get_object)
 

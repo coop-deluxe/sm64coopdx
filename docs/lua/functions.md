@@ -2033,6 +2033,7 @@
 
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-7.md#get_network_area_timer)
+   - [get_network_area_random_seed](functions-7.md#get_network_area_random_seed)
    - [get_area_update_counter](functions-7.md#get_area_update_counter)
    - [get_temp_s32_pointer](functions-7.md#get_temp_s32_pointer)
    - [deref_s32_pointer](functions-7.md#deref_s32_pointer)
@@ -2275,6 +2276,7 @@
 <br />
 
 - sync_object.h
+   - [sync_object_get_random_seed](functions-7.md#sync_object_get_random_seed)
    - [sync_object_get_object](functions-7.md#sync_object_get_object)
    - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
    - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
