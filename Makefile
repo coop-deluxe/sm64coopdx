@@ -493,9 +493,9 @@ endif
 SRC_DIRS += src/pc/mumble
 
 ifeq ($(ENABLE_VULKAN),1)
-  # Vulkan backend (gfx_vulkan.c/.h, gfx_window_vulkan.c/.h, gfx_vulkan_volk.c/.h,
-  # gfx_vulkan_vma.cpp/.h) lives directly in src/pc/gfx, alongside the other
-  # GfxRenderingAPI backends - already covered by the src/pc/gfx SRC_DIR above.
+  # Vulkan backend (gfx_vulkan.c/.h, gfx_window_vulkan.c/.h, gfx_vulkan_vma.cpp)
+  # lives directly in src/pc/gfx, alongside the other GfxRenderingAPI backends -
+  # already covered by the src/pc/gfx SRC_DIR above.
   # Vendored glslang (GLSL->SPIR-V, runtime shader compiler for the Color
   # Combiner generator) is the one dependency still vendored under its own
   # folder (src/pc/gfx/gfx_vulkan/glslang), pending upstream changes; its
@@ -527,10 +527,10 @@ LEVEL_C_FILES     := $(wildcard levels/*/leveldata.c) $(wildcard levels/*/script
 C_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)) $(LEVEL_C_FILES)
 CPP_FILES         := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
 ifneq ($(ENABLE_VULKAN),1)
-  # gfx_vulkan.c/gfx_window_vulkan.c/gfx_vulkan_volk.c/gfx_vulkan_vma.cpp live
-  # directly in src/pc/gfx (not gated by their own SRC_DIRS entry), so they
-  # need their own filter-out here to stay unbuilt when Vulkan is off.
-  C_FILES         := $(filter-out src/pc/gfx/gfx_vulkan.c src/pc/gfx/gfx_window_vulkan.c src/pc/gfx/gfx_vulkan_volk.c,$(C_FILES))
+  # gfx_vulkan.c/gfx_window_vulkan.c/gfx_vulkan_vma.cpp live directly in
+  # src/pc/gfx (not gated by their own SRC_DIRS entry), so they need their
+  # own filter-out here to stay unbuilt when Vulkan is off.
+  C_FILES         := $(filter-out src/pc/gfx/gfx_vulkan.c src/pc/gfx/gfx_window_vulkan.c,$(C_FILES))
   CPP_FILES       := $(filter-out src/pc/gfx/gfx_vulkan_vma.cpp,$(CPP_FILES))
 endif
 S_FILES           := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.s))
@@ -750,11 +750,6 @@ ifeq ($(TARGET_N64),1)
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
   ifeq ($(ENABLE_VULKAN),1)
-    # gfx_vulkan_volk.h/gfx_vulkan_vma.h are same-directory quoted includes
-    # from gfx_vulkan.c (src/pc/gfx), so they need no -I of their own; system
-    # Vulkan headers (<vulkan/vulkan.h> etc., pulled in by both) resolve via
-    # the default include path once libvulkan-dev (or equivalent) is
-    # installed. glslang is still vendored, so it still needs its own -I.
     INCLUDE_DIRS += src/pc/gfx/gfx_vulkan/glslang
   endif
 endif
@@ -771,12 +766,15 @@ ifeq ($(WINDOWS_BUILD),1)
 endif
 
 # Vulkan flags (volk loads Vulkan itself at runtime, no -lvulkan needed;
-# dlopen() needs -ldl explicitly on Linux, it's already part of libc on Windows/macOS)
+# dlopen() needs -ldl explicitly on Linux, it's already part of libc on Windows/macOS).
+# volk itself comes from the system package (libvulkan-volk-dev on Debian -
+# not "libvolk-dev", an unrelated GNU Radio package with a confusingly similar
+# name) instead of being vendored; -lvolk resolves via the default lib search
+# path on Linux (no .pc file shipped). Not yet verified on Windows/macOS.
 ifeq ($(ENABLE_VULKAN),1)
+  BACKEND_LDFLAGS += -lvolk
   ifeq ($(WINDOWS_BUILD),0)
-    ifeq ($(OSX_BUILD),0)
-      BACKEND_LDFLAGS += -ldl
-    endif
+    BACKEND_LDFLAGS += -ldl
   endif
 endif
 

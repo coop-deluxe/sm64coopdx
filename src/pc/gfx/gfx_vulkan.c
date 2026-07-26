@@ -19,19 +19,14 @@
 // via glslang (chosen over shaderc specifically to avoid also pulling in
 // SPIRV-Tools), and bakes a VkPipeline around it, cached by CC hash.
 //
-// ENABLE_VULKAN=1 forces this backend on unconditionally (see pc_main.c) with
-// no runtime fallback to GL/D3D11 - switching Vulkan's swapchain/frame-sync
-// state at runtime turned out to be a real hazard, not just an unfinished
-// feature (see gfx_vulkan_probe_support below for the capability probe this
-// would need, which exists but isn't wired up). This whole file is opt-in at
-// the Makefile level (SRC_DIRS/C_FILES gating on ENABLE_VULKAN), not via a
-// preprocessor guard in-file.
-//
-// Vendored dependencies: gfx_vulkan_volk.c/.h load Vulkan entry points at
-// runtime (no libvulkan link dependency beyond dlopen, hence -ldl on Linux -
-// see the Makefile); gfx_vulkan_vma.cpp/.h wrap AMD's Vulkan Memory Allocator
-// for buffer/image suballocation. glslang stays vendored under gfx_vulkan/
-// pending upstream changes.
+// Dependencies: volk (<volk.h>, loads Vulkan entry points at runtime - no
+// libvulkan link dependency beyond dlopen, hence -ldl on Linux, see the
+// Makefile) and VMA (<vk_mem_alloc.h>, buffer/image suballocation - only its
+// implementation TU, gfx_vulkan_vma.cpp, still lives in this repo) now both
+// come from system packages (libvulkan-volk-dev / libvulkan-memory-allocator-dev
+// on Debian - watch out, "libvolk-dev" without "vulkan-" in the name is an
+// unrelated GNU Radio package) instead of being vendored. glslang stays
+// vendored under gfx_vulkan/ pending upstream changes.
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -50,14 +45,15 @@
 
 #include "macros.h"
 #include "gfx_vulkan.h"
-#include "gfx_vulkan_volk.h"
-#include "gfx_vulkan_vma.h"
+#include <volk.h>
+#include <vk_mem_alloc.h>
 #include "gfx_cc.h"
 #include "gfx_pc.h"
 #include "gfx_window_manager.h"
 #include "../configfile.h"
 #include "../fs/fs.h"
 #include "../platform.h"
+#include "../terminal.h"
 
 #include "glslang/Include/glslang_c_interface.h"
 #include "glslang/Public/resource_limits_c.h"
@@ -206,7 +202,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL gfx_vulkan_debug_callback(
     const VkDebugUtilsMessengerCallbackDataEXT *data,
     UNUSED void *userData) {
     if (severity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
-        fprintf(stderr, "[vulkan] %s\n", data->pMessage);
+        log_to_terminal("[vulkan] %s\n", data->pMessage);
     }
     return VK_FALSE;
 }
@@ -992,7 +988,7 @@ static bool gfx_vulkan_swapchain_create(struct SDL_Window *window) {
     VkResult res = vkCreateSwapchainKHR(gfxVkDevice, &createInfo, NULL, &newSwapchain);
 
 #ifdef VULKAN_DEBUG
-    fprintf(stderr, "[vulkan] swapchain_create: extent=%ux%u imageCount=%u presentMode=%d oldSwapchain=%p result=%d\n",
+    log_to_terminal("[vulkan] swapchain_create: extent=%ux%u imageCount=%u presentMode=%d oldSwapchain=%p result=%d\n",
             extent.width, extent.height, imageCount, presentMode, (void *)oldSwapchain, res);
 #endif
 
@@ -1525,7 +1521,7 @@ static void gfx_vulkan_frame_destroy(void) {
 // device-idle wait that shouldn't happen on the event thread.
 static void gfx_vulkan_frame_notify_resize(void) {
 #ifdef VULKAN_DEBUG
-    fprintf(stderr, "[vulkan] notify_resize called\n");
+    log_to_terminal("[vulkan] notify_resize called\n");
 #endif
     sSwapchainDirty = true;
 }
@@ -1570,7 +1566,7 @@ static void recreate_image_available_semaphore(GfxVulkanFrameSlot *slot) {
     VkSemaphoreCreateInfo semInfo = { .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO };
     if (vkCreateSemaphore(gfxVkDevice, &semInfo, NULL, &slot->imageAvailable) != VK_SUCCESS) {
         slot->imageAvailable = VK_NULL_HANDLE;
-        fprintf(stderr, "[vulkan] failed to recreate imageAvailable semaphore after a failed acquire\n");
+        log_to_terminal("[vulkan] failed to recreate imageAvailable semaphore after a failed acquire\n");
     }
 }
 
@@ -1606,7 +1602,7 @@ static bool gfx_vulkan_frame_start(void) {
         };
         VkResult waitRes = vkWaitSemaphores(gfxVkDevice, &waitInfo, UINT64_MAX);
         if (waitRes != VK_SUCCESS) {
-            fprintf(stderr, "[vulkan] vkWaitSemaphores failed: %d\n", waitRes);
+            log_to_terminal("[vulkan] vkWaitSemaphores failed: %d\n", waitRes);
             return false;
         }
     }
@@ -1621,7 +1617,7 @@ static bool gfx_vulkan_frame_start(void) {
         return false;
     }
     if (res != VK_SUCCESS && res != VK_SUBOPTIMAL_KHR) {
-        fprintf(stderr, "[vulkan] vkAcquireNextImageKHR failed: %d\n", res);
+        log_to_terminal("[vulkan] vkAcquireNextImageKHR failed: %d\n", res);
         recreate_image_available_semaphore(slot);
         return false;
     }
@@ -1738,7 +1734,7 @@ static void gfx_vulkan_frame_end_and_submit(void) {
 
     VkResult endRes = vkEndCommandBuffer(gfxVkCurrentCommandBuffer);
     if (endRes != VK_SUCCESS) {
-        fprintf(stderr, "[vulkan] vkEndCommandBuffer failed: %d\n", endRes);
+        log_to_terminal("[vulkan] vkEndCommandBuffer failed: %d\n", endRes);
     }
 
     GfxVulkanFrameSlot *slot = &sFrames[sCurrentFrame];
@@ -1778,7 +1774,7 @@ static void gfx_vulkan_frame_end_and_submit(void) {
     };
     VkResult submitRes = vkQueueSubmit2(gfxVkQueue, 1, &submitInfo, VK_NULL_HANDLE);
     if (submitRes != VK_SUCCESS) {
-        fprintf(stderr, "[vulkan] vkQueueSubmit2 failed: %d\n", submitRes);
+        log_to_terminal("[vulkan] vkQueueSubmit2 failed: %d\n", submitRes);
     }
 }
 
@@ -1802,7 +1798,7 @@ static bool gfx_vulkan_frame_present(void) {
         return false;
     }
     if (res != VK_SUCCESS) {
-        fprintf(stderr, "[vulkan] vkQueuePresentKHR failed: %d\n", res);
+        log_to_terminal("[vulkan] vkQueuePresentKHR failed: %d\n", res);
     }
     return res == VK_SUCCESS;
 }
@@ -2207,7 +2203,7 @@ static VkPipeline gfx_vulkan_pipeline_create(VkShaderModule vertModule, VkShader
     VkPipeline pipeline = VK_NULL_HANDLE;
     VkResult res = vkCreateGraphicsPipelines(gfxVkDevice, sPipelineCache, 1, &pipelineInfo, NULL, &pipeline);
     if (res != VK_SUCCESS) {
-        fprintf(stderr, "[vulkan] vkCreateGraphicsPipelines failed: %d\n", res);
+        log_to_terminal("[vulkan] vkCreateGraphicsPipelines failed: %d\n", res);
         return VK_NULL_HANDLE;
     }
     return pipeline;
@@ -2757,12 +2753,12 @@ static bool compile_stage(const char *source, glslang_stage_t stage, const char 
 
     glslang_shader_t *shader = glslang_shader_create(&input);
     if (!glslang_shader_preprocess(shader, &input)) {
-        fprintf(stderr, "[vulkan] %s shader preprocess failed:\n%s\n--- source ---\n%s\n", stageName, glslang_shader_get_info_log(shader), source);
+        log_to_terminal("[vulkan] %s shader preprocess failed:\n%s\n--- source ---\n%s\n", stageName, glslang_shader_get_info_log(shader), source);
         glslang_shader_delete(shader);
         return false;
     }
     if (!glslang_shader_parse(shader, &input)) {
-        fprintf(stderr, "[vulkan] %s shader parse failed:\n%s\n--- source ---\n%s\n", stageName, glslang_shader_get_info_log(shader), source);
+        log_to_terminal("[vulkan] %s shader parse failed:\n%s\n--- source ---\n%s\n", stageName, glslang_shader_get_info_log(shader), source);
         glslang_shader_delete(shader);
         return false;
     }
@@ -2770,7 +2766,7 @@ static bool compile_stage(const char *source, glslang_stage_t stage, const char 
     glslang_program_t *program = glslang_program_create();
     glslang_program_add_shader(program, shader);
     if (!glslang_program_link(program, GLSLANG_MSG_SPV_RULES_BIT | GLSLANG_MSG_VULKAN_RULES_BIT)) {
-        fprintf(stderr, "[vulkan] %s shader link failed:\n%s\n", stageName, glslang_program_get_info_log(program));
+        log_to_terminal("[vulkan] %s shader link failed:\n%s\n", stageName, glslang_program_get_info_log(program));
         glslang_program_delete(program);
         glslang_shader_delete(shader);
         return false;
@@ -2934,7 +2930,7 @@ static struct ShaderProgram *gfx_vulkan_shader_create_and_load(struct ColorCombi
 #if defined(VULKAN_DEBUG)
     uint64_t tEnd = SDL_GetPerformanceCounter();
     double toMs = 1000.0 / (double)perfFreq;
-    fprintf(stderr, "[vulkan] new pipeline for CC 0x%016llx: %.2fms total (glsl=%.2fms spirv=%.2fms pipeline=%.2fms)\n",
+    log_to_terminal("[vulkan] new pipeline for CC 0x%016llx: %.2fms total (glsl=%.2fms spirv=%.2fms pipeline=%.2fms)\n",
             (unsigned long long)cc->hash, (double)(tEnd - tStart) * toMs,
             (double)(tAfterGen - tStart) * toMs, (double)(tAfterSpirv - tAfterGen) * toMs,
             (double)(tEnd - tAfterSpirv) * toMs);
@@ -3105,7 +3101,7 @@ static void gfx_vulkan_draw_triangles(const struct ShaderProgram *prg, float buf
     VkDeviceSize byteSize = (VkDeviceSize)buf_vbo_len * sizeof(float);
     if (arena->offset + byteSize > GFX_VULKAN_ARENA_SIZE) {
         if (!sOverflowWarned) {
-            fprintf(stderr, "[vulkan] vertex arena exhausted this frame, dropping draw (increase GFX_VULKAN_ARENA_SIZE)\n");
+            log_to_terminal("[vulkan] vertex arena exhausted this frame, dropping draw (increase GFX_VULKAN_ARENA_SIZE)\n");
             sOverflowWarned = true;
         }
         return;
@@ -3407,37 +3403,37 @@ static void gfx_vulkan_renderer_init(void) {
     struct SDL_Window *window = gfx_wm_get_window();
 
     if (!gfx_vulkan_context_init(window)) {
-        fprintf(stderr, "[vulkan] failed to initialize instance/device\n");
+        log_to_terminal("[vulkan] failed to initialize instance/device\n");
         return;
     }
     // VMA must exist before the first swapchain_create call: the swapchain
     // also allocates a depth image through it.
     if (!gfx_vulkan_memory_init()) {
-        fprintf(stderr, "[vulkan] failed to initialize VMA\n");
+        log_to_terminal("[vulkan] failed to initialize VMA\n");
         goto fail_memory;
     }
     if (!gfx_vulkan_swapchain_create(window)) {
-        fprintf(stderr, "[vulkan] failed to create swapchain\n");
+        log_to_terminal("[vulkan] failed to create swapchain\n");
         goto fail_swapchain;
     }
     if (!gfx_vulkan_frame_init(window)) {
-        fprintf(stderr, "[vulkan] failed to initialize frame resources\n");
+        log_to_terminal("[vulkan] failed to initialize frame resources\n");
         goto fail_frame;
     }
     if (!gfx_vulkan_texture_init()) {
-        fprintf(stderr, "[vulkan] failed to initialize texture subsystem\n");
+        log_to_terminal("[vulkan] failed to initialize texture subsystem\n");
         goto fail_texture;
     }
     if (!gfx_vulkan_shader_init()) {
-        fprintf(stderr, "[vulkan] failed to initialize glslang\n");
+        log_to_terminal("[vulkan] failed to initialize glslang\n");
         goto fail_shader;
     }
     if (!gfx_vulkan_pipeline_init()) {
-        fprintf(stderr, "[vulkan] failed to initialize shared pipeline layout/frame UBO\n");
+        log_to_terminal("[vulkan] failed to initialize shared pipeline layout/frame UBO\n");
         goto fail_pipeline;
     }
     if (!gfx_vulkan_draw_init()) {
-        fprintf(stderr, "[vulkan] failed to initialize vertex streaming arenas\n");
+        log_to_terminal("[vulkan] failed to initialize vertex streaming arenas\n");
         goto fail_draw;
     }
 
