@@ -63,6 +63,7 @@ bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
 u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
+u32 gNetworkAreaRandomSeed = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 u16 gNetworkRequestLocationTimer = 0;
@@ -201,6 +202,7 @@ void network_on_init_area(void) {
     gNetworkAreaSyncing = true;
     gNetworkAreaTimer = 0;
     gNetworkAreaTimerClock = clock_elapsed_ticks();
+    gNetworkAreaRandomSeed = rand();
 }
 
 void network_on_loaded_area(void) {
