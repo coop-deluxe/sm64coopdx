@@ -2548,9 +2548,6 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 #endif
 
 void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
-    u8 TEXT_EXIT_TO_CASTLE[16] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(TEXT_EXIT_TO_CASTLE, "EXIT TO CASTLE", false);
-
 #ifdef VERSION_EU
     u8 textContinue[][10] = {
         { TEXT_CONTINUE },
@@ -2575,28 +2572,34 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
     INGAME_TEXT_COPY(textContinue, TEXT_CONTINUE);
     INGAME_TEXT_COPY(textExitCourse, TEXT_EXIT_COURSE);
     INGAME_TEXT_COPY(textCameraAngleR, TEXT_CAMERA_ANGLE_R);
-#endif
-
-    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 4);
+    #endif
+    u8 textExitToCastle[] = { TEXT_EXIT_TO_CASTLE };
+    u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
+    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, maxIndex);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
     print_generic_string(x + 10, y - 2, textContinue);
-    print_generic_string(x + 10, y - 17, textExitCourse);
-    print_generic_string(x + 10, y - 32, TEXT_EXIT_TO_CASTLE);
+    if (PAUSE_EXIT_MODE != PAUSE_EXIT_TO_CASTLE) {
+        y -= yIndex; print_generic_string(x + 10, y - 2, textExitCourse);
+    }
+    if (PAUSE_EXIT_MODE & PAUSE_EXIT_TO_CASTLE) {
+        y -= yIndex; print_generic_string(x + 10, y - 2, textExitToCastle);
+    }
 
-    if (index[0] != 4) {
-        print_generic_string(x + 10, y - 47, textCameraAngleR);
+    if (*index != maxIndex) {
+        print_generic_string(x + 10, y - 17, textCameraAngleR);
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
-        create_dl_translation_matrix(MENU_MTX_PUSH, x - X_VAL8, (y - ((index[0] - 1) * yIndex)) - Y_VAL8, 0);
+        y += (maxIndex - 2) * yIndex;
+        create_dl_translation_matrix(MENU_MTX_PUSH, x - X_VAL8, (y - ((*index - 1) * yIndex)) - Y_VAL8, 0);
 
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
         gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     } else {
-        render_pause_camera_options(x - 42, y - 57, &gDialogCameraAngleIndex, 110);
+        render_pause_camera_options(x - 42, y - 27, &gDialogCameraAngleIndex, 110);
     }
 }
 
@@ -2976,8 +2979,6 @@ s32 gCourseCompleteCoins = 0;
 s8 gHudFlash = 0;
 
 s16 render_pause_courses_and_castle(void) {
-    s16 num;
-
 #ifdef VERSION_EU
     gInGameLanguage = eu_get_language();
 #endif
@@ -3014,13 +3015,15 @@ s16 render_pause_courses_and_castle(void) {
 #ifdef VERSION_EU
                 if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
-                if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | START_BUTTON))
 #endif
                 {
+                    u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
                     bool allowExit = true;
-                    if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, gDialogLineNum == 3, &allowExit);
+                    bool pauseExit = gDialogLineNum > 1 && gDialogLineNum < maxIndex;
+                    bool usedExitToCastle = (PAUSE_EXIT_MODE & PAUSE_EXIT_COURSE) ? gDialogLineNum == 3 : gDialogLineNum == 2;  
+                    if (pauseExit) {
+                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, usedExitToCastle, &allowExit);
                     }
                     if (allowExit) {
                         level_set_transition(0, NULL);
@@ -3028,13 +3031,10 @@ s16 render_pause_courses_and_castle(void) {
                         gDialogBoxState = DIALOG_STATE_OPENING;
                         gMenuMode = -1;
 
-                        if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                            num = gDialogLineNum;
-                        } else {
-                            num = 1;
+                        if (pauseExit) {
+                            return usedExitToCastle ? MENU_OPT_EXIT_TO_CASTLE : MENU_OPT_EXIT_COURSE;
                         }
-
-                        return num;
+                        return MENU_OPT_DEFAULT;
                     } else {
                         play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
                     }
@@ -3084,7 +3084,7 @@ s16 render_pause_courses_and_castle(void) {
         network_mod_dev_mode_reload();
     }
 
-    return 0;
+    return MENU_OPT_NONE;
 }
 
 #if defined(VERSION_JP)
@@ -3196,8 +3196,8 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
 void play_star_fanfare_and_flash_hud(s32 arg, u8 starNum) {
     if (gHudDisplay.coins == gCourseCompleteCoins && (gCurrCourseStarFlags & starNum) == 0 && gHudFlash == 0) {
         gCurrCourseStarFlags |= starNum; // SM74 was spamming fanfare without this line
-        if (gFanFareDebounce <= 0) {
-            gFanFareDebounce = 30 * 5;
+        if (gFanfareDebounce <= 0) {
+            gFanfareDebounce = 30 * 5;
             play_star_fanfare();
         }
         gHudFlash = arg;
@@ -3312,13 +3312,11 @@ void render_course_complete_lvl_info_and_hud_str(void) {
 #endif
 #if defined(VERSION_JP) || defined(VERSION_SH)
 #define TXT_SAVECONT_Y 2
-//#define TXT_SAVEQUIT_Y 18
-//#define TXT_SAVE_EXIT_GAME_Y 38
+//#define TXT_SAVEQUIT_Y 18 // 38
 #define TXT_CONTNOSAVE_Y 18
 #else
 #define TXT_SAVECONT_Y 0
-//#define TXT_SAVEQUIT_Y 20
-//#define TXT_SAVE_EXIT_GAME_Y 40
+//#define TXT_SAVEQUIT_Y 20 // 40
 #define TXT_CONTNOSAVE_Y 20
 #endif
 
@@ -3341,13 +3339,6 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
         { TEXT_SAVE_AND_QUIT_FR },
         { TEXT_SAVE_AND_QUIT_DE }
     };
-
-    u8 textSaveExitGame[][30] = { // New function to exit game
-        { TEXT_SAVE_EXIT_GAME },
-        { TEXT_SAVE_EXIT_GAME_FR },
-        { TEXT_SAVE_EXIT_GAME_DE }
-    };
-
     u8 textContinueWithoutSaveArr[][30] = {
         { TEXT_CONTINUE_WITHOUT_SAVING },
         { TEXT_CONTINUE_WITHOUT_SAVING_FR },
@@ -3356,13 +3347,11 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 
 #define textSaveAndContinue textSaveAndContinueArr[gInGameLanguage]
 #define textSaveAndQuit textSaveAndQuitArr[gInGameLanguage]
-#define textSaveExitGame textSaveExitGame[gInGameLanguage]
 #define textContinueWithoutSave textContinueWithoutSaveArr[gInGameLanguage]
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
     INGAME_TEXT_COPY(textSaveAndContinue, TEXT_SAVE_AND_CONTINUE);
     //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
-    //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
     INGAME_TEXT_COPY(textContinueWithoutSave, TEXT_CONTINUE_WITHOUT_SAVING);
 #endif
 
@@ -3373,7 +3362,6 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 
     print_generic_string(TXT_SAVEOPTIONS_X, y + TXT_SAVECONT_Y, textSaveAndContinue);
     //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVEQUIT_Y, textSaveAndQuit);
-    //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVE_EXIT_GAME_Y, textSaveExitGame);
     print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_CONTNOSAVE_Y, textContinueWithoutSave);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
@@ -3438,11 +3426,11 @@ s16 render_course_complete_screen(void) {
 
     gCourseDoneMenuTimer++;
 
-    return 0;
+    return MENU_OPT_NONE;
 }
 
 s16 render_menus_and_dialogs(void) {
-    s16 mode = 0;
+    s16 mode = MENU_OPT_NONE;
 
     create_dl_ortho_matrix();
 

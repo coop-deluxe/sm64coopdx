@@ -53,6 +53,7 @@ constants_files = [
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/game/hardcoded.h",
 ]
 
 # For each file, expose only these constants
@@ -153,6 +154,7 @@ functions_files = [
     "src/game/mario_step.h",
     "src/game/mario.h",
     "src/game/rumble_init.h",
+    "src/pc/commands.h",
     "src/pc/djui/djui_popup.h",
     "src/pc/network/network_utils.h",
     "src/pc/djui/djui_console.h",
@@ -206,6 +208,7 @@ functions_files = [
 functions_whitelist = { "__name__": "functions_whitelist",
     "src/audio/external.h":                 [ " play_", "fade", "current_background", "stop_", "sound_banks", "drop_queued_background_music", "set_sound_moving_speed", "background_music_default_volume", "get_sound_pan", "sound_get_level_intensity", "set_audio_muted" ],
     "src/game/rumble_init.h":               [ "queue_rumble_", "reset_rumble_", "cancel_rumble", "is_rumble_finished_and_queue_empty" ],
+    "src/pc/commands.h":                    [ "command_message_create" ],
     "src/pc/djui/djui_popup.h":             [ "create" ],
     "src/pc/djui/djui_language.h":          [ "djui_language_get" ],
     "src/pc/djui/djui_panel_menu.h":        [ "djui_menu_get_rainbow_string_color" ],
@@ -238,7 +241,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/game/mario_actions_submerged.c":       [ "^[us]32 act_.*" ],
     "src/game/mario_step.h":                    [ " stub_mario_step", "transfer_bully_speed" ],
     "src/game/mario.h":                         [ " init_mario" ],
-    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_message_create", "djui_console_message_dequeue" ],
+    "src/pc/djui/djui_console.h":               [ " djui_console_create", "djui_console_clear", "djui_console_message_create", "djui_console_message_dequeue" ],
     "src/pc/djui/djui_chat_message.h":          [ "create_from" ],
     "src/pc/djui/djui_hud_utils.h":             [ "djui_hud_clear_interp_data" ],
     "src/game/interaction.h":                   [ "process_interaction", "_handle_" ],
