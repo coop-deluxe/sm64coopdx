@@ -1091,9 +1091,26 @@ void smlua_call_behavior_hook(struct Object* object) {
         // - object->curBhvCommand is not updated until the end of this function
         bool init = object->curBhvCommand == object->initBhvCommand;
 
-        // Run callbacks one after the other
-        struct GrowingArray *callbacks = init ? hooked->initCallbacks : hooked->loopCallbacks;
-        growing_array_for_each_(callbacks, struct LuaHookedBehaviorCallback, callback) {
+        // Run init callbacks once, on the object's first update tick
+        if (init) {
+            growing_array_for_each_(hooked->initCallbacks, struct LuaHookedBehaviorCallback, callback) {
+
+                // push the callback onto the stack
+                lua_rawgeti(L, LUA_REGISTRYINDEX, callback->ref);
+
+                // push object
+                smlua_push_object(L, LOT_OBJECT, object, NULL);
+
+                // call the callback
+                if (0 != smlua_call_hook(L, 1, 0, 0, callback->mod, callback->modFile)) {
+                    LOG_LUA("Failed to call behavior init callback for behavior id: %hu", hooked->behaviorId);
+                    return;
+                }
+            }
+        }
+
+        // Run loop callbacks every update tick, including the first
+        growing_array_for_each_(hooked->loopCallbacks, struct LuaHookedBehaviorCallback, callback) {
 
             // push the callback onto the stack
             lua_rawgeti(L, LUA_REGISTRYINDEX, callback->ref);
@@ -1103,15 +1120,12 @@ void smlua_call_behavior_hook(struct Object* object) {
 
             // call the callback
             if (0 != smlua_call_hook(L, 1, 0, 0, callback->mod, callback->modFile)) {
-                LOG_LUA("Failed to call behavior %s callback for behavior id: %hu",
-                    (init ? "init" : "loop"), hooked->behaviorId
-                );
+                LOG_LUA("Failed to call behavior loop callback for behavior id: %hu", hooked->behaviorId);
                 return;
             }
         }
     }
 }
-
 
   /////////////////////////
  // hooked chat command //
