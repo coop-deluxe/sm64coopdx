@@ -83,9 +83,7 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
     resolve_relative_path(basePath, moduleName, absolutePath);
 
     char luaName[SYS_MAX_PATH] = "";
-    char luacName[SYS_MAX_PATH] = "";
     snprintf(luaName, SYS_MAX_PATH, "%s.lua", absolutePath);
-    snprintf(luacName, SYS_MAX_PATH, "%s.luac", absolutePath);
 
     // since mods' relativePaths are relative to the mod's root, we can do a direct comparison
     for (int i = 0; i < gLuaActiveMod->fileCount; i++) {
@@ -97,14 +95,14 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // only consider lua files
-        if (!path_ends_with(file->relativePath, ".lua") && !path_ends_with(file->relativePath, ".luac")) {
+        if (!path_ends_with(file->relativePath, ".lua")) {
             continue;
         }
 
         // check for match, normalizing to system separators
         strcpy(normalizedRelative, file->relativePath);
         normalize_path(normalizedRelative);
-        if (!strcmp(normalizedRelative, luaName) || !strcmp(normalizedRelative, luacName)) {
+        if (!strcmp(normalizedRelative, luaName)) {
             return file;
         }
     }

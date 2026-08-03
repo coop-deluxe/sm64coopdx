@@ -124,7 +124,7 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
             return false;
         }
 
-        if (path_ends_with(file_stat.m_filename, ".lua") || path_ends_with(file_stat.m_filename, ".luac")) {
+        if (path_ends_with(file_stat.m_filename, ".lua")) {
             path_get_folder(file_stat.m_filename, luaPath);
             *isLua = true;
             break;
@@ -263,7 +263,7 @@ bool mod_import_file(char* path) {
         return false;
     }
 
-    if (path_ends_with(path, ".lua") || path_ends_with(path, ".luac")) {
+    if (path_ends_with(path, ".lua")) {
         isLua = true;
         ret = mod_import_lua(path);
     } else if (path_ends_with(path, ".ini")) {
