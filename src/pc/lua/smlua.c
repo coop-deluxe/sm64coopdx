@@ -90,9 +90,6 @@ void smlua_exec_str(const char* str) {
     lua_pop(L, lua_gettop(L));
 }
 
-#define LUA_BOM_11 0x0000000000005678llu
-#define LUA_BOM_19 0x4077280000000000llu
-
 static bool smlua_check_binary_header(struct ModFile *file) {
     FILE *f = f_open_r(file->cachedPath);
     if (f) {
@@ -108,87 +105,7 @@ static bool smlua_check_binary_header(struct ModFile *file) {
 
         // Check signature
         if (strcmp(signature, LUA_SIGNATURE) != 0) {
-            f_close(f);
-            return true; // Not a binary lua
-        }
-
-        // Read version number
-        u8 version;
-        if (f_read(&version, 1, 1, f) != 1) {
-            LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-
-        // Check version number
-        u8 expectedVersion = strtoul(LUA_VERSION_MAJOR LUA_VERSION_MINOR, NULL, 16);
-        if (version != expectedVersion) {
-            LOG_LUA("Failed to load lua script '%s': Lua versions don't match (%X, expected %X).", file->cachedPath, version, expectedVersion);
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-
-        // Read the rest of the header
-        u8 header[28];
-        if (f_read(header, 1, 28, f) != 28) {
-            LOG_LUA("Failed to load lua script '%s': File too short.", file->cachedPath);
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-
-        // The following errors are silent (they're due to non-matching endianness/bitness and shouldn't prevent the rest of the mod from loading)
-
-        // Check endianness
-        u64 bom11 = *((u64 *) (header + 12));
-        u64 bom19 = *((u64 *) (header + 20));
-        if (bom11 != LUA_BOM_11) {
-            LOG_ERROR("Failed to load lua script '%s': BOM at offset 0x11 don't match (%016llX, expected %016llX).", file->cachedPath, bom11, LUA_BOM_11);
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-        if (bom19 != LUA_BOM_19) {
-            LOG_ERROR("Failed to load lua script '%s': BOM at offset 0x19 don't match (%016llX, expected %016llX).", file->cachedPath, bom19, LUA_BOM_19);
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-
-        // Check sizes
-        u8 sizeOfCInteger = header[7];
-        u8 sizeOfCPointer = header[8];
-        u8 sizeOfCFloat = header[9];
-        u8 sizeOfLuaInteger = header[10];
-        u8 sizeOfLuaNumber = header[11];
-        if (sizeOfCInteger != sizeof(int)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfCInteger, (long long unsigned)sizeof(int));
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-        if (sizeOfCPointer != sizeof(void *)) { // 4 for 32-bit architectures, 8 for 64-bit
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Pointer don't match (%d, expected %llu).", file->cachedPath, sizeOfCPointer, (long long unsigned)sizeof(void *));
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-        if (sizeOfCFloat != sizeof(float)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of C Float don't match (%d, expected %llu).", file->cachedPath, sizeOfCFloat, (long long unsigned)sizeof(float));
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-        if (sizeOfLuaInteger != sizeof(LUA_INTEGER)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Integer don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaInteger, (long long unsigned)sizeof(LUA_INTEGER));
-            f_close(f);
-            f_delete(f);
-            return false;
-        }
-        if (sizeOfLuaNumber != sizeof(LUA_NUMBER)) {
-            LOG_ERROR("Failed to load lua script '%s': sizes of Lua Number don't match (%d, expected %llu).", file->cachedPath, sizeOfLuaNumber, (long long unsigned)sizeof(LUA_NUMBER));
+            LOG_LUA("Failed to load lua script '%s': Disallowed binary chunk.", file->cachedPath);
             f_close(f);
             f_delete(f);
             return false;
@@ -363,7 +280,7 @@ void smlua_init(void) {
         for (int j = 0; j < mod->fileCount; j++) {
             struct ModFile* file = &mod->files[j];
             // skip loading non-lua files
-            if (!(path_ends_with(file->relativePath, ".lua") || path_ends_with(file->relativePath, ".luac"))) {
+            if (!path_ends_with(file->relativePath, ".lua")) {
                 continue;
             }
 
