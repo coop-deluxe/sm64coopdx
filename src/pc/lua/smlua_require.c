@@ -100,7 +100,8 @@ static struct ModFile* smlua_find_mod_file(const char* moduleName) {
         }
 
         // check for match, normalizing to system separators
-        strcpy(normalizedRelative, file->relativePath);
+        strncpy(normalizedRelative, file->relativePath, SYS_MAX_PATH - 1);
+        normalizedRelative[SYS_MAX_PATH - 1] = 0;
         normalize_path(normalizedRelative);
         if (!strcmp(normalizedRelative, luaName)) {
             return file;
