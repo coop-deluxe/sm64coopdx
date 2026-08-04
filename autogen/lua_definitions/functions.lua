@@ -5346,6 +5346,12 @@ function level_trigger_warp(m, warpOp)
     -- ...
 end
 
+--- @param playMode integer
+--- Sets the current play mode (`PLAY_MODE_*`)
+function set_play_mode(playMode)
+    -- ...
+end
+
 --- @param arg SpecialWarpDestination
 --- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
@@ -10853,6 +10859,12 @@ end
 --- @return number
 --- Gets the fade volume of `player`
 function sequence_player_get_fade_volume(player)
+    -- ...
+end
+
+--- @param player integer
+--- @param volume number
+function sequence_player_set_fade_volume(player, volume)
     -- ...
 end
 

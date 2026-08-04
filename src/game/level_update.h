@@ -195,6 +195,7 @@ void initiate_painting_warp(s16 paintingIndex);
 /* |description|Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`|descriptionEnd| */
 s16 level_trigger_warp(struct MarioState *m, enum WarpOperation warpOp);
 void level_set_transition(s16 length, void (*updateFunction)(s16 *));
+/* |description|Sets the current play mode (`PLAY_MODE_*`)|descriptionEnd| */
 void set_play_mode(s16 playMode);
 /* |description|Special warps to arg (`WARP_SPECIAL_*`)|descriptionEnd| */
 void warp_special(enum SpecialWarpDestination arg);

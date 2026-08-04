@@ -14891,6 +14891,23 @@ int smlua_func_level_trigger_warp(lua_State* L) {
     return 1;
 }
 
+int smlua_func_set_play_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "set_play_mode", 1, top);
+        return 0;
+    }
+
+    s16 playMode = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "set_play_mode"); return 0; }
+
+    set_play_mode(playMode);
+
+    return 0;
+}
+
 int smlua_func_warp_special(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -29340,6 +29357,25 @@ int smlua_func_sequence_player_get_fade_volume(lua_State* L) {
     return 1;
 }
 
+int smlua_func_sequence_player_set_fade_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_set_fade_volume", 2, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_set_fade_volume"); return 0; }
+    f32 volume = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sequence_player_set_fade_volume"); return 0; }
+
+    sequence_player_set_fade_volume(player, volume);
+
+    return 0;
+}
+
 int smlua_func_sequence_player_get_mute_volume_scale(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37131,6 +37167,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_painting_warp_node", smlua_func_get_painting_warp_node);
     smlua_bind_function(L, "initiate_painting_warp", smlua_func_initiate_painting_warp);
     smlua_bind_function(L, "level_trigger_warp", smlua_func_level_trigger_warp);
+    smlua_bind_function(L, "set_play_mode", smlua_func_set_play_mode);
     smlua_bind_function(L, "warp_special", smlua_func_warp_special);
     smlua_bind_function(L, "initiate_warp", smlua_func_initiate_warp);
     smlua_bind_function(L, "lvl_set_current_level", smlua_func_lvl_set_current_level);
@@ -37932,6 +37969,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "sequence_player_set_transposition", smlua_func_sequence_player_set_transposition);
     smlua_bind_function(L, "sequence_player_get_volume", smlua_func_sequence_player_get_volume);
     smlua_bind_function(L, "sequence_player_get_fade_volume", smlua_func_sequence_player_get_fade_volume);
+    smlua_bind_function(L, "sequence_player_set_fade_volume", smlua_func_sequence_player_set_fade_volume);
     smlua_bind_function(L, "sequence_player_get_mute_volume_scale", smlua_func_sequence_player_get_mute_volume_scale);
 
     // smlua_anim_utils.h

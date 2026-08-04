@@ -3085,6 +3085,10 @@ f32 sequence_player_get_fade_volume(u8 player) {
     return gSequencePlayers[player].fadeVolume;
 }
 
+void sequence_player_set_fade_volume(u8 player, f32 volume) {
+    gSequencePlayers[player].fadeVolume = volume;
+}
+
 f32 sequence_player_get_mute_volume_scale(u8 player) {
     return gSequencePlayers[player].muteVolumeScale;
 }

@@ -8,6 +8,8 @@
 #include "game/mario.h"
 #include "game/mario_step.h"
 #include "game/mario_actions_stationary.h"
+#include "game/object_helpers.h"
+#include "game/object_list_processor.h"
 #include "audio/external.h"
 #include "object_fields.h"
 #include "level_commands.h"
@@ -1060,6 +1062,126 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
+static LuaFunction sInContinueDialogLuaFn = LUA_NOREF;
+
+static u8 inContinueDialogFnWrapper(void) {
+    lua_State* L = gLuaState;
+
+    if (sInContinueDialogLuaFn == LUA_NOREF) {
+        return 0;
+    }
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, sInContinueDialogLuaFn);
+
+    if (smlua_pcall(L, 0, 1, 0) != 0) {
+        LOG_LUA("Failed to call continue in dialog callback: %u", sInContinueDialogLuaFn);
+        lua_pop(L, 1);
+        return 0;
+    }
+
+    bool result = false;
+
+    if (lua_type(L, -1) == LUA_TBOOLEAN) {
+        result = smlua_to_boolean(L, -1);
+    }
+
+    lua_pop(L, 1);
+
+    return result;
+}
+
+static int update_dialog_common(lua_State *L, bool cutscene) {
+    const char *funcName = cutscene ? "cur_obj_update_dialog_with_cutscene" : "cur_obj_update_dialog";
+    int paramCount = lua_gettop(L);
+
+    if (paramCount < 5) {
+        LOG_LUA_LINE("%s: Improper param count: Expected at least 5, Received %d", funcName, paramCount);
+        return 0;
+    }
+
+    struct MarioState *m = (struct MarioState *) smlua_to_cobject(L, 1, LOT_MARIOSTATE);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 1 for function '%s'", funcName);
+        return 0;
+    }
+
+    s32 arg2 = smlua_to_integer(L, 2); // actionArg
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 2 for function '%s'", funcName);
+        return 0;
+    }
+
+    s32 arg3 = smlua_to_integer(L, 3); // dialogFlags
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 3 for function '%s'", funcName);
+        return 0;
+    }
+
+    s32 arg4 = smlua_to_integer(L, 4); // cutsceneTable or dialogID
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 4 for function '%s'", funcName);
+        return 0;
+    }
+
+    s32 arg5 = smlua_to_integer(L, 5); // dialogID or unused
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 5 for function '%s'", funcName);
+        return 0;
+    }
+
+    u8 (*inContinueDialogFunction)(void) = NULL;
+
+    if (paramCount > 5) {
+        // unref the callback if it changed since the last call
+        lua_rawgeti(L, LUA_REGISTRYINDEX, sInContinueDialogLuaFn);
+        int same = lua_rawequal(L, -1, 6);
+        lua_pop(L, 1);
+
+        if (!same) {
+            if (sInContinueDialogLuaFn != LUA_NOREF) {
+                luaL_unref(L, LUA_REGISTRYINDEX, sInContinueDialogLuaFn);
+            }
+
+            sInContinueDialogLuaFn = smlua_to_lua_function(L, 6);
+
+            if (!gSmLuaConvertSuccess) {
+                LOG_LUA("Failed to convert parameter 6 for function '%s'", funcName);
+                sInContinueDialogLuaFn = LUA_NOREF;
+                return 0;
+            }
+        }
+
+        inContinueDialogFunction = inContinueDialogFnWrapper;
+    } else {
+        if (sInContinueDialogLuaFn != LUA_NOREF) {
+            luaL_unref(L, LUA_REGISTRYINDEX, sInContinueDialogLuaFn);
+        }
+
+        sInContinueDialogLuaFn = LUA_NOREF;
+    }
+
+    s32 ret = 0;
+
+    if (cutscene) {
+        // arg4 = cutsceneTable, arg5 = dialogID
+        ret = cur_obj_update_dialog_with_cutscene(m, arg2, arg3, arg4, arg5, inContinueDialogFunction);
+    } else {
+        // arg4 = dialogID, arg5 = unused
+        ret = cur_obj_update_dialog(m, arg2, arg3, arg4, arg5, inContinueDialogFunction);
+    }
+
+    lua_pushinteger(L, ret);
+    return 1;
+}
+
+int smlua_func_cur_obj_update_dialog(lua_State *L) {
+    return update_dialog_common(L, false);
+}
+
+int smlua_func_cur_obj_update_dialog_with_cutscene(lua_State *L) {
+    return update_dialog_common(L, true);
+}
+
   //////////
  // bind //
 //////////
@@ -1092,4 +1214,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
+    smlua_bind_function(L, "cur_obj_update_dialog_with_cutscene", smlua_func_cur_obj_update_dialog_with_cutscene);
+    smlua_bind_function(L, "cur_obj_update_dialog", smlua_func_cur_obj_update_dialog);
 }

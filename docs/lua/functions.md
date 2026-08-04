@@ -29,6 +29,8 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [cur_obj_update_dialog](#cur_obj_update_dialog)
+   - [cur_obj_update_dialog_with_cutscene](#cur_obj_update_dialog_with_cutscene)
 
 <br />
 
@@ -988,6 +990,7 @@
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
+   - [set_play_mode](functions-3.md#set_play_mode)
    - [warp_special](functions-3.md#warp_special)
    - [initiate_warp](functions-3.md#initiate_warp)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)
@@ -1839,6 +1842,7 @@
    - [sequence_player_set_transposition](functions-6.md#sequence_player_set_transposition)
    - [sequence_player_get_volume](functions-6.md#sequence_player_get_volume)
    - [sequence_player_get_fade_volume](functions-6.md#sequence_player_get_fade_volume)
+   - [sequence_player_set_fade_volume](functions-6.md#sequence_player_set_fade_volume)
    - [sequence_player_get_mute_volume_scale](functions-6.md#sequence_player_get_mute_volume_scale)
 
 <br />
@@ -2846,6 +2850,60 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 | gfx | [Gfx](./structs.md#Gfx) |
 | command | `string` |
 | parameters... | `integer` \| `string` \| [Gfx](./structs.md#Gfx) \| [Texture](./structs.md#Texture) \| [Vtx](./structs.md#Vtx) |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_update_dialog](#cur_obj_update_dialog)
+
+### Description
+Processes object dialog state and returns the dialog response result
+
+### Lua Example
+```lua
+cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](./structs.md#MarioState) |
+| actionArg | `integer` |
+| dialogFlags | `integer` |
+| dialogID | [enum DialogId](./constants.md#enum-DialogId) |
+| unused | `integer` |
+| inContinueDialogFunction | `function` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [cur_obj_update_dialog_with_cutscene](#cur_obj_update_dialog_with_cutscene)
+
+### Description
+Processes dialog state for cutscene-triggered object dialog and returns the dialog result
+
+### Lua Example
+```lua
+cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| m | [MarioState](./structs.md#MarioState) |
+| actionArg | `integer` |
+| dialogFlags | `integer` |
+| cutsceneTable | `integer` |
+| dialogID | [enum DialogId](./constants.md#enum-DialogId) |
+| inContinueDialogFunction | `function` |
 
 ### Returns
 - None

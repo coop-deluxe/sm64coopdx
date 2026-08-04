@@ -352,3 +352,39 @@ end
 function gfx_set_command(gfx, command, ...)
     -- ...
 end
+
+--- @param m MarioState
+--- @param actionArg integer
+--- @param dialogFlags integer
+--- @param dialogID DialogId
+--- @param unused integer
+--- @param inContinueDialogFunction fun(): boolean
+--- Processes object dialog state and returns the dialog response result
+--- 
+--- ### Lua Example
+---
+--- ```lua
+--- cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction)
+--- ```
+---
+function cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDialogFunction)
+    -- ...
+end
+
+--- @param m MarioState
+--- @param actionArg integer
+--- @param dialogFlags integer
+--- @param cutsceneTable integer
+--- @param dialogID DialogId
+--- @param inContinueDialogFunction fun(): boolean
+--- Processes dialog state for cutscene-triggered object dialog and returns the dialog result
+--- 
+--- ### Lua Example
+---
+--- ```lua
+--- cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction)
+--- ```
+---
+function cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, dialogID, inContinueDialogFunction)
+    -- ...
+end

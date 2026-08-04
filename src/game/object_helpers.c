@@ -3312,6 +3312,11 @@ s32 cur_obj_update_dialog(struct MarioState* m, s32 actionArg, s32 dialogFlags, 
 
     if (m->playerIndex != 0) { return 0; }
 
+    // mario is already talking to a different NPC
+    if (m->action == ACT_READING_NPC_DIALOG && m->usedObj != NULL && m->usedObj != o) {
+        return 0;
+    }
+
     switch (o->oDialogState) {
 #ifdef VERSION_JP
         case DIALOG_UNK1_ENABLE_TIME_STOP:
@@ -3393,6 +3398,11 @@ s32 cur_obj_update_dialog_with_cutscene(struct MarioState* m, s32 actionArg, s32
 
     if (m->playerIndex != 0) { return 0; }
     if (!m->visibleToObjects) { return FALSE; }
+
+    // mario is already talking to a different NPC
+    if (m->action == ACT_READING_NPC_DIALOG && m->usedObj != NULL && m->usedObj != o) {
+        return 0;
+    }
 
     switch (o->oDialogState) {
 #ifdef VERSION_JP
