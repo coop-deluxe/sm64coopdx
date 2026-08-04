@@ -6325,7 +6325,7 @@ end
 --- @param m MarioState
 --- @param object Object
 --- @return integer
---- Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
+--- Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states), is not already talking to a different NPC, and, for remote players, validates the correct dialog object
 function should_start_or_continue_dialog(m, object)
     -- ...
 end

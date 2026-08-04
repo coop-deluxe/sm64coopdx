@@ -386,11 +386,12 @@ s32 mario_ready_to_speak(struct MarioState* m) {
 }
 
 /* |description|
-Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
+Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states), is not already talking to a different NPC, and, for remote players, validates the correct dialog object
 |descriptionEnd| */
 u8 should_start_or_continue_dialog(struct MarioState* m, struct Object* object) {
     if (!m) { return FALSE; }
     if (!m->visibleToObjects) { return FALSE; }
+    if (m->action == ACT_READING_NPC_DIALOG && m->usedObj != NULL && m->usedObj != object) { return FALSE; }
     if (m->playerIndex == 0) { return TRUE; }
     return (gContinueDialogFunctionObject == object);
 }
