@@ -6094,6 +6094,9 @@ Gets the fade volume of `player`
 
 ## [sequence_player_set_fade_volume](#sequence_player_set_fade_volume)
 
+### Description
+Sets the fade volume of `player`
+
 ### Lua Example
 `sequence_player_set_fade_volume(player, volume)`
 

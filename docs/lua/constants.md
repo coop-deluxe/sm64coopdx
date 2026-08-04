@@ -1303,6 +1303,7 @@
 - SEQ_PLAYER_LEVEL
 - SEQ_PLAYER_ENV
 - SEQ_PLAYER_SFX
+- SEQ_PLAYER_COUNT
 
 ### [enum DialogSound](#DialogSound)
 | Identifier | Value |

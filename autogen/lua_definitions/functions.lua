@@ -10864,6 +10864,7 @@ end
 
 --- @param player integer
 --- @param volume number
+--- Sets the fade volume of `player`
 function sequence_player_set_fade_volume(player, volume)
     -- ...
 end

@@ -20,6 +20,7 @@
 #define SEQ_PLAYER_LEVEL            0  // Level background music
 #define SEQ_PLAYER_ENV              1  // Misc music like the puzzle jingle
 #define SEQ_PLAYER_SFX              2  // Sound effects
+#define SEQ_PLAYER_COUNT            3
 
 enum DialogSound {
     DS_UKIKI,

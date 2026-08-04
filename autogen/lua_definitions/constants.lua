@@ -2906,6 +2906,9 @@ SEQ_PLAYER_ENV = 1
 --- @type integer
 SEQ_PLAYER_SFX = 2
 
+--- @type integer
+SEQ_PLAYER_COUNT = 3
+
 DS_UKIKI =    0 --- @type DialogSound
 DS_TUXIE =    1 --- @type DialogSound
 DS_BOWS1 =    2 --- @type DialogSound

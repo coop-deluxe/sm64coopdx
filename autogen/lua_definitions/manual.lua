@@ -358,7 +358,8 @@ end
 --- @param dialogFlags integer
 --- @param dialogID DialogId
 --- @param unused integer
---- @param inContinueDialogFunction fun(): boolean
+--- @param inContinueDialogFunction? fun(): boolean
+--- @return integer
 --- Processes object dialog state and returns the dialog response result
 --- 
 --- ### Lua Example
@@ -376,7 +377,8 @@ end
 --- @param dialogFlags integer
 --- @param cutsceneTable integer
 --- @param dialogID DialogId
---- @param inContinueDialogFunction fun(): boolean
+--- @param inContinueDialogFunction? fun(): boolean
+--- @return integer
 --- Processes dialog state for cutscene-triggered object dialog and returns the dialog result
 --- 
 --- ### Lua Example

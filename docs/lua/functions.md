@@ -2879,7 +2879,7 @@ cur_obj_update_dialog(m, actionArg, dialogFlags, dialogID, unused, inContinueDia
 | inContinueDialogFunction | `function` |
 
 ### Returns
-- None
+- `integer`
 
 [:arrow_up_small:](#)
 
@@ -2906,7 +2906,7 @@ cur_obj_update_dialog_with_cutscene(m, actionArg, dialogFlags, cutsceneTable, di
 | inContinueDialogFunction | `function` |
 
 ### Returns
-- None
+- `integer`
 
 [:arrow_up_small:](#)
 
