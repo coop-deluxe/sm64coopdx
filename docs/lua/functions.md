@@ -990,7 +990,6 @@
    - [get_painting_warp_node](functions-3.md#get_painting_warp_node)
    - [initiate_painting_warp](functions-3.md#initiate_painting_warp)
    - [level_trigger_warp](functions-3.md#level_trigger_warp)
-   - [set_play_mode](functions-3.md#set_play_mode)
    - [warp_special](functions-3.md#warp_special)
    - [initiate_warp](functions-3.md#initiate_warp)
    - [lvl_set_current_level](functions-3.md#lvl_set_current_level)

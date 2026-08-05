@@ -7295,29 +7295,6 @@ Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 
 <br />
 
-## [set_play_mode](#set_play_mode)
-
-### Description
-Sets the current play mode (`PLAY_MODE_*`)
-
-### Lua Example
-`set_play_mode(playMode)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| playMode | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void set_play_mode(s16 playMode);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [warp_special](#warp_special)
 
 ### Description

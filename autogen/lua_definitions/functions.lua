@@ -5346,12 +5346,6 @@ function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param playMode integer
---- Sets the current play mode (`PLAY_MODE_*`)
-function set_play_mode(playMode)
-    -- ...
-end
-
 --- @param arg SpecialWarpDestination
 --- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
