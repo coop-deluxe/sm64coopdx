@@ -11987,6 +11987,19 @@ function warp_to_castle(aLevel)
     -- ...
 end
 
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
+--- @param aTransType integer
+--- @param aDelay integer
+--- @param aColor Color
+--- @param aWarpId? integer
+--- @return boolean
+--- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
+function warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current area's networked timer
 function get_network_area_timer()

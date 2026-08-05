@@ -1925,6 +1925,35 @@ Warps back to the castle from `aLevel`
 
 <br />
 
+## [warp_delayed](#warp_delayed)
+
+### Description
+Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
+
+### Lua Example
+`local booleanValue = warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+| aTransType | `integer` |
+| aDelay | `integer` |
+| aColor | [Color](structs.md#Color) |
+| aWarpId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_misc_utils.h
 

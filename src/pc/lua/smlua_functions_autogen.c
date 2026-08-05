@@ -32334,6 +32334,38 @@ int smlua_func_warp_to_castle(lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_delayed(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 6 || top > 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_delayed", 6, 7, top);
+        return 0;
+    }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_delayed"); return 0; }
+    s32 aArea = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "warp_delayed"); return 0; }
+    s32 aAct = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "warp_delayed"); return 0; }
+    s16 aTransType = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "warp_delayed"); return 0; }
+    s16 aDelay = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "warp_delayed"); return 0; }
+    Color aColor; smlua_get_color(aColor, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "warp_delayed"); return 0; }
+    s32 aWarpId = (s32) 0;
+    if (top >= 7) {
+        aWarpId = smlua_to_integer(L, 7);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "warp_delayed"); return 0; }
+    }
+
+    lua_pushboolean(L, warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId));
+
+    return 1;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -38117,6 +38149,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
+    smlua_bind_function(L, "warp_delayed", smlua_func_warp_delayed);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);

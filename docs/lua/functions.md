@@ -2032,6 +2032,7 @@
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
    - [warp_exit_level](functions-7.md#warp_exit_level)
    - [warp_to_castle](functions-7.md#warp_to_castle)
+   - [warp_delayed](functions-7.md#warp_delayed)
 
 <br />
 
@@ -2586,7 +2587,7 @@ level_script_parse(LEVEL_BOB, func)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
+| levelNum | [LevelNum](./structs.md#LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -2639,7 +2640,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
+| level | [ConsoleMessageLevel](./structs.md#ConsoleMessageLevel) |
 
 ### Returns
 - None

@@ -60,6 +60,10 @@ bool dynos_warp_to_castle(s32 aLevel) {
     return DynOS_Warp_ToCastle(aLevel);
 }
 
+bool dynos_warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId) {
+    return DynOS_Warp_Delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId);
+}
+
 // -- dynos packs -- //
 
 void dynos_gfx_init(void) {

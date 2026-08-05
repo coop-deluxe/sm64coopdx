@@ -864,6 +864,7 @@ bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct);
 bool DynOS_Warp_RestartLevel();
 bool DynOS_Warp_ExitLevel(s32 aDelay);
 bool DynOS_Warp_ToCastle(s32 aLevel);
+bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId);
 
 //
 // Builtin
