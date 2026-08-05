@@ -32,9 +32,9 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
 /* |description|Checks if `levelNum` is a vanilla level|descriptionEnd| */
 bool level_is_vanilla_level(s16 levelNum);
 /* |description|Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`|descriptionEnd| */
-bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
+bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId, OPTIONAL bool aGotoActSelect);
 /* |description|Warps to `aArea` of `aLevel` in `aAct`|descriptionEnd| */
-bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
+bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct, OPTIONAL bool aGotoActSelect);
 /* |description|Restarts the current level|descriptionEnd| */
 bool warp_restart_level(void);
 /* |description|Warps to the start level (Castle Grounds by default)|descriptionEnd| */
@@ -44,6 +44,6 @@ bool warp_exit_level(s32 aDelay);
 /* |description|Warps back to the castle from `aLevel`|descriptionEnd| */
 bool warp_to_castle(s32 aLevel);
 /* |description|Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition|descriptionEnd| */
-bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId);
+bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId, OPTIONAL bool aGotoActSelect);
 
 #endif

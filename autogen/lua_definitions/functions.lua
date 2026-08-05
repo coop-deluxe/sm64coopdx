@@ -11946,18 +11946,20 @@ end
 --- @param aArea integer
 --- @param aAct integer
 --- @param aWarpId integer
+--- @param aGotoActSelect? boolean
 --- @return boolean
 --- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
-function warp_to_warpnode(aLevel, aArea, aAct, aWarpId)
+function warp_to_warpnode(aLevel, aArea, aAct, aWarpId, aGotoActSelect)
     -- ...
 end
 
 --- @param aLevel integer
 --- @param aArea integer
 --- @param aAct integer
+--- @param aGotoActSelect? boolean
 --- @return boolean
 --- Warps to `aArea` of `aLevel` in `aAct`
-function warp_to_level(aLevel, aArea, aAct)
+function warp_to_level(aLevel, aArea, aAct, aGotoActSelect)
     -- ...
 end
 
@@ -11994,9 +11996,10 @@ end
 --- @param aDelay integer
 --- @param aColor Color
 --- @param aWarpId? integer
+--- @param aGotoActSelect? boolean
 --- @return boolean
 --- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
-function warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId)
+function warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)
     -- ...
 end
 

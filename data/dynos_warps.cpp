@@ -13,6 +13,8 @@ extern "C" {
 #include "game/object_list_processor.h"
 #include "pc/network/packets/packet.h"
 #include "pc/lua/smlua_hooks.h"
+#include "level_commands.h"
+
 extern s32 gWdwWaterLevelSet;
 extern u8 sSpawnTypeFromWarpBhv[];
 extern void set_mario_initial_action(struct MarioState *, u32, u32);
@@ -33,11 +35,42 @@ static bool sDynosWarpIsDelayed = false;
 static s32 sDynosExitLevelNum = -1;
 static s32 sDynosExitAreaNum  = -1;
 
+static bool sDynosWarpGotoActSelect = false;
+static bool sDynosActSelectStarted  = false;
+static bool sDynosActSelectDone     = false;
+
+static void DynOS_Warp_BeforeActSelect(UNUSED s32 arg, UNUSED s32 unused) {
+    gCurrActNum = 0;
+    gCurrActStarNum = 0;
+    gHudDisplay.flags = HUD_DISPLAY_NONE;
+}
+
+static s32 DynOS_Warp_AfterActSelect(UNUSED s32 arg, UNUSED s32 unused) {
+    // Set by the actor selector 
+    // GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_ACT_NUM),
+    sDynosWarpActNum = gCurrActNum;
+    sDynosActSelectDone = true;
+
+    return 0;
+}
+
+extern const LevelScript level_main_menu_entry_2[];
+
+static const LevelScript sDynosActSelectScript[] = {
+    CALL(/*arg*/ 0, /*func*/ DynOS_Warp_BeforeActSelect),
+    GET_OR_SET(/*op*/ OP_GET, /*var*/ VAR_CURR_LEVEL_NUM),
+    EXECUTE(/*seg*/ 0, /*script*/ NULL, /*scriptEnd*/ NULL, /*entry*/ level_main_menu_entry_2),
+    CALL(/*arg*/ 0, /*func*/ DynOS_Warp_AfterActSelect),
+    // Put something after CALL so we don't return out of bounds
+    // this will be overriden by update warp
+    JUMP(sDynosActSelectScript),
+};
+
 //
 // Specific Warp Node
 //
 
-bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
+bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId, bool aGotoActSelect) {
     if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
         return false;
     }
@@ -51,6 +84,8 @@ bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
     sDynosWarpAreaNum  = aArea;
     sDynosWarpActNum   = aAct;
     sDynosWarpNodeNum  = aWarpId;
+    sDynosWarpGotoActSelect = aGotoActSelect;
+
     return true;
 }
 
@@ -58,7 +93,7 @@ bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
 // Level Entry
 //
 
-bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct) {
+bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct, bool aGotoActSelect) {
     if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
         return false;
     }
@@ -69,11 +104,13 @@ bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct) {
     sDynosWarpLevelNum = aLevel;
     sDynosWarpAreaNum  = aArea;
     sDynosWarpActNum   = aAct;
+    sDynosWarpGotoActSelect = aGotoActSelect;
+
     return true;
 }
 
 bool DynOS_Warp_RestartLevel() {
-    return DynOS_Warp_ToLevel(gCurrLevelNum, 1, gCurrActNum);
+    return DynOS_Warp_ToLevel(gCurrLevelNum, 1, gCurrActNum, false);
 }
 
 //
@@ -139,7 +176,7 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     return true;
 }
 
-bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId) {   
+bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {   
     if (aWarpId != 0) {
         if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
             return false;
@@ -154,6 +191,7 @@ bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDe
     sDynosWarpAreaNum = aArea;
     sDynosWarpActNum = aAct;
     sDynosWarpIsDelayed = true;
+    sDynosWarpGotoActSelect = aGotoActSelect;
 
     play_transition(aTransType, aDelay, aColor[0], aColor[1], aColor[2]);
     fadeout_music((3 * aDelay / 2) * 8 - 2);
@@ -173,26 +211,45 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
     // Phase 1 - Clear the previous level and set up the new level
     if (sDynosWarpTargetArea == -1) {
 
-        // Close the pause menu if it was open
-        level_set_transition(0, NULL);
-        gDialogBoxState = 0;
-        gMenuMode = -1;
+        // One time teardown for this warp. Runs once before we either
+        // (a) show the act selector
+        // (b) jump straight to the target level
+        // and once again after the act selector finishes, before (b)
+        if (!sDynosActSelectStarted || sDynosActSelectDone) {
+            level_set_transition(0, NULL);
+            gDialogBoxState = 0;
+            gMenuMode = -1;
 
-        // Cancel out every music/sound/sequence
-        for (u16 seqid = 0; seqid != SEQ_COUNT; ++seqid) {
-            stop_background_music(seqid);
+            // Cancel out every music/sound/sequence
+            for (u16 seqid = 0; seqid != SEQ_COUNT; ++seqid) {
+                stop_background_music(seqid);
+            }
+            play_shell_music();
+            stop_shell_music();
+            stop_cap_music();
+            stop_secondary_music(0);
+            fadeout_music(0);
+            fadeout_level_music(0);
+
+            // Free everything from the current level
+            clear_objects();
+            clear_area_graph_nodes();
+            clear_areas();
+
+            gCurrLevelNum = sDynosWarpLevelNum;
+            gCurrCourseNum = DynOS_Level_GetCourse(gCurrLevelNum);
+            gSavedCourseNum = gCurrCourseNum;
         }
-        play_shell_music();
-        stop_shell_music();
-        stop_cap_music();
-        stop_secondary_music(0);
-        fadeout_music(0);
-        fadeout_level_music(0);
 
-        // Free everything from the current level
-        clear_objects();
-        clear_area_graph_nodes();
-        clear_areas();
+        if (sDynosWarpGotoActSelect && !sDynosActSelectDone) {
+            // Let the act selector run
+            if (sDynosActSelectStarted) {
+                return NULL;
+            }
+            
+            sDynosActSelectStarted = true;
+            return (void *)sDynosActSelectScript;
+        }
 
         // Reset Mario's state
         gMarioState->healCounter = 0;
@@ -204,9 +261,6 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gHudDisplay.coins = 0;
 
         // Set up new level values
-        gCurrLevelNum = sDynosWarpLevelNum;
-        gCurrCourseNum = DynOS_Level_GetCourse(gCurrLevelNum);
-        gSavedCourseNum = gCurrCourseNum;
         gCurrActNum = MAX(0, sDynosWarpActNum * (gCurrCourseNum <= COURSE_STAGES_MAX));
         gDialogCourseActNum = gCurrActNum;
         gCurrAreaIndex = sDynosWarpAreaNum;
@@ -296,6 +350,10 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
             sDynosWarpAreaNum    = -1;
             sDynosWarpActNum     = -1;
             sDynosWarpNodeNum    = -1;
+
+            sDynosWarpGotoActSelect = false;
+            sDynosActSelectDone = false;
+            sDynosActSelectStarted = false;
         }
     }
 

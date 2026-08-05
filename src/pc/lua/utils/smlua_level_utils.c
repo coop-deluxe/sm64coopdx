@@ -171,12 +171,12 @@ bool level_is_vanilla_level(s16 levelNum) {
     return dynos_level_is_vanilla_level(levelNum);
 }
 
-bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
-    return dynos_warp_to_warpnode(aLevel, aArea, aAct, aWarpId);
+bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId, bool aGotoActSelect) {
+    return dynos_warp_to_warpnode(aLevel, aArea, aAct, aWarpId, aGotoActSelect);
 }
 
-bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
-    return dynos_warp_to_level(aLevel, aArea, aAct);
+bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct, bool aGotoActSelect) {
+    return dynos_warp_to_level(aLevel, aArea, aAct, aGotoActSelect);
 }
 
 bool warp_to_start_level(void) {
@@ -195,6 +195,6 @@ bool warp_to_castle(s32 aLevel) {
     return dynos_warp_to_castle(aLevel);
 }
 
-bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId) {
-    return dynos_warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId);
+bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {
+    return dynos_warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect);
 }

@@ -2587,7 +2587,7 @@ level_script_parse(LEVEL_BOB, func)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [LevelNum](./structs.md#LevelNum) \| `integer` |
+| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -2640,7 +2640,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [ConsoleMessageLevel](./structs.md#ConsoleMessageLevel) |
+| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
 
 ### Returns
 - None

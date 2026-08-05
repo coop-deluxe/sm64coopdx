@@ -32232,8 +32232,8 @@ int smlua_func_warp_to_warpnode(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 4) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "warp_to_warpnode", 4, top);
+    if (top < 4 || top > 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_to_warpnode", 4, 5, top);
         return 0;
     }
 
@@ -32245,8 +32245,13 @@ int smlua_func_warp_to_warpnode(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "warp_to_warpnode"); return 0; }
     s32 aWarpId = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "warp_to_warpnode"); return 0; }
+    bool aGotoActSelect = (bool) 0;
+    if (top >= 5) {
+        aGotoActSelect = smlua_to_boolean(L, 5);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "warp_to_warpnode"); return 0; }
+    }
 
-    lua_pushboolean(L, warp_to_warpnode(aLevel, aArea, aAct, aWarpId));
+    lua_pushboolean(L, warp_to_warpnode(aLevel, aArea, aAct, aWarpId, aGotoActSelect));
 
     return 1;
 }
@@ -32255,8 +32260,8 @@ int smlua_func_warp_to_level(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top != 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "warp_to_level", 3, top);
+    if (top < 3 || top > 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_to_level", 3, 4, top);
         return 0;
     }
 
@@ -32266,8 +32271,13 @@ int smlua_func_warp_to_level(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "warp_to_level"); return 0; }
     s32 aAct = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "warp_to_level"); return 0; }
+    bool aGotoActSelect = (bool) 0;
+    if (top >= 4) {
+        aGotoActSelect = smlua_to_boolean(L, 4);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "warp_to_level"); return 0; }
+    }
 
-    lua_pushboolean(L, warp_to_level(aLevel, aArea, aAct));
+    lua_pushboolean(L, warp_to_level(aLevel, aArea, aAct, aGotoActSelect));
 
     return 1;
 }
@@ -32338,8 +32348,8 @@ int smlua_func_warp_delayed(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
-    if (top < 6 || top > 7) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_delayed", 6, 7, top);
+    if (top < 6 || top > 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_delayed", 6, 8, top);
         return 0;
     }
 
@@ -32360,8 +32370,13 @@ int smlua_func_warp_delayed(lua_State* L) {
         aWarpId = smlua_to_integer(L, 7);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "warp_delayed"); return 0; }
     }
+    bool aGotoActSelect = (bool) 0;
+    if (top >= 8) {
+        aGotoActSelect = smlua_to_boolean(L, 8);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "warp_delayed"); return 0; }
+    }
 
-    lua_pushboolean(L, warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId));
+    lua_pushboolean(L, warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect));
 
     return 1;
 }

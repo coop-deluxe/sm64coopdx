@@ -1792,7 +1792,7 @@ Checks if `levelNum` is a vanilla level
 Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 
 ### Lua Example
-`local booleanValue = warp_to_warpnode(aLevel, aArea, aAct, aWarpId)`
+`local booleanValue = warp_to_warpnode(aLevel, aArea, aAct, aWarpId, aGotoActSelect)`
 
 ### Parameters
 | Field | Type |
@@ -1801,12 +1801,13 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 | aArea | `integer` |
 | aAct | `integer` |
 | aWarpId | `integer` |
+| aGotoActSelect | `boolean` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);`
+`bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId, OPTIONAL bool aGotoActSelect);`
 
 [:arrow_up_small:](#)
 
@@ -1818,7 +1819,7 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 Warps to `aArea` of `aLevel` in `aAct`
 
 ### Lua Example
-`local booleanValue = warp_to_level(aLevel, aArea, aAct)`
+`local booleanValue = warp_to_level(aLevel, aArea, aAct, aGotoActSelect)`
 
 ### Parameters
 | Field | Type |
@@ -1826,12 +1827,13 @@ Warps to `aArea` of `aLevel` in `aAct`
 | aLevel | `integer` |
 | aArea | `integer` |
 | aAct | `integer` |
+| aGotoActSelect | `boolean` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);`
+`bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct, OPTIONAL bool aGotoActSelect);`
 
 [:arrow_up_small:](#)
 
@@ -1931,7 +1933,7 @@ Warps back to the castle from `aLevel`
 Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
 
 ### Lua Example
-`local booleanValue = warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId)`
+`local booleanValue = warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)`
 
 ### Parameters
 | Field | Type |
@@ -1943,12 +1945,13 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
 | aDelay | `integer` |
 | aColor | [Color](structs.md#Color) |
 | aWarpId | `integer` |
+| aGotoActSelect | `boolean` |
 
 ### Returns
 - `boolean`
 
 ### C Prototype
-`bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId);`
+`bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId, OPTIONAL bool aGotoActSelect);`
 
 [:arrow_up_small:](#)
 
