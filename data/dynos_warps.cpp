@@ -184,6 +184,7 @@ bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDe
 
         sDynosWarpNodeNum = aWarpId;
     } else if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
+        sDynosWarpNodeNum = -1;
         return false;
     }
 
