@@ -11,8 +11,8 @@
 // If an object is set as active for the first 5 acts only, it is treated as always active.
 // It's possible that there were only planned to be 5 acts per level early in development.
 // Hence, they added a macro so they wouldn't have to change the acts for every object.
-#define ALL_ACTS_MACRO ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5
-#define ALL_ACTS       ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5 | ACT_6
+#define ALL_ACTS_MACRO (ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5)
+#define ALL_ACTS       (ACT_1 | ACT_2 | ACT_3 | ACT_4 | ACT_5 | ACT_6)
 
 #define COIN_FORMATION_FLAG_VERTICAL  (1 << 0)
 #define COIN_FORMATION_FLAG_RING      (1 << 1)

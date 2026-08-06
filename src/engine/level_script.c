@@ -531,11 +531,19 @@ static void level_cmd_init_mario(void) {
 }
 
 static void level_cmd_place_object(void) {
-    u8 val7 = gCurrActNum > 0 ? (1 << (gCurrActNum - 1)) : ALL_ACTS;
     u16 model;
     struct SpawnInfo *spawnInfo;
 
-    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+    u8 actFlags = CMD_GET(u8, 2);
+    u8 actMatch;
+
+    if (gCurrActNum > 0) {
+        actMatch = actFlags & (1 << (gCurrActNum - 1));
+    } else {
+        actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
+    }
+
+    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
         model = CMD_GET(u8, 3);
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
