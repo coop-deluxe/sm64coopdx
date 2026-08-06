@@ -147,7 +147,7 @@ bool exec_dev_chat_command(char* command) {
         }
 
         // Warp
-        if (!dynos_warp_to_level(level, area, act)) {
+        if (!dynos_warp_to_level(level, area, act, false)) {
             char message[256];
             snprintf(message, 256, "Unable to warp to: %s %d %d", paramLevel, area, act);
             command_message_create(message, CONSOLE_MESSAGE_ERROR);
