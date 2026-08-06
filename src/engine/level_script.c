@@ -538,7 +538,7 @@ static void level_cmd_place_object(void) {
     u8 actMatch;
 
     if (gCurrActNum > 0) {
-        actMatch = actFlags & (1 << (gCurrActNum - 1));
+        actMatch = actFlags & (1 << (gCurrActNum - 1)) || actFlags == ALL_ACTS_MACRO;
     } else {
         actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
     }
