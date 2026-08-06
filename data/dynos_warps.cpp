@@ -191,6 +191,7 @@ bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDe
         }
     }
 
+    aDelay = MAX(1, aDelay);
     sDynosWarpLevelNum = aLevel;
     sDynosWarpAreaNum = aArea;
     sDynosWarpActNum = aAct;
