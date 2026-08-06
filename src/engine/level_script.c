@@ -531,7 +531,7 @@ static void level_cmd_init_mario(void) {
 }
 
 static void level_cmd_place_object(void) {
-    u8 val7 = 1 << (gCurrActNum - 1);
+    u8 val7 = gCurrActNum > 0 ? (1 << (gCurrActNum - 1)) : ALL_ACTS;
     u16 model;
     struct SpawnInfo *spawnInfo;
 
