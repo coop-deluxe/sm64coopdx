@@ -195,6 +195,6 @@ bool warp_to_castle(s32 aLevel) {
     return dynos_warp_to_castle(aLevel);
 }
 
-bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {
-    return dynos_warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect);
+bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {
+    return dynos_warp_with_transition(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect);
 }

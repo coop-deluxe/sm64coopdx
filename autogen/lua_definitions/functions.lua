@@ -11999,7 +11999,7 @@ end
 --- @param aGotoActSelect? boolean
 --- @return boolean
 --- Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
-function warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)
+function warp_with_transition(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)
     -- ...
 end
 

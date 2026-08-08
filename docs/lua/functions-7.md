@@ -1927,13 +1927,13 @@ Warps back to the castle from `aLevel`
 
 <br />
 
-## [warp_delayed](#warp_delayed)
+## [warp_with_transition](#warp_with_transition)
 
 ### Description
 Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
 
 ### Lua Example
-`local booleanValue = warp_delayed(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)`
+`local booleanValue = warp_with_transition(aLevel, aArea, aAct, aTransType, aDelay, aColor, aWarpId, aGotoActSelect)`
 
 ### Parameters
 | Field | Type |
@@ -1951,7 +1951,7 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct` with a transition
 - `boolean`
 
 ### C Prototype
-`bool warp_delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId, OPTIONAL bool aGotoActSelect);`
+`bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, OPTIONAL s32 aWarpId, OPTIONAL bool aGotoActSelect);`
 
 [:arrow_up_small:](#)
 

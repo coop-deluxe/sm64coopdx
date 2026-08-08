@@ -2032,7 +2032,7 @@
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
    - [warp_exit_level](functions-7.md#warp_exit_level)
    - [warp_to_castle](functions-7.md#warp_to_castle)
-   - [warp_delayed](functions-7.md#warp_delayed)
+   - [warp_with_transition](functions-7.md#warp_with_transition)
 
 <br />
 

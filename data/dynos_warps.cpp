@@ -176,7 +176,7 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     return true;
 }
 
-bool DynOS_Warp_Delayed(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {   
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aDelay, Color aColor, s32 aWarpId, bool aGotoActSelect) {   
     if (aWarpId != 0) {
         if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
             return false;
