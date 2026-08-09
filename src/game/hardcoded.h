@@ -70,6 +70,7 @@ struct LevelValues {
     u8 showStarNumber;
     u8 extendedPauseDisplay;
     u8 pauseExitAnywhere;
+    u8 disableShadows;
     enum PauseExitMode pauseExitMode;
     u8 disableActs;
     u8 bubbleOnDeathBarrierInCapStages;
