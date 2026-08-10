@@ -194,3 +194,7 @@ bool warp_exit_level(s32 aDelay) {
 bool warp_to_castle(s32 aLevel) {
     return dynos_warp_to_castle(aLevel);
 }
+
+bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId) {
+    return dynos_warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId);
+}

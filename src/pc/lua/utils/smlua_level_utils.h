@@ -43,5 +43,7 @@ bool warp_to_start_level(void);
 bool warp_exit_level(s32 aDelay);
 /* |description|Warps back to the castle from `aLevel`|descriptionEnd| */
 bool warp_to_castle(s32 aLevel);
+/* |description|Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`|descriptionEnd| */
+bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);
 
 #endif

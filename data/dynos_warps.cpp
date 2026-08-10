@@ -30,6 +30,7 @@ static s32 sDynosWarpActNum   = -1;
 static s32 sDynosWarpNodeNum  = -1;
 static s32 sDynosExitLevelNum = -1;
 static s32 sDynosExitAreaNum  = -1;
+static bool sDynosWarpIsDelayed = false;
 
 //
 // Specific Warp Node
@@ -134,6 +135,34 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     set_play_mode(0);
     sDynosExitLevelNum = aLevel;
     sDynosExitAreaNum = 1;
+    return true;
+}
+
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId) {
+    if (aWarpId != 0) {
+        if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
+            return false;
+        }
+    } else {
+        if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
+            return false;
+        }
+    }
+
+    // Close the pause menu if it was open
+    level_set_transition(0, NULL);
+    gDialogBoxState = 0;
+    gMenuMode = -1;
+
+    sDynosWarpNodeNum = aWarpId != 0 ? aWarpId : -1;
+    sDynosWarpIsDelayed = true;
+    sDynosWarpLevelNum = aLevel;
+    sDynosWarpAreaNum = aArea;
+    sDynosWarpActNum = aAct;
+
+    play_transition(aTransType, aTime, aColor[0], aColor[1], aColor[2]);
+    fadeout_music((3 * aTime / 2) * 8 - 2);
+
     return true;
 }
 
@@ -426,6 +455,16 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
     return NULL;
 }
 
+static void *DynOS_Warp_UpdateDelayed(void *aCmd, bool aIsLevelInitDone) {
+    if (DynOS_IsTransitionActive()) {
+        return NULL;
+    }
+
+    sDynosWarpIsDelayed = false;
+
+    return DynOS_Warp_UpdateWarp(aCmd, aIsLevelInitDone);
+}
+
 void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone) {
 
     // Level Exit
@@ -438,6 +477,11 @@ void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone) {
     if (sDynosWarpLevelNum != -1 &&
         sDynosWarpAreaNum != -1 &&
         sDynosWarpActNum != -1) {
+
+        if (sDynosWarpIsDelayed) {
+            return DynOS_Warp_UpdateDelayed(aCmd, aIsLevelInitDone);
+        }
+
         return DynOS_Warp_UpdateWarp(aCmd, aIsLevelInitDone);
     }
 
