@@ -1,27 +1,32 @@
 #include "smlua_fs_utils.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/lua/smlua.h"
+#include "pc/lua/smlua_utils.h"
 #include "pc/fs/fmem.h"
 
 static char *sReadBuffer = NULL;
 static size_t sReadBufferSize = 0;
 
-const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
+ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
+    ByteString byteString = { NULL, 0 };
+
     if (path_ends_with(fileName, PATH_SEPARATOR) || path_ends_with(fileName, PATH_SEPARATOR_ALT)) {
         LOG_LUA_LINE("Cannot read '%s' because it is a directory", fileName);
-        return NULL;
+        return byteString;
     }
 
-    bool activeFileInMod = (gLuaActiveModFile >= &mod->files[0] && gLuaActiveModFile < &mod->files[mod->fileCount]);
+    bool activeFileInMod = gLuaActiveMod == mod && gLuaActiveModFile != NULL;
 
-    
     char baseDir[SYS_MAX_PATH] = { 0 };
     if (activeFileInMod && strlen(gLuaActiveModFile->relativePath) > 0) {
         snprintf(baseDir, SYS_MAX_PATH, "%s", gLuaActiveModFile->relativePath);
 
         char* lastSeparator = strrchr(baseDir, *PATH_SEPARATOR);
         char* lastAltSeparator = strrchr(baseDir, *PATH_SEPARATOR_ALT);
-        if (lastAltSeparator > lastSeparator) lastSeparator = lastAltSeparator;
+
+        if (lastAltSeparator != NULL && (lastSeparator == NULL || lastAltSeparator > lastSeparator)) {
+            lastSeparator = lastAltSeparator;
+        }
 
         if (lastSeparator) {
             *lastSeparator = '\0';
@@ -47,7 +52,7 @@ const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) 
 
     if (!file) {
         LOG_LUA_LINE("File '%s' not found in '%s'", fileName, mod->name);
-        return NULL;
+        return byteString;
     }
 
     FILE* fp = file->fp;
@@ -65,7 +70,7 @@ const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) 
 
     if (!fp) {
         LOG_LUA_LINE("Failed to open file '%s'", file->relativePath);
-        return NULL;
+        return byteString;
     }
 
     size_t fileSize = file->size;
@@ -83,7 +88,7 @@ const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) 
             }
         }
         LOG_LUA_LINE("Ran out of memory while reading '%s'", file->relativePath);
-        return NULL;
+        return byteString;
     }
 
     if (needsClose) {
@@ -110,7 +115,10 @@ const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) 
         }
     }
 
-    return sReadBuffer;
+    byteString.bytes = sReadBuffer;
+    byteString.length = bytesRead;
+
+    return byteString;
 }
 
 bool smlua_fs_utils_mod_file_exists(const char *filename) {

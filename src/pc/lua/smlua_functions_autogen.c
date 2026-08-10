@@ -31180,7 +31180,7 @@ int smlua_func_smlua_fs_utils_mod_file_read(lua_State* L) {
     const char* fileName = smlua_to_string(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_fs_utils_mod_file_read"); return 0; }
 
-    lua_pushstring(L, smlua_fs_utils_mod_file_read(mod, fileName));
+    smlua_push_bytestring(L, smlua_fs_utils_mod_file_read(mod, fileName));
 
     return 1;
 }

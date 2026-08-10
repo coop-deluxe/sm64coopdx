@@ -397,7 +397,7 @@ Reads a file in a given mod, relative to the current lua file if it's the active
 - `string`
 
 ### C Prototype
-`const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName);`
+`ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName);`
 
 [:arrow_up_small:](#)
 
