@@ -4,9 +4,6 @@
 #include "pc/lua/smlua_utils.h"
 #include "pc/fs/fmem.h"
 
-static char *sReadBuffer = NULL;
-static size_t sReadBufferSize = 0;
-
 ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
     ByteString byteString = { NULL, 0 };
 
@@ -55,16 +52,26 @@ ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
         return byteString;
     }
 
+    static char *sReadBuffer = NULL;
+    static size_t sReadBufferSize = 0;
     FILE* fp = file->fp;
-    bool inMemory = false;
+
+    size_t fileSize = file->size;
+    if (sReadBufferSize < fileSize) {
+        char *newBuffer = realloc(sReadBuffer, fileSize);
+        if (newBuffer) {
+            sReadBuffer = newBuffer;
+            sReadBufferSize = fileSize;
+        } else {
+            LOG_LUA_LINE("Could not set read buffer for '%s'", file->relativePath)
+            return byteString;
+        }
+    }
+
     bool needsClose = false;
 
     if (!fp && file->cachedPath) {
-        fp = fopen(file->cachedPath, "rb");
-        if (!fp) {
-            fp = f_open_r(file->cachedPath);
-            inMemory = true;
-        }
+        fp = f_open_r(file->cachedPath);
         needsClose = true;
     }
 
@@ -73,46 +80,26 @@ ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
         return byteString;
     }
 
-    size_t fileSize = file->size;
-    if (sReadBufferSize < fileSize + 1) {
-        sReadBufferSize = fileSize + 1;
-        sReadBuffer = realloc(sReadBuffer, sReadBufferSize);
-    }
-
     if (!sReadBuffer) {
         if (needsClose) {
-            if (!inMemory) {
-                fclose(fp);
-            } else {
-                f_close(fp);
-            }
+            f_close(fp);
         }
         LOG_LUA_LINE("Ran out of memory while reading '%s'", file->relativePath);
         return byteString;
     }
 
-    if (needsClose) {
-        if (!inMemory) {
-            fseek(fp, 0, SEEK_SET);
-        } else {
-            f_seek(fp, 0, SEEK_SET);
-        }
-    }
+    f_rewind(fp);
 
     size_t bytesRead;
-    if (!inMemory) {
-        bytesRead = fread(sReadBuffer, 1, fileSize, fp);
-    } else {
-        bytesRead = f_read(sReadBuffer, 1, fileSize, fp);
-    }
-    sReadBuffer[bytesRead] = '\0';
+    bytesRead = f_read(sReadBuffer, 1, fileSize, fp);
 
     if (needsClose) {
-        if (!inMemory) {
-            fclose(fp);
-        } else {
-            f_close(fp);
-        }
+        f_close(fp);
+    }
+
+    if (bytesRead != fileSize) {
+        LOG_LUA_LINE("Filesize mismatched with the amount of bytes read for file '%s'", file->relativePath);
+        return byteString;
     }
 
     byteString.bytes = sReadBuffer;
