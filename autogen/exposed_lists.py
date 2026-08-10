@@ -181,6 +181,7 @@ functions_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_level_utils.h",
     "src/pc/lua/utils/smlua_anim_utils.h",
+    "src/pc/lua/utils/smlua_fs_utils.h",
     "src/pc/lua/utils/smlua_deprecated.h",
     "src/game/object_helpers.c",
     "src/game/obj_behaviors.c",

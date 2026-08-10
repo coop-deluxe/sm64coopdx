@@ -25,16 +25,6 @@ static std::vector<struct ModFs *> sModFsList = {};
 #define MOD_FS_IS_PUBLIC_DEFAULT        false
 #define MOD_FS_FILE_IS_PUBLIC_DEFAULT   false
 
-static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
-    ".txt", ".json", ".ini", ".sav",    // text
-    ".bin", ".col",                     // actors
-    ".bhv",                             // behaviors
-    ".tex", ".png",                     // textures
-    ".lvl",                             // levels
-    ".m64", ".aiff", ".mp3", ".ogg",    // audio
-    NULL
-};
-
 //
 // Error handling
 //
@@ -236,26 +226,6 @@ static bool mod_fs_check_filepath(struct ModFs *modFs, const char *filepath, enu
             "modPath: %s, filepath: %s - Two or more consecutive slashes '/' are not allowed", modFs->modPath, filepath
         );
         return false;
-    }
-
-    // check extension
-    const char *lastSlash = strrchr(filepath, '/');
-    const char *lastDot = strrchr(filepath, '.');
-    if (lastDot > lastSlash) {
-        bool allowedExtension = false;
-        for (const char **ext = MOD_FS_FILE_ALLOWED_EXTENSIONS; *ext; ext++) {
-            if (strcasecmp(lastDot, *ext) == 0) {
-                allowedExtension = true;
-                break;
-            }
-        }
-        if (!allowedExtension) {
-            mod_fs_raise_error(
-                MOD_FS_ERR_FILEPATH_INVALID_EXTENSION,
-                "modPath: %s, filepath: %s - file extension not allowed: %s", modFs->modPath, filepath, lastDot
-            );
-            return false;
-        }
     }
 
     return true;

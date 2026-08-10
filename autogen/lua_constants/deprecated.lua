@@ -72,5 +72,12 @@ audio_stream_set_volume = audio_set_volume
 audio_stream_get_volume_channel = audio_get_volume_channel
 audio_stream_set_volume_channel = audio_set_volume_channel
 
+-------------------------------------------------------------
+-- File system (Not the same as modfs) utils old functions --
+-------------------------------------------------------------
+
+mod_file_exists = smlua_fs_utils_mod_file_exists
+get_mod_files   = smlua_fs_utils_mod_files_get
+
 -- compatibility band-aid
 function return_self(self) return self end

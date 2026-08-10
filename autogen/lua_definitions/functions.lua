@@ -11520,6 +11520,30 @@ function surface_is_painting_warp(surf)
     -- ...
 end
 
+--- @param mod Mod
+--- @param fileName string
+--- @return string
+--- Reads a file in a given mod, relative to the current lua file if it's the active mod, and returns its content as a bytestring
+function smlua_fs_utils_mod_file_read(mod, fileName)
+    -- ...
+end
+
+--- @param filename string
+--- @return boolean
+--- Checks if a file exists inside of a mod
+function smlua_fs_utils_mod_file_exists(filename)
+    -- ...
+end
+
+--- @param mod Mod
+--- @param subDirectory? string
+--- @param relative? boolean
+--- @return table
+--- Gets all files a mod contains
+function smlua_fs_utils_mod_files_get(mod, subDirectory, relative)
+    -- ...
+end
+
 --- @param flag ShaderFlag
 --- @return boolean
 --- Gets if a custom shader flag (`SHADER_FLAG_*`) is enabled or not
@@ -12527,24 +12551,9 @@ function set_environment_region(index, value)
     -- ...
 end
 
---- @param filename string
---- @return boolean
---- Checks if a file exists inside of a mod
-function mod_file_exists(filename)
-    -- ...
-end
-
 --- @return Mod
 --- Gets the mod currently being processed
 function get_active_mod()
-    -- ...
-end
-
---- @param mod Mod
---- @param subDirectory? string
---- @return table
---- Gets all files a mod contains
-function get_mod_files(mod, subDirectory)
     -- ...
 end
 

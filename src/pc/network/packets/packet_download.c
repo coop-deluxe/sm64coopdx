@@ -29,6 +29,17 @@ static u64 sTotalDownloadBytes = 0;
 static f32 sDownloadStartTime = 0;
 static u64 sDownloadReceivedBytes = 0;
 
+const char *MOD_FILE_CACHEABLE_EXTENSIONS[] = {
+    ".lua", ".luac",                    // script
+    ".txt", ".json", ".ini", ".sav",    // text
+    ".bin", ".col",                     // actors
+    ".bhv",                             // behaviors
+    ".tex", ".png",                     // textures
+    ".lvl",                             // levels
+    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    NULL
+};
+
 static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
 static void mark_groups_loaded_from_hash(void);
@@ -341,8 +352,22 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 
     file->wroteBytes = 0;
     if (should_cache_mod(mod)) {
-        mod_file_create_directories(mod, file);
-        file->fp = fopen(fullPath, "wb");
+        const char *lastSlash = strrchr(file->relativePath, '/');
+        const char *lastDot = strrchr(file->relativePath, '.');
+        bool cacheableExtension = false;
+        if (lastDot > lastSlash) {
+            for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
+                if (strcasecmp(lastDot, *ext) == 0) {
+                    mod_file_create_directories(mod, file);
+                    file->fp = fopen(fullPath, "wb");
+                    cacheableExtension = true;
+                    break;
+                }
+            }
+        }
+        if (!cacheableExtension) {
+            file->fp = f_open_w(fullPath);
+        }
     } else {
         file->fp = f_open_w(fullPath);
     }
@@ -457,10 +482,19 @@ after_group:;
 
                     // Write cachedPath here so the file doesn't end up in mod.cache
                     if (!should_cache_mod(mod)) {
-                        char modFilePath[SYS_MAX_PATH] = { 0 };
-                        concat_path(modFilePath, mod->basePath, modFile->relativePath);
-                        normalize_path(modFilePath);
-                        modFile->cachedPath = strdup(modFilePath);
+                        const char *lastSlash = strrchr(modFile->relativePath, '/');
+                        const char *lastDot = strrchr(modFile->relativePath, '.');
+                        if (lastDot > lastSlash) {
+                            for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
+                                if (strcasecmp(lastDot, *ext) == 0) {
+                                    char modFilePath[SYS_MAX_PATH] = { 0 };
+                                    concat_path(modFilePath, mod->basePath, modFile->relativePath);
+                                    normalize_path(modFilePath);
+                                    modFile->cachedPath = strdup(modFilePath);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
 

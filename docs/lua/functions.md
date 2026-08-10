@@ -1961,6 +1961,13 @@
 
 <br />
 
+- smlua_fs_utils.h
+   - [smlua_fs_utils_mod_file_read](functions-7.md#smlua_fs_utils_mod_file_read)
+   - [smlua_fs_utils_mod_file_exists](functions-7.md#smlua_fs_utils_mod_file_exists)
+   - [smlua_fs_utils_mod_files_get](functions-7.md#smlua_fs_utils_mod_files_get)
+
+<br />
+
 - smlua_gfx_utils.h
    - [get_shader_flag_enabled](functions-7.md#get_shader_flag_enabled)
    - [set_shader_flag_enabled](functions-7.md#set_shader_flag_enabled)
@@ -2119,9 +2126,7 @@
    - [set_volume_env](functions-7.md#set_volume_env)
    - [get_environment_region](functions-7.md#get_environment_region)
    - [set_environment_region](functions-7.md#set_environment_region)
-   - [mod_file_exists](functions-7.md#mod_file_exists)
    - [get_active_mod](functions-7.md#get_active_mod)
-   - [get_mod_files](functions-7.md#get_mod_files)
    - [set_window_title](functions-7.md#set_window_title)
    - [reset_window_title](functions-7.md#reset_window_title)
    - [get_os_name](functions-7.md#get_os_name)

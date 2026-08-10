@@ -374,6 +374,84 @@ Checks if the surface is a painting warp
 
 
 ---
+# functions from smlua_fs_utils.h
+
+<br />
+
+
+## [smlua_fs_utils_mod_file_read](#smlua_fs_utils_mod_file_read)
+
+### Description
+Reads a file in a given mod, relative to the current lua file if it's the active mod, and returns its content as a bytestring
+
+### Lua Example
+`local stringValue = smlua_fs_utils_mod_file_read(mod, fileName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mod | [Mod](structs.md#Mod) |
+| fileName | `string` |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_fs_utils_mod_file_exists](#smlua_fs_utils_mod_file_exists)
+
+### Description
+Checks if a file exists inside of a mod
+
+### Lua Example
+`local booleanValue = smlua_fs_utils_mod_file_exists(filename)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| filename | `string` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_fs_utils_mod_file_exists(const char* filename);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_fs_utils_mod_files_get](#smlua_fs_utils_mod_files_get)
+
+### Description
+Gets all files a mod contains
+
+### Lua Example
+`local tableValue = smlua_fs_utils_mod_files_get(mod, subDirectory, relative)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mod | [Mod](structs.md#Mod) |
+| subDirectory | `string` |
+| relative | `boolean` |
+
+### Returns
+- `table`
+
+### C Prototype
+`LuaTable smlua_fs_utils_mod_files_get(struct Mod* mod, OPTIONAL const char* subDirectory, OPTIONAL bool relative);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_gfx_utils.h
 
 <br />
@@ -3784,29 +3862,6 @@ Sets an environment region (gas/water boxes) height value
 
 <br />
 
-## [mod_file_exists](#mod_file_exists)
-
-### Description
-Checks if a file exists inside of a mod
-
-### Lua Example
-`local booleanValue = mod_file_exists(filename)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| filename | `string` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool mod_file_exists(const char* filename);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## [get_active_mod](#get_active_mod)
 
 ### Description
@@ -3823,30 +3878,6 @@ Gets the mod currently being processed
 
 ### C Prototype
 `struct Mod* get_active_mod(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_mod_files](#get_mod_files)
-
-### Description
-Gets all files a mod contains
-
-### Lua Example
-`local tableValue = get_mod_files(mod, subDirectory)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mod | [Mod](structs.md#Mod) |
-| subDirectory | `string` |
-
-### Returns
-- `table`
-
-### C Prototype
-`LuaTable get_mod_files(struct Mod* mod, OPTIONAL const char* subDirectory);`
 
 [:arrow_up_small:](#)
 
