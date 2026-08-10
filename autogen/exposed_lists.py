@@ -359,6 +359,7 @@ structs_excluded = [
     'LinearTransitionPoint',
     'MarioAnimDmaRelatedThing',
     'ModFile',
+    'ModFilePatterns',
     'ModeTransitionInfo',
     'OffsetSizePair',
     'PaintingMeshVertex',
@@ -380,7 +381,7 @@ structs_fields_whitelist = { "__name__": "structs_fields_whitelist",
 
 # For each struct, do not expose these fields
 structs_fields_blacklist = { "__name__": "structs_fields_blacklist",
-    "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
+    "Mod": [ "files", "filePatterns", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
     "Camera": [ "paletteEditorCapState" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
