@@ -160,6 +160,8 @@ bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, 
     sDynosWarpAreaNum = aArea;
     sDynosWarpActNum = aAct;
 
+    aTime = MAX(1, aTime);
+
     play_transition(aTransType, aTime, aColor[0], aColor[1], aColor[2]);
     fadeout_music((3 * aTime / 2) * 8 - 2);
 
