@@ -369,4 +369,4 @@ struct MacroPreset MacroObjectPresets[] = {
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0}
 };
 
-static_assert(ARRAY_COUNT(MacroObjectPresets) == MACRO_OBJECT_PRESET_COUNT);
+STATIC_ASSERT(ARRAY_COUNT(MacroObjectPresets) == MACRO_OBJECT_PRESET_COUNT, "MACRO_OBJECT_PRESET_COUNT needs updating");
