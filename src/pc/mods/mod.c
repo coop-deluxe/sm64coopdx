@@ -268,10 +268,9 @@ static struct ModFilePatterns* mod_parse_file_patterns(const char* input) {
         while (isspace((u8)*token)) token++;
 
         // trailing spaces
-        char* end = token + strlen(token) - 1;
+        char* end = token + strlen(token);
         while (end > token && isspace((u8)*end)) {
-            *end = '\0';
-            end--;
+            *--end = '\0';
         }
 
         if (*token != '\0') {
@@ -424,7 +423,7 @@ static bool mod_check_file_cacheable(const char *path) {
     if (!path) return false;
     const char *lastSlash = strrchr(path, '/');
     const char *lastDot = strrchr(path, '.');
-    if (lastDot > lastSlash) {
+    if (lastDot != NULL && (lastSlash == NULL || lastDot > lastSlash)) {
         for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
             if (strcasecmp(lastDot, *ext) == 0) {
                 return true;
@@ -449,7 +448,15 @@ static bool mod_matches_pattern(const char *relativePath, const char *pattern) {
     // literal strings
     if (strchr(pattern, '*') == NULL && strchr(pattern, '?') == NULL) {
         if (str_ends_with(pattern, "/") || str_ends_with(pattern, "\\")) {
-            return str_starts_with(relativePath, pattern);
+            char normalizedPattern[SYS_MAX_PATH] = { 0 };
+            snprintf(normalizedPattern, sizeof(normalizedPattern), "%s", pattern);
+
+            size_t length = strlen(normalizedPattern);
+            if (normalizedPattern[length - 1] == '\\') {
+                normalizedPattern[length - 1] = '/';
+            }
+
+            return str_starts_with(relativePath, normalizedPattern);
         }
         return path_ends_with_filepath(relativePath, pattern);
     }

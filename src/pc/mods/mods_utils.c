@@ -209,28 +209,33 @@ bool path_ends_with_filepath(const char *path, const char *filepath) {
 }
 
 bool wildcard_match(const char* pattern, const char* text) {
-    while (*pattern) {
-        if (*pattern == '*') {
-            while (*pattern == '*') pattern++;
-            if (!*pattern) return true;
-            while (*text) {
-                if (wildcard_match(pattern, text)) return true;
-                text++;
-            }
-            return false;
-        }
+    const char* wildcard = NULL;
+    const char* retryText = NULL;
 
+    while (*text) {
         char p = (*pattern == '\\') ? '/' : *pattern;
         char t = (*text == '\\') ? '/' : *text;
 
-        if ((p == '?' && t != '\0') || tolower((unsigned char)p) == tolower((unsigned char)t)) {
+        if (p == '*') {
+            wildcard = pattern++;
+            retryText = text;
+        } else if ((p == '?' && t != '\0') ||
+                   tolower((unsigned char)p) == tolower((unsigned char)t)) {
             pattern++;
             text++;
+        } else if (wildcard != NULL) {
+            pattern = wildcard + 1;
+            text = ++retryText;
         } else {
             return false;
         }
     }
-    return *pattern == '\0' && *text == '\0';
+
+    while (*pattern == '*') {
+        pattern++;
+    }
+
+    return *pattern == '\0';
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
