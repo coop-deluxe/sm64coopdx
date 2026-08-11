@@ -269,7 +269,7 @@ static struct ModFilePatterns* mod_parse_file_patterns(const char* input) {
 
         // trailing spaces
         char* end = token + strlen(token);
-        while (end > token && isspace((u8)*end)) {
+        while (end > token && isspace((u8)*(end - 1))) {
             *--end = '\0';
         }
 
