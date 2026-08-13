@@ -53,6 +53,42 @@ bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
     return true;
 }
 
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId) {
+    if (aWarpId != 0) {
+        if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
+            return false;
+        }
+    } else {
+        if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
+            return false;
+        }
+    }
+
+    // Close the pause menu if it was open
+    level_set_transition(0, NULL);
+    gDialogBoxState = 0;
+    gMenuMode = -1;
+
+    if (aTime <= 0) {
+        if (aWarpId != 0) {
+            return DynOS_Warp_ToWarpNode(aLevel, aArea, aAct, aWarpId);
+        } else {
+            return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
+        }
+    }
+
+    sDynosWarpNodeNum = aWarpId != 0 ? aWarpId : -1;
+    sDynosWarpIsDelayed = true;
+    sDynosWarpLevelNum = aLevel;
+    sDynosWarpAreaNum = aArea;
+    sDynosWarpActNum = aAct;
+
+    play_transition(aTransType, aTime, aColor[0], aColor[1], aColor[2]);
+    fadeout_music((3 * aTime / 2) * 8 - 2);
+
+    return true;
+}
+
 //
 // Level Entry
 //
@@ -135,36 +171,6 @@ bool DynOS_Warp_ToCastle(s32 aLevel) {
     set_play_mode(0);
     sDynosExitLevelNum = aLevel;
     sDynosExitAreaNum = 1;
-    return true;
-}
-
-bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId) {
-    if (aWarpId != 0) {
-        if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
-            return false;
-        }
-    } else {
-        if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
-            return false;
-        }
-    }
-
-    // Close the pause menu if it was open
-    level_set_transition(0, NULL);
-    gDialogBoxState = 0;
-    gMenuMode = -1;
-
-    sDynosWarpNodeNum = aWarpId != 0 ? aWarpId : -1;
-    sDynosWarpIsDelayed = true;
-    sDynosWarpLevelNum = aLevel;
-    sDynosWarpAreaNum = aArea;
-    sDynosWarpActNum = aAct;
-
-    aTime = MAX(1, aTime);
-
-    play_transition(aTransType, aTime, aColor[0], aColor[1], aColor[2]);
-    fadeout_music((3 * aTime / 2) * 8 - 2);
-
     return true;
 }
 
