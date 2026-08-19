@@ -23,7 +23,7 @@ const char *MOD_FILE_CACHEABLE_EXTENSIONS[] = {
     ".txt", ".json", ".ini", ".sav",    // text
     ".bin", ".col",                     // actors
     ".bhv",                             // behaviors
-    ".tex", /* ".png", */               // textures (pngs should be enabled later when tex generation is deprecated/removed since we do support png textures in dynos)
+    ".tex",                             // textures
     ".lvl",                             // levels
     ".m64", ".aiff", ".mp3", ".ogg",    // audio
     NULL
@@ -519,6 +519,9 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
             }
         }
 
+        // Normalizing the path
+        normalize_path(relativePath);
+
         // Check if this is a directory
         struct stat st = { 0 };
         if (recursive && stat(path, &st) == 0 && S_ISDIR(st.st_mode)) {
@@ -539,7 +542,6 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         bool blacklist = (mod->filePatterns != NULL && mod->filePatterns->blacklist);
         bool matched = false;
         if (mod->filePatterns != NULL) {
-            normalize_path(relativePath);
             for (size_t i = 0; i < mod->filePatterns->count; i++) {
                 char pattern[SYS_MAX_PATH] = { 0 };
                 if (snprintf(pattern, SYS_MAX_PATH - 1, "%s", mod->filePatterns->patterns[i]) < 0) {
