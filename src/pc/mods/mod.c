@@ -519,7 +519,6 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
             }
         }
 
-        // Normalizing the path
         normalize_path(relativePath);
 
         // Check if this is a directory
@@ -558,7 +557,7 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
                 }
             }
         }
-        
+
         bool allowedFile = false;
         if (blacklist) {
             // blacklist
