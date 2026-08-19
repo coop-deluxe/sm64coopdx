@@ -70,5 +70,6 @@ void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
 bool mod_refresh_files(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
+bool mod_check_file_cacheable(const char *path);
 
 #endif

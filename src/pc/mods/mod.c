@@ -23,7 +23,7 @@ const char *MOD_FILE_CACHEABLE_EXTENSIONS[] = {
     ".txt", ".json", ".ini", ".sav",    // text
     ".bin", ".col",                     // actors
     ".bhv",                             // behaviors
-    ".tex", ".png",                     // textures
+    ".tex", /* ".png", */               // textures (pngs should be enabled later when tex generation is deprecated/removed since we do support png textures in dynos)
     ".lvl",                             // levels
     ".m64", ".aiff", ".mp3", ".ogg",    // audio
     NULL
@@ -235,9 +235,7 @@ void mod_clear(struct Mod* mod) {
 
     if (mod->filePatterns != NULL) {
         for (size_t i = 0; i < mod->filePatterns->count; i++) {
-            if (mod->filePatterns->patterns[i] != NULL) {
-                free((char*)mod->filePatterns->patterns[i]);
-            }
+            free((char*)mod->filePatterns->patterns[i]);
         }
         free(mod->filePatterns);
         mod->filePatterns = NULL;
@@ -250,25 +248,25 @@ void mod_clear(struct Mod* mod) {
 }
 
 
-static struct ModFilePatterns* mod_parse_file_patterns(const char* input) {
-    if (!input || !*input) return NULL;
+static struct ModFilePatterns *mod_parse_file_patterns(const char *input) {
+    if (!input || !*input) { return NULL; }
 
-    struct ModFilePatterns* fp = calloc(1, sizeof(struct ModFilePatterns));
-    if (!fp) return NULL;
+    struct ModFilePatterns *fp = calloc(1, sizeof(struct ModFilePatterns));
+    if (!fp) { return NULL; }
 
     // prepare buffer for tokenization
     char str[MOD_FILE_PATTERNS_SIZE] = { 0 };
     snprintf(str, sizeof(str), "%s", input);
 
-    char* token = strtok(str, ",");
+    char *token = strtok(str, ",");
     bool blacklistToken = true;
 
     while (token != NULL) {
         // leading spaces
-        while (isspace((u8)*token)) token++;
+        while (isspace((u8)*token)) { token++; }
 
         // trailing spaces
-        char* end = token + strlen(token);
+        char *end = token + strlen(token);
         while (end > token && isspace((u8)*(end - 1))) {
             *--end = '\0';
         }
@@ -280,7 +278,7 @@ static struct ModFilePatterns* mod_parse_file_patterns(const char* input) {
             } else if (fp->count < MOD_FILE_PATTERNS_MAX) {
                 // allocate a copy for pattern
                 size_t len = strlen(token) + 1;
-                char* pattern = calloc(len, sizeof(char));
+                char *pattern = calloc(len, sizeof(char));
                 if (pattern) {
                     memcpy(pattern, token, len);
                     fp->patterns[fp->count++] = pattern;
@@ -419,10 +417,17 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     return file;
 }
 
-static bool mod_check_file_cacheable(const char *path) {
+bool mod_check_file_cacheable(const char *path) {
     if (!path) return false;
-    const char *lastSlash = strrchr(path, '/');
-    const char *lastDot = strrchr(path, '.');
+    char normPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(normPath, sizeof(normPath), "%s", path) < 0) {
+        LOG_ERROR("Failed to copy path for normalization: %s", path);
+    }
+
+    normalize_path(normPath);
+
+    const char *lastSlash = strrchr(normPath, *PATH_SEPARATOR);
+    const char *lastDot = strrchr(normPath, '.');
     if (lastDot != NULL && (lastSlash == NULL || lastDot > lastSlash)) {
         for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
             if (strcasecmp(lastDot, *ext) == 0) {
@@ -433,55 +438,50 @@ static bool mod_check_file_cacheable(const char *path) {
     return false;
 }
 
-static bool mod_matches_pattern(const char *relativePath, const char *pattern) {
-    if (!relativePath || !pattern || !*pattern) return false;
+static bool mod_matches_pattern(char *relativePath, char *pattern) {
+    if (!relativePath || !pattern || !*pattern) { return false; }
 
-    // simple matching
-    if (pattern[0] == '.' && strchr(pattern, '*') == NULL && strchr(pattern, '/') == NULL && strchr(pattern, '\\') == NULL) {
+    // check for pattern after the .
+    if (pattern[0] == '.' && strchr(pattern, '*') == NULL && strchr(pattern, *PATH_SEPARATOR) == NULL) {
         return path_ends_with(relativePath, pattern);
     }
 
-    if (pattern[0] == '*' && pattern[1] == '.' && strchr(pattern + 2, '*') == NULL && strchr(pattern + 2, '/') == NULL && strchr(pattern + 2, '\\') == NULL) {
+    // check for pattern after the *.
+    if (pattern[0] == '*' && pattern[1] == '.' && strchr(pattern + 2, '*') == NULL && strchr(pattern + 2, *PATH_SEPARATOR) == NULL) {
         return path_ends_with(relativePath, pattern + 1);
     }
 
     // literal strings
     if (strchr(pattern, '*') == NULL && strchr(pattern, '?') == NULL) {
-        if (str_ends_with(pattern, "/") || str_ends_with(pattern, "\\")) {
-            char normalizedPattern[SYS_MAX_PATH] = { 0 };
-            snprintf(normalizedPattern, sizeof(normalizedPattern), "%s", pattern);
-
-            size_t length = strlen(normalizedPattern);
-            if (normalizedPattern[length - 1] == '\\') {
-                normalizedPattern[length - 1] = '/';
-            }
-
-            return str_starts_with(relativePath, normalizedPattern);
+        if (str_ends_with(pattern, PATH_SEPARATOR)) {
+            return str_starts_with(relativePath, pattern);
         }
         return path_ends_with_filepath(relativePath, pattern);
     }
 
     // complex wildcards
-    char patBuf[SYS_MAX_PATH] = { 0 };
-    snprintf(patBuf, sizeof(patBuf), "%s", pattern);
+    char pathBuffer[SYS_MAX_PATH] = { 0 };
+    snprintf(pathBuffer, sizeof(pathBuffer), "%s", pattern);
 
     // append "*" to match contents inside folder
-    if (str_ends_with(patBuf, "/") || str_ends_with(patBuf, "\\")) {
-        strncat(patBuf, "*", sizeof(patBuf) - strlen(patBuf) - 1);
+    if (str_ends_with(pathBuffer, PATH_SEPARATOR)) {
+        strncat(pathBuffer, "*", sizeof(pathBuffer) - strlen(pathBuffer) - 1);
     }
 
     // wildcard match for full relativePath
-    if (wildcard_match(patBuf, relativePath)) {
+    if (wildcard_match(pathBuffer, relativePath)) {
         return true;
     }
 
     // match files in the root if **/file
-    if (str_starts_with(patBuf, "**/") || str_starts_with(patBuf, "**\\")) {
-        if (wildcard_match(patBuf + 3, relativePath)) return true;
+    char patternBuffer[SYS_MAX_PATH] = { 0 };
+    snprintf(patternBuffer, sizeof(patternBuffer), "**%s", PATH_SEPARATOR);
+    if (str_starts_with(pathBuffer, patternBuffer)) {
+        if (wildcard_match(pathBuffer + 3, relativePath)) { return true; }
     }
 
     // match file name only
-    return wildcard_match(patBuf, path_basename((char*)relativePath));
+    return wildcard_match(pathBuffer, path_basename(relativePath));
 }
 
 static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, bool recursive) {
@@ -539,9 +539,18 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         bool blacklist = (mod->filePatterns != NULL && mod->filePatterns->blacklist);
         bool matched = false;
         if (mod->filePatterns != NULL) {
+            normalize_path(relativePath);
             for (size_t i = 0; i < mod->filePatterns->count; i++) {
-                const char* pattern = mod->filePatterns->patterns[i];
-                if (pattern && mod_matches_pattern(relativePath, pattern)) {
+                char pattern[SYS_MAX_PATH] = { 0 };
+                if (snprintf(pattern, SYS_MAX_PATH - 1, "%s", mod->filePatterns->patterns[i]) < 0) {
+                    LOG_ERROR("Could not concat %s pattern!", mod->filePatterns->patterns[i]);
+                    closedir(d);
+                    return false;
+                }
+
+                normalize_path(pattern);
+
+                if (mod_matches_pattern(relativePath, pattern)) {
                     matched = true;
                     break;
                 }

@@ -341,23 +341,9 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     }
 
     file->wroteBytes = 0;
-    if (should_cache_mod(mod)) {
-        const char *lastSlash = strrchr(file->relativePath, '/');
-        const char *lastDot = strrchr(file->relativePath, '.');
-        bool cacheableExtension = false;
-        if (lastDot > lastSlash) {
-            for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
-                if (strcasecmp(lastDot, *ext) == 0) {
-                    mod_file_create_directories(mod, file);
-                    file->fp = fopen(fullPath, "wb");
-                    cacheableExtension = true;
-                    break;
-                }
-            }
-        }
-        if (!cacheableExtension) {
-            file->fp = f_open_w(fullPath);
-        }
+    if (should_cache_mod(mod) && mod_check_file_cacheable(file->relativePath)) {
+        mod_file_create_directories(mod, file);
+        file->fp = fopen(fullPath, "wb");
     } else {
         file->fp = f_open_w(fullPath);
     }
@@ -472,18 +458,11 @@ after_group:;
 
                     // Write cachedPath here so the file doesn't end up in mod.cache
                     if (!should_cache_mod(mod)) {
-                        const char *lastSlash = strrchr(modFile->relativePath, '/');
-                        const char *lastDot = strrchr(modFile->relativePath, '.');
-                        if (lastDot > lastSlash) {
-                            for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
-                                if (strcasecmp(lastDot, *ext) == 0) {
-                                    char modFilePath[SYS_MAX_PATH] = { 0 };
-                                    concat_path(modFilePath, mod->basePath, modFile->relativePath);
-                                    normalize_path(modFilePath);
-                                    modFile->cachedPath = strdup(modFilePath);
-                                    break;
-                                }
-                            }
+                        if (mod_check_file_cacheable(modFile->relativePath)) {                            
+                            char modFilePath[SYS_MAX_PATH] = { 0 };
+                            concat_path(modFilePath, mod->basePath, modFile->relativePath);
+                            normalize_path(modFilePath);
+                            modFile->cachedPath = strdup(modFilePath);
                         }
                     }
                 }
