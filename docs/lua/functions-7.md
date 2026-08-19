@@ -379,13 +379,13 @@ Checks if the surface is a painting warp
 <br />
 
 
-## [smlua_fs_utils_mod_file_read](#smlua_fs_utils_mod_file_read)
+## [mod_file_read](#mod_file_read)
 
 ### Description
 Reads a file in a given mod, relative to the current lua file if it's the active mod, and returns its content as a bytestring
 
 ### Lua Example
-`local stringValue = smlua_fs_utils_mod_file_read(mod, fileName)`
+`local stringValue = mod_file_read(mod, fileName)`
 
 ### Parameters
 | Field | Type |
@@ -397,19 +397,19 @@ Reads a file in a given mod, relative to the current lua file if it's the active
 - `string`
 
 ### C Prototype
-`ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName);`
+`ByteString mod_file_read(struct Mod *mod, const char *fileName);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [smlua_fs_utils_mod_file_exists](#smlua_fs_utils_mod_file_exists)
+## [mod_file_exists](#mod_file_exists)
 
 ### Description
 Checks if a file exists inside of a mod
 
 ### Lua Example
-`local booleanValue = smlua_fs_utils_mod_file_exists(filename)`
+`local booleanValue = mod_file_exists(filename)`
 
 ### Parameters
 | Field | Type |
@@ -420,19 +420,19 @@ Checks if a file exists inside of a mod
 - `boolean`
 
 ### C Prototype
-`bool smlua_fs_utils_mod_file_exists(const char* filename);`
+`bool mod_file_exists(const char* filename);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [smlua_fs_utils_mod_files_get](#smlua_fs_utils_mod_files_get)
+## [mod_files_get](#mod_files_get)
 
 ### Description
 Gets all files a mod contains
 
 ### Lua Example
-`local tableValue = smlua_fs_utils_mod_files_get(mod, subDirectory, relative)`
+`local tableValue = mod_files_get(mod, subDirectory, relative)`
 
 ### Parameters
 | Field | Type |
@@ -445,7 +445,7 @@ Gets all files a mod contains
 - `table`
 
 ### C Prototype
-`LuaTable smlua_fs_utils_mod_files_get(struct Mod* mod, OPTIONAL const char* subDirectory, OPTIONAL bool relative);`
+`LuaTable mod_files_get(struct Mod* mod, OPTIONAL const char* subDirectory, OPTIONAL bool relative);`
 
 [:arrow_up_small:](#)
 

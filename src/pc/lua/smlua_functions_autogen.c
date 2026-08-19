@@ -31166,65 +31166,65 @@ int smlua_func_network_player_palette_to_color(lua_State* L) {
  // smlua_fs_utils.h //
 //////////////////////
 
-int smlua_func_smlua_fs_utils_mod_file_read(lua_State* L) {
+int smlua_func_mod_file_read(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_fs_utils_mod_file_read", 2, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_read", 2, top);
         return 0;
     }
 
     struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_fs_utils_mod_file_read"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_read"); return 0; }
     const char* fileName = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_fs_utils_mod_file_read"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_file_read"); return 0; }
 
-    smlua_push_bytestring(L, smlua_fs_utils_mod_file_read(mod, fileName));
+    smlua_push_bytestring(L, mod_file_read(mod, fileName));
 
     return 1;
 }
 
-int smlua_func_smlua_fs_utils_mod_file_exists(lua_State* L) {
+int smlua_func_mod_file_exists(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_fs_utils_mod_file_exists", 1, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_exists", 1, top);
         return 0;
     }
 
     const char* filename = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_fs_utils_mod_file_exists"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_exists"); return 0; }
 
-    lua_pushboolean(L, smlua_fs_utils_mod_file_exists(filename));
+    lua_pushboolean(L, mod_file_exists(filename));
 
     return 1;
 }
 
-int smlua_func_smlua_fs_utils_mod_files_get(lua_State* L) {
+int smlua_func_mod_files_get(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top < 1 || top > 3) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "smlua_fs_utils_mod_files_get", 1, 3, top);
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_files_get", 1, 3, top);
         return 0;
     }
 
     struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_fs_utils_mod_files_get"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_files_get"); return 0; }
     const char* subDirectory = (const char*) NULL;
     if (top >= 2) {
         subDirectory = smlua_to_string(L, 2);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_fs_utils_mod_files_get"); return 0; }
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_files_get"); return 0; }
     }
     bool relative = (bool) 0;
     if (top >= 3) {
         relative = smlua_to_boolean(L, 3);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "smlua_fs_utils_mod_files_get"); return 0; }
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_files_get"); return 0; }
     }
 
-    smlua_push_lua_table(L, smlua_fs_utils_mod_files_get(mod, subDirectory, relative));
+    smlua_push_lua_table(L, mod_files_get(mod, subDirectory, relative));
 
     return 1;
 }
@@ -38078,9 +38078,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
 
     // smlua_fs_utils.h
-    smlua_bind_function(L, "smlua_fs_utils_mod_file_read", smlua_func_smlua_fs_utils_mod_file_read);
-    smlua_bind_function(L, "smlua_fs_utils_mod_file_exists", smlua_func_smlua_fs_utils_mod_file_exists);
-    smlua_bind_function(L, "smlua_fs_utils_mod_files_get", smlua_func_smlua_fs_utils_mod_files_get);
+    smlua_bind_function(L, "mod_file_read", smlua_func_mod_file_read);
+    smlua_bind_function(L, "mod_file_exists", smlua_func_mod_file_exists);
+    smlua_bind_function(L, "mod_files_get", smlua_func_mod_files_get);
 
     // smlua_gfx_utils.h
     smlua_bind_function(L, "get_shader_flag_enabled", smlua_func_get_shader_flag_enabled);

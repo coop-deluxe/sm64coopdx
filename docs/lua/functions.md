@@ -1962,9 +1962,9 @@
 <br />
 
 - smlua_fs_utils.h
-   - [smlua_fs_utils_mod_file_read](functions-7.md#smlua_fs_utils_mod_file_read)
-   - [smlua_fs_utils_mod_file_exists](functions-7.md#smlua_fs_utils_mod_file_exists)
-   - [smlua_fs_utils_mod_files_get](functions-7.md#smlua_fs_utils_mod_files_get)
+   - [mod_file_read](functions-7.md#mod_file_read)
+   - [mod_file_exists](functions-7.md#mod_file_exists)
+   - [mod_files_get](functions-7.md#mod_files_get)
 
 <br />
 

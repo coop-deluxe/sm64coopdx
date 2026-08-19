@@ -4,8 +4,12 @@
 #include "pc/lua/smlua_utils.h"
 #include "pc/fs/fmem.h"
 
-ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
+ByteString mod_file_read(struct Mod *mod, const char *fileName) {
     ByteString byteString = { NULL, 0 };
+    if (!mod) {
+        LOG_LUA_LINE("Attempted to read a nil mod");
+        return byteString;
+    }
 
     if (path_ends_with(fileName, PATH_SEPARATOR) || path_ends_with(fileName, PATH_SEPARATOR_ALT)) {
         LOG_LUA_LINE("Cannot read '%s' because it is a directory", fileName);
@@ -108,7 +112,7 @@ ByteString smlua_fs_utils_mod_file_read(struct Mod *mod, const char *fileName) {
     return byteString;
 }
 
-bool smlua_fs_utils_mod_file_exists(const char *filename) {
+bool mod_file_exists(const char *filename) {
     if (gLuaActiveMod == NULL) { return false; }
 
     char normPath[SYS_MAX_PATH] = { 0 };
@@ -132,7 +136,7 @@ bool smlua_fs_utils_mod_file_exists(const char *filename) {
     return false;
 }
 
-LuaTable smlua_fs_utils_mod_files_get(struct Mod *mod, OPTIONAL const char *subDirectory, OPTIONAL bool relative) {
+LuaTable mod_files_get(struct Mod *mod, OPTIONAL const char *subDirectory, OPTIONAL bool relative) {
     if (!mod) {
         struct lua_State *L = gLuaState;
         if (L) {

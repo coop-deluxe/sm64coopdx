@@ -11524,14 +11524,14 @@ end
 --- @param fileName string
 --- @return string
 --- Reads a file in a given mod, relative to the current lua file if it's the active mod, and returns its content as a bytestring
-function smlua_fs_utils_mod_file_read(mod, fileName)
+function mod_file_read(mod, fileName)
     -- ...
 end
 
 --- @param filename string
 --- @return boolean
 --- Checks if a file exists inside of a mod
-function smlua_fs_utils_mod_file_exists(filename)
+function mod_file_exists(filename)
     -- ...
 end
 
@@ -11540,7 +11540,7 @@ end
 --- @param relative? boolean
 --- @return table
 --- Gets all files a mod contains
-function smlua_fs_utils_mod_files_get(mod, subDirectory, relative)
+function mod_files_get(mod, subDirectory, relative)
     -- ...
 end
 
