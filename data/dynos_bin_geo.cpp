@@ -1,7 +1,9 @@
 #include "dynos.cpp.h"
 extern "C" {
+#include "macros.h"
 #include "sm64.h"
 #include "geo_commands.h"
+#include "engine/geo_layout.h"
 #include "game/camera.h"
 #include "game/envfx_snow.h"
 #include "game/paintings.h"
@@ -159,142 +161,6 @@ static s64 ParseGeoSymbolArg(GfxData* aGfxData, DataNode<GeoLayout>* aNode, u64&
     return 0;
 }
 
-#define geo_symbol_0(symb)                       \
-    if (_Symbol == #symb) {                      \
-        GeoLayout _Gl[] = { symb() };            \
-        memcpy(aHead, _Gl, sizeof(_Gl));         \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0])); \
-        return;                                  \
-    }
-
-#define geo_symbol_1(symb, n)                                        \
-    if (_Symbol == #symb) {                                          \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
-        GeoLayout _Gl[] = { symb(_Arg0) };                           \
-        memcpy(aHead, _Gl, sizeof(_Gl));                             \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                     \
-        return;                                                      \
-    }
-
-#define geo_symbol_2(symb, n)                                        \
-    if (_Symbol == #symb) {                                          \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1) };                    \
-        memcpy(aHead, _Gl, sizeof(_Gl));                             \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                     \
-        return;                                                      \
-    }
-
-#define geo_symbol_3(symb, n)                                        \
-    if (_Symbol == #symb) {                                          \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2) };             \
-        memcpy(aHead, _Gl, sizeof(_Gl));                             \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                     \
-        return;                                                      \
-    }
-
-#define geo_symbol_4(symb, n)                                        \
-    if (_Symbol == #symb) {                                          \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex); \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }       \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3) };      \
-        memcpy(aHead, _Gl, sizeof(_Gl));                             \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                     \
-        return;                                                      \
-    }
-
-#define geo_symbol_5(symb, n)                                          \
-    if (_Symbol == #symb) {                                            \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);   \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }         \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4) }; \
-        memcpy(aHead, _Gl, sizeof(_Gl));                               \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                       \
-        return;                                                        \
-    }
-
-#define geo_symbol_6(symb, n)                                                 \
-    if (_Symbol == #symb) {                                                   \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);          \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5) }; \
-        memcpy(aHead, _Gl, sizeof(_Gl));                                      \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                              \
-        return;                                                               \
-    }
-
-#define geo_symbol_7(symb, n)                                                        \
-    if (_Symbol == #symb) {                                                          \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        s64 _Arg6 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                 \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                       \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6) }; \
-        memcpy(aHead, _Gl, sizeof(_Gl));                                             \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                                     \
-        return;                                                                      \
-    }
-
-#define geo_symbol_8(symb, n)                                                               \
-    if (_Symbol == #symb) {                                                                 \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg6 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        s64 _Arg7 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                        \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                              \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7) }; \
-        memcpy(aHead, _Gl, sizeof(_Gl));                                                    \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                                            \
-        return;                                                                             \
-    }
-
-#define geo_symbol_11(symb, n)                                                                                    \
-    if (_Symbol == #symb) {                                                                                       \
-        s64 _Arg0 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg1 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg2 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg3 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg4 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg5 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg6 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg7 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg8 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg9 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                              \
-        s64 _Arg10 = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);                                             \
-        if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }                                                    \
-        GeoLayout _Gl[] = { symb(_Arg0, _Arg1, _Arg2, _Arg3, _Arg4, _Arg5, _Arg6, _Arg7, _Arg8, _Arg9, _Arg10) }; \
-        memcpy(aHead, _Gl, sizeof(_Gl));                                                                          \
-        aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                                                                  \
-        return;                                                                                                   \
-    }
-
 static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLayout*& aHead, u64& aTokenIndex, Array<u64>& aSwitchNodes) {
     const String& _Symbol = aNode->mTokens[aTokenIndex++];
 
@@ -303,49 +169,27 @@ static void ParseGeoSymbol(GfxData* aGfxData, DataNode<GeoLayout>* aNode, GeoLay
         aGfxData->mGfxContext = aGfxData->mGeoNodeStack[aGfxData->mGeoNodeStack.Count() - 1];
     }
 
-    geo_symbol_1(GEO_BRANCH_AND_LINK, 1);
-    geo_symbol_0(GEO_END);
-    geo_symbol_2(GEO_BRANCH, 1);
-    geo_symbol_0(GEO_RETURN);
-    geo_symbol_5(GEO_NODE_SCREEN_AREA, 0);
-    geo_symbol_1(GEO_NODE_ORTHO, 0);
-    geo_symbol_3(GEO_CAMERA_FRUSTUM, 0);
-    geo_symbol_4(GEO_CAMERA_FRUSTUM_WITH_FUNC, 2);
-    geo_symbol_0(GEO_NODE_START);
-    geo_symbol_1(GEO_ZBUFFER, 0);
-    geo_symbol_2(GEO_RENDER_RANGE, 0);
-    geo_symbol_8(GEO_CAMERA, 4);
-    geo_symbol_7(GEO_TRANSLATE_ROTATE, 0);
-    geo_symbol_8(GEO_TRANSLATE_ROTATE_WITH_DL, 4);
-    geo_symbol_4(GEO_TRANSLATE, 0);
-    geo_symbol_5(GEO_TRANSLATE_WITH_DL, 2);
-    geo_symbol_4(GEO_ROTATE, 0);
-    geo_symbol_5(GEO_ROTATE_WITH_DL, 2);
-    geo_symbol_2(GEO_ROTATE_Y, 0);
-    geo_symbol_3(GEO_ROTATE_Y_WITH_DL, 1);
-    geo_symbol_4(GEO_TRANSLATE_NODE, 0);
-    geo_symbol_5(GEO_TRANSLATE_NODE_WITH_DL, 2);
-    geo_symbol_4(GEO_ROTATION_NODE, 0);
-    geo_symbol_5(GEO_ROTATION_NODE_WITH_DL, 2);
-    geo_symbol_5(GEO_ANIMATED_PART, 2);
-    geo_symbol_4(GEO_BILLBOARD_WITH_PARAMS, 0);
-    geo_symbol_5(GEO_BILLBOARD_WITH_PARAMS_AND_DL, 2);
-    geo_symbol_0(GEO_BILLBOARD);
-    geo_symbol_2(GEO_DISPLAY_LIST, 1);
-    geo_symbol_3(GEO_SHADOW, 0);
-    geo_symbol_0(GEO_RENDER_OBJ);
-    geo_symbol_1(GEO_BACKGROUND_COLOR, 0);
-    geo_symbol_0(GEO_NOP_1A);
-    geo_symbol_5(GEO_HELD_OBJECT, 2);
-    geo_symbol_2(GEO_SCALE, 0);
-    geo_symbol_3(GEO_SCALE_WITH_DL, 2);
-    geo_symbol_4(GEO_SCALE_XYZ, 0);
-    geo_symbol_5(GEO_SCALE_XYZ_WITH_DL, 4);
-    geo_symbol_0(GEO_NOP_1E);
-    geo_symbol_0(GEO_NOP_1F);
-    geo_symbol_1(GEO_CULLING_RADIUS, 0);
-    geo_symbol_8(GEO_BONE, 4);
-    geo_symbol_11(GEO_BONE_WITH_SCALE, 7);
+    // Simple symbols
+    // Uses macro iterators to dynamically handle the correct number of parameters
+#define HANDLE_PARAM(paramNum) s64 _Arg##paramNum = ParseGeoSymbolArg(aGfxData, aNode, aTokenIndex);
+#define GET_ARG(paramNum) _Arg##paramNum
+#define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
+#define define_geo_symbol(symb, params, n, ...)                       \
+if (_Symbol == #symb) {                                               \
+    REPEAT(HANDLE_PARAM, params);                                     \
+    if (n != 0) { aGfxData->mPointerList.Add(aHead + n); }            \
+    GeoLayout _Gl[] = { CALL_SYMB(symb, LIST_ARGS(GET_ARG, params)) };\
+    memcpy(aHead, _Gl, sizeof(_Gl));                                  \
+    aHead += (sizeof(_Gl) / sizeof(_Gl[0]));                          \
+    return;                                                           \
+}
+#define define_geo_symbol_manual(...)
+#include "geo_symbols.h"
+#undef HANDLE_PARAM
+#undef GET_ARG
+#undef CALL_SYMB
+#undef define_geo_symbol
+#undef define_geo_symbol_manual
 
     // Geo function node
     if (_Symbol == "GEO_ASM") {
@@ -518,6 +362,40 @@ void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNo
  // Reading //
 /////////////
 
+static bool DynOS_Geo_Validate(DataNode<GeoLayout> *aNode) {
+    for (u32 i = 0; i < aNode->mSize;) {
+
+        // Check the command header and validate its length.
+        u8 *commandBytes = (u8 *)&aNode->mData[i];
+        if (commandBytes[0] >= GEO_CMD_COUNT) {
+            return false;
+        }
+        u16 commandHeader = ((u16) commandBytes[0] << 8) | commandBytes[1];
+        u32 cmdLengthWords = 0;
+#define GET_ARG(paramNum) 0
+#define CALL_SYMB(symb, ...) symb(__VA_ARGS__)
+#define define_geo_symbol(symb, params, n, words, headerMask, headerValue)  \
+if ((commandHeader & headerMask) == headerValue) {                          \
+    cmdLengthWords = words;                                                 \
+}
+#define define_geo_symbol_manual(...) define_geo_symbol(__VA_ARGS__)
+#include "geo_symbols.h"
+#undef GET_ARG
+#undef CALL_SYMB
+#undef define_geo_symbol
+#undef define_geo_symbol_manual
+
+        assert(cmdLengthWords > 0);
+        if (i + cmdLengthWords > aNode->mSize) {
+            return false;
+        }
+
+        // Next command
+        i += cmdLengthWords;
+    }
+    return true;
+}
+
 void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData) {
     DataNode<GeoLayout> *_Node = New<DataNode<GeoLayout>>();
 
@@ -537,6 +415,8 @@ void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData) {
         }
     }
 
-    // Append
-    aGfxData->mGeoLayouts.Add(_Node);
+    // Append if valid
+    if (DynOS_Geo_Validate(_Node)) {
+        aGfxData->mGeoLayouts.Add(_Node);
+    }
 }

@@ -7,6 +7,9 @@
 #include "macros.h"
 #include "types.h"
 
+// Must be up to date with GeoLayoutJumpTable
+#define GEO_CMD_COUNT 37
+
 #define GEO_CMD_FLAGS_RESET 0
 #define GEO_CMD_FLAGS_SET   1
 #define GEO_CMD_FLAGS_CLEAR 2

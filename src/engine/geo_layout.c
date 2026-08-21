@@ -6,6 +6,7 @@
 #include "game/memory.h"
 #include "graph_node.h"
 #include "geo_commands.h"
+#include "pc/debuglog.h"
 
 typedef void (*GeoLayoutCommandProc)(void);
 
@@ -49,6 +50,8 @@ GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_node_generated_ext,
     geo_layout_cmd_bone,
 };
+
+STATIC_ASSERT(ARRAY_COUNT(GeoLayoutJumpTable) == GEO_CMD_COUNT, "GEO_CMD_COUNT needs updating");
 
 struct GraphNode gObjParentGraphNode;
 struct DynamicPool *gGraphNodePool = NULL;
@@ -909,7 +912,12 @@ struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {
     gGeoLayoutStack[1] = 0;
 
     while (gGeoLayoutCommand != NULL) {
-        GeoLayoutJumpTable[gGeoLayoutCommand[0x00]]();
+        u8 op = gGeoLayoutCommand[0x00];
+        if (op >= GEO_CMD_COUNT) {
+            LOG_ERROR("invalid geo layout op %d", op);
+            break;
+        }
+        GeoLayoutJumpTable[op]();
     }
 
     if (gCurRootGraphNode) {
