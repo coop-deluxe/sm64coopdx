@@ -10866,6 +10866,13 @@ function sequence_player_get_fade_volume(player)
 end
 
 --- @param player integer
+--- @param volume number
+--- Sets the fade volume of `player`
+function sequence_player_set_fade_volume(player, volume)
+    -- ...
+end
+
+--- @param player integer
 --- @return number
 --- Gets the mute volume scale of `player`
 function sequence_player_get_mute_volume_scale(player)

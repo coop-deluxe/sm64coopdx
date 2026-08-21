@@ -31,6 +31,8 @@ void sequence_player_set_transposition(u8 player, u16 transposition);
 f32 sequence_player_get_volume(u8 player);
 /* |description|Gets the fade volume of `player`|descriptionEnd| */
 f32 sequence_player_get_fade_volume(u8 player);
+/* |description|Sets the fade volume of `player`|descriptionEnd| */
+void sequence_player_set_fade_volume(u8 player, f32 volume);
 /* |description|Gets the mute volume scale of `player`|descriptionEnd| */
 f32 sequence_player_get_mute_volume_scale(u8 player);
 

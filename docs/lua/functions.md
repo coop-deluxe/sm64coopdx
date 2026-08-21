@@ -1840,6 +1840,7 @@
    - [sequence_player_set_transposition](functions-6.md#sequence_player_set_transposition)
    - [sequence_player_get_volume](functions-6.md#sequence_player_get_volume)
    - [sequence_player_get_fade_volume](functions-6.md#sequence_player_get_fade_volume)
+   - [sequence_player_set_fade_volume](functions-6.md#sequence_player_set_fade_volume)
    - [sequence_player_get_mute_volume_scale](functions-6.md#sequence_player_get_mute_volume_scale)
 
 <br />

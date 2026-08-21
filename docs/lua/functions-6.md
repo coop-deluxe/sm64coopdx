@@ -6092,6 +6092,30 @@ Gets the fade volume of `player`
 
 <br />
 
+## [sequence_player_set_fade_volume](#sequence_player_set_fade_volume)
+
+### Description
+Sets the fade volume of `player`
+
+### Lua Example
+`sequence_player_set_fade_volume(player, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_fade_volume(u8 player, f32 volume);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
 
 ### Description

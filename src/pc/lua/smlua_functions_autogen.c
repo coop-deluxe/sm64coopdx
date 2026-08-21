@@ -29361,6 +29361,25 @@ int smlua_func_sequence_player_get_fade_volume(lua_State* L) {
     return 1;
 }
 
+int smlua_func_sequence_player_set_fade_volume(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "sequence_player_set_fade_volume", 2, top);
+        return 0;
+    }
+
+    u8 player = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "sequence_player_set_fade_volume"); return 0; }
+    f32 volume = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "sequence_player_set_fade_volume"); return 0; }
+
+    sequence_player_set_fade_volume(player, volume);
+
+    return 0;
+}
+
 int smlua_func_sequence_player_get_mute_volume_scale(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37954,6 +37973,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "sequence_player_set_transposition", smlua_func_sequence_player_set_transposition);
     smlua_bind_function(L, "sequence_player_get_volume", smlua_func_sequence_player_get_volume);
     smlua_bind_function(L, "sequence_player_get_fade_volume", smlua_func_sequence_player_get_fade_volume);
+    smlua_bind_function(L, "sequence_player_set_fade_volume", smlua_func_sequence_player_set_fade_volume);
     smlua_bind_function(L, "sequence_player_get_mute_volume_scale", smlua_func_sequence_player_get_mute_volume_scale);
 
     // smlua_anim_utils.h
