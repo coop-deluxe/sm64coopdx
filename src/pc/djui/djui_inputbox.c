@@ -692,6 +692,8 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     if (isChatInput && djui_interactable_is_input_focus(&inputbox->base)) {
         char charCountText[32];
         int currentLength = djui_unicode_len(inputbox->buffer);
+        int usedBytes = (int)strlen(inputbox->buffer);
+        int capacity = (inputbox->bufferSize > 0) ? (int)inputbox->bufferSize - 1 : 0;
         snprintf(charCountText, sizeof(charCountText), "%d", currentLength);
 
         f32 counterX = origX + origWidth + 7;
@@ -705,14 +707,16 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, counterFontSize, counterFontSize, 1.0f);
 
         u8 colR = 255, colG = 255, colB = 255;
-        if (currentLength >= 499) {
-            colG = 0; colB = 0;
-        } else if (currentLength >= 256) {
-            colG = 128; colB = 64;
-        } else if (currentLength >= 192) {
-            colG = 192; colB = 64;
-        } else if (currentLength >= 128) {
-            colG = 255; colB = 64;
+        if (capacity > 0) {
+            if (usedBytes >= capacity) {
+                colG = 0; colB = 0;
+            } else if (usedBytes >= capacity / 2) {
+                colG = 128; colB = 64;
+            } else if (usedBytes >= (capacity * 3) / 8) {
+                colG = 192; colB = 64;
+            } else if (usedBytes >= capacity / 4) {
+                colG = 255; colB = 64;
+            }
         }
         gDPSetEnvColor(gDisplayListHead++, colR, colG, colB, 255);
 
