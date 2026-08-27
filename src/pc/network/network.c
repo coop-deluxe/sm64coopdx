@@ -38,6 +38,7 @@
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
 #include "audio/load.h"
+#include "pc/mods/mod_socket.h"
 
 #ifdef DISCORD_SDK
 #include "pc/discord/discord.h"
@@ -636,6 +637,9 @@ void network_update(void) {
         network_reset_reconnect_and_rehost();
         network_shutdown(true, false, false, false);
     }
+
+    // Update the state of the mod socket too
+    mod_socket_update();
 }
 
 static inline void color_set(Color color, u8 r, u8 g, u8 b) {
@@ -783,6 +787,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     extern void save_file_set_using_backup_slot(bool usingBackupSlot);
     save_file_set_using_backup_slot(false);
     f_shutdown();
+
+    mod_socket_disconnect();
 
     extern s16 gMenuMode;
     gMenuMode = -1;

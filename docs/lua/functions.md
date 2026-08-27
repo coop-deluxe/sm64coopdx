@@ -1428,6 +1428,16 @@
 
 <br />
 
+- mod_socket.h
+   - [mod_socket_allowed](functions-5.md#mod_socket_allowed)
+   - [mod_socket_init](functions-5.md#mod_socket_init)
+   - [mod_socket_disconnect](functions-5.md#mod_socket_disconnect)
+   - [mod_socket_send](functions-5.md#mod_socket_send)
+   - [mod_socket_is_connected](functions-5.md#mod_socket_is_connected)
+   - [mod_socket_update](functions-5.md#mod_socket_update)
+
+<br />
+
 - mod_storage.h
    - [mod_storage_save](functions-5.md#mod_storage_save)
    - [mod_storage_save_integer](functions-5.md#mod_storage_save_integer)

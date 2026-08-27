@@ -204,6 +204,7 @@ functions_files = [
     "src/pc/network/sync_object.h",
     "src/audio/load.h",
     "src/pc/djui/djui_gfx.h",
+    "src/pc/mods/mod_socket.h",
 ]
 
 # For each file, expose only these functions
@@ -271,6 +272,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
     "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64", "can_update_game", "update_game", "open_url", "open_folder" ],
     "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
+    "src/pc/mods/mod_socket.h":               [ "external_update" ],
 }
 
 # For each file, expose these functions, but hide them from the documentation or VSCode autocomplete

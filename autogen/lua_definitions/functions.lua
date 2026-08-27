@@ -8197,6 +8197,42 @@ function mod_fs_get_last_error()
     -- ...
 end
 
+--- @return boolean
+--- Retured whether external functions are allowed by the user
+function mod_socket_allowed()
+    -- ...
+end
+
+--- @param ip string
+--- @param port integer
+--- @param TCP boolean
+--- @return boolean
+--- Initializes the current socket with the provided IP, Port, and TCP/UDP state
+function mod_socket_init(ip, port, TCP)
+    -- ...
+end
+
+--- Disconnect from the current socket if it exists
+function mod_socket_disconnect()
+    -- ...
+end
+
+--- @param data string
+--- Sends a string to the current external socket
+function mod_socket_send(data)
+    -- ...
+end
+
+--- @return boolean
+--- Returns whether the current socket is open or not
+function mod_socket_is_connected()
+    -- ...
+end
+
+function mod_socket_update()
+    -- ...
+end
+
 --- @param key string
 --- @param value string
 --- @return boolean
