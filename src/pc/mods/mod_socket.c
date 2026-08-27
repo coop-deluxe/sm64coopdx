@@ -21,7 +21,28 @@ bool mod_socket_init(const char* ip, int port, bool TCP)
         return false;
         
     struct sockaddr_in servAddr;
-    servAddr.sin_addr.s_addr = inet_addr(ip);
+    char rawIP[INET6_ADDRSTRLEN];
+
+    struct addrinfo hints;
+    struct addrinfo *result, *i;
+    memset(&hints, 0, sizeof(hints));
+    int error = getaddrinfo(ip, NULL, &hints, &result);
+
+    if (error == 0) {
+        for (i = result; i != NULL; i = i->ai_next) {
+            if (i->ai_family == AF_INET6)
+                continue; // IPv6 not yet supported
+
+            inet_ntop(i->ai_family, &((struct sockaddr_in *) i->ai_addr)->sin_addr, rawIP, INET6_ADDRSTRLEN);
+        }
+    } else {
+        LOG_ERROR("getaddrinfo() failed with error code %i: %s", error, gai_strerror(error));
+    }
+
+    if (strlen(rawIP) <= 0)
+        return false;
+
+    servAddr.sin_addr.s_addr = inet_addr(rawIP);
     servAddr.sin_port = htons(port);
     servAddr.sin_family = AF_INET;
 
