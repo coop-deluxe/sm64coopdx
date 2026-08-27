@@ -101,6 +101,14 @@ extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
 extern bool         configSmoothScrolling;
+extern bool         configChatCharCounter;
+extern unsigned int configChatClosedMode;
+extern unsigned int configChatWidth;
+extern unsigned int configChatHeight;
+extern unsigned int configChatTextScale;
+extern unsigned int configChatBackgroundOpacity;
+extern unsigned int configChatTextOpacity;
+extern unsigned int configChatMessageLifetime;
 // free camera settings
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;

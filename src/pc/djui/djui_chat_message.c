@@ -8,9 +8,7 @@
 #include "djui_hud_utils.h"
 #include "pc/debuglog.h"
 #include "pc/lua/smlua_hooks.h"
-
-#define DJUI_CHAT_LIFE_TIME 10.0f
-#define DJUI_CHAT_TEXT_SCALE 1.0f
+#include "pc/configfile.h"
 
 static void djui_chat_message_apply_style_one(struct DjuiChatMessage* chatMessage) {
     struct DjuiBase* base = &chatMessage->base;
@@ -26,11 +24,15 @@ static void djui_chat_message_apply_style_one(struct DjuiChatMessage* chatMessag
     djui_base_set_color(ctBase, 255, 255, 255, 255);
     djui_base_set_location(ctBase, 0, 0);
     djui_text_set_alignment(chatText, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
-    djui_text_set_font_scale(chatText, chatText->font->defaultFontScale * DJUI_CHAT_TEXT_SCALE);
+
+    f32 scale = ((f32)configChatTextScale) / 100.0f;
+    if (scale < 0.5f) { scale = 0.5f; }
+    if (scale > 2.0f) { scale = 2.0f; }
+    djui_text_set_font_scale(chatText, chatText->font->defaultFontScale * scale);
 
     chatText->base.comp.width = maxTextWidth;
     f32 messageHeight = djui_text_count_lines(chatText, 10)
-        * (chatText->font->lineHeight * chatText->font->defaultFontScale * DJUI_CHAT_TEXT_SCALE) + 8;
+        * (chatText->font->lineHeight * chatText->font->defaultFontScale * scale) + 8;
     djui_base_set_size(base, 1.0f, messageHeight);
 
     f32 messageWidth = djui_text_find_width(chatText, 10);
@@ -60,22 +62,43 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
     struct DjuiChatMessage* chatMessage = (struct DjuiChatMessage*)base;
     struct DjuiBase* ctBase = &chatMessage->message->base;
 
-    f32 seconds = clock_elapsed() - chatMessage->createTime;
     f32 f = 1.0f;
-    if (seconds >= (DJUI_CHAT_LIFE_TIME - 1)) {
-        f = fmax(1.0f - (seconds - (DJUI_CHAT_LIFE_TIME - 1)), 0.0f);
-        f *= f;
-        f *= f;
-    }
+    if (!gDjuiChatBoxFocus) {
+        u32 mode = configChatClosedMode;
+        if (mode > 2) { mode = 1; }
 
-    if (gDjuiChatBoxFocus) {
+        if (mode == 0) {
+            return false;
+        }
+
+        if (mode == 1) {
+            f32 lifeTime = (f32)configChatMessageLifetime;
+            if (lifeTime < 1.0f) { lifeTime = 1.0f; }
+            if (lifeTime > 120.0f) { lifeTime = 120.0f; }
+
+            f32 seconds = clock_elapsed() - chatMessage->createTime;
+            if (seconds >= (lifeTime - 1.0f)) {
+                f = fmax(1.0f - (seconds - (lifeTime - 1.0f)), 0.0f);
+                f *= f;
+                f *= f;
+            }
+            if (f <= 0.1f) {
+                return false;
+            }
+        }
+
+        f32 bgOpacity = (f32)configChatBackgroundOpacity;
+        if (bgOpacity > 100.0f) { bgOpacity = 100.0f; }
+        f32 textOpacity = (f32)configChatTextOpacity;
+        if (textOpacity > 100.0f) { textOpacity = 100.0f; }
+
+        u8 bgAlpha = (u8)(bgOpacity * f * 2.55f);
+        u8 textAlpha = (u8)(255.0f * f * (textOpacity / 100.0f));
+        djui_base_set_color(base, 0, 0, 0, bgAlpha);
+        djui_base_set_color(ctBase, 255, 255, 255, textAlpha);
+    } else {
         djui_base_set_color(base, 0, 0, 0, 0);
         djui_base_set_color(ctBase, 255, 255, 255, 255);
-    } else if (f <= 0.1f) {
-        return false;
-    } else {
-        djui_base_set_color(base, 0, 0, 0, 180 * f);
-        djui_base_set_color(ctBase, 255, 255, 255, 255 * f);
     }
 
     djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);

@@ -162,6 +162,14 @@ bool         configExtendedReports                = false;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = false;
 bool         configSmoothScrolling                = false;
+bool         configChatCharCounter                = true;
+unsigned int configChatClosedMode                 = 1;
+unsigned int configChatWidth                      = 800;
+unsigned int configChatHeight                     = 400;
+unsigned int configChatTextScale                  = 100;
+unsigned int configChatBackgroundOpacity          = 70;
+unsigned int configChatTextOpacity                = 100;
+unsigned int configChatMessageLifetime            = 10;
 // free camera settings
 bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
@@ -312,6 +320,14 @@ static const struct ConfigOption options[] = {
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
     {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},
+    {.name = "chat_char_counter",              .type = CONFIG_TYPE_BOOL, .boolValue = &configChatCharCounter},
+    {.name = "chat_closed_mode",               .type = CONFIG_TYPE_UINT, .uintValue = &configChatClosedMode},
+    {.name = "chat_width",                     .type = CONFIG_TYPE_UINT, .uintValue = &configChatWidth},
+    {.name = "chat_height",                    .type = CONFIG_TYPE_UINT, .uintValue = &configChatHeight},
+    {.name = "chat_text_scale",                .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextScale},
+    {.name = "chat_background_opacity",        .type = CONFIG_TYPE_UINT, .uintValue = &configChatBackgroundOpacity},
+    {.name = "chat_text_opacity",              .type = CONFIG_TYPE_UINT, .uintValue = &configChatTextOpacity},
+    {.name = "chat_message_lifetime",          .type = CONFIG_TYPE_UINT, .uintValue = &configChatMessageLifetime},
     {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
     {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
     {.name = "stick_invert_left_y",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftY},

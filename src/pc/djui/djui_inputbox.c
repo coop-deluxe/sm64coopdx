@@ -689,7 +689,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
-    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base)) {
+    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base) && configChatCharCounter) {
         char charCountText[32];
         int currentLength = djui_unicode_len(inputbox->buffer);
         int usedBytes = (int)strlen(inputbox->buffer);

@@ -5,6 +5,7 @@
 #include "djui_panel_options.h"
 #include "djui_panel_language.h"
 #include "djui_panel_info.h"
+#include "djui_panel_chat.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
 #include "game/hardcoded.h"
@@ -53,6 +54,7 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
 #endif
 
         djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);
+        djui_button_create(body, DLANG(OPTIONS, CHAT), DJUI_BUTTON_STYLE_NORMAL, djui_panel_chat_create);
         djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
         djui_button_create(body, DLANG(MISC, INFORMATION), DJUI_BUTTON_STYLE_NORMAL, djui_panel_info_create);
 #ifdef DEVELOPMENT
