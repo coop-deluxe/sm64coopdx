@@ -77,8 +77,8 @@ static bool djui_chat_message_render(struct DjuiBase* base) {
             if (lifeTime > 120.0f) { lifeTime = 120.0f; }
 
             f32 seconds = clock_elapsed() - chatMessage->createTime;
-            if (seconds >= (lifeTime - 1.0f)) {
-                f = fmax(1.0f - (seconds - (lifeTime - 1.0f)), 0.0f);
+            if (seconds >= lifeTime) {
+                f = fmax(1.0f - (seconds - lifeTime), 0.0f);
                 f *= f;
                 f *= f;
             }
