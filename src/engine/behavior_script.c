@@ -37,6 +37,62 @@
 
 #define BHV_CMD_GET_ADDR_OF_CMD(index) (uintptr_t)(&gCurBhvCommand[index])
 
+inline static s32 cur_obj_get_int(u8 offset) {
+    return (offset < OBJECT_NUM_FIELDS ? gCurrentObject->OBJECT_FIELD_S32(offset) : 0);
+}
+
+inline static f32 cur_obj_get_float(u8 offset) {
+    return (offset < OBJECT_NUM_FIELDS ? gCurrentObject->OBJECT_FIELD_F32(offset) : 0);
+}
+
+inline static void cur_obj_add_float(u8 offset, f32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_F32(offset) += value;
+    }
+}
+
+inline static void cur_obj_set_float(u8 offset, f32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_F32(offset) = value;
+    }
+}
+
+inline static void cur_obj_add_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) += value;
+    }
+}
+
+inline static void cur_obj_set_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) = value;
+    }
+}
+
+inline static void cur_obj_or_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) |= value;
+    }
+}
+
+inline static void cur_obj_and_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) &= value;
+    }
+}
+
+inline static void cur_obj_set_vptr(u8 offset, void *value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_VPTR(offset) = value;
+    }
+}
+
+inline static void obj_and_int(struct Object *object, u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        object->OBJECT_FIELD_S32(offset) &= value;
+    }
+}
+
 static u16 gRandomSeed16;
 
 // Unused function that directly jumps to a behavior command and resets the object's stack index.

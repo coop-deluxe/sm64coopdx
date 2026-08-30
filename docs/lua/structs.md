@@ -1512,6 +1512,7 @@
 | showStarNumber | `integer` |  |
 | extendedPauseDisplay | `integer` |  |
 | pauseExitAnywhere | `integer` |  |
+| disableShadows | `integer` |  |
 | pauseExitMode | [enum PauseExitMode](constants.md#enum-PauseExitMode) |  |
 | disableActs | `integer` |  |
 | bubbleOnDeathBarrierInCapStages | `integer` |  |

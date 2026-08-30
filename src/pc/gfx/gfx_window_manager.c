@@ -105,6 +105,8 @@ void gfx_wm_init(const char *window_title) {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
 
+    SDL_StopTextInput();
+
 #if defined(_WIN32)
     currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
 #else

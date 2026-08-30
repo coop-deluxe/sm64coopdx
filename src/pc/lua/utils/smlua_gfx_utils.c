@@ -180,6 +180,10 @@ void set_skybox_color(u8 index, u8 value) {
 static const Gfx SENTINEL_GFX[1] = {{{ _SHIFTL(G_ENDDL, 24, 8) | _SHIFTL(UINT32_MAX, 0, 24), UINT32_MAX }}};
 static const u8  SENTINEL_VTX[sizeof(Vtx)] = {[0 ... sizeof(Vtx) - 1] = UINT8_MAX};
 
+#define GFX_MAX_SCAN_COMMANDS (1u << 16)
+#define GFX_MAX_PARSE_COMMANDS (1u << 20)
+#define GFX_MAX_PARSE_RECURSION_DEPTH 16
+
 Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
     if (!gfx) {
         gfx = calloc(length + 1, sizeof(Gfx)); // +1 to insert SENTINEL_GFX at the end of the buffer
@@ -204,7 +208,7 @@ Vtx *vtx_allocate_internal(Vtx *vtx, u32 count) {
 // until gsSPEndDisplayList or gsSPBranchList is found
 u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
     if (!gfx) { return 0; }
-    for (u32 i = 0;; ++i) {
+    for (u32 i = 0; i < GFX_MAX_SCAN_COMMANDS; ++i) {
         u32 op = GFX_OP(gfx + i);
         switch (op) {
             case G_DL:
@@ -214,41 +218,57 @@ u32 gfx_get_length_no_sentinel(const Gfx *gfx) {
                 return i + 1;
         }
     }
+    return GFX_MAX_SCAN_COMMANDS;
+}
+
+static void gfx_parse_recursive(Gfx *cmd, LuaFunction func, u32 recursionDepth, u32 *commandCount) {
+    if (!cmd) { return; }
+
+    lua_State* L = gLuaState;
+    for (; *commandCount < GFX_MAX_PARSE_COMMANDS; cmd++) {
+        (*commandCount)++;
+        u32 op = GFX_OP(cmd);
+        switch (op) {
+            case G_DL: {
+                Gfx *dl = (Gfx *) cmd->words.w1;
+                if (dl == NULL) { break; }
+                if (C0(cmd, 16, 1) == G_DL_PUSH) {
+                    if (recursionDepth >= GFX_MAX_PARSE_RECURSION_DEPTH) { return; }
+                    gfx_parse_recursive(dl, func, recursionDepth + 1, commandCount);
+                } else {
+                    cmd = dl;
+                    --cmd;
+                }
+                break;
+            }
+
+            case (uint8_t) G_ENDDL:
+                return; // Reached end of display list
+
+            default: {
+                lua_rawgeti(L, LUA_REGISTRYINDEX, func);
+                smlua_push_object(L, LOT_GFX, cmd, NULL);
+                lua_pushinteger(L, op);
+                bool shouldStop = false;
+                if (smlua_pcall(L, 2, 1, 0) != 0) {
+                    LOG_LUA("Failed to call the gfx_parse callback: %u", func);
+                } else if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
+                    shouldStop = true;
+                }
+                lua_pop(L, 1);
+                if (shouldStop) { return; }
+                break;
+            }
+        }
+    }
 }
 
 void gfx_parse(Gfx* cmd, LuaFunction func) {
     if (!cmd) { return; }
     if (func == 0) { return; }
 
-    lua_State* L = gLuaState;
-    for (;; cmd++) {
-        u32 op = GFX_OP(cmd);
-        switch (op) {
-            case G_DL:
-                if (C0(cmd, 16, 1) == G_DL_PUSH) {
-                    gfx_parse((Gfx *) cmd->words.w1, func);
-                } else {
-                    cmd = (Gfx *) cmd->words.w1;
-                    --cmd;
-                }
-                break;
-
-            case (uint8_t) G_ENDDL:
-                return; // Reached end of display list
-
-            default:
-                lua_rawgeti(L, LUA_REGISTRYINDEX, func);
-                smlua_push_object(L, LOT_GFX, cmd, NULL);
-                lua_pushinteger(L, op);
-                if (smlua_pcall(L, 2, 1, 0) != 0) {
-                    LOG_LUA("Failed to call the gfx_parse callback: %u", func);
-                }
-                if (lua_type(L, -1) == LUA_TBOOLEAN && smlua_to_boolean(L, -1)) {
-                    return;
-                }
-                break;
-        }
-    }
+    u32 commandCount = 0;
+    gfx_parse_recursive(cmd, func, 0, &commandCount);
 }
 
 u32 gfx_get_op(Gfx *cmd) {
@@ -308,7 +328,9 @@ u32 gfx_get_length(Gfx *gfx) {
     if (!gfx) { return 0; }
 
     u32 length = 0;
-    for (; memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0; ++length, gfx++);
+    for (; memcmp(gfx, SENTINEL_GFX, sizeof(Gfx)) != 0; ++length, gfx++) {
+        if (length >= GFX_MAX_SCAN_COMMANDS) { break; }
+    }
     return length;
 }
 
@@ -421,7 +443,9 @@ u32 vtx_get_count(Vtx *vtx) {
     if (!vtx) { return 0; }
 
     u32 count = 0;
-    for (; memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0; ++count, vtx++);
+    for (; memcmp(vtx, SENTINEL_VTX, sizeof(Vtx)) != 0; ++count, vtx++) {
+        if (count >= GFX_MAX_SCAN_COMMANDS) { break; }
+    }
     return count;
 }
 

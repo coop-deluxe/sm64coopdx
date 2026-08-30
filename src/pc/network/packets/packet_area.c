@@ -176,6 +176,10 @@ void network_receive_area(struct Packet* p) {
     // read removed sync ids
     area_remove_sync_ids_clear();
     packet_read(p, &sRemoveSyncIdsIndex, sizeof(u32));
+    if (sRemoveSyncIdsIndex >= SYNC_ID_BLOCK_SIZE) {
+        LOG_ERROR("rx area: invalid number of sync ids to remove: %u", sRemoveSyncIdsIndex);
+        sRemoveSyncIdsIndex = SYNC_ID_BLOCK_SIZE - 1;
+    }
     for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         packet_read(p, &sRemoveSyncIds[i], sizeof(u32));
         struct SyncObject* so = sync_object_get(sRemoveSyncIds[i]);

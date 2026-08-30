@@ -1272,6 +1272,31 @@ Linearly interpolates between `a` and `b` with `delta`
 
 <br />
 
+## [delta_interpolate_angle](#delta_interpolate_angle)
+
+### Description
+Interpolates angle between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_angle(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 delta_interpolate_angle(s16 a, s16 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [delta_interpolate_vec3f](#delta_interpolate_vec3f)
 
 ### Description

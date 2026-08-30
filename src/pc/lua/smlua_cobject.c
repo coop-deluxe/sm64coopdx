@@ -779,6 +779,17 @@ static int smlua__set_field(lua_State* L) {
 }
 
 int smlua__iter(lua_State *L) {
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for iter: Expected 2, Received %u", top);
+        return 0;
+    }
+
+    if (!lua_istable(L, 1)) {
+        LOG_LUA_LINE("Improper param type for iter: Expected table, Received %s", luaL_typename(L, 1));
+        return 0;
+    }
+
     lua_rawgeti(L, 1, 1);
     int i = lua_tointeger(L, -1);
     lua_pop(L, 1);
@@ -788,7 +799,7 @@ int smlua__iter(lua_State *L) {
     lua_pop(L, 1);
 
     // Only support autogen objects
-    if (cobj->lot <= LOT_AUTOGEN_MIN || cobj->lot >= LOT_AUTOGEN_MAX) {
+    if (!cobj || cobj->freed || cobj->lot <= LOT_AUTOGEN_MIN || cobj->lot >= LOT_AUTOGEN_MAX) {
         return 0;
     }
 

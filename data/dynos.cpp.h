@@ -232,12 +232,12 @@ public:
 
     inline Array(const Array &aOther) : mBuffer(NULL), mCount(0), mCapacity(0) {
         Resize(aOther.mCount);
-        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
+        memcpy((void *)mBuffer, aOther.mBuffer, mCount * sizeof(T));
     }
 
     inline void operator=(const Array &aOther) {
         Resize(aOther.mCount);
-        memcpy(mBuffer, aOther.mBuffer, mCount * sizeof(T));
+        memcpy((void *)mBuffer, aOther.mBuffer, mCount * sizeof(T));
     }
 
     inline ~Array() {
@@ -250,7 +250,7 @@ public:
             mCapacity = MAX(aCount, MAX(16, mCapacity * 2));
             T *_Buffer = (T *) calloc(mCapacity, sizeof(T));
             if (mBuffer) {
-                memcpy(_Buffer, mBuffer, mCount * sizeof(T));
+                memcpy((void *)_Buffer, mBuffer, mCount * sizeof(T));
                 free(mBuffer);
             }
             mBuffer = _Buffer;
@@ -1020,6 +1020,7 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode);
+const char *DynOS_Model_GetNameFromVanillaAsset(const void *aAsset);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 

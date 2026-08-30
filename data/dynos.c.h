@@ -94,6 +94,7 @@ struct GraphNode* dynos_model_get_geo(u32 aId);
 void dynos_model_overwrite_slot(u32 srcSlot, u32 dstSlot);
 u32 dynos_model_get_id_from_asset(void* aAsset);
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode);
+const char *dynos_model_get_name_from_vanilla_asset(const void *asset);
 void dynos_model_clear_pool(enum ModelPool aModelPool);
 
 // -- gfx -- //

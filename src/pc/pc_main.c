@@ -136,6 +136,7 @@ extern void patch_title_screen_before(void);
 extern void patch_dialog_before(void);
 extern void patch_hud_before(void);
 extern void patch_paintings_before(void);
+extern void patch_carpet_before(void);
 extern void patch_bubble_particles_before(void);
 extern void patch_snow_particles_before(void);
 extern void patch_djui_before(void);
@@ -148,6 +149,7 @@ extern void patch_title_screen_interpolated(f32 delta);
 extern void patch_dialog_interpolated(f32 delta);
 extern void patch_hud_interpolated(f32 delta);
 extern void patch_paintings_interpolated(f32 delta);
+extern void patch_carpet_interpolated(f32 delta);
 extern void patch_bubble_particles_interpolated(f32 delta);
 extern void patch_snow_particles_interpolated(f32 delta);
 extern void patch_djui_interpolated(f32 delta);
@@ -161,6 +163,7 @@ static void patch_interpolations_before(void) {
     patch_dialog_before();
     patch_hud_before();
     patch_paintings_before();
+    patch_carpet_before();
     patch_bubble_particles_before();
     patch_snow_particles_before();
     patch_djui_before();
@@ -175,6 +178,7 @@ static inline void patch_interpolations(f32 delta) {
     patch_dialog_interpolated(delta);
     patch_hud_interpolated(delta);
     patch_paintings_interpolated(delta);
+    patch_carpet_interpolated(delta);
     patch_bubble_particles_interpolated(delta);
     patch_snow_particles_interpolated(delta);
     patch_djui_interpolated(delta);
@@ -506,7 +510,16 @@ int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     // handle Windows console
+    bool console = false;
     if (gCLIOpts.console || gCLIOpts.headless) {
+        console = true;
+    } else {
+        // detect if the game should keep the console open
+        DWORD pids[2];
+        DWORD pcount = GetConsoleProcessList(pids, 2);
+        console = pcount > 1;
+    }
+    if (console) {
         SetConsoleOutputCP(CP_UTF8);
     } else {
         FreeConsole();

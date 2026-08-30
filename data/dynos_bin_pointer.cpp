@@ -354,6 +354,9 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     {
         auto _Node = aGfxData->mVertices.Find(aPtrName);
         if (_Node) {
+            if (aPtrData >= _Node->mSize) {
+                sys_fatal("Vertices offset %u larger than buffer size %u", aPtrData, _Node->mSize);
+            }
             *outFlags |= _Node->mFlags;
             return (void *) (_Node->mData + aPtrData);
         }
@@ -371,6 +374,9 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     {
         auto _Node = aGfxData->mLevelScripts.Find(aPtrName);
         if (_Node) {
+            if (aPtrData >= _Node->mSize) {
+                sys_fatal("Level script offset %u larger than buffer size %u", aPtrData, _Node->mSize);
+            }
             return (void *) (_Node->mData + aPtrData);
         }
     }

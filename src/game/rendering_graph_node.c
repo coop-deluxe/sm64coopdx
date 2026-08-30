@@ -1285,6 +1285,12 @@ void geo_set_animation_globals(struct AnimInfo *node, s32 hasAnimation) {
  * the floor below it.
  */
 static void geo_process_shadow(struct GraphNodeShadow *node) {
+    if (gLevelValues.disableShadows) {
+        if (node->node.children != NULL) {
+            geo_process_node_and_siblings(node->node.children);
+        }
+        return;
+    }
     Mat4 mtxf;
     Vec3f shadowPosPrev;
     Vec3f animOffset;

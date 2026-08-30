@@ -47,26 +47,23 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
 int smlua_func_print(lua_State *L) {
     int top = lua_gettop(L);
 
-    // calculate total length first
-    size_t totalLen = 0;
-    for (int i = 1; i <= top; i++) {
-        size_t len;
-        luaL_tolstring(L, i, &len);
-        totalLen += len;
-        if (i > 1) totalLen += 1;
-        lua_pop(L, 1);
+    char* completeString = calloc(1, 1);
+    if (!completeString) {
+        return 0;
     }
 
-    // allocate string
-    char* completeString = malloc(totalLen + 1);
-    if (!completeString) return 0;
-
     size_t pos = 0;
-
-    // copy string
     for (int i = 1; i <= top; i++) {
         size_t len;
         const char* str = luaL_tolstring(L, i, &len);
+
+        size_t needExtra = len + 1 + (i > 1);
+        char* grownString = realloc(completeString, pos + needExtra);
+        if (!grownString) {
+            free(completeString);
+            return 0;
+        }
+        completeString = grownString;
 
         if (i > 1) {
             completeString[pos] = '\t';

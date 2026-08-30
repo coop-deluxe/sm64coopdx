@@ -66,6 +66,7 @@ struct LevelValues gDefaultLevelValues = {
     .pauseExitMode                    = PAUSE_EXIT_BOTH,
     .disableActs                      = FALSE,
     .bubbleOnDeathBarrierInCapStages  = FALSE,
+    .disableShadows                   = FALSE,
     .entryLevel                       = LEVEL_CASTLE_GROUNDS,
     .exitCastleLevel                  = LEVEL_CASTLE,
     .exitCastleArea                   = 1,

@@ -92,6 +92,7 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         // AREA
         case 0x1F: {
             sDynosAreaIndex = (u8) DynOS_Level_CmdGet(aCmd, 2);
+            if (sDynosAreaIndex >= MAX_AREAS) { return 3; } // Not allowed
         } break;
 
         // OBJECT

@@ -278,7 +278,7 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     if (valueType == LUA_TSTRING) {
         lnt.type = LST_NETWORK_TYPE_STRING;
         lnt.value.string = (char*)lua_tostring(L, index);
-        if (lnt.value.string == NULL || strlen(lnt.value.string) > 256) {
+        if (lnt.value.string == NULL) {
             LOG_LUA_LINE("smlua_to_lnt on invalid string value: '%s'", (lnt.value.string == NULL) ? "<null>" : lnt.value.string);
             gSmLuaConvertSuccess = false;
             return lnt;
@@ -352,12 +352,13 @@ bool packet_write_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
         }
 
         case LST_NETWORK_TYPE_STRING: {
-            u16 valueLength = strlen(lnt->value.string);
-            if (valueLength < 1 || valueLength > 256) {
+            u64 valueLength = strlen(lnt->value.string);
+            if (valueLength > PACKET_LENGTH) {
                 LOG_ERROR("attempted to send lua variable with invalid string length: %u", valueLength);
                 return false;
             }
-            packet_write(p, &valueLength, sizeof(u16));
+            u16 lengthToSend = (u16)valueLength;
+            packet_write(p, &lengthToSend, sizeof(u16));
             packet_write(p, lnt->value.string, valueLength * sizeof(u8));
             return true;
         }
@@ -394,7 +395,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
         case LST_NETWORK_TYPE_STRING: {
             u16 valueLength = 0;
             packet_read(p, &valueLength, sizeof(u16));
-            if (valueLength < 1 || valueLength > 256) {
+            if (valueLength > PACKET_LENGTH) {
                 LOG_ERROR("received lua variable with invalid value length: %d", valueLength);
                 return false;
             }

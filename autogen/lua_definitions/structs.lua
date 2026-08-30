@@ -1016,6 +1016,7 @@
 --- @field public showStarNumber integer
 --- @field public extendedPauseDisplay integer
 --- @field public pauseExitAnywhere integer
+--- @field public disableShadows integer
 --- @field public pauseExitMode PauseExitMode
 --- @field public disableActs integer
 --- @field public bubbleOnDeathBarrierInCapStages integer
