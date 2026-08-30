@@ -172,7 +172,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
 
-        if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
+        if (gCurrLevelNum != gLevelValues.entryLevel) {
             extern s16 gChangeLevelTransition;
             gChangeLevelTransition = gLevelValues.entryLevel;
         }

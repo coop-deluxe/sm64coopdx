@@ -153,9 +153,15 @@ def process_define(filename, line, inIfBlock):
 
     return [ident, val]
 
-
+enum_constants = None
+enum_entries = 0
 def process_line(filename, line, inIfBlock):
-    if line.startswith('enum '):
+    if line.startswith('ENUM ('):
+        global enum_constants, enum_entries
+        enum_constants = {}
+        enum_constants['identifier'], enum_entries = line[6:-1].split(", ")
+        enum_constants['constants'], enum_entries = [], int(enum_entries) + 1
+    elif line.startswith('enum '):
         return process_enum(filename, line, inIfBlock)
     elif line.startswith('#define '):
         return process_define(filename, line, inIfBlock)
@@ -200,6 +206,15 @@ def process_file(filename):
                 constants.extend(block['else'])
         else:
             c = process_line(filename, line, block_stack is not None)
+            global enum_constants, enum_entries
+            if enum_entries > 0:
+                if c is not None:
+                    enum_constants['constants'].append(c)
+                enum_entries -= 1
+                if enum_entries == 0:
+                    c = enum_constants
+                else:
+                    continue
             if c is not None:
                 if block_stack and not block_stack[-1]['ignore']:
                     current = block_stack[-1]
@@ -329,7 +344,7 @@ def doc_constant(fname, processed_constant):
             return ''
 
         enum = 'enum ' + processed_constant['identifier']
-        s += '\n### [%s](#%s)\n' % (enum, processed_constant['identifier'])
+        s += '\n### [%s](#%s)\n' % (enum, 'enum-' + processed_constant['identifier'])
         s += '| Identifier | Value |\n'
         s += '| :--------- | :---- |\n'
         for c in constants:

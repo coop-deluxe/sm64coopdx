@@ -514,11 +514,15 @@ def process_function(fname, line, description):
     line = line.replace('UNUSED', '')
 
     match = re.search(r'[a-zA-Z0-9_]+\(', line)
-    function['type'] = normalize_type(line[0:match.span()[0]])
-    function['identifier'] = match.group()[0:-1]
+    if 'enum (' in line[:match.span()[0]]:
+        function['enum'] = re.sub(r'.*enum \((.*?)\).*', 'enum \\1', line, count=1)
+        line = re.sub(r'enum \(.*?\) ', '', line, count=1)
+        match = re.search(r'[a-zA-Z0-9_]+\(', line)
+    function['type'] = normalize_type(line[:match.span()[0]])
+    function['identifier'] = match.group()[:-1]
 
     function['params'] = []
-    params_str = line.split('(', 1)[1].rsplit(')', 1)[0].strip()
+    params_str = line[match.span()[1]:].rsplit(')', 1)[0]
     if len(params_str) == 0 or params_str == 'void':
         pass
     else:
@@ -527,6 +531,10 @@ def process_function(fname, line, description):
         for param_str in params_str.split(','):
             param = {}
             param_str = param_str.strip()
+
+            if 'enum (' in param_str:
+                param['enum'] = re.sub(r'.*enum \((.*)\).*', 'enum \\1', param_str)
+                param_str = re.sub(r'enum \(.*\) ', '', param_str)
 
             for param_keyword in parameter_keywords:
                 keyword_index = param_str.find(param_keyword + ' ')
@@ -541,7 +549,7 @@ def process_function(fname, line, description):
                 match = re.search(r'[a-zA-Z0-9_\[\]]+$', param_str)
                 if match == None:
                     return None
-                param['type'] = normalize_type(param_str[0:match.span()[0]])
+                param['type'] = normalize_type(param_str[:match.span()[0]])
                 param['identifier'] = match.group()
 
             if 'OPTIONAL' in param:
@@ -975,7 +983,7 @@ def doc_function(fname, function):
 
     description = function.get('description', [""])
 
-    rtype, rlink = translate_type_to_lua(function['type'])
+    rtype, rlink = translate_type_to_lua(function.get('enum', function['type']))
     param_str = ', '.join([x['identifier'] for x in function['params'] if 'RET' not in x])
 
     if description[0] != "":
@@ -992,7 +1000,7 @@ def doc_function(fname, function):
 
     fparams, freturns = split_function_parameters_and_returns(function)
     for param in freturns:
-        ptype, plink = translate_type_to_lua(param['rtype'])
+        ptype, plink = translate_type_to_lua(param.get('enum', param['rtype']))
         rvalues.append((param['identifier'], ptype, plink))
 
     if rvalues:
@@ -1006,8 +1014,7 @@ def doc_function(fname, function):
         s += '| ----- | ---- |\n'
         for param in fparams:
             pid = param['identifier']
-            ptype = param['type']
-            ptype, plink = translate_type_to_lua(ptype)
+            ptype, plink = translate_type_to_lua(param.get('enum', param['type']))
 
             # build lua function params
             if param['type'] == 'LuaFunction' and 'lua_function_params' in param:
@@ -1133,7 +1140,7 @@ def def_function(fname, function):
     if not allowed_identifier(None, functions_hidden, fname, fid):
         return ''
 
-    rtype, _ = translate_type_to_lua(function['type'])
+    rtype, _ = translate_type_to_lua(function.get('enum', function['type']))
     param_str = ', '.join([x['identifier'] for x in function['params'] if 'RET' not in x])
 
     rtypes = []
@@ -1142,7 +1149,7 @@ def def_function(fname, function):
 
     fparams, freturns = split_function_parameters_and_returns(function)
     for param in freturns:
-        rtype, _ = translate_type_to_lua(param['rtype'])
+        rtype, _ = translate_type_to_lua(param.get('enum', param['rtype']))
         rid = param['identifier']
         rtypes.append((rtype, rid))
 
@@ -1151,8 +1158,7 @@ def def_function(fname, function):
 
     for param in fparams:
         pid = param['identifier']
-        ptype = param['type']
-        ptype, _ = translate_type_to_lua(ptype)
+        ptype, _ = translate_type_to_lua(param.get('enum', param['type']))
 
         ptype = translate_to_def(ptype)
         if ptype.startswith('Pointer_') and ptype not in def_pointers:

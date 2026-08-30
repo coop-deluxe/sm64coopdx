@@ -2781,41 +2781,41 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
---- @type number
-ROTATION_PIVOT_X_LEFT = 0.0
+ROTATION_PIVOT_X_LEFT   = 0.0 --- @type HudUtilsRotationPivotX
+ROTATION_PIVOT_X_CENTER = 0.5 --- @type HudUtilsRotationPivotX
+ROTATION_PIVOT_X_RIGHT  = 1.0 --- @type HudUtilsRotationPivotX
 
---- @type number
-ROTATION_PIVOT_X_CENTER = 0.5
+--- @alias HudUtilsRotationPivotX
+--- | `ROTATION_PIVOT_X_LEFT`
+--- | `ROTATION_PIVOT_X_CENTER`
+--- | `ROTATION_PIVOT_X_RIGHT`
 
---- @type number
-ROTATION_PIVOT_X_RIGHT = 1.0
+ROTATION_PIVOT_Y_TOP    = 0.0 --- @type HudUtilsRotationPivotY
+ROTATION_PIVOT_Y_CENTER = 0.5 --- @type HudUtilsRotationPivotY
+ROTATION_PIVOT_Y_BOTTOM = 1.0 --- @type HudUtilsRotationPivotY
 
---- @type number
-ROTATION_PIVOT_Y_TOP = 0.0
+--- @alias HudUtilsRotationPivotY
+--- | `ROTATION_PIVOT_Y_TOP`
+--- | `ROTATION_PIVOT_Y_CENTER`
+--- | `ROTATION_PIVOT_Y_BOTTOM`
 
---- @type number
-ROTATION_PIVOT_Y_CENTER = 0.5
+TEXT_HALIGN_LEFT   = 0.0 --- @type HudUtilsHorizontalAlign
+TEXT_HALIGN_CENTER = 0.5 --- @type HudUtilsHorizontalAlign
+TEXT_HALIGN_RIGHT  = 1.0 --- @type HudUtilsHorizontalAlign
 
---- @type number
-ROTATION_PIVOT_Y_BOTTOM = 1.0
+--- @alias HudUtilsHorizontalAlign
+--- | `TEXT_HALIGN_LEFT`
+--- | `TEXT_HALIGN_CENTER`
+--- | `TEXT_HALIGN_RIGHT`
 
---- @type number
-TEXT_HALIGN_LEFT = 0.0
+TEXT_VALIGN_TOP    = 0.0 --- @type HudUtilsVerticalAlign
+TEXT_VALIGN_CENTER = 0.5 --- @type HudUtilsVerticalAlign
+TEXT_VALIGN_BOTTOM = 1.0 --- @type HudUtilsVerticalAlign
 
---- @type number
-TEXT_HALIGN_CENTER = 0.5
-
---- @type number
-TEXT_HALIGN_RIGHT = 1.0
-
---- @type number
-TEXT_VALIGN_TOP = 0.0
-
---- @type number
-TEXT_VALIGN_CENTER = 0.5
-
---- @type number
-TEXT_VALIGN_BOTTOM = 1.0
+--- @alias HudUtilsVerticalAlign
+--- | `TEXT_VALIGN_TOP`
+--- | `TEXT_VALIGN_CENTER`
+--- | `TEXT_VALIGN_BOTTOM`
 
 RESOLUTION_DJUI  = 0 --- @type HudUtilsResolution
 RESOLUTION_N64   = 1 --- @type HudUtilsResolution
