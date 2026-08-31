@@ -44,7 +44,7 @@ void network_receive_save_set_flag(struct Packet* p) {
         return;
     }
 
-    gSaveBuffer.files[fileIndex][backupSlot].courseStars[courseIndex] |= courseStars;
-    gSaveBuffer.files[fileIndex][backupSlot].flags |= flags;
+    gSaveBuffer[fileIndex].files[backupSlot].courseStars[courseIndex] |= courseStars;
+    gSaveBuffer[fileIndex].files[backupSlot].flags |= flags;
     gSaveFileModified = TRUE;
 }

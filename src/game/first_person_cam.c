@@ -98,7 +98,7 @@ static void first_person_camera_update(void) {
     for (s32 i = 0; i < 6; i++) {
         u32 flag = actions[i];
         if ((m->action & flag) == flag) {
-            if (ABS(m->controller->stickX) > 4) {
+            if (absf(m->controller->stickX) > 4) {
                 gFirstPersonCamera.yaw = m->faceAngle[1] + 0x8000;
             } else {
                 m->faceAngle[1] = gFirstPersonCamera.yaw - 0x8000;

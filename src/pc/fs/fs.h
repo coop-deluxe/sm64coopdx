@@ -9,6 +9,8 @@
 #include "../platform.h"
 
 #define SAVE_FILENAME "sm64_save_file.bin"
+#define SAVE_DIRECTORY "saves/"
+#define SAVE_EXTENSION ".bin"
 
 extern char fs_writepath[];
 

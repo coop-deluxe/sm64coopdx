@@ -61,10 +61,10 @@ static bool char_valid(const char* buffer, bool isKey) {
 }
 
 static void mod_storage_get_filename(char* dest) {
-    const char* path = fs_get_write_path(SAVE_DIRECTORY); // get user path
+    const char* path = fs_get_write_path(MS_SAVE_DIRECTORY); // get user path
     snprintf(dest, SYS_MAX_PATH - 1, "%s/%s", path, gLuaActiveMod->relativePath); // append sav folder
     strdelete(dest, ".lua"); // delete ".lua" from sav name
-    strcat(dest, SAVE_EXTENSION); // append SAVE_EXTENSION
+    strcat(dest, MS_SAVE_EXTENSION); // append MS_SAVE_EXTENSION
     normalize_path(dest); // fix any out of place slashes
 }
 
@@ -88,7 +88,7 @@ static bool mod_storage_check_inputs(const char *key, const char *value, char *f
         if (!char_valid(value, false)) { return false; }
 
         // write: ensure savPath exists
-        const char* savPath = fs_get_write_path(SAVE_DIRECTORY);
+        const char* savPath = fs_get_write_path(MS_SAVE_DIRECTORY);
         if (!fs_sys_dir_exists(savPath)) { fs_sys_mkdir(savPath); }
     }
 

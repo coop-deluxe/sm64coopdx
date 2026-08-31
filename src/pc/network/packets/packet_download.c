@@ -199,7 +199,7 @@ static void network_update_offset_groups(void) {
             mod->enabled = true;
         }
         LOG_INFO("Download complete!");
-        network_send_join_request();
+        network_send_download_save_files_request();
         return;
     }
 

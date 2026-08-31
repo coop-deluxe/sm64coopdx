@@ -35,6 +35,7 @@
 #include "game/first_person_cam.h"
 #include "game/envfx_snow.h"
 #include "game/mario.h"
+#include "game/save_file.h"
 #include "engine/math_util.h"
 #include "engine/lighting_engine.h"
 #include "audio/load.h"
@@ -169,8 +170,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         smlua_init();
 
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
-        extern u8* gOverrideEeprom;
-        gOverrideEeprom = NULL;
+        memset(gOverrideEeprom, 0, sizeof(gOverrideEeprom));
 
         if (gCurrLevelNum != (s16)gLevelValues.entryLevel) {
             extern s16 gChangeLevelTransition;
@@ -240,6 +240,8 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
         || (packetType == PACKET_MOD_LIST_ENTRY)
         || (packetType == PACKET_MOD_LIST_FILE)
         || (packetType == PACKET_MOD_LIST_DONE)
+        || (packetType == PACKET_DOWNLOAD_SAVE_REQUEST)
+        || (packetType == PACKET_DOWNLOAD_SAVE_FILE)
         || (packetType == PACKET_DOWNLOAD_REQUEST)
         || (packetType == PACKET_DOWNLOAD)
         || (packetType == PACKET_KEEP_ALIVE)
@@ -704,8 +706,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     dynos_model_clear_pool(MODEL_POOL_SESSION);
 
     // reset other stuff
-    extern u8* gOverrideEeprom;
-    gOverrideEeprom = NULL;
+    memset(gOverrideEeprom, 0, sizeof(gOverrideEeprom));
     extern u8 gOverrideFreezeCamera;
     gOverrideFreezeCamera = false;
     gDjuiHudLockMouse = false;

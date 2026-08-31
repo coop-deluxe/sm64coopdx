@@ -25,8 +25,6 @@ extern u8 gThread6Stack[];
 
 extern u8 gGfxSPTaskYieldBuffer[];
 
-extern struct SaveBuffer gSaveBuffer;
-
 extern u8 gGfxSPTaskStack[];
 
 #define GFX_NUM_POOLS 1

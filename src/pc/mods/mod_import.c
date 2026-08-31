@@ -8,6 +8,8 @@
 #include "pc/djui/djui_popup.h"
 #include "mods.h"
 #include "mods_utils.h"
+#include "game/save_file.h"
+#include "buffers/buffers.h"
 
 static bool mod_import_lua(char* src) {
     char dst[SYS_MAX_PATH] = { 0 };
@@ -252,10 +254,49 @@ static bool mod_import_zip(char* path, bool* isLua, bool* isDynos) {
     return true;
 }
 
+static bool mod_import_save(char* src) {
+    // check to see if it's the old format first
+    struct LegacySaveBuffer legacySaveBuffer = { 0 };
+    s32 status = osEepromLongRead(NULL, 0, (void*)&legacySaveBuffer, sizeof(legacySaveBuffer), src, 512);
+    if (status == 0) { // 0 is success with osEeprom functions
+        // make sure we have 4 slots to import the 4 saves
+        if (save_file_get_amount_of_available_indexes() < 4) {
+            LOG_ERROR("Ran out of save files slots!");
+            return false;
+        }
+        // write the save file
+        for (int i = 0; i < 4; i++) {
+            int file = save_file_get_first_available_index();
+            write_save_file(file, legacySaveBuffer.files[i], sizeof(legacySaveBuffer.files[i]), 0);
+        }
+        LOG_INFO("Imported save: '%s' into 4 parts", src);
+        save_file_load_all(TRUE);
+        return true;
+    }
+
+    // it's not legacy, try to load it using the new format
+    int firstIndex = save_file_get_first_available_index();
+    if (firstIndex == NUM_SAVE_FILES) {
+        LOG_ERROR("Ran out of save files slots");
+        return false;
+    }
+    status = osEepromLongRead(NULL, 0, (void*)&gSaveBuffer[firstIndex].files, sizeof(gSaveBuffer[firstIndex].files), src, EEPROM_SIZE);
+    if (status == 0) {
+        // write to save file and load save file
+        write_save_file(firstIndex, gSaveBuffer[firstIndex].files, sizeof(gSaveBuffer[firstIndex].files), 0);
+        LOG_INFO("Imported save: '%s'", src);
+        save_file_load_all(TRUE);
+        return true;
+    }
+
+    return false;
+}
+
 bool mod_import_file(char* path) {
     bool isLua = false;
     bool isDynos = false;
     bool isPalette = false;
+    bool isSave = false;
     bool ret = false;
 
     if (gNetworkType != NT_NONE && !path_ends_with(path, ".ini")) {
@@ -271,6 +312,9 @@ bool mod_import_file(char* path) {
         ret = mod_import_palette(path);
     } else if (path_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
+    } else if (path_ends_with(path, SAVE_EXTENSION)) {
+        isSave = true;
+        ret = mod_import_save(path);
     }
 
     char msg[SYS_MAX_PATH] = { 0 };
@@ -287,6 +331,9 @@ bool mod_import_file(char* path) {
             djui_popup_create(msg, 2);
         } else if (isPalette) {
             djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        } else if (isSave) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_SAVE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }
     } else {

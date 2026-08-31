@@ -10,6 +10,7 @@
 #include "audio/external.h"
 #include "engine/surface_collision.h"
 #include "engine/math_util.h"
+#include "game/object_helpers.h"
 #include "game/object_list_processor.h"
 #include "game/mario_misc.h"
 #include "pc/configfile.h"
@@ -369,8 +370,8 @@ void network_receive_player(struct Packet* p) {
         // always prefer the closest floor
         // use the floor below if there's a ceiling between the player and the floor above
         // only accept floors 500 units away
-        f32 diffAbove = ABS(m->pos[1] - floorHeight);
-        f32 diffBelow = ABS(m->pos[1] - currFloorHeight);
+        f32 diffAbove = absf(m->pos[1] - floorHeight);
+        f32 diffBelow = absf(m->pos[1] - currFloorHeight);
         if (floorHeight != gLevelValues.floorLowerLimit &&
             (currFloorHeight == gLevelValues.floorLowerLimit || diffBelow > diffAbove) &&
             (ceilHeight == gLevelValues.cellHeightLimit || floorHeight < ceilHeight) &&

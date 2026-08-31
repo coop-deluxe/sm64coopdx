@@ -41,6 +41,9 @@
 
 #define CBUTTON_MASK (U_CBUTTONS | D_CBUTTONS | L_CBUTTONS | R_CBUTTONS)
 
+#define ABS(x) ((x) > 0.f ? (x) : -(x))
+#define ABS2(x) ((x) >= 0.f ? (x) : -(x))
+
 static u8 sSoftResettingCamera = FALSE;
 static u8 sCCSSChangedByMod = FALSE;
 static u8 sForceRomhackCamera = FALSE;

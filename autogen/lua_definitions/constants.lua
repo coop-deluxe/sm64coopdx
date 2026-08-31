@@ -7008,7 +7008,10 @@ METAL           = CAP --- @type PlayerPart
 --- | `METAL`
 
 --- @type integer
-NUM_SAVE_FILES = 4
+NUM_SAVE_FILES = 64
+
+--- @type integer
+MAX_SAVE_NAME_STRING = 32
 
 SAVE_FILE_A = 0 --- @type SaveFileIndex
 SAVE_FILE_B = 1 --- @type SaveFileIndex

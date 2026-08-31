@@ -8,17 +8,17 @@
 
 #include "course_table.h"
 
-#define EEPROM_SIZE 0x200
-#define NUM_SAVE_FILES 4
+#define NUM_SAVE_FILES 64
+#define MAX_SAVE_NAME_STRING 32
+// size of savebuffer
+#define EEPROM_SIZE 128
 
-struct SaveBlockSignature
-{
+struct SaveBlockSignature {
     u16 magic;
     u16 chksum;
 };
 
-struct SaveFile
-{
+struct SaveFileData {
     // Location of lost cap.
     // Note: the coordinates get set, but are never actually used, since the
     // cap can always be found in a fixed spot within the course
@@ -45,12 +45,19 @@ enum SaveFileIndex {
     SAVE_FILE_D
 };
 
-struct MainMenuSaveData
-{
+struct SaveFile {
+    // each save file has two copies. If one is bad, the other is used as a backup.
+    struct SaveFileData files[2];
+    // filler to make a single save file equal the eeprom size
+    u8 filler[EEPROM_SIZE - (sizeof(struct SaveFileData) * 2)];
+};
+
+// Legacy save info for loading old save files
+struct LegacyMainMenuSaveData {
     // Each save file has a 2 bit "age" for each course. The higher this value,
     // the older the high score is. This is used for tie-breaking when displaying
     // on the high score screen.
-    u32 coinScoreAges[NUM_SAVE_FILES];
+    u32 coinScoreAges[4];
     u16 soundMode;
 
 #ifdef VERSION_EU
@@ -61,19 +68,20 @@ struct MainMenuSaveData
 #endif
 
     // Pad to match the EEPROM size of 0x200 (10 bytes on JP/US, 8 bytes on EU)
-    u8 filler[EEPROM_SIZE / 2 - SUBTRAHEND - NUM_SAVE_FILES * (4 + sizeof(struct SaveFile))];
+    u8 filler[512 / 2 - SUBTRAHEND - 4 * (4 + sizeof(struct SaveFileData))];
 
     struct SaveBlockSignature signature;
 };
 
-struct SaveBuffer
-{
+struct LegacySaveBuffer {
     // Each of the four save files has two copies. If one is bad, the other is used as a backup.
-    struct SaveFile files[NUM_SAVE_FILES][2];
+    struct SaveFileData files[4][2];
     // The main menu data has two copies. If one is bad, the other is used as a backup.
-    struct MainMenuSaveData menuData[2];
+    struct LegacyMainMenuSaveData menuData[2];
 };
 
+extern struct SaveFile gSaveBuffer[NUM_SAVE_FILES];
+extern u8 *gOverrideEeprom[NUM_SAVE_FILES];
 extern u8 gLastCompletedCourseNum;
 extern u8 gLastCompletedStarNum;
 extern s8 sUnusedGotGlobalCoinHiScore;
@@ -123,10 +131,15 @@ struct WarpCheckpoint {
     /*0x04*/ u8 warpNode;
 };
 
+// forward declaration
+struct WarpNode;
+
 extern struct WarpCheckpoint gWarpCheckpoint;
 
 extern s8 gMainMenuDataModified;
 extern s8 gSaveFileModified;
+
+bool write_save_file(u32 fileIndex, void *buffer, s32 size, u32 offset);
 
 /* |description|Gets the course number's corresponding level number|descriptionEnd| */
 s8 get_level_num_from_course_num(s16 courseNum);
@@ -134,11 +147,19 @@ s8 get_level_num_from_course_num(s16 courseNum);
 /* |description|Gets the level number's corresponding course number|descriptionEnd| */
 s8 get_level_course_num(s16 levelNum);
 
-/* |description|
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
-Useful for leaderboard tracking or displaying recent progress
-|descriptionEnd| */
-void touch_coin_score_age(s32 fileIndex, s32 courseIndex);
+void save_file_get_all_filenames(char filenames[NUM_SAVE_FILES][MAX_SAVE_NAME_STRING]);
+
+void save_file_get_filename_at_index(int fileIndex, char outFilename[MAX_SAVE_NAME_STRING]);
+
+void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* overrideName);
+
+s32 save_file_get_first_available_index();
+
+s32 save_file_get_amount_of_available_indexes();
+
+s32 save_file_get_first_active_index();
+
+void save_file_rename_file(s32 fileIndex, char* name);
 
 /* |description|
 Saves the current state of the game into a specified save file. Includes data verification and backup management.

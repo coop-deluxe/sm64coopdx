@@ -5438,26 +5438,78 @@ Gets the level number's corresponding course number
 
 <br />
 
-## [touch_coin_score_age](#touch_coin_score_age)
-
-### Description
-Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
-Useful for leaderboard tracking or displaying recent progress
+## [save_file_get_dir](#save_file_get_dir)
 
 ### Lua Example
-`touch_coin_score_age(fileIndex, courseIndex)`
+`save_file_get_dir(fileIndex, outPath, size, overrideName)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | fileIndex | `integer` |
-| courseIndex | `integer` |
+| outPath | `string` |
+| size | `integer` |
+| overrideName | `string` |
 
 ### Returns
 - None
 
 ### C Prototype
-`void touch_coin_score_age(s32 fileIndex, s32 courseIndex);`
+`void save_file_get_dir(int fileIndex, char* outPath, size_t size, char* overrideName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_first_available_index](#save_file_get_first_available_index)
+
+### Lua Example
+`local integerValue = save_file_get_first_available_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_first_available_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_amount_of_available_indexes](#save_file_get_amount_of_available_indexes)
+
+### Lua Example
+`local integerValue = save_file_get_amount_of_available_indexes()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_amount_of_available_indexes();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [save_file_get_first_active_index](#save_file_get_first_active_index)
+
+### Lua Example
+`local integerValue = save_file_get_first_active_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 save_file_get_first_active_index();`
 
 [:arrow_up_small:](#)
 

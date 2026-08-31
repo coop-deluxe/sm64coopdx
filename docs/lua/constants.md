@@ -3196,6 +3196,7 @@
 
 ## [save_file.h](#save_file.h)
 - NUM_SAVE_FILES
+- MAX_SAVE_NAME_STRING
 
 ### [enum SaveFileIndex](#SaveFileIndex)
 | Identifier | Value |

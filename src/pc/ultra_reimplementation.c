@@ -4,8 +4,8 @@
 #include "macros.h"
 #include "platform.h"
 #include "fs/fs.h"
-
-u8* gOverrideEeprom = NULL;
+#include "configfile.h"
+#include "game/save_file.h"
 
 extern OSMgrArgs piMgrArgs;
 
@@ -124,45 +124,18 @@ s32 osEepromProbe(UNUSED OSMesgQueue *mq) {
     return 1;
 }
 
-s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
-    if (gOverrideEeprom != NULL) {
-        memcpy(buffer, gOverrideEeprom + address * 8, nbytes);
-        return 0;
-    }
-
-    u8 content[512];
+s32 osEepromLongRead(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes, char *path, size_t size) {
+    u8 content[size];
     s32 ret = -1;
 
-    fs_file_t *fp = fs_open(SAVE_FILENAME);
-    if (fp == NULL) {
+    FILE *fp = fopen(path, "rb");
+    if (!fp) {
         return -1;
     }
-    if (fs_read(fp, content, 512) == 512) {
+    if (fread(content, 1, size, fp) == size) {
         memcpy(buffer, content + address * 8, nbytes);
         ret = 0;
     }
-    fs_close(fp);
-
-    return ret;
-}
-
-s32 osEepromLongWrite(UNUSED OSMesgQueue *mq, u8 address, u8 *buffer, int nbytes) {
-    if (gOverrideEeprom != NULL) {
-        memcpy(gOverrideEeprom + address * 8, buffer, nbytes);
-        return 0;
-    }
-
-    u8 content[512] = { 0 };
-    if (address != 0 || nbytes != 512) {
-        osEepromLongRead(mq, 0, content, 512);
-    }
-    memcpy(content + address * 8, buffer, nbytes);
-
-    FILE *fp = fopen(fs_get_write_path(SAVE_FILENAME), "wb");
-    if (fp == NULL) {
-        return -1;
-    }
-    s32 ret = fwrite(content, 1, 512, fp) == 512 ? 0 : -1;
     fclose(fp);
 
     return ret;

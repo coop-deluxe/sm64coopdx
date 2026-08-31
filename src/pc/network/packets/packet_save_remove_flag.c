@@ -46,9 +46,9 @@ void network_receive_save_remove_flag(struct Packet* p) {
 
     // Remove the specified star flags and flags from the save data
     if (courseIndex == -1) {
-        gSaveBuffer.files[fileIndex][backupSlot].flags &= ~flagsToRemove;
+        gSaveBuffer[fileIndex].files[backupSlot].flags &= ~flagsToRemove;
     } else {
-        gSaveBuffer.files[fileIndex][backupSlot].courseStars[courseIndex] &= ~courseStarsToRemove;
+        gSaveBuffer[fileIndex].files[backupSlot].courseStars[courseIndex] &= ~courseStarsToRemove;
     }
 
     gSaveFileModified = TRUE;

@@ -10659,10 +10659,25 @@ function get_level_course_num(levelNum)
 end
 
 --- @param fileIndex integer
---- @param courseIndex integer
---- Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.<br>
---- Useful for leaderboard tracking or displaying recent progress
-function touch_coin_score_age(fileIndex, courseIndex)
+--- @param outPath string
+--- @param size integer
+--- @param overrideName string
+function save_file_get_dir(fileIndex, outPath, size, overrideName)
+    -- ...
+end
+
+--- @return integer
+function save_file_get_first_available_index()
+    -- ...
+end
+
+--- @return integer
+function save_file_get_amount_of_available_indexes()
+    -- ...
+end
+
+--- @return integer
+function save_file_get_first_active_index()
     -- ...
 end
 

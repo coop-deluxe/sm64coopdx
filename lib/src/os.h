@@ -90,9 +90,9 @@ typedef struct {
       char      ext_name[4];
       char     game_name[16];
 } OSPfsState;
-    
+
 /*
- * Structure for Profiler 
+ * Structure for Profiler
  */
 typedef struct {
     u16    *histo_base;        /* histogram base */
@@ -239,7 +239,7 @@ typedef struct {
 #define    OS_MIN_STACKSIZE    72
 
 /*
- * Values for osTvType 
+ * Values for osTvType
  */
 #define    OS_TV_PAL        0
 #define    OS_TV_NTSC        1
@@ -321,8 +321,8 @@ typedef struct {
 #define OS_VI_BIT_NTSC            0x0400
 #define OS_VI_BIT_PAL            0x0800
 
-/* 
- * Leo Disk 
+/*
+ * Leo Disk
  */
 
 /* transfer mode */
@@ -347,7 +347,7 @@ typedef struct {
 #ifdef _HW_VERSION_1
 #define CONT_FRAME_ERROR                0x2
 #define CONT_COLLISION_ERROR            0x1
-#endif 
+#endif
 
 /* Controller type */
 
@@ -433,7 +433,7 @@ typedef struct {
 #define PFS_ERR_NEW_PACK        2    /* ram pack has been changed to a */
                     /* different one           */
 #define PFS_ERR_INCONSISTENT    3    /* need to run Pfschecker       */
-#define PFS_ERR_CONTRFAIL    CONT_OVERRUN_ERROR              
+#define PFS_ERR_CONTRFAIL    CONT_OVERRUN_ERROR
 #define PFS_ERR_INVALID         5    /* invalid parameter or file not exist*/
 #define PFS_ERR_BAD_DATA        6       /* the data read from pack are bad*/
 #define PFS_DATA_FULL           7    /* no free pages on ram pack      */
@@ -730,7 +730,6 @@ extern s32 osEepromProbe(OSMesgQueue *);
 extern s32 osEepromRead(OSMesgQueue *, u8, u8 *);
 extern s32 osEepromWrite(OSMesgQueue *, u8, u8 *);
 extern s32 osEepromLongRead(OSMesgQueue *, u8, u8 *, int);
-extern s32 osEepromLongWrite(OSMesgQueue *, u8, u8 *, int);
 
 /* MOTOR interface */
 

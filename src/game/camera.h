@@ -48,9 +48,6 @@ extern u8 gOverrideAllowToxicGasCamera;
  * @see camera.c
  */
 
-#define ABS(x) ((x) > 0.f ? (x) : -(x))
-#define ABS2(x) ((x) >= 0.f ? (x) : -(x))
-
 /**
  * Converts an angle in degrees to sm64's s16 angle units. For example, DEGREES(90) == 0x4000
  * This should be used mainly to make camera code clearer at first glance.

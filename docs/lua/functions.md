@@ -1809,7 +1809,10 @@
 - save_file.h
    - [get_level_num_from_course_num](functions-6.md#get_level_num_from_course_num)
    - [get_level_course_num](functions-6.md#get_level_course_num)
-   - [touch_coin_score_age](functions-6.md#touch_coin_score_age)
+   - [save_file_get_dir](functions-6.md#save_file_get_dir)
+   - [save_file_get_first_available_index](functions-6.md#save_file_get_first_available_index)
+   - [save_file_get_amount_of_available_indexes](functions-6.md#save_file_get_amount_of_available_indexes)
+   - [save_file_get_first_active_index](functions-6.md#save_file_get_first_active_index)
    - [save_file_do_save](functions-6.md#save_file_do_save)
    - [save_file_erase](functions-6.md#save_file_erase)
    - [save_file_erase_current_backup_save](functions-6.md#save_file_erase_current_backup_save)
