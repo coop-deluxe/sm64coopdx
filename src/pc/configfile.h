@@ -13,6 +13,7 @@
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
 #define MAX_SAVE_NAME_STRING 32
+#define FASTDL_URL_MAX 256
 
 #define DEFAULT_PORT 7777
 #define DEFAULT_COOPNET_IP "net.coop64.us"
@@ -161,6 +162,9 @@ extern char         configLanguage[MAX_CONFIG_STRING];
 extern bool         configForce4By3;
 extern bool         configDynosLocalPlayerModelOnly;
 extern unsigned int configPvpType;
+// FastDL settings
+extern unsigned int configFastDlMode;
+extern char         configFastDlUrl[FASTDL_URL_MAX];
 // CoopNet settings
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;

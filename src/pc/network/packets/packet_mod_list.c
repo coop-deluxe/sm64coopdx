@@ -6,11 +6,14 @@
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/debuglog.h"
 #include "pc/mods/mod_cache.h"
+#include "pc/mods/mod_fastdl.h"
+#include "pc/configfile.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
+    fastdl_clear_url();
 
     if (!mods_generate_remote_base_path()) {
         LOG_ERROR("Failed to generate remote base path!");
@@ -51,6 +54,18 @@ void network_send_mod_list(void) {
     LOG_INFO("sending version: %s", version);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
+
+    // advertise the FastDL URL (empty means the host doesn't offer it)
+    u16 fastDlUrlLength = 0;
+    if (configFastDlUrl[0] != '\0') {
+        fastDlUrlLength = strlen(configFastDlUrl);
+        if (fastDlUrlLength >= FASTDL_URL_MAX) {
+            LOG_ERROR("FastDL URL too long, not advertising it");
+            fastDlUrlLength = 0;
+        }
+    }
+    packet_write(&p, &fastDlUrlLength, sizeof(u16));
+    packet_write(&p, configFastDlUrl, sizeof(u8) * fastDlUrlLength);
     network_send_to(0, &p);
 
     LOG_INFO("sent mod list (%u):", gActiveMods.entryCount);
@@ -152,6 +167,27 @@ void network_receive_mod_list(struct Packet* p) {
     }
 
     packet_read(p, &gRemoteMods.entryCount, sizeof(u16));
+
+    // read the advertised FastDL URL (validates scheme/characters; empty means not offered)
+    {
+        u16 fastDlUrlLength = 0;
+        packet_read(p, &fastDlUrlLength, sizeof(u16));
+        if (p->error || fastDlUrlLength >= FASTDL_URL_MAX) {
+            LOG_ERROR("Received an invalid FastDL URL length!");
+            fastdl_clear_url();
+        } else if (fastDlUrlLength > 0) {
+            char fastDlUrl[FASTDL_URL_MAX] = { 0 };
+            packet_read(p, fastDlUrl, sizeof(u8) * fastDlUrlLength);
+            if (!fastdl_set_url(fastDlUrl)) {
+                LOG_ERROR("Rejected an invalid FastDL URL!");
+            } else {
+                LOG_INFO("Host offers FastDL: %s", fastDlUrl);
+            }
+        } else {
+            fastdl_clear_url();
+        }
+    }
+
     gRemoteMods.entries = calloc(gRemoteMods.entryCount, sizeof(struct Mod*));
     if (gRemoteMods.entries == NULL) {
         LOG_ERROR("Failed to allocate remote mod entries");
@@ -356,6 +392,12 @@ void network_receive_mod_list_done(struct Packet* p) {
         totalSize += mod->size;
     }
     gRemoteMods.size = totalSize;
+
+    // FastDL may take over the download flow (HTTP fetch + hash verification);
+    // when it does, it resumes the join flow itself once it's done
+    if (fastdl_on_mod_list_done()) {
+        return;
+    }
 
     network_start_download_requests();
 }

@@ -48,6 +48,9 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
     {
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_PING), &configShowPing, NULL);
         djui_checkbox_create(body, DLANG(MISC, DISABLE_POPUPS), &configDisablePopups, NULL);
+
+        char* fastDlChoices[3] = { DLANG(MISC, FASTDL_ALWAYS_OFF), DLANG(MISC, FASTDL_LET_ME_CHOOSE), DLANG(MISC, FASTDL_ALWAYS_ON) };
+        djui_selectionbox_create(body, DLANG(MISC, FASTDL_MODE), fastDlChoices, 3, &configFastDlMode, NULL);
 #ifndef DEVELOPMENT
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif

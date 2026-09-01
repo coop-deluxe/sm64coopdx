@@ -222,6 +222,9 @@ char         configLanguage[MAX_CONFIG_STRING]    = "";
 bool         configForce4By3                      = false;
 bool         configDynosLocalPlayerModelOnly      = false;
 unsigned int configPvpType                        = PLAYER_PVP_CLASSIC;
+// FastDL settings
+unsigned int configFastDlMode                     = 1; // 0 = always off, 1 = let me choose, 2 = always on
+char         configFastDlUrl[FASTDL_URL_MAX]      = "";
 // CoopNet settings
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
@@ -385,6 +388,9 @@ static const struct ConfigOption options[] = {
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configForce4By3},
     {.name = "dynos_local_player_model_only",  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDynosLocalPlayerModelOnly},
+    // FastDL settings
+    {.name = "fastdl_mode",                    .type = CONFIG_TYPE_UINT,   .uintValue   = &configFastDlMode},
+    {.name = "fastdl_url",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configFastDlUrl, .maxStringLength = FASTDL_URL_MAX},
     // CoopNet settings
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},

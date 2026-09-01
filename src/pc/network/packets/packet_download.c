@@ -316,18 +316,6 @@ after_filled:;
     //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
 }
 
-// Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)
-static bool should_cache_mod(struct Mod *mod) {
-    char modNameLowercase[MOD_NAME_SIZE];
-    memcpy(modNameLowercase, mod->name, MOD_NAME_SIZE * sizeof(char));
-    sys_strlwr(modNameLowercase);
-    bool shouldCache = (
-        !strstr(modNameLowercase, "(wip)") &&
-        !strstr(modNameLowercase, "[wip]")
-    );
-    return shouldCache;
-}
-
 static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     if (file->fp != NULL) {
         return;
@@ -340,7 +328,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     }
 
     file->wroteBytes = 0;
-    if (should_cache_mod(mod)) {
+    if (mod_should_cache(mod)) {
         mod_file_create_directories(mod, file);
         file->fp = fopen(fullPath, "wb");
     } else {
@@ -456,7 +444,7 @@ after_group:;
                     modFile->fp = NULL;
 
                     // Write cachedPath here so the file doesn't end up in mod.cache
-                    if (!should_cache_mod(mod)) {
+                    if (!mod_should_cache(mod)) {
                         char modFilePath[SYS_MAX_PATH] = { 0 };
                         concat_path(modFilePath, mod->basePath, modFile->relativePath);
                         normalize_path(modFilePath);

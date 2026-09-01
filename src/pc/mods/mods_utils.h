@@ -9,6 +9,8 @@ void mods_size_enforce(struct Mods* mods);
 void mods_update_selectable(void);
 void mods_delete_tmp(void);
 
+bool mod_should_cache(struct Mod* mod);
+
 bool mod_file_full_path(char* destination, struct Mod* mod, struct ModFile* modFile);
 bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile);
 

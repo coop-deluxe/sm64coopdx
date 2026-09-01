@@ -18,6 +18,7 @@
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/utils/smlua_gfx_utils.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mod_fastdl.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
@@ -564,6 +565,8 @@ void network_update(void) {
         gNetworkStartupTimer--;
     }
 
+    fastdl_update();
+
     network_rehost_update();
     network_reconnect_update();
 
@@ -673,6 +676,9 @@ void network_mod_dev_mode_reload(void) {
 
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     smlua_call_event_hooks(HOOK_ON_EXIT);
+
+    // stop any FastDL transfer before the remote mods go away
+    fastdl_shutdown(reconnecting);
 
     if (gDjuiChatBox != NULL) {
         djui_base_destroy(&gDjuiChatBox->base);
