@@ -352,6 +352,9 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         if (!buffer || len == 0) {
             LOG_ERROR("Failed to compress!");
         } else {
+            if (len > 1200) {
+                LOG_INFO("Packet size exceeds 1200, fragmentation/loss may occur. sourceSize:%u compSize:%u", (u32)p->dataLength + sizeof(u32), len);
+            }
             int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
             if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
         }
