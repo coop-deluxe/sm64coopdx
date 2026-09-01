@@ -12,6 +12,7 @@ enum FastDlMode {
 
 // called by the mod list packet handlers
 bool fastdl_set_url(const char* url); // empty string clears
+bool fastdl_url_valid(const char* url); // receiver-equivalent check; doesn't touch state
 void fastdl_clear_url(void);
 
 // returns true when FastDL took over the join flow (caller must not start the chunk path)

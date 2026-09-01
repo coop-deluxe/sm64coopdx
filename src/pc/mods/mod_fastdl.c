@@ -79,7 +79,9 @@ struct FastDlCtx {
 static char sFastDlUrl[FASTDL_URL_MAX] = { 0 };
 static enum FastDlState sFastDlState = FDLS_IDLE;
 static struct FastDlCtx* sFastDlCtx = NULL;
-static struct FastDlCtx* sFastDlPendingFree = NULL; // aborted transfer awaiting its worker's done signal
+static struct FastDlCtx** sFastDlPendingFree = NULL; // canceled transfers awaiting their workers' done signals
+static u32 sFastDlPendingCount = 0;
+static u32 sFastDlPendingCapacity = 0;
 static volatile u32 sFastDlGeneration = 0;
 static struct ThreadHandle sFastDlThread = { 0 };
 
@@ -94,9 +96,8 @@ static bool sFastDlSessionAnswer = false;
 // URL helpers
 ///////////////////////////////////////////////////////////
 
-bool fastdl_set_url(const char* url) {
-    sFastDlUrl[0] = '\0';
-    if (url == NULL || url[0] == '\0') { return true; }
+bool fastdl_url_valid(const char* url) {
+    if (url == NULL) { return false; }
 
     size_t len = strlen(url);
     if (len == 0 || len >= FASTDL_URL_MAX) { return false; }
@@ -107,16 +108,22 @@ bool fastdl_set_url(const char* url) {
         if (c < 0x21 || c > 0x7E || c == '\\' || c == '"') { return false; }
     }
 
+    const char* schemeSep = strstr(url, "://");
+    size_t hostLen = len - (size_t)(schemeSep - url) - 3;
+    while (hostLen > 0 && schemeSep[3 + hostLen - 1] == '/') { hostLen--; }
+    return hostLen > 0;
+}
+
+bool fastdl_set_url(const char* url) {
+    sFastDlUrl[0] = '\0';
+    if (url == NULL || url[0] == '\0') { return true; }
+
+    if (!fastdl_url_valid(url)) { return false; }
+
     snprintf(sFastDlUrl, FASTDL_URL_MAX, "%s", url);
     size_t dstLen = strlen(sFastDlUrl);
     while (dstLen > 0 && sFastDlUrl[dstLen - 1] == '/') {
         sFastDlUrl[--dstLen] = '\0';
-    }
-    // require a non-empty host part after the scheme
-    const char* schemeSep = strstr(sFastDlUrl, "://");
-    if (schemeSep == NULL || schemeSep[3] == '\0') {
-        sFastDlUrl[0] = '\0';
-        return false;
     }
     return true;
 }
@@ -680,7 +687,7 @@ static void fastdl_popup_create(u32 fileCount, u64 totalBytes) {
 
 // stops the current transfer, if any: the worker is told to stop starting new
 // work; its context is freed right away when it already signaled done, and
-// parked in sFastDlPendingFree for fastdl_update to free once it does
+// parked otherwise for fastdl_update to free once its worker does
 // (the worker never frees the context itself)
 static void fastdl_stop_transfer(void) {
     sFastDlGeneration++;
@@ -690,12 +697,25 @@ static void fastdl_stop_transfer(void) {
     ctx->aborted = true;
     if (ctx->done) {
         fastdl_free_ctx(ctx);
-    } else if (sFastDlPendingFree == NULL || sFastDlPendingFree->done) {
-        if (sFastDlPendingFree != NULL) { fastdl_free_ctx(sFastDlPendingFree); }
-        sFastDlPendingFree = ctx;
+    } else {
+        // the worker stops touching the context right after signaling done;
+        // park it here so fastdl_update can free it then
+        if (sFastDlPendingCount == sFastDlPendingCapacity) {
+            u32 newCapacity = (sFastDlPendingCapacity == 0) ? 4 : sFastDlPendingCapacity * 2;
+            struct FastDlCtx** grown = realloc(sFastDlPendingFree, newCapacity * sizeof(struct FastDlCtx*));
+            if (grown != NULL) {
+                sFastDlPendingFree = grown;
+                sFastDlPendingCapacity = newCapacity;
+            }
+        }
+        if (sFastDlPendingCount < sFastDlPendingCapacity) {
+            sFastDlPendingFree[sFastDlPendingCount++] = ctx;
+        } else {
+            // allocation failed; leak the context rather than risk freeing
+            // one its worker may still touch
+            LOG_ERROR("FastDL: out of memory parking a canceled transfer");
+        }
     }
-    // (in the remaining case - an earlier transfer still in flight - this one
-    // is leaked rather than risk freeing a context its worker may still touch)
 
     sFastDlCtx = NULL;
     sFastDlState = FDLS_IDLE;
@@ -793,14 +813,19 @@ bool fastdl_on_mod_list_done(void) {
 }
 
 void fastdl_update(void) {
-    // an aborted transfer's worker stops touching its context after signaling
-    // done; that is the cue to free it
-    if (sFastDlPendingFree != NULL && sFastDlPendingFree->done) {
-        struct FastDlCtx* ctx = sFastDlPendingFree;
-        sFastDlPendingFree = NULL;
-        __sync_synchronize(); // pair with the worker's barrier before ->done
-        fastdl_free_ctx(ctx);
+    // canceled transfers: each worker stops touching its context after
+    // signaling done; that is the cue to free it
+    u32 keepCount = 0;
+    for (u32 i = 0; i < sFastDlPendingCount; i++) {
+        struct FastDlCtx* ctx = sFastDlPendingFree[i];
+        if (ctx->done) {
+            __sync_synchronize(); // pair with the worker's barrier before ->done
+            fastdl_free_ctx(ctx);
+        } else {
+            sFastDlPendingFree[keepCount++] = ctx;
+        }
     }
+    sFastDlPendingCount = keepCount;
 
     if (sFastDlState != FDLS_DOWNLOADING || sFastDlCtx == NULL) { return; }
 

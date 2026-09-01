@@ -58,10 +58,13 @@ void network_send_mod_list(void) {
     // advertise the FastDL URL (empty means the host doesn't offer it)
     u16 fastDlUrlLength = 0;
     if (configFastDlUrl[0] != '\0') {
-        fastDlUrlLength = strlen(configFastDlUrl);
-        if (fastDlUrlLength >= FASTDL_URL_MAX) {
+        size_t urlLength = strlen(configFastDlUrl);
+        if (urlLength >= FASTDL_URL_MAX) {
             LOG_ERROR("FastDL URL too long, not advertising it");
-            fastDlUrlLength = 0;
+        } else if (!fastdl_url_valid(configFastDlUrl)) {
+            LOG_ERROR("FastDL URL invalid, not advertising it");
+        } else {
+            fastDlUrlLength = (u16)urlLength;
         }
     }
     packet_write(&p, &fastDlUrlLength, sizeof(u16));
