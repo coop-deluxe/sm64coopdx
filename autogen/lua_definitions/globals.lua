@@ -57,20 +57,6 @@ gGlobalObjectCollisionData = {}
 --- Struct containing all paintings and their fields
 gPaintingValues = {}
 
---- @alias SyncTable table
-
---- @type SyncTable
---- Any keys added and modified to this table will be synced among everyone.
---- - This shouldn't be used to sync player-specific values; Use `gPlayerSyncTable` for that
---- - Note: Does not support tables as keys
-gGlobalSyncTable = {}
-
---- @type SyncTable[]
---- Array of sync tables. Any change to any sync tables will be synced to everyone else.
---- - This array takes in a local index, however it automatically translates to the global index
---- - Note: Does not support tables as keys
-gPlayerSyncTable = {}
-
 --- @type LevelValues
 --- Struct containing fields that modify specific gameplay or level properties
 gLevelValues = {}
@@ -88,6 +74,10 @@ gFirstPersonCamera = {}
 --- - Local player only
 gLakituState = {}
 
+--- @type CameraFOVStatus
+--- Struct that controls the camera's FOV
+gFOVState = {}
+
 --- @type ServerSettings
 --- Struct containing the settings for the server
 --- - enablePlayersInLevelDisplay and enablePlayerList are not synced
@@ -100,3 +90,17 @@ gNametagsSettings = {}
 --- @type HudDisplay
 --- Struct containing the flags for the hud display
 gHudDisplay = {}
+
+--- @alias SyncTable table
+
+--- @type SyncTable
+--- Any keys added and modified to this table will be synced among everyone.
+--- - This shouldn't be used to sync player-specific values; Use `gPlayerSyncTable` for that
+--- - Note: Does not support tables as keys
+gGlobalSyncTable = {}
+
+--- @type SyncTable[]
+--- Array of sync tables. Any change to any sync tables will be synced to everyone else.
+--- - This array takes in a local index, however it automatically translates to the global index
+--- - Note: Does not support tables as keys
+gPlayerSyncTable = {}

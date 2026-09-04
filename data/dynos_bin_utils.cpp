@@ -235,11 +235,11 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
             Delete(_Node);
         }
         for (auto& _Node : aGfxData->mVertices) {
-            Delete(_Node->mData);
+            free(_Node->mData);
             Delete(_Node);
         }
         for (auto& _Node : aGfxData->mDisplayLists) {
-            Delete(_Node->mData);
+            free(_Node->mData);
             Delete(_Node);
         }
         for (auto& _Node : aGfxData->mGeoLayouts) {

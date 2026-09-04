@@ -21,9 +21,9 @@
 
 #define LOG_LUA(...) { \
     if (!gSmLuaSuppressErrors) { \
-        printf("[LUA] "); \
-        printf(__VA_ARGS__); \
-        printf("\n"); \
+        log_to_terminal("\x1b[31m[LUA] "); \
+        log_to_terminal(__VA_ARGS__); \
+        log_to_terminal("\x1b[0m\n"); \
         smlua_mod_error(); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
@@ -40,9 +40,9 @@
 
 #define LOG_LUA_WARNING(...) { \
     if (!gSmLuaSuppressErrors) { \
-        printf("[LUA] Warning: "); \
-        printf(__VA_ARGS__); \
-        printf("\n"); \
+        log_to_terminal("\x1b[33m[LUA] Warning: "); \
+        log_to_terminal(__VA_ARGS__); \
+        log_to_terminal("\x1b[0m\n"); \
         smlua_mod_warning(false); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
@@ -59,9 +59,9 @@
 
 #define LOG_LUA_WARNING_ONCE(...) { \
     if (!gSmLuaSuppressErrors && smlua_mod_warning(true)) { \
-        printf("[LUA] Warning: "); \
-        printf(__VA_ARGS__); \
-        printf("\n"); \
+        log_to_terminal("\x1b[33m[LUA] Warning: "); \
+        log_to_terminal(__VA_ARGS__); \
+        log_to_terminal("\x1b[0m\n"); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
         djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_WARNING); \

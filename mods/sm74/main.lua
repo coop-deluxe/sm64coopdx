@@ -23,9 +23,9 @@ end
 local function on_swap_command()
     local np = gNetworkPlayers[0]
     if np.currAreaIndex == 1 then
-        djui_chat_message_create("Swapping to Extreme Edition")
+        command_message_create("Swapping to Extreme Edition")
     else
-        djui_chat_message_create("Swapping to normal edition")
+        command_message_create("Swapping to normal edition")
     end
     warp_to_level(np.currLevelNum, np.currAreaIndex ~ 3, np.currActNum)
     return true

@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include "include/behavior_table.h"
+#include "include/dialog_ids.h"
 
 #include "smlua.h"
 #include "pc/mods/mod.h"
@@ -188,8 +189,8 @@ int smlua_call_hook(lua_State* L, int nargs, int nresults, int errfunc, struct M
 bool smlua_call_action_hook(enum LuaActionHookType hookType, struct MarioState* m, s32* cancel);
 u32 smlua_get_action_interaction_type(struct MarioState* m);
 
-bool smlua_call_chat_command_hook(char* command);
-void smlua_display_chat_commands(void);
+bool smlua_call_chat_command_hook(char* command, bool onConsole);
+void smlua_display_chat_commands(bool isConsole);
 char** smlua_get_chat_player_list(void);
 char** smlua_get_chat_maincommands_list(void);
 char** smlua_get_chat_subcommands_list(const char* maincommand);

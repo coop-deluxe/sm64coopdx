@@ -479,7 +479,7 @@ def build_struct(struct):
             if size != 1:
                 row.append('%s, '         % size )
                 row.append('sizeof(%s), ' % ftype)
-                if field['is_c_array']:
+                if is_c_array:
                     row.append('true')
                 else: row[-1] = row[-1][:-2]
             else: row[-1] = row[-1][:-2]
@@ -547,9 +547,9 @@ def build_body(parsed):
     for type_name in VEC_TYPES.keys():
         lot_names += f'    [LOT_{type_name.upper()}] = "{type_name}",\n'
 
-    lot_names += f'    [LOT_ARRAY] = "Array",\n'
-    lot_names += f'    [LOT_POINTER] = "Pointer",\n'
-    lot_names += f'    [LOT_MAX] = "Max",\n'
+    lot_names += '    [LOT_ARRAY] = "Array",\n'
+    lot_names += '    [LOT_POINTER] = "Pointer",\n'
+    lot_names += '    [LOT_MAX] = "Max",\n'
     lot_names += '\n'
 
     for struct in parsed:
@@ -735,24 +735,24 @@ def get_function_signature(function):
         with open('autogen/lua_definitions/functions.lua') as f:
             lines = f.readlines()
         function_params = []
-        function_return = None
+        function_returns = []
         for line in lines:
             if line.startswith('--- @param'):
                 function_params.append(line.split()[2:4])
             elif line.startswith('--- @return'):
-                function_return = line.split()[2]
+                function_returns.append(line.split()[2])
             elif line.startswith('function'):
                 sig = 'fun('
                 sig += ', '.join(['%s: %s' % (param_name, param_type) for param_name, param_type in function_params])
                 sig += ')'
-                if function_return:
-                    sig += ': %s' % (function_return)
+                if function_returns:
+                    sig += ': %s' % (", ".join(function_returns))
                 function_name = line.replace('(', ' ').split()[1]
                 if function_signatures.get(function_name) is None:
                     function_signatures[function_name] = []
                 function_signatures[function_name].append(sig)
                 function_params.clear()
-                function_return = None
+                function_returns = []
 
     return function_signatures.get(function, ['function'])
 
@@ -793,8 +793,8 @@ def def_struct(struct):
         if ftype[0].startswith('Pointer_') and ftype[0] not in def_pointers:
             def_pointers.append(ftype[0])
 
-        for type in ftype:
-            s += '--- @field public %s %s\n' % (fid, type)
+        for field_type in ftype:
+            s += '--- @field public %s %s\n' % (fid, field_type)
 
     return s
 

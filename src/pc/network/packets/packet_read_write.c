@@ -138,6 +138,7 @@ void packet_write(struct Packet* packet, void* data, u16 length) {
     if (packet->cursor + length >= PACKET_LENGTH) {
         SOFT_ASSERT(packet->cursor + length < PACKET_LENGTH);
         packet->writeError = true;
+        return;
     }
     memcpy(&packet->buffer[packet->cursor], data, length);
     packet->dataLength += length;

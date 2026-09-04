@@ -534,6 +534,11 @@ void smlua_model_util_register_model_id(u32 id, const void *asset) {
             }
         }
     }
+
+    // This is a vanilla model which isn't in sModels, it still needs to be unregistered
+    if (dynos_model_get_name_from_vanilla_asset(asset) != NULL) {
+        smlua_model_util_unregister_model_id(id, sModels, E_MODEL_MAX);
+    }
 }
 
 // Translates an extended model id to a regular model id

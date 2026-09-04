@@ -1576,6 +1576,29 @@ Counts the number of objects with the specified behavior
 
 <br />
 
+## [delete_all_objects_with_behavior](#delete_all_objects_with_behavior)
+
+### Description
+Deletes all objects with the specified behavior
+
+### Lua Example
+`delete_all_objects_with_behavior(behavior)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| behavior | `Pointer` <`BehaviorScript`> |
+
+### Returns
+- None
+
+### C Prototype
+`void delete_all_objects_with_behavior(const BehaviorScript *behavior);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [find_object_with_behavior](#find_object_with_behavior)
 
 ### Description
@@ -6087,6 +6110,30 @@ Gets the fade volume of `player`
 
 ### C Prototype
 `f32 sequence_player_get_fade_volume(u8 player);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [sequence_player_set_fade_volume](#sequence_player_set_fade_volume)
+
+### Description
+Sets the fade volume of `player`
+
+### Lua Example
+`sequence_player_set_fade_volume(player, volume)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| player | `integer` |
+| volume | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void sequence_player_set_fade_volume(u8 player, f32 volume);`
 
 [:arrow_up_small:](#)
 

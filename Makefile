@@ -476,6 +476,10 @@ ifeq ($(DISCORD_SDK),1)
   SRC_DIRS += src/pc/discord
 endif
 
+ifeq ($(WINDOWS_BUILD),0)
+  SRC_DIRS += src/pc/linenoise
+endif
+
 SRC_DIRS += src/pc/mumble
 
 ULTRA_SRC_DIRS := lib/src lib/src/math lib/asm lib/data
@@ -927,7 +931,11 @@ ifeq ($(WINDOWS_BUILD),1)
   endif
 else
   ifeq ($(DISCORD_SDK),1)
-    LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+    ifeq ($(OSX_BUILD),1)
+      LDFLAGS += -ldiscord_game_sdk -Wl,-rpath,@executable_path
+    else
+      LDFLAGS += -ldiscord_game_sdk -Wl,-rpath . -Wl,-rpath lib/discordsdk
+    endif
   endif
 endif
 

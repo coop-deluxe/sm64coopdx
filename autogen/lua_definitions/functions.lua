@@ -3907,6 +3907,17 @@ function update_character_anim_offset(m)
 end
 
 --- @param message string
+--- @param level? ConsoleMessageLevel
+--- Creates a message that goes into either the chat, console, or terminal.<br>
+--- It decides by checking where you entered the command, and will output to that source directly.<br>
+--- <br>
+--- It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.<br>
+--- If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
+function command_message_create(message, level)
+    -- ...
+end
+
+--- @param message string
 --- Creates a `message` in the game's chat box
 function djui_chat_message_create(message)
     -- ...
@@ -4133,12 +4144,25 @@ function djui_hud_get_mouse_scroll_y()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the viewport to the specified position and size, this will resize any subsequent DJUI graphics
-function djui_hud_set_viewport(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+function djui_hud_set_viewport(ulx, uly, lrx, lry)
+    -- ...
+end
+
+--- @param pulx number
+--- @param puly number
+--- @param plrx number
+--- @param plry number
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
+function djui_hud_set_viewport_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)
     -- ...
 end
 
@@ -4147,12 +4171,25 @@ function djui_hud_reset_viewport()
     -- ...
 end
 
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- Sets the scissor rectangle to the specified position and size, this will cut off any subsequent DJUI graphics not within the rectangle
-function djui_hud_set_scissor(x, y, width, height)
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+function djui_hud_set_scissor(ulx, uly, lrx, lry)
+    -- ...
+end
+
+--- @param pulx number
+--- @param puly number
+--- @param plrx number
+--- @param plry number
+--- @param ulx number
+--- @param uly number
+--- @param lrx number
+--- @param lry number
+--- Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
+function djui_hud_set_scissor_interpolated(pulx, puly, plrx, plry, ulx, uly, lrx, lry)
     -- ...
 end
 
@@ -5249,20 +5286,6 @@ function get_star_name(courseNum, starNum)
     -- ...
 end
 
---- @param id integer
---- @param destLevel integer
---- @param destArea integer
---- @param destNode integer
---- @param checkpoint integer
---- @param o Object
---- @return ObjectWarpNode
---- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.<br>
---- To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)<br>
---- `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
-function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
-    -- ...
-end
-
 --- @return integer
 --- Returns if the level timer is running
 function level_control_timer_running()
@@ -5275,7 +5298,7 @@ function pressed_pause()
     -- ...
 end
 
---- @param arg integer
+--- @param arg SpecialWarpDestination
 --- @param color integer
 --- Fades into a special warp with `arg` and using `color`
 function fade_into_special_warp(arg, color)
@@ -5302,15 +5325,15 @@ function initiate_painting_warp(paintingIndex)
 end
 
 --- @param m MarioState
---- @param warpOp integer
+--- @param warpOp WarpOperation
 --- @return integer
 --- Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 function level_trigger_warp(m, warpOp)
     -- ...
 end
 
---- @param arg integer
---- Special warps to arg (`SPECIAL_WARP_*`)
+--- @param arg SpecialWarpDestination
+--- Special warps to arg (`WARP_SPECIAL_*`)
 function warp_special(arg)
     -- ...
 end
@@ -5318,9 +5341,9 @@ end
 --- @param destLevel integer
 --- @param destArea integer
 --- @param destWarpNode integer
---- @param arg integer
---- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `arg`. This function is unstable and it's generally recommended to use `warp_to_level` instead
-function initiate_warp(destLevel, destArea, destWarpNode, arg)
+--- @param warpFlags integer
+--- Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
+function initiate_warp(destLevel, destArea, destWarpNode, warpFlags)
     -- ...
 end
 
@@ -7808,6 +7831,15 @@ function delta_interpolate_s32(a, b, delta)
     -- ...
 end
 
+--- @param a integer
+--- @param b integer
+--- @param delta number
+--- @return integer
+--- Interpolates angle between `a` and `b` with `delta`
+function delta_interpolate_angle(a, b, delta)
+    -- ...
+end
+
 --- @param res Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
@@ -7828,6 +7860,7 @@ end
 
 --- @param modPath? string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
 function mod_fs_exists(modPath)
     -- ...
@@ -7835,6 +7868,7 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
 function mod_fs_get(modPath)
     -- ...
@@ -7842,12 +7876,14 @@ end
 
 --- @param modPath? string
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
 function mod_fs_reload(modPath)
     -- ...
 end
 
 --- @return ModFs
+--- @return ModFsErrorCode err
 --- Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
 function mod_fs_create()
     -- ...
@@ -7856,6 +7892,7 @@ end
 --- @param modFs ModFs
 --- @param index integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Gets the filename at position `index` of the provided `modFs`
 function mod_fs_get_filename(modFs, index)
     -- ...
@@ -7864,6 +7901,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
 function mod_fs_get_file(modFs, filepath)
     -- ...
@@ -7873,6 +7911,7 @@ end
 --- @param filepath string
 --- @param text boolean
 --- @return ModFsFile
+--- @return ModFsErrorCode err
 --- Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
 function mod_fs_create_file(modFs, filepath, text)
     -- ...
@@ -7883,6 +7922,7 @@ end
 --- @param newpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
 function mod_fs_move_file(modFs, oldpath, newpath, overwriteExisting)
     -- ...
@@ -7893,6 +7933,7 @@ end
 --- @param dstpath string
 --- @param overwriteExisting boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
 function mod_fs_copy_file(modFs, srcpath, dstpath, overwriteExisting)
     -- ...
@@ -7901,6 +7942,7 @@ end
 --- @param modFs ModFs
 --- @param filepath string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
 function mod_fs_delete_file(modFs, filepath)
     -- ...
@@ -7908,6 +7950,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Deletes all files of the provided `modFs`. Returns true on success
 function mod_fs_clear(modFs)
     -- ...
@@ -7915,6 +7958,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Saves the provided `modFs` to persistent storage. Returns true on success
 function mod_fs_save(modFs)
     -- ...
@@ -7922,6 +7966,7 @@ end
 
 --- @param modFs ModFs
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
 function mod_fs_delete(modFs)
     -- ...
@@ -7930,6 +7975,7 @@ end
 --- @param modFs ModFs
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_set_public(modFs, pub)
     -- ...
@@ -7937,6 +7983,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Reads a boolean from a binary modfs `file`
 function mod_fs_file_read_bool(file)
     -- ...
@@ -7945,6 +7992,7 @@ end
 --- @param file ModFsFile
 --- @param intType ModFsFileIntType
 --- @return integer
+--- @return ModFsErrorCode err
 --- Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
 function mod_fs_file_read_integer(file, intType)
     -- ...
@@ -7953,6 +8001,7 @@ end
 --- @param file ModFsFile
 --- @param floatType ModFsFileFloatType
 --- @return number
+--- @return ModFsErrorCode err
 --- Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
 function mod_fs_file_read_number(file, floatType)
     -- ...
@@ -7961,6 +8010,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a bytestring of `length` bytes from a binary modfs `file`
 function mod_fs_file_read_bytes(file, length)
     -- ...
@@ -7968,6 +8018,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
 function mod_fs_file_read_string(file)
     -- ...
@@ -7975,6 +8026,7 @@ end
 
 --- @param file ModFsFile
 --- @return string
+--- @return ModFsErrorCode err
 --- Reads a line from a text modfs `file`
 function mod_fs_file_read_line(file)
     -- ...
@@ -7983,6 +8035,7 @@ end
 --- @param file ModFsFile
 --- @param value boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a boolean to a binary modfs `file`. Returns true on success
 function mod_fs_file_write_bool(file, value)
     -- ...
@@ -7992,6 +8045,7 @@ end
 --- @param value integer
 --- @param intType ModFsFileIntType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_integer(file, value, intType)
     -- ...
@@ -8001,6 +8055,7 @@ end
 --- @param value number
 --- @param floatType ModFsFileFloatType
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
 function mod_fs_file_write_number(file, value, floatType)
     -- ...
@@ -8009,6 +8064,7 @@ end
 --- @param file ModFsFile
 --- @param bytestring string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a bytestring to a modfs `file`. Returns true on success
 function mod_fs_file_write_bytes(file, bytestring)
     -- ...
@@ -8017,6 +8073,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a string to a modfs `file`. Returns true on success
 function mod_fs_file_write_string(file, str)
     -- ...
@@ -8025,6 +8082,7 @@ end
 --- @param file ModFsFile
 --- @param str string
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Writes a line to a text modfs `file`. Returns true on success
 function mod_fs_file_write_line(file, str)
     -- ...
@@ -8034,6 +8092,7 @@ end
 --- @param offset integer
 --- @param origin ModFsFileSeek
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file`.<br>
 --- If `origin` is `FILE_SEEK_SET`, file position is set to `offset`.<br>
 --- If `origin` is `FILE_SEEK_CUR`, `offset` is added to file current position.<br>
@@ -8045,6 +8104,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Sets the current position of a modfs `file` to its beginning.<br>
 --- Returns true on success
 function mod_fs_file_rewind(file)
@@ -8053,6 +8113,7 @@ end
 
 --- @param file ModFsFile
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Returns true if the provided modfs `file` has reached its end of file
 function mod_fs_file_is_eof(file)
     -- ...
@@ -8062,6 +8123,7 @@ end
 --- @param byte integer
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
 function mod_fs_file_fill(file, byte, length)
     -- ...
@@ -8070,6 +8132,7 @@ end
 --- @param file ModFsFile
 --- @param length integer
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Erases `length` bytes or characters from a modfs `file`. Returns true on success
 function mod_fs_file_erase(file, length)
     -- ...
@@ -8078,6 +8141,7 @@ end
 --- @param file ModFsFile
 --- @param text boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as text. Returns true on success
 function mod_fs_file_set_text_mode(file, text)
     -- ...
@@ -8086,6 +8150,7 @@ end
 --- @param file ModFsFile
 --- @param pub boolean
 --- @return boolean
+--- @return ModFsErrorCode err
 --- Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
 function mod_fs_file_set_public(file, pub)
     -- ...
@@ -8094,7 +8159,8 @@ end
 --- @param file ModFsFile
 --- @param level integer
 --- @return boolean
---- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success.
+--- @return ModFsErrorCode err
+--- Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
 function mod_fs_file_set_compression(file, level)
     -- ...
 end
@@ -8102,6 +8168,12 @@ end
 --- @param hide boolean
 --- Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
 function mod_fs_hide_errors(hide)
+    -- ...
+end
+
+--- @return ModFsErrorCode
+--- Returns the last error code raised by `mod_fs` functions
+function mod_fs_get_last_error_code()
     -- ...
 end
 
@@ -9471,6 +9543,12 @@ function count_objects_with_behavior(behavior)
 end
 
 --- @param behavior Pointer_BehaviorScript
+--- Deletes all objects with the specified behavior
+function delete_all_objects_with_behavior(behavior)
+    -- ...
+end
+
+--- @param behavior Pointer_BehaviorScript
 --- @return Object
 --- Finds any object with the specified behavior
 function find_object_with_behavior(behavior)
@@ -10780,6 +10858,13 @@ function sequence_player_get_fade_volume(player)
 end
 
 --- @param player integer
+--- @param volume number
+--- Sets the fade volume of `player`
+function sequence_player_set_fade_volume(player, volume)
+    -- ...
+end
+
+--- @param player integer
 --- @return number
 --- Gets the mute volume scale of `player`
 function sequence_player_get_mute_volume_scale(player)
@@ -11910,9 +11995,78 @@ function warp_to_castle(aLevel)
     -- ...
 end
 
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @param pos Vec3f
+--- @param angle Vec3s
+--- @param modelId ModelExtendedId
+--- @param behaviorId BehaviorId
+--- @param behParams integer
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @return CustomWarpNode
+--- Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+function level_get_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_delete_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- Deletes all the warp nodes in level `levelNum`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_clear_warp_nodes(levelNum)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current area's networked timer
 function get_network_area_timer()
+    -- ...
+end
+
+--- @return integer
+--- Gets the current area's networked random seed
+function get_network_area_random_seed()
     -- ...
 end
 
@@ -13003,6 +13157,26 @@ function smlua_text_utils_allocate_dialog()
     -- ...
 end
 
+--- @param dialogId DialogId
+--- @return DialogType
+--- Gets the type of a `dialogId`
+function smlua_text_utils_dialog_get_type(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @param dialogType DialogType
+--- Sets the type of a `dialogId`
+function smlua_text_utils_dialog_set_type(dialogId, dialogType)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- Resets the type of a `dialogId`
+function smlua_text_utils_dialog_reset_type(dialogId)
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- @param act1 string
@@ -13381,6 +13555,13 @@ end
 --- @return boolean
 --- Checks if a surface has force
 function surface_has_force(surfaceType)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return integer
+--- Retrieves the random seed of a sync object from its sync ID
+function sync_object_get_random_seed(syncId)
     -- ...
 end
 

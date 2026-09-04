@@ -416,6 +416,12 @@ static LevelScript ParseLevelScriptSymbolArgInternal(GfxData* aGfxData, DataNode
         auto _Node = aGfxData->mLevelScripts.Find(_Arg, aGfxData->mDataIdentifier);
         if (_Node != NULL) {
             auto base = DynOS_Lvl_Parse(aGfxData, _Node, false)->mData;
+            u64 bufferSize = _Node->mSize * sizeof(LevelScript);
+            if (_Offset < 0 || _Offset >= bufferSize) {
+                PrintDataError("  ERROR: Level script offset %d larger than buffer size %llu", _Offset, bufferSize);
+                *found = false;
+                return 0;
+            }
             auto data = (u8*)base + _Offset;
             if (_Offset != 0) {
                 aGfxData->mPointerOffsetList.Add({ data, base });

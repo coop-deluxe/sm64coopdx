@@ -815,7 +815,7 @@ u32 should_push_or_pull_door(struct MarioState *m, struct Object *o) {
 
     s16 dYaw = o->oMoveAngleYaw - atan2s(dz, dx);
 
-    return (dYaw >= -0x4000 && dYaw <= 0x4000) ? 0x00000001 : 0x00000002;
+    return (dYaw >= -0x4000 && dYaw <= 0x4000) ? WARP_FLAG_DOOR_PULLED : WARP_FLAG_DOOR_FLIP_MARIO;
 }
 
 u32 take_damage_from_interact_object(struct MarioState *m) {
@@ -1152,10 +1152,10 @@ u32 interact_warp_door(struct MarioState *m, UNUSED u32 interactType, struct Obj
         }
 
         if (m->action == ACT_WALKING || m->action == ACT_DECELERATING) {
-            actionArg = should_push_or_pull_door(m, o) + 0x00000004;
+            actionArg = should_push_or_pull_door(m, o) + WARP_FLAG_DOOR_IS_WARP;
 
             if (doorAction == 0) {
-                if (actionArg & 0x00000001) {
+                if (actionArg & WARP_FLAG_DOOR_PULLED) {
                     doorAction = ACT_PULLING_DOOR;
                 } else {
                     doorAction = ACT_PUSHING_DOOR;
@@ -1229,7 +1229,7 @@ u32 interact_door(struct MarioState *m, UNUSED u32 interactType, struct Object *
             u32 enterDoorAction;
             u32 doorSaveFileFlag;
 
-            if (actionArg & 0x00000001) {
+            if (actionArg & WARP_FLAG_DOOR_PULLED) {
                 enterDoorAction = ACT_PULLING_DOOR;
             } else {
                 enterDoorAction = ACT_PUSHING_DOOR;

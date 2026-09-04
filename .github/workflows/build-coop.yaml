@@ -8,81 +8,77 @@ on:
         branches: [ dev ]
 
 jobs:
-    build-linux:
+    build:
         if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
-        runs-on: ubuntu-22.04
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+        strategy:
+          fail-fast: false
+          matrix:
+            platform:
+              - name: Windows
+                os: windows-latest
+                make: make -j$(nproc)
+                exe: .exe
+                zip: dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
-            - name: Install dependencies
-              run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+              - name: Linux
+                os: ubuntu-22.04
+                deps: |
+                  sudo apt update
+                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                make: make -j$(nproc)
+                zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
-            - name: Build the game
-              run: make -j$(nproc)
+              - name: SteamOS
+                os: ubuntu-22.04
+                deps: |
+                  sudo apt update
+                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                make: make -j$(nproc)
+                zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file hash_file.cpp
-                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
+              - name: macOS_ARM
+                os: macos-26
+                deps: brew install make mingw-w64 pkg-config glfw3 coreutils
+                glew-flags: CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
+                glew-install: GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
+                sdl2-config: --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
+                make: |
+                  export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH
+                  gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+                internal: .app/Contents/MacOS/sm64coopdx
+                zip: sm64coopdx.app
 
-            - name: Zip the game
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
+              - name: macOS_Intel
+                os: macos-15-intel
+                deps: brew install make mingw-w64 pkg-config glfw3 coreutils
+                glew-flags: CC="clang -arch x86_64 -mmacosx-version-min=10.15"
+                sdl2-config: --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=10.15"
+                make: gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
+                internal: .app/Contents/MacOS/sm64coopdx
+                zip: sm64coopdx.app
 
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-linux
-                path: ./build/us_pc/sm64coopdx_Linux.zip
+        env:
+          MACOSX_DEPLOYMENT_TARGET: |-
+            ${{ case(
+              matrix.platform.os == 'macos-26', '11',
+              matrix.platform.os == 'macos-15-intel', '10.15',
+              ''
+            ) }}
 
-    build-steamos:
-        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
-        runs-on: ubuntu-22.04
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: |
-                sudo apt update
-                sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
-
-            - name: Build the game
-              run: make -j$(nproc) HANDHELD=1
-
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file hash_file.cpp
-                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
-
-            - name: Zip the game
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-steamos
-                path: ./build/us_pc/sm64coopdx_SteamOS.zip
-
-    build-windows:
-        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
-        runs-on: windows-latest
+        name: ${{ matrix.platform.name }}
+        runs-on: ${{ matrix.platform.os }}
         defaults:
             run:
-                shell: msys2 {0}
+                shell: ${{ case(matrix.platform.name == 'Windows', 'msys2 {0}', 'sh') }}
+
         steps:
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v7
+              with:
+                persist-credentials: false
 
-            - name: Install dependencies
+            - name: Install MSYS2 (Windows)
+              if: ${{ matrix.platform.name == 'Windows' }}
               uses: msys2/setup-msys2@v2
               with:
                 msystem: mingw64
@@ -97,131 +93,50 @@ jobs:
                     python3
                     zip
 
+            - name: Install dependencies
+              if: ${{ matrix.platform.name != 'Windows' }}
+              run: ${{ matrix.platform.deps }}
+
+            - name: Compile glew (macOS)
+              if: ${{ contains(matrix.platform.name, 'macOS') }}
+              run: |
+                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
+                tar -xzf glew.tar.gz
+                cd glew-2.2.0
+                make SYSTEM=darwin ${{ matrix.platform.glew-flags }}
+                make install ${{ matrix.platform.glew-install }}
+
+            - name: Compile SDL2 (macOS)
+              if: ${{ contains(matrix.platform.name, 'macOS') }}
+              run: |
+                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
+                tar -xzf SDL2.tar.gz
+                cd SDL2-2.30.9
+                ./configure ${{ matrix.platform.sdl2-config }}
+                make -j$(sysctl -n hw.ncpu)
+                make install
+
             - name: Build the game
-              run: make -j$(nproc)
+              run: ${{ matrix.platform.make }} ${{ case(matrix.platform.name == 'SteamOS', 'HANDHELD=1', '') }}
+
+            - name: Code sign the app (Ad-Hoc) (macOS)
+              if: ${{ contains(matrix.platform.name, 'macOS') }}
+              run: |
+                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
 
             - name: Generate hash
               run: |
                 cd tools
-                g++ -std=c++17 -o hash_file.exe hash_file.cpp
-                echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
+                g++ -std=c++17 -o hash_file${{ matrix.platform.exe }} hash_file.cpp
+                echo "::notice ::$(./hash_file${{ matrix.platform.exe }} ../build/us_pc/sm64coopdx${{ matrix.platform.exe }}${{ matrix.platform.internal }})"
 
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Windows.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
+                zip -r sm64coopdx_${{ matrix.platform.name }}.zip ${{ matrix.platform.zip }}
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
-                name: sm64coopdx-windows
-                path: ./build/us_pc/sm64coopdx_Windows.zip
-
-    build-macos-arm:
-        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
-        runs-on: macos-26
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: |
-                brew install make mingw-w64 pkg-config glfw3 coreutils
-
-            - name: Compile glew
-              run: |
-                export MACOSX_DEPLOYMENT_TARGET=11
-                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
-                tar -xzf glew.tar.gz
-                cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
-                make install GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
-
-            - name: Compile SDL2
-              run: |
-                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
-                tar -xzf SDL2.tar.gz
-                cd SDL2-2.30.9
-                ./configure --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
-                make -j$(sysctl -n hw.ncpu)
-                make install
-
-            - name: Build the game
-              run: |
-                export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH
-                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
-
-            - name: Code sign the app (Ad-Hoc)
-              run: |
-                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
-
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file hash_file.cpp
-                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
-
-            - name: Zip the .app bundle
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_macOS_ARM.zip sm64coopdx.app
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-macos-arm
-                path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
-
-    build-macos-intel:
-        if: ${{ (github.event_name != 'push' || contains(github.event.head_commit.message, '[build]')) && github.event.pull_request.draft == false }}
-        runs-on: macos-15-intel
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: |
-                brew install make mingw-w64 pkg-config glfw3 coreutils
-
-            - name: Compile glew
-              run: |
-                export MACOSX_DEPLOYMENT_TARGET=10.15
-                curl -L -o glew.tar.gz https://github.com/nigels-com/glew/releases/download/glew-2.2.0/glew-2.2.0.tgz
-                tar -xzf glew.tar.gz
-                cd glew-2.2.0
-                make SYSTEM=darwin CC="clang -arch x86_64 -mmacosx-version-min=10.15"
-                make install
-
-            - name: Compile SDL2
-              run: |
-                curl -L -o SDL2.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-2.30.9/SDL2-2.30.9.tar.gz
-                tar -xzf SDL2.tar.gz
-                cd SDL2-2.30.9
-                ./configure --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=10.15"
-                make -j$(sysctl -n hw.ncpu)
-                make install
-
-            - name: Build the game
-              run: |
-                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
-
-            - name: Code sign the app (Ad-Hoc)
-              run: |
-                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
-
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file hash_file.cpp
-                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
-
-            - name: Zip the .app bundle
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_macOS_Intel.zip sm64coopdx.app
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-macos-intel
-                path: ./build/us_pc/sm64coopdx_macOS_Intel.zip
+                path: ./build/us_pc/sm64coopdx_${{ matrix.platform.name }}.zip
+                archive: false

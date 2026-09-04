@@ -3054,37 +3054,51 @@ void init_sequence_players(void) {
 }
 
 void sequence_player_set_tempo(u8 player, u16 tempo) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     gSequencePlayers[player].tempo = tempo;
 }
 
 void sequence_player_set_tempo_acc(u8 player, u16 tempoAcc) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     gSequencePlayers[player].tempoAcc = tempoAcc;
 }
 
 void sequence_player_set_transposition(u8 player, u16 transposition) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
     gSequencePlayers[player].transposition = transposition;
 }
 
+void sequence_player_set_fade_volume(u8 player, f32 volume) {
+    if (player >= SEQUENCE_PLAYERS) { return; }
+    gSequencePlayers[player].fadeVolume = volume;
+}
+
 u16 sequence_player_get_tempo(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0; }
     return gSequencePlayers[player].tempo;
 }
 
 u16 sequence_player_get_tempo_acc(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0; }
     return gSequencePlayers[player].tempoAcc;
 }
 
 u16 sequence_player_get_transposition(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0; }
     return gSequencePlayers[player].transposition;
 }
 
 f32 sequence_player_get_volume(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0.f; }
     return gSequencePlayers[player].volume;
 }
 
 f32 sequence_player_get_fade_volume(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0.f; }
     return gSequencePlayers[player].fadeVolume;
 }
 
 f32 sequence_player_get_mute_volume_scale(u8 player) {
+    if (player >= SEQUENCE_PLAYERS) { return 0.f; }
     return gSequencePlayers[player].muteVolumeScale;
 }

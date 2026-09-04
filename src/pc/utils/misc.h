@@ -27,6 +27,8 @@ void file_get_line(char* buffer, size_t maxLength, FILE* fp);
 f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);
 /* |description|Linearly interpolates between `a` and `b` with `delta`|descriptionEnd| */
 s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);
+/* |description|Interpolates angle between `a` and `b` with `delta`|descriptionEnd| */
+s16 delta_interpolate_angle(s16 a, s16 b, f32 delta);
 /* |description|Linearly interpolates `res` between `a` and `b` with `delta`|descriptionEnd| */
 void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);
 /* |description|Linearly interpolates `res` between `a` and `b` with `delta`|descriptionEnd| */

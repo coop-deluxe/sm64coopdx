@@ -3,24 +3,24 @@
 
 local function on_get_command(msg)
     if not network_is_server() then
-        djui_chat_message_create("You need to be the host!")
+        command_message_create("You need to be the host!", CONSOLE_MESSAGE_ERROR)
         return true
     end
 
-    djui_chat_message_create(tostring(get_water_level(0)))
-    djui_chat_message_create(tostring(get_water_level(1)))
+    command_message_create(tostring(get_water_level(0)))
+    command_message_create(tostring(get_water_level(1)))
     return true
 end
 
 local function on_set_command(msg)
     if not network_is_server() then
-        djui_chat_message_create("You need to be the host!")
+        command_message_create("You need to be the host!", CONSOLE_MESSAGE_ERROR)
         return true
     end
 
     local num = tonumber(msg)
     if not num then
-        djui_chat_message_create("Not a number!")
+        command_message_create("Not a number!", CONSOLE_MESSAGE_ERROR)
         return true
     end
 

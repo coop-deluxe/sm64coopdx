@@ -389,31 +389,31 @@ end
 
 local function on_touch_tag_command()
     gGlobalSyncTable.touchTag = not gGlobalSyncTable.touchTag
-    djui_chat_message_create("Touch tag: " .. on_or_off(gGlobalSyncTable.touchTag))
+    command_message_create("Touch tag: " .. on_or_off(gGlobalSyncTable.touchTag))
     return true
 end
 
 local function on_hider_cap_command()
     gGlobalSyncTable.hiderCaps = not gGlobalSyncTable.hiderCaps
-    djui_chat_message_create("Hider Caps: " .. on_or_off(gGlobalSyncTable.hiderCaps))
+    command_message_create("Hider Caps: " .. on_or_off(gGlobalSyncTable.hiderCaps))
     return true
 end
 
 local function on_seeker_cap_command()
     gGlobalSyncTable.seekerCaps = not gGlobalSyncTable.seekerCaps
-    djui_chat_message_create("Seeker Caps: " .. on_or_off(gGlobalSyncTable.seekerCaps))
+    command_message_create("Seeker Caps: " .. on_or_off(gGlobalSyncTable.seekerCaps))
     return true
 end
 
 local function on_koopa_shell_command()
     gGlobalSyncTable.banKoopaShell = not gGlobalSyncTable.banKoopaShell
-    djui_chat_message_create("Koopa Shells: " .. on_or_off(not gGlobalSyncTable.banKoopaShell))
+    command_message_create("Koopa Shells: " .. on_or_off(not gGlobalSyncTable.banKoopaShell))
     return true
 end
 
 local function on_blj_command()
     gGlobalSyncTable.disableBLJ = not gGlobalSyncTable.disableBLJ
-    djui_chat_message_create("BLJS: " .. on_or_off(not gGlobalSyncTable.disableBLJ))
+    command_message_create("BLJS: " .. on_or_off(not gGlobalSyncTable.disableBLJ))
     return true
 end
 

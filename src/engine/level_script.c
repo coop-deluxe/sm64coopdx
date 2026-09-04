@@ -27,6 +27,7 @@
 #include "surface_load.h"
 #include "level_table.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/smlua.h"
 #include "pc/djui/djui.h"
 #include "pc/debug_context.h"
@@ -104,30 +105,11 @@ static s32 eval_script_op(s8 op, s32 arg) {
     return result;
 }
 
-struct ObjectWarpNode *area_create_warp_node(u8 id, u8 destLevel, u8 destArea, u8 destNode, u8 checkpoint, struct Object *o) {
-    if (sCurrAreaIndex != -1) {
-        struct ObjectWarpNode *warpNode = dynamic_pool_alloc(gLevelPool, sizeof(struct ObjectWarpNode));
-
-        warpNode->node.id = id;
-        warpNode->node.destLevel = destLevel + checkpoint;
-        warpNode->node.destArea = destArea;
-        warpNode->node.destNode = destNode;
-
-        warpNode->object = o;
-
-        warpNode->next = gAreas[sCurrAreaIndex].warpNodes;
-        gAreas[sCurrAreaIndex].warpNodes = warpNode;
-
-        return warpNode;
-    }
-    return NULL;
-}
-
-static void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
+void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
     const BehaviorScript *bhv = NULL;
     if (isMacroObject) {
         MacroObject index = (*((MacroObject *) arg) & 0x1FF) - 0x1F;
-        if (index >= 0 && index < 366) {
+        if (index >= 0 && index < MACRO_OBJECT_PRESET_COUNT) {
             bhv = MacroObjectPresets[index].behavior;
         }
     } else {
@@ -456,6 +438,8 @@ static void level_cmd_begin_area(void) {
 }
 
 static void level_cmd_end_area(void) {
+    level_register_custom_warp_nodes(gCurrLevelNum, sCurrAreaIndex);
+
     sCurrAreaIndex = -1;
     sCurrentCmd = CMD_NEXT;
 }
@@ -531,11 +515,19 @@ static void level_cmd_init_mario(void) {
 }
 
 static void level_cmd_place_object(void) {
-    u8 val7 = 1 << (gCurrActNum - 1);
     u16 model;
     struct SpawnInfo *spawnInfo;
 
-    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (CMD_GET(u8, 2) & val7) || CMD_GET(u8, 2) == 0x1F)) {
+    u8 actFlags = CMD_GET(u8, 2);
+    u8 actMatch;
+
+    if (gCurrActNum > 0) {
+        actMatch = actFlags & (1 << (gCurrActNum - 1)) || actFlags == ALL_ACTS_MACRO;
+    } else {
+        actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
+    }
+
+    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
         model = CMD_GET(u8, 3);
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
@@ -646,12 +638,15 @@ static void level_cmd_create_painting_warp_node(void) {
             }
         }
 
-        node = &gAreas[sCurrAreaIndex].paintingWarpNodes[CMD_GET(u8, 2)];
+        u8 id = CMD_GET(u8, 2);
+        if (id < MAX_PAINTING_WARP_NODES) {
+            node = &gAreas[sCurrAreaIndex].paintingWarpNodes[id];
 
-        node->id = 1;
-        node->destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
-        node->destArea = CMD_GET(u8, 4);
-        node->destNode = CMD_GET(u8, 5);
+            node->id = 1;
+            node->destLevel = CMD_GET(u8, 3) + CMD_GET(u8, 6);
+            node->destArea = CMD_GET(u8, 4);
+            node->destNode = CMD_GET(u8, 5);
+        }
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -956,7 +951,6 @@ static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaP
     type name = (type) name##Param;
 
 static void level_cmd_place_object_ext_lua_params(void) {
-    u8 val7 = 1 << (gCurrActNum - 1);
     struct SpawnInfo *spawnInfo;
 
     u8 cmdType = sCurrentCmd->type;
@@ -966,9 +960,16 @@ static void level_cmd_place_object_ext_lua_params(void) {
         CMD_GET(u16, 2)
     )));
 
-    get_lua_param(acts, u8, OBJECT_EXT_LUA_ACTS);
+    get_lua_param(actFlags, u8, OBJECT_EXT_LUA_ACTS);
+    u8 actMatch;
 
-    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || (acts & val7) || acts == 0x1F)) {
+    if (gCurrActNum > 0) {
+        actMatch = actFlags & (1 << (gCurrActNum - 1)) || actFlags == ALL_ACTS_MACRO;
+    } else {
+        actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
+    }
+
+    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
         get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);

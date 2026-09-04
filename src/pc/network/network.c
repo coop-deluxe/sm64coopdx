@@ -63,6 +63,7 @@ bool gNetworkAreaLoaded = false;
 bool gNetworkAreaSyncing = true;
 u32 gNetworkAreaTimerClock = 0;
 u32 gNetworkAreaTimer = 0;
+u32 gNetworkAreaRandomSeed = 0;
 void* gNetworkServerAddr = NULL;
 bool gNetworkSentJoin = false;
 u16 gNetworkRequestLocationTimer = 0;
@@ -167,8 +168,6 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
         mods_activate(&gLocalMods);
         smlua_init();
 
-        dynos_behavior_hook_all_custom_behaviors();
-
         network_player_connected(NPT_LOCAL, 0, configPlayerModel, &configPlayerPalette, configPlayerName, get_local_discord_id());
         extern u8* gOverrideEeprom;
         gOverrideEeprom = NULL;
@@ -203,6 +202,7 @@ void network_on_init_area(void) {
     gNetworkAreaSyncing = true;
     gNetworkAreaTimer = 0;
     gNetworkAreaTimerClock = clock_elapsed_ticks();
+    gNetworkAreaRandomSeed = rand();
 }
 
 void network_on_loaded_area(void) {

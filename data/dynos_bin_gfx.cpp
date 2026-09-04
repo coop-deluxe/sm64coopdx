@@ -1459,8 +1459,14 @@ static bool ParseGfxCommand(lua_State *L, GfxData *aGfxData, Gfx *gfx, const cha
         return false;
     }
 
-    // Cache parsed command
+    // Sanity check command length
     u32 commandLength = (u32) (gfxHead - gfxBuffer);
+    if (commandLength > ARRAY_COUNT(gfxBuffer)) {
+        PrintDataErrorGfx("  ERROR: Command '%s' expands to %u commands, max is %u", command, commandLength, ARRAY_COUNT(gfxBuffer));
+        return false;
+    }
+
+    // Cache parsed command
     size_t commandSize = commandLength * sizeof(Gfx);
     Gfx *cached = (Gfx *) malloc(commandSize);
     memcpy(cached, gfxBuffer, commandSize);

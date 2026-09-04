@@ -8,35 +8,35 @@ function on_stream_play(msg)
     if msg == "load" then
         audioStream = audio_load("music.mp3", MA_TYPE_STREAM)
         audioStream.looping = true
-        djui_chat_message_create("audio audioStream: " .. tostring(audioStream))
+        command_message_create("audio audioStream: " .. tostring(audioStream))
     elseif not audioStream then
-        djui_chat_message_create("load the stream first!")
+        command_message_create("load the stream first!")
         return true
 
     elseif msg == "play" then
         audioStream.position = 0
         audioStream:play()
-        djui_chat_message_create("playing audio")
+        command_message_create("playing audio")
     elseif msg == "resume" then
         audioStream:play()
-        djui_chat_message_create("resuming audio")
+        command_message_create("resuming audio")
     elseif msg == "pause" then
         audioStream:pause()
-        djui_chat_message_create("pausing audio")
+        command_message_create("pausing audio")
     elseif msg == "stop" then
         audioStream:stop()
-        djui_chat_message_create("stopping audio")
+        command_message_create("stopping audio")
     elseif msg == "destroy" then
         audioStream:destroy()
-        djui_chat_message_create("destroyed audio")
+        command_message_create("destroyed audio")
     elseif msg:sub(1, 4) == "seek" then
         audioStream.position = tonumber(msg:sub(5)) or 0
     elseif msg:sub(1, 5) == "speed" then
         audioStream.frequency = tonumber(msg:sub(6)) or 1
     elseif msg == "pos" then
-        djui_chat_message_create("pos: " .. audioStream.position)
+        command_message_create("pos: " .. audioStream.position)
     elseif msg == "length" then
-        djui_chat_message_create("length: " .. audioStream.length)
+        command_message_create("length: " .. audioStream.length)
     end
 
     return true
@@ -45,10 +45,10 @@ end
 function on_sample_play(msg)
     if msg == "load" then
         audioSample = audio_load("sample.mp3", MA_TYPE_SAMPLE)
-        djui_chat_message_create("audio audioSample: " .. tostring(audioSample))
+        command_message_create("audio audioSample: " .. tostring(audioSample))
         return true
     elseif not audioSample then
-        djui_chat_message_create("load the sample first!")
+        command_message_create("load the sample first!")
         return true
     end
 

@@ -2,6 +2,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "dynos.cpp.h"
 extern "C" {
 #include "pc/gfx/gfx.h"
@@ -323,6 +324,17 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
     auto& _ValidTextures = DynosValidTextures();
     if (_ValidTextures.find((DataNode<TexData>*)aPtr) != _ValidTextures.end()) {
         return (DataNode<TexData>*)aPtr;
+    }
+
+    // DynOS_Tex_GetFromData passes aPtr as `const Texture *`, the check above isn't going to find it
+    auto _TexNode = std::find_if(
+        _ValidTextures.begin(), _ValidTextures.end(),
+        [aPtr](DataNode<TexData> *aTexNode) {
+            return aTexNode->mData && aTexNode->mData->mRawData.begin() == (Texture *) aPtr;
+        }
+    );
+    if (_TexNode != _ValidTextures.end()) {
+        return *_TexNode;
     }
 
     auto& _DynosCustomTexs = DynosCustomTexs();

@@ -12,8 +12,8 @@ Each mod has its own file system, and can allow other mods to read its files.
 ### File system
 
 Each ModFS file system:
-- Has a maximum size of **32 MB** (`MOD_FS_MAX_SIZE`). Files can be any size, as long as the cumulative sum of file sizes doesn't exceed this limit.
-- Can store at most **512 files** (`MOD_FS_MAX_FILES`).
+- Has a maximum size of **128 MB** (`MOD_FS_MAX_SIZE`). Files can be any size, as long as the cumulative sum of file sizes doesn't exceed this limit.
+- Can store at most **1024 files** (`MOD_FS_MAX_FILES`).
 - Is stored on disk as a `.modfs` file, which is a ZIP file, containing all files written in it.
 
 The ModFS files are located in the `sav` directory at the usual save file location:
@@ -25,7 +25,7 @@ The ModFS files are located in the `sav` directory at the usual save file locati
 
 - The maximum filepath length is **256 characters** (`MOD_FS_MAX_PATH`), including the NUL terminator.
 - Filepaths have the following restrictions:
-  - Cannot start, end or have two or more consecutive `/`
+  - Cannot start or end with whitespaces or slashes `/`, and cannot have two or more consecutive slashes `/`
   - Can contain only valid ASCII characters, no `*` or `\`
   - Cannot be called `properties.json` (this name is reserved for ModFS internal properties)
   - Only the following extensions (and extension-less files) are allowed:
@@ -141,6 +141,7 @@ print("The ModFS file " .. file.filepath .. " is now empty.")
 All errors coming from ModFS functions are not blocking. However, they appear in the console and raise the "Mod has script errors" message.
 
 - The function [`mod_fs_hide_errors`](../functions-5.md#mod_fs_hide_errors) can suppress the ModFS errors from the console.
+- Use the function [`mod_fs_get_last_error_code`](../functions-5.md#mod_fs_get_last_error_code) to retrieve the last error code raised by ModFS. This function always return an error code if an error occurred, even if errors are hidden.
 - Use the function [`mod_fs_get_last_error`](../functions-5.md#mod_fs_get_last_error) to retrieve the last error raised by ModFS. This function always return an error message if an error occurred, even if errors are hidden.
 
 <br>
@@ -255,10 +256,41 @@ file:write_string("some text")
 
 ### Handle possible failures
 
-In addition to error messages that can be retrieved with [`mod_fs_get_last_error`](../functions-5.md#mod_fs_get_last_error), almost all ModFS functions have a boolean return value indicating if the function succeeded or failed.
+In addition to error messages that can be retrieved with [`mod_fs_get_last_error`](../functions-5.md#mod_fs_get_last_error), all ModFS functions return an error code as second return value. The error code can be one of the following:
+
+|Error code|Description|
+|-|-|
+|`MOD_FS_ERR_ALLOC_FAILED`|Memory allocation failed|
+|`MOD_FS_ERR_ALREADY_EXISTS`|Tried to create, move or copy an existing ModFS or ModFS file|
+|`MOD_FS_ERR_NOT_FOUND`|Tried to move, copy or delete a non-existent ModFS file|
+|`MOD_FS_ERR_INVALID_POINTER`|Passed an invalid ModFS or ModFS file pointer|
+|`MOD_FS_ERR_INVALID_PARAMETER`|Passed an invalid parameter value|
+|`MOD_FS_ERR_FILE_INVALID_INDEX`|Tried to get the filename of an out-of-bounds file index|
+|`MOD_FS_ERR_FILE_TYPE_NOT_ALLOWED`|Tried to use a read/write function on a non-supported file type|
+|`MOD_FS_ERR_TOTAL_SIZE_EXCEEDED`|Tried to read, copy or write past the maximum size of a ModFS|
+|`MOD_FS_ERR_NUM_FILES_EXCEEDED`|Tried to read or create more files than allowed for a ModFS|
+|`MOD_FS_ERR_FILEPATH_EMPTY`|Empty filepath|
+|`MOD_FS_ERR_FILEPATH_LEN_EXCEEDED`|Filepath too long|
+|`MOD_FS_ERR_FILEPATH_RESERVED`|Filepath is reserved and cannot be used for ModFS files|
+|`MOD_FS_ERR_FILEPATH_INVALID_CHAR`|Filepath contains invalid characters (non-ASCII, control characters, asterisk or backslash)|
+|`MOD_FS_ERR_FILEPATH_MALFORMED`|Filepath is malformed (leading/trailing whitespaces/slashes, consecutive slashes)|
+|`MOD_FS_ERR_FILEPATH_INVALID_EXTENSION`|Filepath extension is not in whitelist|
+|`MOD_FS_ERR_READ_INVALID_MODPATH`|Modpath couldn't be resolved|
+|`MOD_FS_ERR_READ_ZIP`|ZIP decompression failed|
+|`MOD_FS_ERR_READ_PROPERTIES`|Properties file JSON is malformed|
+|`MOD_FS_ERR_READ_FILE_TRUNCATED`|Read data didn't match the expected size|
+|`MOD_FS_ERR_READ_EOF`|Reached end of file while reading|
+|`MOD_FS_ERR_WRITE_ZIP`|ZIP compression failed|
+|`MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD`|Tried to perform a write operation (create, delete, move, copy, write, set) on another mod ModFS or ModFS file|
+
+Along with the return value of the function, use this error code to handle errors properly:
 ```lua
-if not modFs:delete_file("somefile") then
-    print(mod_fs_get_last_error())
+local ok, err = modFs:delete_file("somefile")
+if not ok then
+    print(err, mod_fs_get_last_error())
+    if err == MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD then
+        print("Do not delete other mods ModFS files!")
+    end
 end
 ```
 

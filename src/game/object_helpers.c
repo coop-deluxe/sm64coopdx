@@ -128,7 +128,7 @@ Gfx *geo_update_layer_transparency(s32 callContext, struct GraphNode *node, UNUS
                 }
             }
 #else // gDebugInfo accesses were removed in all non-JP versions.
-            if (objectOpacity == 0 && segmented_to_virtual(smlua_override_behavior(bhvBowser)) == objectGraphNode->behavior) {
+            if (objectOpacity == 0 && smlua_override_behavior(bhvBowser) == objectGraphNode->behavior) {
                 objectGraphNode->oAnimState = 2;
             }
             // the debug info check was removed in US. so we need to
@@ -332,7 +332,7 @@ void create_transformation_from_matrices(VEC_OUT Mat4 dest, Mat4 src1, Mat4 src2
 
 /* |description|Sets an object's held state based on the behavior script it will perform|descriptionEnd| */
 void obj_set_held_state(struct Object *obj, const BehaviorScript *heldBehavior) {
-    if (obj == NULL) { return; }
+    if (obj == NULL || heldBehavior == NULL) { return; }
     obj->parentObj = o;
 
     if (obj->oFlags & OBJ_FLAG_HOLDABLE) {
@@ -661,14 +661,15 @@ struct Object *spawn_object_rel_with_rot(struct Object *parent, u32 model, const
 }
 
 struct Object *spawn_obj_with_transform_flags(struct Object *sp20, s32 model, const BehaviorScript *sp28) {
-    struct Object *sp1C = spawn_object(sp20, model, sp28);
-    if (sp1C == NULL) { return NULL; }
-    sp1C->oFlags |= OBJ_FLAG_0020 | OBJ_FLAG_SET_THROW_MATRIX_FROM_TRANSFORM;
-    return sp1C;
+    struct Object *newObj = spawn_object(sp20, model, sp28);
+    if (newObj == NULL) { return NULL; }
+    newObj->oFlags |= OBJ_FLAG_0020 | OBJ_FLAG_SET_THROW_MATRIX_FROM_TRANSFORM;
+    return newObj;
 }
 
 /* |description|Spawns a water droplet object with the specified parameters|descriptionEnd| */
 struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletParams *params) {
+    if (!params) { return NULL; }
     f32 randomScale;
     struct Object *newObj = spawn_object(parent, params->model, params->behavior);
     if (newObj == NULL) { return NULL; }
@@ -711,10 +712,8 @@ struct Object *spawn_water_droplet(struct Object *parent, struct WaterDropletPar
 struct Object *spawn_object_at_origin(struct Object *parent, UNUSED s32 unusedArg, u32 model,
                                       const BehaviorScript *behavior) {
     struct Object *obj;
-    const BehaviorScript *behaviorAddr;
 
-    behaviorAddr = segmented_to_virtual(behavior);
-    obj = create_object(behaviorAddr);
+    obj = create_object(behavior);
     if (obj == NULL) { return NULL; }
 
     obj->parentObj = parent;
@@ -1110,6 +1109,7 @@ f32 cur_obj_dist_to_nearest_object_with_behavior(const BehaviorScript *behavior)
 
 /* |description|Finds the nearest pole-like object to the current object|descriptionEnd| */
 struct Object* cur_obj_find_nearest_pole(void) {
+    if (!o) { return NULL; }
     struct Object* closestObj = NULL;
     struct Object* obj;
     struct ObjectNode* listHead;
@@ -1136,22 +1136,21 @@ struct Object* cur_obj_find_nearest_pole(void) {
 
 /* |description|Finds the nearest object with specified behavior and returns distance via pointer|descriptionEnd| */
 struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *behavior, RET f32 *dist) {
-    if (!behavior || !dist) { return NULL; }
+    if (!o || !behavior || !dist) { return NULL; }
 
     behavior = smlua_override_behavior(behavior);
-    uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
     struct Object *closestObj = NULL;
     struct Object *obj;
     struct ObjectNode *listHead;
     f32 minDist = 0x20000;
-    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    u32 objList = get_object_list_from_behavior(behavior);
     if (objList >= NUM_OBJ_LISTS) { return NULL; }
 
     listHead = &gObjectLists[objList];
     obj = (struct Object *) listHead->next;
 
     while (obj && obj != (struct Object *) listHead) {
-        if (obj->behavior == behaviorAddr) {
+        if (obj->behavior == behavior) {
             if (obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj != o) {
                 f32 objDist = dist_between_objects(o, obj);
                 if (objDist < minDist) {
@@ -1169,21 +1168,20 @@ struct Object *cur_obj_find_nearest_object_with_behavior(const BehaviorScript *b
 
 /* |description|Counts objects with specified behavior within distance of current object|descriptionEnd| */
 u16 cur_obj_count_objects_with_behavior(const BehaviorScript* behavior, f32 dist) {
-    if (!behavior) { return 0; }
+    if (!o || !behavior) { return 0; }
     behavior = smlua_override_behavior(behavior);
     u16 numObjs = 0;
-    uintptr_t* behaviorAddr = segmented_to_virtual(behavior);
     struct Object* obj;
     struct ObjectNode* listHead;
 
-    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    u32 objList = get_object_list_from_behavior(behavior);
     if (objList >= NUM_OBJ_LISTS) { return 0; }
 
     listHead = &gObjectLists[objList];
     obj = (struct Object*)listHead->next;
 
     while (obj && obj != (struct Object*)listHead) {
-        if (obj->behavior == behaviorAddr) {
+        if (obj->behavior == behavior) {
             if (obj->activeFlags != ACTIVE_FLAG_DEACTIVATED && obj != o) {
                 f32 objDist = dist_between_objects(o, obj);
                 if (objDist < dist) {
@@ -1227,9 +1225,8 @@ s32 count_unimportant_objects(void) {
 s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     if (!behavior) { return 0; }
     behavior = smlua_override_behavior(behavior);
-    uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
 
-    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    u32 objList = get_object_list_from_behavior(behavior);
     if (objList >= NUM_OBJ_LISTS) { return 0; }
 
     struct ObjectNode *listHead = &gObjectLists[objList];
@@ -1237,7 +1234,7 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     s32 count = 0;
 
     while (obj && listHead != obj) {
-        if (((struct Object *) obj)->behavior == behaviorAddr) {
+        if (((struct Object *) obj)->behavior == behavior) {
             count++;
         }
 
@@ -1247,19 +1244,38 @@ s32 count_objects_with_behavior(const BehaviorScript *behavior) {
     return count;
 }
 
+/* |description|Deletes all objects with the specified behavior|descriptionEnd| */
+void delete_all_objects_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return; }
+    behavior = smlua_override_behavior(behavior);
+
+    u32 objList = get_object_list_from_behavior(behavior);
+    if (objList >= NUM_OBJ_LISTS) { return; }
+
+    struct ObjectNode *listHead = &gObjectLists[objList];
+    struct ObjectNode *obj = listHead->next;
+    while (obj && listHead != obj) {
+        if (((struct Object *) obj)->behavior == behavior) {
+            obj_mark_for_deletion((struct Object *) obj);
+        }
+
+        obj = obj->next;
+    }
+}
+
 /* |description|Finds any object with the specified behavior|descriptionEnd| */
 struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
+    if (!behavior) { return NULL; }
     behavior = smlua_override_behavior(behavior);
-    uintptr_t *behaviorAddr = segmented_to_virtual(behavior);
 
-    u32 objList = get_object_list_from_behavior(behaviorAddr);
+    u32 objList = get_object_list_from_behavior(behavior);
     if (objList >= NUM_OBJ_LISTS) { return 0; }
 
     struct ObjectNode *listHead = &gObjectLists[objList];
     struct ObjectNode *obj = listHead->next;
 
     while (listHead != obj) {
-        if (((struct Object *) obj)->behavior == behaviorAddr) {
+        if (((struct Object *) obj)->behavior == behavior) {
             return (struct Object *)obj;
         }
 
@@ -1271,8 +1287,8 @@ struct Object *find_object_with_behavior(const BehaviorScript *behavior) {
 
 /* |description|Finds an object with specified behavior within `maxDist` that is being held by a player|descriptionEnd| */
 struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f32 maxDist) {
+    if (!o || !behavior) { return NULL; }
     behavior = smlua_override_behavior(behavior);
-    const BehaviorScript *behaviorAddr = segmented_to_virtual(behavior);
     struct ObjectNode *listHead;
     struct Object *obj;
     struct Object *foundObj;
@@ -1282,7 +1298,7 @@ struct Object *cur_obj_find_nearby_held_actor(const BehaviorScript *behavior, f3
     foundObj = NULL;
 
     while ((struct Object *) listHead != obj) {
-        if (obj->behavior == behaviorAddr) {
+        if (obj->behavior == behavior) {
             if (obj->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
                 // This includes the dropped and thrown states. By combining instant
                 // release, this allows us to activate mama penguin remotely
@@ -1470,11 +1486,10 @@ void cur_obj_move_after_thrown_or_dropped(f32 forwardVel, f32 velY) {
 /* |description|Handles object state when it's been thrown or placed by a player|descriptionEnd| */
 void cur_obj_get_thrown_or_placed(f32 forwardVel, f32 velY, s32 thrownAction) {
     if (!o) { return; }
-    if (o->behavior == segmented_to_virtual(smlua_override_behavior(bhvBowser))) {
+    if (o->behavior == smlua_override_behavior(bhvBowser)) {
         // Interestingly, when bowser is thrown, he is offset slightly to
         // Mario's right
         cur_obj_set_pos_relative_to_parent(-41.684f, 85.859f, 321.577f);
-    } else {
     }
 
     cur_obj_become_tangible();
@@ -1517,6 +1532,7 @@ void cur_obj_set_model(s32 modelID) {
 
 /* |description|Sets the model for an object|descriptionEnd| */
 void obj_set_model(struct Object* obj, s32 modelID) {
+    if (!obj) { return; }
     obj->header.gfx.sharedChild = dynos_model_get_geo(modelID);
     dynos_actor_override(obj, (void*)&obj->header.gfx.sharedChild);
     smlua_call_event_hooks(HOOK_OBJECT_SET_MODEL, obj, modelID, smlua_model_util_id_to_ext_id(modelID));
@@ -1878,7 +1894,7 @@ f32 increment_velocity_toward_range(f32 value, f32 center, f32 zeroThreshold, f3
 
 /* |description|Checks whether obj1's collided object list contains obj2|descriptionEnd| */
 s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) {
-    if (obj1 == NULL) { return FALSE; }
+    if (obj1 == NULL || obj2 == NULL) { return FALSE; }
     s32 i;
     for (i = 0; i < obj1->numCollidedObjs; i++) {
         if (obj1->collidedObjs[i] == obj2) {
@@ -1892,20 +1908,20 @@ s32 obj_check_if_collided_with_object(struct Object *obj1, struct Object *obj2) 
 /* |description|Sets the current object's behavior script|descriptionEnd| */
 void cur_obj_set_behavior(const BehaviorScript *behavior) {
     if (!o) { return; }
-    o->behavior = segmented_to_virtual(behavior);
+    o->behavior = behavior;
 }
 
 /* |description|Sets the specified object's behavior script|descriptionEnd| */
 void obj_set_behavior(struct Object *obj, const BehaviorScript *behavior) {
     if (!obj) { return; }
-    obj->behavior = segmented_to_virtual(behavior);
+    obj->behavior = behavior;
 }
 
 /* |description|Checks whether the current object has the specified behavior|descriptionEnd| */
 s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
     if (!o) { return 0; }
     behavior = smlua_override_behavior(behavior);
-    if (o->behavior == segmented_to_virtual(behavior)) {
+    if (o->behavior == behavior) {
         return TRUE;
     } else {
         return FALSE;
@@ -1916,7 +1932,7 @@ s32 cur_obj_has_behavior(const BehaviorScript *behavior) {
 s32 obj_has_behavior(struct Object *obj, const BehaviorScript *behavior) {
     if (!obj || !behavior) { return FALSE; }
     behavior = smlua_override_behavior(behavior);
-    if (obj->behavior == segmented_to_virtual(behavior)) {
+    if (obj->behavior == behavior) {
         return TRUE;
     } else {
         return FALSE;
@@ -3176,8 +3192,9 @@ void obj_explode_and_spawn_coins(f32 mistSize, enum CoinType coinType) {
 }
 
 /* |description|Sets an object's collision data pointer from a segmented address|descriptionEnd| */
-void obj_set_collision_data(struct Object *obj, const void *segAddr) {
-    obj->collisionData = segmented_to_virtual(segAddr);
+void obj_set_collision_data(struct Object *obj, const void *collisionPtr) {
+    if (!obj) { return; }
+    obj->collisionData = (Collision *) collisionPtr;
 }
 
 /* |description|Sets the current object to bounce away if it hit a wall|descriptionEnd| */

@@ -284,6 +284,8 @@ void patch_mtx_before(void) {
 
     if (sPerspectiveNode != NULL) {
         sPerspectiveNode->prevFov = sPerspectiveNode->fov;
+        sPerspectiveNode->prevNear = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
+        sPerspectiveNode->prevFar = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
         sPerspectiveNode = NULL;
     }
 
@@ -305,18 +307,25 @@ void patch_mtx_before(void) {
 
 void patch_mtx_interpolated(f32 delta) {
     if (sPerspectiveNode != NULL) {
-        if (gCamSkipInterp) {
-            sPerspectiveNode->prevFov = sPerspectiveNode->fov;
-        }
         u16 perspNorm;
-        f32 fovInterpolated = delta_interpolate_f32(sPerspectiveNode->prevFov, sPerspectiveNode->fov, delta);
+        f32 fov = sPerspectiveNode->fov;
         f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
+        
+        if (gCamSkipInterp) {
+            sPerspectiveNode->prevFov = fov;
+            sPerspectiveNode->prevNear = near;
+            sPerspectiveNode->prevFar = far;
+        } else {
+            fov = delta_interpolate_f32(sPerspectiveNode->prevFov, fov, delta);
+            near = delta_interpolate_f32(sPerspectiveNode->prevNear, near, delta);
+            far = delta_interpolate_f32(sPerspectiveNode->prevFar, far, delta);
+        }
 
         // "infinite" draw distance
         if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
 
-        guPerspective(sPerspectiveMtx, &perspNorm, fovInterpolated, sPerspectiveAspect, near, far, 1.0f);
+        guPerspective(sPerspectiveMtx, &perspNorm, fov, sPerspectiveAspect, near, far, 1.0f);
         gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
     }
 
@@ -1285,6 +1294,12 @@ void geo_set_animation_globals(struct AnimInfo *node, s32 hasAnimation) {
  * the floor below it.
  */
 static void geo_process_shadow(struct GraphNodeShadow *node) {
+    if (gLevelValues.disableShadows) {
+        if (node->node.children != NULL) {
+            geo_process_node_and_siblings(node->node.children);
+        }
+        return;
+    }
     Mat4 mtxf;
     Vec3f shadowPosPrev;
     Vec3f animOffset;

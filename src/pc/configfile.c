@@ -10,7 +10,7 @@
 #include "configfile.h"
 #include "cliopts.h"
 #include "gfx/gfx_screen_config.h"
-#include "gfx/gfx_window_manager_api.h"
+#include "gfx/gfx_window_manager.h"
 #include "controller/controller_api.h"
 #include "fs/fs.h"
 #include "mods/mods.h"
@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-enum GraphicsBackend configGraphicsBackend        = GAPI_GL;
+enum GfxWindowBackend configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -152,6 +152,7 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
+unsigned int configInputDelay                     = 0;
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
@@ -301,6 +302,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "input_delay",                    .type = CONFIG_TYPE_UINT, .uintValue = &configInputDelay},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
@@ -817,7 +819,7 @@ NEXT_OPTION:
 
     fs_close(file);
 
-    if (configGraphicsBackend < GAPI_GL || configGraphicsBackend > GAPI_MAX) { configGraphicsBackend = GAPI_GL; }
+    if (configGraphicsBackend < GFX_WINDOW_BACKEND_OPENGL || configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
@@ -852,6 +854,8 @@ NEXT_OPTION:
     if (gCLIOpts.playerCount != 0) {
         configAmountOfPlayers = MIN(gCLIOpts.playerCount, MAX_PLAYERS);
     }
+
+    if (configInputDelay > INPUT_BUFFER_MAX_DELAY) { configInputDelay = INPUT_BUFFER_MAX_DELAY; }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
@@ -950,7 +954,7 @@ void configfile_save(const char *filename) {
         return;
     }
 
-    printf("Saving configuration to '%s'\n", filename);
+    LOG_INFO("Saving configuration to '%s'\n", filename);
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];

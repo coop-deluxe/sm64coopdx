@@ -1,4 +1,6 @@
 #include <deque>
+#include <regex>
+#include <charconv>
 #include "dynos.cpp.h"
 extern "C" {
 #include "engine/graph_node.h"
@@ -7,6 +9,23 @@ extern "C" {
 static std::deque<PackData>& DynosPacks() {
     static std::deque<PackData> sDynosPacks;
     return sDynosPacks;
+}
+
+static bool ParseU8(const std::string& s, u8& out) {
+    unsigned int value = 0;
+    auto [ptr, ec] = std::from_chars(s.data(), s.data() + s.size(), value);
+
+    // Reject:
+    // - parse errors
+    // - overflow
+    // - trailing junk
+    // - values outside u8 range
+    if (ec != std::errc() || ptr != s.data() + s.size() || value > 0xFF) {
+        return false;
+    }
+
+    out = static_cast<u8>(value);
+    return true;
 }
 
 static void ScanPackBins(struct PackData* aPack) {
@@ -34,6 +53,37 @@ static void ScanPackBins(struct PackData* aPack) {
             String _TexName = _PackEnt->d_name;
             _TexName[length - 4] = '\0';
             DynOS_Tex_LoadFromBinary(aPack->mPath, _FileName, _TexName.begin(), true);
+        }
+
+        // check for sequences
+        if (length > 4 && !strncmp(&_PackEnt->d_name[length - 4], ".m64", 4)) {
+            String _SeqName = _PackEnt->d_name;
+            _SeqName[length - 4] = '\0';
+            std::string seqName = _SeqName.begin();
+            std::regex re(".*\\.(\\d+)\\.(\\d+)\\.(\\d+)$");
+            std::smatch match;
+            bool success = false;
+            if (std::regex_match(seqName, match, re) && match.size() == 4) {
+                u8 sequenceId, bankId, defaultVolume;
+                if (ParseU8(match[1].str(), sequenceId) &&
+                    ParseU8(match[2].str(), bankId) &&
+                    ParseU8(match[3].str(), defaultVolume)
+                ) {
+                    AudioOverrideEntry* audioOverride = DynOS_Audio_CreateOverride(
+                        sequenceId, bankId, defaultVolume, _FileName.c_str(), true
+                    );
+                    if (audioOverride) {
+                        aPack->mAudioOverrides.push_back(audioOverride);
+                    }
+                    success = true; // Not a formatting error
+                }
+            }
+            if (!success) {
+                PrintError(
+                    "Invalid sequence override filename (expected format: <name>.<sequenceId>.<bankId>.<defaultVolume>.m64): '%s.m64'",
+                    _SeqName.begin()
+                );
+            }
         }
     }
 }
@@ -106,12 +156,18 @@ void DynOS_Pack_SetEnabled(PackData* aPack, bool aEnabled) {
         for (auto& _Tex : aPack->mTextures) {
             DynOS_Tex_Activate(_Tex, false);
         }
+        for (auto& audioOverride : aPack->mAudioOverrides) {
+            DynOS_Audio_ActivatePackOverride(audioOverride);
+        }
     } else {
         for (auto& pair : aPack->mGfxData) {
             DynOS_Pack_DeactivateActor(aPack->mIndex, pair);
         }
         for (auto& _Tex : aPack->mTextures) {
             DynOS_Tex_Deactivate(_Tex);
+        }
+        for (auto& audioOverride : aPack->mAudioOverrides) {
+            DynOS_Audio_DeactivatePackOverride(audioOverride);
         }
     }
     DynOS_Actor_Override_All();

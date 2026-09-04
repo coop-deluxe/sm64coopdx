@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "pc/ini.h"
+#include "pc/debuglog.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/debuglog.h"

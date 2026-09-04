@@ -600,12 +600,13 @@ static void newcam_apply_values(struct Camera *c) {
     // Adds support for wing mario tower
     if (gNewCamera.tilt < -8000 &&
         sCurrPlayMode != PLAY_MODE_PAUSED &&
+        gMarioState->action & ACT_FLAG_ALLOW_FIRST_PERSON &&
         gMarioState->floor != NULL &&
         gMarioState->floor->type == SURFACE_LOOK_UP_WARP &&
         gMarioState->forwardVel == 0 &&
         save_file_get_total_star_count(gCurrSaveFileNum - 1, 0, COURSE_COUNT - 1) >= gLevelValues.wingCapLookUpReq)
     {
-        level_trigger_warp(gMarioState, 1);
+        level_trigger_warp(gMarioState, WARP_OP_LOOK_UP);
     }
 }
 

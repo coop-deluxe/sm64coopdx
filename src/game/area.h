@@ -126,8 +126,26 @@ struct WarpTransition
     /*0x04*/ struct WarpTransitionData data;
 };
 
+enum MenuOption {
+    MENU_OPT_NONE,
+    MENU_OPT_1,
+    MENU_OPT_2,
+    MENU_OPT_3,
+    MENU_OPT_DEFAULT = MENU_OPT_1,
+
+    // Course Pause Menu
+    MENU_OPT_CONTINUE = MENU_OPT_1,
+    MENU_OPT_EXIT_COURSE,
+    MENU_OPT_CAMERA_ANGLE_R,
+    MENU_OPT_EXIT_TO_CASTLE,
+
+    // Save Menu
+    MENU_OPT_SAVE_AND_CONTINUE = MENU_OPT_1,
+    // MENU_OPT_SAVE_AND_QUIT,
+    MENU_OPT_CONTINUE_DONT_SAVE
+};
+
 extern struct SpawnInfo gPlayerSpawnInfos[];
-extern struct GraphNode *D_8033A160[];
 extern struct Area gAreaData[];
 extern struct WarpTransition gWarpTransition;
 extern s16 gCurrCourseNum;
@@ -135,7 +153,7 @@ extern s16 gCurrActNum;
 extern s16 gCurrActStarNum;
 extern s16 gCurrAreaIndex;
 extern s16 gSavedCourseNum;
-extern s16 gPauseScreenMode;
+extern s16 gMenuOptSelectIndex;
 extern s16 gSaveOptSelectIndex;
 
 extern struct SpawnInfo *gMarioSpawnInfo;

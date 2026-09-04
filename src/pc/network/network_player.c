@@ -4,6 +4,7 @@
 #include "game/mario_misc.h"
 #include "pc/djui/djui.h"
 #include "pc/debuglog.h"
+#include "pc/commands.h"
 #include "pc/utils/misc.h"
 #include "game/area.h"
 #include "game/level_info.h"
@@ -396,6 +397,12 @@ u8 network_player_disconnected(u8 globalIndex) {
         np->currAreaSyncValid  = false;
         gNetworkSystem->clear_id(i);
         network_forget_all_reliable_from(i);
+        if (np->localIndex == gConfirmPlayerIndex) {
+            struct Command *confirmCommand = get_command("confirm");
+            if (confirmCommand) { confirmCommand->active = false; }
+            gConfirmPlayerIndex = 0;
+            gConfirmingCommandType = CCC_NONE;
+        }
 
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             so->rxEventId[i] = 0;

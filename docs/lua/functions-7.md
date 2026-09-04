@@ -1925,6 +1925,151 @@ Warps back to the castle from `aLevel`
 
 <br />
 
+## [level_create_warp_node](#level_create_warp_node)
+
+### Description
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+
+### Lua Example
+`local customWarpNodeValue = level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+| marioSpawnType | [enum MarioSpawnType](constants.md#enum-MarioSpawnType) |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `boolean` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_create_warp_node(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_create_warp_node_with_object](#level_create_warp_node_with_object)
+
+### Description
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+
+### Lua Example
+`local customWarpNodeValue = level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+| marioSpawnType | [enum MarioSpawnType](constants.md#enum-MarioSpawnType) |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `boolean` |
+| pos | [Vec3f](structs.md#Vec3f) |
+| angle | [Vec3s](structs.md#Vec3s) |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| behParams | `integer` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_create_warp_node_with_object(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint, Vec3f pos, Vec3s angle, enum ModelExtendedId modelId, enum BehaviorId behaviorId, u32 behParams);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_get_warp_node](#level_get_warp_node)
+
+### Description
+Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+
+### Lua Example
+`local customWarpNodeValue = level_get_warp_node(levelNum, areaIndex, id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_get_warp_node(u8 levelNum, u8 areaIndex, u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_delete_warp_node](#level_delete_warp_node)
+
+### Description
+Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+
+### Lua Example
+`level_delete_warp_node(levelNum, areaIndex, id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void level_delete_warp_node(u8 levelNum, u8 areaIndex, u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_clear_warp_nodes](#level_clear_warp_nodes)
+
+### Description
+Deletes all the warp nodes in level `levelNum`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+
+### Lua Example
+`level_clear_warp_nodes(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void level_clear_warp_nodes(u8 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_misc_utils.h
 
@@ -1947,6 +2092,27 @@ Gets the current area's networked timer
 
 ### C Prototype
 `u32 get_network_area_timer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [get_network_area_random_seed](#get_network_area_random_seed)
+
+### Description
+Gets the current area's networked random seed
+
+### Lua Example
+`local integerValue = get_network_area_random_seed()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 get_network_area_random_seed(void);`
 
 [:arrow_up_small:](#)
 
@@ -5526,6 +5692,76 @@ Allocates a new dialog entry
 
 <br />
 
+## [smlua_text_utils_dialog_get_type](#smlua_text_utils_dialog_get_type)
+
+### Description
+Gets the type of a `dialogId`
+
+### Lua Example
+`local enumValue = smlua_text_utils_dialog_get_type(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- [enum DialogType](constants.md#enum-DialogType)
+
+### C Prototype
+`enum DialogType smlua_text_utils_dialog_get_type(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_set_type](#smlua_text_utils_dialog_set_type)
+
+### Description
+Sets the type of a `dialogId`
+
+### Lua Example
+`smlua_text_utils_dialog_set_type(dialogId, dialogType)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+| dialogType | [enum DialogType](constants.md#enum-DialogType) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_dialog_set_type(enum DialogId dialogId, enum DialogType dialogType);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [smlua_text_utils_dialog_reset_type](#smlua_text_utils_dialog_reset_type)
+
+### Description
+Resets the type of a `dialogId`
+
+### Lua Example
+`smlua_text_utils_dialog_reset_type(dialogId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dialogId | [enum DialogId](constants.md#enum-DialogId) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_text_utils_dialog_reset_type(enum DialogId dialogId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
 
 ### Description
@@ -6836,6 +7072,29 @@ Checks if a surface has force
 
 <br />
 
+
+## [sync_object_get_random_seed](#sync_object_get_random_seed)
+
+### Description
+Retrieves the random seed of a sync object from its sync ID
+
+### Lua Example
+`local integerValue = sync_object_get_random_seed(syncId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| syncId | `integer` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`u16 sync_object_get_random_seed(u32 syncId);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## [sync_object_get_object](#sync_object_get_object)
 

@@ -205,7 +205,7 @@ u8 *convert_string_ascii_to_sm64(u8 *str64, const char *strAscii, bool menu) {
     return str64;
 }
 
-static inline size_t strlen64(const u8 *str64) {
+size_t strlen64(const u8 *str64) {
     const u8 *str64Begin = str64;
     for (; *str64 != 0xFF; str64++);
     return (size_t) (str64 - str64Begin);

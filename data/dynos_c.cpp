@@ -109,6 +109,24 @@ void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
 
+// -- audio -- //
+
+void dynos_audio_reset_mods() {
+    DynOS_Audio_ResetMods();
+}
+
+bool dynos_audio_override(u8 sequenceId, s32* bankId, void** seqData) {
+    return DynOS_Audio_Override(sequenceId, bankId, seqData);
+}
+
+void dynos_audio_create_override(u8 sequenceId, u8 bankId, u8 defaultVolume, const char *filepath) {
+    DynOS_Audio_CreateOverride(sequenceId, bankId, defaultVolume, filepath, false);
+}
+
+u8 dynos_audio_alloc_sequence(void) {
+    return DynOS_Audio_AllocSequence();
+}
+
 // -- geos -- //
 
 void dynos_actor_override(struct Object* obj, void** aSharedChild) {
@@ -282,6 +300,10 @@ u32 dynos_model_get_id_from_asset(void* aAsset) {
 
 u32 dynos_model_get_id_from_graph_node(struct GraphNode* aGraphNode) {
     return DynOS_Model_GetIdFromGraphNode(aGraphNode);
+}
+
+const char *dynos_model_get_name_from_vanilla_asset(const void *asset) {
+    return DynOS_Model_GetNameFromVanillaAsset(asset);
 }
 
 void dynos_model_clear_pool(enum ModelPool aModelPool) {
