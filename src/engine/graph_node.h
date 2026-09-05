@@ -25,34 +25,11 @@
 // Whether the node type has a function pointer of type GraphNodeFunc
 #define GRAPH_NODE_TYPE_FUNCTIONAL            0x100
 
-// Type used for Bowser and an unused geo function in obj_behaviors.c
-#define GRAPH_NODE_TYPE_400                   0x400
-
-// The discriminant for different types of geo nodes
-#define GRAPH_NODE_TYPE_ROOT                  0x001
-#define GRAPH_NODE_TYPE_ORTHO_PROJECTION      0x002
-#define GRAPH_NODE_TYPE_PERSPECTIVE          (0x003 | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_MASTER_LIST           0x004
-#define GRAPH_NODE_TYPE_START                 0x00A
-#define GRAPH_NODE_TYPE_LEVEL_OF_DETAIL       0x00B
-#define GRAPH_NODE_TYPE_SWITCH_CASE          (0x00C | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_CAMERA               (0x014 | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_TRANSLATION_ROTATION  0x015
-#define GRAPH_NODE_TYPE_TRANSLATION           0x016
-#define GRAPH_NODE_TYPE_ROTATION              0x017
-#define GRAPH_NODE_TYPE_OBJECT                0x018
-#define GRAPH_NODE_TYPE_ANIMATED_PART         0x019
-#define GRAPH_NODE_TYPE_BILLBOARD             0x01A
-#define GRAPH_NODE_TYPE_DISPLAY_LIST          0x01B
-#define GRAPH_NODE_TYPE_SCALE                 0x01C
-#define GRAPH_NODE_TYPE_SCALE_XYZ             0x01D
-#define GRAPH_NODE_TYPE_SHADOW                0x028
-#define GRAPH_NODE_TYPE_OBJECT_PARENT         0x029
-#define GRAPH_NODE_TYPE_GENERATED_LIST       (0x02A | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_BACKGROUND           (0x02C | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_HELD_OBJ             (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
-#define GRAPH_NODE_TYPE_CULLING_RADIUS        0x02F
-#define GRAPH_NODE_TYPE_BONE                  0x030
+enum GraphNodeType {
+#define GRAPH_NODE_TYPE(_name_, _id_, ...) _name_ = _id_,
+#include "src/engine/graph_node_types.inl"
+#undef GRAPH_NODE_TYPE
+};
 
 // The number of master lists. A master list determines the order and render
 // mode with which display lists are drawn.
@@ -403,6 +380,8 @@ extern struct GraphNode *gCurRootGraphNode;
 extern struct GraphNode *gCurGraphNodeList[];
 
 extern s16 gCurGraphNodeIndex;
+
+u32 get_graph_node_type_size(s16 type);
 
 void init_scene_graph_node_links(struct GraphNode *graphNode, s32 type);
 

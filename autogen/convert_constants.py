@@ -6,7 +6,8 @@ from exposed_lists import \
     constants_files, \
     constants_whitelist, \
     constants_blacklist, \
-    constants_hidden
+    constants_hidden, \
+    constants_enums_with_include
 
 verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbose")
 
@@ -37,6 +38,39 @@ pretend_find = [
 
 ############################################################################
 
+def process_enum_include(filename, line, inIfBlock, enum_defines, filepath, field, index, set_to, set_to_val):
+    constants = []
+    with open(filepath, 'r') as f:
+        txt = f.read()
+
+    # strip comments
+    txt = re.sub('//.*', ' ', txt)
+    while ('/*' in txt):
+        s1 = txt.split('/*', 1)
+        s2 = s1[1].split('*/', 1)
+        txt = s1[0] + s2[-1]
+
+    for l in txt.split('\n'):
+        for define, pos in enum_defines.items():
+            tokens = l.strip().replace('(', ',').replace(')', ',').split(',')
+            const_pos = pos[0]
+            if len(tokens) >= const_pos + 1 and tokens[0].strip() == define:
+                field = tokens[const_pos].strip()
+                value_pos = pos[1] if len(pos) >= 2 else None
+                if value_pos is not None and len(tokens) >= value_pos + 1:
+                    set_to, set_to_val = eval_constant(filename, constants, field, tokens[value_pos].strip())
+                    index = 0
+                else:
+                    constant, set_to, set_to_val = get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val)
+                    if constant is not None:
+                        constants.append(constant)
+                index += 1
+                break
+
+    return constants, index
+
+############################################################################
+
 def validate_identifiers(built_files):
     files = ''
     for f in built_files.splitlines():
@@ -63,19 +97,28 @@ def saw_constant(identifier, inIfBlock):
         seen_constants.append(identifier)
         return False
 
+def eval_constant(filename, constants, ident, val):
+    try:
+        set_to_val = int(eval(val, {}, {}))
+    except Exception:
+        set_to_val = None
+    if allowed_identifier(constants_whitelist, constants_blacklist, filename, ident):
+        constants.append([ident, val])
+    return ident, set_to_val
+
 def get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val):
     if set_to is not None:
         if allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
             if set_to_val is not None:
-                return [field, str(set_to_val + index)]
-            return [field, '((%s) + %d)' % (set_to, index)]
+                return [field, str(set_to_val + index)], set_to, set_to_val
+            return [field, '((%s) + %d)' % (set_to, index)], set_to, set_to_val
 
     elif allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
         if saw_constant(field, inIfBlock):
             print('>>> ' + line)
-        return [field, str(index)]
+        return [field, str(index)], set_to, set_to_val
 
-    return None
+    return None, set_to, set_to_val
 
 def process_enum(filename, line, inIfBlock):
     _, ident, val = line.split(' ', 2)
@@ -90,6 +133,11 @@ def process_enum(filename, line, inIfBlock):
     ret = {}
     ret['identifier'] = ident
 
+    enum_defines = constants_enums_with_include.get(filename, {}).get(ident)
+    if enum_defines:
+        val = re.sub(r'#define .*#include', '#include', val)
+        val = re.sub(r'#undef [A-Z_]+', ',', val)
+
     constants = []
     set_to = None
     set_to_val = None
@@ -100,23 +148,21 @@ def process_enum(filename, line, inIfBlock):
         if len(field) == 0:
             continue
 
+        if enum_defines and field.startswith("#include"):
+            filepath = re.sub(r'#include +\"(.*)\"', r'\1', field)
+            included, index = process_enum_include(filename, line, inIfBlock, enum_defines, filepath, field, index, set_to, set_to_val)
+            constants += included
+            continue
+
         if '=' in field:
             ident, val = field.split('=', 1)
             ident = ident.strip()
             val = val.strip()
-
-            try:
-                set_to_val = int(eval(val, {}, {}))
-            except Exception:
-                set_to_val = None
-
-            if allowed_identifier(constants_whitelist, constants_blacklist, filename, field):
-                constants.append([ident, val])
-            set_to = ident
+            set_to, set_to_val = eval_constant(filename, constants, ident, val)
             index = 1
             continue
 
-        constant = get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val)
+        constant, set_to, set_to_val = get_constant(filename, line, inIfBlock, field, index, set_to, set_to_val)
         if constant is not None:
             constants.append(constant)
 
@@ -333,7 +379,7 @@ def doc_constant(fname, processed_constant):
         s += '| Identifier | Value |\n'
         s += '| :--------- | :---- |\n'
         for c in constants:
-            s += '| %s | %s |\n' % (c[0], c[1])
+            s += '| %s | %s |\n' % (c[0], c[1].replace('|', '\\|'))
         return s
 
     for c in [processed_constant]:
