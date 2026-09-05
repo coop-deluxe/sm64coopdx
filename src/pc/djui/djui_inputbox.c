@@ -637,10 +637,12 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
     bool isChatInput = (gDjuiChatBox != NULL && gDjuiChatBox->chatInput == inputbox);
     if (isChatInput && djui_interactable_is_input_focus(&inputbox->base) && inputbox->buffer[0] == '/') {
-        char* previewText = get_next_tab_completion_preview(inputbox->buffer);
+        char *previewText = djui_chat_box_get_next_tab_completion_preview(inputbox->buffer);
         if (previewText != NULL && previewText[0] != '\0') {
-            gDPSetEnvColor(gDisplayListHead++, 128, 128, 128, 180);
-            char* previewChar = previewText;
+            struct DjuiTheme *theme = gDjuiThemes[configDjuiTheme];
+            struct DjuiColor disabledTextColor = theme->interactables.disabledTextColor;
+            gDPSetEnvColor(gDisplayListHead++, disabledTextColor.r, disabledTextColor.g, disabledTextColor.b, disabledTextColor.a);
+            char *previewChar = previewText;
             while (*previewChar != '\0') {
                 djui_inputbox_render_char(inputbox, previewChar, &drawX, &additionalShift);
                 previewChar = djui_unicode_next_char(previewChar);
