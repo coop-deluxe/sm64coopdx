@@ -8,6 +8,7 @@
 - [camera.h](#camerah)
     - [enum RomhackCameraOverride](#enum-RomhackCameraOverride)
     - [enum RomhackCameraEnable](#enum-RomhackCameraEnable)
+    - [enum CameraFov](#enum-CameraFov)
 - [characters.h](#charactersh)
     - [enum CharacterType](#enum-CharacterType)
     - [enum CharacterSound](#enum-CharacterSound)
@@ -880,17 +881,22 @@
 - DOOR_DEFAULT
 - DOOR_LEAVING_SPECIAL
 - DOOR_ENTER_LOBBY
-- CAM_FOV_SET_45
-- CAM_FOV_DEFAULT
-- CAM_FOV_APP_45
-- CAM_FOV_SET_30
-- CAM_FOV_APP_20
-- CAM_FOV_BBH
-- CAM_FOV_APP_80
-- CAM_FOV_APP_30
-- CAM_FOV_APP_60
-- CAM_FOV_ZOOM_30
-- CAM_FOV_SET_29
+
+### [enum CameraFov](#CameraFov)
+| Identifier | Value |
+| :--------- | :---- |
+| CAM_FOV_NONE | 0 |
+| CAM_FOV_SET_45 | 1 |
+| CAM_FOV_DEFAULT | 2 |
+| CAM_FOV_APP_45 | 4 |
+| CAM_FOV_SET_30 | 5 |
+| CAM_FOV_APP_20 | 6 |
+| CAM_FOV_BBH | 7 |
+| CAM_FOV_APP_80 | 9 |
+| CAM_FOV_APP_30 | 10 |
+| CAM_FOV_APP_60 | 11 |
+| CAM_FOV_ZOOM_30 | 12 |
+| CAM_FOV_SET_29 | 13 |
 - CAM_EVENT_CANNON
 - CAM_EVENT_SHOT_FROM_CANNON
 - CAM_EVENT_UNUSED_3

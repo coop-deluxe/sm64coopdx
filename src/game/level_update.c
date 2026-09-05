@@ -7,8 +7,8 @@
 #include "dialog_ids.h"
 #include "audio/external.h"
 #include "level_update.h"
+#include "level_commands.h"
 #include "game_init.h"
-#include "level_update.h"
 #include "main.h"
 #include "engine/math_util.h"
 #include "engine/graph_node.h"
@@ -820,7 +820,7 @@ struct WarpNode *get_painting_warp_node(void) {
 static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     struct WarpNode warpNode = *pWarpNode;
 
-    if (!(warpNode.destLevel & 0x80)) {
+    if (!(warpNode.destLevel & WARP_CHECKPOINT)) {
         sWarpCheckpointActive = check_warp_checkpoint(&warpNode);
     }
 

@@ -2155,38 +2155,32 @@ DOOR_LEAVING_SPECIAL = 1
 --- @type integer
 DOOR_ENTER_LOBBY = 2
 
---- @type integer
-CAM_FOV_SET_45 = 1
+CAM_FOV_NONE    =  0 --- @type CameraFov
+CAM_FOV_SET_45  =  1 --- @type CameraFov
+CAM_FOV_DEFAULT =  2 --- @type CameraFov
+CAM_FOV_APP_45  =  4 --- @type CameraFov
+CAM_FOV_SET_30  =  5 --- @type CameraFov
+CAM_FOV_APP_20  =  6 --- @type CameraFov
+CAM_FOV_BBH     =  7 --- @type CameraFov
+CAM_FOV_APP_80  =  9 --- @type CameraFov
+CAM_FOV_APP_30  = 10 --- @type CameraFov
+CAM_FOV_APP_60  = 11 --- @type CameraFov
+CAM_FOV_ZOOM_30 = 12 --- @type CameraFov
+CAM_FOV_SET_29  = 13 --- @type CameraFov
 
---- @type integer
-CAM_FOV_DEFAULT = 2
-
---- @type integer
-CAM_FOV_APP_45 = 4
-
---- @type integer
-CAM_FOV_SET_30 = 5
-
---- @type integer
-CAM_FOV_APP_20 = 6
-
---- @type integer
-CAM_FOV_BBH = 7
-
---- @type integer
-CAM_FOV_APP_80 = 9
-
---- @type integer
-CAM_FOV_APP_30 = 10
-
---- @type integer
-CAM_FOV_APP_60 = 11
-
---- @type integer
-CAM_FOV_ZOOM_30 = 12
-
---- @type integer
-CAM_FOV_SET_29 = 13
+--- @alias CameraFov
+--- | `CAM_FOV_NONE`
+--- | `CAM_FOV_SET_45`
+--- | `CAM_FOV_DEFAULT`
+--- | `CAM_FOV_APP_45`
+--- | `CAM_FOV_SET_30`
+--- | `CAM_FOV_APP_20`
+--- | `CAM_FOV_BBH`
+--- | `CAM_FOV_APP_80`
+--- | `CAM_FOV_APP_30`
+--- | `CAM_FOV_APP_60`
+--- | `CAM_FOV_ZOOM_30`
+--- | `CAM_FOV_SET_29`
 
 --- @type integer
 CAM_EVENT_CANNON = 1

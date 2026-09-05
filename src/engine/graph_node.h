@@ -121,6 +121,8 @@ struct GraphNodePerspective
     /*0x20*/ s16 near;  // near clipping plane
     /*0x22*/ s16 far;   // far clipping plane
     f32 prevFov;
+    f32 prevNear;
+    f32 prevFar;
     f32 prevTimestamp;
 };
 

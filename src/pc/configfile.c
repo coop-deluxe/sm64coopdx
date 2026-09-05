@@ -152,6 +152,7 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
+unsigned int configInputDelay                     = 0;
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
@@ -299,6 +300,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "input_delay",                    .type = CONFIG_TYPE_UINT, .uintValue = &configInputDelay},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
@@ -848,6 +850,8 @@ NEXT_OPTION:
     if (gCLIOpts.playerCount != 0) {
         configAmountOfPlayers = MIN(gCLIOpts.playerCount, MAX_PLAYERS);
     }
+
+    if (configInputDelay > INPUT_BUFFER_MAX_DELAY) { configInputDelay = INPUT_BUFFER_MAX_DELAY; }
 
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;

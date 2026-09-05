@@ -93,6 +93,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
 
         free(gamepadChoices);
 
+        djui_slider_create(body, DLANG(CONTROLS, INPUT_DELAY), &configInputDelay, 0, INPUT_BUFFER_MAX_DELAY, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, DEADZONE), &configStickDeadzone, 0, 100, djui_panel_controls_value_change);
         djui_slider_create(body, DLANG(CONTROLS, RUMBLE_STRENGTH), &configRumbleStrength, 0, 100, djui_panel_controls_value_change);
 

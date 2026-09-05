@@ -225,6 +225,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gCurrAreaIndex = sDynosWarpAreaNum;
         gCurrActStarNum = sDynosWarpActNum;
         sDynosWarpTargetArea = gCurrAreaIndex;
+        gCurrCreditsEntry = NULL;
 
         // Set up new level script
         memcpy(&sBackupWarpDest, &sWarpDest, sizeof(WarpDest));
@@ -391,6 +392,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
         gDialogCourseActNum = gCurrActNum;
         gCurrAreaIndex = _ExitWarp[8];
         sDynosExitTargetArea = _ExitWarp[8];
+        gCurrCreditsEntry = NULL;
 
         // Set up new level script
         memcpy(&sBackupWarpDest, &sWarpDest, sizeof(WarpDest));
