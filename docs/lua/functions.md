@@ -19,7 +19,7 @@
    - [get_texture_info](#get_texture_info)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
-   - [level_script_parse](#level_script_parse)
+   - [level_parse_script](#level_parse_script)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
@@ -2576,18 +2576,384 @@ texture_override_reset("outside_09004000")
 
 <br />
 
-## [level_script_parse](#level_script_parse)
+## [level_parse_script](#level_parse_script)
 
 ### Description
-Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
-When `func` is called, arguments are filled depending on the level command:
-- `AREA` command: only `areaIndex` is filled. It's a number
-- `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'
-- `MACRO` command: only `macroBhvIds`, `macroBhvArgs` and 'macroBhvModels' are filled. `macroBhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. 'macroBhvModels' is a list of model ids. All lists have the same size and start at index 0
+Parses a level script and passes level data to a function.<br>
+When `func` is called, the parameter `levelData` is filled with level data depending on the level command.<br>
+`levelData` is a table of tables and its structure is the following:
+
+<table>
+    <thead>
+        <tr>
+            <th colspan=2>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=4 valign="top"><code>area</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Start of area data.<br><i>Level commands: <code>AREA</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Area index.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Model ID of the area layout.</td>
+        </tr>
+        <tr>
+            <td><code>modelName</code></td>
+            <td><code>string</code></td>
+            <td>Model name of the area layout.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>model</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Load model in vanilla ID.<br><i>Level commands: <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code>, <code>LOAD_MODEL_FROM_GEO_EXT</code></i></td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Vanilla model ID. Objects use these temporary IDs to load their model.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Model ID.</td>
+        </tr>
+        <tr>
+            <td><code>modelName</code></td>
+            <td><code>string</code></td>
+            <td>Model name.</td>
+        </tr>
+        <tr>
+            <td><code>displayList</code></td>
+            <td><code>Gfx</code></td>
+            <td>Display list (if the model is not a Geo layout).</td>
+        </tr>
+        <tr>
+            <td><code>layer</code></td>
+            <td><code>integer</code></td>
+            <td>Display list layer (if the model is not a Geo layout).</td>
+        </tr>
+        <tr>
+            <td rowspan=8 valign="top"><code>object</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Object spawn information.<br><i>Level commands: <code>OBJECT</code>, <code>OBJECT_WITH_ACTS</code>, <code>OBJECT_EXT</code>, <code>OBJECT_WITH_ACTS_EXT</code>, <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code>, <code>OBJECT_EXT_LUA_PARAMS</code></i></td>
+        </tr>
+        <tr>
+            <td><code>acts</code></td>
+            <td><code>integer</code></td>
+            <td>Acts where the object appears.</td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's model ID. Only available from commands <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code> and <code>OBJECT_EXT_LUA_PARAMS</code> if the object's model is a custom model.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+        <tr>
+            <td rowspan=7 valign="top"><code>warpNode</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Warp node data.<br><i>Level commands: <code>WARP_NODE</code>, <code>PAINTING_WARP_NODE</code></i></td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><code>integer</code></td>
+            <td>Warp node ID.</td>
+        </tr>
+        <tr>
+            <td><code>destLevel</code></td>
+            <td><code>integer</code></td>
+            <td>Level num of destination.</td>
+        </tr>
+        <tr>
+            <td><code>destArea</code></td>
+            <td><code>integer</code></td>
+            <td>Area index of destination.</td>
+        </tr>
+        <tr>
+            <td><code>destNode</code></td>
+            <td><code>integer</code></td>
+            <td>Node ID of destination.</td>
+        </tr>
+        <tr>
+            <td><code>flags</code></td>
+            <td><code>integer</code></td>
+            <td>Warp node flags, such as the checkpoint flag.</td>
+        </tr>
+        <tr>
+            <td><code>painting</code></td>
+            <td><code>boolean</code></td>
+            <td><code>true</code> if it's a painting warp node, <code>false</code> otherwise.</td>
+        </tr>
+        <tr>
+            <td rowspan=4 valign="top"><code>instantWarp</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Instant warp data.<br><i>Level commands: <code>INSTANT_WARP</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Instant warp index.</td>
+        </tr>
+        <tr>
+            <td><code>destArea</code></td>
+            <td><code>integer</code></td>
+            <td>Area index of destination.</td>
+        </tr>
+        <tr>
+            <td><code>displacement</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Instant displacement.</td>
+        </tr>
+        <tr>
+            <td rowspan=2 valign="top"><code>terrain</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Terrain data.<br><i>Level commands: <code>TERRAIN_TYPE</code></i></td>
+        </tr>
+        <tr>
+            <td><code>type</code></td>
+            <td><code>integer</code></td>
+            <td>Terrain type. One of the <code>TERRAIN_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>collision</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>data</code></td>
+            <td><code>Collision</code></td>
+            <td>Collision pointer.</td>
+        </tr>
+        <tr>
+            <td><code>size</code></td>
+            <td><code>integer</code></td>
+            <td>Size of collision data in bytes.</td>
+        </tr>
+        <tr>
+            <td rowspan=7 valign="top"><code>waterBoxes</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of water boxes. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><code>integer</code></td>
+            <td>Water box ID.</td>
+        </tr>
+        <tr>
+            <td><code>xmin</code></td>
+            <td><code>integer</code></td>
+            <td>Water box xmin coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>xmax</code></td>
+            <td><code>integer</code></td>
+            <td>Water box xmax coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>zmin</code></td>
+            <td><code>integer</code></td>
+            <td>Water box zmin coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>zmax</code></td>
+            <td><code>integer</code></td>
+            <td>Water box zmax coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>height</code></td>
+            <td><code>integer</code></td>
+            <td>Water box top height.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>specialObjects</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of special objects. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's inital position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>dialog</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Entry dialog data.<br><i>Level commands: <code>SHOW_DIALOG</code>, <code>SHOW_DIALOG_EXT</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Entry dialog index.</td>
+        </tr>
+        <tr>
+            <td><code>dialogId</code></td>
+            <td><code>integer</code></td>
+            <td>Dialog ID. One of the <code>DIALOG_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>music</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Background music of the level.<br><i>Level commands: <code>SET_BACKGROUND_MUSIC</code></i></td>
+        </tr>
+        <tr>
+            <td><code>settings</code></td>
+            <td><code>integer</code></td>
+            <td>Background music settings.</td>
+        </tr>
+        <tr>
+            <td><code>seqId</code></td>
+            <td><code>integer</code></td>
+            <td>Sequence ID. One of the <code>SEQ_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=5 valign="top"><code>whirlpool</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Whirlpool data.<br><i>Level commands: <code>WHIRLPOOL</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Whirlpool index.</td>
+        </tr>
+        <tr>
+            <td><code>condition</code></td>
+            <td><code>integer</code></td>
+            <td>Spawn condition.<br><code>0</code>: Always<br><code>1</code>: Bowser 2 is not defeated yet<br><code>2</code>: Bowser 2 is defeated<br><code>3</code>: Always except during act 1</td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Whirlpool position.</td>
+        </tr>
+        <tr>
+            <td><code>strength</code></td>
+            <td><code>integer</code></td>
+            <td>Whirlpool strength. Positive values pull Mario in.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>macroObjects</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of macro objects.<br><i>Level commands: <code>MACRO_OBJECTS</code></i></td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's inital position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+    </tbody>
+</table>
+
+Not all fields are filled at the same time. Make sure to `nil`-check tables before reading the fields.
 
 ### Lua Example
 ```lua
-level_script_parse(LEVEL_BOB, func)
+function table.print(t, indent, step)
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            print(string.rep(" ", indent or 0) .. tostring(k))
+            table.print(v, (indent or 0) + (step or 4), step)
+        else
+            print(string.rep(" ", indent or 0) .. tostring(k) .. " = " .. tostring(v))
+        end
+    end
+end
+
+local function print_level_data(levelData)
+    table.print(levelData)
+end
+
+local function on_level_entry()
+    local levelNum = gNetworkPlayers[0].currLevelNum
+    print("===== LEVEL " .. tostring(levelNum) .. " DATA =====")
+    level_parse_script(levelNum, print_level_data)
+end
+
+hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 ```
 
 ### Parameters
