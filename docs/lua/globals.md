@@ -72,6 +72,13 @@ The `gObjectAnimations` table contains references to object animations. Listed i
 
 <br />
 
+## [gPaintingValues](#gPaintingValues)
+`gPaintingValues`'s fields are listed in [PaintingValues](structs.md#PaintingValues).
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gGlobalObjectCollisionData](#gGlobalObjectCollisionData)
 The `gGlobalObjectCollisionData` table contains references to object collision data. Listed in [GlobalObjectCollisionData](structs.md#GlobalObjectCollisionData).
 
@@ -79,8 +86,38 @@ The `gGlobalObjectCollisionData` table contains references to object collision d
 
 <br />
 
+## [gLevelValues](#gLevelValues)
+`gLevelValues`'s fields are listed in [LevelValues](structs.md#LevelValues).
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gBehaviorValues](#gBehaviorValues)
+`gBehaviorValues`'s fields are listed in [BehaviorValues](structs.md#BehaviorValues).
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gFirstPersonCamera](#gFirstPersonCamera)
+`gFirstPersonCamera`'s fields are listed in [FirstPersonCamera](structs.md#FirstPersonCamera).
+
+__**NOTE**__: `gFirstPersonCamera.enabled` returns whether or not first person is enabled at all. `get_first_person_enabled()` also accounts for certain conditions that make the camera exit first person mode and will return `false` if so.
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [gLakituState](#gLakituState)
 `gLakituState`'s fields are listed in [LakituState](structs.md#LakituState).
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [gFOVStatus](#gFOVStatus)
+`gFOVStatus`'s fields are listed in [CameraFOVStatus](structs.md#CameraFOVStatus).
 
 [:arrow_up_small:](#)
 
@@ -104,36 +141,6 @@ __**NOTE**__: The fields in this struct are not synced and are meant to be chang
 
 ## [gHudDisplay](#gHudDisplay)
 `gHudDisplay`'s fields are listed in [HudDisplay](structs.md#HudDisplay).
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gLevelValues](#gLevelValues)
-`gLevelValues`'s fields are listed in [LevelValues](structs.md#LevelValues).
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gBehaviorValues](#gBehaviorValues)
-`gBehaviorValues`'s fields are listed in [BehaviorValues](structs.md#BehaviorValues).
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gPaintingValues](#gPaintingValues)
-`gPaintingValues`'s fields are listed in [PaintingValues](structs.md#PaintingValues).
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gFirstPersonCamera](#gFirstPersonCamera)
-`gFirstPersonCamera`'s fields are listed in [FirstPersonCamera](structs.md#FirstPersonCamera).
-
-__**NOTE**__: `gFirstPersonCamera.enabled` returns whether or not first person is enabled at all. `get_first_person_enabled()` also accounts for certain conditions that make the camera exit first person mode and will return `false` if so.
 
 [:arrow_up_small:](#)
 

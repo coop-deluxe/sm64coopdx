@@ -92,6 +92,7 @@ extern unsigned int configKeyConsole[MAX_BINDS];
 extern unsigned int configKeyPrevPage[MAX_BINDS];
 extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
+extern unsigned int configInputDelay;
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;

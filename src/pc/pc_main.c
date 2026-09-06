@@ -520,6 +520,10 @@ int main(int argc, char *argv[]) {
         console = pcount > 1;
     }
     if (console) {
+        HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+        DWORD mode = 0;
+        GetConsoleMode(out, &mode);
+        SetConsoleMode(out, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
         SetConsoleOutputCP(CP_UTF8);
     } else {
         FreeConsole();
