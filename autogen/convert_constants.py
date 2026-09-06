@@ -356,11 +356,16 @@ def build_to_c(built_files):
 def doc_constant_index(processed_files):
     s = '# Supported Constants\n'
     for processed_file in processed_files:
+        constants = processed_file['constants']
+        if not constants:
+            continue
+
         s += '- [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'].replace('.', ''))
         constants = [x for x in processed_file['constants'] if 'identifier' in x]
         for c in constants:
             if len(c['constants']) > 0:
                 s += '    - [enum %s](#enum-%s)\n' % (c['identifier'], c['identifier'])
+
     s += '\n<br />\n\n'
     return s
 
@@ -375,7 +380,7 @@ def doc_constant(fname, processed_constant):
             return ''
 
         enum = 'enum ' + processed_constant['identifier']
-        s += '\n### [%s](#%s)\n' % (enum, processed_constant['identifier'])
+        s += '\n### %s\n' % (enum)
         s += '| Identifier | Value |\n'
         s += '| :--------- | :---- |\n'
         for c in constants:
@@ -392,8 +397,11 @@ def doc_constant(fname, processed_constant):
     return s
 
 def doc_file(processed_file):
-    s = '## [%s](#%s)\n' % (processed_file['filename'], processed_file['filename'])
     constants = processed_file['constants']
+    if not constants:
+        return ''
+
+    s = '## %s\n' % (processed_file['filename'])
     for c in constants:
         s += doc_constant(processed_file['filename'], c)
 
