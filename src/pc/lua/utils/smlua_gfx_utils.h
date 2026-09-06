@@ -7,6 +7,7 @@
 #include "geo_commands.h"
 
 #define C0(cmd, pos, width) (((cmd)->words.w0 >> (pos)) & ((1U << width) - 1))
+#define C1(cmd, pos, width) (((cmd)->words.w1 >> (pos)) & ((1U << width) - 1))
 #define GFX_OP(cmd) C0(cmd, 24, 8)
 
 Gfx *gfx_allocate_internal(Gfx *gfx, u32 length);

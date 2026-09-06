@@ -14746,33 +14746,6 @@ int smlua_func_get_star_name(lua_State* L) {
  // level_script.h //
 ////////////////////
 
-int smlua_func_area_create_warp_node(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 6) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "area_create_warp_node", 6, top);
-        return 0;
-    }
-
-    u8 id = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "area_create_warp_node"); return 0; }
-    u8 destLevel = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "area_create_warp_node"); return 0; }
-    u8 destArea = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "area_create_warp_node"); return 0; }
-    u8 destNode = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "area_create_warp_node"); return 0; }
-    u8 checkpoint = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "area_create_warp_node"); return 0; }
-    struct Object* o = (struct Object*)smlua_to_cobject(L, 6, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "area_create_warp_node"); return 0; }
-
-    smlua_push_object(L, LOT_OBJECTWARPNODE, area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o), NULL);
-
-    return 1;
-}
-
   ////////////////////
  // level_update.h //
 ////////////////////
@@ -32392,6 +32365,137 @@ int smlua_func_warp_to_castle(lua_State* L) {
     return 1;
 }
 
+int smlua_func_level_create_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_create_warp_node", 8, top);
+        return 0;
+    }
+
+    u8 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_create_warp_node"); return 0; }
+    u8 areaIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "level_create_warp_node"); return 0; }
+    u8 id = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "level_create_warp_node"); return 0; }
+    enum MarioSpawnType marioSpawnType = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "level_create_warp_node"); return 0; }
+    u8 destLevel = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "level_create_warp_node"); return 0; }
+    u8 destArea = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "level_create_warp_node"); return 0; }
+    u8 destNode = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "level_create_warp_node"); return 0; }
+    bool checkpoint = smlua_to_boolean(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "level_create_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_CUSTOMWARPNODE, level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint), NULL);
+
+    return 1;
+}
+
+int smlua_func_level_create_warp_node_with_object(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 13) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_create_warp_node_with_object", 13, top);
+        return 0;
+    }
+
+    u8 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_create_warp_node_with_object"); return 0; }
+    u8 areaIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "level_create_warp_node_with_object"); return 0; }
+    u8 id = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "level_create_warp_node_with_object"); return 0; }
+    enum MarioSpawnType marioSpawnType = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "level_create_warp_node_with_object"); return 0; }
+    u8 destLevel = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "level_create_warp_node_with_object"); return 0; }
+    u8 destArea = smlua_to_integer(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "level_create_warp_node_with_object"); return 0; }
+    u8 destNode = smlua_to_integer(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "level_create_warp_node_with_object"); return 0; }
+    bool checkpoint = smlua_to_boolean(L, 8);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "level_create_warp_node_with_object"); return 0; }
+    Vec3f pos; smlua_get_vec3f(pos, 9);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "level_create_warp_node_with_object"); return 0; }
+    Vec3s angle; smlua_get_vec3s(angle, 10);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 10, "level_create_warp_node_with_object"); return 0; }
+    enum ModelExtendedId modelId = smlua_to_integer(L, 11);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 11, "level_create_warp_node_with_object"); return 0; }
+    enum BehaviorId behaviorId = smlua_to_integer(L, 12);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 12, "level_create_warp_node_with_object"); return 0; }
+    u32 behParams = smlua_to_integer(L, 13);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 13, "level_create_warp_node_with_object"); return 0; }
+
+    smlua_push_object(L, LOT_CUSTOMWARPNODE, level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams), NULL);
+
+    return 1;
+}
+
+int smlua_func_level_get_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_get_warp_node", 3, top);
+        return 0;
+    }
+
+    u8 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_get_warp_node"); return 0; }
+    u8 areaIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "level_get_warp_node"); return 0; }
+    u8 id = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "level_get_warp_node"); return 0; }
+
+    smlua_push_object(L, LOT_CUSTOMWARPNODE, level_get_warp_node(levelNum, areaIndex, id), NULL);
+
+    return 1;
+}
+
+int smlua_func_level_delete_warp_node(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_delete_warp_node", 3, top);
+        return 0;
+    }
+
+    u8 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_delete_warp_node"); return 0; }
+    u8 areaIndex = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "level_delete_warp_node"); return 0; }
+    u8 id = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "level_delete_warp_node"); return 0; }
+
+    level_delete_warp_node(levelNum, areaIndex, id);
+
+    return 0;
+}
+
+int smlua_func_level_clear_warp_nodes(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "level_clear_warp_nodes", 1, top);
+        return 0;
+    }
+
+    u8 levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "level_clear_warp_nodes"); return 0; }
+
+    level_clear_warp_nodes(levelNum);
+
+    return 0;
+}
+
   ////////////////////////
  // smlua_misc_utils.h //
 ////////////////////////
@@ -37179,7 +37283,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "get_star_name", smlua_func_get_star_name);
 
     // level_script.h
-    smlua_bind_function(L, "area_create_warp_node", smlua_func_area_create_warp_node);
 
     // level_update.h
     smlua_bind_function(L, "level_control_timer_running", smlua_func_level_control_timer_running);
@@ -38178,6 +38281,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);
     smlua_bind_function(L, "warp_exit_level", smlua_func_warp_exit_level);
     smlua_bind_function(L, "warp_to_castle", smlua_func_warp_to_castle);
+    smlua_bind_function(L, "level_create_warp_node", smlua_func_level_create_warp_node);
+    smlua_bind_function(L, "level_create_warp_node_with_object", smlua_func_level_create_warp_node_with_object);
+    smlua_bind_function(L, "level_get_warp_node", smlua_func_level_get_warp_node);
+    smlua_bind_function(L, "level_delete_warp_node", smlua_func_level_delete_warp_node);
+    smlua_bind_function(L, "level_clear_warp_nodes", smlua_func_level_clear_warp_nodes);
 
     // smlua_misc_utils.h
     smlua_bind_function(L, "get_network_area_timer", smlua_func_get_network_area_timer);

@@ -21,12 +21,39 @@ extern "C" {
 #define LUA_VAR_CODE    (u32) 0x5641554C
 #define TEX_REF_CODE    (u32) 0x52584554
 
-#define FUNCTION_GEO    1
-#define FUNCTION_BHV    2
-#define FUNCTION_LVL    3
-
 #define MOD_PACK_INDEX -1 // the pack index for actors loaded from mods
 #define PACK_MOD_INDEX -1 // the mod index for actors loaded from packs
+
+// Size limits
+#define DYNOS_BIN_FILE_MAX_SIZE (s32) 0x40000000 // 1 GiB
+#define DYNOS_TEX_MIN_WIDTH_HEIGHT 1
+#define DYNOS_TEX_MAX_WIDTH_HEIGHT 4096
+
+// Pointer types
+#define PTYPE_LUAV              (1 <<  0)
+#define PTYPE_FUNC_GEO          (1 <<  1)
+#define PTYPE_FUNC_BHV          (1 <<  2)
+#define PTYPE_FUNC_LVL          (1 <<  3)
+#define PTYPE_FUNC              (PTYPE_FUNC_GEO | PTYPE_FUNC_BHV | PTYPE_FUNC_LVL)
+#define PTYPE_PNTR_LIGHT        (1 <<  4)
+#define PTYPE_PNTR_LIGHT0       (1 <<  5)
+#define PTYPE_PNTR_LIGHTT       (1 <<  6)
+#define PTYPE_PNTR_AMBIENTT     (1 <<  7)
+#define PTYPE_PNTR_TEX          (1 <<  8)
+#define PTYPE_PNTR_TEXLIST      (1 <<  9)
+#define PTYPE_PNTR_GFX          (1 << 10)
+#define PTYPE_PNTR_GEO          (1 << 11)
+#define PTYPE_PNTR_VTX          (1 << 12)
+#define PTYPE_PNTR_COL          (1 << 13)
+#define PTYPE_PNTR_LVL          (1 << 14)
+#define PTYPE_PNTR_BHV          (1 << 15)
+#define PTYPE_PNTR_MACRO        (1 << 16)
+#define PTYPE_PNTR_TRAJ         (1 << 17)
+#define PTYPE_PNTR_MOVTEX       (1 << 18)
+#define PTYPE_PNTR_MOVTEXQC     (1 << 19)
+#define PTYPE_PNTR_ROOM         (1 << 20)
+#define PTYPE_PNTR_ANIM         (1 << 21)
+#define PTYPE_PNTR              (PTYPE_PNTR_LIGHT | PTYPE_PNTR_LIGHT0 | PTYPE_PNTR_LIGHTT | PTYPE_PNTR_AMBIENTT | PTYPE_PNTR_TEX | PTYPE_PNTR_TEXLIST | PTYPE_PNTR_GFX | PTYPE_PNTR_GEO | PTYPE_PNTR_VTX | PTYPE_PNTR_COL | PTYPE_PNTR_LVL | PTYPE_PNTR_BHV | PTYPE_PNTR_MACRO | PTYPE_PNTR_TRAJ | PTYPE_PNTR_MOVTEX | PTYPE_PNTR_MOVTEXQC | PTYPE_PNTR_ROOM | PTYPE_PNTR_ANIM)
 
 //
 // Enums
@@ -83,10 +110,16 @@ enum {
 
 class BinFile {
 private:
-    void Grow(s32 newSize) {
-        if (newSize >= mCapacity) {
+    bool Grow(s32 newSize) {
+        if (newSize > DYNOS_BIN_FILE_MAX_SIZE) {
+            return false;
+        }
+        if (newSize > mCapacity) {
             mCapacity = MAX(newSize, MAX(256, mCapacity * 2));
             u8 *newBuffer = (u8 *) calloc(mCapacity, 1);
+            if (!newBuffer) {
+                return false;
+            }
             if (mData) {
                 memcpy(newBuffer, mData, mSize);
                 free(mData);
@@ -94,6 +127,7 @@ private:
             mData = newBuffer;
         }
         mSize = MAX(mSize, newSize);
+        return true;
     }
 
 public:
@@ -108,10 +142,19 @@ public:
         FILE *f = f_open_r(aFilename);
         if (f) {
             f_seek(f, 0, SEEK_END);
+            s32 _FileSize = f_tell(f);
+            if (_FileSize > DYNOS_BIN_FILE_MAX_SIZE) {
+                f_close(f);
+                return NULL;
+            }
             BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
             _BinFile->mFilename = (const char *) memcpy(calloc(strlen(aFilename) + 1, 1), aFilename, strlen(aFilename));
             _BinFile->mReadOnly = true;
-            _BinFile->Grow(f_tell(f));
+            if (!_BinFile->Grow(_FileSize)) {
+                free(_BinFile);
+                f_close(f);
+                return NULL;
+            }
             f_rewind(f);
             f_read(_BinFile->mData, 1, _BinFile->mSize, f);
             f_close(f);
@@ -128,16 +171,22 @@ public:
     }
 
     static BinFile *OpenB(const u8 *aBuffer, s32 aSize) {
+        if (aSize > DYNOS_BIN_FILE_MAX_SIZE) {
+            return NULL;
+        }
         BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
         _BinFile->mReadOnly = true;
-        _BinFile->Grow(aSize);
+        if (!_BinFile->Grow(aSize)) {
+            free(_BinFile);
+            return NULL;
+        }
         memcpy(_BinFile->mData, aBuffer, aSize);
         return _BinFile;
     }
 
     static void Close(BinFile *&aBinFile) {
         if (aBinFile) {
-            if (!aBinFile->mReadOnly && aBinFile->mFilename && aBinFile->mData && aBinFile->mSize) {
+            if (!aBinFile->mReadOnly && aBinFile->mFilename && aBinFile->mData && aBinFile->mSize > 0 && aBinFile->mSize <= DYNOS_BIN_FILE_MAX_SIZE) {
                 FILE *f = fopen(aBinFile->mFilename, "wb");
                 if (f) {
                     fwrite(aBinFile->mData, 1, aBinFile->mSize, f);
@@ -175,8 +224,7 @@ public:
 
     template <typename T>
     void Write(const T& aItem) {
-        if (!mReadOnly) {
-            Grow(mOffset + sizeof(T));
+        if (!mReadOnly && Grow(mOffset + sizeof(T))) {
             memcpy(mData + mOffset, &aItem, sizeof(T));
             mOffset += sizeof(T);
         }
@@ -187,15 +235,10 @@ public:
         if (aCount <= 0 || aBuffer == NULL) {
             return;
         }
-        if (!mReadOnly) {
-            Grow(mOffset + aCount * sizeof(T));
+        if (!mReadOnly && Grow(mOffset + aCount * sizeof(T))) {
             memcpy(mData + mOffset, aBuffer, aCount * sizeof(T));
             mOffset += aCount * sizeof(T);
         }
-    }
-
-    void Skip(s32 aAmount) const {
-        mOffset += aAmount;
     }
 
 private:
@@ -525,6 +568,7 @@ struct TexData : NoCopy {
     s32 mRawFormat = -1;
     s32 mRawSize   = -1;
     bool mUploaded = false;
+    bool mInvalidated = false;
 };
 
 struct AnimData : NoCopy {
@@ -597,6 +641,8 @@ struct GfxContext {
     DataNode<TexData>* mCurrentPalette = NULL;
 };
 
+struct DataPointer { void *ptr; u32 ptype; };
+
 template <typename T>
 using AnimBuffer = Pair<String, Array<T>>;
 struct GfxData : NoCopy {
@@ -637,7 +683,7 @@ struct GfxData : NoCopy {
     s32 mModIndex = 0;
     s32 mModFileIndex = 0;
     SysPath mPackFolder;
-    Array<void *> mPointerList;
+    Array<DataPointer> mPointerList;
     Array<Pair<const void*, const void*>> mPointerOffsetList;
     Array<void *> mLuaPointerList;
     Array<String> mLuaTokenList;
@@ -683,11 +729,6 @@ struct PackData {
     bool mLoaded;
 };
 
-struct LvlCmd {
-    u8 mType;
-    u8 mSize;
-};
-
 //
 // Utils
 //
@@ -708,6 +749,28 @@ void Delete(T *& aPtr) {
         free(aPtr);
     }
     aPtr = NULL;
+}
+
+template <typename T>
+void DeleteNode(DataNode<T> *&aNode) {
+    if (aNode) {
+        Delete(aNode->mData);
+        Delete(aNode);
+    }
+}
+
+static void DeleteNode(DataNode<Vtx> *&aNode) {
+    if (aNode) {
+        free(aNode->mData);
+        Delete(aNode);
+    }
+}
+
+static void DeleteNode(DataNode<Gfx> *&aNode) {
+    if (aNode) {
+        free(aNode->mData);
+        Delete(aNode);
+    }
 }
 
 template <typename T = void>
@@ -785,10 +848,10 @@ void PrintError(const char *aFmt, Args... aArgs) {
     PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
-    if (aGfxData->mErrorCount == 0) Print("  ERROR!"); \
+    if (aGfxData && aGfxData->mErrorCount == 0) { Print("  ERROR!"); } \
     Print(__VA_ARGS__); \
     PrintConsole(CONSOLE_MESSAGE_ERROR, __VA_ARGS__); \
-    aGfxData->mErrorCount++; \
+    if (aGfxData) { aGfxData->mErrorCount++; } \
 }
 
 #if DEBUG
@@ -863,7 +926,6 @@ s16 *DynOS_Level_GetWarp(s32 aLevel, s32 aArea, s8 aWarpId);
 s16 *DynOS_Level_GetWarpEntry(s32 aLevel, s32 aArea);
 s16 *DynOS_Level_GetWarpDeath(s32 aLevel, s32 aArea);
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset);
-LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd);
 void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8, void *));
 
 //
@@ -885,9 +947,6 @@ const void*      DynOS_Builtin_ScriptPtr_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_ScriptPtr_GetFromData(const void* aData);
 const GeoLayout* DynOS_Builtin_Actor_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Actor_GetFromData(const GeoLayout* aData);
-const GeoLayout* DynOS_Builtin_Actor_GetFromIndex(s32 aIndex);
-const char*      DynOS_Builtin_Actor_GetNameFromIndex(s32 aIndex);
-s32              DynOS_Builtin_Actor_GetCount();
 const MacroObject* DynOS_Builtin_LvlMacro_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_LvlMacro_GetFromData(const MacroObject* aData);
 const GeoLayout* DynOS_Builtin_LvlGeo_GetFromName(const char* aDataName);
@@ -901,13 +960,13 @@ const char*      DynOS_Builtin_Tex_GetFromData(const Texture* aData);
 const char*      DynOS_Builtin_Tex_GetNameFromFileName(const char* aDataName);
 const struct TextureInfo* DynOS_Builtin_Tex_GetInfoFromName(const char* aDataName);
 const struct TextureInfo* DynOS_Builtin_Tex_GetInfoFromData(const Texture* aData);
-const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName, u8 aFuncType);
-const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex, u8 aFuncType);
-const char *     DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u8 aFuncType);
-s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData, u8 aFuncType);
-String           DynOS_Builtin_Func_CheckMisuse(s32 aIndex, u8 aFuncType);
-String           DynOS_Builtin_Func_CheckMisuse(const char* aDataName, u8 aFuncType);
-String           DynOS_Builtin_Func_CheckMisuse(const void* aData, u8 aFuncType);
+const void*      DynOS_Builtin_Func_GetFromName(const char* aDataName, u32 aPtrType);
+const void*      DynOS_Builtin_Func_GetFromIndex(s32 aIndex, u32 aPtrType);
+const char *     DynOS_Builtin_Func_GetNameFromIndex(s32 aIndex, u32 aPtrType);
+s32              DynOS_Builtin_Func_GetIndexFromData(const void* aData, u32 aPtrType);
+String           DynOS_Builtin_Func_CheckMisuse(s32 aIndex, u32 aPtrType);
+String           DynOS_Builtin_Func_CheckMisuse(const char* aDataName, u32 aPtrType);
+String           DynOS_Builtin_Func_CheckMisuse(const void* aData, u32 aPtrType);
 const Gfx *      DynOS_Builtin_Gfx_GetFromName(const char *aDataName);
 const char *     DynOS_Builtin_Gfx_GetFromData(const Gfx *aData);
 
@@ -950,6 +1009,7 @@ u8 DynOS_Audio_AllocSequence();
 std::map<const void *, ActorGfx> &DynOS_Actor_GetValidActors();
 bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFilename, const char *aActorName);
 const void *DynOS_Actor_GetLayoutFromName(const char *aActorName);
+const char *DynOS_Actor_GetNameFromLayout(const void *aGeoLayout);
 bool DynOS_Actor_GetModIndexAndToken(const GraphNode *aGraphNode, u32 aTokenIndex, s32 *outModIndex, s32 *outModFileIndex, const char **outToken);
 ActorGfx* DynOS_Actor_GetActorGfx(const GraphNode* aGraphNode);
 void DynOS_Actor_Valid(const void* aGeoref, ActorGfx& aActorGfx);
@@ -1038,6 +1098,7 @@ struct GraphNode* DynOS_Model_GetGeo(u32 aId);
 u32 DynOS_Model_GetIdFromAsset(void* asset);
 u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode);
 enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode);
+const char *DynOS_Model_GetNameFromVanillaAsset(const void *aAsset);
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot);
 void DynOS_Model_ClearPool(enum ModelPool aModelPool);
 
@@ -1101,14 +1162,40 @@ DataNode<Collision>* DynOS_Col_Load(BinFile *aFile, GfxData *aGfxData);
 DataNode<Collision>* DynOS_Col_LoadFromBinary(const SysPath &aFilename, const char *aCollisionName);
 void DynOS_Col_Generate(const SysPath &aPackFolder, Array<Pair<u64, String>> _ActorsFolders, GfxData *_GfxData);
 
+void DynOS_Col_Validate_Begin();
+bool DynOS_Col_Validate_CheckSectionEnd();
+bool DynOS_Col_Validate_CheckCommands(GfxData *aGfxData, const DataNode<Collision> *aNode);
+void DynOS_Col_Validate_SetLastSymbol(const char *aLastSymbol);
+void DynOS_Col_Validate_Init(GfxData *aGfxData);
+void DynOS_Col_Validate_VertexInit(GfxData *aGfxData, s16 vertexCount);
+void DynOS_Col_Validate_Vertex(GfxData *aGfxData, s16 x, s16 y, s16 z);
+void DynOS_Col_Validate_TriInit(GfxData *aGfxData, s16 surfaceType, s16 triangleCount);
+void DynOS_Col_Validate_Tri(GfxData *aGfxData, s16 vertex0, s16 vertex1, s16 vertex2);
+void DynOS_Col_Validate_TriSpecial(GfxData *aGfxData, s16 vertex0, s16 vertex1, s16 vertex2, s16 force);
+void DynOS_Col_Validate_Stop(GfxData *aGfxData);
+void DynOS_Col_Validate_End(GfxData *aGfxData);
+void DynOS_Col_Validate_SpecialInit(GfxData *aGfxData, s16 specialCount);
+void DynOS_Col_Validate_WaterBoxInit(GfxData *aGfxData, s16 waterBoxCount);
+void DynOS_Col_Validate_WaterBox(GfxData *aGfxData, s16 id, s16 x1, s16 z1, s16 x2, s16 z2, s16 y);
+void DynOS_Col_Validate_SpecialObject(GfxData *aGfxData, s16 preset, s16 posX, s16 posY, s16 posZ);
+void DynOS_Col_Validate_SpecialObjectWithYaw(GfxData *aGfxData, s16 preset, s16 posX, s16 posY, s16 posZ, s16 yaw);
+void DynOS_Col_Validate_SpecialObjectWithYawAndParam(GfxData *aGfxData, s16 preset, s16 posX, s16 posY, s16 posZ, s16 yaw, s16 param);
+
 DataNode<GeoLayout>* DynOS_Geo_Parse(GfxData* aGfxData, DataNode<GeoLayout>* aNode, bool aDisplayPercent);
 void DynOS_Geo_Write(BinFile *aFile, GfxData *aGfxData, DataNode<GeoLayout> *aNode);
 void DynOS_Geo_Load(BinFile *aFile, GfxData *aGfxData);
+
+void DynOS_Geo_Validate_Begin();
+bool DynOS_Geo_Validate_GetPointerTypes(u32 aValue, u16 &outCommandId, u32 &outPtrTypes);
+bool DynOS_Geo_Validate_CheckCommands(GfxData *aGfxData, const DataNode<GeoLayout> *aNode, bool isLoad);
 
 DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
 void DynOS_Gfx_Write(BinFile *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
 void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData);
 s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found);
+
+bool DynOS_Gfx_Validate_GetPointerTypes(u32 aWordsW0, u8 &outCommandId, u32 &outPtrTypes);
+bool DynOS_Gfx_Validate_CheckCommands(GfxData *aGfxData, const DataNode<Gfx> *aNode);
 
 DataNode<Lights1>* DynOS_Lights_Parse(GfxData* aGfxData, DataNode<Lights1>* aNode);
 void DynOS_Lights_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Lights1> *aNode);
@@ -1130,13 +1217,19 @@ DataNode<MacroObject>* DynOS_MacroObject_Parse(GfxData* aGfxData, DataNode<Macro
 void DynOS_MacroObject_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MacroObject> *aNode);
 DataNode<MacroObject>* DynOS_MacroObject_Load(BinFile *aFile, GfxData *aGfxData);
 
+bool DynOS_MacroObject_Validate_CheckCommands(GfxData *aGfxData, const DataNode<MacroObject> *aNode);
+
 DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Trajectory>* aNode, bool aDisplayPercent);
 void DynOS_Trajectory_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Trajectory> *aNode);
 DataNode<Trajectory>* DynOS_Trajectory_Load(BinFile *aFile, GfxData *aGfxData);
 
+bool DynOS_Trajectory_Validate_CheckCommands(GfxData *aGfxData, const DataNode<Trajectory> *aNode);
+
 DataNode<Movtex>* DynOS_Movtex_Parse(GfxData* aGfxData, DataNode<Movtex>* aNode, bool aDisplayPercent);
 void DynOS_Movtex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Movtex> *aNode);
 DataNode<Movtex>* DynOS_Movtex_Load(BinFile *aFile, GfxData *aGfxData);
+
+bool DynOS_Movtex_Validate_CheckCommands(GfxData *aGfxData, const DataNode<Movtex> *aNode);
 
 DataNode<MovtexQC>* DynOS_MovtexQC_Parse(GfxData* aGfxData, DataNode<MovtexQC>* aNode);
 void DynOS_MovtexQC_Write(BinFile* aFile, GfxData* aGfxData, DataNode<MovtexQC> *aNode);
@@ -1149,6 +1242,8 @@ DataNode<u8>* DynOS_Rooms_Load(BinFile *aFile, GfxData *aGfxData);
 DataNode<TexData>* DynOS_Tex_Parse(GfxData* aGfxData, DataNode<TexData>* aNode);
 void DynOS_Tex_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData> *aNode);
 DataNode<TexData>* DynOS_Tex_Load(BinFile *aFile, GfxData *aGfxData);
+DataNode<TexData>* DynOS_Tex_LoadRaw(BinFile *aFile, GfxData *aGfxData);
+DataNode<TexData>* DynOS_Tex_LoadPng(BinFile *aFile, GfxData *aGfxData);
 DataNode<TexData>* DynOS_Tex_LoadFromBinary(const SysPath &aPackFolder, const SysPath &aFilename, const char *aTexName, bool aAddToPack);
 void DynOS_Tex_ConvertTextureDataToPng(GfxData *aGfxData, TexData* aTexture);
 void DynOS_Tex_GeneratePack(const SysPath &aPackFolder, SysPath &aOutputFolder, bool aAllowCustomTextures);
@@ -1162,8 +1257,8 @@ void DynOS_Vtx_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Vtx> *aNode);
 void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData);
 
 void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData);
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType);
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags);
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u32 aPtrType);
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u32 aPtrTypes, u8* outFlags);
 
 void DynOS_GfxDynCmd_Load(BinFile *aFile, GfxData *aGfxData);
 
@@ -1176,13 +1271,19 @@ void DynOS_Lvl_GeneratePack(const SysPath &aPackFolder);
 s64 DynOS_Lvl_ParseLevelScriptConstants(const String& _Arg, bool* found);
 
 void DynOS_Lvl_Validate_Begin();
-bool DynOS_Lvl_Validate_RequirePointer(u32 value);
+bool DynOS_Lvl_Validate_GetPointerTypes(u32 aValue, u8 &outCommandId, u32 &outPtrTypes);
+bool DynOS_Lvl_Validate_CheckCommands(GfxData *aGfxData, const DataNode<LevelScript> *aNode, bool isLoad);
+u8 DynOS_Lvl_GetCommandSize(u8 aCmdType);
 
 DataNode<BehaviorScript> *DynOS_Bhv_Parse(GfxData *aGfxData, DataNode<BehaviorScript> *aNode, bool aDisplayPercent);
 GfxData *DynOS_Bhv_LoadFromBinary(const SysPath &aFilename, const char *aBehaviorName);
 void DynOS_Bhv_GeneratePack(const SysPath &aPackFolder);
 s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found);
 s64 DynOS_Bhv_ParseBehaviorIntegerScriptConstants(const String &_Arg, bool *found);
+
+void DynOS_Bhv_Validate_Begin();
+bool DynOS_Bhv_Validate_GetPointerTypes(u32 aValue, u8 &outCommandId, u32 &outPtrTypes);
+bool DynOS_Bhv_Validate_CheckCommands(GfxData *aGfxData, const DataNode<BehaviorScript> *aNode, bool isLoad);
 
 s64 DynOS_Common_ParseBhvConstants(const String &_Arg, bool *found);
 s64 DynOS_Common_ParseModelConstants(const String &_Arg, bool *found);
@@ -1192,6 +1293,52 @@ bool DynOS_Bin_Compress(const SysPath &aFilename);
 BinFile *DynOS_Bin_Decompress(const SysPath &aFilename);
 
 void DynOS_Add_Scroll_Target(u32 index, const char *name, u32 offset, u32 size);
+
+//
+// Validation
+//
+
+#define DynOS_Bin_Validate_CheckSize(aDataSize, aElemBytes, aReturnValue) \
+    u32 _ElemBytes = (aElemBytes); \
+    u32 _RemainingBytes = (u32) MAX(0, aFile->Size() - aFile->Offset()); \
+    u32 _RemainingSize = _RemainingBytes / _ElemBytes; \
+    if (aDataSize == 0 || aDataSize > _RemainingSize) { \
+        PrintDataError("  ERROR: Invalid data size in file '%s': %u (should be > 0 and <= %u)", aFile->GetFilename(), aDataSize, _RemainingSize); \
+        DeleteNode(_Node); \
+        return aReturnValue; \
+    }
+
+#define DynOS_Bin_Validate_CheckEoF(aReturnValue) \
+    if (aFile->EoF()) { \
+        u32 _ExpectedBytes = _RemainingBytes + (_Node->mSize - i) * _ElemBytes; \
+        PrintDataError("  ERROR: Reached EOF when reading file '%s': Expected at least %u bytes, got only %u", aFile->GetFilename(), _ExpectedBytes, _RemainingBytes); \
+        DeleteNode(_Node); \
+        return aReturnValue; \
+    }
+
+template <typename CommandType, u32 CommandIdShift, typename NodeType, typename MapType, typename CommandIdType>
+static bool DynOS_Bin_Validate_GetCommandIds(
+    GfxData *aGfxData, const DataNode<NodeType> *aNode,
+    const MapType &aCommandsMap, Array<CommandIdType> &outCommandIds
+) {
+    outCommandIds.Clear();
+    for (u32 i = 0; i < aNode->mSize;) {
+        CommandIdType id = (CommandIdType) (aNode->mData[i] >> CommandIdShift);
+        if (aCommandsMap.count(id) != 0) {
+            outCommandIds.Add(id);
+            u32 commandSize = aCommandsMap.at(id).size / 4;
+            if ((u64) i + (u64) commandSize > (u64) aNode->mSize) {
+                PrintDataError("  ERROR: Validation failed for '%s': Unterminated command: %X %016llX", aNode->mName.begin(), id, aNode->mData[i]);
+                return false;
+            }
+            i += commandSize;
+        } else {
+            PrintDataError("  ERROR: Validation failed for '%s': Invalid command: %X %016llX", aNode->mName.begin(), id, aNode->mData[i]);
+            return false;
+        }
+    }
+    return true;
+}
 
 #endif
 #endif

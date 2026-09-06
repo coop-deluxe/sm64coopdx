@@ -9,6 +9,9 @@
 #include "types.h"
 #include "memory.h"
 
+#define INPUT_BUFFER_MAX_DELAY 15
+#define INPUT_BUFFER_SIZE (INPUT_BUFFER_MAX_DELAY + 1)
+
 struct GfxPool {
     Gfx buffer[GFX_POOL_SIZE];
     struct SPTask spTask;
