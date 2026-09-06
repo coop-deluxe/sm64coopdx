@@ -26,7 +26,7 @@
 #define GRAPH_NODE_TYPE_FUNCTIONAL            0x100
 
 enum GraphNodeType {
-#define GRAPH_NODE_TYPE(_name_, _id_, ...) _name_ = _id_,
+#define GRAPH_NODE_TYPE(_name_, _value_, ...) _name_ = _value_,
 #include "src/engine/graph_node_types.inl"
 #undef GRAPH_NODE_TYPE
 };

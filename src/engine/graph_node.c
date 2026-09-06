@@ -15,7 +15,7 @@
  * Return the size in bytes of a graph node type.
  */
 u32 get_graph_node_type_size(s16 type) {
-#define GRAPH_NODE_TYPE(_name_, _id_, _type_, ...) { if (type == _name_) { return (u32) sizeof(struct _type_); } }
+#define GRAPH_NODE_TYPE(_name_, _value_, _type_, ...) { if (type == _name_) { return (u32) sizeof(struct _type_); } }
 #include "src/engine/graph_node_types.inl"
 #undef GRAPH_NODE_TYPE
     return 0;
