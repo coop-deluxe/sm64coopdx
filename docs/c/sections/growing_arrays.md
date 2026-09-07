@@ -2,7 +2,7 @@
 
 # Growing Arrays
 
-Growing arrays are a custom type designed to handle dynamically scaling arrays in C. It allocates on the heap and only allocates what it needs, with no limit to how much it can allocate if necessary.
+Growing arrays are a custom type designed to handle dynamically scaling arrays in C. It allocates on the heap and only allocates what it needs, with no limit to how much it can allocate.
 
 This won't go over every function, but it will go over the most important ones. For a complete view on all the functions, head to `src/game/memory.c`, and head over to the growing array section (starts at line 193).
 
@@ -14,7 +14,7 @@ Define a pointer to a `GrowingArray` struct:
 struct GrowingArray *gGrowingArrayExample = NULL;
 ```
 
-You then need to find a spot to initialize this growing array. Look for an initialization function that works for the code you are modifying and throw the initialization for the array there.
+You then need to find a spot to initialize this growing array. Look for an appropriate place in your code to init the array, and call `growing_array_init` there.
 
 You can initialize a growing array using the function
 
