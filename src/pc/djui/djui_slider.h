@@ -12,7 +12,9 @@ struct DjuiSlider {
     unsigned int min;
     unsigned int max;
     bool updateRectValueColor;
+    const char* valueSuffix;
 };
 
 struct DjuiSlider* djui_slider_create(struct DjuiBase* parent, const char* message, unsigned int* value, unsigned int min, unsigned int max, void (*on_value_change)(struct DjuiBase*));
+void djui_slider_set_value_suffix(struct DjuiSlider* slider, const char* suffix);
 void djui_slider_update_value(struct DjuiBase* base);

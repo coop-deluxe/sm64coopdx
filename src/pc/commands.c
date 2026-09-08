@@ -161,6 +161,11 @@ static void chat_construct_player_message(struct NetworkPlayer *np, char *msg) {
 }
 
 static bool command_help(UNUSED const char *message, bool onConsole) {
+    char tabcompletionHint[256];
+    snprintf(tabcompletionHint, sizeof(tabcompletionHint), "\\#ff2020\\%s \\#ffa020\\(%s)\\#ff2020\\:\\#000000\\",
+        DLANG(CHAT, ALL_COMMANDS), DLANG(CHAT, TAB_COMPLETE_INFO));
+    command_message_create(tabcompletionHint, CONSOLE_MESSAGE_INFO);
+
     for (unsigned int i = 0; i < sCommandCount; i++) {
         if (!sCommands[i].active) { continue; }
         if (!sCommands[i].isChatCommand && !onConsole) { continue; }

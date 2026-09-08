@@ -50,9 +50,19 @@ void djui_slider_update_value(struct DjuiBase* base) {
     djui_base_set_size(&slider->rectValue->base, ((f32)*value - min) / ((f32)max - min), 1.0f);
 
     char textStr[16];
-    snprintf(textStr, sizeof(textStr), "%u", *value);
+    if (slider->valueSuffix != NULL && slider->valueSuffix[0] != '\0') {
+        snprintf(textStr, sizeof(textStr), "%u%s", *value, slider->valueSuffix);
+    } else {
+        snprintf(textStr, sizeof(textStr), "%u", *value);
+    }
     djui_text_set_text(slider->textValueForeground, textStr);
     djui_text_set_text(slider->textValueBackground, textStr);
+}
+
+void djui_slider_set_value_suffix(struct DjuiSlider* slider, const char* suffix) {
+    if (slider == NULL) { return; }
+    slider->valueSuffix = suffix;
+    djui_slider_update_value(&slider->base);
 }
 
 static void djui_slider_get_cursor_hover_location(struct DjuiBase* base, f32* x, f32* y) {

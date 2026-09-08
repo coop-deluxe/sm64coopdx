@@ -53,6 +53,11 @@ void sent_history_init(ArrayList *arrayList) {
 
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
     if (!configUseStandardKeyBindingsChat && (!newMessage || newMessage[0] != '/')) { return; }
+    if (!newMessage) { return; }
+
+    if (arrayList->size > 0 && strncmp(arrayList->messages[arrayList->size - 1], newMessage, MAX_CHAT_MSG_LENGTH) == 0) {
+        return;
+    }
 
     if (arrayList->size == MAX_HISTORY_SIZE) {
         for (s32 i = 1; i < MAX_HISTORY_SIZE; i++) {
@@ -97,10 +102,19 @@ void sent_history_reset_navigation(ArrayList *arrayList) {
     arrayList->currentIndex = -1;
 }
 
+#define CHAT_INPUT_HEIGHT 32.0f
+#define CHAT_INPUT_GAP 18.0f
+
+static unsigned int clamp_uint(unsigned int value, unsigned int min, unsigned int max) {
+    if (value < min) { return min; }
+    if (value > max) { return max; }
+    return value;
+}
+
 bool djui_chat_box_render(struct DjuiBase* base) {
     struct DjuiChatBox* chatBox = (struct DjuiChatBox*)base;
     struct DjuiBase* ccBase = &chatBox->chatContainer->base;
-    djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - 32 - 8);
+    djui_base_set_size(ccBase, 1.0f, chatBox->base.comp.height - CHAT_INPUT_HEIGHT - CHAT_INPUT_GAP);
     if (chatBox->scrolling) {
         f32 yMax = chatBox->chatContainer->base.elem.height - chatBox->chatFlow->base.height.value;
         f32 target = chatBox->chatFlow->base.y.value + (chatBox->scrollY - chatBox->chatFlow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
@@ -130,7 +144,13 @@ static void djui_chat_box_set_focus_style(void) {
         djui_interactable_set_input_focus(&gDjuiChatBox->chatInput->base);
     }
 
-    djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, gDjuiChatBoxFocus ? 128 : 0);
+    bool hasMessages = (gDjuiChatBox->chatFlow->base.height.value > 2.0f);
+    u8 alpha = 0;
+    if (hasMessages && gDjuiChatBoxFocus) {
+        unsigned int opacity = clamp_uint(configChatBackgroundOpacity, 0, 100);
+        alpha = (u8)(opacity * 2.55f);
+    }
+    djui_base_set_color(&gDjuiChatBox->chatFlow->base, 0, 0, 0, alpha);
 }
 
 static void djui_chat_box_input_enter(struct DjuiInputbox* chatInput) {
@@ -170,10 +190,29 @@ static char* get_main_command_from_input(const char* input) {
     return command;
 }
 
-static bool complete_subcommand(const char* mainCommand, const char* subCommandPrefix) {
+static s32 tab_completion_cycle_index(s32 current, s32 count, bool reverse) {
+    if (count <= 0) { return -1; }
+    if (reverse) {
+        return (current <= 0) ? (count - 1) : (current - 1);
+    }
+    return (current + 1) % count;
+}
+
+static void free_string_list(char** list) {
+    if (list == NULL) { return; }
+    for (s32 i = 0; list[i] != NULL; i++) {
+        free(list[i]);
+    }
+    free(list);
+}
+
+static bool complete_subcommand(const char* mainCommand, const char* subCommandPrefix, bool reverse) {
     char** subcommands = smlua_get_chat_subcommands_list(mainCommand);
 
     if (!subcommands || !subcommands[0]) {
+        if (subcommands) {
+            free(subcommands);
+        }
         return false;
     }
 
@@ -186,7 +225,7 @@ static bool complete_subcommand(const char* mainCommand, const char* subCommandP
 
     bool completionSuccess = false;
     if (foundSubCommandsCount > 0) {
-        sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundSubCommandsCount;
+        sCommandsTabCompletionIndex = tab_completion_cycle_index(sCommandsTabCompletionIndex, foundSubCommandsCount, reverse);
         s32 currentIndex = 0;
 
         for (s32 i = 0; subcommands[i] != NULL; i++) {
@@ -267,7 +306,7 @@ void djui_inputbox_replace_current_word(struct DjuiInputbox* inputbox, char* tex
     djui_inputbox_move_cursor_to_position(inputbox, currentWordStart + strlen(text));
 }
 
-static bool complete_player_name(const char* namePrefix) {
+static bool complete_player_name(const char* namePrefix, bool reverse) {
     char** playerNames = smlua_get_chat_player_list();
     if (!playerNames || !playerNames[0]) {
         if (playerNames) {
@@ -285,7 +324,7 @@ static bool complete_player_name(const char* namePrefix) {
 
     bool completionSuccess = false;
     if (foundNamesCount > 0) {
-        sPlayersTabCompletionIndex = (sPlayersTabCompletionIndex + 1) % foundNamesCount;
+        sPlayersTabCompletionIndex = tab_completion_cycle_index(sPlayersTabCompletionIndex, foundNamesCount, reverse);
         s32 currentIndex = 0;
 
         for (s32 i = 0; playerNames[i] != NULL; i++) {
@@ -308,14 +347,66 @@ static bool complete_player_name(const char* namePrefix) {
     return completionSuccess;
 }
 
-static void handle_tab_completion(void) {
+char* get_next_tab_completion_preview(const char* input) {
+    if (input == NULL || input[0] != '/') {
+        return NULL;
+    }
+
+    char* preview = NULL;
+    char* spacePosition = strrchr(input, ' ');
+    if (spacePosition != NULL) {
+        char* mainCommand = get_main_command_from_input(input);
+        if (mainCommand) {
+            char** subcommands = smlua_get_chat_subcommands_list(mainCommand + 1);
+            if (subcommands) {
+                const char* prefix = spacePosition + 1;
+                size_t prefixLen = strlen(prefix);
+                for (s32 i = 0; subcommands[i] != NULL; i++) {
+                    if (strncmp(subcommands[i], prefix, prefixLen) == 0) {
+                        preview = malloc(MAX_CHAT_MSG_LENGTH);
+                        if (preview) {
+                            snprintf(preview, MAX_CHAT_MSG_LENGTH, "%s", subcommands[i] + prefixLen);
+                        }
+                        break;
+                    }
+                }
+                free_string_list(subcommands);
+            }
+            free(mainCommand);
+        }
+    } else {
+        const char* bufferWithoutSlash = input + 1;
+        size_t prefixLen = strlen(bufferWithoutSlash);
+        char** commands = smlua_get_chat_maincommands_list();
+        if (commands) {
+            for (s32 i = 0; commands[i] != NULL; i++) {
+                if (strncmp(commands[i], bufferWithoutSlash, prefixLen) == 0) {
+                    preview = malloc(MAX_CHAT_MSG_LENGTH);
+                    if (preview) {
+                        snprintf(preview, MAX_CHAT_MSG_LENGTH, "%s", commands[i] + prefixLen);
+                    }
+                    break;
+                }
+            }
+            free_string_list(commands);
+        }
+    }
+
+    if (preview != NULL && preview[0] == '\0') {
+        free(preview);
+        return NULL;
+    }
+    return preview;
+}
+
+static void handle_tab_completion(bool reverse) {
     bool alreadyTabCompleted = false;
     if (gDjuiChatBox->chatInput->buffer[0] == '/') {
         char* spacePosition = strrchr(sCommandsTabCompletionOriginalText, ' ');
         if (spacePosition != NULL) {
             char* mainCommand = get_main_command_from_input(sCommandsTabCompletionOriginalText);
             if (mainCommand) {
-                if (!complete_subcommand(mainCommand + 1, spacePosition + 1)) {
+                if (!complete_subcommand(mainCommand + 1, spacePosition + 1, reverse)) {
                     reset_tab_completion_all();
                 } else {
                     alreadyTabCompleted = true;
@@ -338,7 +429,7 @@ static void handle_tab_completion(void) {
             }
 
             if (foundCommandsCount > 0) {
-                sCommandsTabCompletionIndex = (sCommandsTabCompletionIndex + 1) % foundCommandsCount;
+                sCommandsTabCompletionIndex = tab_completion_cycle_index(sCommandsTabCompletionIndex, foundCommandsCount, reverse);
                 s32 currentIndex = 0;
 
                 for (s32 i = 0; commands[i] != NULL; i++) {
@@ -358,7 +449,7 @@ static void handle_tab_completion(void) {
                 if (spacePositionB != NULL) {
                     char* mainCommandB = get_main_command_from_input(sCommandsTabCompletionOriginalText);
                     if (mainCommandB) {
-                        if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1)) {
+                        if (!complete_subcommand(mainCommandB + 1, spacePositionB + 1, reverse)) {
                             reset_tab_completion_all();
                         } else {
                             alreadyTabCompleted = true;
@@ -398,7 +489,7 @@ static void handle_tab_completion(void) {
             if (sPlayersTabCompletionIndex == -1) {
                 snprintf(sPlayersTabCompletionOriginalText, MAX_CHAT_MSG_LENGTH, "%s", wordInfo.word);
             }
-            if (!complete_player_name(sPlayersTabCompletionOriginalText)) {
+            if (!complete_player_name(sPlayersTabCompletionOriginalText, reverse)) {
                 reset_tab_completion_players();
             } else {
                 alreadyTabCompleted = true;
@@ -451,7 +542,7 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
             gDjuiChatBox->scrollY -= pageAmount;
             break;
         case SCANCODE_TAB:
-            handle_tab_completion();
+            handle_tab_completion(gDjuiInputHeldShift != 0);
             return true;
         case SCANCODE_ENTER:
             reset_tab_completion_all();
@@ -511,7 +602,37 @@ void djui_chat_box_toggle(void) {
     gDjuiChatBoxFocus = !gDjuiChatBoxFocus;
     djui_chat_box_set_focus_style();
     gDjuiChatBox->scrolling = false;
-    gDjuiChatBox->chatFlow->base.y.value = gDjuiChatBox->chatContainer->base.elem.height - gDjuiChatBox->chatFlow->base.height.value;
+    f32 containerHeight = gDjuiChatBox->base.height.value - CHAT_INPUT_HEIGHT - CHAT_INPUT_GAP;
+    gDjuiChatBox->chatFlow->base.y.value = containerHeight - gDjuiChatBox->chatFlow->base.height.value;
+}
+
+void djui_chat_box_apply_layout(void) {
+    if (gDjuiChatBox == NULL) { return; }
+
+    configChatWidth = clamp_uint(configChatWidth, 200, 2000);
+    configChatHeight = clamp_uint(configChatHeight, 100, 1000);
+    configChatTextScale = clamp_uint(configChatTextScale, 50, 200);
+    configChatBackgroundOpacity = clamp_uint(configChatBackgroundOpacity, 0, 100);
+    configChatTextOpacity = clamp_uint(configChatTextOpacity, 0, 100);
+    configChatMessageLifetime = clamp_uint(configChatMessageLifetime, 1, 120);
+    if (configChatClosedMode > 2) { configChatClosedMode = 1; }
+
+    djui_base_set_size(&gDjuiChatBox->base, configChatWidth, configChatHeight);
+    djui_chat_box_set_focus_style();
+    djui_chat_messages_apply_style();
+}
+
+void djui_chat_box_open_with_text(const char* text) {
+    if (gDjuiChatBox == NULL) { return; }
+    if (!gDjuiChatBoxFocus) {
+        sDjuiChatBoxClearText = false;
+        gDjuiChatBoxFocus = true;
+        djui_chat_box_set_focus_style();
+    }
+    if (gDjuiChatBox->chatInput != NULL && text != NULL) {
+        djui_inputbox_set_text(gDjuiChatBox->chatInput, (char*)text);
+        djui_inputbox_move_cursor_to_end(gDjuiChatBox->chatInput);
+    }
 }
 
 struct DjuiChatBox* djui_chat_box_create(void) {
@@ -525,7 +646,7 @@ struct DjuiChatBox* djui_chat_box_create(void) {
 
     djui_base_init(&gDjuiRoot->base, base, djui_chat_box_render, djui_chat_box_destroy);
     djui_base_set_size_type(base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 600, 400);
+    djui_base_set_size(base, configChatWidth, configChatHeight);
     djui_base_set_alignment(base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_color(base, 0, 0, 0, 0);
     djui_base_set_padding(base, 0, 8, 8, 8);
@@ -539,12 +660,12 @@ struct DjuiChatBox* djui_chat_box_create(void) {
 
     struct DjuiFlowLayout* chatFlow = djui_flow_layout_create(ccBase);
     struct DjuiBase* cfBase = &chatFlow->base;
-    djui_base_set_location(cfBase, 0, 0);
+    djui_base_set_location(cfBase, 0, 8);
     djui_base_set_size_type(cfBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(cfBase, 1.0f, 0);
-    djui_base_set_color(cfBase, 0, 0, 0, 128);
-    djui_base_set_padding(cfBase, 2, 2, 2, 2);
-    djui_flow_layout_set_margin(chatFlow, 2);
+    djui_base_set_size(cfBase, 1.0f, 2);
+    djui_base_set_color(cfBase, 0, 0, 0, 64);
+    djui_base_set_padding(cfBase, 0, 2, 0, 2);
+    djui_flow_layout_set_margin(chatFlow, 0);
     djui_flow_layout_set_flow_direction(chatFlow, DJUI_FLOW_DIR_UP);
     cfBase->addChildrenToHead = true;
     cfBase->abandonAfterChildRenderFail = true;
@@ -555,6 +676,8 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     djui_base_set_size_type(ciBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(ciBase, 1.0f, 32);
     djui_base_set_alignment(ciBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_location(ciBase, 0, 0);
+    djui_base_set_border_width(ciBase, 0);
     djui_interactable_hook_key(&chatInput->base, djui_chat_box_input_on_key_down, djui_inputbox_on_key_up);
     djui_interactable_hook_text_input(&chatInput->base, djui_chat_box_input_on_text_input);
     djui_interactable_hook_text_editing(&chatInput->base, djui_chat_box_input_on_text_editing);
@@ -562,6 +685,9 @@ struct DjuiChatBox* djui_chat_box_create(void) {
     chatBox->chatInput = chatInput;
 
     gDjuiChatBox = chatBox;
-    djui_chat_box_set_focus_style();
+    if (chatInput->base.interactable != NULL && chatInput->base.interactable->update_style != NULL) {
+        chatInput->base.interactable->update_style(&chatInput->base);
+    }
+    djui_chat_box_apply_layout();
     return chatBox;
 }
