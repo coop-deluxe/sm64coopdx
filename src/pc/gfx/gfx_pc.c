@@ -2068,10 +2068,10 @@ void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
         } else {
             *height = (3.0f / 4.0f) * *width;
         }
-        // Avoid division by zero in callers
-        if (*width  == 0) { *width  = 1; }
-        if (*height == 0) { *height = 1; }
     }
+    // Avoid division by zero in callers
+    if (*width  == 0) { *width  = 1; }
+    if (*height == 0) { *height = 1; }
 }
 
 void gfx_init(struct GfxRenderingAPI *rapi, const char *window_title) {
