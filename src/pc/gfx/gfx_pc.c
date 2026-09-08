@@ -2096,6 +2096,7 @@ void gfx_start_frame(void) {
     } else { gfx_current_dimensions.x_adjust_4by3 = 0; }
     gfx_current_dimensions.aspect_ratio = ((float)gfx_current_dimensions.width / (float)gfx_current_dimensions.height);
     gfx_current_dimensions.x_adjust_ratio = (4.0f / 3.0f) / gfx_current_dimensions.aspect_ratio;
+    rdp.viewport_or_scissor_changed = true;
 }
 
 void gfx_run(Gfx *commands) {
