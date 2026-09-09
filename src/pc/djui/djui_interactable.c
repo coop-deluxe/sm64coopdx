@@ -258,7 +258,7 @@ bool djui_interactable_on_key_down(int scancode) {
                 return true;
             }
 
-            if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD)
+            if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
                 voicechat_toggle_mute();
                 return true;
             }
@@ -325,7 +325,6 @@ bool djui_interactable_on_key_down(int scancode) {
 }
 
 void djui_interactable_on_key_up(int scancode) {
-<<<<<<< HEAD
     if (!gDjuiChatBoxFocus) {
         bool disablePushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
@@ -335,8 +334,6 @@ void djui_interactable_on_key_up(int scancode) {
         if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
     }
 
-=======
->>>>>>> ef9705b3ba991eecf45e91a88dcf9458345cfae2
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
         if (!gDjuiChatBoxFocus) {
             djui_console_toggle();
