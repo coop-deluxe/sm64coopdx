@@ -1,3 +1,5 @@
+## [:rewind: Lua Reference](../lua.md)
+
 # The Mod Menu
 
 The mod menu is a panel in DJUI dedicated to your mod. It can be used for configuring your mod, and has a variety of elements to use.
