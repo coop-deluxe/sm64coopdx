@@ -125,6 +125,19 @@ void sync_object_forget_last_reliable_packet(u32 syncId) {
     so->lastReliablePacket.error = true;
 }
 
+// MurmurHash3 finalizer
+u16 sync_object_get_random_seed(u32 syncId) {
+    u32 h = syncId ^ gNetworkAreaRandomSeed;
+
+    h ^= h >> 16;
+    h *= 0x85ebca6b;
+    h ^= h >> 13;
+    h *= 0xc2b2ae35;
+    h ^= h >> 16;
+
+    return (u16)h;
+}
+
 struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     if (!o) { return NULL; }
 
@@ -178,10 +191,12 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     so->on_forget = NULL;
     so->syncDeathEvent = true;
     so->ctx = 0;
+
     if (!hadSyncId) {
         so->extendedModelId = 0xFFFF;
+        so->randomSeed = sync_object_get_random_seed(o->oSyncID);
     }
-    so->randomSeed = (u16)(o->oSyncID * 7951);
+
     memset(so->extraFields, 0, sizeof(so->extraFields));
     memset(so->extraFieldsSizeBytes, 0, sizeof(so->extraFieldsSizeBytes));
 
@@ -386,6 +401,7 @@ bool sync_object_set_id(struct Object* o) {
     if (!so) {
         so = calloc(1, sizeof(struct SyncObject));
         so->extendedModelId = 0xFFFF;
+        so->randomSeed = sync_object_get_random_seed(syncId);
         hmap_put(sSoMap, syncId, so);
         //LOG_INFO("Allocated sync object @ %u, size %ld", syncId, (long int)hmap_len(sSoMap));
     } else if (so->o != o) {

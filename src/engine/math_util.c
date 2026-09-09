@@ -883,3 +883,16 @@ OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(VEC_OUT Vec3f dest, Mat4 objMtx, M
     return dest;
 }
 
+/**
+ * Extract world-space transformations given an object's model-view matrix and a 
+ * camera matrix. A model-view matrix generated during rendering is a combination 
+ * of world-space and camera transforms to position and orient objects in a scene 
+ * relative to the camera view. By multiplying this matrix with the inverse of the 
+ * camera matrix, the camera transforms can be removed to get the position and
+ * orientation of an object relative to world-space.
+ */
+OPTIMIZE_O3 void get_world_mtx_from_transform(VEC_OUT Mat4 dest, Mat4 objMtx, Mat4 camMtx) {
+    Mat4 invCamMtx;
+    mtxf_inverse(invCamMtx, camMtx);
+    mtxf_mul(dest, objMtx, invCamMtx);
+}

@@ -12,21 +12,23 @@
    - [define_custom_obj_fields](#define_custom_obj_fields)
    - [network_init_object](#network_init_object)
    - [network_send_object](#network_send_object)
-   - [network_send_to](#network_send_to)
    - [network_send](#network_send)
+   - [network_send_to](#network_send_to)
+   - [network_send_bytestring](#network_send_bytestring)
+   - [network_send_bytestring_to](#network_send_bytestring_to)
    - [get_texture_info](#get_texture_info)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
+   - [level_parse_script](#level_parse_script)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
-   - [level_script_parse](#level_script_parse)
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+   - [set_exclamation_box_contents](#set_exclamation_box_contents)
+   - [get_exclamation_box_contents](#get_exclamation_box_contents)
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
-   - [djui_hud_print_text](#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
 
 <br />
 
@@ -744,6 +746,11 @@
 
 <br />
 
+- commands.h
+   - [command_message_create](functions-3.md#command_message_create)
+
+<br />
+
 - djui_chat_message.h
    - [djui_chat_message_create](functions-3.md#djui_chat_message_create)
 
@@ -793,10 +800,14 @@
    - [djui_hud_get_mouse_scroll_x](functions-3.md#djui_hud_get_mouse_scroll_x)
    - [djui_hud_get_mouse_scroll_y](functions-3.md#djui_hud_get_mouse_scroll_y)
    - [djui_hud_set_viewport](functions-3.md#djui_hud_set_viewport)
+   - [djui_hud_set_viewport_interpolated](functions-3.md#djui_hud_set_viewport_interpolated)
    - [djui_hud_reset_viewport](functions-3.md#djui_hud_reset_viewport)
    - [djui_hud_set_scissor](functions-3.md#djui_hud_set_scissor)
+   - [djui_hud_set_scissor_interpolated](functions-3.md#djui_hud_set_scissor_interpolated)
    - [djui_hud_reset_scissor](functions-3.md#djui_hud_reset_scissor)
    - [djui_hud_measure_text](functions-3.md#djui_hud_measure_text)
+   - [djui_hud_print_text](functions-3.md#djui_hud_print_text)
+   - [djui_hud_print_text_interpolated](functions-3.md#djui_hud_print_text_interpolated)
    - [djui_hud_render_texture](functions-3.md#djui_hud_render_texture)
    - [djui_hud_render_texture_tile](functions-3.md#djui_hud_render_texture_tile)
    - [djui_hud_render_texture_interpolated](functions-3.md#djui_hud_render_texture_interpolated)
@@ -965,7 +976,6 @@
 <br />
 
 - level_script.h
-   - [area_create_warp_node](functions-3.md#area_create_warp_node)
 
 <br />
 
@@ -1261,6 +1271,7 @@
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
+   - [get_world_mtx_from_transform](functions-4.md#get_world_mtx_from_transform)
 
 <br />
 
@@ -1369,6 +1380,7 @@
    - [clock_is_date](functions-5.md#clock_is_date)
    - [delta_interpolate_f32](functions-5.md#delta_interpolate_f32)
    - [delta_interpolate_s32](functions-5.md#delta_interpolate_s32)
+   - [delta_interpolate_angle](functions-5.md#delta_interpolate_angle)
    - [delta_interpolate_vec3f](functions-5.md#delta_interpolate_vec3f)
    - [delta_interpolate_vec3s](functions-5.md#delta_interpolate_vec3s)
 
@@ -1410,6 +1422,7 @@
    - [mod_fs_file_set_public](functions-5.md#mod_fs_file_set_public)
    - [mod_fs_file_set_compression](functions-5.md#mod_fs_file_set_compression)
    - [mod_fs_hide_errors](functions-5.md#mod_fs_hide_errors)
+   - [mod_fs_get_last_error_code](functions-5.md#mod_fs_get_last_error_code)
    - [mod_fs_get_last_error](functions-5.md#mod_fs_get_last_error)
 
 <br />
@@ -1611,6 +1624,7 @@
    - [find_unimportant_object](functions-6.md#find_unimportant_object)
    - [count_unimportant_objects](functions-6.md#count_unimportant_objects)
    - [count_objects_with_behavior](functions-6.md#count_objects_with_behavior)
+   - [delete_all_objects_with_behavior](functions-6.md#delete_all_objects_with_behavior)
    - [find_object_with_behavior](functions-6.md#find_object_with_behavior)
    - [cur_obj_find_nearby_held_actor](functions-6.md#cur_obj_find_nearby_held_actor)
    - [cur_obj_reset_timer_and_subaction](functions-6.md#cur_obj_reset_timer_and_subaction)
@@ -1826,6 +1840,7 @@
    - [sequence_player_set_transposition](functions-6.md#sequence_player_set_transposition)
    - [sequence_player_get_volume](functions-6.md#sequence_player_get_volume)
    - [sequence_player_get_fade_volume](functions-6.md#sequence_player_get_fade_volume)
+   - [sequence_player_set_fade_volume](functions-6.md#sequence_player_set_fade_volume)
    - [sequence_player_get_mute_volume_scale](functions-6.md#sequence_player_get_mute_volume_scale)
 
 <br />
@@ -1841,26 +1856,31 @@
    - [smlua_audio_utils_reset_all](functions-6.md#smlua_audio_utils_reset_all)
    - [smlua_audio_utils_replace_sequence](functions-6.md#smlua_audio_utils_replace_sequence)
    - [smlua_audio_utils_allocate_sequence](functions-6.md#smlua_audio_utils_allocate_sequence)
-   - [audio_stream_load](functions-6.md#audio_stream_load)
-   - [audio_stream_destroy](functions-6.md#audio_stream_destroy)
-   - [audio_stream_play](functions-6.md#audio_stream_play)
-   - [audio_stream_pause](functions-6.md#audio_stream_pause)
-   - [audio_stream_stop](functions-6.md#audio_stream_stop)
-   - [audio_stream_get_position](functions-6.md#audio_stream_get_position)
-   - [audio_stream_set_position](functions-6.md#audio_stream_set_position)
-   - [audio_stream_get_looping](functions-6.md#audio_stream_get_looping)
-   - [audio_stream_set_looping](functions-6.md#audio_stream_set_looping)
-   - [audio_stream_set_loop_points](functions-6.md#audio_stream_set_loop_points)
-   - [audio_stream_get_frequency](functions-6.md#audio_stream_get_frequency)
-   - [audio_stream_set_frequency](functions-6.md#audio_stream_set_frequency)
-   - [audio_stream_get_volume](functions-6.md#audio_stream_get_volume)
-   - [audio_stream_set_volume](functions-6.md#audio_stream_set_volume)
-   - [audio_stream_get_volume_channel](functions-6.md#audio_stream_get_volume_channel)
-   - [audio_stream_set_volume_channel](functions-6.md#audio_stream_set_volume_channel)
-   - [audio_sample_load](functions-6.md#audio_sample_load)
-   - [audio_sample_destroy](functions-6.md#audio_sample_destroy)
-   - [audio_sample_stop](functions-6.md#audio_sample_stop)
-   - [audio_sample_play](functions-6.md#audio_sample_play)
+   - [audio_load](functions-6.md#audio_load)
+   - [audio_play](functions-6.md#audio_play)
+   - [audio_pause](functions-6.md#audio_pause)
+   - [audio_stop](functions-6.md#audio_stop)
+   - [audio_destroy](functions-6.md#audio_destroy)
+   - [audio_reload](functions-6.md#audio_reload)
+   - [audio_copy](functions-6.md#audio_copy)
+   - [audio_get_volume](functions-6.md#audio_get_volume)
+   - [audio_set_volume](functions-6.md#audio_set_volume)
+   - [audio_get_pan](functions-6.md#audio_get_pan)
+   - [audio_set_pan](functions-6.md#audio_set_pan)
+   - [audio_get_length](functions-6.md#audio_get_length)
+   - [audio_get_position](functions-6.md#audio_get_position)
+   - [audio_set_position](functions-6.md#audio_set_position)
+   - [audio_get_looping](functions-6.md#audio_get_looping)
+   - [audio_set_looping](functions-6.md#audio_set_looping)
+   - [audio_get_playing](functions-6.md#audio_get_playing)
+   - [audio_set_playing](functions-6.md#audio_set_playing)
+   - [audio_get_loop_points](functions-6.md#audio_get_loop_points)
+   - [audio_set_loop_points](functions-6.md#audio_set_loop_points)
+   - [audio_get_frequency](functions-6.md#audio_get_frequency)
+   - [audio_set_frequency](functions-6.md#audio_set_frequency)
+   - [audio_get_volume_channel](functions-6.md#audio_get_volume_channel)
+   - [audio_set_volume_channel](functions-6.md#audio_set_volume_channel)
+   - [audio_get_sample_rate](functions-6.md#audio_get_sample_rate)
 
 <br />
 
@@ -2014,11 +2034,17 @@
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
    - [warp_exit_level](functions-7.md#warp_exit_level)
    - [warp_to_castle](functions-7.md#warp_to_castle)
+   - [level_create_warp_node](functions-7.md#level_create_warp_node)
+   - [level_create_warp_node_with_object](functions-7.md#level_create_warp_node_with_object)
+   - [level_get_warp_node](functions-7.md#level_get_warp_node)
+   - [level_delete_warp_node](functions-7.md#level_delete_warp_node)
+   - [level_clear_warp_nodes](functions-7.md#level_clear_warp_nodes)
 
 <br />
 
 - smlua_misc_utils.h
    - [get_network_area_timer](functions-7.md#get_network_area_timer)
+   - [get_network_area_random_seed](functions-7.md#get_network_area_random_seed)
    - [get_area_update_counter](functions-7.md#get_area_update_counter)
    - [get_temp_s32_pointer](functions-7.md#get_temp_s32_pointer)
    - [deref_s32_pointer](functions-7.md#deref_s32_pointer)
@@ -2071,6 +2097,7 @@
    - [get_hand_foot_pos_z](functions-7.md#get_hand_foot_pos_z)
    - [get_mario_anim_part_pos](functions-7.md#get_mario_anim_part_pos)
    - [get_mario_anim_part_rot](functions-7.md#get_mario_anim_part_rot)
+   - [get_mario_anim_part_mtx](functions-7.md#get_mario_anim_part_mtx)
    - [get_current_save_file_num](functions-7.md#get_current_save_file_num)
    - [save_file_get_using_backup_slot](functions-7.md#save_file_get_using_backup_slot)
    - [save_file_set_using_backup_slot](functions-7.md#save_file_set_using_backup_slot)
@@ -2185,6 +2212,9 @@
    - [smlua_text_utils_dialog_restore](functions-7.md#smlua_text_utils_dialog_restore)
    - [smlua_text_utils_dialog_is_replaced](functions-7.md#smlua_text_utils_dialog_is_replaced)
    - [smlua_text_utils_allocate_dialog](functions-7.md#smlua_text_utils_allocate_dialog)
+   - [smlua_text_utils_dialog_get_type](functions-7.md#smlua_text_utils_dialog_get_type)
+   - [smlua_text_utils_dialog_set_type](functions-7.md#smlua_text_utils_dialog_set_type)
+   - [smlua_text_utils_dialog_reset_type](functions-7.md#smlua_text_utils_dialog_reset_type)
    - [smlua_text_utils_course_acts_replace](functions-7.md#smlua_text_utils_course_acts_replace)
    - [smlua_text_utils_secret_star_replace](functions-7.md#smlua_text_utils_secret_star_replace)
    - [smlua_text_utils_course_name_replace](functions-7.md#smlua_text_utils_course_name_replace)
@@ -2260,6 +2290,7 @@
 <br />
 
 - sync_object.h
+   - [sync_object_get_random_seed](functions-7.md#sync_object_get_random_seed)
    - [sync_object_get_object](functions-7.md#sync_object_get_object)
    - [sync_object_is_initialized](functions-7.md#sync_object_is_initialized)
    - [sync_object_is_owned_locally](functions-7.md#sync_object_is_owned_locally)
@@ -2288,10 +2319,11 @@
 
 ## [define_custom_obj_fields](#define_custom_obj_fields)
 
+### Description
 Defines a custom set of overlapping object fields.
 
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
-If, for a field, `global` is `true`, the field will be defined for all mods.
+- The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+- If, for a field, `global` is `true`, the field will be defined for all mods.
 
 ### Lua Example
 ```lua
@@ -2308,34 +2340,38 @@ define_custom_obj_fields({
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fieldTable | `Lua Table` |
+| objFieldTable | `table` |
 
-### C Prototype
-`N/A`
+### Returns
+- None
 
 [:arrow_up_small:](#)
 
+<br />
+
 ## [network_init_object](#network_init_object)
 
+### Description
 Enables synchronization on an object.
 
 - Setting `standardSync` to `true` will automatically synchronize the object at a rate that is determined based on player distance. The commonly used object fields will be automatically synchronized.
 - Setting `standardSync` to `false` will not automatically synchronize the object, or add commonly used object fields. The mod must manually call `network_send_object()` when fields have changed.
-
-The `fieldTable` parameter can be `nil`, or a list of object fields.
+- The `fieldTable` parameter can be `nil`, or a list of object fields.
 
 ### Lua Example
-`network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField3' })`
+```lua
+network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField3' })
+```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| object | [Object](structs.md#Object) |
+| object | [Object](./structs.md#Object) |
 | standardSync | `bool` |
-| fieldTable | `Lua Table` |
+| fieldTable | `table` |
 
-### C Prototype
-`N/A`
+### Returns
+- None
 
 [:arrow_up_small:](#)
 
@@ -2343,46 +2379,24 @@ The `fieldTable` parameter can be `nil`, or a list of object fields.
 
 ## [network_send_object](#network_send_object)
 
+### Description
 Sends a packet that synchronizes an object. This does not need to be called when `standardSync` is enabled.
 
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+- The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
 
 ### Lua Example
-`network_send_object(obj, false)`
+```lua
+network_send_object(obj, false)
+```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| object | [Object](structs.md#Object) |
+| object | [Object](./structs.md#Object) |
 | reliable | `bool` |
 
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_send_to](#network_send_to)
-
-Sends a packet to a particular player (using their local index) containing whatever data you want.
-
-`dataTable` can only contain strings, integers, numbers, booleans, and nil
-
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
-
-### Lua Example
-`network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10})`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localPlayerIndex | `integer` |
-| reliable | `bool` |
-| dataTable | `table` |
-
-### C Prototype
-`N/A`
+### Returns
+- None
 
 [:arrow_up_small:](#)
 
@@ -2390,14 +2404,16 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ## [network_send](#network_send)
 
-Sends a packet to all players containing whatever data you want.
+### Description
+Sends a global Lua packet with the values of `dataTable`. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
 
-`dataTable` can only contain strings, integers, numbers, booleans, and nil
-
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+- `dataTable` can only contain strings, integers, numbers, booleans, and nil.
+- The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
 
 ### Lua Example
-`network_send(reliable, { data1 = 'hello', data2 = 10})`
+```lua
+network_send(reliable, { data1 = 'hello', data2 = 10 })
+```
 
 ### Parameters
 | Field | Type |
@@ -2405,8 +2421,102 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 | reliable | `bool` |
 | dataTable | `table` |
 
-### C Prototype
-`N/A`
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send_to](#network_send_to)
+
+### Description
+Sends a Lua packet with the values of `dataTable` to a specific client through local indices. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
+
+- `dataTable` can only contain strings, integers, numbers, booleans, and nil.
+- The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+```lua
+network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10 })
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toLocalIndex | `integer` |
+| reliable | `bool` |
+| dataTable | `table` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send_bytestring](#network_send_bytestring)
+
+### Description
+Sends a global Lua packet with the bytestring of `bytestring`. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+
+- The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+```lua
+local bytestring = ''
+    -------------- PACKET ID --------------
+    .. string.pack("<B", PACKET_EXAMPLE_ID)
+    ---------------------------------------
+    .. string.pack("<l",  long_param)
+    .. string.pack("<s2", string_param)
+    ---------------------------------------
+
+network_send_bytestring(reliable, bytestring)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| reliable | `bool` |
+| bytestring | `string` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [network_send_bytestring_to](#network_send_bytestring_to)
+
+### Description
+Sends a Lua packet with the bytestring of `bytestring` to a specific client through local indices. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+
+- The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+
+### Lua Example
+```lua
+local bytestring = ''
+    -------------- PACKET ID --------------
+    .. string.pack("<B", PACKET_EXAMPLE_ID)
+    ---------------------------------------
+    .. string.pack("<l",  long_param)
+    .. string.pack("<s2", string_param)
+    ---------------------------------------
+
+network_send_bytestring_to(localPlayerIndex, reliable, bytestring)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toLocalIndex | `integer` |
+| reliable | `bool` |
+| bytestring | `string` |
+
+### Returns
+- None
 
 [:arrow_up_small:](#)
 
@@ -2414,10 +2524,14 @@ The `reliable` field will ensure that the packet arrives, but should be used spa
 
 ## [get_texture_info](#get_texture_info)
 
-Retrieves a texture by name.
+### Description
+Gets the `TextureInfo` of a texture by name.
+- Note: This also works with vanilla textures.
 
 ### Lua Example
-`get_texture_info(textureName)`
+```lua
+local texinfo = get_texture_info(textureName)
+```
 
 ### Parameters
 | Field | Type |
@@ -2425,32 +2539,7 @@ Retrieves a texture by name.
 | textureName | `string` |
 
 ### Returns
-- [TextureInfo](structs.md#TextureInfo)
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [texture_override_reset](#texture_override_reset)
-
-Resets an overridden texture.
-
-### Lua Example
-`texture_override_reset("outside_09004000")`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void dynos_texture_override_reset(const char* textureName);`
+- [TextureInfo](./structs.md#TextureInfo)
 
 [:arrow_up_small:](#)
 
@@ -2458,22 +2547,439 @@ Resets an overridden texture.
 
 ## [texture_override_set](#texture_override_set)
 
+### Description
 Overrides a texture with a custom `TextureInfo`.
+- `textureName` must be the codename of a vanilla texture, you can find these in `data/dynos_mgr_builtin_tex.cpp`
+- `overrideTexInfo` can be any `TextureInfo`
 
 ### Lua Example
-`texture_override_set("outside_09004000", overrideTexInfo)`
+```lua
+texture_override_set("outside_09004000", overrideTexInfo)
+```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | textureName | `string` |
-| overrideTexInfo | [TextureInfo](structs.md#TextureInfo) |
+| overrideTexInfo | [TextureInfo](./structs.md#TextureInfo) |
 
 ### Returns
 - None
 
-### C Prototype
-`void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTexInfo);`
+[:arrow_up_small:](#)
+
+<br />
+
+## [texture_override_reset](#texture_override_reset)
+
+### Description
+Resets an overridden texture.
+
+### Lua Example
+```lua
+texture_override_reset("outside_09004000")
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_parse_script](#level_parse_script)
+
+### Description
+Parses a level script and passes level data to a function.<br>
+When `func` is called, the parameter `levelData` is filled with level data depending on the level command.<br>
+`levelData` is a table of tables and its structure is the following:
+
+<table>
+    <thead>
+        <tr>
+            <th colspan=2>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=4 valign="top"><code>area</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Start of area data.<br><i>Level commands: <code>AREA</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Area index.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Model ID of the area layout.</td>
+        </tr>
+        <tr>
+            <td><code>modelName</code></td>
+            <td><code>string</code></td>
+            <td>Model name of the area layout.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>model</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Load model in vanilla ID.<br><i>Level commands: <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code>, <code>LOAD_MODEL_FROM_GEO_EXT</code></i></td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Vanilla model ID. Objects use these temporary IDs to load their model.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Model ID.</td>
+        </tr>
+        <tr>
+            <td><code>modelName</code></td>
+            <td><code>string</code></td>
+            <td>Model name.</td>
+        </tr>
+        <tr>
+            <td><code>displayList</code></td>
+            <td><code>Gfx</code></td>
+            <td>Display list (if the model is not a Geo layout).</td>
+        </tr>
+        <tr>
+            <td><code>layer</code></td>
+            <td><code>integer</code></td>
+            <td>Display list layer (if the model is not a Geo layout).</td>
+        </tr>
+        <tr>
+            <td rowspan=8 valign="top"><code>object</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Object spawn information.<br><i>Level commands: <code>OBJECT</code>, <code>OBJECT_WITH_ACTS</code>, <code>OBJECT_EXT</code>, <code>OBJECT_WITH_ACTS_EXT</code>, <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code>, <code>OBJECT_EXT_LUA_PARAMS</code></i></td>
+        </tr>
+        <tr>
+            <td><code>acts</code></td>
+            <td><code>integer</code></td>
+            <td>Acts where the object appears.</td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>modelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's model ID. Only available from commands <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code> and <code>OBJECT_EXT_LUA_PARAMS</code> if the object's model is a custom model.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+        <tr>
+            <td rowspan=7 valign="top"><code>warpNode</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Warp node data.<br><i>Level commands: <code>WARP_NODE</code>, <code>PAINTING_WARP_NODE</code></i></td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><code>integer</code></td>
+            <td>Warp node ID.</td>
+        </tr>
+        <tr>
+            <td><code>destLevel</code></td>
+            <td><code>integer</code></td>
+            <td>Level num of destination.</td>
+        </tr>
+        <tr>
+            <td><code>destArea</code></td>
+            <td><code>integer</code></td>
+            <td>Area index of destination.</td>
+        </tr>
+        <tr>
+            <td><code>destNode</code></td>
+            <td><code>integer</code></td>
+            <td>Node ID of destination.</td>
+        </tr>
+        <tr>
+            <td><code>flags</code></td>
+            <td><code>integer</code></td>
+            <td>Warp node flags, such as the checkpoint flag.</td>
+        </tr>
+        <tr>
+            <td><code>painting</code></td>
+            <td><code>boolean</code></td>
+            <td><code>true</code> if it's a painting warp node, <code>false</code> otherwise.</td>
+        </tr>
+        <tr>
+            <td rowspan=4 valign="top"><code>instantWarp</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Instant warp data.<br><i>Level commands: <code>INSTANT_WARP</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Instant warp index.</td>
+        </tr>
+        <tr>
+            <td><code>destArea</code></td>
+            <td><code>integer</code></td>
+            <td>Area index of destination.</td>
+        </tr>
+        <tr>
+            <td><code>displacement</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Instant displacement.</td>
+        </tr>
+        <tr>
+            <td rowspan=2 valign="top"><code>terrain</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Terrain data.<br><i>Level commands: <code>TERRAIN_TYPE</code></i></td>
+        </tr>
+        <tr>
+            <td><code>type</code></td>
+            <td><code>integer</code></td>
+            <td>Terrain type. One of the <code>TERRAIN_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>collision</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>data</code></td>
+            <td><code>Collision</code></td>
+            <td>Collision pointer.</td>
+        </tr>
+        <tr>
+            <td><code>size</code></td>
+            <td><code>integer</code></td>
+            <td>Size of collision data in bytes.</td>
+        </tr>
+        <tr>
+            <td rowspan=7 valign="top"><code>waterBoxes</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of water boxes. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>id</code></td>
+            <td><code>integer</code></td>
+            <td>Water box ID.</td>
+        </tr>
+        <tr>
+            <td><code>xmin</code></td>
+            <td><code>integer</code></td>
+            <td>Water box xmin coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>xmax</code></td>
+            <td><code>integer</code></td>
+            <td>Water box xmax coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>zmin</code></td>
+            <td><code>integer</code></td>
+            <td>Water box zmin coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>zmax</code></td>
+            <td><code>integer</code></td>
+            <td>Water box zmax coordinate.</td>
+        </tr>
+        <tr>
+            <td><code>height</code></td>
+            <td><code>integer</code></td>
+            <td>Water box top height.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>specialObjects</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of special objects. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's inital position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>dialog</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Entry dialog data.<br><i>Level commands: <code>SHOW_DIALOG</code>, <code>SHOW_DIALOG_EXT</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Entry dialog index.</td>
+        </tr>
+        <tr>
+            <td><code>dialogId</code></td>
+            <td><code>integer</code></td>
+            <td>Dialog ID. One of the <code>DIALOG_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=3 valign="top"><code>music</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Background music of the level.<br><i>Level commands: <code>SET_BACKGROUND_MUSIC</code></i></td>
+        </tr>
+        <tr>
+            <td><code>settings</code></td>
+            <td><code>integer</code></td>
+            <td>Background music settings.</td>
+        </tr>
+        <tr>
+            <td><code>seqId</code></td>
+            <td><code>integer</code></td>
+            <td>Sequence ID. One of the <code>SEQ_*</code> constants.</td>
+        </tr>
+        <tr>
+            <td rowspan=5 valign="top"><code>whirlpool</code></td>
+            <td></td>
+            <td><code>table</code></td>
+            <td>Whirlpool data.<br><i>Level commands: <code>WHIRLPOOL</code></i></td>
+        </tr>
+        <tr>
+            <td><code>index</code></td>
+            <td><code>integer</code></td>
+            <td>Whirlpool index.</td>
+        </tr>
+        <tr>
+            <td><code>condition</code></td>
+            <td><code>integer</code></td>
+            <td>Spawn condition.<br><code>0</code>: Always<br><code>1</code>: Bowser 2 is not defeated yet<br><code>2</code>: Bowser 2 is defeated<br><code>3</code>: Always except during act 1</td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Whirlpool position.</td>
+        </tr>
+        <tr>
+            <td><code>strength</code></td>
+            <td><code>integer</code></td>
+            <td>Whirlpool strength. Positive values pull Mario in.</td>
+        </tr>
+        <tr>
+            <td rowspan=6 valign="top"><code>macroObjects</code></td>
+            <td></td>
+            <td><code>list&lt;table&gt;</code></td>
+            <td>List of macro objects.<br><i>Level commands: <code>MACRO_OBJECTS</code></i></td>
+        </tr>
+        <tr>
+            <td><code>pos</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's inital position.</td>
+        </tr>
+        <tr>
+            <td><code>angle</code></td>
+            <td><code>Vec3s</code></td>
+            <td>Object's initial angle (in SM64 units).</td>
+        </tr>
+        <tr>
+            <td><code>vanillaModelId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+        </tr>
+        <tr>
+            <td><code>behaviorId</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior ID.</td>
+        </tr>
+        <tr>
+            <td><code>behParams</code></td>
+            <td><code>integer</code></td>
+            <td>Object's behavior parameters.</td>
+        </tr>
+    </tbody>
+</table>
+
+Not all fields are filled at the same time. Make sure to `nil`-check tables before reading the fields.
+
+### Lua Example
+```lua
+function table.print(t, indent, step)
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            print(string.rep(" ", indent or 0) .. tostring(k))
+            table.print(v, (indent or 0) + (step or 4), step)
+        else
+            print(string.rep(" ", indent or 0) .. tostring(k) .. " = " .. tostring(v))
+        end
+    end
+end
+
+local function print_level_data(levelData)
+    table.print(levelData)
+end
+
+local function on_level_entry()
+    local levelNum = gNetworkPlayers[0].currLevelNum
+    print("===== LEVEL " .. tostring(levelNum) .. " DATA =====")
+    level_parse_script(levelNum, print_level_data)
+end
+
+hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
+| func | `function` |
+
+### Returns
+- None
 
 [:arrow_up_small:](#)
 
@@ -2481,10 +2987,13 @@ Overrides a texture with a custom `TextureInfo`.
 
 ## [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
 
-Register a new Lua animation.
+### Description
+Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
 
 ### Lua Example
-`smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)`
+```lua
+smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
+```
 
 ### Parameters
 | Field | Type |
@@ -2501,54 +3010,28 @@ Register a new Lua animation.
 ### Returns
 - None
 
-### C Prototype
-`void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [level_script_parse](#level_script_parse)
-
-### Lua Example
-`level_script_parse(LEVEL_BOB, func)`
-
-Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| levelNum | `LevelNum` |
-| func | `function` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_func_level_script_parse(lua_State* L);`
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [log_to_console](#log_to_console)
 
+### Description
 Logs a message to the in-game console.
 
 ### Lua Example
-`log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)`
+```lua
+log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
+```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level (optional) | `ConsoleMessageLevel` |
+| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
 
 ### Returns
 - None
-
-### C Prototype
-`void log_to_console(const char* message, enum ConsoleMessageLevel level);`
 
 [:arrow_up_small:](#)
 
@@ -2556,10 +3039,13 @@ Logs a message to the in-game console.
 
 ## [add_scroll_target](#add_scroll_target)
 
-Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+### Description
+Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`.
 
 ### Lua Example
-`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
+```lua
+add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")
+```
 
 ### Parameters
 | Field | Type |
@@ -2570,19 +3056,19 @@ Registers a vertex buffer to be used for a scrolling texture. Should be used wit
 ### Returns
 - None
 
-### C Prototype
-`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
-
 [:arrow_up_small:](#)
 
 <br />
 
 ## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
 
+### Description
 Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
 
 ### Lua Example
-`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
+```lua
+local hit = collision_find_surface_on_ray(0, 0, 0, 50, 100, 50, 3.0)
+```
 
 ### Parameters
 | Field | Type |
@@ -2593,13 +3079,10 @@ Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX
 | dirX | `number` |
 | dirY | `number` |
 | dirZ | `number` |
-| precision (optional) | `number` |
+| precision | `number` |
 
 ### Returns
-- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
-
-### C Prototype
-`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
+- [RayIntersectionInfo](./structs.md#RayIntersectionInfo)
 
 [:arrow_up_small:](#)
 
@@ -2607,38 +3090,32 @@ Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX
 
 ## [set_exclamation_box_contents](#set_exclamation_box_contents)
 
-Sets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
-* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-* `unused`: Optional; unused by vanilla.
-* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+### Description
+Sets the contents that the exclamation box spawns.
+A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
+- `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+- `unused`: Optional; unused by vanilla.
+- `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+- `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+- `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
 
 ### Lua Example
 ```lua
 set_exclamation_box_contents({
    {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
    {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
-   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+   {id = 2, firstByte = 0, model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
    {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
 })
 ```
 
 ### Parameters
-There exists only 1 parameter to this function which is the main table. However, each subtable has 5 different keys that could be accessed.
 | Field | Type |
 | ----- | ---- |
-| id | `integer` |
-| unused (Optional) | `integer` |
-| firstByte (Optional) | `integer` |
-| model | [ModelExtendedId](#ModelExtendedId) |
-| behavior | [BehaviorId](#BehaviorId) |
+| contents | `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent) |
 
 ### Returns
 - None
-
-### C Prototype
-N/A
 
 [:arrow_up_small:](#)
 
@@ -2646,40 +3123,31 @@ N/A
 
 ## [get_exclamation_box_contents](#get_exclamation_box_contents)
 
-Gets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
-* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-* `unused`: Optional; unused by vanilla.
-* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+### Description
+Gets the contents that the exclamation box spawns.
+A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
+- `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+- `unused`: Optional; unused by vanilla.
+- `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+- `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+- `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
 
 ### Lua Example
 ```lua
 local contents = get_exclamation_box_contents()
 for index, content in pairs(contents) do -- Enter the main table
-   djui_chat_message_create("Table index " .. index) -- Print the current table index
-      for key, value in pairs(content) do
-         djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
-      end
-   djui_chat_message_create("---------------------------------") -- Separator
+    djui_chat_message_create("Table index " .. index) -- Print the current table index
+    for key, value in pairs(content) do
+       djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
+    end
 end
 ```
 
 ### Parameters
-- N/A
+- None
 
 ### Returns
-The function itself does not return every key/value pair. Instead it returns the main table which holds all the subtables that hold each key/value pair.
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| unused (Optional) | `integer` |
-| firstByte (Optional) | `integer` |
-| model | [ModelExtendedId](#ModelExtendedId) |
-| behavior | [BehaviorId](#BehaviorId) |
-
-### C Prototype
-N/A
+- `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent)
 
 [:arrow_up_small:](#)
 
@@ -2687,7 +3155,9 @@ N/A
 
 ## [cast_graph_node](#cast_graph_node)
 
-Returns the specific GraphNode(...) the node is part of. Basically the reverse of `.node` or `.fnNode`.
+### Description
+Returns the specific GraphNode(...) the node is part of.
+Basically the reverse of `.node` or `.fnNode`.
 
 ### Lua Example
 ```lua
@@ -2700,13 +3170,10 @@ print(marioGfx == cast_graph_node(node)) -- true
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| node  | [GraphNode](structs.md#GraphNode) |
+| node | [GraphNode](./structs.md#GraphNode) \| [FnGraphNode](./structs.md#FnGraphNode) |
 
 ### Returns
-- GraphNode(...)
-
-### C Prototype
-N/A
+- [GraphNode](./structs.md#GraphNode) \| [GraphNodeAnimatedPart](./structs.md#GraphNodeAnimatedPart) \| [GraphNodeBackground](./structs.md#GraphNodeBackground) \| [GraphNodeBillboard](./structs.md#GraphNodeBillboard) \| [GraphNodeCamera](./structs.md#GraphNodeCamera) \| [GraphNodeCullingRadius](./structs.md#GraphNodeCullingRadius) \| [GraphNodeDisplayList](./structs.md#GraphNodeDisplayList) \| [GraphNodeGenerated](./structs.md#GraphNodeGenerated) \| [GraphNodeHeldObject](./structs.md#GraphNodeHeldObject) \| [GraphNodeLevelOfDetail](./structs.md#GraphNodeLevelOfDetail) \| [GraphNodeMasterList](./structs.md#GraphNodeMasterList) \| [GraphNodeObject](./structs.md#GraphNodeObject) \| [GraphNodeObjectParent](./structs.md#GraphNodeObjectParent) \| [GraphNodeOrthoProjection](./structs.md#GraphNodeOrthoProjection) \| [GraphNodePerspective](./structs.md#GraphNodePerspective) \| [GraphNodeRotation](./structs.md#GraphNodeRotation) \| [GraphNodeScale](./structs.md#GraphNodeScale) \| [GraphNodeShadow](./structs.md#GraphNodeShadow) \| [GraphNodeStart](./structs.md#GraphNodeStart) \| [GraphNodeSwitchCase](./structs.md#GraphNodeSwitchCase) \| [GraphNodeTranslation](./structs.md#GraphNodeTranslation) \| [GraphNodeTranslationRotation](./structs.md#GraphNodeTranslationRotation) \| [GraphNodeBone](./structs.md#GraphNodeBone)
 
 [:arrow_up_small:](#)
 
@@ -2714,23 +3181,21 @@ N/A
 
 ## [get_uncolored_string](#get_uncolored_string)
 
+### Description
 Removes color codes from a string.
 
 ### Lua Example
 ```lua
-print(get_uncolored_string("\#210059\Colored \#FF086F\String")) -- "Colored String"
+print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
 ```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| str   | 'string' |
+| str | `string` |
 
 ### Returns
 - `string`
-
-### C Prototype
-N/A
 
 [:arrow_up_small:](#)
 
@@ -2738,6 +3203,7 @@ N/A
 
 ## [gfx_set_command](#gfx_set_command)
 
+### Description
 Sets a display list command on the display list given.
 
 If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
@@ -2751,8 +3217,7 @@ The following specifiers are allowed:
 - `%t` for a `Texture` parameter
 - `%g` for a `Gfx` parameter
 
-### Lua Examples
-
+### Lua Example
 Plain string:
 ```lua
 gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
@@ -2760,85 +3225,23 @@ gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
 
 With parameter specifiers:
 ```lua
-r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+local r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
 gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 ```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| gfx   | [Gfx](structs.md#Gfx) |
+| gfx | [Gfx](./structs.md#Gfx) |
 | command | `string` |
-| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
+| parameters... | `integer` \| `string` \| [Gfx](./structs.md#Gfx) \| [Texture](./structs.md#Texture) \| [Vtx](./structs.md#Vtx) |
 
 ### Returns
 - None
 
-### C Prototype
-N/A
-
 [:arrow_up_small:](#)
 
 <br />
-
-## [djui_hud_print_text](#djui_hud_print_text)
-
-### Description
-Prints DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text(message, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-### Description
-Prints interpolated DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleX | `number` |
-| prevScaleY | `number` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
 
 ---
 # functions from area.h

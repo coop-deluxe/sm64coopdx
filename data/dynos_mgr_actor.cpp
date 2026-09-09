@@ -45,15 +45,16 @@ bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
 
     GfxData *_GfxData = DynOS_Actor_LoadFromBinary(aFilename, actorName.c_str(), aFilename, false);
     if (!_GfxData) {
-        PrintError("  ERROR: Couldn't load Actor Binary \"%s\" from \"%s\"", actorName.c_str(), aFilename.c_str());
+        PrintError("  ERROR! Couldn't load Actor Binary \"%s\" from \"%s\"", actorName.c_str(), aFilename.c_str());
         return false;
     }
     _GfxData->mModIndex = aModIndex;
     _GfxData->mModFileIndex = aModFileIndex;
 
-    void* geoLayout = (*(_GfxData->mGeoLayouts.end() - 1))->mData;
-    if (!geoLayout) {
-        PrintError("  ERROR: Couldn't load geo layout for \"%s\"", actorName.c_str());
+    void *geoLayout = (_GfxData->mGeoLayouts.Count() > 0 ? (void *) (*(_GfxData->mGeoLayouts.end() - 1))->mData : NULL);
+    if (geoLayout == NULL) {
+        PrintError("  ERROR! Couldn't load geo layout for \"%s\"", actorName.c_str());
+        DynOS_Gfx_Free(_GfxData);
         return false;
     }
 
@@ -61,7 +62,8 @@ bool DynOS_Actor_AddCustom(s32 aModIndex, s32 aModFileIndex, const SysPath &aFil
     u32 id = 0;
     GraphNode *graphNode = (GraphNode *) DynOS_Model_LoadGeo(&id, MODEL_POOL_SESSION, geoLayout, true);
     if (!graphNode) {
-        PrintError("  ERROR: Couldn't load graph node for \"%s\"", actorName.c_str());
+        PrintError("  ERROR! Couldn't load graph node for \"%s\"", actorName.c_str());
+        DynOS_Gfx_Free(_GfxData);
         return false;
     }
     graphNode->georef = georef;
@@ -112,10 +114,18 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     }
 
     // check built in actors
-    for (s32 i = 0; i < DynOS_Builtin_Actor_GetCount(); ++i) {
-        auto name = DynOS_Builtin_Actor_GetNameFromIndex(i);
-        if (!strcmp(aActorName, name)) {
-            return DynOS_Builtin_Actor_GetFromIndex(i);
+    {
+        auto geoLayout = DynOS_Builtin_Actor_GetFromName(aActorName);
+        if (geoLayout) {
+            return geoLayout;
+        }
+    }
+
+    // check built in levels
+    {
+        auto geoLayout = DynOS_Builtin_LvlGeo_GetFromName(aActorName);
+        if (geoLayout) {
+            return geoLayout;
         }
     }
 
@@ -123,6 +133,54 @@ const void *DynOS_Actor_GetLayoutFromName(const char *aActorName) {
     if (is_mod_fs_file(aActorName)) {
         if (DynOS_Actor_AddCustom(gLuaActiveMod->index, -1, aActorName, aActorName)) {
             return DynOS_Actor_GetLayoutFromName(aActorName);
+        }
+    }
+
+    return NULL;
+}
+
+const char *DynOS_Actor_GetNameFromLayout(const void *aGeoLayout) {
+    if (aGeoLayout == NULL) { return NULL; }
+
+    // check levels
+    auto &levelsArray = DynOS_Lvl_GetArray();
+    for (auto &lvl : levelsArray) {
+        for (auto &geo : lvl.second->mGeoLayouts) {
+            if (geo->mData == aGeoLayout) {
+                return geo->mName.begin();
+            }
+        }
+    }
+
+    // check custom actors
+    for (auto &pair : DynosCustomActors()) {
+        if (pair.second == aGeoLayout) {
+            return pair.first.c_str();
+        }
+    }
+
+    // check loaded actors
+    for (auto &pair : DynosValidActors()) {
+        for (auto &geo : pair.second.mGfxData->mGeoLayouts) {
+            if (geo->mData == aGeoLayout) {
+                return geo->mName.begin();
+            }
+        }
+    }
+
+    // check built in actors
+    {
+        const char *name = DynOS_Builtin_Actor_GetFromData((const GeoLayout *) aGeoLayout);
+        if (name) {
+            return name;
+        }
+    }
+
+    // check built in levels
+    {
+        const char *name = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout *) aGeoLayout);
+        if (name) {
+            return name;
         }
     }
 
@@ -296,6 +354,7 @@ void DynOS_Actor_ModShutdown() {
     for (auto it = _ValidActors.cbegin(); it != _ValidActors.cend();) {
         auto& actorGfx = it->second;
         if (actorGfx.mPackIndex == MOD_PACK_INDEX) {
+            DynOS_Tex_Invalid(actorGfx.mGfxData);
             DynOS_Gfx_Free(actorGfx.mGfxData);
             _ValidActors.erase(it++);
         } else {

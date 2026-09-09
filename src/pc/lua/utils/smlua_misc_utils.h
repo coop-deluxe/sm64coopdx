@@ -38,8 +38,8 @@ enum ActSelectHudPart {
     ACT_SELECT_HUD_STAR_NUM = 1 << 4,
     ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
 
-	ACT_SELECT_HUD_NONE = 0,
-	ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
+    ACT_SELECT_HUD_NONE = 0,
+    ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
 
 struct DateTime {
@@ -54,6 +54,8 @@ struct DateTime {
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
+/* |description|Gets the current area's networked random seed|descriptionEnd| */
+u32 get_network_area_random_seed(void);
 /* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
 u16 get_area_update_counter(void);
 
@@ -178,6 +180,10 @@ bool get_mario_anim_part_pos(struct MarioState *m, u32 animPart, VEC_OUT Vec3f p
 Retrieves the animated part rotation associated to `animPart` from the MarioState `m` and stores it into `rot`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
 bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot);
+/* |description|
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure 
+|descriptionEnd| */
+bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);
 
 /* |description|Gets the current save file number (1-indexed)|descriptionEnd| */
 s16 get_current_save_file_num(void);
@@ -226,21 +232,21 @@ const char* get_local_discord_id(void);
 const char* get_coopnet_id(s8 localIndex);
 
 /* |description|Gets the master volume level|descriptionEnd| */
-f32 get_volume_master(void);
+u8 get_volume_master(void);
 /* |description|Gets the volume level of music|descriptionEnd| */
-f32 get_volume_level(void);
+u8 get_volume_level(void);
 /* |description|Gets the volume level of sound effects|descriptionEnd| */
-f32 get_volume_sfx(void);
+u8 get_volume_sfx(void);
 /* |description|Gets the volume level of environment sounds effects|descriptionEnd| */
-f32 get_volume_env(void);
+u8 get_volume_env(void);
 /* |description|Sets the master volume level|descriptionEnd| */
-void set_volume_master(f32 volume);
+void set_volume_master(u8 volume);
 /* |description|Sets the volume level of music|descriptionEnd| */
-void set_volume_level(f32 volume);
+void set_volume_level(u8 volume);
 /* |description|Sets the volume level of sound effects|descriptionEnd| */
-void set_volume_sfx(f32 volume);
+void set_volume_sfx(u8 volume);
 /* |description|Sets the volume level of environment sounds effects|descriptionEnd| */
-void set_volume_env(f32 volume);
+void set_volume_env(u8 volume);
 
 /* |description|Gets an environment region (gas/water boxes) height value|descriptionEnd| */
 s16 get_environment_region(u8 index);

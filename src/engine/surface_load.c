@@ -491,10 +491,10 @@ static struct Surface *read_surface_data(s16 *vertexData, s16 **vertexIndices, s
     if (vertexData == NULL || vertexIndices == NULL || *vertexIndices == NULL) { return NULL; }
 
     struct Surface *surface;
-    register s32 x1, y1, z1;
-    register s32 x2, y2, z2;
-    register s32 x3, y3, z3;
-    s32 maxY, minY;
+    f32 x1, y1, z1;
+    f32 x2, y2, z2;
+    f32 x3, y3, z3;
+    f32 maxY, minY;
     f32 nx, ny, nz;
     f32 mag;
     s32 offset1, offset2, offset3;
@@ -1137,7 +1137,7 @@ void remove_static_object_collision(struct StaticObjectCollision *col) {
     col->index = 0;
 
     // reclaim the SOC metadata from the pool
-    smlua_cobject_invalidate(col, LOT_STATICOBJECTCOLLISION);
+    smlua_invalidate_soc(col);
     growing_array_swap_and_pop(sSOCPool, col);
 }
 

@@ -5,6 +5,8 @@
 #include "behavior_data.h"
 #include "model_ids.h"
 
+#define MACRO_OBJECT_PRESET_COUNT 366
+
 struct MacroPreset
 {
     /*0x00*/ const BehaviorScript *behavior;

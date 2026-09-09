@@ -23,6 +23,8 @@
 #include "game/interaction.h"
 #include "game/hardcoded.h"
 
+#define BEHAVIOR_CMD_TABLE_SIZE 66
+
 // Macros for retrieving arguments from behavior scripts.
 #define BHV_CMD_GET_1ST_U8(index)  (u8)((gCurBhvCommand[index] >> 24) & 0xFF) // unused
 #define BHV_CMD_GET_2ND_U8(index)  (u8)((gCurBhvCommand[index] >> 16) & 0xFF)
@@ -37,13 +39,63 @@
 
 #define BHV_CMD_GET_ADDR_OF_CMD(index) (uintptr_t)(&gCurBhvCommand[index])
 
-static u16 gRandomSeed16;
-
-// Unused function that directly jumps to a behavior command and resets the object's stack index.
-UNUSED static void goto_behavior_unused(const BehaviorScript *bhvAddr) {
-    gCurBhvCommand = segmented_to_virtual(bhvAddr);
-    gCurrentObject->bhvStackIndex = 0;
+inline static s32 cur_obj_get_int(u8 offset) {
+    return (offset < OBJECT_NUM_FIELDS ? gCurrentObject->OBJECT_FIELD_S32(offset) : 0);
 }
+
+inline static f32 cur_obj_get_float(u8 offset) {
+    return (offset < OBJECT_NUM_FIELDS ? gCurrentObject->OBJECT_FIELD_F32(offset) : 0);
+}
+
+inline static void cur_obj_add_float(u8 offset, f32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_F32(offset) += value;
+    }
+}
+
+inline static void cur_obj_set_float(u8 offset, f32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_F32(offset) = value;
+    }
+}
+
+inline static void cur_obj_add_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) += value;
+    }
+}
+
+inline static void cur_obj_set_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) = value;
+    }
+}
+
+inline static void cur_obj_or_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) |= value;
+    }
+}
+
+inline static void cur_obj_and_int(u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_S32(offset) &= value;
+    }
+}
+
+inline static void cur_obj_set_vptr(u8 offset, void *value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        gCurrentObject->OBJECT_FIELD_VPTR(offset) = value;
+    }
+}
+
+inline static void obj_and_int(struct Object *object, u8 offset, s32 value) {
+    if (offset < OBJECT_NUM_FIELDS) {
+        object->OBJECT_FIELD_S32(offset) &= value;
+    }
+}
+
+static u16 gRandomSeed16;
 
 // Generate a pseudorandom integer from 0 to 65535 from the random seed, and update the seed.
 u16 random_u16(void) {
@@ -127,24 +179,86 @@ void obj_update_gfx_pos_and_angle(struct Object *obj) {
     obj->header.gfx.angle[2] = obj->oFaceAngleRoll & 0xFFFF;
 }
 
-// Push the address of a behavior command to the object's behavior stack.
-static void cur_obj_bhv_stack_push(uintptr_t bhvAddr) {
-    if (gCurrentObject->bhvStackIndex < OBJECT_MAX_BHV_STACK) {
-        gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex] = bhvAddr;
+// Set the object's current behavior command.
+static bool cur_obj_bhv_command_set(const BehaviorScript *command) {
+    if (!gCurBhvCommand || !command) {
+        return false;
     }
+
+    gCurBhvCommand = command;
+    u8 index = *gCurBhvCommand >> 24;
+    if (index >= BEHAVIOR_CMD_TABLE_SIZE) {
+        return false;
+    }
+
+    return true;
+}
+
+// Advance the object's current behavior command.
+static bool cur_obj_bhv_command_next(size_t offset) {
+    if (!gCurBhvCommand) {
+        return false;
+    }
+
+    gCurBhvCommand += offset;
+    u8 index = *gCurBhvCommand >> 24;
+    if (index >= BEHAVIOR_CMD_TABLE_SIZE) {
+        return false;
+    }
+
+    return true;
+}
+
+// Push the address of a behavior command to the object's behavior stack.
+static bool cur_obj_bhv_stack_push(uintptr_t value) {
+    if (gCurrentObject->bhvStackIndex >= OBJECT_MAX_BHV_STACK) {
+        return false;
+    }
+
+    gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex] = value;
     gCurrentObject->bhvStackIndex++;
+    return true;
 }
 
 // Retrieve the last behavior command address from the object's behavior stack.
-static uintptr_t cur_obj_bhv_stack_pop(void) {
-    uintptr_t bhvAddr = 0;
-
-    gCurrentObject->bhvStackIndex--;
-    if (gCurrentObject->bhvStackIndex < OBJECT_MAX_BHV_STACK) {
-        bhvAddr = gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex];
+static bool cur_obj_bhv_stack_pop(uintptr_t *outValue) {
+    if (gCurrentObject->bhvStackIndex == 0 || gCurrentObject->bhvStackIndex > OBJECT_MAX_BHV_STACK) {
+        return false;
     }
 
-    return bhvAddr;
+    gCurrentObject->bhvStackIndex--;
+    *outValue = gCurrentObject->bhvStack[gCurrentObject->bhvStackIndex];
+    return true;
+}
+
+#define cmd_set(command) { \
+    if (!cur_obj_bhv_command_set((const BehaviorScript *) command)) { \
+        gCurBhvCommand = NULL; \
+        return BHV_PROC_BREAK; \
+    } \
+}
+
+#define cmd_next(offset) { \
+    if (!cur_obj_bhv_command_next(offset)) { \
+        gCurBhvCommand = NULL; \
+        return BHV_PROC_BREAK; \
+    } \
+}
+
+#define stack_push(value) { \
+    if (!cur_obj_bhv_stack_push((uintptr_t) value)) { \
+        gCurBhvCommand = NULL; \
+        return BHV_PROC_BREAK; \
+    } \
+}
+
+#define stack_pop(value) { \
+    uintptr_t _value_; \
+    if (!cur_obj_bhv_stack_pop(&_value_)) { \
+        gCurBhvCommand = NULL; \
+        return BHV_PROC_BREAK; \
+    } \
+    value = (typeof(value)) _value_; \
 }
 
 // Command 0x22: Hides the current object.
@@ -152,7 +266,7 @@ static uintptr_t cur_obj_bhv_stack_pop(void) {
 static s32 bhv_cmd_hide(void) {
     cur_obj_hide();
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -161,7 +275,7 @@ static s32 bhv_cmd_hide(void) {
 static s32 bhv_cmd_disable_rendering(void) {
     gCurrentObject->header.gfx.node.flags &= ~GRAPH_RENDER_ACTIVE;
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -170,7 +284,7 @@ static s32 bhv_cmd_disable_rendering(void) {
 static s32 bhv_cmd_billboard(void) {
     gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_BILLBOARD;
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -178,7 +292,7 @@ static s32 bhv_cmd_billboard(void) {
 static s32 bhv_cmd_cylboard(void) {
     gCurrentObject->header.gfx.node.flags |= GRAPH_RENDER_CYLBOARD;
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -189,7 +303,7 @@ static s32 bhv_cmd_set_model(void) {
 
     obj_set_model(gCurrentObject, modelID);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -204,7 +318,7 @@ static s32 bhv_cmd_spawn_child(void) {
         obj_copy_pos_and_angle(child, gCurrentObject);
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -221,7 +335,7 @@ static s32 bhv_cmd_spawn_obj(void) {
         gCurrentObject->prevObj = object;
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -238,7 +352,7 @@ static s32 bhv_cmd_spawn_child_with_param(void) {
         child->oBehParams2ndByte = bhvParam;
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -265,11 +379,10 @@ static s32 bhv_cmd_break_unused(void) {
 // Usage: CALL(addr)
 static s32 bhv_cmd_call(void) {
     const BehaviorScript *jumpAddress;
-    gCurBhvCommand++;
 
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the next bhv command in the stack.
-    jumpAddress = segmented_to_virtual(BHV_CMD_GET_VPTR(0));
-    gCurBhvCommand = jumpAddress; // Jump to the new address.
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(2)); // Store address of the next bhv command in the stack.
+    jumpAddress = (const BehaviorScript *) BHV_CMD_GET_VPTR(1);
+    cmd_set(jumpAddress); // Jump to the new address.
 
     return BHV_PROC_CONTINUE;
 }
@@ -277,7 +390,9 @@ static s32 bhv_cmd_call(void) {
 // Command 0x03: Jumps back to the behavior command stored in the object's behavior stack. Used after CALL.
 // Usage: RETURN()
 static s32 bhv_cmd_return(void) {
-    gCurBhvCommand = (const BehaviorScript *) cur_obj_bhv_stack_pop(); // Retrieve command address and jump to it.
+    const BehaviorScript *command;
+    stack_pop(command); // Retrieve command address and jump to it.
+    cmd_set(command);
     return BHV_PROC_CONTINUE;
 }
 
@@ -290,7 +405,7 @@ static s32 bhv_cmd_delay(void) {
         gCurrentObject->bhvDelayTimer++; // Increment timer
     } else {
         gCurrentObject->bhvDelayTimer = 0;
-        gCurBhvCommand++; // Delay ended, move to next bhv command (note: following commands will not execute until next frame)
+        cmd_next(1); // Delay ended, move to next bhv command (note: following commands will not execute until next frame)
     }
 
     return BHV_PROC_BREAK;
@@ -306,7 +421,7 @@ static s32 bhv_cmd_delay_var(void) {
         gCurrentObject->bhvDelayTimer++; // Increment timer
     } else {
         gCurrentObject->bhvDelayTimer = 0;
-        gCurBhvCommand++; // Delay ended, move to next bhv command
+        cmd_next(1); // Delay ended, move to next bhv command
     }
 
     return BHV_PROC_BREAK;
@@ -315,8 +430,7 @@ static s32 bhv_cmd_delay_var(void) {
 // Command 0x04: Jumps to a new behavior script without saving anything.
 // Usage: GOTO(addr)
 static s32 bhv_cmd_goto(void) {
-    gCurBhvCommand++; // Useless
-    gCurBhvCommand = segmented_to_virtual(BHV_CMD_GET_VPTR(0)); // Jump directly to address
+    cmd_set(BHV_CMD_GET_VPTR(1)); // Jump directly to address
     return BHV_PROC_CONTINUE;
 }
 
@@ -326,10 +440,10 @@ static s32 bhv_cmd_goto(void) {
 static s32 bhv_cmd_begin_repeat_unused(void) {
     s32 count = BHV_CMD_GET_2ND_U8(0);
 
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
-    cur_obj_bhv_stack_push(count); // Store repeat count in the stack too
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
+    stack_push(count); // Store repeat count in the stack too
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -338,27 +452,31 @@ static s32 bhv_cmd_begin_repeat_unused(void) {
 static s32 bhv_cmd_begin_repeat(void) {
     s32 count = BHV_CMD_GET_2ND_S16(0);
 
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
-    cur_obj_bhv_stack_push(count); // Store repeat count in the stack too
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
+    stack_push(count); // Store repeat count in the stack too
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
 // Command 0x06: Marks the end of a repeating loop.
 // Usage: END_REPEAT()
 static s32 bhv_cmd_end_repeat(void) {
-    u32 count = cur_obj_bhv_stack_pop(); // Retrieve loop count from the stack.
+    s32 count;
+    stack_pop(count); // Retrieve loop count from the stack.
     count--;
 
-    if (count != 0) {
-        gCurBhvCommand = (const BehaviorScript *) cur_obj_bhv_stack_pop(); // Jump back to the first command in the loop
+    if (count > 0) {
+        const BehaviorScript *command;
+        stack_pop(command); // Jump back to the first command in the loop
+        cmd_set(command);
         // Save address and count to the stack again
-        cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(0));
-        cur_obj_bhv_stack_push(count);
+        stack_push(BHV_CMD_GET_ADDR_OF_CMD(0));
+        stack_push(count);
     } else { // Finished iterating over the loop
-        cur_obj_bhv_stack_pop(); // Necessary to remove address from the stack
-        gCurBhvCommand++;
+        UNUSED uintptr_t dummy;
+        stack_pop(dummy); // Necessary to remove address from the stack
+        cmd_next(1);
     }
 
     // Don't execute following commands until next frame
@@ -368,17 +486,21 @@ static s32 bhv_cmd_end_repeat(void) {
 // Command 0x07: Also marks the end of a repeating loop, but continues executing commands following the loop on the same frame.
 // Usage: END_REPEAT_CONTINUE()
 static s32 bhv_cmd_end_repeat_continue(void) {
-    u32 count = cur_obj_bhv_stack_pop();
+    s32 count;
+    stack_pop(count); // Retrieve loop count from the stack.
     count--;
 
-    if (count != 0) {
-        gCurBhvCommand = (const BehaviorScript *) cur_obj_bhv_stack_pop(); // Jump back to the first command in the loop
+    if (count > 0) {
+        const BehaviorScript *command;
+        stack_pop(command); // Jump back to the first command in the loop
+        cmd_set(command);
         // Save address and count to the stack again
-        cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(0));
-        cur_obj_bhv_stack_push(count);
+        stack_push(BHV_CMD_GET_ADDR_OF_CMD(0));
+        stack_push(count);
     } else { // Finished iterating over the loop
-        cur_obj_bhv_stack_pop(); // Necessary to remove address from the stack
-        gCurBhvCommand++;
+        UNUSED uintptr_t dummy;
+        stack_pop(dummy); // Necessary to remove address from the stack
+        cmd_next(1);
     }
 
     // Start executing following commands immediately
@@ -388,17 +510,19 @@ static s32 bhv_cmd_end_repeat_continue(void) {
 // Command 0x08: Marks the beginning of an infinite loop.
 // Usage: BEGIN_LOOP()
 static s32 bhv_cmd_begin_loop(void) {
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the first command of the loop in the stack
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
 // Command 0x09: Marks the end of an infinite loop.
 // Usage: END_LOOP()
 static s32 bhv_cmd_end_loop(void) {
-    gCurBhvCommand = (const BehaviorScript *) cur_obj_bhv_stack_pop(); // Jump back to the first command in the loop
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(0)); // Save address to the stack again
+    const BehaviorScript *command;
+    stack_pop(command); // Jump back to the first command in the loop
+    cmd_set(command);
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(0)); // Save address to the stack again
 
     return BHV_PROC_BREAK;
 }
@@ -411,7 +535,7 @@ static s32 bhv_cmd_call_native(void) {
 
     behaviorFunc();
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -423,7 +547,7 @@ static s32 bhv_cmd_set_float(void) {
 
     cur_obj_set_float(field, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -435,7 +559,7 @@ static s32 bhv_cmd_set_int(void) {
 
     cur_obj_set_int(field, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -446,7 +570,7 @@ static s32 bhv_cmd_set_int_unused(void) {
 
     cur_obj_set_int(field, value);
 
-    gCurBhvCommand += 2; // Twice as long
+    cmd_next(2); // Twice as long
     return BHV_PROC_CONTINUE;
 }
 
@@ -459,7 +583,7 @@ static s32 bhv_cmd_set_random_float(void) {
 
     cur_obj_set_float(field, (range * random_float()) + min);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -472,7 +596,7 @@ static s32 bhv_cmd_set_random_int(void) {
 
     cur_obj_set_int(field, (s32)(range * random_float()) + min);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -485,7 +609,7 @@ static s32 bhv_cmd_set_int_rand_rshift(void) {
 
     cur_obj_set_int(field, (random_u16() >> rshift) + min);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -498,7 +622,7 @@ static s32 bhv_cmd_add_random_float(void) {
 
     cur_obj_set_float(field, cur_obj_get_float(field) + min + (range * random_float()));
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -512,7 +636,7 @@ static s32 bhv_cmd_add_int_rand_rshift(void) {
 
     cur_obj_set_int(field, (cur_obj_get_int(field) + min) + (rnd >> rshift));
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -524,7 +648,7 @@ static s32 bhv_cmd_add_float(void) {
 
     cur_obj_add_float(field, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -536,7 +660,7 @@ static s32 bhv_cmd_add_int(void) {
 
     cur_obj_add_int(field, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -550,7 +674,7 @@ static s32 bhv_cmd_or_int(void) {
     value &= 0xFFFF;
     cur_obj_or_int(objectOffset, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -563,7 +687,7 @@ static s32 bhv_cmd_bit_clear(void) {
     value = (value & 0xFFFF) ^ 0xFFFF;
     cur_obj_and_int(field, value);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -574,7 +698,7 @@ static s32 bhv_cmd_load_animations(void) {
 
     cur_obj_set_vptr(field, BHV_CMD_GET_VPTR(1));
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -588,7 +712,7 @@ static s32 bhv_cmd_animate(void) {
         geo_obj_init_animation(&gCurrentObject->header.gfx, (struct Animation*)animations->anims[animIndex]);
     }
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -603,7 +727,7 @@ static s32 bhv_cmd_drop_to_floor(void) {
     gCurrentObject->oPosY = floor;
     gCurrentObject->oMoveFlags |= OBJ_MOVE_ON_GROUND;
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -612,7 +736,7 @@ static s32 bhv_cmd_drop_to_floor(void) {
 static s32 bhv_cmd_nop_1(void) {
     UNUSED u8 field = BHV_CMD_GET_2ND_U8(0);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -621,7 +745,7 @@ static s32 bhv_cmd_nop_1(void) {
 static s32 bhv_cmd_nop_3(void) {
     UNUSED u8 field = BHV_CMD_GET_2ND_U8(0);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -630,7 +754,7 @@ static s32 bhv_cmd_nop_3(void) {
 static s32 bhv_cmd_nop_2(void) {
     UNUSED u8 field = BHV_CMD_GET_2ND_U8(0);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -643,7 +767,7 @@ static s32 bhv_cmd_sum_float(void) {
 
     cur_obj_set_float(fieldDst, cur_obj_get_float(fieldSrc1) + cur_obj_get_float(fieldSrc2));
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -656,7 +780,7 @@ static s32 bhv_cmd_sum_int(void) {
 
     cur_obj_set_int(fieldDst, cur_obj_get_int(fieldSrc1) + cur_obj_get_int(fieldSrc2));
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -669,7 +793,7 @@ static s32 bhv_cmd_set_hitbox(void) {
     gCurrentObject->hitboxRadius = radius;
     gCurrentObject->hitboxHeight = height;
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -682,7 +806,7 @@ static s32 bhv_cmd_set_hurtbox(void) {
     gCurrentObject->hurtboxRadius = radius;
     gCurrentObject->hurtboxHeight = height;
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -697,7 +821,7 @@ static s32 bhv_cmd_set_hitbox_with_offset(void) {
     gCurrentObject->hitboxHeight = height;
     gCurrentObject->hitboxDownOffset = downOffset;
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -707,7 +831,7 @@ static s32 bhv_cmd_nop_4(void) {
     UNUSED s16 field = BHV_CMD_GET_2ND_U8(0);
     UNUSED s16 value = BHV_CMD_GET_2ND_S16(0);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -729,62 +853,18 @@ static s32 bhv_cmd_begin(void) {
     if (cur_obj_has_behavior(bhvMessagePanel)) {
         gCurrentObject->oCollisionDistance = 150.0f;
     }
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
-
-// An unused, incomplete behavior command that does not have an entry in the lookup table, and so no command number.
-// It cannot be simply re-added to the table, as unlike all other bhv commands it takes a parameter.
-// Theoretically this command would have been of variable size.
-// Included below is a modified/repaired version of this function that would work properly.
-UNUSED static void bhv_cmd_set_int_random_from_table(s32 tableSize) {
-    u8 field = BHV_CMD_GET_2ND_U8(0);
-    s32 table[16];
-    s32 i;
-    // This for loop would not work as intended at all...
-    for (i = 0; i <= tableSize / 2; i += 2) {
-        table[i] = BHV_CMD_GET_1ST_S16(i + 1);
-        table[i + 1] = BHV_CMD_GET_2ND_S16(i + 1);
-    }
-
-    cur_obj_set_int(field, table[(s32)(tableSize * random_float())]);
-
-    // Does not increment gCurBhvCommand or return a bhv status
-}
-
-/**
-// Command 0x??: Sets the specified field to a random entry in the given table, up to size 16.
-// Bytes: ?? FF SS SS V1 V1 V2 V2 V3 V3 V4 V4... ...V15 V15 V16 V16 (no macro exists)
-// F -> field, S -> table size, V1, V2, etc. -> table entries (up to 16)
-static s32 bhv_cmd_set_int_random_from_table(void) {
-    u8 field = BHV_CMD_GET_2ND_U8(0);
-    // Retrieve tableSize from the bhv command instead of as a parameter.
-    s16 tableSize = BHV_CMD_GET_2ND_S16(0); // tableSize should not be greater than 16
-    s32 table[16];
-    s32 i;
-
-    // Construct the table from the behavior command.
-    for (i = 0; i <= tableSize; i += 2) {
-        table[i] = BHV_CMD_GET_1ST_S16((i / 2) + 1);
-        table[i + 1] = BHV_CMD_GET_2ND_S16((i / 2) + 1);
-    }
-
-    // Set the field to a random entry of the table.
-    cur_obj_set_int(field, table[(s32)(tableSize * random_float())]);
-
-    gCurBhvCommand += (tableSize / 2) + 1;
-    return BHV_PROC_CONTINUE;
-}
-**/
 
 // Command 0x2A: Loads collision data for the object.
 // Usage: LOAD_COLLISION_DATA(collisionData)
 static s32 bhv_cmd_load_collision_data(void) {
-    u32 *collisionData = segmented_to_virtual(BHV_CMD_GET_VPTR(1));
+    u32 *collisionData = (u32 *) BHV_CMD_GET_VPTR(1);
 
     gCurrentObject->collisionData = (Collision*)collisionData;
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -812,7 +892,7 @@ static s32 bhv_cmd_set_home(void) {
         gCurrentObject->oHomeZ = gCurrentObject->oPosZ;
         gCurrentObject->setHome = TRUE;
     }
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -821,7 +901,7 @@ static s32 bhv_cmd_set_home(void) {
 static s32 bhv_cmd_set_interact_type(void) {
     gCurrentObject->oInteractType = BHV_CMD_GET_U32(1);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -830,7 +910,7 @@ static s32 bhv_cmd_set_interact_type(void) {
 static s32 bhv_cmd_set_interact_subtype(void) {
     gCurrentObject->oInteractionSubtype = BHV_CMD_GET_U32(1);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -842,7 +922,7 @@ static s32 bhv_cmd_scale(void) {
 
     cur_obj_scale(percent / 100.0f);
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
@@ -862,7 +942,7 @@ static s32 bhv_cmd_set_obj_physics(void) {
     unused1 = BHV_CMD_GET_1ST_S16(4) / 100.0f;
     unused2 = BHV_CMD_GET_2ND_S16(4) / 100.0f;
 
-    gCurBhvCommand += 5;
+    cmd_next(5);
     return BHV_PROC_CONTINUE;
 }
 
@@ -878,7 +958,7 @@ static s32 bhv_cmd_parent_bit_clear(void) {
         obj_and_int(gCurrentObject->parentObj, field, value);
     }
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -889,7 +969,7 @@ static s32 bhv_cmd_spawn_water_droplet(void) {
 
     spawn_water_droplet(gCurrentObject, dropletParams);
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -904,32 +984,31 @@ static s32 bhv_cmd_animate_texture(void) {
         cur_obj_add_int(field, 1);
     }
 
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
 // Command 0x39: Defines the id of the behavior script, used for synchronization
 // Usage: ID(index)
 static s32 bhv_cmd_id(void) {
-    gCurBhvCommand++;
+    cmd_next(1);
     return BHV_PROC_CONTINUE;
 }
 
 // Command 0x3A: Jumps to a new behavior command and stores the return address in the object's behavior stack.
 // Usage: CALL_EXT(addr)
 static s32 bhv_cmd_call_ext(void) {
-    gCurBhvCommand++;
-
     BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
     s32 modIndex = -1;
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
-    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(0));
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
 
     gSmLuaConvertSuccess = true;
     enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
@@ -941,12 +1020,19 @@ static s32 bhv_cmd_call_ext(void) {
 
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to call address, could not find behavior '%s'", behStr);
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
-    cur_obj_bhv_stack_push(BHV_CMD_GET_ADDR_OF_CMD(1)); // Store address of the next bhv command in the stack.
     const BehaviorScript *jumpAddress = (BehaviorScript *)get_behavior_from_id(behId);
-    gCurBhvCommand = jumpAddress; // Jump to the new address.
+    if (jumpAddress == NULL) {
+        LOG_LUA("Failed to call address, could not get behavior '%s' from the id %u.", behStr, behId);
+        cmd_next(2);
+        return BHV_PROC_CONTINUE;
+    }
+
+    stack_push(BHV_CMD_GET_ADDR_OF_CMD(2)); // Store address of the next bhv command in the stack.
+    cmd_set(jumpAddress); // Jump to the new address.
 
     return BHV_PROC_CONTINUE;
 }
@@ -960,10 +1046,11 @@ static s32 bhv_cmd_goto_ext(void) {
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
-    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(0));
+    const char *behStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
 
     gSmLuaConvertSuccess = true;
     enum BehaviorId behId = smlua_get_integer_mod_variable(modIndex, behStr);
@@ -975,10 +1062,18 @@ static s32 bhv_cmd_goto_ext(void) {
 
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to jump to address, could not find behavior '%s'", behStr);
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
-    gCurBhvCommand = (BehaviorScript *)get_behavior_from_id(behId); // Jump directly to address
+    const BehaviorScript *jumpAddress = (BehaviorScript *)get_behavior_from_id(behId);
+    if (jumpAddress == NULL) {
+        LOG_LUA("Failed to call address, could not get behavior '%s' from the id %u.", behStr, behId);
+        cmd_next(2);
+        return BHV_PROC_CONTINUE;
+    }
+
+    cmd_set(jumpAddress); // Jump directly to address
     return BHV_PROC_CONTINUE;
 }
 
@@ -991,14 +1086,14 @@ static s32 bhv_cmd_call_native_ext(void) {
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
     const char *funcStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
     if (!funcStr) {
         LOG_LUA("Could not retrieve function name from behavior command.");
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1006,14 +1101,14 @@ static s32 bhv_cmd_call_native_ext(void) {
     LuaFunction funcRef = smlua_get_function_mod_variable(modIndex, funcStr);
     if (!gSmLuaConvertSuccess || funcRef == 0) {
         LOG_LUA("Failed to call lua behavior function, could not find lua function '%s'", funcStr);
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
     // Get our mod.
     if (modIndex < 0 || modIndex >= gActiveMods.entryCount) {
         LOG_LUA("Failed to call lua behavior function, could not find mod");
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
     struct Mod *mod = gActiveMods.entries[modIndex];
@@ -1021,7 +1116,7 @@ static s32 bhv_cmd_call_native_ext(void) {
     // Get our mod file
     if (modFileIndex < 0 || modFileIndex >= mod->fileCount) {
         LOG_LUA("Failed to call lua behavior function, could not find mod file %d", modFileIndex);
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
     struct ModFile *modFile = &mod->files[modFileIndex];
@@ -1037,7 +1132,7 @@ static s32 bhv_cmd_call_native_ext(void) {
         LOG_LUA("Failed to call the function callback: '%s'", funcStr);
     }
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -1052,7 +1147,7 @@ static s32 bhv_cmd_spawn_child_ext(void) {
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1068,14 +1163,14 @@ static s32 bhv_cmd_spawn_child_ext(void) {
 
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to spawn custom child, could not find behavior '%s'", behStr);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
     BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (childBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom child, could not get behavior '%s' from the id %u.", behStr, behId);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1084,7 +1179,7 @@ static s32 bhv_cmd_spawn_child_ext(void) {
         obj_copy_pos_and_angle(child, gCurrentObject);
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -1100,7 +1195,7 @@ static s32 bhv_cmd_spawn_child_with_param_ext(void) {
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1116,14 +1211,14 @@ static s32 bhv_cmd_spawn_child_with_param_ext(void) {
 
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to spawn custom child with params, could not find behavior '%s'", behStr);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
     BehaviorScript *childBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (childBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom child with params, could not get behavior '%s' from the id %u.", behStr, behId);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1133,7 +1228,7 @@ static s32 bhv_cmd_spawn_child_with_param_ext(void) {
         child->oBehParams2ndByte = bhvParam;
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -1148,7 +1243,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
     s32 modFileIndex = -1;
     if (!dynos_behavior_get_active_mod_index(behavior, &modIndex, &modFileIndex)) {
         LOG_ERROR("Could not find behavior script mod index.");
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1164,14 +1259,14 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Failed to spawn custom object, could not find behavior '%s'", behStr);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
     BehaviorScript *objBhvScript = (BehaviorScript *)get_behavior_from_id(behId);
     if (objBhvScript == NULL) {
         LOG_LUA("Failed to spawn custom object, could not get behavior '%s' from the id %u.", behStr, behId);
-        gCurBhvCommand += 3;
+        cmd_next(3);
         return BHV_PROC_CONTINUE;
     }
 
@@ -1181,7 +1276,7 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
         gCurrentObject->prevObj = object;
     }
 
-    gCurBhvCommand += 3;
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
@@ -1198,7 +1293,7 @@ static s32 bhv_cmd_load_animations_ext(void) {
 
     //cur_obj_set_vptr(field, BHV_CMD_GET_VPTR(1));
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
@@ -1212,23 +1307,21 @@ static s32 bhv_cmd_load_collision_data_ext(void) {
     Collision *collisionData = dynos_collision_get(collisionDataStr);
     if (collisionData == NULL) {
         LOG_ERROR("Failed to load custom collision, could not get collision from name '%s'", collisionDataStr);
-        gCurBhvCommand += 2;
+        cmd_next(2);
         return BHV_PROC_CONTINUE;
     }
 
     gCurrentObject->collisionData = collisionData;
 
-    gCurBhvCommand += 2;
+    cmd_next(2);
     return BHV_PROC_CONTINUE;
 }
 
 void stub_behavior_script_2(void) {
 }
 
-#define BEHAVIOR_CMD_TABLE_MAX 66
-
 typedef s32 (*BhvCommandProc)(void);
-static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
+static BhvCommandProc BehaviorCmdTable[] = {
     bhv_cmd_begin, //00
     bhv_cmd_delay, //01
     bhv_cmd_call,  //02
@@ -1297,6 +1390,8 @@ static BhvCommandProc BehaviorCmdTable[BEHAVIOR_CMD_TABLE_MAX] = {
     bhv_cmd_load_collision_data_ext, //41
 };
 
+STATIC_ASSERT(ARRAY_COUNT(BehaviorCmdTable) == BEHAVIOR_CMD_TABLE_SIZE, "BEHAVIOR_CMD_TABLE_SIZE no longer matches BehaviorCmdTable size!");
+
 // Execute the behavior script of the current object, process the object flags, and other miscellaneous code for updating objects.
 void cur_obj_update(void) {
     if (!gCurrentObject) { return; }
@@ -1349,7 +1444,7 @@ cur_obj_update_begin:;
     s16 objFlags = gCurrentObject->oFlags;
     f32 distanceFromMario;
     BhvCommandProc bhvCmdProc = NULL;
-    s32 bhvProcResult;
+    s32 bhvProcResult = BHV_PROC_CONTINUE;
 
     // Calculate the distance from the object to Mario.
     if (objFlags & OBJ_FLAG_COMPUTE_DIST_TO_MARIO) {
@@ -1372,15 +1467,23 @@ cur_obj_update_begin:;
 
     // Execute the behavior script.
     gCurBhvCommand = gCurrentObject->curBhvCommand;
-    do {
-        if (!gCurBhvCommand) { break; }
-
-        u32 index = *gCurBhvCommand >> 24;
-        if (index >= BEHAVIOR_CMD_TABLE_MAX) { break; }
+    while (bhvProcResult == BHV_PROC_CONTINUE && gCurBhvCommand) {
+        u8 index = *gCurBhvCommand >> 24;
+        if (index >= BEHAVIOR_CMD_TABLE_SIZE) { // Hit sentinel or invalid command
+            gCurBhvCommand = NULL;
+            break;
+        }
 
         bhvCmdProc = BehaviorCmdTable[index];
         bhvProcResult = bhvCmdProc();
-    } while (bhvProcResult == BHV_PROC_CONTINUE);
+    }
+
+    // Stack corruption or invalid command: delete the object
+    if (!gCurBhvCommand) {
+        LOG_ERROR("Behavior stack corruption detected for object with behavior %s, deleting it...", get_behavior_name_from_id(get_id_from_behavior(gCurrentObject->behavior)));
+        obj_mark_for_deletion(gCurrentObject);
+        return;
+    }
 
     smlua_call_behavior_hook(gCurrentObject);
     gCurrentObject->curBhvCommand = gCurBhvCommand;

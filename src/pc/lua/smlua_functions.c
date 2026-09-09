@@ -13,6 +13,7 @@
 #include "level_commands.h"
 #include "engine/math_util.h"
 #include "engine/level_script.h"
+#include "engine/surface_load.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/utils/misc.h"
 #include "include/level_misc_macros.h"
@@ -20,7 +21,12 @@
 #include "utils/smlua_anim_utils.h"
 #include "utils/smlua_collision_utils.h"
 #include "game/hardcoded.h"
+#include "game/macro_special_objects.h"
 #include "include/macros.h"
+#include "include/surface_terrains.h"
+#include "include/special_presets.h"
+
+extern void smlua_new_vec3s(Vec3s);
 
 bool smlua_functions_valid_param_count(lua_State* L, int expected) {
     int top = lua_gettop(L);
@@ -38,6 +44,51 @@ bool smlua_functions_valid_param_range(lua_State* L, int min, int max) {
         return false;
     }
     return true;
+}
+
+  ///////////
+ // print //
+///////////
+
+int smlua_func_print(lua_State *L) {
+    int top = lua_gettop(L);
+
+    char* completeString = calloc(1, 1);
+    if (!completeString) {
+        return 0;
+    }
+
+    size_t pos = 0;
+    for (int i = 1; i <= top; i++) {
+        size_t len;
+        const char* str = luaL_tolstring(L, i, &len);
+
+        size_t needExtra = len + 1 + (i > 1);
+        char* grownString = realloc(completeString, pos + needExtra);
+        if (!grownString) {
+            free(completeString);
+            return 0;
+        }
+        completeString = grownString;
+
+        if (i > 1) {
+            completeString[pos] = '\t';
+            pos += 1;
+        }
+
+        memcpy(completeString + pos, str, len);
+        pos += len;
+        lua_pop(L, 1);
+    }
+
+    completeString[pos] = '\0';
+
+    // print to terminal and console
+    log_to_terminal("%s\n", completeString);
+    djui_console_message_create(completeString, CONSOLE_MESSAGE_INFO);
+
+    free(completeString);
+    return 0;
 }
 
   ///////////
@@ -482,72 +533,414 @@ int smlua_func_texture_override_reset(lua_State* L) {
  // level script preprocessing //
 ////////////////////////////////
 
-struct LuaLevelScriptParse {
-    int reference;
-    struct Mod* mod;
-    struct ModFile* modFile;
-};
+static struct LuaLevelParseScript {
+    int callback;
+    struct Mod *mod;
+    struct ModFile *modFile;
+    bool isLegacyFunc;
+    bool isParsing;
+} sLuaLevelParseScript = { 0 };
 
-struct LuaLevelScriptParse sLevelScriptParse = { 0 };
+//
+// Legacy level_script_parse compatibility
+//
 
-static bool smlua_func_level_find_lua_param(u64 *param, void *cmd, u32 offset, u32 luaParams, u32 luaParamFlag) {
-    *param = dynos_level_cmd_get(cmd, offset);
-    if (luaParams & luaParamFlag) {
-        const char *paramStr = dynos_level_get_token(*param);
-        gSmLuaConvertSuccess = true;
-        *param = smlua_get_integer_mod_variable(gLevelScriptModIndex, paramStr);
-        if (!gSmLuaConvertSuccess) {
-            gSmLuaConvertSuccess = true;
-            *param = smlua_get_any_integer_mod_variable(paramStr);
-        }
-        if (!gSmLuaConvertSuccess) {
-            return false;
-        }
+static bool level_script_parse_get_value(lua_State *L, int index, const char *key, int type) {
+    index = lua_absindex(L, index);
+    lua_pushstring(L, key);
+    if (type == lua_gettable(L, index)) {
+        return true;
     }
-    return true;
+    lua_pop(L, 1);
+    return false;
 }
 
-#define smlua_func_level_get_lua_param(name, ptype, flag) \
-    u64 name##Param; \
-    if (!smlua_func_level_find_lua_param(&name##Param, cmd, flag##_OFFSET(type), luaParams, flag)) { \
-        break; \
-    } \
-    ptype name = (ptype) name##Param;
+static bool level_script_parse_push_field(lua_State *L, int srcIndex, const char *srcKey, int dstIndex, const char *dstKey, int type) {
+    srcIndex = lua_absindex(L, srcIndex);
+    dstIndex = lua_absindex(L, dstIndex);
+    if (level_script_parse_get_value(L, srcIndex, srcKey, type)) {
+        lua_setfield(L, dstIndex, dstKey);
+        return true;
+    }
+    return false;
+}
 
-s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
-    u32 areaIndex, bhvId, bhvArgs, bhvModelId;
-    s16 bhvPosX, bhvPosY, bhvPosZ;
-    s32 bhvPitch, bhvYaw, bhvRoll;
-    bool area = false, bhv = false;
-    MacroObject *macroData = NULL;
+static int level_script_parse_push_params(lua_State *L, int index, int count) {
+    for (int i = 0; i != count; ++i) {
+        lua_insert(L, index);
+    }
+    index += count;
+    lua_settop(L, index);
+    return index;
+}
+
+static void level_script_parse_convert_parameters(lua_State *L) {
+    int tableIndex = lua_gettop(L);
+
+    // Push 'areaIndex'
+    if (!level_script_parse_get_value(L, tableIndex, "area", LUA_TTABLE) ||
+        !level_script_parse_get_value(L, -1, "index", LUA_TNUMBER)) {
+        lua_pushnil(L);
+    }
+    tableIndex = level_script_parse_push_params(L, tableIndex, 1);
+
+    // Push 'bhvData'
+    if (level_script_parse_get_value(L, tableIndex, "object", LUA_TTABLE)) {
+        lua_newtable(L);
+        level_script_parse_push_field(L, -2, "behaviorId", -1, "behavior", LUA_TNUMBER);
+        level_script_parse_push_field(L, -2, "behParams", -1, "behaviorArg", LUA_TNUMBER);
+        level_script_parse_push_field(L, -2, "vanillaModelId", -1, "model", LUA_TNUMBER);
+        if (level_script_parse_get_value(L, -2, "pos", LUA_TTABLE)) {
+            level_script_parse_push_field(L, -1, "x", -2, "posX", LUA_TNUMBER);
+            level_script_parse_push_field(L, -1, "y", -2, "posY", LUA_TNUMBER);
+            level_script_parse_push_field(L, -1, "z", -2, "posZ", LUA_TNUMBER);
+            lua_pop(L, 1);
+        }
+        if (level_script_parse_get_value(L, -2, "angle", LUA_TTABLE)) {
+            level_script_parse_push_field(L, -1, "x", -2, "pitch", LUA_TNUMBER);
+            level_script_parse_push_field(L, -1, "y", -2, "yaw", LUA_TNUMBER);
+            level_script_parse_push_field(L, -1, "z", -2, "roll", LUA_TNUMBER);
+            lua_pop(L, 1);
+        }
+    } else {
+        lua_pushnil(L);
+    }
+    tableIndex = level_script_parse_push_params(L, tableIndex, 1);
+
+    // Push 'macroBhvIds', 'macroBhvArgs' and 'macroBhvModels'
+    if (level_script_parse_get_value(L, tableIndex, "macroObjects", LUA_TTABLE)) {
+        lua_newtable(L); int macroBhvIdsIndex = lua_gettop(L);
+        lua_newtable(L); int macroBhvArgsIndex = lua_gettop(L);
+        lua_newtable(L); int macroBhvModelsIndex = lua_gettop(L);
+        for (int i = 1; lua_rawgeti(L, -4, i) != LUA_TNIL; ++i) {
+            if (!level_script_parse_get_value(L, -1, "behaviorId", LUA_TNUMBER)) {
+                lua_pushinteger(L, id_bhv_max_count);
+            }
+            lua_rawseti(L, macroBhvIdsIndex, i);
+            if (!level_script_parse_get_value(L, -1, "behParams", LUA_TNUMBER)) {
+                lua_pushinteger(L, 0);
+            }
+            lua_rawseti(L, macroBhvArgsIndex, i);
+            if (!level_script_parse_get_value(L, -1, "vanillaModelId", LUA_TNUMBER)) {
+                lua_pushinteger(L, E_MODEL_NONE);
+            }
+            lua_rawseti(L, macroBhvModelsIndex, i);
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1); // Pop the nil from the last lua_rawgeti
+    } else {
+        lua_pushnil(L);
+        lua_pushnil(L);
+        lua_pushnil(L);
+    }
+    tableIndex = level_script_parse_push_params(L, tableIndex, 3);
+
+    // Pop table
+    lua_settop(L, tableIndex - 1);
+}
+
+//
+// level_parse_script
+//
+
+#define dynos_level_cmd_get_lua_param(paramName, paramType, luaParamFlag) \
+    smlua_get_lua_param(paramName, paramType, dynos_level_cmd_get(cmd, luaParamFlag##_OFFSET(type)), luaParams, luaParamFlag, { \
+        break; \
+    })
+
+static void smlua_func_level_parse_collision(lua_State *L, Collision *data, u32 size) {
+
+    // Collision data
+    lua_newtable(L);
+    smlua_push_pointer(L, LVT_COLLISION_P, data, NULL); lua_setfield(L, -2, "data");
+    smlua_push_integer_field(-2, "size", size); // size in bytes
+
+    lua_setfield(L, -2, "collision");
+
+    // Special objects and water boxes
+    lua_newtable(L); int specialObjectsTable = lua_gettop(L); s32 specialObjectsTableIndex = 1;
+    lua_newtable(L); int waterBoxesTable = lua_gettop(L); s32 waterBoxesTableIndex = 1;
+
+    Collision *end = data + (size / sizeof(Collision));
+    while (data < end) {
+        s16 terrainLoadType = *data++;
+        switch (terrainLoadType) {
+            case TERRAIN_LOAD_VERTICES: {
+                s16 numVertices = *data++;
+                data += 3 * numVertices;
+            } break;
+
+            case TERRAIN_LOAD_OBJECTS: {
+                s16 numSpecialObjects = *data++;
+
+                for (s16 i = 0; i < numSpecialObjects; ++i) {
+                    u8 presetID = (u8) *data++;
+                    Vec3s pos;
+                    pos[0] = *data++;
+                    pos[1] = *data++;
+                    pos[2] = *data++;
+
+                    s32 index = get_special_object_preset_index(presetID);
+                    if (index == -1) {
+                        // If the preset cannot be identified, the rest of the collision data
+                        // can no longer be parsed properly; abort and return
+                        lua_pop(L, 2);
+                        return;
+                    }
+
+                    const struct SpecialPreset *preset = &SpecialObjectPresets[index];
+                    u8 vanillaModelId = preset->model;
+                    enum BehaviorId behaviorId = get_id_from_behavior(preset->behavior);
+                    u8 defParam = preset->defParam;
+
+                    if (behaviorId != id_bhv_max_count) {
+                        lua_newtable(L);
+                        smlua_new_vec3s(pos); lua_setfield(L, -2, "pos");
+                        smlua_new_vec3s(gVec3sZero); lua_setfield(L, -2, "angle");
+                        smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+                        smlua_push_integer_field(-2, "behaviorId", behaviorId);
+                        smlua_push_integer_field(-2, "behParams", 0);
+                    }
+
+                    switch (preset->type) {
+                        case SPTYPE_NO_YROT_OR_PARAMS: {
+                            // Nothing to add
+                        } break;
+
+                        case SPTYPE_YROT_NO_PARAMS: {
+                            Vec3s angle = { 0, *data++, 0 };
+                            if (behaviorId != id_bhv_max_count) {
+                                smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+                            }
+                        } break;
+
+                        case SPTYPE_PARAMS_AND_YROT: {
+                            Vec3s angle = { 0, *data++, 0 };
+                            u32 behParams = ((u32) (*data++)) << 16;
+                            if (behaviorId != id_bhv_max_count) {
+                                smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+                                smlua_push_integer_field(-2, "behParams", behParams);
+                            }
+                        } break;
+
+                        case SPTYPE_UNKNOWN: { // Unused and unknown data
+                            f32 macroUnk108 = (f32) *data++;
+                            f32 macroUnk10C = (f32) *data++;
+                            f32 macroUnk110 = (f32) *data++;
+                            if (behaviorId != id_bhv_max_count) {
+                                smlua_push_number_field(-2, "oMacroUnk108", macroUnk108);
+                                smlua_push_number_field(-2, "oMacroUnk10C", macroUnk10C);
+                                smlua_push_number_field(-2, "oMacroUnk110", macroUnk110);
+                            }
+                        } break;
+
+                        case SPTYPE_DEF_PARAM_AND_YROT: {
+                            Vec3s angle = { 0, *data++, 0 };
+                            u32 behParams = ((u32) defParam) << 16;
+                            if (behaviorId != id_bhv_max_count) {
+                                smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+                                smlua_push_integer_field(-2, "behParams", behParams);
+                            }
+                        } break;
+
+                        default: { // Undefined
+                            // Cannot tell how many extra bytes to read
+                            // The game assumes it's 0, but better abort here
+                            if (behaviorId != id_bhv_max_count) {
+                                lua_pop(L, 3);
+                            } else {
+                                lua_pop(L, 2);
+                            }
+                        } return;
+                    }
+
+                    if (behaviorId != id_bhv_max_count) {
+                        lua_rawseti(L, specialObjectsTable, specialObjectsTableIndex++);
+                    }
+                }
+            } break;
+
+            case TERRAIN_LOAD_ENVIRONMENT: {
+                s16 numRegions = *data++;
+
+                for (s16 i = 0; i < numRegions; ++i) {
+                    // WaterRegion
+                    s16 id = *data++;
+                    s16 xmin = *data++;
+                    s16 xmax = *data++;
+                    s16 zmin = *data++;
+                    s16 zmax = *data++;
+                    s16 height = *data++;
+
+                    lua_newtable(L);
+                    smlua_push_integer_field(-2, "id", id);
+                    smlua_push_integer_field(-2, "xmin", xmin);
+                    smlua_push_integer_field(-2, "xmax", xmax);
+                    smlua_push_integer_field(-2, "zmin", zmin);
+                    smlua_push_integer_field(-2, "zmax", zmax);
+                    smlua_push_integer_field(-2, "height", height);
+
+                    lua_rawseti(L, waterBoxesTable, waterBoxesTableIndex++);
+                }
+            } break;
+
+            case TERRAIN_LOAD_CONTINUE: {
+            } continue;
+
+            case TERRAIN_LOAD_END: {
+                data = end;
+            } break;
+
+            default: {
+                s16 numSurfaces = *data++;
+                data += (3 + surface_has_force(terrainLoadType)) * numSurfaces;
+            } break;
+        }
+    }
+
+    lua_setfield(L, -3, "waterBoxes");
+    lua_setfield(L, -2, "specialObjects");
+}
+
+static void smlua_func_level_parse_macro_objects(lua_State *L, MacroObject *macroData) {
+    for (s32 i = 1; *macroData != MACRO_OBJECT_END(); macroData += 5) {
+        s16 presetId = (s16) ((macroData[0] & 0x1FF) - 0x1F);
+        if (presetId < 0 || presetId >= MACRO_OBJECT_PRESET_COUNT) {
+            continue;
+        }
+
+        struct MacroPreset *preset = &MacroObjectPresets[presetId];
+        Vec3s pos = { macroData[1], macroData[2], macroData[3] };
+        Vec3s angle = { 0, convert_rotation(((macroData[0] >> 9) & 0x7F) << 1), 0 };
+        u16 objParams = macroData[4];
+        u16 presetParams = preset->param;
+        if (presetParams != 0) {
+            objParams = (objParams & 0xFF00) + (presetParams & 0x00FF);
+        }
+
+        u8 vanillaModelId = (u8) preset->model;
+        enum BehaviorId behaviorId = get_id_from_behavior(preset->behavior);
+        u32 behParams = ((objParams & 0x00FF) << 16) | (objParams & 0xFF00);
+
+        lua_newtable(L);
+        smlua_new_vec3s(pos); lua_setfield(L, -2, "pos");
+        smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+        smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+        smlua_push_integer_field(-2, "behaviorId", behaviorId);
+        smlua_push_integer_field(-2, "behParams", behParams);
+
+        lua_rawseti(L, -2, i++);
+    }
+}
+
+static s32 smlua_func_level_parse_script_callback(u8 type, void *cmd) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return DYNOS_LEVEL_PARSE_STOP; }
+    int top = lua_gettop(L);
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, sLuaLevelParseScript.callback);
+    int callbackIndex = lua_gettop(L);
+
+    lua_newtable(L);
 
     // Gather arguments
     switch (type) {
 
         // AREA
         case 0x1F: {
-            areaIndex = dynos_level_cmd_get(cmd, 2);
-            area = true;
+            u8 index = (u8) dynos_level_cmd_get(cmd, 2);
+            const GeoLayout *geoLayout = (const GeoLayout *) dynos_level_cmd_get(cmd, 4);
+            const char *modelName = dynos_geolayout_get_name(geoLayout);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "index", index);
+            if (modelName) {
+                enum ModelExtendedId modelId = smlua_model_util_get_id(modelName);
+                smlua_push_integer_field(-2, "modelId", modelId);
+                smlua_push_string_field(-2, "modelName", modelName);
+            }
+
+            lua_setfield(L, -2, "area");
+        } break;
+
+        // LOAD_MODEL_FROM_DL
+        case 0x21: {
+            u8 vanillaModelId = (u8) dynos_level_cmd_get(cmd, 2);
+            u8 layer = (u8) (dynos_level_cmd_get(cmd, 2) >> 12);
+            const Gfx *displayList = (const Gfx *) dynos_level_cmd_get(cmd, 4);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+            if (displayList) {
+                Gfx *wDisplayList = dynos_gfx_get_writable_display_list((Gfx *) displayList);
+                if (wDisplayList) {
+                    smlua_push_object(L, LOT_GFX, wDisplayList, NULL); lua_setfield(L, -2, "displayList");
+                }
+            }
+            smlua_push_integer_field(-2, "layer", layer);
+
+            lua_setfield(L, -2, "model");
+        } break;
+
+        // LOAD_MODEL_FROM_GEO
+        case 0x22: {
+            u8 vanillaModelId = (u8) dynos_level_cmd_get(cmd, 2);
+            const GeoLayout *geoLayout = (const GeoLayout *) dynos_level_cmd_get(cmd, 4);
+            const char *modelName = dynos_geolayout_get_name(geoLayout);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+            if (modelName) {
+                enum ModelExtendedId modelId = smlua_model_util_get_id(modelName);
+                smlua_push_integer_field(-2, "modelId", modelId);
+                smlua_push_string_field(-2, "modelName", modelName);
+            }
+
+            lua_setfield(L, -2, "model");
+        } break;
+
+        // LOAD_MODEL_FROM_GEO_EXT
+        case 0x41: {
+            u8 vanillaModelId = (u8) dynos_level_cmd_get(cmd, 2);
+            const char *modelName = dynos_level_get_token((u32) dynos_level_cmd_get(cmd, 4));
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+            if (modelName) {
+                enum ModelExtendedId modelId = smlua_model_util_get_id(modelName);
+                smlua_push_integer_field(-2, "modelId", modelId);
+                smlua_push_string_field(-2, "modelName", modelName);
+            }
+
+            lua_setfield(L, -2, "model");
         } break;
 
         // OBJECT, OBJECT_WITH_ACTS
         case 0x24: {
-            const BehaviorScript *bhvPtr = (const BehaviorScript *) dynos_level_cmd_get(cmd, 20);
-            if (bhvPtr) {
-                bhvId = get_id_from_behavior(bhvPtr);
-                if (bhvId == id_bhv_max_count) {
-                    bhvId = get_id_from_vanilla_behavior(bhvPtr); // for behaviors with no id in the script (e.g. bhvInstantActiveWarp)
-                }
-                bhvArgs = dynos_level_cmd_get(cmd, 16);
-                bhvModelId = dynos_level_cmd_get(cmd, 3);
-                bhvPosX = dynos_level_cmd_get(cmd, 4);
-                bhvPosY = dynos_level_cmd_get(cmd, 6);
-                bhvPosZ = dynos_level_cmd_get(cmd, 8);
-                bhvPitch = (dynos_level_cmd_get(cmd, 10) * 0x8000) / 180;
-                bhvYaw   = (dynos_level_cmd_get(cmd, 12) * 0x8000) / 180;
-                bhvRoll  = (dynos_level_cmd_get(cmd, 14) * 0x8000) / 180;
-                bhv = true;
-            }
+            u8 acts = (u8) dynos_level_cmd_get(cmd, 2);
+            Vec3s pos = {
+                (s16) ((u16) dynos_level_cmd_get(cmd, 4)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 6)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 8))
+            };
+            Vec3s angle = {
+                (s16) ((((u16) dynos_level_cmd_get(cmd, 10)) * 0x8000) / 180),
+                (s16) ((((u16) dynos_level_cmd_get(cmd, 12)) * 0x8000) / 180),
+                (s16) ((((u16) dynos_level_cmd_get(cmd, 14)) * 0x8000) / 180)
+            };
+            u8 vanillaModelId = (u8) dynos_level_cmd_get(cmd, 3);
+            enum BehaviorId behaviorId = get_id_from_behavior((const BehaviorScript *) dynos_level_cmd_get(cmd, 20));
+            u32 behParams = (u32) dynos_level_cmd_get(cmd, 16);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "acts", acts);
+            smlua_new_vec3s(pos); lua_setfield(L, -2, "pos");
+            smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+            smlua_push_integer_field(-2, "vanillaModelId", vanillaModelId);
+            smlua_push_integer_field(-2, "behaviorId", behaviorId);
+            smlua_push_integer_field(-2, "behParams", behParams);
+
+            lua_setfield(L, -2, "object");
         } break;
 
         // OBJECT_EXT, OBJECT_WITH_ACTS_EXT
@@ -560,158 +953,244 @@ s32 smlua_func_level_script_parse_callback(u8 type, void *cmd) {
                 u16 luaParams = (
                     type == 0x3F ? OBJECT_EXT_LUA_BEHAVIOR : (
                     type == 0x40 ? OBJECT_EXT_LUA_BEHAVIOR | OBJECT_EXT_LUA_MODEL : (
-                    dynos_level_cmd_get(cmd, 2)
+                    (u16) dynos_level_cmd_get(cmd, 2)
                 )));
 
-                smlua_func_level_get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
-                smlua_func_level_get_lua_param(posX, s16, OBJECT_EXT_LUA_POS_X);
-                smlua_func_level_get_lua_param(posY, s16, OBJECT_EXT_LUA_POS_Y);
-                smlua_func_level_get_lua_param(posZ, s16, OBJECT_EXT_LUA_POS_Z);
-                smlua_func_level_get_lua_param(angleX, s16, OBJECT_EXT_LUA_ANGLE_X);
-                smlua_func_level_get_lua_param(angleY, s16, OBJECT_EXT_LUA_ANGLE_Y);
-                smlua_func_level_get_lua_param(angleZ, s16, OBJECT_EXT_LUA_ANGLE_Z);
-                smlua_func_level_get_lua_param(behParam, u32, OBJECT_EXT_LUA_BEH_PARAMS);
-                smlua_func_level_get_lua_param(behavior, uintptr_t, OBJECT_EXT_LUA_BEHAVIOR);
+                dynos_level_cmd_get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
+                dynos_level_cmd_get_lua_param(posX, s16, OBJECT_EXT_LUA_POS_X);
+                dynos_level_cmd_get_lua_param(posY, s16, OBJECT_EXT_LUA_POS_Y);
+                dynos_level_cmd_get_lua_param(posZ, s16, OBJECT_EXT_LUA_POS_Z);
+                dynos_level_cmd_get_lua_param(anglePitch, s16, OBJECT_EXT_LUA_ANGLE_X);
+                dynos_level_cmd_get_lua_param(angleYaw, s16, OBJECT_EXT_LUA_ANGLE_Y);
+                dynos_level_cmd_get_lua_param(angleRoll, s16, OBJECT_EXT_LUA_ANGLE_Z);
+                dynos_level_cmd_get_lua_param(behParams, u32, OBJECT_EXT_LUA_BEH_PARAMS);
+                dynos_level_cmd_get_lua_param(behavior, uintptr_t, OBJECT_EXT_LUA_BEHAVIOR);
+                dynos_level_cmd_get_lua_param(acts, u8, OBJECT_EXT_LUA_ACTS);
+                enum BehaviorId behaviorId = (luaParams & OBJECT_EXT_LUA_BEHAVIOR) ? behavior : get_id_from_behavior((const BehaviorScript *) behavior);
+                Vec3s pos = { posX, posY, posZ };
+                Vec3s angle = { anglePitch, angleYaw, angleRoll };
 
-                bhvArgs = behParam;
-                bhvModelId = modelId;
-                bhvPosX = posX;
-                bhvPosY = posY;
-                bhvPosZ = posZ;
-                bhvPitch = angleX;
-                bhvYaw = angleY;
-                bhvRoll = angleZ;
-                if (luaParams & OBJECT_EXT_LUA_BEHAVIOR) {
-                    bhvId = (u32) behavior;
+                lua_newtable(L);
+                smlua_push_integer_field(-2, "acts", acts);
+                smlua_new_vec3s(pos); lua_setfield(L, -2, "pos");
+                smlua_new_vec3s(angle); lua_setfield(L, -2, "angle");
+                if (luaParams & OBJECT_EXT_LUA_MODEL) {
+                    smlua_push_integer_field(-2, "vanillaModelId", smlua_model_util_load((enum ModelExtendedId) modelId));
+                    smlua_push_integer_field(-2, "modelId", modelId);
                 } else {
-                    bhvId = get_id_from_behavior((const BehaviorScript *) behavior);
-                    if (bhvId == id_bhv_max_count) {
-                        bhvId = get_id_from_vanilla_behavior((const BehaviorScript *) behavior);
-                    }
+                    smlua_push_integer_field(-2, "vanillaModelId", modelId);
                 }
+                smlua_push_integer_field(-2, "behaviorId", behaviorId);
+                smlua_push_integer_field(-2, "behParams", behParams);
 
-                bhv = true;
+                lua_setfield(L, -2, "object");
             }
+        } break;
+
+        // WARP_NODE
+        // PAINTING_WARP_NODE
+        case 0x26:
+        case 0x27: {
+            u8 id = (u8) dynos_level_cmd_get(cmd, 2);
+            u8 destLevel = (u8) dynos_level_cmd_get(cmd, 3);
+            u8 destArea = (u8) dynos_level_cmd_get(cmd, 4);
+            u8 destNode = (u8) dynos_level_cmd_get(cmd, 5);
+            u8 flags = (u8) dynos_level_cmd_get(cmd, 6);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "id", id);
+            smlua_push_integer_field(-2, "destLevel", destLevel);
+            smlua_push_integer_field(-2, "destArea", destArea);
+            smlua_push_integer_field(-2, "destNode", destNode);
+            smlua_push_integer_field(-2, "flags", flags);
+            smlua_push_boolean_field(-2, "painting", type == 0x27);
+
+            lua_setfield(L, -2, "warpNode");
+        } break;
+
+        // INSTANT_WARP
+        case 0x28: {
+            u8 index = (u8) dynos_level_cmd_get(cmd, 2);
+            u8 destArea = (u8) dynos_level_cmd_get(cmd, 3);
+            Vec3s displacement = {
+                (s16) ((u16) dynos_level_cmd_get(cmd, 4)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 6)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 8))
+            };
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "index", index);
+            smlua_push_integer_field(-2, "destArea", destArea);
+            smlua_new_vec3s(displacement); lua_setfield(L, -2, "displacement");
+
+            lua_setfield(L, -2, "instantWarp");
+        } break;
+
+        // TERRAIN
+        case 0x2E: {
+            Collision *data = (Collision *) dynos_level_cmd_get(cmd, 4);
+            u32 size = get_area_terrain_size(data) * sizeof(Collision);
+
+            smlua_func_level_parse_collision(L, data, size);
+        } break;
+
+        // SHOW_DIALOG
+        case 0x30: {
+            u8 index = (u8) dynos_level_cmd_get(cmd, 2);
+            enum DialogId dialogId = (u8) dynos_level_cmd_get(cmd, 3);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "index", index);
+            smlua_push_integer_field(-2, "dialogId", dialogId);
+
+            lua_setfield(L, -2, "dialog");
+        } break;
+
+        // SHOW_DIALOG_EXT
+        case 0x44: {
+            u8 luaParams = (u8) dynos_level_cmd_get(cmd, 2);
+
+            dynos_level_cmd_get_lua_param(index, u8, SHOW_DIALOG_EXT_LUA_INDEX);
+            dynos_level_cmd_get_lua_param(dialogId, s32, SHOW_DIALOG_EXT_LUA_DIALOG);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "index", index);
+            smlua_push_integer_field(-2, "dialogId", dialogId);
+
+            lua_setfield(L, -2, "dialog");
+        } break;
+
+        // TERRAIN_TYPE
+        case 0x31: {
+            u16 terrainType = (u16) dynos_level_cmd_get(cmd, 2);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "type", terrainType);
+
+            lua_setfield(L, -2, "terrain");
+        } break;
+
+        // SET_BACKGROUND_MUSIC
+        case 0x36: {
+            u16 settings = (u16) dynos_level_cmd_get(cmd, 2);
+            u16 seqId = (u16) dynos_level_cmd_get(cmd, 4);
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "settings", settings);
+            smlua_push_integer_field(-2, "seqId", seqId);
+
+            lua_setfield(L, -2, "music");
+        } break;
+
+        // WHIRLPOOL
+        case 0x3B: {
+            u8 index = (u8) dynos_level_cmd_get(cmd, 2);
+            u8 condition = (u8) dynos_level_cmd_get(cmd, 3);
+            Vec3s pos = {
+                (s16) ((u16) dynos_level_cmd_get(cmd, 4)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 6)),
+                (s16) ((u16) dynos_level_cmd_get(cmd, 8))
+            };
+            s16 strength = (s16) ((u16) dynos_level_cmd_get(cmd, 10));
+
+            lua_newtable(L);
+            smlua_push_integer_field(-2, "index", index);
+            smlua_push_integer_field(-2, "condition", condition);
+            smlua_new_vec3s(pos); lua_setfield(L, -2, "pos");
+            smlua_push_integer_field(-2, "strength", strength);
+
+            lua_setfield(L, -2, "whirlpool");
         } break;
 
         // MACRO_OBJECTS
         case 0x39: {
-            macroData = (MacroObject *) dynos_level_cmd_get(cmd, 4);
+            MacroObject *macroData = (MacroObject *) dynos_level_cmd_get(cmd, 4);
+
+            lua_newtable(L);
+            smlua_func_level_parse_macro_objects(L, macroData);
+
+            lua_setfield(L, -2, "macroObjects");
         } break;
 
         // None of the above
-        default: return 0;
-    }
-
-    // Retrieve Lua state
-    lua_State* L = gLuaState;
-    if (L == NULL) { return 0; }
-    struct LuaLevelScriptParse* preprocess = &sLevelScriptParse;
-    lua_rawgeti(L, LUA_REGISTRYINDEX, preprocess->reference);
-
-    // Push 'areaIndex'
-    if (area) {
-        lua_pushinteger(L, areaIndex);
-    } else {
-        lua_pushnil(L);
-    }
-
-    // Push 'bhvData'
-    if (bhv) {
-        lua_newtable(L);
-        smlua_push_integer_field(-2, "behavior", bhvId);
-        smlua_push_integer_field(-2, "behaviorArg", bhvArgs);
-        smlua_push_integer_field(-2, "model", bhvModelId);
-        smlua_push_integer_field(-2, "posX", bhvPosX);
-        smlua_push_integer_field(-2, "posY", bhvPosY);
-        smlua_push_integer_field(-2, "posZ", bhvPosZ);
-        smlua_push_integer_field(-2, "pitch", bhvPitch);
-        smlua_push_integer_field(-2, "yaw", bhvYaw);
-        smlua_push_integer_field(-2, "roll", bhvRoll);
-    } else {
-        lua_pushnil(L);
-    }
-
-    // Push 'macroBhvIds' and 'macroBhvArgs' and 'macroBhvModels'
-    if (macroData) {
-        lua_newtable(L);
-        s32 macroBhvIdsIdx = lua_gettop(L);
-        lua_newtable(L);
-        s32 macroBhvArgsIdx = lua_gettop(L);
-        lua_newtable(L);
-        s32 macroBhvModelsIdx = lua_gettop(L);
-        for (s32 i = 0; *macroData != MACRO_OBJECT_END(); macroData += 5, i++) {
-            s32 presetId = (s32) ((macroData[0] & 0x1FF) - 0x1F);
-            s32 presetParams = MacroObjectPresets[presetId].param;
-            s32 objParams = (macroData[4] & 0xFF00) | (presetParams & 0x00FF);
-            s32 bhvParams = ((objParams & 0x00FF) << 16) | (objParams & 0xFF00);
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, get_id_from_behavior(MacroObjectPresets[presetId].behavior));
-            lua_settable(L, macroBhvIdsIdx);
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, bhvParams);
-            lua_settable(L, macroBhvArgsIdx);
-            lua_pushinteger(L, i);
-            lua_pushinteger(L, MacroObjectPresets[presetId].model);
-            lua_settable(L, macroBhvModelsIdx);
+        default: {
+            lua_settop(L, top);
+            return DYNOS_LEVEL_PARSE_CONTINUE;
         }
-    } else {
-        lua_pushnil(L);
-        lua_pushnil(L);
-        lua_pushnil(L);
     }
 
-    // call the callback
-    if (0 != smlua_call_hook(L, 5, 0, 0, preprocess->mod, preprocess->modFile)) {
-        LOG_LUA("Failed to call the callback behaviors: %u", type);
-        return 0;
+    // Legacy 'level_script_parse'
+    if (sLuaLevelParseScript.isLegacyFunc) {
+        level_script_parse_convert_parameters(L);
     }
-    return 0;
+
+    // Call the callback
+    if (0 != smlua_call_hook(L, lua_gettop(L) - callbackIndex, 0, 0, sLuaLevelParseScript.mod, sLuaLevelParseScript.modFile)) {
+        LOG_LUA("level_parse_script: Failed to call the callback: %u", type);
+    }
+
+    lua_settop(L, top);
+    return DYNOS_LEVEL_PARSE_CONTINUE;
 }
 
-void smlua_func_level_script_parse(lua_State* L) {
-    if (!smlua_functions_valid_param_count(L, 2)) { return; }
+int smlua_func_level_parse_script(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
 
-    lua_Integer levelNum = smlua_to_integer(L, 1);
-    if (!gSmLuaConvertSuccess) {
-        LOG_LUA_LINE("Invalid level script name");
-        return;
+    if (sLuaLevelParseScript.isParsing) {
+        LOG_LUA("Cannot call 'level_parse_script' inside itself");
+        return 0;
     }
 
-    struct LuaLevelScriptParse* preprocess = &sLevelScriptParse;
-    preprocess->reference = LUA_NOREF;
+    enum LevelNum levelNum = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("Failed to convert parameter 1 for function 'level_parse_script'");
+        return 0;
+    }
+
+    void *levelScript = dynos_level_get_script(levelNum);
+    if (levelScript == NULL) {
+        LOG_LUA_LINE("Could not find script for level num: %d", levelNum);
+        return 0;
+    }
 
     lua_pushvalue(L, 2);
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-
-    if (ref == -1) {
-        LOG_LUA_LINE("Level Script Parse: %lld tried to parse using undefined function", levelNum);
-        return;
+    if (ref == LUA_REFNIL) {
+        LOG_LUA_LINE("Failed to convert parameter 2 for function 'level_parse_script': undefined function");
+        return 0;
     }
 
-    preprocess->reference = ref;
-    preprocess->mod = gLuaActiveMod;
-    preprocess->modFile = gLuaActiveModFile;
-
-    void *script = dynos_level_get_script(levelNum);
-    if (script == NULL) {
-        LOG_LUA("Failed to find script: %lld", levelNum);
-        return;
-    }
-    s32 modIndex = dynos_level_get_mod_index(levelNum);
+    // Setup Lua callback
+    sLuaLevelParseScript.callback = ref;
+    sLuaLevelParseScript.mod = gLuaActiveMod;
+    sLuaLevelParseScript.modFile = gLuaActiveModFile;
+    sLuaLevelParseScript.isParsing = true;
 
     // Back up current values
     LevelScript *currLevelScript = gLevelScriptActive;
     s32 currModIndex = gLevelScriptModIndex;
 
     // Parse script
-    gLevelScriptActive = (LevelScript *) script;
-    gLevelScriptModIndex = modIndex;
-    dynos_level_parse_script(script, smlua_func_level_script_parse_callback);
+    gLevelScriptActive = (LevelScript *) levelScript;
+    gLevelScriptModIndex = dynos_level_get_mod_index(levelNum);
+    dynos_level_parse_script(levelScript, smlua_func_level_parse_script_callback);
 
     // Restore current values
     gLevelScriptActive = currLevelScript;
     gLevelScriptModIndex = currModIndex;
+
+    // Cleanup Lua callback
+    luaL_unref(L, LUA_REGISTRYINDEX, ref);
+    sLuaLevelParseScript.isParsing = false;
+
+    return 1;
+}
+
+int smlua_func_level_script_parse(lua_State* L) {
+    sLuaLevelParseScript.isLegacyFunc = true;
+    int res = smlua_func_level_parse_script(L);
+    sLuaLevelParseScript.isLegacyFunc = false;
+    return res;
 }
 
   ///////////////////////
@@ -732,9 +1211,15 @@ static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
         int indexKey = lua_gettop(L) - 1;
         int indexValue = lua_gettop(L) - 0;
 
-        s32 key = smlua_to_integer(L, indexKey);
+        lua_Integer key = smlua_to_integer(L, indexKey);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA("smlua_to_u16_list: Failed to convert table key");
+            free(values);
+            return 0;
+        }
+
+        if (key < 1 || key > *length) {
+            LOG_LUA("smlua_to_u16_list: Table key out of bounds: " LUA_INTEGER_FMT, key);
             free(values);
             return 0;
         }
@@ -806,6 +1291,13 @@ int smlua_func_log_to_console(lua_State* L) {
     }
 
     djui_console_message_create(message, level);
+    char* colorCode;
+    switch (level) {
+        case CONSOLE_MESSAGE_WARNING: colorCode = "\x1b[33m"; break;
+        case CONSOLE_MESSAGE_ERROR:   colorCode = "\x1b[31m"; break;
+        default:                      colorCode = "\x1b[0m"; break;
+    }
+    log_to_terminal("%s%s\x1b[0m\n", colorCode, message);
 
     return 1;
 }
@@ -815,10 +1307,6 @@ int smlua_func_log_to_console(lua_State* L) {
 ////////////////////
 
 int smlua_func_add_scroll_target(lua_State* L) {
-    if (gLuaLoadingMod == NULL) {
-        LOG_LUA_LINE("add_scroll_target() can only be called on load.");
-        return 0;
-    }
 
     // add_scroll_target used to require offset and size of the vertex buffer to be used
     int paramCount = lua_gettop(L);
@@ -1009,77 +1497,6 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
-  /////////
- // hud //
-/////////
-
-
-int smlua_func_djui_hud_print_text(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 4 && top != 5) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_print_text", 4, top);
-        return 0;
-    }
-
-    const char* message = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_print_text"); return 0; }
-    f32 x = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_print_text"); return 0; }
-    f32 y = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_print_text"); return 0; }
-    f32 scaleX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_print_text"); return 0; }
-    f32 scaleY = top == 5 ? smlua_to_number(L, 5) : scaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_print_text"); return 0; }
-
-    djui_hud_print_text(message, x, y, scaleX, scaleY);
-
-    return 1;
-}
-
-int smlua_func_djui_hud_print_text_interpolated(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 7 && top != 9) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_hud_print_text_interpolated", 7, top);
-        return 0;
-    }
-
-    const char* message = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevX = smlua_to_number(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevY = smlua_to_number(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevScaleX = smlua_to_number(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_print_text_interpolated"); return 0; }
-    f32 prevScaleY = top == 9 ? smlua_to_number(L, 5) : prevScaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_print_text_interpolated"); return 0; }
-    f32 x = top == 9 ? smlua_to_number(L, 6) : smlua_to_number(L, 5); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_print_text_interpolated"); return 0; }
-    f32 y = top == 9 ? smlua_to_number(L, 7) : smlua_to_number(L, 6); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "djui_hud_print_text_interpolated"); return 0; }
-    f32 scaleX = top == 9 ? smlua_to_number(L, 8) : smlua_to_number(L, 7); // Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "djui_hud_print_text_interpolated"); return 0; }
-    f32 scaleY = top == 9 ? smlua_to_number(L, 9) : scaleX; // Copy Scale + Backwards Compatibility
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 9, "djui_hud_print_text_interpolated"); return 0; }
-
-    djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY);
-
-    return 1;
-}
-
-// compatibility band-aid
-int smlua_func_return_self(lua_State* L) {
-    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
-
-    lua_pushvalue(L, 1);
-    return 1;
-}
-
   //////////
  // bind //
 //////////
@@ -1088,6 +1505,7 @@ void smlua_bind_functions(void) {
     lua_State* L = gLuaState;
 
     // misc
+    smlua_bind_function(L, "print", smlua_func_print);
     smlua_bind_function(L, "table_copy", smlua_func_table_copy);
     smlua_bind_function(L, "table_deepcopy", smlua_func_table_deepcopy);
     smlua_bind_function(L, "init_mario_after_warp", smlua_func_init_mario_after_warp);
@@ -1103,7 +1521,8 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
     smlua_bind_function(L, "texture_override_set", smlua_func_texture_override_set);
     smlua_bind_function(L, "texture_override_reset", smlua_func_texture_override_reset);
-    smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse);
+    smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse); // deprecated
+    smlua_bind_function(L, "level_parse_script", smlua_func_level_parse_script);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
@@ -1111,7 +1530,4 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
-    smlua_bind_function(L, "djui_hud_print_text", smlua_func_djui_hud_print_text);
-    smlua_bind_function(L, "djui_hud_print_text_interpolated", smlua_func_djui_hud_print_text_interpolated);
-    smlua_bind_function(L, "return_self", smlua_func_return_self); // compatibility band-aid
 }

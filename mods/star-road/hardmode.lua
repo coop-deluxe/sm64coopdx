@@ -15,7 +15,7 @@ function mario_update_hardmode(m)
             frameCounter = 0
             save_file_set_using_backup_slot(gGlobalSyncTable.hardMode)
             save_file_reload(1)
-            djui_popup_create("\\#ff0000\\HARD MODE\\#dcdcdc\\ Activated", 1)
+            djui_popup_create("\\#f00\\HARD MODE\\#\\ Activated", 1)
             play_sound(SOUND_MENU_MARIO_CASTLE_WARP + 1 << 0, { x = 0, y = 0, z = 0 })
         end
         frameCounter = frameCounter - 1
@@ -26,7 +26,7 @@ function mario_update_hardmode(m)
     if not seenPopup and not network_is_server() then
         save_file_set_using_backup_slot(gGlobalSyncTable.hardMode)
         save_file_reload(1)
-        djui_popup_create("You have joined a \\#ff0000\\HARD MODE\\#dcdcdc\\ lobby.", 3)
+        djui_popup_create("You have joined a \\#f00\\HARD MODE\\#\\ lobby.", 3)
         play_sound(SOUND_MENU_MARIO_CASTLE_WARP + 1 << 0, { x = 0, y = 0, z = 0 })
         seenPopup = true
     end
@@ -79,7 +79,7 @@ function hard_mode_menu(_, value)
     gGlobalSyncTable.hardMode = value
     save_file_set_using_backup_slot(gGlobalSyncTable.hardMode)
     save_file_reload(1)
-    djui_popup_create(value and "\\#ff0000\\HARD MODE\\#dcdcdc\\ enabled." or "\\#ff0000\\HARD MODE\\#dcdcdc\\ disabled.", 1)
+    djui_popup_create("\\#f00\\HARD MODE\\#\\ " .. (value and "enabled." or "disabled."), 1)
     play_sound(SOUND_MENU_MARIO_CASTLE_WARP, { x = 0, y = 0, z = 0 })
     warp_to_start_level()
 end

@@ -51,6 +51,7 @@ struct LuaObjectField {
             u16 lot;
             u16 count;
             u32 size;
+            bool cArray; // if true, array starts at index 0
         };
         const char* function;
         struct {

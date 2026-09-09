@@ -109,6 +109,7 @@ extern bool gNetworkAreaLoaded;
 extern bool gNetworkAreaSyncing;
 extern u32 gNetworkAreaTimer;
 extern u32 gNetworkAreaTimerClock;
+extern u32 gNetworkAreaRandomSeed;
 extern void* gNetworkServerAddr;
 extern struct ServerSettings gServerSettings;
 extern struct NametagsSettings gNametagsSettings;

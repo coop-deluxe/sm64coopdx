@@ -15,5 +15,6 @@ void spawn_macro_objects(s16 areaIndex, s16 *macroObjList);
 void spawn_macro_objects_hardcoded(s16 areaIndex, s16 *macroObjList);
 void spawn_special_objects(s16 areaIndex, s16 **specialObjList);
 u32 get_special_objects_size(s16 *data);
+s32 get_special_object_preset_index(u8 presetID);
 
 #endif // MACRO_SPECIAL_OBJECTS_H

@@ -299,7 +299,7 @@ u8 wiggler_act_jumped_on_continue_dialog(void) { return o->oAction == WIGGLER_AC
 static void wiggler_act_jumped_on(void) {
     struct MarioState* marioState = nearest_mario_state_to_object(o);
 
-    // Text to show on first, second, and third attack.
+    // Text to show when jumped on at 1, 2 and 3 health.
     enum DialogId* attackText[3] = {
         &gBehaviorValues.dialogs.WigglerAttack1Dialog,
         &gBehaviorValues.dialogs.WigglerAttack2Dialog,

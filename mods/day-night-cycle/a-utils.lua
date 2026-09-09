@@ -43,8 +43,8 @@ end
 --- @param value boolean
 --- Returns an on or off string depending on value
 function on_or_off(value)
-    if value then return "\\#00ff00\\ON" end
-    return "\\#ff0000\\OFF"
+    if value then return "\\#0f0\\ON" end
+    return "\\#f00\\OFF"
 end
 
 --- @param a number

@@ -1,5 +1,5 @@
 -- name: Lighting Engine Demo
--- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#dcdcdc\\Open the mod menu in the pause menu to see what you can do.
+-- description: Lighting Engine Demo\nBy \\#ec7731\\Agent X\n\n\\#\\Open the mod menu in the pause menu to see what you can do.
 
 flashlightColor = { 255, 255, 200 }
 
@@ -43,7 +43,13 @@ end
 
 
 local function on_set_flashlight_color(index, value)
-    flashlightColor[index + 1] = value
+    if index == indexFlashlightRed then
+        flashlightColor[1] = value
+    elseif index == indexFlashlightGreen then
+        flashlightColor[2] = value
+    elseif index == indexFlashlightBlue then
+        flashlightColor[3] = value
+    end
 end
 
 set_override_skybox(BACKGROUND_HAUNTED)
@@ -56,8 +62,8 @@ djui_popup_create("Use Left D-Pad to turn on the flashlight.", 2)
 hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 
-hook_mod_menu_slider("Flashlight Red", flashlightColor[1], 0, 255, on_set_flashlight_color)
-hook_mod_menu_slider("Flashlight Green", flashlightColor[2], 0, 255, on_set_flashlight_color)
-hook_mod_menu_slider("Flashlight Blue", flashlightColor[3], 0, 255, on_set_flashlight_color)
+indexFlashlightRed = hook_mod_menu_slider("Flashlight Red", flashlightColor[1], 0, 255, on_set_flashlight_color)
+indexFlashlightGreen = hook_mod_menu_slider("Flashlight Green", flashlightColor[2], 0, 255, on_set_flashlight_color)
+indexFlashlightBlue = hook_mod_menu_slider("Flashlight Blue", flashlightColor[3], 0, 255, on_set_flashlight_color)
 hook_mod_menu_button("Warp to Black Mesa", function() warp_to_level(LEVEL_HL, 1, 0) end)
 hook_mod_menu_button("Warp to Sunset Canals", function() warp_to_level(LEVEL_CANALS, 1, 0) end)

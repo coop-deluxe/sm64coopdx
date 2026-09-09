@@ -1,9 +1,11 @@
 #include <PR/ultratypes.h>
 
+#include "level_select_menu.h"
 #include "audio/external.h"
 #include "engine/math_util.h"
 #include "game/area.h"
 #include "game/game_init.h"
+#include "game/hardcoded.h"
 #include "game/level_update.h"
 #include "game/main.h"
 #include "game/memory.h"
@@ -88,8 +90,8 @@ extern int gPressedStart;
 
 int start_demo(int timer)
 {
-	gCurrDemoInput = NULL;
-	gPressedStart = 0;
+    gCurrDemoInput = NULL;
+    gPressedStart = 0;
     // start the mario demo animation for the demo list.
     //func_80278AD4(&gDemo, gDemoInputListID_2);
 
@@ -172,7 +174,7 @@ s16 level_select_input_loop(void) {
 }
 
 s32 intro_default(void) {
-    s32 sp1C = 0;
+    s32 result = 0;
 
 #ifndef VERSION_JP
     if (D_U_801A7C34 == 1) {
@@ -192,16 +194,22 @@ s32 intro_default(void) {
         queue_rumble_data(60, 70);
         queue_rumble_decay(1);
 #endif
-        sp1C = 100 + gDebugLevelSelect;
+        if (gDebugLevelSelect) {
+            result = LEVEL_INTRO_GOTO_DEBUG_LEVEL_SELECT;
+        } else if (gLevelValues.skipFileSelect) {
+            result = LEVEL_INTRO_GOTO_MAIN_SCRIPTS;
+        } else {
+            result = LEVEL_INTRO_GOTO_FILE_SELECT;
+        }
 #ifndef VERSION_JP
         D_U_801A7C34 = 1;
 #endif
     }
-    return run_press_start_demo_timer(sp1C);
+    return run_press_start_demo_timer(result);
 }
 
 s32 intro_game_over(void) {
-    s32 sp1C = 0;
+    s32 result = 0;
 
 #ifndef VERSION_JP
     if (gameOverNotPlayed == 1) {
@@ -218,17 +226,32 @@ s32 intro_game_over(void) {
         queue_rumble_data(60, 70);
         queue_rumble_decay(1);
 #endif
-        sp1C = 100 + gDebugLevelSelect;
+        if (gDebugLevelSelect) {
+            result = LEVEL_INTRO_GOTO_DEBUG_LEVEL_SELECT;
+        } else if (gLevelValues.skipFileSelect) {
+            result = LEVEL_INTRO_GOTO_MAIN_SCRIPTS;
+        } else {
+            result = LEVEL_INTRO_GOTO_FILE_SELECT;
+        }
 #ifndef VERSION_JP
         gameOverNotPlayed = 1;
 #endif
     }
-    return run_press_start_demo_timer(sp1C);
+    return run_press_start_demo_timer(result);
 }
 
 s32 intro_play_its_a_me_mario(void) {
     set_background_music(0, SEQ_SOUND_PLAYER, 0);
     play_sound(SOUND_MENU_COIN_ITS_A_ME_MARIO, gGlobalSoundSource);
+    if (gDebugLevelSelect) {
+        return LEVEL_INTRO_GOTO_DEBUG_LEVEL_SELECT;
+    }
+    if (gLevelValues.skipGoddard) {
+        if (gLevelValues.skipFileSelect) {
+            return LEVEL_INTRO_GOTO_MAIN_SCRIPTS;
+        }
+        return LEVEL_INTRO_GOTO_FILE_SELECT;
+    }
     return 1;
 }
 

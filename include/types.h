@@ -8,6 +8,7 @@
 #include "macros.h"
 #include "pc/network/version.h"
 #include "pc/platform.h"
+#include "pc/lua/smlua_autogen.h"
 
 struct Controller
 {
@@ -417,8 +418,9 @@ struct MarioBodyState
     Vec3f torsoPos;
     Vec3f heldObjLastPosition; /// also known as HOLP
 
-    Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
-    Vec3s animPartsRot[MARIO_ANIM_PART_MAX];
+    C_ARRAY Vec3f animPartsPos[MARIO_ANIM_PART_MAX];
+    C_ARRAY Vec3s animPartsRot[MARIO_ANIM_PART_MAX];
+    C_ARRAY Mat4 animPartsMtx[MARIO_ANIM_PART_MAX];
     u32 currAnimPart;
 
     u32 updateTorsoTime;

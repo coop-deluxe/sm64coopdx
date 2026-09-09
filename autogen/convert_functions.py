@@ -20,6 +20,10 @@ parameter_keywords = ["VEC_OUT", "RET", "INOUT", "OPTIONAL"]
 out_filename = 'src/pc/lua/smlua_functions_autogen.c'
 out_filename_docs = 'docs/lua/functions%s.md'
 out_filename_defs = 'autogen/lua_definitions/functions.lua'
+manually_written_functions_filename = 'autogen/lua_definitions/manual.lua'
+enums_filename = 'autogen/lua_definitions/constants.lua'
+hooks_filename = 'autogen/lua_definitions/hooks.lua'
+out_filename_hooks = 'docs/lua/guides/hooks.md'
 
 ###########################################################
 
@@ -42,14 +46,10 @@ $[BINDS]
 
 ###########################################################
 
-vec_type_before = """
-    %s $[IDENTIFIER];
-    smlua_get_%s($[IDENTIFIER], $[INDEX]);
-"""
+vec_type_before = "    %s $[IDENTIFIER]; smlua_get_%s($[IDENTIFIER], $[INDEX]);\n"
+vec_type_after  = "    smlua_push_%s($[IDENTIFIER], $[INDEX]);\n"
 
-vec_type_after = """
-    smlua_push_%s($[IDENTIFIER], $[INDEX]);
-"""
+vec_type_check  = "smlua_check_%s(%i)"
 
 #
 # Special cases for sound functions
@@ -62,595 +62,7 @@ SOUND_FUNCTIONS = [
     "stop_sounds_from_source",
 ]
 
-vec3f_sound_before = """
-    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer();
-    smlua_get_vec3f($[IDENTIFIER], $[INDEX]);
-"""
-
-###########################################################
-
-manual_index_documentation = """
-- manually written functions
-   - [define_custom_obj_fields](#define_custom_obj_fields)
-   - [network_init_object](#network_init_object)
-   - [network_send_object](#network_send_object)
-   - [network_send_to](#network_send_to)
-   - [network_send](#network_send)
-   - [get_texture_info](#get_texture_info)
-   - [texture_override_set](#texture_override_set)
-   - [texture_override_reset](#texture_override_reset)
-   - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
-   - [level_script_parse](#level_script_parse)
-   - [log_to_console](#log_to_console)
-   - [add_scroll_target](#add_scroll_target)
-   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
-   - [cast_graph_node](#cast_graph_node)
-   - [get_uncolored_string](#get_uncolored_string)
-   - [gfx_set_command](#gfx_set_command)
-   - [djui_hud_print_text](#djui_hud_print_text)
-   - [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-<br />
-
-"""
-manual_documentation = """
----
-# manually written functions
-
-## [define_custom_obj_fields](#define_custom_obj_fields)
-
-Defines a custom set of overlapping object fields.
-
-The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
-If, for a field, `global` is `true`, the field will be defined for all mods.
-
-### Lua Example
-```lua
-define_custom_obj_fields({
-    oCustomField1 = 'u32',
-    oCustomField2 = 's32',
-    oCustomField3 = 'f32',
-    oCustomField4 = { type = 'u32', global = true },
-    oCustomField5 = { type = 's32', global = true },
-    oCustomField6 = { type = 'f32', global = true },
-})
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| fieldTable | `Lua Table` |
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-## [network_init_object](#network_init_object)
-
-Enables synchronization on an object.
-
-- Setting `standardSync` to `true` will automatically synchronize the object at a rate that is determined based on player distance. The commonly used object fields will be automatically synchronized.
-- Setting `standardSync` to `false` will not automatically synchronize the object, or add commonly used object fields. The mod must manually call `network_send_object()` when fields have changed.
-
-The `fieldTable` parameter can be `nil`, or a list of object fields.
-
-### Lua Example
-`network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField3' })`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| object | [Object](structs.md#Object) |
-| standardSync | `bool` |
-| fieldTable | `Lua Table` |
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_send_object](#network_send_object)
-
-Sends a packet that synchronizes an object. This does not need to be called when `standardSync` is enabled.
-
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
-
-### Lua Example
-`network_send_object(obj, false)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| object | [Object](structs.md#Object) |
-| reliable | `bool` |
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_send_to](#network_send_to)
-
-Sends a packet to a particular player (using their local index) containing whatever data you want.
-
-`dataTable` can only contain strings, integers, numbers, booleans, and nil
-
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
-
-### Lua Example
-`network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10})`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| localPlayerIndex | `integer` |
-| reliable | `bool` |
-| dataTable | `table` |
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [network_send](#network_send)
-
-Sends a packet to all players containing whatever data you want.
-
-`dataTable` can only contain strings, integers, numbers, booleans, and nil
-
-The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
-
-### Lua Example
-`network_send(reliable, { data1 = 'hello', data2 = 10})`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| reliable | `bool` |
-| dataTable | `table` |
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_texture_info](#get_texture_info)
-
-Retrieves a texture by name.
-
-### Lua Example
-`get_texture_info(textureName)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-
-### Returns
-- [TextureInfo](structs.md#TextureInfo)
-
-### C Prototype
-`N/A`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [texture_override_reset](#texture_override_reset)
-
-Resets an overridden texture.
-
-### Lua Example
-`texture_override_reset("outside_09004000")`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void dynos_texture_override_reset(const char* textureName);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [texture_override_set](#texture_override_set)
-
-Overrides a texture with a custom `TextureInfo`.
-
-### Lua Example
-`texture_override_set("outside_09004000", overrideTexInfo)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-| overrideTexInfo | [TextureInfo](structs.md#TextureInfo) |
-
-### Returns
-- None
-
-### C Prototype
-`void dynos_texture_override_set(const char* textureName, struct TextureInfo* overrideTexInfo);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
-
-Register a new Lua animation.
-
-### Lua Example
-`smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| flags | `integer` |
-| animYTransDivisor | `integer` |
-| startFrame | `integer` |
-| loopStart | `integer` |
-| loopEnd | `integer` |
-| values | `table` |
-| index | `table` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, s16 *values, u32 valuesLength, u16 *index, u32 indexLength);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [level_script_parse](#level_script_parse)
-
-### Lua Example
-`level_script_parse(LEVEL_BOB, func)`
-
-Parses a level script and passes area index, behavior data, macro behavior IDs and macro behavior arguments to a function.
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| levelNum | `LevelNum` |
-| func | `function` |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_func_level_script_parse(lua_State* L);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [log_to_console](#log_to_console)
-
-Logs a message to the in-game console.
-
-### Lua Example
-`log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| level (optional) | `ConsoleMessageLevel` |
-
-### Returns
-- None
-
-### C Prototype
-`void log_to_console(const char* message, enum ConsoleMessageLevel level);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [add_scroll_target](#add_scroll_target)
-
-Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
-
-### Lua Example
-`add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| name | `string` |
-
-### Returns
-- None
-
-### C Prototype
-`void dynos_add_scroll_target(u32 index, const char *name, u32 offset, u32 size);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
-
-Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
-
-### Lua Example
-`collision_find_surface_on_ray(0, 0, 0, 50, 100, 50)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| startX | `number` |
-| startY | `number` |
-| startZ | `number` |
-| dirX | `number` |
-| dirY | `number` |
-| dirZ | `number` |
-| precision (optional) | `number` |
-
-### Returns
-- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
-
-### C Prototype
-`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [set_exclamation_box_contents](#set_exclamation_box_contents)
-
-Sets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
-* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-* `unused`: Optional; unused by vanilla.
-* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
-
-### Lua Example
-```lua
-set_exclamation_box_contents({
-   {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
-   {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
-   {id = 2, firsteByte = model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
-   {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
-})
-```
-
-### Parameters
-There exists only 1 parameter to this function which is the main table. However, each subtable has 5 different keys that could be accessed.
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| unused (Optional) | `integer` |
-| firstByte (Optional) | `integer` |
-| model | [ModelExtendedId](#ModelExtendedId) |
-| behavior | [BehaviorId](#BehaviorId) |
-
-### Returns
-- None
-
-### C Prototype
-N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_exclamation_box_contents](#get_exclamation_box_contents)
-
-Gets the contents that the exclamation box spawns. A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`.
-* `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-* `unused`: Optional; unused by vanilla.
-* `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-* `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-* `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
-
-### Lua Example
-```lua
-local contents = get_exclamation_box_contents()
-for index, content in pairs(contents) do -- Enter the main table
-   djui_chat_message_create("Table index " .. index) -- Print the current table index
-      for key, value in pairs(content) do
-         djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
-      end
-   djui_chat_message_create("---------------------------------") -- Separator
-end
-```
-
-### Parameters
-- N/A
-
-### Returns
-The function itself does not return every key/value pair. Instead it returns the main table which holds all the subtables that hold each key/value pair.
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| unused (Optional) | `integer` |
-| firstByte (Optional) | `integer` |
-| model | [ModelExtendedId](#ModelExtendedId) |
-| behavior | [BehaviorId](#BehaviorId) |
-
-### C Prototype
-N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [cast_graph_node](#cast_graph_node)
-
-Returns the specific GraphNode(...) the node is part of. Basically the reverse of `.node` or `.fnNode`.
-
-### Lua Example
-```lua
-local marioGfx = gMarioStates[0].marioObj.header.gfx -- GraphNodeObject
-local node = marioGfx.node -- GraphNode
-
-print(marioGfx == cast_graph_node(node)) -- true
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| node  | [GraphNode](structs.md#GraphNode) |
-
-### Returns
-- GraphNode(...)
-
-### C Prototype
-N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_uncolored_string](#get_uncolored_string)
-
-Removes color codes from a string.
-
-### Lua Example
-```lua
-print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| str   | 'string' |
-
-### Returns
-- `string`
-
-### C Prototype
-N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [gfx_set_command](#gfx_set_command)
-
-Sets a display list command on the display list given.
-
-If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
-
-The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
-
-The following specifiers are allowed:
-- `%i` for an `integer` parameter
-- `%s` for a `string` parameter
-- `%v` for a `Vtx` parameter
-- `%t` for a `Texture` parameter
-- `%g` for a `Gfx` parameter
-
-### Lua Examples
-
-Plain string:
-```lua
-gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
-```
-
-With parameter specifiers:
-```lua
-r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
-gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| gfx   | [Gfx](structs.md#Gfx) |
-| command | `string` |
-| parameters... | any of `integer`, `string`, `Gfx`, `Texture`, `Vtx` |
-
-### Returns
-- None
-
-### C Prototype
-N/A
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text](#djui_hud_print_text)
-
-### Description
-Prints DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text(message, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
-
-### Description
-Prints interpolated DJUI HUD text onto the screen
-
-### Lua Example
-`djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| message | `string` |
-| prevX | `number` |
-| prevY | `number` |
-| prevScaleX | `number` |
-| prevScaleY | `number` |
-| x | `number` |
-| y | `number` |
-| scaleX | `number` |
-| scaleY | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void djui_hud_print_text_interpolated(const char* message, f32 prevX, f32 prevY, f32 prevScaleX, f32 prevScaleY, f32 x, f32 y, f32 scaleX, f32 scaleY);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-"""
+vec3f_sound_before = "    f32 *$[IDENTIFIER] = smlua_get_vec3f_from_buffer(); smlua_get_vec3f($[IDENTIFIER], $[INDEX]);\n"
 
 ############################################################################
 
@@ -766,6 +178,27 @@ def build_param_after(param, i):
     else:
         return ''
 
+def build_param_check(param, i):
+    ptype = param['type']
+
+    if "struct TextureInfo" in ptype and "*" in ptype:
+        return 'smlua_is_cobject(L, %d, LOT_TEXTUREINFO);\n' % (i)
+
+    if ptype in VEC_TYPES \
+      or ptype == 'LuaTable':    return 'lua_istable(L, %d)'    % (i)
+    elif ptype == 'bool':        return 'lua_isboolean(L, %d)'  % (i)
+    elif ptype in integer_types: return 'lua_isinteger(L, %d)'  % (i)
+    elif ptype in number_types:  return 'lua_isnumber(L, %d)'   % (i)
+    elif ptype == 'const char*' \
+      or ptype == 'ByteString':  return 'lua_isstring(L, %d)'   % (i)
+    elif ptype == 'LuaFunction': return 'lua_isfunction(L, %d)' % (i)
+    elif translate_type_to_lot(ptype) == 'LOT_POINTER':
+        lvt = translate_type_to_lvt(ptype)
+        return 'smlua_is_cpointer(L, %d, %s)' % (i, lvt)
+    else:
+        lot = translate_type_to_lot(ptype)
+        return 'smlua_is_cobject(L, %d, %s)' % (i, lot)
+
 def build_return_value(id, rtype):
     lot = translate_type_to_lot(rtype)
 
@@ -824,7 +257,88 @@ def split_function_parameters_and_returns(function):
             fparams.append(param)
     return fparams, freturns
 
+def get_params_bounds(params):
+    return len(params), len([param for param in params if 'OPTIONAL' not in param])
+
+def build_overloaded_function(function, do_extern):
+    s = ''
+    fid = function['identifier']
+    overload = function['overload']
+    oblocks = []
+    bounds = {}
+    for func in overload:
+        func['filename'] = function['filename']
+        built = build_function(func, do_extern)
+        if func['implemented']: function['implemented'] = True
+
+        built = built.split('\n\n')[2:-1]
+        built[-1] = built[-1][:-2]
+        if len(built) == 3:
+            built[0] = built[0].replace(func['identifier'], function['identifier'])
+        built = '\n\n'.join(built)
+
+        fparams, freturns = split_function_parameters_and_returns(func)
+        params_max, params_min = get_params_bounds(fparams)
+
+        bounds["top != %i" % params_max if params_min == params_max else "(top < %d || top > %d)" % (params_min, params_max)] \
+             = "%i"        % params_max if params_min == params_max else "between %d and %d"      % (params_min, params_max)
+
+        oblocks.append({'params': fparams, 'lines': built, 'count': params_min, 'max': params_max})
+
+    s += """int smlua_func_%s(lua_State* L) {
+    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);
+    if (%s) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %s, Received %%u", top);
+        return 0;
+    }\n\n""" % (fid, ' && '.join(bounds.keys()), fid, ' or '.join(bounds.values()))
+
+    def add_block(block, i, unique=False):
+        if block not in oblocks: return
+
+        nonlocal s
+        first = len(oblocks) == len(overload)
+        last = len(oblocks) == 1
+        s += '    ' if first else ' else '
+        if not last:
+            if unique: s += 'if (top == %i) ' % i
+            else: s += 'if (%s) ' % build_param_check(block['params'][i - 1], i)
+        s += '{\n'
+        for line in block['lines'].splitlines():
+            s += '    ' + line + '\n'
+        s = s[:-1] + '\n    }'
+        oblocks.remove(block)
+
+    i = 0
+    while len(oblocks) > 0:
+        candidates = []
+        ptypes = {}
+        for block in oblocks:
+            if i >= block['max']: continue
+            if i + 1 == block['count'] and block['count'] == block['max']:
+                candidates.append(block)
+
+            ptype = block['params'][i]['type']
+            if ptypes.get(ptype) is None: ptypes[ptype] = []
+            ptypes[ptype].append(block)
+
+        for blocks in ptypes.values():
+            if len(blocks) == 1:
+                for block in blocks: add_block(block, i + 1)
+
+        if len(candidates) == 1:
+            add_block(candidates[0], i + 1, True)
+
+        i += 1
+
+    s += '\n}\n'
+
+    return s + '\n'
+
 def build_function(function, do_extern):
+    if function.get('overload') is not None:
+        return build_overloaded_function(function, do_extern)
+
     s = ''
     fid = function['identifier']
 
@@ -833,7 +347,7 @@ def build_function(function, do_extern):
 
     fparams, freturns = split_function_parameters_and_returns(function)
 
-    s += 'int smlua_func_%s(lua_State* L) {\n' % function['identifier']
+    s += 'int smlua_func_%s(lua_State* L) {\n' % fid
 
     # make sure the bhv functions have a current object
     fname = function['filename']
@@ -841,22 +355,22 @@ def build_function(function, do_extern):
         if 'bhv_' in fid and len(fparams) == 0:
             s += '    if (!gCurrentObject) { return 0; }\n'
 
-    params_max = len(fparams)
-    params_min = len([param for param in fparams if 'OPTIONAL' not in param])
+    s += """    if (L == NULL) { return 0; }\n
+    int top = lua_gettop(L);"""
+
+    params_max, params_min = get_params_bounds(fparams)
     if params_min == params_max:
-        s += """    if (L == NULL) { return 0; }\n
-    int top = lua_gettop(L);
+        s += """
     if (top != %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected %%u, Received %%u", "%s", %d, top);
         return 0;
-    }\n\n""" % (params_max, function['identifier'], params_max)
+    }\n\n""" % (params_max, fid, params_max)
     else:
-        s += """    if (L == NULL) { return 0; }\n
-    int top = lua_gettop(L);
+        s += """
     if (top < %d || top > %d) {
         LOG_LUA_LINE("Improper param count for '%%s': Expected between %%u and %%u, Received %%u", "%s", %d, %d, top);
         return 0;
-    }\n\n""" % (params_min, params_max, function['identifier'], params_min, params_max)
+    }\n\n""" % (params_min, params_max, fid, params_min, params_max)
 
     is_interact_func = fid.startswith('interact_') and fname == 'interaction.h'
 
@@ -867,18 +381,18 @@ def build_function(function, do_extern):
             s += "    // interactType skipped so mods can't lie about what interaction it is\n"
         elif 'OPTIONAL' in param:
             sparam = build_param(fid, param, i)
-            param_var, param_value = sparam.split('=')
-            param_type = param_var.replace(pid, '').strip()
-            s += '    %s = (%s) %s;\n' % (param_var.strip(), param_type, "NULL" if '*' in param_type else "0")
+            param_var, param_value = sparam.strip().split(' = ')
+            param_type = param['type']
+            s += '    %s = (%s) %s;\n' % (param_var, param_type, "NULL" if '*' in param_type else "0")
             s += '    if (top >= %d) {\n' % (i)
-            s += '        %s = %s\n' % (pid, param_value.strip())
+            s += '        %s = %s\n' % (pid, param_value)
             s += '        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
             s += '    }\n'
         else:
             s += build_param(fid, param, i)
             s += '    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %%u for function \'%%s\'", %d, "%s"); return 0; }\n' % (i, fid)
         i += 1
-    s += '\n'
+    if params_max > 0: s += '\n'
 
     if freturns:
         for param in freturns:
@@ -906,10 +420,13 @@ def build_function(function, do_extern):
         i += 1
     s += '\n'
 
+    vec_out_count = 0
+
     # To allow chaining vector functions calls, return the table corresponding to the `VEC_OUT` parameter
     if function['type'] in VECP_TYPES:
         for i, param in enumerate(function['params']):
             if 'VEC_OUT' in param:
+                vec_out_count += 1
                 s += '    lua_settop(L, %d);\n' % (i + 1)
                 break
 
@@ -921,7 +438,7 @@ def build_function(function, do_extern):
             s += build_return_value(pid, ptype)
         s += '\n'
 
-    num_returns = max(1, push_value + len(freturns))
+    num_returns = push_value + len(freturns) + vec_out_count
     s += '    return %d;\n}\n' % num_returns
 
     if fid in functions_version_excludes:
@@ -1052,17 +569,30 @@ def process_function(fname, line, description):
 
 def process_functions(fname, file_str, extracted_descriptions):
     functions = []
+    overload_funcs = {}
     for line in file_str.splitlines():
+        overload = None
+        line = line.strip()
+        if line.startswith(cobject_overload_identifier):
+            line = line.split()
+            overload = line[1]
+            line = ' '.join(line[2:])
         if reject_line(line):
             global rejects
             rejects += line + '\n'
             continue
-        line = line.strip()
         description = extracted_descriptions.get(line, [""])
         fn = process_function(fname, line, description)
-        if fn == None:
-            continue
-        functions.append(fn)
+        if fn is None: continue
+
+        if overload is not None:
+            overload_func = overload_funcs.get(overload)
+            if overload_func is None:
+                overload_func = overload_funcs[overload] = { 'identifier': overload, 'overload': [] }
+                functions.append(overload_func)
+            overload_func['overload'].append(fn)
+        else:
+            functions.append(fn)
     return functions
 
 def process_file(fname):
@@ -1131,16 +661,246 @@ def output_fuzz_file():
 
 ############################################################################
 
+manual_function_types = {
+    'boolean':  '`bool`',
+    'integer':  '`integer`',
+    'number':   '`number`',
+    'string':   '`string`',
+    'table':    '`table`',
+    'function': '`function`',
+    'fun':      '`function`',
+    'nil':      '`nil`',
+    'any':      '`any`',
+}
+
+def read_single_type(buffer: str):
+    ptype = ''
+    depth = 0
+    for i, c in enumerate(buffer):
+        if c in '<(':
+            depth += 1
+        elif c in '>)':
+            depth = max(depth - 1, 0)
+        elif depth == 0:
+            if c.isalnum() or c in '_[]':
+                ptype += c
+            else:
+                return ptype, buffer[i:]
+    return ptype, ''
+
+def read_type_and_description(line: str):
+    ptype = ''
+    pdesc = ''
+    is_param = True
+    is_function_return = False
+
+    while line:
+        stype, line = read_single_type(line)
+        if stype:
+            if is_function_return:
+                is_function_return = False
+                continue
+            if is_param:
+                ptype += stype
+                is_param = False
+            else:
+                pdesc = stype + line
+                break
+        elif line[0] == ':':
+            is_function_return = True
+            line = line[1:]
+        elif line[0] == ',':
+            is_function_return = True
+            line = line[1:]
+        elif line[0] == '|':
+            ptype += '|'
+            is_param = True
+            line = line[1:]
+        else:
+            line = line[1:]
+
+    return ptype.strip(), pdesc.strip()
+
+def get_empty_function_definition():
+    return {
+        'identifier': '',
+        'params': [],
+        'returns': [],
+        'description': [],
+        'lua_example': [],
+    }
+
+def read_manually_written_functions(in_filename):
+    with open(in_filename, 'r', encoding='utf-8', newline='\n') as f:
+        lines = f.readlines()
+
+    classes = []
+    functions = []
+    function = get_empty_function_definition()
+    text_type = None
+    for line in lines:
+
+        # Custom table
+        if line.startswith('--- @class'):
+            tokens = [token for token in line.split() if token]
+            classes.append(tokens[2])
+
+        # Parameter
+        if line.startswith('--- @param'):
+            tokens = [token for token in line.split() if token]
+            ptype, pdesc = read_type_and_description(' '.join(tokens[3:]))
+            function['params'].append({
+                'name': tokens[2].strip('?'),
+                'type': ptype,
+                'desc': pdesc,
+                'is_vararg': False,
+            })
+            text_type = 'description'
+
+        # Vararg parameter
+        elif line.startswith('--- @vararg'):
+            tokens = [token for token in line.split() if token]
+            ptype, pdesc = read_type_and_description(' '.join(tokens[2:]))
+            ptokens = pdesc.split() or ['']
+            function['params'].append({
+                'name': ptokens[0],
+                'type': ptype,
+                'desc': " ".join(ptokens[1:]),
+                'is_vararg': True,
+            })
+            text_type = 'description'
+
+        # Return value
+        elif line.startswith('--- @return'):
+            tokens = [token for token in line.split() if token]
+            rtype, rdesc = read_type_and_description(' '.join(tokens[2:]))
+            rtokens = rdesc.split() or ['']
+            function['returns'].append({
+                'name': rtokens[0],
+                'type': rtype,
+                'desc': " ".join(rtokens[1:]),
+            })
+            text_type = 'description'
+
+        # End of function doc
+        elif line.startswith('function '):
+            tokens = [token for token in line.replace('(', ' ').split() if token]
+            function['identifier'] = tokens[1]
+            function['description'] = '\n'.join(function['description']).strip('\n').split('\n')
+            function['lua_example'] = '\n'.join(function['lua_example']).strip('\n').split('\n')
+            functions.append(function)
+            function = get_empty_function_definition()
+            text_type = None
+
+        # Lua example in doc
+        elif line.startswith('--- ### Lua Example'):
+            text_type = 'lua_example'
+
+        # Doc
+        elif line.startswith('---') and text_type:
+            line_desc = line[4:].rstrip()
+            function[text_type].append(line_desc)
+
+        # Anything else
+        else:
+            function = get_empty_function_definition()
+            text_type = None
+
+    return functions, classes
+
+enums_file = ''
+def function_type_is_enum(ptype):
+    global enums_file
+    if not enums_file:
+        with open(get_path(enums_filename), 'r', encoding='utf-8', newline='\n') as f:
+            enums_file = f.read()
+
+    return '@alias {ptype}\n'.format(ptype=ptype) in enums_file
+
+def get_manual_function_type(ptype: str, classes, docs_dir):
+    types = ptype.split('|')
+    converted_types = []
+    for t in types:
+        type_str = ''
+        if t.endswith('[]'):
+            type_str += '`table` of '
+            t = t[:-2]
+        if t in manual_function_types:
+            type_str += manual_function_types[t]
+        elif t in classes:
+            type_str += manual_function_types['table']
+        elif t == 'SyncTable':
+            type_str += '[SyncTable]({docs_dir}/globals.md#gGlobalSyncTable)'.format(docs_dir=docs_dir)
+        elif function_type_is_enum(t):
+            type_str += '[enum {t}]({docs_dir}/constants.md#enum-{t})'.format(t=t, docs_dir=docs_dir)
+        else:
+            type_str += '[{t}]({docs_dir}/structs.md#{t})'.format(t=t, docs_dir=docs_dir)
+        converted_types.append(type_str)
+
+    return ' \\| '.join(converted_types)
+
+def doc_manual_function(function, classes, docs_dir, include_param_desc):
+    fid = function['identifier']
+    s = '\n## [%s](#%s)\n' % (fid, fid)
+
+    s += '\n### Description\n'
+    for line in function['description']:
+        s +=  f'{line}\n'
+
+    s += '\n### Lua Example\n'
+    for line in function['lua_example']:
+        s +=  f'{line}\n'
+
+    s += '\n### Parameters\n'
+    if function['params']:
+        if include_param_desc:
+            s += '| Field | Type | Description |\n'
+            s += '| ----- | ---- | ----------- |\n'
+        else:
+            s += '| Field | Type |\n'
+            s += '| ----- | ---- |\n'
+        for param in function['params']:
+            pname = param['name']
+            ptype = param['type']
+            is_vararg = param['is_vararg']
+            if include_param_desc:
+                s += '| %s%s | %s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, classes, docs_dir), param.get('desc', ''))
+            else:
+                s += '| %s%s | %s |\n' % (pname, ('...' if is_vararg else ''), get_manual_function_type(ptype, classes, docs_dir))
+    else:
+        s += '- None\n'
+
+    s += '\n### Returns\n'
+    if function['returns']:
+        for ret in function['returns']:
+            rname = ret['name']
+            rtype = ret['type']
+            if rname:
+                s += '- %s: %s\n' % (rname, get_manual_function_type(rtype, classes, docs_dir))
+            else:
+                s += '- %s\n' % get_manual_function_type(rtype, classes, docs_dir)
+    else:
+        s += '- None\n'
+
+    s += '\n[:arrow_up_small:](#)\n\n<br />\n'
+
+    return s
+
 def doc_page_link(page_num):
     if page_num == 1:
         return 'functions.md'
     else:
         return 'functions-%d.md' % page_num
 
-def doc_function_index(processed_files):
+def doc_function_index(processed_files, manual_functions):
     s = '# Supported Functions\n'
-    s += manual_index_documentation
-    count = 0
+
+    if manual_functions:
+        s += '\n- manually written functions\n'
+        for function in manual_functions:
+            s += '   - [{identifier}](#{identifier})\n'.format(identifier=function['identifier'])
+        s += '\n<br />\n\n'
+
     for processed_file in processed_files:
         page_num = processed_file['page_num']
         s += '- %s\n' % processed_file['filename']
@@ -1176,7 +936,30 @@ def doc_lua_func_param(param):
     s += ')'
     return s
 
+def doc_overloaded_function(fname, function):
+    s = ''
+    overload = function['overload']
+    skip, cont = 0, 0
+    for i, func in enumerate(overload):
+        for line in doc_function(fname, func).splitlines():
+            if skip > 0: skip -= 1; continue
+            if cont > 0: cont -= 1
+            else: line = line.replace(func['identifier'], function['identifier'])
+
+            if "C Prototype" in line: cont = 1
+            if i+1 != len(overload) and "(#)" in line:
+                s += "---"
+                skip = 2
+                break
+
+            s += line + '\n'
+
+    return s
+
 def doc_function(fname, function):
+    if function.get('overload'):
+        return doc_overloaded_function(fname, function)
+
     if not function['implemented']:
         return ''
 
@@ -1272,7 +1055,13 @@ def doc_files(processed_files):
     s = '## [:rewind: Lua Reference](lua.md)\n\n'
     s += '---\n\n$[FUNCTION_NAV_HERE]\n\n---\n\n'
     s += '$[FUNCTION_INDEX_HERE]'
-    s += manual_documentation
+
+    manual_functions, classes = read_manually_written_functions(get_path(manually_written_functions_filename))
+    if manual_functions:
+        s += '\n---\n# manually written functions\n'
+        for function in manual_functions:
+            s += doc_manual_function(function, classes, ".", False)
+
     for processed_file in processed_files:
         s_file  = '\n---'
         s_file += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
@@ -1296,7 +1085,7 @@ def doc_files(processed_files):
         buffer = pages[pnum]
         page_name = ''
         if pnum == 1:
-            buffer = buffer.replace('$[FUNCTION_INDEX_HERE]', doc_function_index(processed_files))
+            buffer = buffer.replace('$[FUNCTION_INDEX_HERE]', doc_function_index(processed_files, manual_functions))
             page_name = ''
         else:
             page_name = '-%d' % pnum
@@ -1325,7 +1114,17 @@ def doc_files(processed_files):
 
 def_pointers = []
 
+def def_overloaded_function(fname, function):
+    s = ''
+    for func in function['overload']:
+        s += def_function(fname, func).replace(func['identifier'], function['identifier'])
+
+    return s
+
 def def_function(fname, function):
+    if function.get('overload') is not None:
+        return def_overloaded_function(fname, function)
+
     s = ''
     if not function['implemented']:
         return ''
@@ -1394,6 +1193,26 @@ def def_files(processed_files):
 
 ############################################################################
 
+def doc_hooks(in_filename, out_filename):
+    hooks, classes = read_manually_written_functions(in_filename)
+
+    s  = '## [:rewind: Lua Reference](../lua.md)\n\n'
+    s += '# Hooks\n'
+    s += 'Hooks are a way for the game to trigger Lua code, whereas the functions listed in [functions](../functions.md) allow Lua to trigger SM64 code.\n\n'
+
+    if hooks:
+        s += '# Supported Hooks\n'
+        for hook in hooks:
+            s += '- [{identifier}](#{identifier})\n'.format(identifier=hook['identifier'])
+        s += '\n<br />\n'
+        for hook in hooks:
+            s += doc_manual_function(hook, classes, "..", True)
+
+    with open(out_filename, 'w', encoding='utf-8', newline='\n') as out:
+        out.write(s)
+
+############################################################################
+
 def main():
     processed_files = process_files()
 
@@ -1418,6 +1237,8 @@ def main():
 
     doc_files(processed_files)
     def_files(processed_files)
+
+    doc_hooks(get_path(hooks_filename), get_path(out_filename_hooks))
 
     global total_functions
     print(f"Total functions: {total_functions}")

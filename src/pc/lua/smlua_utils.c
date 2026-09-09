@@ -1,6 +1,7 @@
 #include "smlua.h"
 #include "pc/mods/mods.h"
 #include "audio/external.h"
+#include "engine/level_script.h"
 
 u8 gSmLuaConvertSuccess = false;
 
@@ -173,8 +174,12 @@ LuaTable smlua_to_lua_table(lua_State* L, int index) {
     return luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
-bool smlua_is_cobject(lua_State* L, int index, UNUSED u16 lot) {
-    return lua_isuserdata(L, index);
+bool smlua_is_cobject(lua_State* L, int index, u16 lot) {
+    CObject *cobject = luaL_testudata(L, index, "CObject");
+    if (cobject && lot) {
+        return lot == cobject->lot;
+    }
+    return cobject != NULL;
 }
 
 void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
@@ -208,6 +213,14 @@ void* smlua_to_cobject(lua_State* L, int index, u16 lot) {
 
     gSmLuaConvertSuccess = true;
     return cobject->pointer;
+}
+
+bool smlua_is_cpointer(lua_State* L, int index, u16 lvt) {
+    CPointer *cpointer = luaL_testudata(L, index, "CPointer");
+    if (cpointer && lvt) {
+        return lvt == cpointer->lvt;
+    }
+    return cpointer != NULL;
 }
 
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt) {
@@ -266,7 +279,7 @@ struct LSTNetworkType smlua_to_lnt(lua_State* L, int index) {
     if (valueType == LUA_TSTRING) {
         lnt.type = LST_NETWORK_TYPE_STRING;
         lnt.value.string = (char*)lua_tostring(L, index);
-        if (lnt.value.string == NULL || strlen(lnt.value.string) > 256) {
+        if (lnt.value.string == NULL) {
             LOG_LUA_LINE("smlua_to_lnt on invalid string value: '%s'", (lnt.value.string == NULL) ? "<null>" : lnt.value.string);
             gSmLuaConvertSuccess = false;
             return lnt;
@@ -340,12 +353,13 @@ bool packet_write_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
         }
 
         case LST_NETWORK_TYPE_STRING: {
-            u16 valueLength = strlen(lnt->value.string);
-            if (valueLength < 1 || valueLength > 256) {
+            u64 valueLength = strlen(lnt->value.string);
+            if (valueLength > PACKET_LENGTH) {
                 LOG_ERROR("attempted to send lua variable with invalid string length: %u", valueLength);
                 return false;
             }
-            packet_write(p, &valueLength, sizeof(u16));
+            u16 lengthToSend = (u16)valueLength;
+            packet_write(p, &lengthToSend, sizeof(u16));
             packet_write(p, lnt->value.string, valueLength * sizeof(u8));
             return true;
         }
@@ -382,7 +396,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt) {
         case LST_NETWORK_TYPE_STRING: {
             u16 valueLength = 0;
             packet_read(p, &valueLength, sizeof(u16));
-            if (valueLength < 1 || valueLength > 256) {
+            if (valueLength > PACKET_LENGTH) {
                 LOG_ERROR("received lua variable with invalid value length: %d", valueLength);
                 return false;
             }
@@ -480,6 +494,11 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     LUA_STACK_CHECK_END(L);
 
     return cpointer;
+}
+
+void smlua_push_boolean_field(int index, const char* name, bool val) {
+    lua_pushboolean(gLuaState, val);
+    lua_setfield(gLuaState, index, name);
 }
 
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
@@ -716,6 +735,36 @@ LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
     return value;
 }
 
+bool smlua_find_lua_param(uintptr_t *param, uintptr_t value, u32 luaParams, u32 luaParamFlag) {
+    *param = value;
+    if (luaParams & luaParamFlag) {
+        if (gLevelScriptModIndex == -1) {
+            LOG_ERROR("smlua_find_lua_param cannot be used for vanilla level scripts");
+            return false;
+        }
+
+        const char *paramStr = dynos_level_get_token(*param);
+        if (!paramStr) {
+            LOG_ERROR("smlua_find_lua_param: Invalid token index: %u", (u32) *param);
+            return false;
+        }
+
+        gSmLuaConvertSuccess = true;
+        *param = smlua_get_integer_mod_variable(gLevelScriptModIndex, paramStr);
+
+        if (!gSmLuaConvertSuccess) {
+            gSmLuaConvertSuccess = true;
+            *param = smlua_get_any_integer_mod_variable(paramStr);
+        }
+
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_find_lua_param: Could not find parameter '%s'", paramStr);
+            return false;
+        }
+    }
+    return true;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 const char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {
@@ -744,33 +793,33 @@ const char* smlua_lnt_to_str(struct LSTNetworkType* lnt) {
 void smlua_dump_stack(void) {
     lua_State* L = gLuaState;
     int top = lua_gettop(L);
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
     for (int i = 1; i <= top; i++) {
-        printf("%d\t%s\t", i, luaL_typename(L, i));
+        log_to_terminal("%d\t%s\t", i, luaL_typename(L, i));
         switch (lua_type(L, i)) {
         case LUA_TNUMBER:
-            printf("%g\n", lua_tonumber(L, i));
+            log_to_terminal("%g\n", lua_tonumber(L, i));
             break;
         case LUA_TSTRING:
-            printf("%s\n", lua_tostring(L, i));
+            log_to_terminal("%s\n", lua_tostring(L, i));
             break;
         case LUA_TBOOLEAN:
-            printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
+            log_to_terminal("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
             break;
         case LUA_TNIL:
-            printf("%s\n", "nil");
+            log_to_terminal("%s\n", "nil");
             break;
         default:
-            printf("%p\n", lua_topointer(L, i));
+            log_to_terminal("%p\n", lua_topointer(L, i));
             break;
         }
     }
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
 }
 
 void smlua_dump_globals(void) {
     lua_State* L = gLuaState;
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
     lua_pushglobaltable(L);
 
     // table is in the stack at index 't'
@@ -778,12 +827,12 @@ void smlua_dump_globals(void) {
     while (lua_next(L, -2) != 0) {
         // uses 'key' (at index -2) and 'value' (at index -1)
         if (lua_type(L, -2) == LUA_TSTRING) {
-            printf("%s - %s\n",
+            log_to_terminal("%s - %s\n",
                 lua_tostring(L, -2),
                 lua_typename(L, lua_type(L, -1)));
         }
         else {
-            printf("%s - %s\n",
+            log_to_terminal("%s - %s\n",
                 lua_typename(L, lua_type(L, -2)),
                 lua_typename(L, lua_type(L, -1)));
         }
@@ -791,23 +840,23 @@ void smlua_dump_globals(void) {
         lua_pop(L, 1);
     }
     lua_pop(L, 1);                 // remove global table(-1)
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
 }
 
 void smlua_dump_table(int index) {
     lua_State* L = gLuaState;
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
 
     if (lua_getmetatable(L, index)) {
         lua_pushnil(L);  // first key
         while (lua_next(L, -2) != 0) {
             if (lua_type(L, -2) == LUA_TSTRING) {
-                printf("[meta] %s - %s\n",
+                log_to_terminal("[meta] %s - %s\n",
                     lua_tostring(L, -2),
                     lua_typename(L, lua_type(L, -1)));
             }
             else {
-                printf("[meta] %s - %s\n",
+                log_to_terminal("[meta] %s - %s\n",
                     lua_typename(L, lua_type(L, -2)),
                     lua_typename(L, lua_type(L, -1)));
             }
@@ -821,19 +870,19 @@ void smlua_dump_table(int index) {
     while (lua_next(L, index) != 0) {
         // uses 'key' (at index -2) and 'value' (at index -1)
         if (lua_type(L, -2) == LUA_TSTRING) {
-            printf("%s - %s\n",
+            log_to_terminal("%s - %s\n",
                 lua_tostring(L, -2),
                 lua_typename(L, lua_type(L, -1)));
         }
         else {
-            printf("%s - %s\n",
+            log_to_terminal("%s - %s\n",
                 lua_typename(L, lua_type(L, -2)),
                 lua_typename(L, lua_type(L, -1)));
         }
         // removes 'value'; keeps 'key' for next iteration
         lua_pop(L, 1);
     }
-    printf("--------------\n");
+    log_to_terminal("--------------\n");
 }
 
 void smlua_logline(void) {
@@ -870,7 +919,7 @@ void smlua_logline(void) {
     }
 }
 
-static void smlua_cobject_invalidate_internal(void *ptr, u16 lot) {
+void smlua_cobject_invalidate(void *ptr, u16 lot) {
     if (ptr && gLuaState) {
         lua_State *L = gLuaState;
         LUA_STACK_CHECK_BEGIN(L);
@@ -894,10 +943,6 @@ static void smlua_cobject_invalidate_internal(void *ptr, u16 lot) {
 }
 
 void smlua_free(void *ptr, u16 lot) {
-    smlua_cobject_invalidate_internal(ptr, lot);
+    smlua_cobject_invalidate(ptr, lot);
     free(ptr);
-}
-
-void smlua_cobject_invalidate(void *ptr, u16 lot) {
-    smlua_cobject_invalidate_internal(ptr, lot);
 }

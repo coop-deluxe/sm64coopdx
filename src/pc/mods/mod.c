@@ -382,7 +382,7 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
     // deal with textures directory
     {
         const char* fileTypes[] = { ".tex", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes, false)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes, true)) { return false; }
     }
 
     // deal with levels directory
@@ -394,7 +394,7 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
     // deal with sound directory
     {
         const char* fileTypes[] = { ".m64", ".mp3", ".aiff", ".ogg", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes, false)) { return false; }
+        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes, true)) { return false; }
     }
 
     return true;

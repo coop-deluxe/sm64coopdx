@@ -837,23 +837,14 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
 extern f32 *smlua_get_vec3f_for_play_sound(f32 *pos);
 
 void play_sound(s32 soundBits, f32 *pos) {
-    MUTEX_LOCK(gAudioThread);
-
-    pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
-    sSoundRequests[sSoundRequestCount].soundBits = soundBits;
-    sSoundRequests[sSoundRequestCount].position = pos;
-    sSoundRequests[sSoundRequestCount].customFreqScale = 0;
-    sSoundRequestCount++;
-
-    MUTEX_UNLOCK(gAudioThread);
+    return play_sound_with_freq_scale(soundBits, pos, 0);
 }
 
 void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
     MUTEX_LOCK(gAudioThread);
 
     pos = smlua_get_vec3f_for_play_sound(pos);
-    smlua_call_event_hooks(HOOK_ON_PLAY_SOUND, soundBits, pos, &soundBits);
+    smlua_call_event_hooks(HOOK_ON_PLAY_SOUND, soundBits, pos, freqScale, &soundBits, &freqScale);
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequests[sSoundRequestCount].customFreqScale = freqScale;
@@ -2461,15 +2452,21 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
  * Called from threads: thread5_game_loop
  */
 void play_dialog_sound(s32 dialogID) {
-    s32 speaker;
+    s32 speaker = DS_NONE;
 
-    if (!IS_VALID_VANILLA_DIALOG(dialogID)) {
-        dialogID = 0;
+    if (IS_VALID_VANILLA_DIALOG(dialogID)) {
+        speaker = sDialogSpeaker[dialogID];
     }
 
-    speaker = sDialogSpeaker[dialogID];
-    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, &speaker);
-    if (speaker < DS_MAX && speaker != 0xff) {
+    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, dialogID, &speaker);
+
+    // Hook returned a sound id
+    if (speaker < 0 || speaker > 0xFF) {
+        play_sound(speaker, gGlobalSoundSource);
+    }
+
+    // Hook returned a speaker id
+    else if (speaker < DS_MAX) {
         play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
 
         // Play music during bowser message that appears when first entering the

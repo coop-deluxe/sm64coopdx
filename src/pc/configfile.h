@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <PR/ultratypes.h>
 #include "game/player_palette.h"
+#include "pc/gfx/gfx_window_manager.h"
 
 #define CONFIGFILE_DEFAULT "sm64config.txt"
 #define CONFIGFILE_BACKUP "sm64config-backup.txt"
@@ -44,20 +45,12 @@ enum RefreshRateMode {
     RRM_MAX
 };
 
-enum GraphicsBackend {
-    GAPI_GL,
-#if defined(_WIN32)
-    GAPI_D3D11,
-#endif
-    GAPI_MAX
-};
-
 extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
-extern enum GraphicsBackend configGraphicsBackend;
+extern enum GfxWindowBackend configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -99,6 +92,7 @@ extern unsigned int configKeyStickDown[MAX_BINDS];
 extern unsigned int configKeyStickLeft[MAX_BINDS];
 extern unsigned int configKeyStickRight[MAX_BINDS];
 extern unsigned int configKeyChat[MAX_BINDS];
+extern unsigned int configKeyChatCommand[MAX_BINDS];
 extern unsigned int configKeyPlayerList[MAX_BINDS];
 extern unsigned int configKeyDUp[MAX_BINDS];
 extern unsigned int configKeyDDown[MAX_BINDS];
@@ -111,6 +105,7 @@ extern unsigned int configKeyDisconnect[MAX_BINDS];
 extern unsigned int configKeyMuteMic[MAX_BINDS];
 extern unsigned int configKeyDeafen[MAX_BINDS];
 extern unsigned int configKeyPushToTalk[MAX_BINDS];
+extern unsigned int configInputDelay;
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
 extern unsigned int configGamepadNumber;

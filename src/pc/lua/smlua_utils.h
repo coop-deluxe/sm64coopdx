@@ -31,6 +31,7 @@ LuaFunction smlua_to_lua_function(lua_State* L, int index);
 LuaTable smlua_to_lua_table(lua_State* L, int index);
 bool smlua_is_cobject(lua_State* L, int index, u16 lot);
 void* smlua_to_cobject(lua_State* L, int index, u16 lot);
+bool smlua_is_cpointer(lua_State* L, int index, u16 lvt);
 void* smlua_to_cpointer(lua_State* L, int index, u16 lvt);
 struct LSTNetworkType smlua_to_lnt(lua_State* L, int index);
 struct TextureInfo *smlua_to_texture_info(lua_State *L, int index);
@@ -40,6 +41,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt);
 
 CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo);
 CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo);
+void smlua_push_boolean_field(int index, const char* name, bool val);
 void smlua_push_integer_field(int index, const char* name, lua_Integer val);
 void smlua_push_number_field(int index, const char* name, lua_Number val);
 void smlua_push_string_field(int index, const char* name, const char* val);
@@ -61,11 +63,20 @@ s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable);
 s64 smlua_get_any_integer_mod_variable(const char* variable);
 LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable);
 LuaFunction smlua_get_any_function_mod_variable(const char *variable);
+bool smlua_find_lua_param(uintptr_t *param, uintptr_t value, u32 luaParams, u32 luaParamFlag);
+
+#define smlua_get_lua_param(paramName, paramType, paramValue, luaParams, luaParamFlag, ...) \
+    uintptr_t paramName##Param; \
+    if (!smlua_find_lua_param(&paramName##Param, paramValue, luaParams, luaParamFlag)) { \
+        __VA_ARGS__ \
+    } \
+    paramType paramName = (paramType) paramName##Param;
 
 void smlua_logline(void);
 void smlua_dump_stack(void);
 void smlua_dump_globals(void);
 void smlua_dump_table(int index);
+
 void smlua_free(void *ptr, u16 lot);
 void smlua_cobject_invalidate(void *ptr, u16 lot);
 
@@ -76,8 +87,10 @@ static inline void smlua_free_##name(void *ptr) { smlua_free(ptr, lot); }
 static inline void smlua_invalidate_##name(void *ptr) { smlua_cobject_invalidate(ptr, lot); }
 
 smlua_invalidate_lot(surface, LOT_SURFACE);
+smlua_invalidate_lot(soc, LOT_STATICOBJECTCOLLISION);
 
 smlua_free_lot(surface, LOT_SURFACE);
 smlua_free_lot(soc, LOT_STATICOBJECTCOLLISION);
+smlua_free_lot(audio_copy, LOT_MODAUDIO);
 
 #endif

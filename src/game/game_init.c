@@ -27,6 +27,8 @@
 #include "bettercamera.h"
 #include "hud.h"
 #include "pc/controller/controller_mouse.h"
+#include "pc/configfile.h"
+#include "src/engine/math_util.h"
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
 // know of a good way to split them
@@ -457,6 +459,16 @@ void run_demo_inputs(void) {
     }
 }
 
+static struct {
+    s16 rawStickX;
+    s16 rawStickY;
+    s16 extStickX;
+    s16 extStickY;
+    u16 buttonDown;
+} sInputBuffer[INPUT_BUFFER_SIZE];
+
+static u8 sInputBufferHead = 0;
+
 // update the controller struct with available inputs if present.
 void read_controller_inputs(void) {
     // If any controllers are plugged in, update the
@@ -473,15 +485,27 @@ void read_controller_inputs(void) {
         // if we're receiving inputs, update the controller struct
         // with the new button info.
         if (controller->controllerData != NULL) {
-            controller->rawStickX = controller->controllerData->stick_x;
-            controller->rawStickY = controller->controllerData->stick_y;
-            controller->extStickX = controller->controllerData->ext_stick_x;
-            controller->extStickY = controller->controllerData->ext_stick_y;
-            controller->buttonPressed = (~controller->buttonDown & controller->controllerData->button);
-            controller->buttonReleased = (~controller->controllerData->button & controller->buttonDown);
+            sInputBuffer[sInputBufferHead].rawStickX  = controller->controllerData->stick_x;
+            sInputBuffer[sInputBufferHead].rawStickY  = controller->controllerData->stick_y;
+            sInputBuffer[sInputBufferHead].extStickX  = controller->controllerData->ext_stick_x;
+            sInputBuffer[sInputBufferHead].extStickY  = controller->controllerData->ext_stick_y;
+            sInputBuffer[sInputBufferHead].buttonDown = controller->controllerData->button;
+            
+            s32 delay = clamp((s32)configInputDelay, 0, INPUT_BUFFER_MAX_DELAY);
+            s32 tail = (sInputBufferHead - delay + INPUT_BUFFER_SIZE) % INPUT_BUFFER_SIZE;
+            u16 delayedButton = sInputBuffer[tail].buttonDown;
+
+            controller->rawStickX = sInputBuffer[tail].rawStickX;
+            controller->rawStickY = sInputBuffer[tail].rawStickY;
+            controller->extStickX = sInputBuffer[tail].extStickX;
+            controller->extStickY = sInputBuffer[tail].extStickY;
+            controller->buttonPressed = (~controller->buttonDown & delayedButton);
+            controller->buttonReleased = (~delayedButton & controller->buttonDown);
             // 0.5x A presses are a good meme
-            controller->buttonDown = controller->controllerData->button;
+            controller->buttonDown = delayedButton;
             adjust_analog_stick(controller);
+
+            sInputBufferHead = (sInputBufferHead + 1) % INPUT_BUFFER_SIZE;
         } else if (i != 0) {
             // otherwise, if the controllerData is NULL, 0 out all of the inputs.
             controller->rawStickX = 0;
@@ -495,7 +519,6 @@ void read_controller_inputs(void) {
             controller->stickY = 0;
             controller->stickMag = 0;
         }
-
     }
 
     // For some reason, player 1's inputs are copied to player 3's port. This

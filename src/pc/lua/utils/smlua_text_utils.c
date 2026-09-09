@@ -1,6 +1,7 @@
 #include "sm64.h"
 #include "types.h"
 #include "course_table.h"
+#include "game/hardcoded.h"
 #include "game/memory.h"
 #include "game/ingame_menu.h"
 #include "game/save_file.h"
@@ -17,7 +18,43 @@ extern s32 gInGameLanguage;
 #include "eu_translation.h"
 #endif
 
-#define INVALID_COURSE_NUM(courseNum) (smlua_level_util_get_info_from_course_num(courseNum) == NULL && !COURSE_IS_VALID_COURSE(courseNum))
+  //////////////////
+ // Dialog types //
+//////////////////
+
+struct DialogIdType {
+    union {
+        enum DialogId dialogId;
+        enum DialogId *dialogIdPtr;
+    };
+    enum DialogType dialogType;
+};
+
+static const struct DialogIdType sDefaultDialogIdTypes[] = {
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KingBobombIntroDialog,       .dialogType = DIALOG_TYPE_BOSS_START }, // King Bob-omb (Start)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KingWhompDialog,             .dialogType = DIALOG_TYPE_BOSS_START }, // Whomp King (Start)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KingBobombCheatDialog,       .dialogType = DIALOG_TYPE_BOSS_START }, // King Bob-omb (throw him out)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.EyerokIntroDialog,           .dialogType = DIALOG_TYPE_BOSS_START }, // Eyerock (Start)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.WigglerDialog,               .dialogType = DIALOG_TYPE_BOSS_START }, // Wiggler (Start)
+
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KingWhompDefeatDialog,       .dialogType = DIALOG_TYPE_BOSS_STOP  }, // Whomp (Defeated)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KingBobombDefeatDialog,      .dialogType = DIALOG_TYPE_BOSS_STOP  }, // King Bob-omb (Defeated)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.EyerokDefeatedDialog,        .dialogType = DIALOG_TYPE_BOSS_STOP  }, // Eyerock (Defeated)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.WigglerAttack1Dialog,        .dialogType = DIALOG_TYPE_BOSS_STOP  }, // Wiggler (Defeated)
+
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KoopaQuickBobStartDialog,    .dialogType = DIALOG_TYPE_RACE       }, // Koopa the Quick (BOB)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.KoopaQuickThiStartDialog,    .dialogType = DIALOG_TYPE_RACE       }, // Koopa the Quick (THI)
+    { .dialogIdPtr = &gBehaviorValues.dialogs.RacingPenguinStartDialog,    .dialogType = DIALOG_TYPE_RACE       }, // Penguin Race
+    { .dialogIdPtr = &gBehaviorValues.dialogs.RacingPenguinBigStartDialog, .dialogType = DIALOG_TYPE_RACE       }, // Fat Penguin Race (120 stars)
+
+    { .dialogIdPtr = &gBehaviorValues.dialogs.CapswitchWingDialog,         .dialogType = DIALOG_TYPE_STAR_SOUND }, // Red Switch
+    { .dialogIdPtr = &gBehaviorValues.dialogs.CapswitchMetalDialog,        .dialogType = DIALOG_TYPE_STAR_SOUND }, // Green Switch
+    { .dialogIdPtr = &gBehaviorValues.dialogs.CapswitchVanishDialog,       .dialogType = DIALOG_TYPE_STAR_SOUND }, // Blue Switch
+    { .dialogIdPtr = &gBehaviorValues.dialogs.HundredCoinsDialog,          .dialogType = DIALOG_TYPE_STAR_SOUND }, // 100 coins star
+    { .dialogIdPtr = &gBehaviorValues.dialogs.CollectedStarDialog,         .dialogType = DIALOG_TYPE_STAR_SOUND }, // Bowser Red Coin Star
+};
+
+static struct GrowingArray *sDialogIdTypes = NULL;
 
 /*
 ---------------------------------------------------
@@ -163,6 +200,9 @@ void smlua_text_utils_reset_all(void) {
     } else {
         dialog_table_shutdown();
     }
+
+    // Dialog types
+    sDialogIdTypes = growing_array_init(sDialogIdTypes, 8, malloc, free);
 }
 
 struct DialogEntry* smlua_text_utils_dialog_get(enum DialogId dialogId) {
@@ -248,6 +288,64 @@ s32 smlua_text_utils_allocate_dialog(void) {
     }
 
     return dialogId;
+}
+
+enum DialogType smlua_text_utils_dialog_get_type(enum DialogId dialogId) {
+
+    // look in defined ids
+    growing_array_for_each_(sDialogIdTypes, struct DialogIdType, dialogIdType) {
+        if (dialogIdType->dialogId == dialogId) {
+            return dialogIdType->dialogType;
+        }
+    }
+
+    // look in default ids
+    for (s32 i = 0; i < ARRAY_COUNT(sDefaultDialogIdTypes); ++i) {
+        const struct DialogIdType *dialogIdType = &sDefaultDialogIdTypes[i];
+        if (*dialogIdType->dialogIdPtr == dialogId) {
+            return dialogIdType->dialogType;
+        }
+    }
+
+    return DIALOG_TYPE_DEFAULT;
+}
+
+void smlua_text_utils_dialog_set_type(enum DialogId dialogId, enum DialogType dialogType) {
+    if (!sDialogIdTypes || dialogType < DIALOG_TYPE_DEFAULT || dialogType >= DIALOG_TYPE_MAX) {
+        return;
+    }
+
+    // find existing
+    growing_array_for_each_(sDialogIdTypes, struct DialogIdType, dialogIdType) {
+        if (dialogIdType->dialogId == dialogId) {
+            dialogIdType->dialogType = dialogType;
+            return;
+        }
+    }
+
+    // create new entry
+    struct DialogIdType *dialogIdType = growing_array_alloc(sDialogIdTypes, sizeof(struct DialogIdType));
+    if (!dialogIdType) {
+        LOG_LUA_WARNING("Failed to allocate DialogIdType");
+        return;
+    }
+
+    dialogIdType->dialogId = dialogId;
+    dialogIdType->dialogType = dialogType;
+}
+
+void smlua_text_utils_dialog_reset_type(enum DialogId dialogId) {
+    if (!sDialogIdTypes) {
+        return;
+    }
+
+    for (u32 i = 0; i < sDialogIdTypes->count; i++) {
+        const struct DialogIdType *dialogIdType = sDialogIdTypes->buffer[i];
+        if (dialogIdType->dialogId == dialogId) {
+            growing_array_swap_and_pop_index(sDialogIdTypes, i);
+            return;
+        }
+    }
 }
 
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6) {

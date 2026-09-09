@@ -1,253 +1,24 @@
--------------
--- globals --
--------------
+--------------------------------
+-- manually written functions --
+--------------------------------
 
---- @type MarioState[]
---- Array of `MarioState`s, from 0 to `MAX_PLAYERS` - 1
---- - Uses the local index, which is different between every player
---- - Index 0 always refers to the local player
-gMarioStates = {}
-
---- @type NetworkPlayer[]
---- Array of `NetworkPlayer`s, from 0 to `MAX_PLAYERS` - 1
---- - Uses the local index, which is different between every player
---- - Index 0 always refers to the local player
-gNetworkPlayers = {}
-
---- @type Mod[]
---- Array of all mods loaded, starting from 0
---- - All mods are loaded in the same order for every player
---- - Index 0 is the first mod in the list (the top of the mod list)
-gActiveMods = {}
-
---- @type Character[]
---- Array of every character, from 0 to `CT_MAX` - 1
---- - The contents or order of the characters can never change
-gCharacters = {}
-
---- @type Controller[]
---- Array of every controller, from 0 to `MAX_PLAYERS` - 1
---- - Uses the local index, which is different between every player
---- - Index 0 always refers to the local player
-gControllers = {}
-
---- @type Pointer_Mat4[]
---- Matrix stack used during geo process
---- - Only has an effect when used in a geo process hook
-gMatStack = {}
-
---- @type Pointer_Mat4[]
---- Matrix stack used during geo process
---- - Only has an effect when used in a geo process hook
-gMatStackPrev = {}
-
---- @type GlobalTextures
---- Struct containing HUD glyph textures
-gTextures = {}
-
---- @type GlobalObjectAnimations
---- Struct containing every object animation
-gObjectAnimations = {}
-
---- @type GlobalObjectCollisionData
---- Struct containing all object collision data
-gGlobalObjectCollisionData = {}
-
---- @type PaintingValues
---- Struct containing all paintings and their fields
-gPaintingValues = {}
-
---- @alias SyncTable table
-
---- @type SyncTable
---- Any keys added and modified to this table will be synced among everyone.
---- - This shouldn't be used to sync player-specific values; Use `gPlayerSyncTable` for that
---- - Note: Does not support tables as keys
-gGlobalSyncTable = {}
-
---- @type SyncTable[]
---- Array of sync tables. Any change to any sync tables will be synced to everyone else.
---- - This array takes in a local index, however it automatically translates to the global index
---- - Note: Does not support tables as keys
-gPlayerSyncTable = {}
-
---- @type LevelValues
---- Struct containing fields that modify specific gameplay or level properties
-gLevelValues = {}
-
---- @type BehaviorValues
---- Struct containing fields that modify specific object behavior properties
-gBehaviorValues = {}
-
---- @type FirstPersonCamera
---- Struct that contains the fields for the first person camera
-gFirstPersonCamera = {}
-
---- @type LakituState
---- The primary struct that controls the camera
---- - Local player only
-gLakituState = {}
-
---- @type ServerSettings
---- Struct containing the settings for the server
---- - enablePlayersInLevelDisplay and enablePlayerList are not synced
-gServerSettings = {}
-
---- @type NametagsSettings
---- Struct containing the settings for Nametags
-gNametagsSettings = {}
-
---- @type HudDisplay
---- Struct containing the flags for the hud display
-gHudDisplay = {}
-
---- @type VoicePlayer
---- Voice chat related information for players
---- - Indexed by the player's local index
---- - Shouldn't be accessed if `gServerSettings.voiceChat == VOICECHAT_TYPE_DISABLED` is true
-gVoicePlayers = {}
-
------------
--- hooks --
------------
-
---- @param behaviorId BehaviorId | integer?  The behavior id of the object to modify. Pass in as `nil` to create a custom object
---- @param objectList ObjectList | integer Object list
---- @param replaceBehavior boolean Whether or not to completely replace the behavior (ignored for non-vanilla behaviors, which are always replaced)
---- @param initFunction? fun(obj:Object) Run on object creation
---- @param loopFunction? fun(obj:Object) Run every frame
---- @param behaviorName? string Optional, name to give to the behavior to be able to retrieve it with `get_id_from_behavior_name`
---- @return BehaviorId BehaviorId Use if creating a custom object, otherwise can be ignored
---- Modify an object's behavior or create a new custom object
-function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction, behaviorName)
-    -- ...
-end
-
---- @param command string The command to run. Should be easy to type
---- @param description string Should describe what the command does and how to use it
---- @param func fun(msg:string): boolean Run upon activating the command. Return `true` to confirm the command has succeeded
-function hook_chat_command(command, description, func)
-    -- ...
-end
-
---- @param command string The command to change the description of
---- @param description string The description to change to
-function update_chat_command_description(command, description)
-    -- ...
-end
-
---- @param hookEventType LuaHookedEventType When a function should run
---- @param func fun(...: any): any?, any? The function to run
---- Different hooks can pass in different parameters and have different return values. Be sure to read the hooks guide for more information.
-function hook_event(hookEventType, func)
-    -- ...
-end
-
---- @class ActionTable
---- @field every_frame fun(m:MarioState):integer?
---- @field gravity fun(m:MarioState):integer?
-
---- @param actionId integer The action to replace
---- @param funcOrFuncTable fun(m:MarioState):integer? | ActionTable The new behavior of the action
---- @param interactionType? InteractionFlag Optional; The flag that determines how the action interacts with other objects
---- If a function table is used, it must be in the form of `{ act_hook = [func], ... }`. Current action hooks include:
---- - every_frame
---- - gravity
-function hook_mario_action(actionId, funcOrFuncTable, interactionType)
-    -- ...
-end
-
---- @param syncTable SyncTable Must be the gGlobalSyncTable or gPlayerSyncTable[] or one of their child tables
---- @param field string Field name
---- @param tag any An additional parameter
---- @param func fun(tag:any, oldVal:any, newVal:any) Run when the specified field has been changed
-function hook_on_sync_table_change(syncTable, field, tag, func)
-    -- ...
-end
-
---- @param message string The message for the text to show
---- @return integer
---- Hooks DJUI text into the mod menu
-function hook_mod_menu_text(message)
-    -- ...
-end
-
---- @param name string The text to show on the button
---- @param func fun(index:integer) The function that is called when the button is pressed
---- @return integer
---- Hooks a DJUI button into the mod menu
-function hook_mod_menu_button(name, func)
-    -- ...
-end
-
---- @param name string The text to show on the left
---- @param defaultValue boolean The default state of the checkbox
---- @param func fun(index:integer, value:boolean) The function that is called when the checkbox is changed
---- @return integer
---- Hooks a DJUI checkbox into the mod menu
-function hook_mod_menu_checkbox(name, defaultValue, func)
-    -- ...
-end
-
---- @param name string The text to show on the left
---- @param defaultValue integer The default value of the slider
---- @param min integer The lowest the slider can go
---- @param max integer The highest the slider can go
---- @param func fun(index:integer, value:integer) The function that is called when the value of the slider changes
---- @return integer
---- Hooks a DJUI slider into the mod menu
-function hook_mod_menu_slider(name, defaultValue, min, max, func)
-    -- ...
-end
-
---- @param name string The text to show on the left
---- @param defaultValue string The default text in the inputbox
---- @param stringLength integer The max length of the inputbox
---- @param func fun(index:integer, value:string) The function that is called when the value of the inputbox changes
---- @return integer
---- Hooks a DJUI inputbox into the mod menu
-function hook_mod_menu_inputbox(name, defaultValue, stringLength, func)
-    -- ...
-end
-
---- @param index integer The index of the element in the order in which they were hooked
---- @param name string The name to change to
---- Updates a mod menu element's text
---- - NOTE: `index` is zero-indexed
-function update_mod_menu_element_name(index, name)
-    -- ...
-end
-
---- @param index integer The index of the element in the order in which they were hooked
---- @param value boolean The boolean value to change to
---- Updates a mod menu checkbox element's boolean value
---- - NOTE: `index` is zero-indexed
-function update_mod_menu_element_checkbox(index, value)
-    -- ...
-end
-
---- @param index integer The index of the element in the order in which they were hooked
---- @param value number The number value to change to
---- Updates a mod menu slider element's numerical value
---- - NOTE: `index` is zero-indexed
-function update_mod_menu_element_slider(index, value)
-    -- ...
-end
-
---- @param index integer The index of the element in the order in which they were hooked
---- @param value string The text to change to
---- Updates a mod menu inputbox element's string value
---- - NOTE: `index` is zero-indexed
-function update_mod_menu_element_inputbox(index, value)
-    -- ...
-end
-
----------------
--- functions --
----------------
-
---- @param objFieldTable table<any, "u32"|"s32"|"f32"|table>
---- Keys must start with `o` and values must be `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`
+--- @param objFieldTable table<any, "u32"|"s32"|"f32"|table> Table of object field names and types
+--- Defines a custom set of overlapping object fields.
+--- 
+--- - The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
+--- - If, for a field, `global` is `true`, the field will be defined for all mods.
+---
+--- ### Lua Example
+--- ```lua
+--- define_custom_obj_fields({
+---     oCustomField1 = 'u32',
+---     oCustomField2 = 's32',
+---     oCustomField3 = 'f32',
+---     oCustomField4 = { type = 'u32', global = true },
+---     oCustomField5 = { type = 's32', global = true },
+---     oCustomField6 = { type = 'f32', global = true },
+--- })
+--- ```
 function define_custom_obj_fields(objFieldTable)
     -- ...
 end
@@ -255,14 +26,30 @@ end
 --- @param object Object Object to sync
 --- @param standardSync boolean Automatically syncs common fields and syncs with distance. If `false`, all syncing must be done with `network_send_object`
 --- @param fieldTable table<string> The fields to sync
---- All synced fields must start with `o` and there should not be any keys, just values
+--- Enables synchronization on an object.
+--- 
+--- - Setting `standardSync` to `true` will automatically synchronize the object at a rate that is determined based on player distance. The commonly used object fields will be automatically synchronized.
+--- - Setting `standardSync` to `false` will not automatically synchronize the object, or add commonly used object fields. The mod must manually call `network_send_object()` when fields have changed.
+--- - The `fieldTable` parameter can be `nil`, or a list of object fields.
+---
+--- ### Lua Example
+--- ```lua
+--- network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField3' })
+--- ```
 function network_init_object(object, standardSync, fieldTable)
     -- ...
 end
 
 --- @param object Object Object to sync
 --- @param reliable boolean Whether or not the game should try to resend the packet in case it gets lost, good for important packets
---- Sends a sync packet to sync up the object with everyone else
+--- Sends a packet that synchronizes an object. This does not need to be called when `standardSync` is enabled.
+---
+--- - The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+---
+--- ### Lua Example
+--- ```lua
+--- network_send_object(obj, false)
+--- ```
 function network_send_object(object, reliable)
     -- ...
 end
@@ -270,6 +57,14 @@ end
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param dataTable table<string, number|boolean|string|nil> Table of values to be included in the packet
 --- Sends a global Lua packet with the values of `dataTable`. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
+---
+--- - `dataTable` can only contain strings, integers, numbers, booleans, and nil.
+--- - The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+---
+--- ### Lua Example
+--- ```lua
+--- network_send(reliable, { data1 = 'hello', data2 = 10 })
+--- ```
 function network_send(reliable, dataTable)
     -- ...
 end
@@ -278,6 +73,14 @@ end
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param dataTable table Table of values to be included in the packet
 --- Sends a Lua packet with the values of `dataTable` to a specific client through local indices. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
+---
+--- - `dataTable` can only contain strings, integers, numbers, booleans, and nil.
+--- - The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+---
+--- ### Lua Example
+--- ```lua
+--- network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10 })
+--- ```
 function network_send_to(toLocalIndex, reliable, dataTable)
     -- ...
 end
@@ -285,6 +88,21 @@ end
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param bytestring string The bytestring to be included in the packet
 --- Sends a global Lua packet with the bytestring of `bytestring`. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+---
+--- - The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+---
+--- ### Lua Example
+--- ```lua
+--- local bytestring = ''
+---     -------------- PACKET ID --------------
+---     .. string.pack("<B", PACKET_EXAMPLE_ID)
+---     ---------------------------------------
+---     .. string.pack("<l",  long_param)
+---     .. string.pack("<s2", string_param)
+---     ---------------------------------------
+---
+--- network_send_bytestring(reliable, bytestring)
+--- ```
 function network_send_bytestring(reliable, bytestring)
     -- ...
 end
@@ -293,29 +111,59 @@ end
 --- @param reliable boolean Whether or not the game should try to resend the packet in case its lost, good for important packets
 --- @param bytestring string The bytestring to be included in the packet
 --- Sends a Lua packet with the bytestring of `bytestring` to a specific client through local indices. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
+---
+--- - The `reliable` field will ensure that the packet arrives, but should be used sparingly and only when missing a packet would cause a desync.
+---
+--- ### Lua Example
+--- ```lua
+--- local bytestring = ''
+---     -------------- PACKET ID --------------
+---     .. string.pack("<B", PACKET_EXAMPLE_ID)
+---     ---------------------------------------
+---     .. string.pack("<l",  long_param)
+---     .. string.pack("<s2", string_param)
+---     ---------------------------------------
+---
+--- network_send_bytestring_to(localPlayerIndex, reliable, bytestring)
+--- ```
 function network_send_bytestring_to(toLocalIndex, reliable, bytestring)
     -- ...
 end
 
 --- @param textureName string The texture name
 --- @return TextureInfo
---- Gets the `TextureInfo` of a texture by name
---- - Note: This also works with vanilla textures
+--- Gets the `TextureInfo` of a texture by name.
+--- - Note: This also works with vanilla textures.
+---
+--- ### Lua Example
+--- ```lua
+--- local texinfo = get_texture_info(textureName)
+--- ```
 function get_texture_info(textureName)
     -- ...
 end
 
 --- @param textureName string The name of the texture
 --- @param overrideTexInfo TextureInfo The texture to override with
---- Overrides a texture with a custom `TextureInfo`
---- - `textureName` must be the codename of a vanilla texture, you can find these in files such as `texture.inc.c`s
---- - `overrideTexInfo` can be any TextureInfo
+--- Overrides a texture with a custom `TextureInfo`.
+--- - `textureName` must be the codename of a vanilla texture, you can find these in `data/dynos_mgr_builtin_tex.cpp`
+--- - `overrideTexInfo` can be any `TextureInfo`
+---
+--- ### Lua Example
+--- ```lua
+--- texture_override_set("outside_09004000", overrideTexInfo)
+--- ```
 function texture_override_set(textureName, overrideTexInfo)
     -- ...
 end
 
 --- @param textureName string The name of the texture
---- Resets an overridden texture
+--- Resets an overridden texture.
+---
+--- ### Lua Example
+--- ```lua
+--- texture_override_reset("outside_09004000")
+--- ```
 function texture_override_reset(textureName)
     -- ...
 end
@@ -324,13 +172,385 @@ end
 --- @field behavior BehaviorId
 --- @field behaviorArg integer
 
---- @param levelNum LevelNum | integer
---- @param func fun(areaIndex:number, bhvData:BehaviorData, macroBhvIds:BehaviorId[], macroBhvArgs:integer[])
---- When `func` is called, arguments are filled depending on the level command:
---- - `AREA` command: only `areaIndex` is filled. It's a number
---- - `OBJECT` command: only `bhvData` is filled. `bhvData` is a table with nine fields: 'behavior', 'behaviorArg', 'model', 'posX', 'posY', 'posZ', 'pitch', 'yaw' and 'roll'
---- - `MACRO` command: only `macroBhvIds`, `macroBhvArgs` and 'macroBhvModels' are filled. `macroBhvIds` is a list of behavior ids. `macroBhvArgs` is a list of behavior params. 'macroBhvModels' is a list of model ids. All lists have the same size and start at index 0
-function level_script_parse(levelNum, func)
+--- @param levelNum LevelNum | integer The level number (ex: `LEVEL_BOB`)
+--- @param func fun(levelData: table) Function to process parsed data
+--- Parses a level script and passes level data to a function.<br>
+--- When `func` is called, the parameter `levelData` is filled with level data depending on the level command.<br>
+--- `levelData` is a table of tables and its structure is the following:
+--- 
+--- <table>
+---     <thead>
+---         <tr>
+---             <th colspan=2>Field</th>
+---             <th>Type</th>
+---             <th>Description</th>
+---         </tr>
+---     </thead>
+---     <tbody>
+---         <tr>
+---             <td rowspan=4 valign="top"><code>area</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Start of area data.<br><i>Level commands: <code>AREA</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>index</code></td>
+---             <td><code>integer</code></td>
+---             <td>Area index.</td>
+---         </tr>
+---         <tr>
+---             <td><code>modelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Model ID of the area layout.</td>
+---         </tr>
+---         <tr>
+---             <td><code>modelName</code></td>
+---             <td><code>string</code></td>
+---             <td>Model name of the area layout.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=6 valign="top"><code>model</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Load model in vanilla ID.<br><i>Level commands: <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code>, <code>LOAD_MODEL_FROM_GEO_EXT</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>vanillaModelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Vanilla model ID. Objects use these temporary IDs to load their model.</td>
+---         </tr>
+---         <tr>
+---             <td><code>modelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Model ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>modelName</code></td>
+---             <td><code>string</code></td>
+---             <td>Model name.</td>
+---         </tr>
+---         <tr>
+---             <td><code>displayList</code></td>
+---             <td><code>Gfx</code></td>
+---             <td>Display list (if the model is not a Geo layout).</td>
+---         </tr>
+---         <tr>
+---             <td><code>layer</code></td>
+---             <td><code>integer</code></td>
+---             <td>Display list layer (if the model is not a Geo layout).</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=8 valign="top"><code>object</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Object spawn information.<br><i>Level commands: <code>OBJECT</code>, <code>OBJECT_WITH_ACTS</code>, <code>OBJECT_EXT</code>, <code>OBJECT_WITH_ACTS_EXT</code>, <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code>, <code>OBJECT_EXT_LUA_PARAMS</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>acts</code></td>
+---             <td><code>integer</code></td>
+---             <td>Acts where the object appears.</td>
+---         </tr>
+---         <tr>
+---             <td><code>pos</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's initial position.</td>
+---         </tr>
+---         <tr>
+---             <td><code>angle</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's initial angle (in SM64 units).</td>
+---         </tr>
+---         <tr>
+---             <td><code>vanillaModelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>modelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's model ID. Only available from commands <code>OBJECT_EXT2</code>, <code>OBJECT_WITH_ACTS_EXT2</code> and <code>OBJECT_EXT_LUA_PARAMS</code> if the object's model is a custom model.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behaviorId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behParams</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior parameters.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=7 valign="top"><code>warpNode</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Warp node data.<br><i>Level commands: <code>WARP_NODE</code>, <code>PAINTING_WARP_NODE</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>id</code></td>
+---             <td><code>integer</code></td>
+---             <td>Warp node ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>destLevel</code></td>
+---             <td><code>integer</code></td>
+---             <td>Level num of destination.</td>
+---         </tr>
+---         <tr>
+---             <td><code>destArea</code></td>
+---             <td><code>integer</code></td>
+---             <td>Area index of destination.</td>
+---         </tr>
+---         <tr>
+---             <td><code>destNode</code></td>
+---             <td><code>integer</code></td>
+---             <td>Node ID of destination.</td>
+---         </tr>
+---         <tr>
+---             <td><code>flags</code></td>
+---             <td><code>integer</code></td>
+---             <td>Warp node flags, such as the checkpoint flag.</td>
+---         </tr>
+---         <tr>
+---             <td><code>painting</code></td>
+---             <td><code>boolean</code></td>
+---             <td><code>true</code> if it's a painting warp node, <code>false</code> otherwise.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=4 valign="top"><code>instantWarp</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Instant warp data.<br><i>Level commands: <code>INSTANT_WARP</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>index</code></td>
+---             <td><code>integer</code></td>
+---             <td>Instant warp index.</td>
+---         </tr>
+---         <tr>
+---             <td><code>destArea</code></td>
+---             <td><code>integer</code></td>
+---             <td>Area index of destination.</td>
+---         </tr>
+---         <tr>
+---             <td><code>displacement</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Instant displacement.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=2 valign="top"><code>terrain</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Terrain data.<br><i>Level commands: <code>TERRAIN_TYPE</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>type</code></td>
+---             <td><code>integer</code></td>
+---             <td>Terrain type. One of the <code>TERRAIN_*</code> constants.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=3 valign="top"><code>collision</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>data</code></td>
+---             <td><code>Collision</code></td>
+---             <td>Collision pointer.</td>
+---         </tr>
+---         <tr>
+---             <td><code>size</code></td>
+---             <td><code>integer</code></td>
+---             <td>Size of collision data in bytes.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=7 valign="top"><code>waterBoxes</code></td>
+---             <td></td>
+---             <td><code>list&lt;table&gt;</code></td>
+---             <td>List of water boxes. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>id</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>xmin</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box xmin coordinate.</td>
+---         </tr>
+---         <tr>
+---             <td><code>xmax</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box xmax coordinate.</td>
+---         </tr>
+---         <tr>
+---             <td><code>zmin</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box zmin coordinate.</td>
+---         </tr>
+---         <tr>
+---             <td><code>zmax</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box zmax coordinate.</td>
+---         </tr>
+---         <tr>
+---             <td><code>height</code></td>
+---             <td><code>integer</code></td>
+---             <td>Water box top height.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=6 valign="top"><code>specialObjects</code></td>
+---             <td></td>
+---             <td><code>list&lt;table&gt;</code></td>
+---             <td>List of special objects. Loaded from the collision data.<br><i>Level commands: <code>TERRAIN</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>pos</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's inital position.</td>
+---         </tr>
+---         <tr>
+---             <td><code>angle</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's initial angle (in SM64 units).</td>
+---         </tr>
+---         <tr>
+---             <td><code>vanillaModelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behaviorId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behParams</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior parameters.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=3 valign="top"><code>dialog</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Entry dialog data.<br><i>Level commands: <code>SHOW_DIALOG</code>, <code>SHOW_DIALOG_EXT</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>index</code></td>
+---             <td><code>integer</code></td>
+---             <td>Entry dialog index.</td>
+---         </tr>
+---         <tr>
+---             <td><code>dialogId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Dialog ID. One of the <code>DIALOG_*</code> constants.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=3 valign="top"><code>music</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Background music of the level.<br><i>Level commands: <code>SET_BACKGROUND_MUSIC</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>settings</code></td>
+---             <td><code>integer</code></td>
+---             <td>Background music settings.</td>
+---         </tr>
+---         <tr>
+---             <td><code>seqId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Sequence ID. One of the <code>SEQ_*</code> constants.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=5 valign="top"><code>whirlpool</code></td>
+---             <td></td>
+---             <td><code>table</code></td>
+---             <td>Whirlpool data.<br><i>Level commands: <code>WHIRLPOOL</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>index</code></td>
+---             <td><code>integer</code></td>
+---             <td>Whirlpool index.</td>
+---         </tr>
+---         <tr>
+---             <td><code>condition</code></td>
+---             <td><code>integer</code></td>
+---             <td>Spawn condition.<br><code>0</code>: Always<br><code>1</code>: Bowser 2 is not defeated yet<br><code>2</code>: Bowser 2 is defeated<br><code>3</code>: Always except during act 1</td>
+---         </tr>
+---         <tr>
+---             <td><code>pos</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Whirlpool position.</td>
+---         </tr>
+---         <tr>
+---             <td><code>strength</code></td>
+---             <td><code>integer</code></td>
+---             <td>Whirlpool strength. Positive values pull Mario in.</td>
+---         </tr>
+---         <tr>
+---             <td rowspan=6 valign="top"><code>macroObjects</code></td>
+---             <td></td>
+---             <td><code>list&lt;table&gt;</code></td>
+---             <td>List of macro objects.<br><i>Level commands: <code>MACRO_OBJECTS</code></i></td>
+---         </tr>
+---         <tr>
+---             <td><code>pos</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's inital position.</td>
+---         </tr>
+---         <tr>
+---             <td><code>angle</code></td>
+---             <td><code>Vec3s</code></td>
+---             <td>Object's initial angle (in SM64 units).</td>
+---         </tr>
+---         <tr>
+---             <td><code>vanillaModelId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's vanilla model ID. Previously filled by <code>LOAD_MODEL_FROM_DL</code>, <code>LOAD_MODEL_FROM_GEO</code> or <code>LOAD_MODEL_FROM_GEO_EXT</code>, it references the object's model ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behaviorId</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior ID.</td>
+---         </tr>
+---         <tr>
+---             <td><code>behParams</code></td>
+---             <td><code>integer</code></td>
+---             <td>Object's behavior parameters.</td>
+---         </tr>
+---     </tbody>
+--- </table>
+--- 
+--- Not all fields are filled at the same time. Make sure to `nil`-check tables before reading the fields.
+---
+--- ### Lua Example
+--- ```lua
+--- function table.print(t, indent, step)
+---     for k, v in pairs(t) do
+---         if type(v) == "table" then
+---             print(string.rep(" ", indent or 0) .. tostring(k))
+---             table.print(v, (indent or 0) + (step or 4), step)
+---         else
+---             print(string.rep(" ", indent or 0) .. tostring(k) .. " = " .. tostring(v))
+---         end
+---     end
+--- end
+--- 
+--- local function print_level_data(levelData)
+---     table.print(levelData)
+--- end
+--- 
+--- local function on_level_entry()
+---     local levelNum = gNetworkPlayers[0].currLevelNum
+---     print("===== LEVEL " .. tostring(levelNum) .. " DATA =====")
+---     level_parse_script(levelNum, print_level_data)
+--- end
+--- 
+--- hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
+--- ```
+function level_parse_script(levelNum, func)
     -- ...
 end
 
@@ -342,21 +562,36 @@ end
 --- @param loopEnd integer When the loop ends
 --- @param values table The table containing animation values
 --- @param index table The table containing animation indices
---- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called
+--- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
+--- 
+--- ### Lua Example
+--- ```lua
+--- smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
+--- ```
 function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
     -- ...
 end
 
 --- @param message string The message to log
 --- @param level? ConsoleMessageLevel Optional; Determines whether the message should appear as info, a warning or an error.
---- Logs a message to the in-game console
+--- Logs a message to the in-game console.
+---
+--- ### Lua Example
+--- ```lua
+--- log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
+--- ```
 function log_to_console(message, level)
     -- ...
 end
 
 --- @param index integer The index of the scroll target, should match up with the behavior param of `RM_Scroll_Texture` or `editor_Scroll_Texture`
 --- @param name string The name of the vertex buffer that should be used while scrolling the texture
---- Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+--- Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`.
+---
+--- ### Lua Example
+--- ```lua
+--- add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")
+--- ```
 function add_scroll_target(index, name)
     -- ...
 end
@@ -369,60 +604,97 @@ end
 --- @param dirZ number Direction Z
 --- @param precision? number Optional; How precise the raycast should be. The default value is 3.0, the higher the number, the more precise.
 --- @return RayIntersectionInfo
---- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`
+--- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
+---
+--- ### Lua Example
+--- ```lua
+--- local hit = collision_find_surface_on_ray(0, 0, 0, 50, 100, 50, 3.0)
+--- ```
 function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
     -- ...
 end
 
---- @param contents ExclamationBoxContent[]
+--- @param contents ExclamationBoxContent[] The exclamation box contents to set
 --- Sets the contents that the exclamation box spawns.
---- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`
---- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object
---- * `unused`: Optional; unused by vanilla
---- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object
---- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`
---- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
+--- - `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- - `unused`: Optional; unused by vanilla.
+--- - `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- - `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- - `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+---
+--- ### Lua Example
+--- ```lua
+--- set_exclamation_box_contents({
+---    {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
+---    {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
+---    {id = 2, firstByte = 0, model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
+---    {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
+--- })
+--- ```
 function set_exclamation_box_contents(contents)
     -- ...
 end
 
 --- @return ExclamationBoxContent[]
---- Gets the contents that the exclamation box spawns
---- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`
---- * `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object
---- * `unused`: Optional; unused by vanilla
---- * `firstByte`: Optional; Overrides the 1st byte given to the spawned object
---- * `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`
---- * `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`
+--- Gets the contents that the exclamation box spawns.
+--- A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
+--- - `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
+--- - `unused`: Optional; unused by vanilla.
+--- - `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
+--- - `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
+--- - `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
+--- 
+--- ### Lua Example
+--- ```lua
+--- local contents = get_exclamation_box_contents()
+--- for index, content in pairs(contents) do -- Enter the main table
+---     djui_chat_message_create("Table index " .. index) -- Print the current table index
+---     for key, value in pairs(content) do
+---        djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
+---     end
+--- end
+--- ```
 function get_exclamation_box_contents()
     -- ...
 end
 
---- @param node GraphNode | FnGraphNode
+--- @param node GraphNode | FnGraphNode A graph node
 --- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation | GraphNodeBone
 --- Returns the specific GraphNode(...) the node is part of.
---- Basically the reverse of `.node` or `.fnNode`
+--- Basically the reverse of `.node` or `.fnNode`.
+--- 
+--- ### Lua Example
+--- ```lua
+--- local marioGfx = gMarioStates[0].marioObj.header.gfx -- GraphNodeObject
+--- local node = marioGfx.node -- GraphNode
+--- 
+--- print(marioGfx == cast_graph_node(node)) -- true
+--- ```
 function cast_graph_node(node)
     -- ...
 end
 
---- @param str string
+--- @param str string Any string
 --- @return string
---- Removes color codes from a string
+--- Removes color codes from a string.
+---
+--- ### Lua Example
+--- ```lua
+--- print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored String"
+--- ```
 function get_uncolored_string(str)
     -- ...
 end
 
---- @param gfx Gfx
---- @param command string
---- @vararg integer | string | Gfx | Texture | Vtx Parameters for the command
+--- @param gfx Gfx A display list
+--- @param command string A display list command
+--- @vararg integer | string | Gfx | Texture | Vtx parameters
 --- Sets a display list command on the display list given.
 ---
---- If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments
---- following `command` are converted and inserted in `command` replacing their respective specifiers.
+--- If `command` includes parameter specifiers (subsequences beginning with `%`), the additional arguments following `command` are converted and inserted in `command` replacing their respective specifiers.
 ---
---- The number of provided parameters must be equal to the number of specifiers in `command`,
---- and the order of parameters must be the same as the specifiers.
+--- The number of provided parameters must be equal to the number of specifiers in `command`, and the order of parameters must be the same as the specifiers.
 ---
 --- The following specifiers are allowed:
 --- - `%i` for an `integer` parameter
@@ -430,48 +702,19 @@ end
 --- - `%v` for a `Vtx` parameter
 --- - `%t` for a `Texture` parameter
 --- - `%g` for a `Gfx` parameter
+---
+--- ### Lua Example
+---
+--- Plain string:
+--- ```lua
+--- gfx_set_command(gfx, "gsDPSetEnvColor(0x00, 0xFF, 0x00, 0xFF)")
+--- ```
+---
+--- With parameter specifiers:
+--- ```lua
+--- local r, g, b, a = 0x00, 0xFF, 0x00, 0xFF
+--- gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
+--- ```
 function gfx_set_command(gfx, command, ...)
-    -- ...
-end
-
---- @param name string
---- @return Pointer_Gfx
---- @return integer
---- Gets a display list of the current mod from its name.
---- Returns a pointer to the display list and its length
-function gfx_get_from_name(name)
-    -- ...
-end
-
---- @param name string
---- @return Pointer_Vtx
---- @return integer
---- Gets a vertex buffer of the current mod from its name.
---- Returns a pointer to the vertex buffering and its vertex count
-function vtx_get_from_name(name)
-    -- ...
-end
-
---- @param message string
---- @param x number
---- @param y number
---- @param scaleX number
---- @param scaleY number?
---- Prints DJUI HUD text onto the screen
-function djui_hud_print_text(message, x, y, scaleX, scaleY)
-    -- ...
-end
-
---- @param message string
---- @param prevX number
---- @param prevY number
---- @param prevScaleX number
---- @param prevScaleY number
---- @param x number
---- @param y number
---- @param scaleX number?
---- @param scaleY number?
---- Prints interpolated DJUI HUD text onto the screen
-function djui_hud_print_text_interpolated(message, prevX, prevY, prevScaleX, prevScaleY, x, y, scaleX, scaleY)
     -- ...
 end

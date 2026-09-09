@@ -49,6 +49,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // area variables
         packet_write(&p, &gNetworkAreaTimer, sizeof(u32));
+        packet_write(&p, &gNetworkAreaRandomSeed, sizeof(u32));
         packet_write(&p, gEnvironmentLevels, sizeof(s32));
 
         // level control timer
@@ -151,6 +152,7 @@ void network_receive_area(struct Packet* p) {
 
     // read area variables
     packet_read(p, &gNetworkAreaTimer, sizeof(u32));
+    packet_read(p, &gNetworkAreaRandomSeed, sizeof(u32));
     gNetworkAreaTimerClock = clock_elapsed_ticks() - gNetworkAreaTimer;
     packet_read(p, gEnvironmentLevels, sizeof(s32));
     if (gCurrLevelNum == LEVEL_WDW && gEnvironmentRegions != NULL && gEnvironmentRegionsLength > 6) {
@@ -174,6 +176,10 @@ void network_receive_area(struct Packet* p) {
     // read removed sync ids
     area_remove_sync_ids_clear();
     packet_read(p, &sRemoveSyncIdsIndex, sizeof(u32));
+    if (sRemoveSyncIdsIndex >= SYNC_ID_BLOCK_SIZE) {
+        LOG_ERROR("rx area: invalid number of sync ids to remove: %u", sRemoveSyncIdsIndex);
+        sRemoveSyncIdsIndex = SYNC_ID_BLOCK_SIZE - 1;
+    }
     for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
         packet_read(p, &sRemoveSyncIds[i], sizeof(u32));
         struct SyncObject* so = sync_object_get(sRemoveSyncIds[i]);

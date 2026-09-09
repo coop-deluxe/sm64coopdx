@@ -47,10 +47,6 @@
 
 #define MAX_HANG_PREVENTION 64
 
-u32 unused80339F10;
-s8 filler80339F1C[20];
-u16 gLocalBubbleCounter = 0;
-
 
 /**************************************************
  *                    ANIMATIONS                  *
@@ -426,32 +422,30 @@ bool mario_can_bubble(struct MarioState* m) {
     if (m->action == ACT_BUBBLED) { return false; }
     if (!m->visibleToObjects) { return false; }
 
-    u8 allInBubble = TRUE;
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!is_player_active(&gMarioStates[i])) { continue; }
         if (!gMarioStates[i].visibleToObjects) { continue; }
         if (gMarioStates[i].action != ACT_BUBBLED && gMarioStates[i].health >= 0x100) {
-            allInBubble = FALSE;
-            break;
+            return true;
         }
     }
-    if (allInBubble) { return false; }
-    return true;
+    return false;
 }
 
-void mario_set_bubbled(struct MarioState* m) {
+void mario_set_bubbled(struct MarioState* m, OPTIONAL bool stayAlive) {
     if (!m) { return; }
     if (m->playerIndex != 0) { return; }
     if (m->action == ACT_BUBBLED) { return; }
 
-    gLocalBubbleCounter = 20;
-
-    drop_and_set_mario_action(m, ACT_BUBBLED, 0);
-    if (m->numLives > 0) {
-        m->numLives--;
+    drop_and_set_mario_action(m, ACT_BUBBLED, stayAlive);
+    if (!stayAlive) {
+        if (m->numLives > 0) {
+            m->numLives--;
+        }
+        m->healCounter = 0;
+        m->hurtCounter = 31;
     }
-    m->healCounter = 0;
-    m->hurtCounter = 31;
+
     gCamera->cutscene = 0;
     m->statusForCamera->action = m->action;
     m->statusForCamera->cameraEvent = 0;
@@ -2193,7 +2187,6 @@ void init_single_mario(struct MarioState* m) {
 
     u16 playerIndex = m->playerIndex;
     struct SpawnInfo* spawnInfo = &gPlayerSpawnInfos[playerIndex];
-    unused80339F10 = 0;
 
     m->freeze = 0;
 

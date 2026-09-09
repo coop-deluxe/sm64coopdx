@@ -37,9 +37,6 @@
 #include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
 
-// TODO: put this elsewhere
-enum SaveOption { SAVE_OPT_SAVE_AND_CONTINUE = 1, /*SAVE_OPT_SAVE_AND_QUIT, SAVE_OPT_SAVE_EXIT_GAME,*/ SAVE_OPT_CONTINUE_DONT_SAVE };
-
 static struct Object* sIntroWarpPipeObj[MAX_PLAYERS] = { 0 };
 static struct Object *sEndPeachObj;
 static struct Object *sEndRightToadObj;
@@ -133,11 +130,11 @@ void print_displaying_credits_entry(void) {
 #endif
 
     if (sDispCreditsEntry != NULL) {
-        currStrPtr = (char **) sDispCreditsEntry->unk0C;
+        currStrPtr = (char **) sDispCreditsEntry->string;
         titleStr = *currStrPtr++;
         numLines = *titleStr++ - '0';
 
-        strY = (sDispCreditsEntry->unk02 & 0x20 ? 28 : 172) + (numLines == 1) * 16;
+        strY = (sDispCreditsEntry->actNum & 0x20 ? 28 : 172) + (numLines == 1) * 16;
 #ifndef VERSION_JP
         lineHeight = 16;
 #endif
@@ -288,20 +285,16 @@ void handle_save_menu(struct MarioState *m) {
     // wait for the menu to show up
     if (is_anim_past_end(m) && gSaveOptSelectIndex != 0) {
         // save and continue / save and quit
-        if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME || gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT*/) {
+        if (gSaveOptSelectIndex == MENU_OPT_SAVE_AND_CONTINUE /*|| gSaveOptSelectIndex == MENU_OPT_SAVE_AND_QUIT*/) {
             save_file_do_save(gCurrSaveFileNum - 1, FALSE);
 
             /*if (gSaveOptSelectIndex == SAVE_OPT_SAVE_AND_QUIT) {
-                fade_into_special_warp(-2, 0); // reset game
-            } else if (gSaveOptSelectIndex == SAVE_OPT_SAVE_EXIT_GAME) {
-                //initiate_warp(LEVEL_CASTLE, 1, 0x1F, 0);
-                fade_into_special_warp(0, 0);
-                game_exit();
+                fade_into_special_warp(WARP_SPECIAL_MARIO_HEAD_REGULAR, 0); // reset game
             }*/
         }
 
         // not quitting
-        //if (gSaveOptSelectIndex != SAVE_OPT_SAVE_EXIT_GAME) {
+        //if (gSaveOptSelectIndex != SAVE_OPT_SAVE_AND_QUIT) {
             disable_time_stop();
             m->faceAngle[1] += 0x8000;
             // figure out what dialog to show, if we should
@@ -843,7 +836,7 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
             if (!allowDeath) { return animFrame; }
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
@@ -916,7 +909,7 @@ s32 act_quicksand_death(struct MarioState *m) {
                 smlua_call_event_hooks(HOOK_ON_DEATH, m, &allowDeath);
                 if (!allowDeath) { return FALSE; }
                 if ((mario_can_bubble(m) && m->numLives > 0)) {
-                    mario_set_bubbled(m);
+                    mario_set_bubbled(m, false);
                 } else {
                     level_trigger_warp(m, WARP_OP_DEATH);
                 }
@@ -941,7 +934,7 @@ s32 act_eaten_by_bubba(struct MarioState *m) {
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
                 m->health = 0xFF;
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
@@ -976,7 +969,7 @@ s32 act_unlocking_key_door(struct MarioState *m) {
         m->pos[2] = m->usedObj->oPosZ + sins(m->faceAngle[1]) * 75.0f;
     }
 
-    if (m->actionArg & 2) {
+    if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
         m->faceAngle[1] += 0x8000;
     }
 
@@ -1020,7 +1013,7 @@ s32 act_unlocking_star_door(struct MarioState *m) {
             if (m->usedObj != NULL) {
                 m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
             }
-            if (m->actionArg & 2) {
+            if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
                 m->faceAngle[1] += 0x8000;
             }
             m->marioObj->oMarioReadingSignDPosX = m->pos[0];
@@ -1077,7 +1070,7 @@ s32 act_entering_star_door(struct MarioState *m) {
 
         // ~30 degrees / 1/12 rot
         if (m->usedObj != NULL) { targetAngle = m->usedObj->oMoveAngleYaw + 0x1555; }
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             targetAngle += 0x5556; // ~120 degrees / 1/3 rot (total 150d / 5/12)
         }
 
@@ -1108,7 +1101,7 @@ s32 act_entering_star_door(struct MarioState *m) {
             m->faceAngle[1] = m->usedObj->oMoveAngleYaw;
         }
 
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             m->faceAngle[1] += 0x8000;
         }
 
@@ -1130,7 +1123,7 @@ s32 act_entering_star_door(struct MarioState *m) {
 s32 act_going_through_door(struct MarioState *m) {
     if (!m) { return 0; }
     if (m->actionTimer == 0) {
-        if (m->actionArg & 1) {
+        if (m->actionArg & WARP_FLAG_DOOR_PULLED) {
             if (m->interactObj != NULL) {
                 m->interactObj->oInteractStatus = 0x00010000;
             }
@@ -1151,12 +1144,12 @@ s32 act_going_through_door(struct MarioState *m) {
     update_mario_pos_for_anim(m);
     stop_and_set_height_to_floor(m);
 
-    if (m->actionArg & 4) {
+    if (m->actionArg & WARP_FLAG_DOOR_IS_WARP) {
         if (m->actionTimer == 16) {
             level_trigger_warp(m, WARP_OP_WARP_DOOR);
         }
     } else if (is_anim_at_end(m)) {
-        if (m->actionArg & 2) {
+        if (m->actionArg & WARP_FLAG_DOOR_FLIP_MARIO) {
             m->faceAngle[1] += 0x8000;
         }
         set_mario_action(m, ACT_IDLE, 0);
@@ -1184,7 +1177,7 @@ s32 act_warp_door_spawn(struct MarioState *m) {
     if (m->actionState == 0) {
         m->actionState = 1;
         if (m->usedObj != NULL) {
-            if (m->actionArg & 1) {
+            if (m->actionArg & WARP_FLAG_DOOR_PULLED) {
                 m->usedObj->oInteractStatus = 0x00040000;
             } else {
                 m->usedObj->oInteractStatus = 0x00080000;
@@ -1430,7 +1423,7 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
 }
 
 static void lose_life_after_death_exit(struct MarioState *m) {
-    if (sDelayedWarpArg != WARP_ARG_EXIT_COURSE) {
+    if (~sDelayedWarpArg & WARP_FLAG_EXIT_COURSE) {
         m->numLives--;
     }
 }
@@ -1832,7 +1825,7 @@ s32 act_squished(struct MarioState *m) {
                     if (!allowDeath) { return FALSE; }
 
                     if ((mario_can_bubble(m) && m->numLives > 0)) {
-                        mario_set_bubbled(m);
+                        mario_set_bubbled(m, false);
                     } else {
                         level_trigger_warp(m, WARP_OP_DEATH);
                         // woosh, he's gone!
@@ -1883,7 +1876,7 @@ s32 act_squished(struct MarioState *m) {
             if (!allowDeath) { return FALSE; }
 
             if ((mario_can_bubble(m) && m->numLives > 0)) {
-                mario_set_bubbled(m);
+                mario_set_bubbled(m, false);
             } else {
                 // 0 units of health
                 m->health = 0x00FF;
@@ -3048,8 +3041,8 @@ static s32 act_credits_cutscene(struct MarioState *m) {
 
                 sEndCutsceneVp.vp.vscale[0] = 640 - width;
                 sEndCutsceneVp.vp.vscale[1] = 480 - height;
-                sEndCutsceneVp.vp.vtrans[0] = (gCurrCreditsEntry->unk02 & 0x10 ? width : -width) * 56 / 100 + 640;
-                sEndCutsceneVp.vp.vtrans[1] = (gCurrCreditsEntry->unk02 & 0x20 ? height : -height) * 66 / 100 + 480;
+                sEndCutsceneVp.vp.vtrans[0] = (gCurrCreditsEntry->actNum & 0x10 ? width : -width) * 56 / 100 + 640;
+                sEndCutsceneVp.vp.vtrans[1] = (gCurrCreditsEntry->actNum & 0x20 ? height : -height) * 66 / 100 + 480;
 
                 override_viewport_and_clip(&sEndCutsceneVp, 0, 0, 0, 0);
             }
@@ -3069,7 +3062,7 @@ static s32 act_credits_cutscene(struct MarioState *m) {
             level_trigger_warp(m, WARP_OP_CREDITS_NEXT);
         }
 
-        m->marioObj->header.gfx.angle[1] += (gCurrCreditsEntry->unk02 & 0xC0) << 8;
+        m->marioObj->header.gfx.angle[1] += (gCurrCreditsEntry->actNum & 0xC0) << 8;
     }
 
     return FALSE;

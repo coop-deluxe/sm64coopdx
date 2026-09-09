@@ -144,15 +144,18 @@ bool smlua_call_event_hooks_HOOK_BEFORE_PHYS_STEP(struct MarioState *m, s32 step
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_PHYS_STEP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return stepResultOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *stepResultOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -743,15 +746,18 @@ bool smlua_call_event_hooks_HOOK_USE_ACT_SELECT(s32 levelNum, bool *useActSelect
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_USE_ACT_SELECT], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return useActSelect
         if (lua_type(L, -1) == LUA_TBOOLEAN) {
             *useActSelect = smlua_to_boolean(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -954,15 +960,18 @@ bool smlua_call_event_hooks_HOOK_CHARACTER_SOUND(struct MarioState *m, enum Char
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_CHARACTER_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return soundOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *soundOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -1120,7 +1129,7 @@ bool smlua_call_event_hooks_HOOK_ON_EXIT() {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride) {
+bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, enum DialogId dialogId, s32 *speakerOverride) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -1134,20 +1143,26 @@ bool smlua_call_event_hooks_HOOK_DIALOG_SOUND(s32 speaker, s32 *speakerOverride)
         // push speaker
         lua_pushinteger(L, speaker);
 
+        // push dialogId
+        lua_pushinteger(L, dialogId);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
+        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_DIALOG_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return speakerOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *speakerOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -1273,7 +1288,7 @@ bool smlua_call_event_hooks_HOOK_ON_OBJECT_LOAD(struct Object *obj) {
     return hookResult;
 }
 
-bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *soundBitsOverride) {
+bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, f32 freqScale, s32 *soundBitsOverride, f32 *freqScaleOverride) {
     lua_State *L = gLuaState;
     if (L == NULL) { return false; }
 
@@ -1291,20 +1306,32 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_SOUND(s32 soundBits, Vec3f pos, s32 *so
         extern void smlua_new_vec3f(Vec3f src);
         smlua_new_vec3f(pos);
 
+        // push freqScale
+        lua_pushnumber(L, freqScale);
+
         // call the callback
-        if (0 != smlua_call_hook(L, 2, 1, 0, hook->mod[i], hook->modFile[i])) {
+        if (0 != smlua_call_hook(L, 3, 2, 0, hook->mod[i], hook->modFile[i])) {
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_PLAY_SOUND], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return soundBitsOverride
+        if (lua_type(L, -2) == LUA_TNUMBER) {
+            *soundBitsOverride = smlua_to_integer(L, -2);
+            outputSet = true;
+        }
+
+        // return freqScaleOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
-            *soundBitsOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            *freqScaleOverride = smlua_to_number(L, -1);
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -1334,15 +1361,18 @@ bool smlua_call_event_hooks_HOOK_ON_SEQ_LOAD(u32 seqPlayer, u32 seqId, s32 loadA
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_SEQ_LOAD], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return seqIdOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *seqIdOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -1679,6 +1709,7 @@ bool smlua_call_event_hooks_HOOK_BEFORE_WARP(s16 destLevel, s16 destArea, s16 de
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_BEFORE_WARP], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // if the hook returns a table, use it to override the warp parameters
         if (lua_istable(L, -1)) {
@@ -1701,11 +1732,13 @@ bool smlua_call_event_hooks_HOOK_BEFORE_WARP(s16 destLevel, s16 destArea, s16 de
             }
             lua_pop(L, 1);
 
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }
@@ -1769,15 +1802,18 @@ bool smlua_call_event_hooks_HOOK_MARIO_OVERRIDE_FLOOR_CLASS(struct MarioState *m
             LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_MARIO_OVERRIDE_FLOOR_CLASS], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
             continue;
         }
+        bool outputSet = false;
 
         // return floorClassOverride
         if (lua_type(L, -1) == LUA_TNUMBER) {
             *floorClassOverride = smlua_to_integer(L, -1);
-            lua_settop(L, prevTop);
-            return true;
+            outputSet = true;
         }
 
         lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
     }
     return false;
 }

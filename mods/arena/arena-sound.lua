@@ -56,7 +56,7 @@ function handleMusic()
         --Handle pausing main streamed music, if applicable.
         if audioMain and not audioMainPaused then
             audioMainPaused = true
-            audio_stream_pause(audioMain)
+            audio_pause(audioMain)
         end
         --Start up cap music if it's defined.
         if not audioSpecial then

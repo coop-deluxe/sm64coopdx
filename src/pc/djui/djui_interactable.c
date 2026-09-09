@@ -183,7 +183,7 @@ void djui_interactable_set_binding(struct DjuiBase* base) {
 }
 
 void djui_interactable_set_input_focus(struct DjuiBase* base) {
-    if (gDjuiConsoleFocus && base != &gDjuiConsole->base) {
+    if (gDjuiConsoleFocus && base != &gDjuiConsole->inputbox->base) {
         return;
     }
 
@@ -201,7 +201,11 @@ bool djui_interactable_on_key_down(int scancode) {
         return true;
     }
 
-    if (!gDjuiChatBoxFocus) {
+    // check if we should open the console
+    // console focus is checked because in the console on key down we check this there
+    // the reason we do is to prevent the input from leaking into the console inputbox
+    // before closing itself
+    if (!gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyConsole[i]) {
                 sPendingConsoleToggleScancode = scancode;
@@ -211,8 +215,8 @@ bool djui_interactable_on_key_down(int scancode) {
     }
 
     bool keyFocused = (gInteractableFocus != NULL)
-                   && (gInteractableFocus->interactable != NULL)
-                   && (gInteractableFocus->interactable->on_key_down != NULL);
+    && (gInteractableFocus->interactable != NULL)
+    && (gInteractableFocus->interactable->on_key_down != NULL);
 
     if (keyFocused) {
         bool consume = gInteractableFocus->interactable->on_key_down(gInteractableFocus, scancode);
@@ -230,20 +234,46 @@ bool djui_interactable_on_key_down(int scancode) {
     }
 
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
-        bool pressChat = false, pressMute = false, pressDeafen = false, pressPushToTalk = false;
+        bool pressChat = false;
+        bool pressChatCommand = false;
+        bool pressMute = false;
+        bool pressDeafen = false;
+        bool pressPushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
             if (scancode == (int)configKeyChat[i]) pressChat = true;
+            if (scancode == (int)configKeyChatCommand[i]) pressChatCommand = true;
             if (scancode == (int)configKeyMuteMic[i]) pressMute = true;
             if (scancode == (int)configKeyDeafen[i]) pressDeafen = true;
             if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
-        if (pressChat) djui_chat_box_toggle();
-        if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) voicechat_toggle_mute();
-        if (pressDeafen) voicechat_toggle_deafen();
-        if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(false);
+        if (!gDjuiConsoleFocus) {
+            if (pressChat && !gDjuiConsoleFocus) {
+                djui_chat_box_toggle();
+                return true;
+            }
+    
+            if (pressChatCommand && !gDjuiConsoleFocus) {
+                djui_chat_box_open_with_text("/");
+                return true;
+            }
 
-        return pressChat || pressMute || pressDeafen || pressPushToTalk;
+            if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD)
+                voicechat_toggle_mute();
+                return true;
+            }
+    
+            if (pressDeafen) {
+                voicechat_toggle_deafen();
+                return true;
+            }
+
+            if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
+                voicechat_set_mute(false);
+                return true;
+            }
+        }
+
     }
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
@@ -281,7 +311,7 @@ bool djui_interactable_on_key_down(int scancode) {
         }
     }
 
-    if (gDjuiChatBoxFocus || djui_panel_is_active()) {
+    if (gDjuiConsoleFocus || gDjuiChatBoxFocus || djui_panel_is_active()) {
         switch (scancode) {
             case SCANCODE_UP:    sKeyboardHoldDirection = PAD_HOLD_DIR_UP;    return true;
             case SCANCODE_DOWN:  sKeyboardHoldDirection = PAD_HOLD_DIR_DOWN;  return true;
@@ -295,6 +325,7 @@ bool djui_interactable_on_key_down(int scancode) {
 }
 
 void djui_interactable_on_key_up(int scancode) {
+<<<<<<< HEAD
     if (!gDjuiChatBoxFocus) {
         bool disablePushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
@@ -304,6 +335,8 @@ void djui_interactable_on_key_up(int scancode) {
         if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
     }
 
+=======
+>>>>>>> ef9705b3ba991eecf45e91a88dcf9458345cfae2
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
         if (!gDjuiChatBoxFocus) {
             djui_console_toggle();
@@ -454,12 +487,12 @@ void djui_interactable_update(void) {
         u16 mainButtons = PAD_BUTTON_A | PAD_BUTTON_B;
         if ((mouseButtons & L_MOUSE_BUTTON) && !(sLastMouseButtons & L_MOUSE_BUTTON) && !djui_cursor_inside_base(gInteractableFocus)) {
             // clicked outside of focus
-            if (!gDjuiChatBoxFocus) {
+            if (!gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
                 djui_interactable_set_input_focus(NULL);
             }
         } else if ((padButtons & mainButtons) && !(sLastInteractablePad.button & mainButtons)) {
             // pressed main face button
-            if (!gDjuiChatBoxFocus) {
+            if (!gDjuiChatBoxFocus && !gDjuiConsoleFocus) {
                 djui_interactable_set_input_focus(NULL);
             }
         } else {

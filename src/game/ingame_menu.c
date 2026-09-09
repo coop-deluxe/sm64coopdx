@@ -1035,49 +1035,29 @@ s32 get_dialog_id(void) {
 }
 
 void handle_special_dialog_text(s32 dialogID) { // dialog ID tables, in order
-    // King Bob-omb (Start), Whomp (Start), King Bob-omb (throw him out), Eyerock (Start), Wiggler (Start)
-    enum DialogId dialogBossStart[] = { DIALOG_017, DIALOG_114, DIALOG_128, DIALOG_117, DIALOG_150 };
-    // Koopa the Quick (BOB), Koopa the Quick (THI), Penguin Race, Fat Penguin Race (120 stars)
-    enum DialogId dialogRaceSound[] = { DIALOG_005, DIALOG_009, DIALOG_055, DIALOG_164 };
-    // Red Switch, Green Switch, Blue Switch, 100 coins star, Bowser Red Coin Star
-    enum DialogId dialogStarSound[] = { DIALOG_010, DIALOG_011, DIALOG_012, DIALOG_013, DIALOG_014 };
-    // King Bob-omb (Start), Whomp (Defeated), King Bob-omb (Defeated, missing in JP), Eyerock (Defeated), Wiggler (Defeated)
-#if BUGFIX_KING_BOB_OMB_FADE_MUSIC
-    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_116, DIALOG_118, DIALOG_152 };
-#else
-    //! @bug JP misses King Bob-omb defeated dialog "116", meaning that the boss music will still
-    //! play after King Bob-omb is defeated until BOB loads it's music after the star cutscene
-    enum DialogId dialogBossStop[] = { DIALOG_017, DIALOG_115, DIALOG_118, DIALOG_152 };
-#endif
-    s16 i;
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogBossStart); i++) {
-        if (dialogBossStart[i] == dialogID) {
+    switch (smlua_text_utils_dialog_get_type(dialogID)) {
+        case DIALOG_TYPE_BOSS_START: {
             seq_player_unlower_volume(SEQ_PLAYER_LEVEL, 60);
             play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, SEQ_EVENT_BOSS), 0);
-            return;
-        }
-    }
+        } break;
 
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogRaceSound); i++) {
-        if (dialogRaceSound[i] == dialogID && gDialogLineNum == 1) {
-            play_race_fanfare();
-            return;
-        }
-    }
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogStarSound); i++) {
-        if (dialogStarSound[i] == dialogID && gDialogLineNum == 1) {
-            play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
-            return;
-        }
-    }
-
-    for (i = 0; i < (s16) ARRAY_COUNT(dialogBossStop); i++) {
-        if (dialogBossStop[i] == dialogID) {
+        case DIALOG_TYPE_BOSS_STOP: {
             seq_player_fade_out(SEQ_PLAYER_LEVEL, 1);
-            return;
-        }
+        } break;
+
+        case DIALOG_TYPE_RACE: {
+            if (gDialogLineNum == 1) {
+                play_race_fanfare();
+            }
+        } break;
+
+        case DIALOG_TYPE_STAR_SOUND: {
+            if (gDialogLineNum == 1) {
+                play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource);
+            }
+        } break;
+
+        default: break;
     }
 }
 
@@ -1897,6 +1877,30 @@ void render_dialog_entries(void) {
         return;
     }
 
+    s16 dialogLen = (s16)strlen64(dialog->str);
+    // this prevents overflow. This is only triggered if we are oob. That means that
+    // only a handful, or even a single character could be rendered on a switch
+    if (gDialogTextPos >= dialogLen) {
+        // look for the last valid page start tex pos index
+        s16 textPos = 0;
+        u16 lineNum = 0;
+        s16 strIdx = 0;
+        while (strIdx < dialogLen) { 
+            u8 strChar = dialog->str[strIdx];
+
+            if (strChar == DIALOG_CHAR_NEWLINE) {
+                lineNum++;
+                if (lineNum >= dialog->linesPerBox) {
+                    textPos = strIdx + 1;
+                    lineNum = 0;
+                }
+            }
+            strIdx++;
+        }
+        gDialogTextPos = textPos;
+        gLastDialogPageStrPos = -1;
+    }
+
 #ifdef VERSION_EU
     gDialogX = 0;
     gDialogY = 0;
@@ -2524,9 +2528,6 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 #endif
 
 void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
-    u8 TEXT_EXIT_TO_CASTLE[16] = { DIALOG_CHAR_TERMINATOR };
-    convert_string_ascii_to_sm64(TEXT_EXIT_TO_CASTLE, "EXIT TO CASTLE", false);
-
 #ifdef VERSION_EU
     u8 textContinue[][10] = {
         { TEXT_CONTINUE },
@@ -2551,28 +2552,34 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
     INGAME_TEXT_COPY(textContinue, TEXT_CONTINUE);
     INGAME_TEXT_COPY(textExitCourse, TEXT_EXIT_COURSE);
     INGAME_TEXT_COPY(textCameraAngleR, TEXT_CAMERA_ANGLE_R);
-#endif
-
-    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 4);
+    #endif
+    u8 textExitToCastle[] = { TEXT_EXIT_TO_CASTLE };
+    u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
+    handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, maxIndex);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_begin);
     gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
 
     print_generic_string(x + 10, y - 2, textContinue);
-    print_generic_string(x + 10, y - 17, textExitCourse);
-    print_generic_string(x + 10, y - 32, TEXT_EXIT_TO_CASTLE);
+    if (PAUSE_EXIT_MODE != PAUSE_EXIT_TO_CASTLE) {
+        y -= yIndex; print_generic_string(x + 10, y - 2, textExitCourse);
+    }
+    if (PAUSE_EXIT_MODE & PAUSE_EXIT_TO_CASTLE) {
+        y -= yIndex; print_generic_string(x + 10, y - 2, textExitToCastle);
+    }
 
-    if (index[0] != 4) {
-        print_generic_string(x + 10, y - 47, textCameraAngleR);
+    if (*index != maxIndex) {
+        print_generic_string(x + 10, y - 17, textCameraAngleR);
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
-        create_dl_translation_matrix(MENU_MTX_PUSH, x - X_VAL8, (y - ((index[0] - 1) * yIndex)) - Y_VAL8, 0);
+        y += (maxIndex - 2) * yIndex;
+        create_dl_translation_matrix(MENU_MTX_PUSH, x - X_VAL8, (y - ((*index - 1) * yIndex)) - Y_VAL8, 0);
 
         gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
         gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
         gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
     } else {
-        render_pause_camera_options(x - 42, y - 57, &gDialogCameraAngleIndex, 110);
+        render_pause_camera_options(x - 42, y - 27, &gDialogCameraAngleIndex, 110);
     }
 }
 
@@ -2952,8 +2959,6 @@ s32 gCourseCompleteCoins = 0;
 s8 gHudFlash = 0;
 
 s16 render_pause_courses_and_castle(void) {
-    s16 num;
-
 #ifdef VERSION_EU
     gInGameLanguage = eu_get_language();
 #endif
@@ -2990,13 +2995,15 @@ s16 render_pause_courses_and_castle(void) {
 #ifdef VERSION_EU
                 if (gPlayer1Controller->buttonPressed & (A_BUTTON | Z_TRIG | START_BUTTON))
 #else
-                if (gPlayer1Controller->buttonPressed & A_BUTTON
-                 || gPlayer1Controller->buttonPressed & START_BUTTON)
+                if (gPlayer1Controller->buttonPressed & (A_BUTTON | START_BUTTON))
 #endif
                 {
+                    u8 maxIndex = PAUSE_EXIT_MODE == PAUSE_EXIT_BOTH ? 4 : 3;
                     bool allowExit = true;
-                    if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, gDialogLineNum == 3, &allowExit);
+                    bool pauseExit = gDialogLineNum > 1 && gDialogLineNum < maxIndex;
+                    bool usedExitToCastle = (PAUSE_EXIT_MODE & PAUSE_EXIT_COURSE) ? gDialogLineNum == 3 : gDialogLineNum == 2;  
+                    if (pauseExit) {
+                        smlua_call_event_hooks(HOOK_ON_PAUSE_EXIT, usedExitToCastle, &allowExit);
                     }
                     if (allowExit) {
                         level_set_transition(0, NULL);
@@ -3004,13 +3011,10 @@ s16 render_pause_courses_and_castle(void) {
                         gDialogBoxState = DIALOG_STATE_OPENING;
                         gMenuMode = -1;
 
-                        if (gDialogLineNum == 2 || gDialogLineNum == 3) {
-                            num = gDialogLineNum;
-                        } else {
-                            num = 1;
+                        if (pauseExit) {
+                            return usedExitToCastle ? MENU_OPT_EXIT_TO_CASTLE : MENU_OPT_EXIT_COURSE;
                         }
-
-                        return num;
+                        return MENU_OPT_DEFAULT;
                     } else {
                         play_sound(SOUND_MENU_CAMERA_BUZZ | (0xFF << 8), gGlobalSoundSource);
                     }
@@ -3060,7 +3064,7 @@ s16 render_pause_courses_and_castle(void) {
         network_mod_dev_mode_reload();
     }
 
-    return 0;
+    return MENU_OPT_NONE;
 }
 
 #if defined(VERSION_JP)
@@ -3172,8 +3176,8 @@ void print_hud_course_complete_coins(s16 x, s16 y) {
 void play_star_fanfare_and_flash_hud(s32 arg, u8 starNum) {
     if (gHudDisplay.coins == gCourseCompleteCoins && (gCurrCourseStarFlags & starNum) == 0 && gHudFlash == 0) {
         gCurrCourseStarFlags |= starNum; // SM74 was spamming fanfare without this line
-        if (gFanFareDebounce <= 0) {
-            gFanFareDebounce = 30 * 5;
+        if (gFanfareDebounce <= 0) {
+            gFanfareDebounce = 30 * 5;
             play_star_fanfare();
         }
         gHudFlash = arg;
@@ -3288,13 +3292,11 @@ void render_course_complete_lvl_info_and_hud_str(void) {
 #endif
 #if defined(VERSION_JP) || defined(VERSION_SH)
 #define TXT_SAVECONT_Y 2
-//#define TXT_SAVEQUIT_Y 18
-//#define TXT_SAVE_EXIT_GAME_Y 38
+//#define TXT_SAVEQUIT_Y 18 // 38
 #define TXT_CONTNOSAVE_Y 18
 #else
 #define TXT_SAVECONT_Y 0
-//#define TXT_SAVEQUIT_Y 20
-//#define TXT_SAVE_EXIT_GAME_Y 40
+//#define TXT_SAVEQUIT_Y 20 // 40
 #define TXT_CONTNOSAVE_Y 20
 #endif
 
@@ -3317,13 +3319,6 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
         { TEXT_SAVE_AND_QUIT_FR },
         { TEXT_SAVE_AND_QUIT_DE }
     };
-
-    u8 textSaveExitGame[][30] = { // New function to exit game
-        { TEXT_SAVE_EXIT_GAME },
-        { TEXT_SAVE_EXIT_GAME_FR },
-        { TEXT_SAVE_EXIT_GAME_DE }
-    };
-
     u8 textContinueWithoutSaveArr[][30] = {
         { TEXT_CONTINUE_WITHOUT_SAVING },
         { TEXT_CONTINUE_WITHOUT_SAVING_FR },
@@ -3332,13 +3327,11 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 
 #define textSaveAndContinue textSaveAndContinueArr[gInGameLanguage]
 #define textSaveAndQuit textSaveAndQuitArr[gInGameLanguage]
-#define textSaveExitGame textSaveExitGame[gInGameLanguage]
 #define textContinueWithoutSave textContinueWithoutSaveArr[gInGameLanguage]
     s16 xOffset = get_str_x_pos_from_center(160, textContinueWithoutSaveArr[gInGameLanguage], 12.0f);
 #else
     INGAME_TEXT_COPY(textSaveAndContinue, TEXT_SAVE_AND_CONTINUE);
     //u8 textSaveAndQuit[] = { TEXT_SAVE_AND_QUIT };
-    //u8 textSaveExitGame[] = { TEXT_SAVE_EXIT_GAME };
     INGAME_TEXT_COPY(textContinueWithoutSave, TEXT_CONTINUE_WITHOUT_SAVING);
 #endif
 
@@ -3349,7 +3342,6 @@ void render_save_confirmation(s16 x, s16 y, s8 *index, s16 sp6e)
 
     print_generic_string(TXT_SAVEOPTIONS_X, y + TXT_SAVECONT_Y, textSaveAndContinue);
     //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVEQUIT_Y, textSaveAndQuit);
-    //print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_SAVE_EXIT_GAME_Y, textSaveExitGame);
     print_generic_string(TXT_SAVEOPTIONS_X, y - TXT_CONTNOSAVE_Y, textContinueWithoutSave);
 
     gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
@@ -3414,11 +3406,11 @@ s16 render_course_complete_screen(void) {
 
     gCourseDoneMenuTimer++;
 
-    return 0;
+    return MENU_OPT_NONE;
 }
 
 s16 render_menus_and_dialogs(void) {
-    s16 mode = 0;
+    s16 mode = MENU_OPT_NONE;
 
     create_dl_ortho_matrix();
 
