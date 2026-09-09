@@ -165,7 +165,8 @@ double_break:
     }
 
     // Load up custom background
-    for (s32 i = 0; i < 80; i++) {
+    memset(gCustomSkyboxPtrList, 0, MAX_SKYBOX_TILES * sizeof(*gCustomSkyboxPtrList));
+    for (s32 i = 0; i < foundList->mSize; i++) {
         // find texture
         for (auto& tex : foundGfxData->mTextures) {
             if (tex->mData == foundList->mData[i]) {

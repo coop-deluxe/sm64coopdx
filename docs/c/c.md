@@ -11,8 +11,10 @@
 - For creating a pointer, `Type *value;` is the proper convention, not `Type* value;`.
 
 ## Sections
+
 - [SMLua](sections/smlua.md)
 - [Config File](sections/configfile.md)
 - [DJUI](sections/djui.md)
 - [Languages](sections/lang.md)
+- [Growing Arrays](sections/growing_arrays.md)
 - [Enums](sections/enums.md)
