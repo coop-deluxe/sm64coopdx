@@ -208,6 +208,35 @@ bool path_ends_with_filepath(const char *path, const char *filepath) {
     return matchPtr == path || *(matchPtr - 1) == *PATH_SEPARATOR || *(matchPtr - 1) == *PATH_SEPARATOR_ALT;
 }
 
+bool wildcard_match(const char *pattern, const char *text) {
+    const char *wildcard = NULL;
+    const char *retryText = NULL;
+
+    while (*text) {
+        char p = *pattern;
+        char t = *text;
+
+        if (p == '*') {
+            wildcard = pattern++;
+            retryText = text;
+        } else if ((p == '?' && t != '\0') || tolower((unsigned char)p) == tolower((unsigned char)t)) {
+            pattern++;
+            text++;
+        } else if (wildcard != NULL) {
+            pattern = wildcard + 1;
+            text = ++retryText;
+        } else {
+            return false;
+        }
+    }
+
+    while (*pattern == '*') {
+        pattern++;
+    }
+
+    return *pattern == '\0';
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 char* extract_lua_field(char* fieldName, char* buffer) {

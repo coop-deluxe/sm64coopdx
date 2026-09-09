@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../network.h"
 #include "pc/djui/djui.h"
+#include "pc/mods/mod.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/utils/misc.h"
@@ -340,7 +341,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     }
 
     file->wroteBytes = 0;
-    if (should_cache_mod(mod)) {
+    if (should_cache_mod(mod) && mod_check_file_cacheable(file->relativePath)) {
         mod_file_create_directories(mod, file);
         file->fp = fopen(fullPath, "wb");
     } else {
@@ -457,10 +458,12 @@ after_group:;
 
                     // Write cachedPath here so the file doesn't end up in mod.cache
                     if (!should_cache_mod(mod)) {
-                        char modFilePath[SYS_MAX_PATH] = { 0 };
-                        concat_path(modFilePath, mod->basePath, modFile->relativePath);
-                        normalize_path(modFilePath);
-                        modFile->cachedPath = strdup(modFilePath);
+                        if (mod_check_file_cacheable(modFile->relativePath)) {                            
+                            char modFilePath[SYS_MAX_PATH] = { 0 };
+                            concat_path(modFilePath, mod->basePath, modFile->relativePath);
+                            normalize_path(modFilePath);
+                            modFile->cachedPath = strdup(modFilePath);
+                        }
                     }
                 }
 

@@ -37,6 +37,7 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_fs_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
 #include "src/game/platform_displacement.h"
 #include "src/game/spawn_sound.h"
@@ -31192,6 +31193,73 @@ int smlua_func_network_player_palette_to_color(lua_State* L) {
     return 0;
 }
 
+  //////////////////////
+ // smlua_fs_utils.h //
+//////////////////////
+
+int smlua_func_mod_file_read(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_read", 2, top);
+        return 0;
+    }
+
+    struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_read"); return 0; }
+    const char* fileName = smlua_to_string(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_file_read"); return 0; }
+
+    smlua_push_bytestring(L, mod_file_read(mod, fileName));
+
+    return 1;
+}
+
+int smlua_func_mod_file_exists(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_exists", 1, top);
+        return 0;
+    }
+
+    const char* filename = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_exists"); return 0; }
+
+    lua_pushboolean(L, mod_file_exists(filename));
+
+    return 1;
+}
+
+int smlua_func_mod_files_get(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 1 || top > 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_files_get", 1, 3, top);
+        return 0;
+    }
+
+    struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_files_get"); return 0; }
+    const char* subDirectory = (const char*) NULL;
+    if (top >= 2) {
+        subDirectory = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_files_get"); return 0; }
+    }
+    bool relative = (bool) 0;
+    if (top >= 3) {
+        relative = smlua_to_boolean(L, 3);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_files_get"); return 0; }
+    }
+
+    smlua_push_lua_table(L, mod_files_get(mod, subDirectory, relative));
+
+    return 1;
+}
+
   ///////////////////////
  // smlua_gfx_utils.h //
 ///////////////////////
@@ -33840,23 +33908,6 @@ int smlua_func_set_environment_region(lua_State* L) {
     return 0;
 }
 
-int smlua_func_mod_file_exists(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_file_exists", 1, top);
-        return 0;
-    }
-
-    const char* filename = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_file_exists"); return 0; }
-
-    lua_pushboolean(L, mod_file_exists(filename));
-
-    return 1;
-}
-
 int smlua_func_get_active_mod(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -33867,28 +33918,6 @@ int smlua_func_get_active_mod(lua_State* L) {
     }
 
     smlua_push_object(L, LOT_MOD, get_active_mod(), NULL);
-
-    return 1;
-}
-
-int smlua_func_get_mod_files(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top < 1 || top > 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "get_mod_files", 1, 2, top);
-        return 0;
-    }
-
-    struct Mod* mod = (struct Mod*)smlua_to_cobject(L, 1, LOT_MOD);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "get_mod_files"); return 0; }
-    const char* subDirectory = (const char*) NULL;
-    if (top >= 2) {
-        subDirectory = smlua_to_string(L, 2);
-        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "get_mod_files"); return 0; }
-    }
-
-    smlua_push_lua_table(L, get_mod_files(mod, subDirectory));
 
     return 1;
 }
@@ -38212,6 +38241,11 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "network_player_color_to_palette", smlua_func_network_player_color_to_palette);
     smlua_bind_function(L, "network_player_palette_to_color", smlua_func_network_player_palette_to_color);
 
+    // smlua_fs_utils.h
+    smlua_bind_function(L, "mod_file_read", smlua_func_mod_file_read);
+    smlua_bind_function(L, "mod_file_exists", smlua_func_mod_file_exists);
+    smlua_bind_function(L, "mod_files_get", smlua_func_mod_files_get);
+
     // smlua_gfx_utils.h
     smlua_bind_function(L, "get_shader_flag_enabled", smlua_func_get_shader_flag_enabled);
     smlua_bind_function(L, "set_shader_flag_enabled", smlua_func_set_shader_flag_enabled);
@@ -38371,9 +38405,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "set_volume_env", smlua_func_set_volume_env);
     smlua_bind_function(L, "get_environment_region", smlua_func_get_environment_region);
     smlua_bind_function(L, "set_environment_region", smlua_func_set_environment_region);
-    smlua_bind_function(L, "mod_file_exists", smlua_func_mod_file_exists);
     smlua_bind_function(L, "get_active_mod", smlua_func_get_active_mod);
-    smlua_bind_function(L, "get_mod_files", smlua_func_get_mod_files);
     smlua_bind_function(L, "set_window_title", smlua_func_set_window_title);
     smlua_bind_function(L, "reset_window_title", smlua_func_reset_window_title);
     smlua_bind_function(L, "get_os_name", smlua_func_get_os_name);

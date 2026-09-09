@@ -9,13 +9,19 @@
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256
 #define MOD_CATEGORY_MAX_LENGTH 64
 #define MOD_DESCRIPTION_MAX_LENGTH 800
+#define MOD_FILE_PATTERNS_MAX_LENGTH 1024
 
 #define MOD_NAME_SIZE (MOD_NAME_MAX_LENGTH + 1)
 #define MOD_INCOMPATIBLE_SIZE (MOD_INCOMPATIBLE_MAX_LENGTH + 1)
 #define MOD_CATEGORY_SIZE (MOD_CATEGORY_MAX_LENGTH + 1)
 #define MOD_DESCRIPTION_SIZE (MOD_DESCRIPTION_MAX_LENGTH + 1)
+#define MOD_FILE_PATTERNS_SIZE (MOD_FILE_PATTERNS_MAX_LENGTH + 1)
+
+#define MOD_FILE_PATTERNS_MAX 256
 
 struct Mods;
+
+extern const char *MOD_FILE_CACHEABLE_EXTENSIONS[];
 
 struct ModFile {
     char relativePath[SYS_MAX_PATH];
@@ -29,6 +35,12 @@ struct ModFile {
     char* cachedPath;
 };
 
+struct ModFilePatterns {
+    bool blacklist;
+    const char *patterns[MOD_FILE_PATTERNS_MAX];
+    size_t count;
+};
+
 struct Mod {
     char name[MOD_NAME_SIZE];
     char* incompatible;
@@ -37,6 +49,7 @@ struct Mod {
     char relativePath[SYS_MAX_PATH];
     char basePath[SYS_MAX_PATH];
     struct ModFile* files;
+    struct ModFilePatterns* filePatterns;
     s32 index;
     u16 fileCount;
     u16 fileCapacity;
@@ -57,5 +70,6 @@ void mod_activate(struct Mod* mod);
 void mod_clear(struct Mod* mod);
 bool mod_refresh_files(struct Mod* mod);
 bool mod_load(struct Mods* mods, char* basePath, char* modName);
+bool mod_check_file_cacheable(const char *path);
 
 #endif

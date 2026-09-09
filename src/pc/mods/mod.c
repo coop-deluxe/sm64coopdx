@@ -18,6 +18,17 @@
 #include <sys/stat.h>
 #endif
 
+const char *MOD_FILE_CACHEABLE_EXTENSIONS[] = {
+    ".lua", ".luac",                    // script
+    ".txt", ".json", ".ini", ".sav",    // text
+    ".bin", ".col",                     // actors
+    ".bhv",                             // behaviors
+    ".tex",                             // textures
+    ".lvl",                             // levels
+    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    NULL
+};
+
 size_t mod_get_lua_size(struct Mod* mod) {
     if (!mod) { return 0; }
     size_t size = 0;
@@ -222,10 +233,134 @@ void mod_clear(struct Mod* mod) {
         growing_array_free(&mod->customObjectFields);
     }
 
+    if (mod->filePatterns != NULL) {
+        for (size_t i = 0; i < mod->filePatterns->count; i++) {
+            free((char*)mod->filePatterns->patterns[i]);
+        }
+        free(mod->filePatterns);
+        mod->filePatterns = NULL;
+    }
+
     mod->fileCount = 0;
     mod->fileCapacity = 0;
     mod->size = 0;
     free(mod);
+}
+
+
+static struct ModFilePatterns *mod_parse_file_patterns(const char *input) {
+    if (!input || !*input) { return NULL; }
+
+    struct ModFilePatterns *fp = calloc(1, sizeof(struct ModFilePatterns));
+    if (!fp) { return NULL; }
+
+    // prepare buffer for tokenization
+    char str[MOD_FILE_PATTERNS_SIZE] = { 0 };
+    snprintf(str, sizeof(str), "%s", input);
+
+    char *token = strtok(str, ",");
+    bool blacklistToken = true;
+
+    while (token != NULL) {
+        // leading spaces
+        while (isspace((u8)*token)) { token++; }
+
+        // trailing spaces
+        char *end = token + strlen(token);
+        while (end > token && isspace((u8)*(end - 1))) {
+            *--end = '\0';
+        }
+
+        if (*token != '\0') {
+            if (blacklistToken) {
+                fp->blacklist = (!strcmp(token, "true"));
+                blacklistToken = false;
+            } else if (fp->count < MOD_FILE_PATTERNS_MAX) {
+                // allocate a copy for pattern
+                size_t len = strlen(token) + 1;
+                char *pattern = calloc(len, sizeof(char));
+                if (pattern) {
+                    memcpy(pattern, token, len);
+                    fp->patterns[fp->count++] = pattern;
+                }
+            }
+        }
+        token = strtok(NULL, ",");
+    }
+
+    return fp;
+}
+
+static void mod_extract_fields(struct Mod* mod) {
+    // initialize fields
+    mod->name[0] = 0;
+    mod->incompatible = NULL;
+    mod->category = NULL;
+    mod->description = NULL;
+    mod->filePatterns = NULL;
+    mod->pausable = true;
+    mod->ignoreScriptWarnings = false;
+
+    // resolve path
+    char path[SYS_MAX_PATH] = { 0 };
+    const char* targetFile = mod->isDirectory ? "main.lua" : mod->relativePath;
+
+    if (!concat_path(path, mod->basePath, (char*)targetFile)) {
+        LOG_ERROR("Failed to find main lua file.");
+        return;
+    }
+
+    // open file
+    FILE* f = fopen(path, "rb");
+    if (f == NULL) {
+        LOG_ERROR("Failed to open '%s'", path);
+        return;
+    }
+    fseek(f, 0, SEEK_SET);
+
+    // read line-by-line
+    #define BUFFER_SIZE MAX(MAX(MOD_NAME_SIZE, MOD_INCOMPATIBLE_SIZE), MAX(MOD_FILE_PATTERNS_SIZE, MOD_DESCRIPTION_SIZE))
+    char buffer[BUFFER_SIZE] = { 0 };
+    while (!feof(f)) {
+        file_get_line(buffer, BUFFER_SIZE, f);
+
+        // no longer in header
+        if (buffer[0] != '-' || buffer[1] != '-') {
+            fclose(f);
+            return;
+        }
+
+        // extract the field
+        char* extracted = NULL;
+        if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
+            if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod name field '%s'", mod->name);
+            }
+        } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
+            mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
+            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
+            }
+        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
+            mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
+            if (snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod category field '%s'", mod->category);
+            }
+        } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
+            mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
+            if (snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", extracted) < 0) {
+                LOG_INFO("Truncated mod description field '%s'", mod->description);
+            }
+        } else if (mod->filePatterns == NULL && (extracted = extract_lua_field("-- unrestricted-extensions:", buffer))) {
+            mod->filePatterns = mod_parse_file_patterns(extracted);
+        } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
+            mod->pausable = !strcmp(extracted, "true");
+        } else if ((extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
+            mod->ignoreScriptWarnings = !strcmp(extracted, "true");
+        }
+    }
+
+    fclose(f);
 }
 
 static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
@@ -282,7 +417,74 @@ static struct ModFile* mod_allocate_file(struct Mod* mod, char* relativePath) {
     return file;
 }
 
-static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, const char** fileTypes, bool recursive) {
+bool mod_check_file_cacheable(const char *path) {
+    if (!path) return false;
+    char normPath[SYS_MAX_PATH] = { 0 };
+    if (snprintf(normPath, sizeof(normPath), "%s", path) < 0) {
+        LOG_ERROR("Failed to copy path for normalization: %s", path);
+    }
+
+    normalize_path(normPath);
+
+    const char *lastSlash = strrchr(normPath, *PATH_SEPARATOR);
+    const char *lastDot = strrchr(normPath, '.');
+    if (lastDot != NULL && (lastSlash == NULL || lastDot > lastSlash)) {
+        for (const char **ext = MOD_FILE_CACHEABLE_EXTENSIONS; *ext; ext++) {
+            if (strcasecmp(lastDot, *ext) == 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static bool mod_matches_pattern(char *relativePath, char *pattern) {
+    if (!relativePath || !pattern || !*pattern) { return false; }
+
+    // check for pattern after the .
+    if (pattern[0] == '.' && strchr(pattern, '*') == NULL && strchr(pattern, *PATH_SEPARATOR) == NULL) {
+        return path_ends_with(relativePath, pattern);
+    }
+
+    // check for pattern after the *.
+    if (pattern[0] == '*' && pattern[1] == '.' && strchr(pattern + 2, '*') == NULL && strchr(pattern + 2, *PATH_SEPARATOR) == NULL) {
+        return path_ends_with(relativePath, pattern + 1);
+    }
+
+    // literal strings
+    if (strchr(pattern, '*') == NULL && strchr(pattern, '?') == NULL) {
+        if (str_ends_with(pattern, PATH_SEPARATOR)) {
+            return str_starts_with(relativePath, pattern);
+        }
+        return path_ends_with_filepath(relativePath, pattern);
+    }
+
+    // complex wildcards
+    char pathBuffer[SYS_MAX_PATH] = { 0 };
+    snprintf(pathBuffer, sizeof(pathBuffer), "%s", pattern);
+
+    // append "*" to match contents inside folder
+    if (str_ends_with(pathBuffer, PATH_SEPARATOR)) {
+        strncat(pathBuffer, "*", sizeof(pathBuffer) - strlen(pathBuffer) - 1);
+    }
+
+    // wildcard match for full relativePath
+    if (wildcard_match(pathBuffer, relativePath)) {
+        return true;
+    }
+
+    // match files in the root if **/file
+    char patternBuffer[SYS_MAX_PATH] = { 0 };
+    snprintf(patternBuffer, sizeof(patternBuffer), "**%s", PATH_SEPARATOR);
+    if (str_starts_with(pathBuffer, patternBuffer)) {
+        if (wildcard_match(pathBuffer + 3, relativePath)) { return true; }
+    }
+
+    // match file name only
+    return wildcard_match(pathBuffer, path_basename(relativePath));
+}
+
+static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subDir, bool recursive) {
 
     // concat directory
     char dirPath[SYS_MAX_PATH] = { 0 };
@@ -317,6 +519,8 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
             }
         }
 
+        normalize_path(relativePath);
+
         // Check if this is a directory
         struct stat st = { 0 };
         if (recursive && stat(path, &st) == 0 && S_ISDIR(st.st_mode)) {
@@ -326,7 +530,7 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
             }
 
             // Recursively process subdirectory
-            if (!mod_load_files_dir(mod, fullPath, relativePath, fileTypes, recursive)) {
+            if (!mod_load_files_dir(mod, fullPath, relativePath, recursive)) {
                 closedir(d);
                 return false;
             }
@@ -334,19 +538,40 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
         }
 
         // only consider certain file types
-        bool fileTypeMatch = false;
-        const char** ft = fileTypes;
-        while (*ft != NULL) {
-            if (path_ends_with(path, (char*)*ft)) {
-                fileTypeMatch = true;
+        bool blacklist = (mod->filePatterns != NULL && mod->filePatterns->blacklist);
+        bool matched = false;
+        if (mod->filePatterns != NULL) {
+            for (size_t i = 0; i < mod->filePatterns->count; i++) {
+                char pattern[SYS_MAX_PATH] = { 0 };
+                if (snprintf(pattern, SYS_MAX_PATH - 1, "%s", mod->filePatterns->patterns[i]) < 0) {
+                    LOG_ERROR("Could not concat %s pattern!", mod->filePatterns->patterns[i]);
+                    closedir(d);
+                    return false;
+                }
+
+                normalize_path(pattern);
+
+                if (mod_matches_pattern(relativePath, pattern)) {
+                    matched = true;
+                    break;
+                }
             }
-            ft++;
         }
-        if (!fileTypeMatch) { continue; }
+
+        bool allowedFile = false;
+        if (blacklist) {
+            // blacklist
+            allowedFile = !matched;
+        } else {
+            // whitelist, cacheable extensions are networked regardless of matching
+            allowedFile = matched || mod_check_file_cacheable(relativePath);
+        }
+        if (!allowedFile) { continue; }
 
         // allocate file
         struct ModFile* file = mod_allocate_file(mod, relativePath);
         if (file == NULL) {
+            closedir(d);
             return false;
         }
     }
@@ -356,48 +581,13 @@ static bool mod_load_files_dir(struct Mod* mod, char* fullPath, const char* subD
 }
 
 static bool mod_load_files(struct Mod* mod, char* fullPath) {
-    // read single lua file
     if (!mod->isDirectory) {
+        // read single file mods
         return (mod_allocate_file(mod, mod->relativePath) != NULL);
+    } else {
+        // read folder mods
+        return (mod_load_files_dir(mod, fullPath, "", true));
     }
-
-    // deal with mod directory
-    {
-        const char* fileTypes[] = { ".lua", ".luac", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "", fileTypes, true)) { return false; }
-    }
-
-    // deal with actors directory
-    {
-        const char* fileTypes[] = { ".bin", ".col", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "actors", fileTypes, false)) { return false; }
-    }
-
-    // deal with behaviors directory
-    {
-        const char* fileTypes[] = { ".bhv", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "data", fileTypes, false)) { return false; }
-    }
-
-    // deal with textures directory
-    {
-        const char* fileTypes[] = { ".tex", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "textures", fileTypes, true)) { return false; }
-    }
-
-    // deal with levels directory
-    {
-        const char* fileTypes[] = { ".lvl", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes, false)) { return false; }
-    }
-
-    // deal with sound directory
-    {
-        const char* fileTypes[] = { ".m64", ".mp3", ".aiff", ".ogg", NULL };
-        if (!mod_load_files_dir(mod, fullPath, "sound", fileTypes, true)) { return false; }
-    }
-
-    return true;
 }
 
 static void mod_set_loading_order(struct Mod* mod) {
@@ -418,86 +608,6 @@ static void mod_set_loading_order(struct Mod* mod) {
             }
         }
     }
-}
-
-static void mod_extract_fields(struct Mod* mod) {
-    // get full path
-    char path[SYS_MAX_PATH] = { 0 };
-    char* relativePath = NULL;
-    if (mod->isDirectory) {
-        for (int i = 0; i < mod->fileCount; i++) {
-            struct ModFile* file = &mod->files[i];
-            if (!strcmp(file->relativePath, "main.lua")) {
-                relativePath = file->relativePath;
-            }
-        }
-    } else {
-        relativePath = mod->files[0].relativePath;
-    }
-
-    if (relativePath == NULL || !concat_path(path, mod->basePath, relativePath)) {
-        LOG_ERROR("Failed to find main lua file.");
-        return;
-    }
-
-    // open file
-    FILE* f = fopen(path, "rb");
-    if (f == NULL) {
-        LOG_ERROR("Failed to open '%s'", path);
-        return;
-    }
-    fseek(f, 0, SEEK_SET);
-
-    // default to null
-    mod->name[0] = 0;
-    mod->incompatible = NULL;
-    mod->category = NULL;
-    mod->description = NULL;
-    mod->pausable = true;
-    mod->ignoreScriptWarnings = false;
-
-    // read line-by-line
-    #define BUFFER_SIZE MAX(MAX(MOD_NAME_SIZE, MOD_INCOMPATIBLE_SIZE), MOD_DESCRIPTION_SIZE)
-    char buffer[BUFFER_SIZE] = { 0 };
-    while (!feof(f)) {
-        file_get_line(buffer, BUFFER_SIZE, f);
-
-        // no longer in header
-        if (buffer[0] != '-' || buffer[1] != '-') {
-            fclose(f);
-            return;
-        }
-
-        // extract the field
-        char* extracted = NULL;
-        if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
-            if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod name field '%s'", mod->name);
-            }
-        } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
-            mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
-            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
-            }
-        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
-            mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
-            if (snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod category field '%s'", mod->category);
-            }
-        } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
-            mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
-            if (snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod description field '%s'", mod->description);
-            }
-        } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
-            mod->pausable = !strcmp(extracted, "true");
-        } else if ((extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
-            mod->ignoreScriptWarnings = !strcmp(extracted, "true");
-        }
-    }
-
-    // close file
-    fclose(f);
 }
 
 bool mod_refresh_files(struct Mod* mod) {
@@ -618,6 +728,9 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     // set directory
     mod->isDirectory = isDirectory;
 
+    // extract fields
+    mod_extract_fields(mod);
+
     // read files
     if (!mod_load_files(mod, fullPath)) {
         LOG_ERROR("Failed to load mod files for '%s'", modName);
@@ -626,9 +739,6 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
 
     // set loading order
     mod_set_loading_order(mod);
-
-    // extract fields
-    mod_extract_fields(mod);
 
     // set name
     if (!mod->name[0]) {
