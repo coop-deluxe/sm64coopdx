@@ -8,6 +8,7 @@ If you haven't, please read up on [contributing](../../CONTRIBUTING.md)!
 - [Config File](sections/configfile.md)
 - [DJUI](sections/djui.md)
 - [Languages](sections/lang.md)
+- [Growing Arrays](sections/growing_arrays.md)
 
 ## Code Format and Conventions
 

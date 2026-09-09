@@ -343,3 +343,36 @@ bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
 
     return true;
 }
+
+bool path_has_traversal(const char *path) {
+    if (!path) { return true; }
+
+    // reject empty and absolute paths
+    if (path[0] == '\0' || path[0] == *PATH_SEPARATOR || path[0] == *PATH_SEPARATOR_ALT) {
+        return true;
+    }
+
+    const char *start = path;
+
+    // iterate through path
+    while (start && *start) {
+        const char *end = start;
+        // look for the next path separator to get the end
+        while (end[0] && end[0] != *PATH_SEPARATOR && end[0] != *PATH_SEPARATOR_ALT) {
+            end++;
+        }
+
+        size_t len = (size_t)(end - start);
+
+        // check if we are . or ..
+        if ((len == 1 && start[0] == '.') ||
+            (len == 2 && start[0] == '.' && start[1] == '.')) {
+            return true;
+        }
+
+        // set start to end + 1 (if end is null, set start to null)
+        start = (end[0]) ? end + 1 : NULL;
+    }
+
+    return false;
+}

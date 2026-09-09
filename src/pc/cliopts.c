@@ -69,10 +69,9 @@ bool parse_cli_opts(int argc, char* argv[]) {
 #if defined(_WIN32)
         if (!strcmp(argv[i], "--console")) {
             gCLIOpts.console = true;
-        } else if (!strcmp(argv[i], "--savepath") && (i + 1) < argc) {
-#else
-        if (!strcmp(argv[i], "--savepath") && (i + 1) < argc) {
+        } else
 #endif
+        if (!strcmp(argv[i], "--savepath") && (i + 1) < argc) {
             arg_string("--savepath", argv[++i], gCLIOpts.savePath, SYS_MAX_PATH);
         } else if (!strcmp(argv[i], "--configfile") && (i + 1) < argc) {
             arg_string("--configfile", argv[++i], gCLIOpts.configFile, SYS_MAX_PATH);

@@ -154,7 +154,7 @@ static struct Object *obj_get_next_internal(struct Object *o, enum ObjectList ob
             if (next->activeFlags != ACTIVE_FLAG_DEACTIVATED) {
                 return next;
             }
-            next = (struct Object *) o->header.next;
+            next = (struct Object *) next->header.next;
         }
     }
     return NULL;

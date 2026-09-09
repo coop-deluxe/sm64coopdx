@@ -1925,6 +1925,151 @@ Warps back to the castle from `aLevel`
 
 <br />
 
+## [level_create_warp_node](#level_create_warp_node)
+
+### Description
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+
+### Lua Example
+`local customWarpNodeValue = level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+| marioSpawnType | [enum MarioSpawnType](constants.md#enum-MarioSpawnType) |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `boolean` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_create_warp_node(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_create_warp_node_with_object](#level_create_warp_node_with_object)
+
+### Description
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+
+### Lua Example
+`local customWarpNodeValue = level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+| marioSpawnType | [enum MarioSpawnType](constants.md#enum-MarioSpawnType) |
+| destLevel | `integer` |
+| destArea | `integer` |
+| destNode | `integer` |
+| checkpoint | `boolean` |
+| pos | [Vec3f](structs.md#Vec3f) |
+| angle | [Vec3s](structs.md#Vec3s) |
+| modelId | [enum ModelExtendedId](constants.md#enum-ModelExtendedId) |
+| behaviorId | [enum BehaviorId](constants.md#enum-BehaviorId) |
+| behParams | `integer` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_create_warp_node_with_object(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint, Vec3f pos, Vec3s angle, enum ModelExtendedId modelId, enum BehaviorId behaviorId, u32 behParams);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_get_warp_node](#level_get_warp_node)
+
+### Description
+Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+
+### Lua Example
+`local customWarpNodeValue = level_get_warp_node(levelNum, areaIndex, id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+
+### Returns
+- [CustomWarpNode](structs.md#CustomWarpNode)
+
+### C Prototype
+`struct CustomWarpNode *level_get_warp_node(u8 levelNum, u8 areaIndex, u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_delete_warp_node](#level_delete_warp_node)
+
+### Description
+Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+
+### Lua Example
+`level_delete_warp_node(levelNum, areaIndex, id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+| areaIndex | `integer` |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void level_delete_warp_node(u8 levelNum, u8 areaIndex, u8 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_clear_warp_nodes](#level_clear_warp_nodes)
+
+### Description
+Deletes all the warp nodes in level `levelNum`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+
+### Lua Example
+`level_clear_warp_nodes(levelNum)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| levelNum | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void level_clear_warp_nodes(u8 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ---
 # functions from smlua_misc_utils.h
 

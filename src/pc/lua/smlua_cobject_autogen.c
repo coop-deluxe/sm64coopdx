@@ -397,6 +397,17 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE                 },
 };
 
+#define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 7
+static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_COUNT] = {
+    { "decay",          LVT_S16, offsetof(struct CameraFOVStatus, decay),          false, LOT_NONE },
+    { "fov",            LVT_F32, offsetof(struct CameraFOVStatus, fov),            false, LOT_NONE },
+    { "fovFunc",        LVT_U8,  offsetof(struct CameraFOVStatus, fovFunc),        false, LOT_NONE },
+    { "fovOffset",      LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),      false, LOT_NONE },
+    { "shakeAmplitude", LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude), false, LOT_NONE },
+    { "shakePhase",     LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),     false, LOT_NONE },
+    { "shakeSpeed",     LVT_S16, offsetof(struct CameraFOVStatus, shakeSpeed),     false, LOT_NONE },
+};
+
 #define LUA_CHAIN_SEGMENT_FIELD_COUNT 6
 static struct LuaObjectField sChainSegmentFields[LUA_CHAIN_SEGMENT_FIELD_COUNT] = {
     { "pitch", LVT_S16, offsetof(struct ChainSegment, pitch), false, LOT_NONE },
@@ -716,6 +727,13 @@ static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_
     { "script",          LVT_LEVELSCRIPT_P, offsetof(struct CustomLevelInfo, script),          true,  LOT_POINTER         },
     { "scriptEntryName", LVT_STRING_P,      offsetof(struct CustomLevelInfo, scriptEntryName), true,  LOT_NONE            },
     { "shortName",       LVT_STRING_P,      offsetof(struct CustomLevelInfo, shortName),       true,  LOT_NONE            },
+};
+
+#define LUA_CUSTOM_WARP_NODE_FIELD_COUNT 3
+static struct LuaObjectField sCustomWarpNodeFields[LUA_CUSTOM_WARP_NODE_FIELD_COUNT] = {
+    { "marioSpawnType", LVT_S32,     offsetof(struct CustomWarpNode, marioSpawnType), false, LOT_NONE           },
+    { "node",           LVT_COBJECT, offsetof(struct CustomWarpNode, node),           true,  LOT_OBJECTWARPNODE },
+    { "spawnInfo",      LVT_COBJECT, offsetof(struct CustomWarpNode, spawnInfo),      true,  LOT_SPAWNINFO      },
 };
 
 #define LUA_DATE_TIME_FIELD_COUNT 6
@@ -1147,13 +1165,15 @@ static struct LuaObjectField sGraphNodeOrthoProjectionFields[LUA_GRAPH_NODE_ORTH
     { "scale", LVT_F32,     offsetof(struct GraphNodeOrthoProjection, scale), false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 6
+#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 8
 static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT] = {
     { "far",           LVT_S16,     offsetof(struct GraphNodePerspective, far),           false, LOT_NONE        },
     { "fnNode",        LVT_COBJECT, offsetof(struct GraphNodePerspective, fnNode),        true,  LOT_FNGRAPHNODE },
     { "fov",           LVT_F32,     offsetof(struct GraphNodePerspective, fov),           false, LOT_NONE        },
     { "near",          LVT_S16,     offsetof(struct GraphNodePerspective, near),          false, LOT_NONE        },
+    { "prevFar",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFar),       false, LOT_NONE        },
     { "prevFov",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFov),       false, LOT_NONE        },
+    { "prevNear",      LVT_F32,     offsetof(struct GraphNodePerspective, prevNear),      false, LOT_NONE        },
     { "prevTimestamp", LVT_F32,     offsetof(struct GraphNodePerspective, prevTimestamp), false, LOT_NONE        },
 };
 
@@ -2673,7 +2693,7 @@ static struct LuaObjectField sWarpNodeFields[LUA_WARP_NODE_FIELD_COUNT] = {
     { "destArea",  LVT_U8, offsetof(struct WarpNode, destArea),  false, LOT_NONE },
     { "destLevel", LVT_U8, offsetof(struct WarpNode, destLevel), false, LOT_NONE },
     { "destNode",  LVT_U8, offsetof(struct WarpNode, destNode),  false, LOT_NONE },
-    { "id",        LVT_U8, offsetof(struct WarpNode, id),        false, LOT_NONE },
+    { "id",        LVT_U8, offsetof(struct WarpNode, id),        true,  LOT_NONE },
 };
 
 #define LUA_WATER_DROPLET_PARAMS_FIELD_COUNT 11
@@ -2711,10 +2731,12 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
     { LOT_BEHAVIORVALUES,               sBehaviorValuesFields,               LUA_BEHAVIOR_VALUES_FIELD_COUNT                 },
     { LOT_CAMERA,                       sCameraFields,                       LUA_CAMERA_FIELD_COUNT                          },
+    { LOT_CAMERAFOVSTATUS,              sCameraFOVStatusFields,              LUA_CAMERA_FOVSTATUS_FIELD_COUNT                },
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
     { LOT_CUSTOMLEVELINFO,              sCustomLevelInfoFields,              LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT               },
+    { LOT_CUSTOMWARPNODE,               sCustomWarpNodeFields,               LUA_CUSTOM_WARP_NODE_FIELD_COUNT                },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
     { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
     { LOT_DISPLAYLISTNODE,              sDisplayListNodeFields,              LUA_DISPLAY_LIST_NODE_FIELD_COUNT               },
@@ -2817,10 +2839,12 @@ const char *sLuaLotNames[] = {
     [LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
     [LOT_BEHAVIORVALUES] = "BehaviorValues",
     [LOT_CAMERA] = "Camera",
+    [LOT_CAMERAFOVSTATUS] = "CameraFOVStatus",
     [LOT_CHAINSEGMENT] = "ChainSegment",
     [LOT_CHARACTER] = "Character",
     [LOT_CONTROLLER] = "Controller",
     [LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
+    [LOT_CUSTOMWARPNODE] = "CustomWarpNode",
     [LOT_DATETIME] = "DateTime",
     [LOT_DIALOGENTRY] = "DialogEntry",
     [LOT_DISPLAYLISTNODE] = "DisplayListNode",

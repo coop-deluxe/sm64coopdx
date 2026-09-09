@@ -634,6 +634,25 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
         djui_inputbox_render_char(inputbox, c, &drawX, &additionalShift);
         c = djui_unicode_next_char(c);
     }
+
+    bool isChatInput = (gDjuiChatBox != NULL && gDjuiChatBox->chatInput == inputbox);
+    if (isChatInput && djui_interactable_is_input_focus(&inputbox->base) && inputbox->buffer[0] == '/') {
+        char *previewText = djui_chat_box_get_next_tab_completion_preview(inputbox->buffer);
+        if (previewText != NULL && previewText[0] != '\0') {
+            struct DjuiTheme *theme = gDjuiThemes[configDjuiTheme];
+            struct DjuiColor disabledTextColor = theme->interactables.disabledTextColor;
+            gDPSetEnvColor(gDisplayListHead++, disabledTextColor.r, disabledTextColor.g, disabledTextColor.b, disabledTextColor.a);
+            char *previewChar = previewText;
+            while (*previewChar != '\0') {
+                djui_inputbox_render_char(inputbox, previewChar, &drawX, &additionalShift);
+                previewChar = djui_unicode_next_char(previewChar);
+            }
+            gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
+        }
+        if (previewText != NULL) {
+            free(previewText);
+        }
+    }
     font->render_end();
 
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);

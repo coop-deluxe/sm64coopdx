@@ -7,8 +7,8 @@
 #include "dialog_ids.h"
 #include "audio/external.h"
 #include "level_update.h"
+#include "level_commands.h"
 #include "game_init.h"
-#include "level_update.h"
 #include "main.h"
 #include "engine/math_util.h"
 #include "engine/graph_node.h"
@@ -820,7 +820,7 @@ struct WarpNode *get_painting_warp_node(void) {
 static void initiate_painting_warp_node(struct WarpNode *pWarpNode) {
     struct WarpNode warpNode = *pWarpNode;
 
-    if (!(warpNode.destLevel & 0x80)) {
+    if (!(warpNode.destLevel & WARP_CHECKPOINT)) {
         sWarpCheckpointActive = check_warp_checkpoint(&warpNode);
     }
 
@@ -1603,13 +1603,12 @@ void update_menu_level(void) {
     }
     if (gIsDemoActive) { return; }
 
-    struct Object *o;
-
-    // Remove the stars
-    o = find_object_with_behavior(bhvStar);
-    if (o != NULL) {
-        obj_mark_for_deletion(o);
-    }
+    // remove the stars
+    delete_all_objects_with_behavior(bhvStar);
+    delete_all_objects_with_behavior(bhvSpawnedStar);
+    delete_all_objects_with_behavior(bhvSpawnedStarNoLevelExit);
+    delete_all_objects_with_behavior(bhvStarSpawnCoordinates);
+    delete_all_objects_with_behavior(bhvRedCoinStarMarker);
 
     // set mario/camera pos
     switch (gCurrLevelNum) {
@@ -1627,10 +1626,7 @@ void update_menu_level(void) {
             gMarioState->faceAngle[1] = 0x2000;
 
             // delete all goombas as they interfere with the main menu
-            o = find_object_with_behavior(bhvGoomba);
-            if (o != NULL) {
-                obj_mark_for_deletion(o);
-            }
+            delete_all_objects_with_behavior(bhvGoomba);
             break;
         case LEVEL_WF:
             vec3f_set(gMarioState->pos, -2904, 2560, -327);
@@ -1667,10 +1663,7 @@ void update_menu_level(void) {
             gMarioState->faceAngle[1] = 0;
 
             // delete all scuttlebugs as they interfere with the main menu
-            o = find_object_with_behavior(bhvScuttlebug);
-            if (o != NULL) {
-                obj_mark_for_deletion(o);
-            }
+            delete_all_objects_with_behavior(bhvScuttlebug);
             break;
         case LEVEL_LLL:
             vec3f_set(gMarioState->pos, -2376, 638, 956);
@@ -1683,10 +1676,7 @@ void update_menu_level(void) {
             gMarioState->faceAngle[1] = -0x4000;
 
             // delete all goombas as they interfere with the main menu
-            o = find_object_with_behavior(bhvGoomba);
-            if (o != NULL) {
-                obj_mark_for_deletion(o);
-            }
+            delete_all_objects_with_behavior(bhvGoomba);
             break;
         case LEVEL_HMC:
             vec3f_set(gMarioState->pos, -3600, -4279, 3616);

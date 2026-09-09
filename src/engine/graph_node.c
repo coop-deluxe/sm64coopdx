@@ -88,9 +88,9 @@ struct GraphNodePerspective *init_graph_node_perspective(struct DynamicPool *poo
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_PERSPECTIVE);
 
-        graphNode->fov = fov;
-        graphNode->near = near;
-        graphNode->far = far;
+        graphNode->prevFov = graphNode->fov = fov;
+        graphNode->prevNear = graphNode->near = near;
+        graphNode->prevFar = graphNode->far = far;
         graphNode->fnNode.func = nodeFunc;
         graphNode->unused = unused;
 

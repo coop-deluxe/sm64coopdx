@@ -10,6 +10,7 @@
 #define MOD_FS_MAX_SIZE     0x8000000 // 128 MB
 #define MOD_FS_MAX_FILES    0x400
 #define MOD_FS_MAX_PATH     0x100
+#define MOD_FS_MAX_PROPERTIES_SIZE (MOD_FS_MAX_FILES * MOD_FS_MAX_PATH * 2) // 512 KB
 #define MOD_FS_URI_PREFIX   "modfs:/"
 #define MOD_FS_URI_FORMAT   "modfs:/%s/%s" // modPath, filepath
 

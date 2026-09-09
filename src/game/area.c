@@ -23,8 +23,10 @@
 #include "level_table.h"
 #include "gfx_dimensions.h"
 #include "game/ingame_menu.h"
+#include "game/object_helpers.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_pause.h"
@@ -151,11 +153,13 @@ void print_intro_text(void) {
 u32 get_mario_spawn_type(struct Object *o) {
     if (o == NULL || o->behavior == NULL) { return MARIO_SPAWN_NONE; }
 
-    const BehaviorScript *behavior = virtual_to_segmented(0x13, o->behavior);
-    if (behavior == NULL) { return MARIO_SPAWN_NONE; }
+    enum MarioSpawnType marioSpawnType = level_get_warp_spawn_type_from_object(gCurrLevelNum, gCurrAreaIndex, o);
+    if (marioSpawnType != MARIO_SPAWN_NONE) {
+        return (u32) marioSpawnType;
+    }
 
-    for (s32 i = 0; i < 20; i++) {
-        if (sWarpBhvSpawnTable[i] == smlua_override_behavior(behavior)) {
+    for (s32 i = 0; i < ARRAY_COUNT(sWarpBhvSpawnTable); i++) {
+        if (obj_has_behavior(o, sWarpBhvSpawnTable[i])) {
             return sSpawnTypeFromWarpBhv[i];
         }
     }
@@ -274,7 +278,7 @@ void clear_area_graph_nodes(void) {
 }
 
 void load_area(s32 index) {
-    if (gCurrentArea == NULL && gAreaData[index].root != NULL) {
+    if (gCurrentArea == NULL && index >= 0 && index < MAX_AREAS && gAreaData[index].root != NULL) {
         gCurrentArea = &gAreaData[index];
         gCurrentArea->localAreaTimer = 0;
         if (gCurrentArea->objectSpawnInfos) {
@@ -291,6 +295,7 @@ void load_area(s32 index) {
             spawn_objects_from_info(0, gCurrentArea->objectSpawnInfos);
         }
 
+        level_clear_warp_node_objects(gCurrLevelNum, index);
         load_obj_warp_nodes();
         geo_call_global_function_nodes(&gCurrentArea->root->node, GEO_CONTEXT_AREA_LOAD);
     }
