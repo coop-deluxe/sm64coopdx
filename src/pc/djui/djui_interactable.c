@@ -10,6 +10,7 @@
 #include "pc/controller/controller_keyboard.h"
 #include "pc/utils/misc.h"
 #include "pc/network/network.h"
+#include "pc/voice_chat.h"
 
 #include "sounds.h"
 #include "audio/external.h"
@@ -235,20 +236,44 @@ bool djui_interactable_on_key_down(int scancode) {
     if (gDjuiChatBox != NULL && !gDjuiChatBoxFocus) {
         bool pressChat = false;
         bool pressChatCommand = false;
+        bool pressMute = false;
+        bool pressDeafen = false;
+        bool pressPushToTalk = false;
         for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyChat[i]) { pressChat = true; }
-            if (scancode == (int)configKeyChatCommand[i]) { pressChatCommand = true; }
+            if (scancode == (int)configKeyChat[i]) pressChat = true;
+            if (scancode == (int)configKeyChatCommand[i]) pressChatCommand = true;
+            if (scancode == (int)configKeyMuteMic[i]) pressMute = true;
+            if (scancode == (int)configKeyDeafen[i]) pressDeafen = true;
+            if (scancode == (int)configKeyPushToTalk[i]) pressPushToTalk = true;
         }
 
-        if (pressChat && !gDjuiConsoleFocus) {
-            djui_chat_box_toggle();
-            return true;
+        if (!gDjuiConsoleFocus) {
+            if (pressChat && !gDjuiConsoleFocus) {
+                djui_chat_box_toggle();
+                return true;
+            }
+    
+            if (pressChatCommand && !gDjuiConsoleFocus) {
+                djui_chat_box_open_with_text("/");
+                return true;
+            }
+
+            if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
+                voicechat_toggle_mute();
+                return true;
+            }
+    
+            if (pressDeafen) {
+                voicechat_toggle_deafen();
+                return true;
+            }
+
+            if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
+                voicechat_set_mute(false);
+                return true;
+            }
         }
 
-        if (pressChatCommand && !gDjuiConsoleFocus) {
-            djui_chat_box_open_with_text("/");
-            return true;
-        }
     }
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
@@ -300,6 +325,15 @@ bool djui_interactable_on_key_down(int scancode) {
 }
 
 void djui_interactable_on_key_up(int scancode) {
+    if (!gDjuiChatBoxFocus) {
+        bool disablePushToTalk = false;
+        for (int i = 0; i < MAX_BINDS; i++) {
+            if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
+        }
+
+        if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
+    }
+
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
         if (!gDjuiChatBoxFocus) {
             djui_console_toggle();

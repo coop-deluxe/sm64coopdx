@@ -23,6 +23,7 @@
 #include "pc/pc_main.h"
 #include "pc/gfx/gfx_pc.h"
 #include "pc/fs/fmem.h"
+#include "pc/voice_chat.h"
 #include "game/hardcoded.h"
 #include "game/scroll_targets.h"
 #include "game/camera.h"
@@ -90,6 +91,7 @@ struct ServerSettings gServerSettings = {
     .maxPlayers = MAX_PLAYERS,
     .pauseAnywhere = FALSE,
     .pvpType = PLAYER_PVP_CLASSIC,
+    .voiceChat = VOICECHAT_TYPE_DISABLED,
 };
 
 struct NametagsSettings gNametagsSettings = {
@@ -135,10 +137,12 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
     gServerSettings.nametags = configNametags;
+    gServerSettings.voiceChat = configVoiceChat;
     gServerSettings.maxPlayers = configAmountOfPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
     gServerSettings.pvpType = configPvpType;
     gServerSettings.headlessServer = gCLIOpts.headless && (inNetworkType == NT_SERVER);
+    if (configNetworkSystem == NS_COOPNET && configPassword[0] == 0) gServerSettings.voiceChat = VOICECHAT_TYPE_DISABLED;
 
     gNametagsSettings.showHealth = false;
     gNametagsSettings.showSelfTag = false;

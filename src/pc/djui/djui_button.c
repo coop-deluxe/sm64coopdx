@@ -47,7 +47,7 @@ static void djui_button_destroy(struct DjuiBase* base) {
     free(button);
 }
 
-struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
+static struct DjuiButton* djui_button_create_base(struct DjuiBase* parent, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
     struct DjuiButton* button = calloc(1, sizeof(struct DjuiButton));
     struct DjuiBase* base     = &button->base;
 
@@ -62,7 +62,18 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_base_set_size(&rect->base, 1.0f, 1.0f);
     button->rect = rect;
 
-    struct DjuiText* text = djui_text_create(&rect->base, message);
+    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(base, 1.0f, configDjuiThemeCenter ? 50 : 64);
+    djui_interactable_hook_click(base, on_click);
+    button->style = style;
+
+    return button;
+}
+
+struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* message, enum DjuiButtonStyle style, void (*on_click)(struct DjuiBase*)) {
+    struct DjuiButton* button = djui_button_create_base(parent, style, on_click);
+
+    struct DjuiText* text = djui_text_create(&button->rect->base, message);
     struct DjuiColor color = gDjuiThemes[configDjuiTheme]->interactables.textColor;
 
     djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
@@ -72,11 +83,19 @@ struct DjuiButton* djui_button_create(struct DjuiBase* parent, const char* messa
     djui_text_set_drop_shadow(text, 64, 64, 64, 100);
     button->text = text;
 
-    djui_base_set_size_type(base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(base, 1.0f, configDjuiThemeCenter ? 50 : 64);
-    djui_interactable_hook_click(base, on_click);
-    button->style = style;
-    djui_button_update_style(base);
+    djui_button_update_style(&button->base);
+
+    return button;
+}
+
+struct DjuiButton* djui_image_button_create(struct DjuiBase* parent, const Texture* tex, u16 width, u16 height, u8 fmt, u8 siz, enum DjuiButtonStyle style, void(*on_click)(struct DjuiBase*)) {
+    struct DjuiButton* button = djui_button_create_base(parent, style, on_click);
+
+    struct DjuiImage* icon = djui_image_create(&button->rect->base, tex, width, height, fmt, siz);
+    djui_base_set_alignment(&icon->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+    button->icon = icon;
+
+    djui_button_update_style(&button->base);
 
     return button;
 }

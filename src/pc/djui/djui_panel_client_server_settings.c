@@ -13,6 +13,7 @@ static unsigned int sKnockbackIndex = 0;
 static unsigned int sPvpType = 0;
 static unsigned int sStayInLevelAfterStar = 0;
 static unsigned int sBouncyLevelBounds = 0;
+static unsigned int sVoiceChat = 0;
 
 void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
@@ -51,6 +52,12 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         djui_base_set_enabled(&checkbox3->base, false);
         struct DjuiCheckbox* checkbox4 = djui_checkbox_create(body, DLANG(HOST_SETTINGS, NAMETAGS), (bool*)&gServerSettings.nametags, NULL);
         djui_base_set_enabled(&checkbox4->base, false);
+    
+        sVoiceChat = gServerSettings.voiceChat;
+        struct DjuiSelectionbox* selectionbox6 = djui_selectionbox_create(body, DLANG(OPTIONS, VOICECHAT), (char*[]){
+            DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
+        }, 3, &sVoiceChat, NULL);
+        djui_base_set_enabled(&selectionbox6->base, false);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

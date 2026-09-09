@@ -96,6 +96,7 @@
 - [Vec4f](#Vec4f)
 - [Vec4i](#Vec4i)
 - [Vec4s](#Vec4s)
+- [VoicePlayer](#VoicePlayer)
 - [Vtx](#Vtx)
 - [WallCollisionData](#WallCollisionData)
 - [WarpNode](#WarpNode)
@@ -2895,6 +2896,7 @@
 | nametags | `integer` |  |
 | maxPlayers | `integer` |  |
 | pauseAnywhere | `integer` |  |
+| voiceChat | `integer` |  |
 
 [:arrow_up_small:](#)
 
@@ -3143,6 +3145,21 @@
 | y | `integer` |  |
 | z | `integer` |  |
 | w | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [VoicePlayer](#VoicePlayer)
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| talking | `boolean` | read-only |
+| volume | `integer` |  |
+| channel | `integer` |  |
+| error | [enum VoiceChatError](constants.md#enum-VoiceChatError) | read-only |
+| clientMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |
+| playerMutedState | [enum VoiceChatMuteState](constants.md#enum-VoiceChatMuteState) | read-only |
 
 [:arrow_up_small:](#)
 

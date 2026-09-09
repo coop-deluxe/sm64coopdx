@@ -8,6 +8,7 @@
 #include "game/camera.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/voice_chat.h"
 
 #define FADE_SCALE 4.f
 
@@ -170,6 +171,23 @@ void nametags_render(void) {
               e->prevPos[0] - prevHalfWidth, prevNametagPosY,   e->prevScale,
             nametag->pos[0] - currHalfWidth, currNametagPosY, nametag->scale,
             color[0], color[1], color[2], alpha, 0.25);
+
+
+        // render mic icon
+        const char* mic = NULL;
+        if      (gVoicePlayers[playerIndex].error != VOICECHAT_ERR_NONE) mic = "texture_microphone_warning";
+        else if (gVoicePlayers[playerIndex].playerMutedState & VOICECHAT_MUTE_DEAFENED) mic = "texture_headphones";
+        else if (gVoicePlayers[playerIndex].clientMutedState & VOICECHAT_MUTE_GLOBAL)   mic = "texture_microphone_red_muted";
+        else if (gVoicePlayers[playerIndex].clientMutedState & VOICECHAT_MUTE_LOCAL)    mic = "texture_microphone_muted";
+        else if (gVoicePlayers[playerIndex].talking) mic = "texture_microphone";
+        if (mic) {
+            struct TextureInfo texture;
+            dynos_texture_get(mic, &texture);
+            djui_hud_render_texture_interpolated(&texture,
+                  e->prevPos[0] - prevHalfWidth - 36 *   e->prevScale, prevNametagPosY,   e->prevScale * 2,   e->prevScale * 2,
+                nametag->pos[0] - currHalfWidth - 36 * nametag->scale, currNametagPosY, nametag->scale * 2, nametag->scale * 2
+            );
+        }
 
         // render power meter
         if (playerIndex != 0 && gNametagsSettings.showHealth) {

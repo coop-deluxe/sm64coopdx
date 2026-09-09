@@ -23,6 +23,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_obj_utils.h"
+#include "pc/voice_chat.h"
 #include "data/dynos_mgr_builtin_externs.h"
 
 extern bool gDjuiInMainMenu;
@@ -590,6 +591,32 @@ void render_hud_camera_status(void) {
     gSPDisplayList(gDisplayListHead++, dl_hud_img_end);
 }
 
+void render_hud_voicechat(void) {
+    if (gServerSettings.voiceChat == VOICECHAT_TYPE_DISABLED || configVoiceChatActivationMode == VOICECHAT_ACTMODE_DISABLED) return;
+    
+    s32 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(22);
+    s32 y = 35;
+
+    const Texture* tex = NULL;
+    if (gVoicePlayer->error != VOICECHAT_ERR_NONE) tex = texture_microphone_warning;
+    else if (gVoicePlayer->clientMutedState & VOICECHAT_MUTE_DEAFENED) tex = texture_headphones;
+    else if (gVoicePlayer->clientMutedState & VOICECHAT_MUTE_GLOBAL)   tex = texture_microphone_red_muted;
+    else if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
+        if (gVoicePlayer->clientMutedState != VOICECHAT_UNMUTED) tex = texture_microphone_muted;
+        else tex = texture_microphone;
+    }
+    else if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
+        if (gVoicePlayer->clientMutedState != VOICECHAT_UNMUTED) tex = texture_microphone_muted;
+        else if (gVoicePlayer->talking) tex = texture_microphone;
+        else tex = NULL;
+    }
+
+    if (!tex) return;
+
+    gDPSetEnvColor(gDisplayListHead++, 0xFF, 0xFF, 0xFF, 0xFF);
+    render_hud_icon(NULL, tex, G_IM_FMT_RGBA, G_IM_SIZ_16b, 16, 16, x, y, 16, 16, 0, 0, 16, 16);
+}
+
 /**
  * Render HUD strings using hudDisplayFlags with it's render functions,
  * excluding the cannon reticle which detects a camera preset for it.
@@ -666,6 +693,10 @@ void render_hud(void) {
 
         if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
             render_hud_timer();
+        }
+
+        if (hudDisplayFlags & HUD_DISPLAY_FLAG_VOICECHAT && showHud) {
+            render_hud_voicechat();
         }
     }
 }

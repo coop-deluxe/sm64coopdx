@@ -30,6 +30,7 @@
 #include "src/game/player_palette.h"
 #include "src/engine/graph_node.h"
 #include "include/PR/gbi.h"
+#include "src/pc/voice_chat.h"
 
 #include "include/object_fields.h"
 
@@ -2533,7 +2534,7 @@ static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SET
     { "zoomedOutHeight", LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutHeight), false, LOT_NONE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 13
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 14
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
@@ -2548,6 +2549,7 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "pvpType",                     LVT_S32, offsetof(struct ServerSettings, pvpType),                     false, LOT_NONE },
     { "skipIntro",                   LVT_U8,  offsetof(struct ServerSettings, skipIntro),                   false, LOT_NONE },
     { "stayInLevelAfterStar",        LVT_S32, offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE },
+    { "voiceChat",                   LVT_U8,  offsetof(struct ServerSettings, voiceChat),                   false, LOT_NONE },
 };
 
 #define LUA_SPAWN_INFO_FIELD_COUNT 8
@@ -2655,6 +2657,16 @@ static struct LuaObjectField sTextureInfoFields[LUA_TEXTURE_INFO_FIELD_COUNT] = 
     { "size",    LVT_U8,        offsetof(struct TextureInfo, size),    true, LOT_NONE    },
     { "texture", LVT_TEXTURE_P, offsetof(struct TextureInfo, texture), true, LOT_POINTER },
     { "width",   LVT_U32,       offsetof(struct TextureInfo, width),   true, LOT_NONE    },
+};
+
+#define LUA_VOICE_PLAYER_FIELD_COUNT 6
+static struct LuaObjectField sVoicePlayerFields[LUA_VOICE_PLAYER_FIELD_COUNT] = {
+    { "channel",          LVT_S32,  offsetof(struct VoicePlayer, channel),          false, LOT_NONE },
+    { "clientMutedState", LVT_S32,  offsetof(struct VoicePlayer, clientMutedState), true,  LOT_NONE },
+    { "error",            LVT_S32,  offsetof(struct VoicePlayer, error),            true,  LOT_NONE },
+    { "playerMutedState", LVT_S32,  offsetof(struct VoicePlayer, playerMutedState), true,  LOT_NONE },
+    { "talking",          LVT_BOOL, offsetof(struct VoicePlayer, talking),          true,  LOT_NONE },
+    { "volume",           LVT_U32,  offsetof(struct VoicePlayer, volume),           false, LOT_NONE },
 };
 
 #define LUA_VTX_FIELD_COUNT 13
@@ -2808,6 +2820,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_STATICOBJECTCOLLISION,        sStaticObjectCollisionFields,        LUA_STATIC_OBJECT_COLLISION_FIELD_COUNT         },
     { LOT_SURFACE,                      sSurfaceFields,                      LUA_SURFACE_FIELD_COUNT                         },
     { LOT_TEXTUREINFO,                  sTextureInfoFields,                  LUA_TEXTURE_INFO_FIELD_COUNT                    },
+    { LOT_VOICEPLAYER,                  sVoicePlayerFields,                  LUA_VOICE_PLAYER_FIELD_COUNT                    },
     { LOT_VTX,                          sVtxFields,                          LUA_VTX_FIELD_COUNT                             },
     { LOT_WALLCOLLISIONDATA,            sWallCollisionDataFields,            LUA_WALL_COLLISION_DATA_FIELD_COUNT             },
     { LOT_WARPNODE,                     sWarpNodeFields,                     LUA_WARP_NODE_FIELD_COUNT                       },
@@ -2916,6 +2929,7 @@ const char *sLuaLotNames[] = {
     [LOT_STATICOBJECTCOLLISION] = "StaticObjectCollision",
     [LOT_SURFACE] = "Surface",
     [LOT_TEXTUREINFO] = "TextureInfo",
+    [LOT_VOICEPLAYER] = "VoicePlayer",
     [LOT_VTX] = "Vtx",
     [LOT_WALLCOLLISIONDATA] = "WallCollisionData",
     [LOT_WARPNODE] = "WarpNode",

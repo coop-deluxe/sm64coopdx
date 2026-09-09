@@ -7166,6 +7166,290 @@ Checks if a sync object is owned locally using a `syncId`
 <br />
 
 ---
+# functions from voice_chat.h
+
+<br />
+
+
+## [voicechat_toggle_mute](#voicechat_toggle_mute)
+
+### Description
+Toggles mute state on the current player
+
+### Lua Example
+`voicechat_toggle_mute()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_toggle_mute();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_toggle_global_mute](#voicechat_toggle_global_mute)
+
+### Description
+Toggles global mute state on another player
+
+### Lua Example
+`voicechat_toggle_global_mute(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_toggle_global_mute(s32 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_toggle_mute_other](#voicechat_toggle_mute_other)
+
+### Description
+Toggles mute state on another player for the current client
+
+### Lua Example
+`voicechat_toggle_mute_other(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_toggle_mute_other(s32 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_toggle_deafen](#voicechat_toggle_deafen)
+
+### Description
+Toggles deafen state on the current player
+
+### Lua Example
+`voicechat_toggle_deafen()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_toggle_deafen();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_set_mute](#voicechat_set_mute)
+
+### Description
+Sets mute state on the current player
+
+### Lua Example
+`voicechat_set_mute(muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| muted | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_set_mute(bool muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_set_global_mute](#voicechat_set_global_mute)
+
+### Description
+Sets global mute state on another player
+
+### Lua Example
+`voicechat_set_global_mute(id, muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| muted | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_set_global_mute(s32 id, bool muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_set_mute_other](#voicechat_set_mute_other)
+
+### Description
+Sets mute state on another player for the current client
+
+### Lua Example
+`voicechat_set_mute_other(id, muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| muted | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_set_mute_other(s32 id, bool muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_set_deafen](#voicechat_set_deafen)
+
+### Description
+Sets deafen state on the current player
+
+### Lua Example
+`voicechat_set_deafen(muted)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| muted | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_set_deafen(bool muted);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_create_channel](#voicechat_create_channel)
+
+### Description
+Creates a new voice channel and returns its ID.
+The ID of the default channel is always 0
+
+### Lua Example
+`local integerValue = voicechat_create_channel()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 voicechat_create_channel();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_remove_channel](#voicechat_remove_channel)
+
+### Description
+Removes a voice channel.
+All players in the to-be-removed channel will get moved to the default channel.
+The default channel cannot be removed
+
+### Lua Example
+`voicechat_remove_channel(channel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| channel | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_remove_channel(s32 channel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_hear](#voicechat_hear)
+
+### Description
+Sets if players in `channel` should be able to hear players in `other_channel`
+
+### Lua Example
+`voicechat_hear(channel, other_channel, can_hear)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| channel | `integer` |
+| other_channel | `integer` |
+| can_hear | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void voicechat_hear(s32 channel, s32 other_channel, bool can_hear);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voicechat_can_hear](#voicechat_can_hear)
+
+### Description
+Checks if players in `channel` can hear players in `other_channel`
+
+### Lua Example
+`local booleanValue = voicechat_can_hear(channel, other_channel)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| channel | `integer` |
+| other_channel | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool voicechat_can_hear(s32 channel, s32 other_channel);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 
 [< prev](functions-6.md) | [1](functions.md) | [2](functions-2.md) | [3](functions-3.md) | [4](functions-4.md) | [5](functions-5.md) | [6](functions-6.md) | 7]
 

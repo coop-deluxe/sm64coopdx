@@ -12,6 +12,7 @@
 #define MAX_BINDS  3
 #define MAX_VOLUME 127
 #define MAX_CONFIG_STRING 64
+#define MAX_AUDIO_DEVICE_LENGTH 256
 #define MAX_SAVE_NAME_STRING 32
 
 #define DEFAULT_PORT 7777
@@ -58,13 +59,21 @@ extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
 extern unsigned int configDrawDistance;
 // sound settings
+extern char configAudioOutputDevice[MAX_AUDIO_DEVICE_LENGTH];
+extern char configAudioInputDevice[MAX_AUDIO_DEVICE_LENGTH];
 extern unsigned int configMasterVolume;
 extern unsigned int configMusicVolume;
 extern unsigned int configSfxVolume;
 extern unsigned int configEnvVolume;
+extern unsigned int configVoiceChatVolume;
 extern bool         configFadeoutDistantSounds;
 extern bool         configMuteFocusLoss;
 extern unsigned int configSoundOutput;
+// voice chat settings
+extern unsigned int configVoiceChatActivationMode;
+extern unsigned int configVoiceChatActivationThreshold;
+extern unsigned int configVoiceChatMicrophoneGain;
+extern unsigned int configVoiceChatStereoSpread;
 // control binds
 extern unsigned int configKeyA[MAX_BINDS];
 extern unsigned int configKeyB[MAX_BINDS];
@@ -93,6 +102,9 @@ extern unsigned int configKeyConsole[MAX_BINDS];
 extern unsigned int configKeyPrevPage[MAX_BINDS];
 extern unsigned int configKeyNextPage[MAX_BINDS];
 extern unsigned int configKeyDisconnect[MAX_BINDS];
+extern unsigned int configKeyMuteMic[MAX_BINDS];
+extern unsigned int configKeyDeafen[MAX_BINDS];
+extern unsigned int configKeyPushToTalk[MAX_BINDS];
 extern unsigned int configInputDelay;
 extern unsigned int configStickDeadzone;
 extern unsigned int configRumbleStrength;
@@ -150,6 +162,7 @@ extern unsigned int configPlayerKnockbackStrength;
 extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
 extern bool         configModDevMode;
+extern unsigned int configVoiceChat;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;

@@ -100,6 +100,8 @@ void packet_process(struct Packet* p) {
         case PACKET_SAVE_REMOVE_FLAG:        network_receive_save_remove_flag(p);        break;
         case PACKET_NETWORK_PLAYERS:         network_receive_network_players(p);         break;
         case PACKET_DEATH:                   network_receive_death(p);                   break;
+        case PACKET_VOICECHAT_FRAME:         network_receive_voicechat_frame(p);         break;
+        case PACKET_VOICECHAT_MUTE:          network_receive_voicechat_muted(p);         break;
 
         case PACKET_PING:                    network_receive_ping(p);                    break;
         case PACKET_PONG:                    network_receive_pong(p);                    break;

@@ -24,7 +24,7 @@ jobs:
                 os: ubuntu-22.04
                 deps: |
                   sudo apt update
-                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libopus-dev libcurl4-openssl-dev zip
                 make: make -j$(nproc)
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
@@ -32,13 +32,13 @@ jobs:
                 os: ubuntu-22.04
                 deps: |
                   sudo apt update
-                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libcurl4-openssl-dev zip
+                  sudo apt install -y build-essential git python3 libglew-dev libsdl2-dev libz-dev libopus-dev libcurl4-openssl-dev zip
                 make: make -j$(nproc)
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: macOS_ARM
                 os: macos-26
-                deps: brew install make mingw-w64 pkg-config glfw3 coreutils
+                deps: brew install make mingw-w64 pkg-config glfw3 coreutils opus
                 glew-flags: CC="clang -arch arm64 -mmacosx-version-min=11" GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
                 glew-install: GLEW_PREFIX=/opt/homebrew GLEW_DEST=/opt/homebrew
                 sdl2-config: --prefix=/opt/homebrew CC="clang -arch arm64 -mmacosx-version-min=11"
@@ -50,7 +50,7 @@ jobs:
 
               - name: macOS_Intel
                 os: macos-15-intel
-                deps: brew install make mingw-w64 pkg-config glfw3 coreutils
+                deps: brew install make mingw-w64 pkg-config glfw3 coreutils opus
                 glew-flags: CC="clang -arch x86_64 -mmacosx-version-min=10.15"
                 sdl2-config: --prefix=/usr/local CC="clang -arch x86_64 -mmacosx-version-min=10.15"
                 make: gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
@@ -89,6 +89,7 @@ jobs:
                     git
                     mingw-w64-x86_64-gcc
                     mingw-w64-x86_64-glew
+                    mingw-w64-x86_64-opus
                     mingw-w64-x86_64-SDL2
                     python3
                     zip

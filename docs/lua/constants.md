@@ -117,6 +117,11 @@
     - [enum AreaTimerType](#enum-AreaTimerType)
     - [enum MarioAnimPart](#enum-MarioAnimPart)
 - [version.h](#versionh)
+- [voice_chat.h](#voice_chath)
+    - [enum VoiceChatType](#enum-VoiceChatType)
+    - [enum VoiceChatActivationMode](#enum-VoiceChatActivationMode)
+    - [enum VoiceChatError](#enum-VoiceChatError)
+    - [enum VoiceChatMuteState](#enum-VoiceChatMuteState)
 
 <br />
 
@@ -1793,8 +1798,9 @@
 | HUD_DISPLAY_FLAG_CAMERA | 0x0080 |
 | HUD_DISPLAY_FLAG_POWER | 0x0100 |
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
+| HUD_DISPLAY_FLAG_VOICECHAT | 0x0200 |
 | HUD_DISPLAY_NONE | 0x0000 |
-| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 | HUD_DISPLAY_FLAG_VOICECHAT |
 
 [:arrow_up_small:](#)
 
@@ -5000,6 +5006,44 @@
 - GAME_NAME
 - WINDOW_NAME
 - MAX_VERSION_LENGTH
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [voice_chat.h](#voice_chat.h)
+- VOICECHAT_DEFAULT_CHANNEL
+
+### [enum VoiceChatType](#VoiceChatType)
+| Identifier | Value |
+| :--------- | :---- |
+| VOICECHAT_TYPE_DISABLED | 0 |
+| VOICECHAT_TYPE_VOICE | 1 |
+| VOICECHAT_TYPE_PROXIMITY | 2 |
+
+### [enum VoiceChatActivationMode](#VoiceChatActivationMode)
+| Identifier | Value |
+| :--------- | :---- |
+| VOICECHAT_ACTMODE_DISABLED | 0 |
+| VOICECHAT_ACTMODE_PUSH_TO_TALK | 1 |
+| VOICECHAT_ACTMODE_THRESHOLD | 2 |
+
+### [enum VoiceChatError](#VoiceChatError)
+| Identifier | Value |
+| :--------- | :---- |
+| VOICECHAT_ERR_NONE | 0 |
+| VOICECHAT_ERR_NO_MICROPHONE | 1 |
+| VOICECHAT_ERR_FAILED_TO_INITIALIZE | 2 |
+| VOICECHAT_ERR_FAILED_TO_ENCODE | 3 |
+| VOICECHAT_ERR_FAILED_TO_DECODE | 4 |
+
+### [enum VoiceChatMuteState](#VoiceChatMuteState)
+| Identifier | Value |
+| :--------- | :---- |
+| VOICECHAT_UNMUTED | 0 |
+| VOICECHAT_MUTE_LOCAL | (1 << 0) |
+| VOICECHAT_MUTE_GLOBAL | (1 << 1) |
+| VOICECHAT_MUTE_DEAFENED | (1 << 2) |
 
 [:arrow_up_small:](#)
 

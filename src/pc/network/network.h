@@ -94,6 +94,7 @@ struct ServerSettings {
     u8 nametags;
     u8 maxPlayers;
     u8 pauseAnywhere;
+    u8 voiceChat;
 };
 
 struct NametagsSettings {

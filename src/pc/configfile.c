@@ -22,6 +22,7 @@
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
+#include "pc/network/voice_list.h"
 
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
@@ -91,13 +92,21 @@ unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
 unsigned int configDrawDistance                   = 6;
 // sound settings
+char configAudioOutputDevice[MAX_AUDIO_DEVICE_LENGTH] = "";
+char configAudioInputDevice[MAX_AUDIO_DEVICE_LENGTH] = "";
 unsigned int configMasterVolume                   = 80; // 0 - MAX_VOLUME
 unsigned int configMusicVolume                    = MAX_VOLUME;
 unsigned int configSfxVolume                      = MAX_VOLUME;
 unsigned int configEnvVolume                      = MAX_VOLUME;
+unsigned int configVoiceChatVolume                 = MAX_VOLUME;
 bool         configFadeoutDistantSounds           = false;
 bool         configMuteFocusLoss                  = false;
 unsigned int configSoundOutput                    = 0; // 0 = Stereo, 1 = Mono, 2 = Headset
+// voice chat settings
+unsigned int configVoiceChatActivationMode         = 0; // 0 = Disabled, 1 = Push to talk, 2 = Threshold
+unsigned int configVoiceChatActivationThreshold    = 10;
+unsigned int configVoiceChatMicrophoneGain         = 100;
+unsigned int configVoiceChatStereoSpread           = 75;
 // control binds
 static const unsigned int defaultConfigKeyA[MAX_BINDS]          = { 0x0026,     0x1000,     0x1103     };
 static const unsigned int defaultConfigKeyB[MAX_BINDS]          = { 0x0033,     0x1001,     0x1101     };
@@ -126,6 +135,9 @@ static const unsigned int defaultConfigKeyConsole[MAX_BINDS]    = { 0x0029,     
 static const unsigned int defaultConfigKeyPrevPage[MAX_BINDS]   = { 0x0016,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyNextPage[MAX_BINDS]   = { 0x0018,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyDisconnect[MAX_BINDS] = { 0x0058,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyMuteMic[MAX_BINDS]    = { 0x0043,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyDeafen[MAX_BINDS]     = { 0x0044,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPushToTalk[MAX_BINDS] = { 0x001d,     VK_INVALID, VK_INVALID };
 
 unsigned int configKeyA[MAX_BINDS]                = { 0x0026,     0x1000,     0x1103     };
 unsigned int configKeyB[MAX_BINDS]                = { 0x0033,     0x1001,     0x1101     };
@@ -154,6 +166,9 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
+unsigned int configKeyMuteMic[MAX_BINDS]          = { 0x0043,     VK_INVALID, VK_INVALID };
+unsigned int configKeyDeafen[MAX_BINDS]           = { 0x0044,     VK_INVALID, VK_INVALID };
+unsigned int configKeyPushToTalk[MAX_BINDS]       = { 0x001d,     VK_INVALID, VK_INVALID };
 unsigned int configInputDelay                     = 0;
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
@@ -211,6 +226,7 @@ unsigned int configPlayerInteraction              = 1;
 unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
+unsigned int configVoiceChat                      = 0; // 0 = Disabled, 1 = Voice, 2 = Proximity
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
@@ -268,13 +284,21 @@ static const struct ConfigOption options[] = {
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
     {.name = "coop_draw_distance",             .type = CONFIG_TYPE_UINT, .uintValue = &configDrawDistance},
     // sound settings
+    {.name = "output_device",                  .type = CONFIG_TYPE_STRING, .stringValue = configAudioOutputDevice, .maxStringLength = MAX_AUDIO_DEVICE_LENGTH },
+    {.name = "input_device",                   .type = CONFIG_TYPE_STRING, .stringValue = configAudioInputDevice,  .maxStringLength = MAX_AUDIO_DEVICE_LENGTH },
     {.name = "master_volume",                  .type = CONFIG_TYPE_UINT, .uintValue = &configMasterVolume},
     {.name = "music_volume",                   .type = CONFIG_TYPE_UINT, .uintValue = &configMusicVolume},
     {.name = "sfx_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configSfxVolume},
     {.name = "env_volume",                     .type = CONFIG_TYPE_UINT, .uintValue = &configEnvVolume},
+    {.name = "voicechat_volume",               .type = CONFIG_TYPE_UINT, .uintValue = &configVoiceChatVolume},
     {.name = "fade_distant_sounds",            .type = CONFIG_TYPE_BOOL, .boolValue = &configFadeoutDistantSounds},
     {.name = "mute_focus_loss",                .type = CONFIG_TYPE_BOOL, .boolValue = &configMuteFocusLoss},
     {.name = "sound_output",                   .type = CONFIG_TYPE_UINT, .uintValue = &configSoundOutput},
+    // voice chat settings
+    {.name = "voicechat_microphone_gain",      .type = CONFIG_TYPE_UINT, .uintValue = &configVoiceChatMicrophoneGain},
+    {.name = "voicechat_activation_mode",      .type = CONFIG_TYPE_UINT, .uintValue = &configVoiceChatActivationMode},
+    {.name = "voicechat_activation_threshold", .type = CONFIG_TYPE_UINT, .uintValue = &configVoiceChatActivationThreshold},
+    {.name = "voicechat_stereo_spread",        .type = CONFIG_TYPE_UINT, .uintValue = &configVoiceChatStereoSpread},
     // control binds
     {.name = "key_a",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyA},
     {.name = "key_b",                          .type = CONFIG_TYPE_BIND, .uintValue = configKeyB},
@@ -303,6 +327,9 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "key_mute_mic",                   .type = CONFIG_TYPE_BIND, .uintValue = configKeyMuteMic},
+    {.name = "key_deafen",                     .type = CONFIG_TYPE_BIND, .uintValue = configKeyDeafen},
+    {.name = "key_push_to_talk",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyPushToTalk},
     {.name = "input_delay",                    .type = CONFIG_TYPE_UINT, .uintValue = &configInputDelay},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
@@ -377,6 +404,7 @@ static const struct ConfigOption options[] = {
     {.name = "coop_stay_in_level_after_star",  .type = CONFIG_TYPE_UINT,   .uintValue   = &configStayInLevelAfterStar},
     {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
     {.name = "coop_mod_dev_mode",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configModDevMode},
+    {.name = "coop_voice_chat",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configVoiceChat},
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},
@@ -592,12 +620,27 @@ static void save_name_write(FILE* file) {
     }
 }
 
+static void voice_read(char** tokens, int numTokens) {
+    if (numTokens < 5) return;
+    struct VoiceList* data = voice_list_get_or_create(tokens[1]);
+    data->volume = atoi(tokens[2]);
+    data->is_muted = atoi(tokens[3]);
+    data->is_globally_muted = atoi(tokens[4]);
+}
+
+static void voice_write(FILE* file) {
+    for (int i = 0; i < gVoiceListCount; i++) {
+        fprintf(file, "voice: %s %d %d %d\n", gVoiceList[i].address, gVoiceList[i].volume, gVoiceList[i].is_muted, gVoiceList[i].is_globally_muted);
+    }
+}
+
 static const struct FunctionConfigOption functionOptions[] = {
     { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
     { .name = "moderator:",  .read = moderator_read,  .write = moderator_write  },
     { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },
-    { .name = "save-name:",  .read = save_name_read,  .write = save_name_write  }
+    { .name = "save-name:",  .read = save_name_read,  .write = save_name_write  },
+    { .name = "voice:",      .read = voice_read,      .write = voice_write      },
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string
@@ -778,10 +821,23 @@ static void configfile_load_internal(const char *filename, bool* error) {
                         case CONFIG_TYPE_FLOAT:
                             sscanf(tokens[1], "%f", option->floatValue);
                             break;
-                        case CONFIG_TYPE_STRING:
+                        case CONFIG_TYPE_STRING: {
                             memset(option->stringValue, '\0', option->maxStringLength);
-                            snprintf(option->stringValue, option->maxStringLength, "%s", tokens[1]);
-                            break;
+                            int ptr = 0;
+                            for (int i = 1; i < numTokens; i++) {
+                                if (ptr >= option->maxStringLength) break;
+                                strncpy(option->stringValue + ptr, tokens[i], option->maxStringLength - ptr - 1);
+                                ptr += strlen(tokens[i]);
+                                if (ptr >= option->maxStringLength) break;
+                                if (i + 1 < numTokens) {
+                                    int spaces = tokens[i + 1] - (tokens[i] + strlen(tokens[i]));
+                                    if (ptr + spaces >= option->maxStringLength) spaces = option->maxStringLength - ptr - 1;
+                                    if (spaces < 0) spaces = 0;
+                                    memset(option->stringValue + ptr, ' ', spaces);
+                                    ptr += spaces;
+                                }
+                            }
+                        } break;
                         case CONFIG_TYPE_U64:
                             sscanf(tokens[1], "%llu", option->u64Value);
                             break;
@@ -891,6 +947,9 @@ void configfile_reset_keybinds(bool extra) {
         memcpy(configKeyPrevPage, defaultConfigKeyPrevPage, sizeof(configKeyPrevPage));
         memcpy(configKeyNextPage, defaultConfigKeyNextPage, sizeof(configKeyNextPage));
         memcpy(configKeyDisconnect, defaultConfigKeyDisconnect, sizeof(configKeyDisconnect));
+        memcpy(configKeyMuteMic, defaultConfigKeyMuteMic, sizeof(configKeyMuteMic));
+        memcpy(configKeyDeafen, defaultConfigKeyDeafen, sizeof(configKeyDeafen));
+        memcpy(configKeyPushToTalk, defaultConfigKeyPushToTalk, sizeof(configKeyPushToTalk));
     }
 }
 

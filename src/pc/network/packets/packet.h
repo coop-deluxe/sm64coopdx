@@ -36,6 +36,8 @@ enum PacketType {
     PACKET_SAVE_REMOVE_FLAG,
     PACKET_NETWORK_PLAYERS,
     PACKET_DEATH,
+    PACKET_VOICECHAT_FRAME,
+    PACKET_VOICECHAT_MUTE,
 
     PACKET_PING,
     PACKET_PONG,
@@ -277,6 +279,12 @@ void network_receive_network_players(struct Packet* p);
 // packet_death.c
 void network_send_death(void);
 void network_receive_death(struct Packet* p);
+
+// packet_voicechat.c
+void network_send_voicechat_frame(void);
+void network_receive_voicechat_frame(struct Packet* p);
+void network_send_voicechat_muted(u8 globalIndex, u8 mask, bool mute);
+void network_receive_voicechat_muted(struct Packet* p);
 
 // packet_ping.c
 void network_send_ping(struct NetworkPlayer* toNp);
