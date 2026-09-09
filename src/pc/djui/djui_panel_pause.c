@@ -75,7 +75,7 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_client_server_settings_create);
         }
 
-        struct Mod **addedMods = calloc(1, sizeof(struct Mod) * gHookedModMenuElements->count);
+        struct Mod **addedMods = calloc(1, sizeof(struct Mod *) * gHookedModMenuElements->count);
         int modCount = 0;
         growing_array_for_each_(gHookedModMenuElements, struct LuaHookedModMenuElement, modMenuElement) {
             bool shouldContinue = false;

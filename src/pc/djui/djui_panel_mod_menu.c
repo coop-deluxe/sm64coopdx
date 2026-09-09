@@ -154,8 +154,6 @@ void djui_panel_mod_menu_mod_destroy(struct DjuiBase *base) {
 }
 
 void djui_panel_mod_menu_mod_create(struct DjuiBase *caller) {
-    sPanelsEntered++;
-
     struct Mod *mod = NULL;
     if (caller) {
         for (int i = 0; i < gActiveMods.entryCount; i++) {
@@ -165,10 +163,12 @@ void djui_panel_mod_menu_mod_create(struct DjuiBase *caller) {
             }
         }
     } else {
-        if (sModActive < 0 || sModActive >= gActiveMods.entryCount) { return; }
+        if (sModActive >= gActiveMods.entryCount) { return; }
         mod = gActiveMods.entries[sModActive];
     }
     if (mod == NULL) { return; }
+
+    sPanelsEntered++;
 
     char *headerTitle = NULL;
     if (sPanelHeaderTitle != NULL) {
@@ -208,7 +208,7 @@ void djui_panel_mod_menu_create(struct DjuiBase *caller) {
     {
         struct DjuiPaginated *paginated = djui_paginated_create(body, 6);
         struct DjuiBase *layoutBase = &paginated->layout->base;
-        struct Mod **addedMods = calloc(1, sizeof(struct Mod) * gHookedModMenuElements->count);
+        struct Mod **addedMods = calloc(1, sizeof(struct Mod *) * gHookedModMenuElements->count);
         int modCount = 0;
         growing_array_for_each_(gHookedModMenuElements, struct LuaHookedModMenuElement, modMenuElement) {
             bool shouldContinue = false;

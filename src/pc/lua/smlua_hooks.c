@@ -1842,6 +1842,11 @@ int smlua_hook_mod_menu_selectionbox(lua_State* L) {
         if (choicesCount == MAX_MOD_MENU_ELEMENT_CHOICES) { break; }
     }
 
+    if (choicesCount == 0) {
+        LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
+        return 0;
+    }
+
     const char *panelId = "";
     if (paramCount > 4) {
         panelId = smlua_to_string(L, 5);
@@ -2026,6 +2031,11 @@ int smlua_update_mod_menu_element_selectionbox(lua_State* L) {
             lua_pop(L, 1);
 
             if (choicesCount == MAX_MOD_MENU_ELEMENT_CHOICES) { break; }
+        }
+
+        if (choicesCount == 0) {
+            LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
+            return 0;
         }
 
         memcpy(modMenuElement->choices, choices, sizeof(choices));
