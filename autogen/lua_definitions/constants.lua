@@ -8441,6 +8441,21 @@ HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 --- | `HOOK_ON_PLAY_MODE_UPDATE`
 --- | `HOOK_MAX`
 
+--- @type integer
+MAX_MOD_MENU_ELEMENT_NAME_LEN = 64
+
+--- @type integer
+MAX_MOD_MENU_ELEMENT_PANEL_ID_LEN = 64
+
+--- @type integer
+MAX_MOD_MENU_ELEMENT_STRING_VALUE_LEN = 256
+
+--- @type integer
+MAX_MOD_MENU_ELEMENT_CHOICES = 64
+
+--- @type integer
+MAX_MOD_MENU_ELEMENT_CHOICE_NAME_LEN = 64
+
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
 HUD_DISPLAY_COINS         = 1 --- @type HudDisplayValue
 HUD_DISPLAY_STARS         = 2 --- @type HudDisplayValue

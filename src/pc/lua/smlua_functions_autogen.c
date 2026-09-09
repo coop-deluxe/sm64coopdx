@@ -24,6 +24,7 @@
 #include "src/game/sound_init.h"
 #include "src/pc/djui/djui_hud_utils.h"
 #include "src/pc/djui/djui_panel_menu.h"
+#include "src/pc/djui/djui_panel_mod_menu.h"
 #include "src/pc/network/network_player.h"
 #include "src/pc/network/lag_compensation.h"
 #include "include/behavior_table.h"
@@ -12643,6 +12644,51 @@ int smlua_func_djui_menu_get_rainbow_string_color(lua_State* L) {
     lua_pushstring(L, djui_menu_get_rainbow_string_color(color));
 
     return 1;
+}
+
+  ///////////////////////////
+ // djui_panel_mod_menu.h //
+///////////////////////////
+
+int smlua_func_mod_menu_push_panel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 1 || top > 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "mod_menu_push_panel", 1, 3, top);
+        return 0;
+    }
+
+    const char* panelId = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_menu_push_panel"); return 0; }
+    const char* headerTitle = (const char*) NULL;
+    if (top >= 2) {
+        headerTitle = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_menu_push_panel"); return 0; }
+    }
+    bool hideBackButton = (bool) 0;
+    if (top >= 3) {
+        hideBackButton = smlua_to_boolean(L, 3);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_menu_push_panel"); return 0; }
+    }
+
+    mod_menu_push_panel(panelId, headerTitle, hideBackButton);
+
+    return 0;
+}
+
+int smlua_func_mod_menu_pop_panel(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_menu_pop_panel", 0, top);
+        return 0;
+    }
+
+    mod_menu_pop_panel();
+
+    return 0;
 }
 
   //////////////////
@@ -37153,6 +37199,10 @@ void smlua_bind_functions_autogen(void) {
 
     // djui_panel_menu.h
     smlua_bind_function(L, "djui_menu_get_rainbow_string_color", smlua_func_djui_menu_get_rainbow_string_color);
+
+    // djui_panel_mod_menu.h
+    smlua_bind_function(L, "mod_menu_push_panel", smlua_func_mod_menu_push_panel);
+    smlua_bind_function(L, "mod_menu_pop_panel", smlua_func_mod_menu_pop_panel);
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
