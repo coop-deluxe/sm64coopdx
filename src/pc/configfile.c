@@ -245,6 +245,8 @@ unsigned int configRulesVersion                   = 0;
 bool         configHideSocketWarning              = false;
 bool         configCompressOnStartup              = false;
 bool         configSkipPackGeneration             = false;
+// mods
+char         configModPreset[MAX_CONFIG_STRING]   = "";
 
 // secrets
 bool configExCoopTheme = false;
@@ -489,6 +491,80 @@ static void enable_mod_write(FILE* file) {
     }
 }
 
+// strncat()'s bound is how much it may append, not how much room is left, so joining tokens has
+// to track the running length itself or a long line walks off the end of the destination
+static void config_join_tokens(char* destination, size_t size, char** tokens, int numTokens) {
+    if (size == 0) { return; }
+    destination[0] = '\0';
+
+    size_t length = 0;
+    for (int i = 1; i < numTokens; i++) {
+        if (length >= size - 1) { break; }
+        int written = snprintf(destination + length, size - length, "%s%s", (i != 1) ? " " : "", tokens[i]);
+        if (written < 0) { break; }
+        // snprintf reports what it wanted to write, which can be more than it did
+        length += (size_t)written;
+        if (length > size - 1) { length = size - 1; break; }
+    }
+}
+
+static struct QueuedFile *sQueuedFavoriteModsHead = NULL;
+
+void favorite_queued_mods(void) {
+    while (sQueuedFavoriteModsHead) {
+        struct QueuedFile *next = sQueuedFavoriteModsHead->next;
+        mods_set_favorited(sQueuedFavoriteModsHead->path, true);
+        free(sQueuedFavoriteModsHead->path);
+        free(sQueuedFavoriteModsHead);
+        sQueuedFavoriteModsHead = next;
+    }
+}
+
+static void favorite_mod_read(char** tokens, int numTokens) {
+    char combined[256] = { 0 };
+    config_join_tokens(combined, sizeof(combined), tokens, numTokens);
+    if (combined[0] == '\0') { return; }
+
+    struct QueuedFile* queued = malloc(sizeof(struct QueuedFile));
+    queued->path = strdup(combined);
+    queued->next = NULL;
+    if (!sQueuedFavoriteModsHead) {
+        sQueuedFavoriteModsHead = queued;
+    } else {
+        struct QueuedFile* tail = sQueuedFavoriteModsHead;
+        while (tail->next) { tail = tail->next; }
+        tail->next = queued;
+    }
+}
+
+static void favorite_mod_write(FILE* file) {
+    // the mod list has never been loaded, so keep whatever the config already held
+    if (sQueuedFavoriteModsHead) {
+        struct QueuedFile* queued = sQueuedFavoriteModsHead;
+        while (queued) {
+            fprintf(file, "%s %s\n", "favorite-mod:", queued->path);
+            queued = queued->next;
+        }
+        return;
+    }
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod == NULL) { continue; }
+        if (!mod->favorited) { continue; }
+        fprintf(file, "%s %s\n", "favorite-mod:", mod->relativePath);
+    }
+}
+
+static void mod_preset_read(char** tokens, int numTokens) {
+    config_join_tokens(configModPreset, MAX_CONFIG_STRING, tokens, numTokens);
+}
+
+static void mod_preset_write(FILE* file) {
+    if (configModPreset[0] == '\0') { return; }
+    fprintf(file, "%s %s\n", "mod-preset:", configModPreset);
+}
+
 static void ban_read(char** tokens, UNUSED int numTokens) {
     ban_list_add(tokens[1], true);
 }
@@ -593,7 +669,9 @@ static void save_name_write(FILE* file) {
 }
 
 static const struct FunctionConfigOption functionOptions[] = {
-    { .name = "enable-mod:", .read = enable_mod_read, .write = enable_mod_write },
+    { .name = "enable-mod:",   .read = enable_mod_read,   .write = enable_mod_write   },
+    { .name = "favorite-mod:", .read = favorite_mod_read, .write = favorite_mod_write },
+    { .name = "mod-preset:",   .read = mod_preset_read,   .write = mod_preset_write   },
     { .name = "ban:",        .read = ban_read,        .write = ban_write        },
     { .name = "moderator:",  .read = moderator_read,  .write = moderator_write  },
     { .name = "dynos-pack:", .read = dynos_pack_read, .write = dynos_pack_write },

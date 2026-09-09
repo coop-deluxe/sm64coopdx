@@ -1205,6 +1205,8 @@
 --- @field public fileCapacity integer
 --- @field public isDirectory boolean
 --- @field public enabled boolean
+--- @field public favorited boolean
+--- @field public hasModMenu boolean
 --- @field public selectable boolean
 --- @field public renderBehindHud boolean
 --- @field public pausable boolean

@@ -4,6 +4,7 @@
 #include "djui_panel_menu.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mod_presets.h"
 
 static char* to_uppercase(char* str) {
     char* buffer = strdup(str);
@@ -28,8 +29,14 @@ void djui_panel_mod_menu_mod_button(struct DjuiBase* caller) {
     }
 }
 
+// hand editing a value the preset owns deselects it, like toggling a mod does
+static void djui_panel_mod_menu_setting_changed(struct DjuiBase* caller) {
+    if (mod_presets_active_owns_element((int)caller->tag)) { mod_presets_set_active(NULL); }
+}
+
 static void djui_panel_mod_menu_mod_checkbox(struct DjuiBase* caller) {
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
+    djui_panel_mod_menu_setting_changed(caller);
     smlua_call_mod_menu_element_hook(hooked, caller->tag);
     struct DjuiCheckbox* checkbox = (struct DjuiCheckbox*)caller;
     djui_text_set_text(checkbox->text, hooked->name);
@@ -37,6 +44,7 @@ static void djui_panel_mod_menu_mod_checkbox(struct DjuiBase* caller) {
 
 static void djui_panel_mod_menu_mod_slider(struct DjuiBase* caller) {
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
+    djui_panel_mod_menu_setting_changed(caller);
     smlua_call_mod_menu_element_hook(hooked, caller->tag);
     struct DjuiSlider* slider = (struct DjuiSlider*)caller;
     djui_text_set_text(slider->text, hooked->name);
@@ -46,6 +54,7 @@ static void djui_panel_mod_menu_mod_inputbox(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)caller;
     struct LuaHookedModMenuElement* hooked = &gHookedModMenuElements[caller->tag];
     snprintf(hooked->stringValue, 256, "%s", inputbox->buffer);
+    djui_panel_mod_menu_setting_changed(caller);
     smlua_call_mod_menu_element_hook(hooked, caller->tag);
 }
 

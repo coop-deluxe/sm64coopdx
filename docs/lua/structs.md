@@ -1770,6 +1770,8 @@
 | fileCapacity | `integer` | read-only |
 | isDirectory | `boolean` | read-only |
 | enabled | `boolean` | read-only |
+| favorited | `boolean` | read-only |
+| hasModMenu | `boolean` | read-only |
 | selectable | `boolean` | read-only |
 | renderBehindHud | `boolean` | read-only |
 | pausable | `boolean` | read-only |

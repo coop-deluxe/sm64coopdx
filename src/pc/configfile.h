@@ -179,11 +179,14 @@ extern unsigned int configRulesVersion;
 extern bool         configHideSocketWarning;
 extern bool         configCompressOnStartup;
 extern bool         configSkipPackGeneration;
+// mods
+extern char         configModPreset[MAX_CONFIG_STRING];
 
 // secrets
 extern bool configExCoopTheme;
 
 void enable_queued_mods(void);
+void favorite_queued_mods(void);
 void enable_queued_dynos_packs(void);
 void configfile_reset_keybinds(bool extra);
 void configfile_load(void);

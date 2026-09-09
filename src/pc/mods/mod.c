@@ -420,6 +420,33 @@ static void mod_set_loading_order(struct Mod* mod) {
     }
 }
 
+// a mod only lists its menu elements once its Lua runs, so the mods panel looks for the calls
+// in the source to know whether to offer the options gear before anything has been loaded
+static void mod_detect_mod_menu(struct Mod* mod) {
+    mod->hasModMenu = false;
+
+    for (int i = 0; i < mod->fileCount && !mod->hasModMenu; i++) {
+        struct ModFile* file = &mod->files[i];
+        if (!path_ends_with(file->relativePath, ".lua")) { continue; }
+
+        char path[SYS_MAX_PATH] = { 0 };
+        if (!mod_file_full_path(path, mod, file)) { continue; }
+
+        FILE* f = fopen(path, "rb");
+        if (f == NULL) { continue; }
+
+        char buffer[1024] = { 0 };
+        while (fgets(buffer, sizeof(buffer), f) != NULL) {
+            if (strstr(buffer, "hook_mod_menu_") != NULL) {
+                mod->hasModMenu = true;
+                break;
+            }
+        }
+
+        fclose(f);
+    }
+}
+
 static void mod_extract_fields(struct Mod* mod) {
     // get full path
     char path[SYS_MAX_PATH] = { 0 };
@@ -629,6 +656,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
 
     // extract fields
     mod_extract_fields(mod);
+    mod_detect_mod_menu(mod);
 
     // set name
     if (!mod->name[0]) {

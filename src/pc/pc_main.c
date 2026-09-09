@@ -49,6 +49,8 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mods.h"
+#include "pc/mods/mod_presets.h"
+#include "pc/mods/mod_options.h"
 
 #include "debug_context.h"
 #include "menu/intro_geo.h"
@@ -490,6 +492,9 @@ void* main_game_init(UNUSED void* dummy) {
 
     mods_init();
     enable_queued_mods();
+    favorite_queued_mods();
+    mod_presets_refresh();
+    mod_options_load();
     LOADING_SCREEN_MUTEX(
         gCurrLoadingSegment.percentage = 0;
         loading_screen_set_segment_text("Starting Game");
