@@ -220,6 +220,39 @@ u8 *DynOS_Tex_ConvertToRGBA32(const u8 *aData, u64 aLength, s32 aFormat, s32 aSi
 // Upload
 //
 
+static bool DynOS_Tex_Validate(const DataNode<TexData> *aNode) {
+    if (!aNode || !aNode->mData || aNode->mData->mInvalidated) {
+        return false;
+    }
+
+    // Check dimensions
+    if (aNode->mData->mRawWidth < DYNOS_TEX_MIN_WIDTH_HEIGHT || aNode->mData->mRawWidth > DYNOS_TEX_MAX_WIDTH_HEIGHT) {
+        LOG_ERROR("Texture '%s': Invalid width: %d (should be between %u and %u)", aNode->mName.begin(), aNode->mData->mRawWidth, DYNOS_TEX_MIN_WIDTH_HEIGHT, DYNOS_TEX_MAX_WIDTH_HEIGHT);
+        aNode->mData->mInvalidated = true;
+        return false;
+    }
+    if (aNode->mData->mRawHeight < DYNOS_TEX_MIN_WIDTH_HEIGHT || aNode->mData->mRawHeight > DYNOS_TEX_MAX_WIDTH_HEIGHT) {
+        LOG_ERROR("Texture '%s': Invalid height: %d (should be between %u and %u)", aNode->mName.begin(), aNode->mData->mRawHeight, DYNOS_TEX_MIN_WIDTH_HEIGHT, DYNOS_TEX_MAX_WIDTH_HEIGHT);
+        aNode->mData->mInvalidated = true;
+        return false;
+    }
+
+    // Check texture data
+    if (aNode->mData->mRawData.begin() == NULL) {
+        LOG_ERROR("Texture '%s': NULL buffer", aNode->mName.begin());
+        aNode->mData->mInvalidated = true;
+        return false;
+    }
+    u64 textureSize = (u64) aNode->mData->mRawWidth * (u64) aNode->mData->mRawHeight * sizeof(u32);
+    if ((u64) aNode->mData->mRawData.Count() != textureSize) {
+        LOG_ERROR("Texture '%s': Invalid size: %u, should be %llu", aNode->mName.begin(), aNode->mData->mRawData.Count(), textureSize);
+        aNode->mData->mInvalidated = true;
+        return false;
+    }
+
+    return true;
+}
+
 typedef struct GfxRenderingAPI GRAPI;
 static void DynOS_Tex_Upload(DataNode<TexData> *aNode, GRAPI *aGfxRApi, s32 aTile, s32 aTexId) {
     aGfxRApi->select_texture(aTile, aTexId);
@@ -351,7 +384,7 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
 static bool DynOS_Tex_Import_Typed(THN **aOutput, void *aPtr, s32 aTile, GRAPI *aGfxRApi, THN **aHashMap, THN *aPool, u32 *aPoolPos, u32 aPoolSize) {
     DataNode<TexData> *_Node = DynOS_Tex_RetrieveNode(aPtr);
     if (_Node) {
-        if (!DynOS_Tex_Cache(aOutput, _Node, aTile, aGfxRApi, aHashMap, aPool, aPoolPos, aPoolSize)) {
+        if (DynOS_Tex_Validate(_Node) && !DynOS_Tex_Cache(aOutput, _Node, aTile, aGfxRApi, aHashMap, aPool, aPoolPos, aPoolSize)) {
             DynOS_Tex_Upload(_Node, aGfxRApi, aTile, (*aOutput)->texture_id);
         }
         return true;
@@ -481,7 +514,7 @@ bool DynOS_Tex_Get(const char* aTexName, struct TextureInfo* aOutTexInfo) {
                 u8 *_RawData = stbi_load_from_memory(_Data->mPngData.begin(), _Data->mPngData.Count(), &_Data->mRawWidth, &_Data->mRawHeight, NULL, 4);
                 // texture data is corrupted
                 if (_RawData == NULL) {
-                    PrintError("Attempted to load corrupted tex file: %s", aTexName);
+                    PrintError("  ERROR! Attempted to load corrupted tex file: %s", aTexName);
                     return false;
                 }
                 _Data->mRawFormat = G_IM_FMT_RGBA;

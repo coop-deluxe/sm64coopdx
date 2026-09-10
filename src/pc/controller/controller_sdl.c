@@ -346,12 +346,16 @@ static void controller_sdl_read(OSContPad *pad) {
 }
 
 static void controller_sdl_rumble_play(f32 strength, f32 length) {
+    if (strength < 0 || strength > 1) { return; } // make sure strengh is between 0 and 1
     if (sdl_haptic) {
+        // play rumble haptics
         SDL_HapticRumblePlay(sdl_haptic, strength, (u32)(length * 1000.0f));
     } else {
 #if SDL_VERSION_ATLEAST(2,0,18)
-        uint16_t scaled_strength = strength * pow(2, 16) - 1;
         if (SDL_GameControllerHasRumble(sdl_cntrl) == SDL_TRUE) {
+            // scale strength to be in between 0 and 65535
+            u16 scaled_strength = (u16)(strength * 65535);
+            // rumble!!!
             SDL_GameControllerRumble(sdl_cntrl, scaled_strength, scaled_strength, (u32)(length * 1000.0f));
         }
 #endif

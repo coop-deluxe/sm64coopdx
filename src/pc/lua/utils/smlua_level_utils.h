@@ -1,6 +1,11 @@
 #ifndef SMLUA_LEVEL_UTILS_H
 #define SMLUA_LEVEL_UTILS_H
 
+#include "behavior_table.h"                 // for enum BehaviorId
+#include "pc/lua/utils/smlua_model_utils.h" // for enum ModelExtendedId
+#include "game/level_update.h"              // for enum MarioSpawnType
+#include "game/area.h"                      // for struct ObjectWarpNode and struct SpawnInfo
+
 struct CustomLevelInfo {
     LevelScript* script;
     char* scriptEntryName;
@@ -14,6 +19,12 @@ struct CustomLevelInfo {
     u32 echoLevel3;
     s32 modIndex;
     struct CustomLevelInfo* next;
+};
+
+struct CustomWarpNode {
+    struct ObjectWarpNode node;
+    struct SpawnInfo spawnInfo;
+    enum MarioSpawnType marioSpawnType;
 };
 
 #define CUSTOM_LEVEL_NUM_START 50
@@ -43,5 +54,41 @@ bool warp_to_start_level(void);
 bool warp_exit_level(s32 aDelay);
 /* |description|Warps back to the castle from `aLevel`|descriptionEnd| */
 bool warp_to_castle(s32 aLevel);
+
+/* |description|
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+|descriptionEnd| */
+struct CustomWarpNode *level_create_warp_node(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint);
+
+/* |description|
+Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.
+If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).
+`marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+|descriptionEnd| */
+struct CustomWarpNode *level_create_warp_node_with_object(u8 levelNum, u8 areaIndex, u8 id, enum MarioSpawnType marioSpawnType, u8 destLevel, u8 destArea, u8 destNode, bool checkpoint, Vec3f pos, Vec3s angle, enum ModelExtendedId modelId, enum BehaviorId behaviorId, u32 behParams);
+
+/* |description|
+Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+|descriptionEnd| */
+struct CustomWarpNode *level_get_warp_node(u8 levelNum, u8 areaIndex, u8 id);
+
+/* |description|
+Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+|descriptionEnd| */
+void level_delete_warp_node(u8 levelNum, u8 areaIndex, u8 id);
+
+/* |description|
+Deletes all the warp nodes in level `levelNum`.
+Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+|descriptionEnd| */
+void level_clear_warp_nodes(u8 levelNum);
+
+void level_register_custom_warp_nodes(u8 levelNum, u8 areaIndex);
+void level_clear_warp_node_objects(u8 levelNum, u8 areaIndex);
+enum MarioSpawnType level_get_warp_spawn_type_from_object(u8 levelNum, u8 areaIndex, struct Object *obj);
 
 #endif

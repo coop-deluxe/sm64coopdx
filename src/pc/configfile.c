@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-enum GfxWindowBackend configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
+unsigned int configGraphicsBackend                = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -115,8 +115,9 @@ static const unsigned int defaultConfigKeyStickUp[MAX_BINDS]    = { 0x0011,     
 static const unsigned int defaultConfigKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickRight[MAX_BINDS] = { 0x0020,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyChat[MAX_BINDS]       = { 0x001C,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS] = { 0x000F,     0x1004,     VK_INVALID };
+static const unsigned int defaultConfigKeyChat[MAX_BINDS]        = { 0x001C,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyChatCommand[MAX_BINDS] = { VK_INVALID, VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS]  = { 0x000F,     0x1004,     VK_INVALID };
 static const unsigned int defaultConfigKeyDUp[MAX_BINDS]        = { 0x0147,     0x100b,     VK_INVALID };
 static const unsigned int defaultConfigKeyDDown[MAX_BINDS]      = { 0x014f,     0x100c,     VK_INVALID };
 static const unsigned int defaultConfigKeyDLeft[MAX_BINDS]      = { 0x0153,     0x100d,     VK_INVALID };
@@ -143,6 +144,7 @@ unsigned int configKeyStickDown[MAX_BINDS]        = { 0x001F,     VK_INVALID, VK
 unsigned int configKeyStickLeft[MAX_BINDS]        = { 0x001E,     VK_INVALID, VK_INVALID };
 unsigned int configKeyStickRight[MAX_BINDS]       = { 0x0020,     VK_INVALID, VK_INVALID };
 unsigned int configKeyChat[MAX_BINDS]             = { 0x001C,     VK_INVALID, VK_INVALID };
+unsigned int configKeyChatCommand[MAX_BINDS]      = { VK_INVALID, VK_INVALID, VK_INVALID };
 unsigned int configKeyPlayerList[MAX_BINDS]       = { 0x000F,     0x1004,     VK_INVALID };
 unsigned int configKeyDUp[MAX_BINDS]              = { 0x0147,     0x100b,     VK_INVALID };
 unsigned int configKeyDDown[MAX_BINDS]            = { 0x014f,     0x100c,     VK_INVALID };
@@ -152,6 +154,7 @@ unsigned int configKeyConsole[MAX_BINDS]          = { 0x0029,     0x003B,     VK
 unsigned int configKeyPrevPage[MAX_BINDS]         = { 0x0016,     VK_INVALID, VK_INVALID };
 unsigned int configKeyNextPage[MAX_BINDS]         = { 0x0018,     VK_INVALID, VK_INVALID };
 unsigned int configKeyDisconnect[MAX_BINDS]       = { 0x0058,     VK_INVALID, VK_INVALID };
+unsigned int configInputDelay                     = 0;
 unsigned int configStickDeadzone                  = 16;
 unsigned int configRumbleStrength                 = 50;
 unsigned int configGamepadNumber                  = 0;
@@ -290,6 +293,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_stickleft",                  .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickLeft},
     {.name = "key_stickright",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickRight},
     {.name = "key_chat",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyChat},
+    {.name = "key_chat_command",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyChatCommand},
     {.name = "key_playerlist",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyPlayerList},
     {.name = "key_dup",                        .type = CONFIG_TYPE_BIND, .uintValue = configKeyDUp},
     {.name = "key_ddown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
@@ -299,6 +303,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_prev",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyPrevPage},
     {.name = "key_next",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyNextPage},
     {.name = "key_disconnect",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyDisconnect},
+    {.name = "input_delay",                    .type = CONFIG_TYPE_UINT, .uintValue = &configInputDelay},
     {.name = "stick_deadzone",                 .type = CONFIG_TYPE_UINT, .uintValue = &configStickDeadzone},
     {.name = "rumble_strength",                .type = CONFIG_TYPE_UINT, .uintValue = &configRumbleStrength},
     {.name = "gamepad_number",                 .type = CONFIG_TYPE_UINT, .uintValue = &configGamepadNumber},
@@ -813,7 +818,7 @@ NEXT_OPTION:
 
     fs_close(file);
 
-    if (configGraphicsBackend < GFX_WINDOW_BACKEND_OPENGL || configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
+    if (configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
@@ -849,6 +854,8 @@ NEXT_OPTION:
         configAmountOfPlayers = MIN(gCLIOpts.playerCount, MAX_PLAYERS);
     }
 
+    if (configInputDelay > INPUT_BUFFER_MAX_DELAY) { configInputDelay = INPUT_BUFFER_MAX_DELAY; }
+
 #ifndef COOPNET
     configNetworkSystem = NS_SOCKET;
 #endif
@@ -874,6 +881,7 @@ void configfile_reset_keybinds(bool extra) {
         memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
         memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
         memcpy(configKeyChat, defaultConfigKeyChat, sizeof(configKeyChat));
+        memcpy(configKeyChatCommand, defaultConfigKeyChatCommand, sizeof(configKeyChatCommand));
         memcpy(configKeyPlayerList, defaultConfigKeyPlayerList, sizeof(configKeyPlayerList));
         memcpy(configKeyDUp, defaultConfigKeyDUp, sizeof(configKeyDUp));
         memcpy(configKeyDDown, defaultConfigKeyDDown, sizeof(configKeyDDown));
