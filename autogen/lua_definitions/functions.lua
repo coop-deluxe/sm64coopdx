@@ -5286,20 +5286,6 @@ function get_star_name(courseNum, starNum)
     -- ...
 end
 
---- @param id integer
---- @param destLevel integer
---- @param destArea integer
---- @param destNode integer
---- @param checkpoint integer
---- @param o Object
---- @return ObjectWarpNode
---- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.<br>
---- To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)<br>
---- `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
-function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
-    -- ...
-end
-
 --- @return integer
 --- Returns if the level timer is running
 function level_control_timer_running()
@@ -12006,6 +11992,69 @@ end
 --- @return boolean
 --- Warps back to the castle from `aLevel`
 function warp_to_castle(aLevel)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @param pos Vec3f
+--- @param angle Vec3s
+--- @param modelId ModelExtendedId
+--- @param behaviorId BehaviorId
+--- @param behParams integer
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @return CustomWarpNode
+--- Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+function level_get_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_delete_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- Deletes all the warp nodes in level `levelNum`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_clear_warp_nodes(levelNum)
     -- ...
 end
 

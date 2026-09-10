@@ -3,6 +3,7 @@
 #include "pc/mods/mods.h"
 #include "pc/network/network.h"
 #include "audio/external.h"
+#include "engine/level_script.h"
 
 u8 gSmLuaConvertSuccess = false;
 
@@ -497,6 +498,11 @@ CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo) {
     return cpointer;
 }
 
+void smlua_push_boolean_field(int index, const char* name, bool val) {
+    lua_pushboolean(gLuaState, val);
+    lua_setfield(gLuaState, index, name);
+}
+
 void smlua_push_integer_field(int index, const char* name, lua_Integer val) {
     lua_pushinteger(gLuaState, val);
     lua_setfield(gLuaState, index, name);
@@ -729,6 +735,36 @@ LuaFunction smlua_get_any_function_mod_variable(const char *variable) {
     // return variable
     gSmLuaSuppressErrors = prevSuppress;
     return value;
+}
+
+bool smlua_find_lua_param(uintptr_t *param, uintptr_t value, u32 luaParams, u32 luaParamFlag) {
+    *param = value;
+    if (luaParams & luaParamFlag) {
+        if (gLevelScriptModIndex == -1) {
+            LOG_ERROR("smlua_find_lua_param cannot be used for vanilla level scripts");
+            return false;
+        }
+
+        const char *paramStr = dynos_level_get_token(*param);
+        if (!paramStr) {
+            LOG_ERROR("smlua_find_lua_param: Invalid token index: %u", (u32) *param);
+            return false;
+        }
+
+        gSmLuaConvertSuccess = true;
+        *param = smlua_get_integer_mod_variable(gLevelScriptModIndex, paramStr);
+
+        if (!gSmLuaConvertSuccess) {
+            gSmLuaConvertSuccess = true;
+            *param = smlua_get_any_integer_mod_variable(paramStr);
+        }
+
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_find_lua_param: Could not find parameter '%s'", paramStr);
+            return false;
+        }
+    }
+    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////

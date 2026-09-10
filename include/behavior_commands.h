@@ -324,9 +324,4 @@
     BC_B(0x41), \
     BC_PTR(collisionData)
 
-// This is a special case for behaviors hooked from LUA.
-#define CALL_LUA_FUNC(func) \
-    BC_B(0x42), \
-    BC_W(func)
-
 #endif // BEHAVIOR_COMMANDS_H
