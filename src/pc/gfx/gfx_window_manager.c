@@ -118,7 +118,7 @@ void gfx_wm_init(const char *window_title) {
     currBackend = configGraphicsBackend;
 #endif
     if (currBackend != GFX_WINDOW_BACKEND_DUMMY &&
-        (currBackend < GFX_WINDOW_BACKEND_OPENGL || currBackend > GFX_WINDOW_BACKEND_MAX)
+        (currBackend < 0 || currBackend > GFX_WINDOW_BACKEND_MAX)
     ) {
         currBackend = GFX_WINDOW_BACKEND_OPENGL;
     }

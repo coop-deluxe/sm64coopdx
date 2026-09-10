@@ -57,8 +57,8 @@ static bool sAppliedVsync = false;
 
 static int gfx_window_opengl_get_max_msaa(void);
 
-static inline void gfx_window_opengl_set_vsync(const bool enabled) {
-    SDL_GL_SetSwapInterval(enabled);
+static inline int gfx_window_opengl_set_vsync(const bool enabled) {
+    return SDL_GL_SetSwapInterval(enabled);
 }
 
 static void gfx_window_opengl_set_fullscreen(void) {
@@ -135,8 +135,9 @@ static void gfx_window_opengl_init(const char *window_title) {
     sGlContext = SDL_GL_CreateContext(sSdlWindow);
 
     gfx_wm_set_window(sSdlWindow);
-    gfx_window_opengl_set_vsync(configWindow.vsync);
-    sAppliedVsync = configWindow.vsync;
+    if (gfx_window_opengl_set_vsync(configWindow.vsync) == 0) {
+        sAppliedVsync = configWindow.vsync;
+    }
 }
 
 bool gfx_window_opengl_check_compatibility(void) {
@@ -181,8 +182,9 @@ static void gfx_window_opengl_handle_events(UNUSED SDL_Event event) {
 
 static bool gfx_window_opengl_start_frame(void) {
     if (sAppliedVsync != configWindow.vsync) {
-        gfx_window_opengl_set_vsync(configWindow.vsync);
-        sAppliedVsync = configWindow.vsync;
+        if (gfx_window_opengl_set_vsync(configWindow.vsync) == 0) {
+            sAppliedVsync = configWindow.vsync;
+        }
     }
     return true;
 }
