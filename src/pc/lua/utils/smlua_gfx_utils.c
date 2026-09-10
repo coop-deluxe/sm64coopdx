@@ -186,7 +186,7 @@ static const u8  SENTINEL_VTX[sizeof(Vtx)] = {[0 ... sizeof(Vtx) - 1] = UINT8_MA
 
 Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
     if (!gfx) {
-        gfx = calloc(length + 1, sizeof(Gfx)); // +1 to insert SENTINEL_GFX at the end of the buffer
+        gfx = calloc(length + 1llu, sizeof(Gfx)); // +1 to insert SENTINEL_GFX at the end of the buffer
     } else {
         memset(gfx, 0, length * sizeof(Gfx));
     }
@@ -196,7 +196,7 @@ Gfx *gfx_allocate_internal(Gfx *gfx, u32 length) {
 
 Vtx *vtx_allocate_internal(Vtx *vtx, u32 count) {
     if (!vtx) {
-        vtx = calloc(count + 1, sizeof(Vtx)); // +1 to insert SENTINEL_VTX at the end of the buffer
+        vtx = calloc(count + 1llu, sizeof(Vtx)); // +1 to insert SENTINEL_VTX at the end of the buffer
     } else {
         memset(vtx, 0, count * sizeof(Vtx));
     }

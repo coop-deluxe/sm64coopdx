@@ -131,6 +131,19 @@ constants_hidden = { "__name__": "constants_hidden",
     "interaction.h": [ "INTERACT_UNKNOWN_08" ],
 }
 
+# Enums that rely on an included file to define them fully
+# Format is:
+# - filename
+#   - struct name
+#     - macro name: [ constant position in macro, value position in macro (incremental if omitted) ]
+constants_enums_with_include = {
+    "src/engine/graph_node.h": {
+        "GraphNodeType": {
+            "GRAPH_NODE_TYPE": [1,2],
+        }
+    },
+}
+
 #############
 # FUNCTIONS #
 #############

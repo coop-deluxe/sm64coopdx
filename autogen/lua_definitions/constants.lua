@@ -3153,80 +3153,56 @@ GRAPH_EXTRA_ROTATE_HELD = (1 << 1)
 --- @type integer
 GRAPH_NODE_TYPE_FUNCTIONAL = 0x100
 
---- @type integer
-GRAPH_NODE_TYPE_400 = 0x400
+GRAPH_NODE_TYPE_ROOT                 =                              0x001 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ORTHO_PROJECTION     =                              0x002 --- @type GraphNodeType
+GRAPH_NODE_TYPE_PERSPECTIVE          = 0x003 | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_MASTER_LIST          =                              0x004 --- @type GraphNodeType
+GRAPH_NODE_TYPE_START                =                              0x00A --- @type GraphNodeType
+GRAPH_NODE_TYPE_LEVEL_OF_DETAIL      =                              0x00B --- @type GraphNodeType
+GRAPH_NODE_TYPE_SWITCH_CASE          = 0x00C | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_CAMERA               = 0x014 | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_TRANSLATION_ROTATION =                              0x015 --- @type GraphNodeType
+GRAPH_NODE_TYPE_TRANSLATION          =                              0x016 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ROTATION             =                              0x017 --- @type GraphNodeType
+GRAPH_NODE_TYPE_OBJECT               =                              0x018 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ANIMATED_PART        =                              0x019 --- @type GraphNodeType
+GRAPH_NODE_TYPE_BILLBOARD            =                              0x01A --- @type GraphNodeType
+GRAPH_NODE_TYPE_DISPLAY_LIST         =                              0x01B --- @type GraphNodeType
+GRAPH_NODE_TYPE_SCALE                =                              0x01C --- @type GraphNodeType
+GRAPH_NODE_TYPE_SCALE_XYZ            =                              0x01D --- @type GraphNodeType
+GRAPH_NODE_TYPE_SHADOW               =                              0x028 --- @type GraphNodeType
+GRAPH_NODE_TYPE_OBJECT_PARENT        =                              0x029 --- @type GraphNodeType
+GRAPH_NODE_TYPE_GENERATED_LIST       = 0x02A | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_BACKGROUND           = 0x02C | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_HELD_OBJ             = 0x02E | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_CULLING_RADIUS       =                              0x02F --- @type GraphNodeType
+GRAPH_NODE_TYPE_BONE                 =                              0x030 --- @type GraphNodeType
 
---- @type integer
-GRAPH_NODE_TYPE_ROOT = 0x001
-
---- @type integer
-GRAPH_NODE_TYPE_ORTHO_PROJECTION = 0x002
-
---- @type integer
-GRAPH_NODE_TYPE_PERSPECTIVE = (0x003 | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_MASTER_LIST = 0x004
-
---- @type integer
-GRAPH_NODE_TYPE_START = 0x00A
-
---- @type integer
-GRAPH_NODE_TYPE_LEVEL_OF_DETAIL = 0x00B
-
---- @type integer
-GRAPH_NODE_TYPE_SWITCH_CASE = (0x00C | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_CAMERA = (0x014 | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_TRANSLATION_ROTATION = 0x015
-
---- @type integer
-GRAPH_NODE_TYPE_TRANSLATION = 0x016
-
---- @type integer
-GRAPH_NODE_TYPE_ROTATION = 0x017
-
---- @type integer
-GRAPH_NODE_TYPE_OBJECT = 0x018
-
---- @type integer
-GRAPH_NODE_TYPE_ANIMATED_PART = 0x019
-
---- @type integer
-GRAPH_NODE_TYPE_BILLBOARD = 0x01A
-
---- @type integer
-GRAPH_NODE_TYPE_DISPLAY_LIST = 0x01B
-
---- @type integer
-GRAPH_NODE_TYPE_SCALE = 0x01C
-
---- @type integer
-GRAPH_NODE_TYPE_SCALE_XYZ = 0x01D
-
---- @type integer
-GRAPH_NODE_TYPE_SHADOW = 0x028
-
---- @type integer
-GRAPH_NODE_TYPE_OBJECT_PARENT = 0x029
-
---- @type integer
-GRAPH_NODE_TYPE_GENERATED_LIST = (0x02A | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_BACKGROUND = (0x02C | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_HELD_OBJ = (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_CULLING_RADIUS = 0x02F
-
---- @type integer
-GRAPH_NODE_TYPE_BONE = 0x030
+--- @alias GraphNodeType
+--- | `GRAPH_NODE_TYPE_ROOT`
+--- | `GRAPH_NODE_TYPE_ORTHO_PROJECTION`
+--- | `GRAPH_NODE_TYPE_PERSPECTIVE`
+--- | `GRAPH_NODE_TYPE_MASTER_LIST`
+--- | `GRAPH_NODE_TYPE_START`
+--- | `GRAPH_NODE_TYPE_LEVEL_OF_DETAIL`
+--- | `GRAPH_NODE_TYPE_SWITCH_CASE`
+--- | `GRAPH_NODE_TYPE_CAMERA`
+--- | `GRAPH_NODE_TYPE_TRANSLATION_ROTATION`
+--- | `GRAPH_NODE_TYPE_TRANSLATION`
+--- | `GRAPH_NODE_TYPE_ROTATION`
+--- | `GRAPH_NODE_TYPE_OBJECT`
+--- | `GRAPH_NODE_TYPE_ANIMATED_PART`
+--- | `GRAPH_NODE_TYPE_BILLBOARD`
+--- | `GRAPH_NODE_TYPE_DISPLAY_LIST`
+--- | `GRAPH_NODE_TYPE_SCALE`
+--- | `GRAPH_NODE_TYPE_SCALE_XYZ`
+--- | `GRAPH_NODE_TYPE_SHADOW`
+--- | `GRAPH_NODE_TYPE_OBJECT_PARENT`
+--- | `GRAPH_NODE_TYPE_GENERATED_LIST`
+--- | `GRAPH_NODE_TYPE_BACKGROUND`
+--- | `GRAPH_NODE_TYPE_HELD_OBJ`
+--- | `GRAPH_NODE_TYPE_CULLING_RADIUS`
+--- | `GRAPH_NODE_TYPE_BONE`
 
 --- @type integer
 GFX_NUM_MASTER_LISTS = 8
@@ -8510,14 +8486,14 @@ HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
 --- | `HUD_DISPLAY_FLAGS_POWER`
 --- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
 
-ACT_SELECT_HUD_SCORE            =                                                                                                                                                            1 << 0 --- @type ActSelectHudPart
-ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                            1 << 1 --- @type ActSelectHudPart
-ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                            1 << 2 --- @type ActSelectHudPart
-ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                            1 << 3 --- @type ActSelectHudPart
-ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                            1 << 4 --- @type ActSelectHudPart
-ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                            1 << 5 --- @type ActSelectHudPart
-ACT_SELECT_HUD_NONE             =                                                                                                                                                                 0 --- @type ActSelectHudPart
-ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
+ACT_SELECT_HUD_SCORE            =                                                                                                                                                             1 << 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                             1 << 1 --- @type ActSelectHudPart
+ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                             1 << 2 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                             1 << 3 --- @type ActSelectHudPart
+ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                             1 << 4 --- @type ActSelectHudPart
+ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                             1 << 5 --- @type ActSelectHudPart
+ACT_SELECT_HUD_NONE             =                                                                                                                                                                  0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
 
 --- @alias ActSelectHudPart
 --- | `ACT_SELECT_HUD_SCORE`

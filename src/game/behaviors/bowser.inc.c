@@ -1572,9 +1572,9 @@ Gfx *geo_bits_bowser_coloring(s32 run, struct GraphNode *node, UNUSED s32 a2) {
         if (gCurGraphNodeHeldObject != 0)
             sp24 = gCurGraphNodeHeldObject->objNode;
         if (sp24->oOpacity == 0xFF)
-            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | GRAPH_NODE_TYPE_FUNCTIONAL;
+            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
         else
-            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
+            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT << 8);
         sp28 = sp2C = alloc_display_list(2 * sizeof(Gfx));
         if (sp28 == NULL) { return NULL; }
 

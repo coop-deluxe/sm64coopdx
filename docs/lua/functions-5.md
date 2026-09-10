@@ -6,1356 +6,12 @@
 
 
 ---
-# functions from math_util_vec3i.inl
-
-<br />
-
-
-## [vec3i_zero](#vec3i_zero)
-
-### Description
-Sets the components of the 3D integer vector `v` to 0
-
-### Lua Example
-`local vec3iValue = vec3i_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_zero(VEC_OUT Vec3i v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_copy](#vec3i_copy)
-
-### Description
-Copies the contents of a 3D integer vector (`src`) into another 3D integer vector (`dest`)
-
-### Lua Example
-`local vec3iValue = vec3i_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| src | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_copy(VEC_OUT Vec3i dest, Vec3i src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_set](#vec3i_set)
-
-### Description
-Sets the values of the 3D integer vector `dest` to the given x, y, and z values
-
-### Lua Example
-`local vec3iValue = vec3i_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_set(VEC_OUT Vec3i dest, s32 x, s32 y, s32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_add](#vec3i_add)
-
-### Description
-Adds the components of the 3D integer vector `a` to `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_add(VEC_OUT Vec3i dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_sum](#vec3i_sum)
-
-### Description
-Adds the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-| b | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_sum(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_sub](#vec3i_sub)
-
-### Description
-Subtracts the components of the 3D integer vector `a` from `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_sub(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_sub(VEC_OUT Vec3i dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_dif](#vec3i_dif)
-
-### Description
-Subtracts the components of the 3D integer vector `b` from the components of `a` and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_dif(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-| b | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_dif(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_mul](#vec3i_mul)
-
-### Description
-Multiplies each component of the 3D integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3iValue = vec3i_mul(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | `number` |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_mul(VEC_OUT Vec3i dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_mult](#vec3i_mult)
-
-### Description
-Multiplies the components of the 3D integer vector `dest` with the components of `a`
-
-### Lua Example
-`local vec3iValue = vec3i_mult(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_mult(VEC_OUT Vec3i dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_prod](#vec3i_prod)
-
-### Description
-Multiplies the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_prod(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-| b | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_prod(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_div](#vec3i_div)
-
-### Description
-Divides each component of the 3D integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3iValue = vec3i_div(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | `number` |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_div(VEC_OUT Vec3i dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_length](#vec3i_length)
-
-### Description
-Calculates the length (magnitude) of the 3D integer vector `a`
-
-### Lua Example
-`local numberValue = vec3i_length(a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3i_length(Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_normalize](#vec3i_normalize)
-
-### Description
-Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
-
-### Lua Example
-`local vec3iValue = vec3i_normalize(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_normalize(VEC_OUT Vec3i v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_set_magnitude](#vec3i_set_magnitude)
-
-### Description
-Sets the length (magnitude) of 3D integer vector `v`, while retaining its direction
-
-### Lua Example
-`local vec3iValue = vec3i_set_magnitude(v, mag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3i](structs.md#Vec3i) |
-| mag | `number` |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_set_magnitude(VEC_OUT Vec3i v, f32 mag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_dot](#vec3i_dot)
-
-### Description
-Computes the dot product of the two 3D integer vectors `a` and `b`
-
-### Lua Example
-`local numberValue = vec3i_dot(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3i](structs.md#Vec3i) |
-| b | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3i_dot(Vec3i a, Vec3i b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_cross](#vec3i_cross)
-
-### Description
-Computes the cross product of two 3D integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_cross(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3i](structs.md#Vec3i) |
-| b | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_cross(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_combine](#vec3i_combine)
-
-### Description
-Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3i_combine(dest, vecA, vecB, sclA, sclB)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| vecA | [Vec3i](structs.md#Vec3i) |
-| vecB | [Vec3i](structs.md#Vec3i) |
-| sclA | `number` |
-| sclB | `number` |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3i_combine(VEC_OUT Vec3i dest, Vec3i vecA, Vec3i vecB, f32 sclA, f32 sclB);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_dist](#vec3i_dist)
-
-### Description
-Calculates the distance between two 3D integer vectors `v1` and `v2`
-
-### Lua Example
-`local numberValue = vec3i_dist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3i](structs.md#Vec3i) |
-| v2 | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3i_dist(Vec3i v1, Vec3i v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_hdist](#vec3i_hdist)
-
-### Description
-Calculates the horizontal distance between two 3D integer vectors `v1` and `v2`, as if their y component was 0
-
-### Lua Example
-`local numberValue = vec3i_hdist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3i](structs.md#Vec3i) |
-| v2 | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3i_hdist(Vec3i v1, Vec3i v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_is_zero](#vec3i_is_zero)
-
-### Description
-Returns `true` if all components of the 3D integer vector `v` are zero
-
-### Lua Example
-`local booleanValue = vec3i_is_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool vec3i_is_zero(Vec3i v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_to_vec3f](#vec3i_to_vec3f)
-
-### Description
-Converts a 3D integer vector `a` into a 3D floating-point vector and stores the result in `dest`
-
-### Lua Example
-`local vec3fValue = vec3i_to_vec3f(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3f](structs.md#Vec3f)
-
-### C Prototype
-`Vec3fp vec3i_to_vec3f(VEC_OUT Vec3f dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3i_to_vec3s](#vec3i_to_vec3s)
-
-### Description
-Converts a 3D integer vector `a` into a 3D short integer vector and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3i_to_vec3s(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3i](structs.md#Vec3i) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3i_to_vec3s(VEC_OUT Vec3s dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from math_util_vec3s.inl
-
-<br />
-
-
-## [vec3s_zero](#vec3s_zero)
-
-### Description
-Sets the components of the 3D short integer vector `v` to 0
-
-### Lua Example
-`local vec3sValue = vec3s_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_zero(VEC_OUT Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_copy](#vec3s_copy)
-
-### Description
-Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
-
-### Lua Example
-`local vec3sValue = vec3s_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| src | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_copy(VEC_OUT Vec3s dest, Vec3s src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_set](#vec3s_set)
-
-### Description
-Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
-
-### Lua Example
-`local vec3sValue = vec3s_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_set(VEC_OUT Vec3s dest, s16 x, s16 y, s16 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_add](#vec3s_add)
-
-### Description
-Adds the components of the 3D short integer vector `a` to `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_add(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_sum](#vec3s_sum)
-
-### Description
-Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_sum(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_sub](#vec3s_sub)
-
-### Description
-Subtracts the components of the 3D short integer vector `a` from `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_sub(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_sub(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_dif](#vec3s_dif)
-
-### Description
-Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_dif(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_dif(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_mul](#vec3s_mul)
-
-### Description
-Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3sValue = vec3s_mul(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_mul(VEC_OUT Vec3s dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_mult](#vec3s_mult)
-
-### Description
-Multiplies the components of the 3D short integer vector `dest` with the components of `a`
-
-### Lua Example
-`local vec3sValue = vec3s_mult(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_mult(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_prod](#vec3s_prod)
-
-### Description
-Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_prod(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_prod(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_div](#vec3s_div)
-
-### Description
-Divides each component of the 3D short integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3sValue = vec3s_div(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_div(VEC_OUT Vec3s dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_length](#vec3s_length)
-
-### Description
-Calculates the length (magnitude) of the 3D short integer vector `a`
-
-### Lua Example
-`local numberValue = vec3s_length(a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_length(Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_normalize](#vec3s_normalize)
-
-### Description
-Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
-
-### Lua Example
-`local vec3sValue = vec3s_normalize(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_normalize(VEC_OUT Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_set_magnitude](#vec3s_set_magnitude)
-
-### Description
-Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
-
-### Lua Example
-`local vec3sValue = vec3s_set_magnitude(v, mag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-| mag | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_set_magnitude(VEC_OUT Vec3s v, f32 mag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_dot](#vec3s_dot)
-
-### Description
-Computes the dot product of the two 3D short integer vectors `a` and `b`
-
-### Lua Example
-`local numberValue = vec3s_dot(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_dot(Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_cross](#vec3s_cross)
-
-### Description
-Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_cross(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_cross(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_combine](#vec3s_combine)
-
-### Description
-Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_combine(dest, vecA, vecB, sclA, sclB)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| vecA | [Vec3s](structs.md#Vec3s) |
-| vecB | [Vec3s](structs.md#Vec3s) |
-| sclA | `number` |
-| sclB | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_combine(VEC_OUT Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_dist](#vec3s_dist)
-
-### Description
-Calculates the distance between two 3D short integer vectors `v1` and `v2`
-
-### Lua Example
-`local numberValue = vec3s_dist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3s](structs.md#Vec3s) |
-| v2 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_hdist](#vec3s_hdist)
-
-### Description
-Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
-
-### Lua Example
-`local numberValue = vec3s_hdist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3s](structs.md#Vec3s) |
-| v2 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_hdist(Vec3s v1, Vec3s v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_is_zero](#vec3s_is_zero)
-
-### Description
-Returns `true` if all components of the 3D short integer vector `v` are zero
-
-### Lua Example
-`local booleanValue = vec3s_is_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool vec3s_is_zero(Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_to_vec3f](#vec3s_to_vec3f)
-
-### Description
-Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
-
-### Lua Example
-`local vec3fValue = vec3s_to_vec3f(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3f](structs.md#Vec3f)
-
-### C Prototype
-`Vec3fp vec3s_to_vec3f(VEC_OUT Vec3f dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [vec3s_to_vec3i](#vec3s_to_vec3i)
-
-### Description
-Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3s_to_vec3i(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3s_to_vec3i(VEC_OUT Vec3i dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from misc.h
-
-<br />
-
-
-## [smooth_step](#smooth_step)
-
-### Description
-Smoothly steps between `edge0` and `edge1` with `x` as delta
-
-### Lua Example
-`local numberValue = smooth_step(edge0, edge1, x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| edge0 | `number` |
-| edge1 | `number` |
-| x | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`float smooth_step(float edge0, float edge1, float x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [update_all_mario_stars](#update_all_mario_stars)
-
-### Description
-Updates every Mario state's star count with the save file total star count
-
-### Lua Example
-`update_all_mario_stars()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void update_all_mario_stars(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clock_elapsed](#clock_elapsed)
-
-### Description
-Gets the current clock elapsed time
-
-### Lua Example
-`local numberValue = clock_elapsed()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 clock_elapsed(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clock_elapsed_f64](#clock_elapsed_f64)
-
-### Description
-Gets the current clock elapsed time with double precision
-
-### Lua Example
-`local numberValue = clock_elapsed_f64()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f64 clock_elapsed_f64(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clock_elapsed_ticks](#clock_elapsed_ticks)
-
-### Description
-Gets the current clock elapsed time in frames
-
-### Lua Example
-`local integerValue = clock_elapsed_ticks()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 clock_elapsed_ticks(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [clock_is_date](#clock_is_date)
-
-### Description
-Checks whether it is the day given
-
-### Lua Example
-`local booleanValue = clock_is_date(month, day)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| month | `integer` |
-| day | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool clock_is_date(u8 month, u8 day);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [delta_interpolate_f32](#delta_interpolate_f32)
-
-### Description
-Linearly interpolates between `a` and `b` with `delta`
-
-### Lua Example
-`local numberValue = delta_interpolate_f32(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-| delta | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [delta_interpolate_s32](#delta_interpolate_s32)
-
-### Description
-Linearly interpolates between `a` and `b` with `delta`
-
-### Lua Example
-`local integerValue = delta_interpolate_s32(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| delta | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [delta_interpolate_angle](#delta_interpolate_angle)
-
-### Description
-Interpolates angle between `a` and `b` with `delta`
-
-### Lua Example
-`local integerValue = delta_interpolate_angle(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| delta | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 delta_interpolate_angle(s16 a, s16 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [delta_interpolate_vec3f](#delta_interpolate_vec3f)
-
-### Description
-Linearly interpolates `res` between `a` and `b` with `delta`
-
-### Lua Example
-`delta_interpolate_vec3f(res, a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| res | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-| delta | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [delta_interpolate_vec3s](#delta_interpolate_vec3s)
-
-### Description
-Linearly interpolates `res` between `a` and `b` with `delta`
-
-### Lua Example
-`delta_interpolate_vec3s(res, a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| res | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-| delta | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void delta_interpolate_vec3s(VEC_OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
 # functions from mod_fs.h
 
 <br />
 
 
-## [mod_fs_exists](#mod_fs_exists)
+## mod_fs_exists
 
 ### Description
 Checks the existence of a modfs at path `modPath` or for the active mod if not provided. Checking for the existence of a private modfs will return false, even if it exists
@@ -1379,7 +35,7 @@ Checks the existence of a modfs at path `modPath` or for the active mod if not p
 
 <br />
 
-## [mod_fs_get](#mod_fs_get)
+## mod_fs_get
 
 ### Description
 Gets the modfs object at path `modPath` or the active mod one if not provided. This function will return nil for a private modfs, even if it exists
@@ -1403,7 +59,7 @@ Gets the modfs object at path `modPath` or the active mod one if not provided. T
 
 <br />
 
-## [mod_fs_reload](#mod_fs_reload)
+## mod_fs_reload
 
 ### Description
 Reloads the modfs object at path `modPath`. This function will return nil for a private modfs, even if it exists
@@ -1427,7 +83,7 @@ Reloads the modfs object at path `modPath`. This function will return nil for a 
 
 <br />
 
-## [mod_fs_create](#mod_fs_create)
+## mod_fs_create
 
 ### Description
 Creates a modfs object for the active mod if it doesn't exist. Returns the modfs object on success
@@ -1449,7 +105,7 @@ Creates a modfs object for the active mod if it doesn't exist. Returns the modfs
 
 <br />
 
-## [mod_fs_get_filename](#mod_fs_get_filename)
+## mod_fs_get_filename
 
 ### Description
 Gets the filename at position `index` of the provided `modFs`
@@ -1474,7 +130,7 @@ Gets the filename at position `index` of the provided `modFs`
 
 <br />
 
-## [mod_fs_get_file](#mod_fs_get_file)
+## mod_fs_get_file
 
 ### Description
 Gets the file object at path `filepath` of the provided `modFs`. This function will return nil for a private modfs file, even if it exists
@@ -1499,7 +155,7 @@ Gets the file object at path `filepath` of the provided `modFs`. This function w
 
 <br />
 
-## [mod_fs_create_file](#mod_fs_create_file)
+## mod_fs_create_file
 
 ### Description
 Creates a new file at path `filepath` for the provided `modFs`. Set `text` to true to treat the file as a pure text file, not a binary file. Returns the created file on success
@@ -1525,7 +181,7 @@ Creates a new file at path `filepath` for the provided `modFs`. Set `text` to tr
 
 <br />
 
-## [mod_fs_move_file](#mod_fs_move_file)
+## mod_fs_move_file
 
 ### Description
 Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `newpath` if it exists. Returns true on success
@@ -1552,7 +208,7 @@ Moves the file at path `oldpath` to `newpath` of the provided `modFs`. Set `over
 
 <br />
 
-## [mod_fs_copy_file](#mod_fs_copy_file)
+## mod_fs_copy_file
 
 ### Description
 Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `overwriteExisting` to true to overwrite the file at path `dstpath` if it exists. Returns true on success
@@ -1579,7 +235,7 @@ Copies the file at path `srcpath` to `dstpath` of the provided `modFs`. Set `ove
 
 <br />
 
-## [mod_fs_delete_file](#mod_fs_delete_file)
+## mod_fs_delete_file
 
 ### Description
 Deletes the file at path `filepath` of the provided `modFs`. Returns true on success
@@ -1604,7 +260,7 @@ Deletes the file at path `filepath` of the provided `modFs`. Returns true on suc
 
 <br />
 
-## [mod_fs_clear](#mod_fs_clear)
+## mod_fs_clear
 
 ### Description
 Deletes all files of the provided `modFs`. Returns true on success
@@ -1628,7 +284,7 @@ Deletes all files of the provided `modFs`. Returns true on success
 
 <br />
 
-## [mod_fs_save](#mod_fs_save)
+## mod_fs_save
 
 ### Description
 Saves the provided `modFs` to persistent storage. Returns true on success
@@ -1652,7 +308,7 @@ Saves the provided `modFs` to persistent storage. Returns true on success
 
 <br />
 
-## [mod_fs_delete](#mod_fs_delete)
+## mod_fs_delete
 
 ### Description
 Removes the provided `modFs` from persistent storage and deletes its object. Returns true on success
@@ -1676,7 +332,7 @@ Removes the provided `modFs` from persistent storage and deletes its object. Ret
 
 <br />
 
-## [mod_fs_set_public](#mod_fs_set_public)
+## mod_fs_set_public
 
 ### Description
 Marks the provided `modFs` as public (i.e. readable by other mods). Returns true on success
@@ -1701,7 +357,7 @@ Marks the provided `modFs` as public (i.e. readable by other mods). Returns true
 
 <br />
 
-## [mod_fs_file_read_bool](#mod_fs_file_read_bool)
+## mod_fs_file_read_bool
 
 ### Description
 Reads a boolean from a binary modfs `file`
@@ -1725,7 +381,7 @@ Reads a boolean from a binary modfs `file`
 
 <br />
 
-## [mod_fs_file_read_integer](#mod_fs_file_read_integer)
+## mod_fs_file_read_integer
 
 ### Description
 Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants
@@ -1750,7 +406,7 @@ Reads an integer from a binary modfs `file`. `intType` must be one of the `INT_T
 
 <br />
 
-## [mod_fs_file_read_number](#mod_fs_file_read_number)
+## mod_fs_file_read_number
 
 ### Description
 Reads an floating-point number from a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants
@@ -1775,7 +431,7 @@ Reads an floating-point number from a binary modfs `file`. `floatType` must be o
 
 <br />
 
-## [mod_fs_file_read_bytes](#mod_fs_file_read_bytes)
+## mod_fs_file_read_bytes
 
 ### Description
 Reads a bytestring of `length` bytes from a binary modfs `file`
@@ -1800,7 +456,7 @@ Reads a bytestring of `length` bytes from a binary modfs `file`
 
 <br />
 
-## [mod_fs_file_read_string](#mod_fs_file_read_string)
+## mod_fs_file_read_string
 
 ### Description
 Reads a string from a binary modfs `file`, or read the whole content of a text modfs `file`
@@ -1824,7 +480,7 @@ Reads a string from a binary modfs `file`, or read the whole content of a text m
 
 <br />
 
-## [mod_fs_file_read_line](#mod_fs_file_read_line)
+## mod_fs_file_read_line
 
 ### Description
 Reads a line from a text modfs `file`
@@ -1848,7 +504,7 @@ Reads a line from a text modfs `file`
 
 <br />
 
-## [mod_fs_file_write_bool](#mod_fs_file_write_bool)
+## mod_fs_file_write_bool
 
 ### Description
 Writes a boolean to a binary modfs `file`. Returns true on success
@@ -1873,7 +529,7 @@ Writes a boolean to a binary modfs `file`. Returns true on success
 
 <br />
 
-## [mod_fs_file_write_integer](#mod_fs_file_write_integer)
+## mod_fs_file_write_integer
 
 ### Description
 Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TYPE_*` constants. Returns true on success
@@ -1899,7 +555,7 @@ Writes an integer to a binary modfs `file`. `intType` must be one of the `INT_TY
 
 <br />
 
-## [mod_fs_file_write_number](#mod_fs_file_write_number)
+## mod_fs_file_write_number
 
 ### Description
 Writes an floating-point number to a binary modfs `file`. `floatType` must be one of the `FLOAT_TYPE_*` constants. Returns true on success
@@ -1925,7 +581,7 @@ Writes an floating-point number to a binary modfs `file`. `floatType` must be on
 
 <br />
 
-## [mod_fs_file_write_bytes](#mod_fs_file_write_bytes)
+## mod_fs_file_write_bytes
 
 ### Description
 Writes a bytestring to a modfs `file`. Returns true on success
@@ -1950,7 +606,7 @@ Writes a bytestring to a modfs `file`. Returns true on success
 
 <br />
 
-## [mod_fs_file_write_string](#mod_fs_file_write_string)
+## mod_fs_file_write_string
 
 ### Description
 Writes a string to a modfs `file`. Returns true on success
@@ -1975,7 +631,7 @@ Writes a string to a modfs `file`. Returns true on success
 
 <br />
 
-## [mod_fs_file_write_line](#mod_fs_file_write_line)
+## mod_fs_file_write_line
 
 ### Description
 Writes a line to a text modfs `file`. Returns true on success
@@ -2000,7 +656,7 @@ Writes a line to a text modfs `file`. Returns true on success
 
 <br />
 
-## [mod_fs_file_seek](#mod_fs_file_seek)
+## mod_fs_file_seek
 
 ### Description
 Sets the current position of a modfs `file`.
@@ -2030,7 +686,7 @@ Returns true on success
 
 <br />
 
-## [mod_fs_file_rewind](#mod_fs_file_rewind)
+## mod_fs_file_rewind
 
 ### Description
 Sets the current position of a modfs `file` to its beginning.
@@ -2055,7 +711,7 @@ Returns true on success
 
 <br />
 
-## [mod_fs_file_is_eof](#mod_fs_file_is_eof)
+## mod_fs_file_is_eof
 
 ### Description
 Returns true if the provided modfs `file` has reached its end of file
@@ -2079,7 +735,7 @@ Returns true if the provided modfs `file` has reached its end of file
 
 <br />
 
-## [mod_fs_file_fill](#mod_fs_file_fill)
+## mod_fs_file_fill
 
 ### Description
 Fills a modfs `file` with `byte` repeated `length` times. Returns true on success
@@ -2105,7 +761,7 @@ Fills a modfs `file` with `byte` repeated `length` times. Returns true on succes
 
 <br />
 
-## [mod_fs_file_erase](#mod_fs_file_erase)
+## mod_fs_file_erase
 
 ### Description
 Erases `length` bytes or characters from a modfs `file`. Returns true on success
@@ -2130,7 +786,7 @@ Erases `length` bytes or characters from a modfs `file`. Returns true on success
 
 <br />
 
-## [mod_fs_file_set_text_mode](#mod_fs_file_set_text_mode)
+## mod_fs_file_set_text_mode
 
 ### Description
 Marks the provided modfs `file` as text. Returns true on success
@@ -2155,7 +811,7 @@ Marks the provided modfs `file` as text. Returns true on success
 
 <br />
 
-## [mod_fs_file_set_public](#mod_fs_file_set_public)
+## mod_fs_file_set_public
 
 ### Description
 Marks the provided modfs `file` as public (i.e. readable by other mods). Returns true on success
@@ -2180,7 +836,7 @@ Marks the provided modfs `file` as public (i.e. readable by other mods). Returns
 
 <br />
 
-## [mod_fs_file_set_compression](#mod_fs_file_set_compression)
+## mod_fs_file_set_compression
 
 ### Description
 Sets the compression level of the provided modfs `file`. Must be between 0 (no compression) and 9 (most compression). Returns true on success
@@ -2205,7 +861,7 @@ Sets the compression level of the provided modfs `file`. Must be between 0 (no c
 
 <br />
 
-## [mod_fs_hide_errors](#mod_fs_hide_errors)
+## mod_fs_hide_errors
 
 ### Description
 Hides script errors raised by `mod_fs` functions. Errors messages are still generated and can be retrieved with `mod_fs_get_last_error()`
@@ -2228,7 +884,7 @@ Hides script errors raised by `mod_fs` functions. Errors messages are still gene
 
 <br />
 
-## [mod_fs_get_last_error_code](#mod_fs_get_last_error_code)
+## mod_fs_get_last_error_code
 
 ### Description
 Returns the last error code raised by `mod_fs` functions
@@ -2249,7 +905,7 @@ Returns the last error code raised by `mod_fs` functions
 
 <br />
 
-## [mod_fs_get_last_error](#mod_fs_get_last_error)
+## mod_fs_get_last_error
 
 ### Description
 Returns the last error message generated by `mod_fs` functions or nil if no error occurred
@@ -2276,7 +932,7 @@ Returns the last error message generated by `mod_fs` functions or nil if no erro
 <br />
 
 
-## [mod_storage_save](#mod_storage_save)
+## mod_storage_save
 
 ### Description
 Saves a `key` corresponding to a string `value` to mod storage
@@ -2300,7 +956,7 @@ Saves a `key` corresponding to a string `value` to mod storage
 
 <br />
 
-## [mod_storage_save_integer](#mod_storage_save_integer)
+## mod_storage_save_integer
 
 ### Description
 Saves a `key` corresponding to an integer `value` to mod storage
@@ -2324,7 +980,7 @@ Saves a `key` corresponding to an integer `value` to mod storage
 
 <br />
 
-## [mod_storage_save_number](#mod_storage_save_number)
+## mod_storage_save_number
 
 ### Description
 Saves a `key` corresponding to a number `value` to mod storage
@@ -2348,7 +1004,7 @@ Saves a `key` corresponding to a number `value` to mod storage
 
 <br />
 
-## [mod_storage_save_bool](#mod_storage_save_bool)
+## mod_storage_save_bool
 
 ### Description
 Saves a `key` corresponding to a bool `value` to mod storage
@@ -2372,7 +1028,7 @@ Saves a `key` corresponding to a bool `value` to mod storage
 
 <br />
 
-## [mod_storage_load](#mod_storage_load)
+## mod_storage_load
 
 ### Description
 Loads a string `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `nil`
@@ -2396,7 +1052,7 @@ Loads a string `value` from a `key` in mod storage. If the `key` is not found, r
 
 <br />
 
-## [mod_storage_load_integer](#mod_storage_load_integer)
+## mod_storage_load_integer
 
 ### Description
 Loads an integer `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
@@ -2420,7 +1076,7 @@ Loads an integer `value` from a `key` in mod storage. If the `key` is not found,
 
 <br />
 
-## [mod_storage_load_number](#mod_storage_load_number)
+## mod_storage_load_number
 
 ### Description
 Loads a number `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `0`
@@ -2444,7 +1100,7 @@ Loads a number `value` from a `key` in mod storage. If the `key` is not found, r
 
 <br />
 
-## [mod_storage_load_bool](#mod_storage_load_bool)
+## mod_storage_load_bool
 
 ### Description
 Loads a bool `value` from a `key` in mod storage. If the `key` is not found, returns `defaultValue` or `false`
@@ -2468,7 +1124,7 @@ Loads a bool `value` from a `key` in mod storage. If the `key` is not found, ret
 
 <br />
 
-## [mod_storage_load_all](#mod_storage_load_all)
+## mod_storage_load_all
 
 ### Description
 Loads all keys and values in mod storage as strings and returns them as a table
@@ -2489,7 +1145,7 @@ Loads all keys and values in mod storage as strings and returns them as a table
 
 <br />
 
-## [mod_storage_exists](#mod_storage_exists)
+## mod_storage_exists
 
 ### Description
 Checks if a `key` is in mod storage
@@ -2512,7 +1168,7 @@ Checks if a `key` is in mod storage
 
 <br />
 
-## [mod_storage_remove](#mod_storage_remove)
+## mod_storage_remove
 
 ### Description
 Removes a `key` from mod storage
@@ -2535,7 +1191,7 @@ Removes a `key` from mod storage
 
 <br />
 
-## [mod_storage_clear](#mod_storage_clear)
+## mod_storage_clear
 
 ### Description
 Clears the mod's data from mod storage
@@ -2562,7 +1218,7 @@ Clears the mod's data from mod storage
 <br />
 
 
-## [network_player_connected_count](#network_player_connected_count)
+## network_player_connected_count
 
 ### Description
 Gets the amount of players connected
@@ -2583,7 +1239,7 @@ Gets the amount of players connected
 
 <br />
 
-## [network_player_set_description](#network_player_set_description)
+## network_player_set_description
 
 ### Description
 Sets the description field of `np`
@@ -2611,7 +1267,7 @@ Sets the description field of `np`
 
 <br />
 
-## [network_player_set_override_location](#network_player_set_override_location)
+## network_player_set_override_location
 
 ### Description
 Overrides the location of `np`
@@ -2635,7 +1291,7 @@ Overrides the location of `np`
 
 <br />
 
-## [network_player_from_global_index](#network_player_from_global_index)
+## network_player_from_global_index
 
 ### Description
 Gets a network player from `globalIndex`
@@ -2658,7 +1314,7 @@ Gets a network player from `globalIndex`
 
 <br />
 
-## [get_network_player_from_level](#get_network_player_from_level)
+## get_network_player_from_level
 
 ### Description
 Gets the first network player whose information matches `courseNum`, `actNum`, and `levelNum`
@@ -2683,7 +1339,7 @@ Gets the first network player whose information matches `courseNum`, `actNum`, a
 
 <br />
 
-## [get_network_player_from_area](#get_network_player_from_area)
+## get_network_player_from_area
 
 ### Description
 Gets the first network player whose information matches `courseNum`, `actNum`, `levelNum`, and `areaIndex`
@@ -2709,7 +1365,7 @@ Gets the first network player whose information matches `courseNum`, `actNum`, `
 
 <br />
 
-## [get_network_player_smallest_global](#get_network_player_smallest_global)
+## get_network_player_smallest_global
 
 ### Description
 Gets the active network player with the smallest global index. Useful for assigning one player to "own" some kind of functionality or object
@@ -2730,7 +1386,7 @@ Gets the active network player with the smallest global index. Useful for assign
 
 <br />
 
-## [network_player_set_override_palette_color](#network_player_set_override_palette_color)
+## network_player_set_override_palette_color
 
 ### Description
 Sets the `part in `np`'s override color palette`
@@ -2755,7 +1411,7 @@ Sets the `part in `np`'s override color palette`
 
 <br />
 
-## [network_player_reset_override_palette](#network_player_reset_override_palette)
+## network_player_reset_override_palette
 
 ### Description
 Resets `np`'s override color palette
@@ -2778,7 +1434,7 @@ Resets `np`'s override color palette
 
 <br />
 
-## [network_player_is_override_palette_same](#network_player_is_override_palette_same)
+## network_player_is_override_palette_same
 
 ### Description
 Checks if `np`'s override color palette is identical to the regular color palette
@@ -2807,7 +1463,7 @@ Checks if `np`'s override color palette is identical to the regular color palett
 <br />
 
 
-## [network_global_index_from_local](#network_global_index_from_local)
+## network_global_index_from_local
 
 ### Description
 Gets a player's global index from their local index
@@ -2830,7 +1486,7 @@ Gets a player's global index from their local index
 
 <br />
 
-## [network_local_index_from_global](#network_local_index_from_global)
+## network_local_index_from_global
 
 ### Description
 Gets a player's local index from their global index
@@ -2853,7 +1509,7 @@ Gets a player's local index from their global index
 
 <br />
 
-## [network_is_server](#network_is_server)
+## network_is_server
 
 ### Description
 Checks if you are hosting the current lobby, this value doesn't change
@@ -2874,7 +1530,7 @@ Checks if you are hosting the current lobby, this value doesn't change
 
 <br />
 
-## [network_is_moderator](#network_is_moderator)
+## network_is_moderator
 
 ### Description
 Checks if you are a moderator in the current lobby
@@ -2895,7 +1551,7 @@ Checks if you are a moderator in the current lobby
 
 <br />
 
-## [network_get_player_text_color_string](#network_get_player_text_color_string)
+## network_get_player_text_color_string
 
 ### Description
 Gets the DJUI hex color code string for the player corresponding to `localIndex`'s cap color
@@ -2918,7 +1574,7 @@ Gets the DJUI hex color code string for the player corresponding to `localIndex`
 
 <br />
 
-## [network_check_singleplayer_pause](#network_check_singleplayer_pause)
+## network_check_singleplayer_pause
 
 ### Description
 Checks if the game can currently be paused in singleplayer
@@ -2939,7 +1595,7 @@ Checks if the game can currently be paused in singleplayer
 
 <br />
 
-## [network_discord_id_from_local_index](#network_discord_id_from_local_index)
+## network_discord_id_from_local_index
 
 ### Description
 Gets a Discord ID corresponding to the network player with `localIndex`
@@ -2968,7 +1624,7 @@ Gets a Discord ID corresponding to the network player with `localIndex`
 <br />
 
 
-## [set_yoshi_as_not_dead](#set_yoshi_as_not_dead)
+## set_yoshi_as_not_dead
 
 ### Description
 Marks Yoshi as alive
@@ -2989,7 +1645,7 @@ Marks Yoshi as alive
 
 <br />
 
-## [obj_find_wall](#obj_find_wall)
+## obj_find_wall
 
 ### Description
 Finds any wall collisions, applies them, and turns away from the surface
@@ -3016,7 +1672,7 @@ Finds any wall collisions, applies them, and turns away from the surface
 
 <br />
 
-## [turn_obj_away_from_steep_floor](#turn_obj_away_from_steep_floor)
+## turn_obj_away_from_steep_floor
 
 ### Description
 Turns an object away from steep floors, similarly to walls
@@ -3042,7 +1698,7 @@ Turns an object away from steep floors, similarly to walls
 
 <br />
 
-## [obj_orient_graph](#obj_orient_graph)
+## obj_orient_graph
 
 ### Description
 Orients an object with the given normals, typically the surface under the object
@@ -3068,7 +1724,7 @@ Orients an object with the given normals, typically the surface under the object
 
 <br />
 
-## [calc_obj_friction](#calc_obj_friction)
+## calc_obj_friction
 
 ### Description
 Determines an object's forward speed multiplier
@@ -3091,7 +1747,7 @@ Determines an object's forward speed multiplier
 
 <br />
 
-## [calc_new_obj_vel_and_pos_y](#calc_new_obj_vel_and_pos_y)
+## calc_new_obj_vel_and_pos_y
 
 ### Description
 Updates an objects speed for gravity and updates Y position
@@ -3117,7 +1773,7 @@ Updates an objects speed for gravity and updates Y position
 
 <br />
 
-## [calc_new_obj_vel_and_pos_y_underwater](#calc_new_obj_vel_and_pos_y_underwater)
+## calc_new_obj_vel_and_pos_y_underwater
 
 ### Description
 Adjusts the current object's veloicty and y position for being underwater
@@ -3144,7 +1800,7 @@ Adjusts the current object's veloicty and y position for being underwater
 
 <br />
 
-## [obj_update_pos_vel_xz](#obj_update_pos_vel_xz)
+## obj_update_pos_vel_xz
 
 ### Description
 Updates an objects position from forward velocity and move angle yaw
@@ -3165,7 +1821,7 @@ Updates an objects position from forward velocity and move angle yaw
 
 <br />
 
-## [obj_splash](#obj_splash)
+## obj_splash
 
 ### Description
 Generates splashes if at surface of water, entering water, or bubbles if underwater
@@ -3189,7 +1845,7 @@ Generates splashes if at surface of water, entering water, or bubbles if underwa
 
 <br />
 
-## [object_step](#object_step)
+## object_step
 
 ### Description
 Generic object move function. Handles walls, water, floors, and gravity.
@@ -3211,7 +1867,7 @@ Returns flags for certain interactions
 
 <br />
 
-## [object_step_without_floor_orient](#object_step_without_floor_orient)
+## object_step_without_floor_orient
 
 ### Description
 Takes an object step but does not orient with the object's floor.
@@ -3233,7 +1889,7 @@ Used for boulders, falling pillars, and the rolling snowman body
 
 <br />
 
-## [obj_move_xyz_using_fvel_and_yaw](#obj_move_xyz_using_fvel_and_yaw)
+## obj_move_xyz_using_fvel_and_yaw
 
 ### Description
 Updates the object `obj` horizontal velocity using its forward velocity and move angle yaw, then moves it
@@ -3256,7 +1912,7 @@ Updates the object `obj` horizontal velocity using its forward velocity and move
 
 <br />
 
-## [is_point_within_radius_of_mario](#is_point_within_radius_of_mario)
+## is_point_within_radius_of_mario
 
 ### Description
 Checks if a point is within distance from any active Mario visible to objects' graphical position
@@ -3282,7 +1938,7 @@ Checks if a point is within distance from any active Mario visible to objects' g
 
 <br />
 
-## [is_point_within_radius_of_any_player](#is_point_within_radius_of_any_player)
+## is_point_within_radius_of_any_player
 
 ### Description
 Checks if a point is within distance from any active Mario's graphical position
@@ -3308,7 +1964,7 @@ Checks if a point is within distance from any active Mario's graphical position
 
 <br />
 
-## [is_player_active](#is_player_active)
+## is_player_active
 
 ### Description
 Checks if `m` is in the current course/act/level/area and isn't bubbled
@@ -3331,7 +1987,7 @@ Checks if `m` is in the current course/act/level/area and isn't bubbled
 
 <br />
 
-## [is_other_player_active](#is_other_player_active)
+## is_other_player_active
 
 ### Description
 Checks if any player besides the local player is in the current course/act/level/area
@@ -3352,7 +2008,7 @@ Checks if any player besides the local player is in the current course/act/level
 
 <br />
 
-## [is_player_in_local_area](#is_player_in_local_area)
+## is_player_in_local_area
 
 ### Description
 Checks if `m` is in the current course/act/level/area
@@ -3375,7 +2031,7 @@ Checks if `m` is in the current course/act/level/area
 
 <br />
 
-## [nearest_mario_state_to_object](#nearest_mario_state_to_object)
+## nearest_mario_state_to_object
 
 ### Description
 Gets the nearest active Mario who isn't bubbled to `obj`
@@ -3398,7 +2054,7 @@ Gets the nearest active Mario who isn't bubbled to `obj`
 
 <br />
 
-## [nearest_possible_mario_state_to_object](#nearest_possible_mario_state_to_object)
+## nearest_possible_mario_state_to_object
 
 ### Description
 Gets the nearest possible Mario to `obj` despite anything like bubbled state or enemy visibility
@@ -3421,7 +2077,7 @@ Gets the nearest possible Mario to `obj` despite anything like bubbled state or 
 
 <br />
 
-## [nearest_player_to_object](#nearest_player_to_object)
+## nearest_player_to_object
 
 ### Description
 Gets the nearest player (Mario Object) to `obj`
@@ -3444,7 +2100,7 @@ Gets the nearest player (Mario Object) to `obj`
 
 <br />
 
-## [nearest_interacting_mario_state_to_object](#nearest_interacting_mario_state_to_object)
+## nearest_interacting_mario_state_to_object
 
 ### Description
 Gets the nearest interacting Mario to `obj`
@@ -3467,7 +2123,7 @@ Gets the nearest interacting Mario to `obj`
 
 <br />
 
-## [nearest_interacting_player_to_object](#nearest_interacting_player_to_object)
+## nearest_interacting_player_to_object
 
 ### Description
 Gets the nearest interacting player (Mario Object) to `obj`
@@ -3490,7 +2146,7 @@ Gets the nearest interacting player (Mario Object) to `obj`
 
 <br />
 
-## [is_nearest_mario_state_to_object](#is_nearest_mario_state_to_object)
+## is_nearest_mario_state_to_object
 
 ### Description
 Checks if `m` is the nearest Mario to `obj`
@@ -3514,7 +2170,7 @@ Checks if `m` is the nearest Mario to `obj`
 
 <br />
 
-## [is_nearest_player_to_object](#is_nearest_player_to_object)
+## is_nearest_player_to_object
 
 ### Description
 Checks if `m` is the nearest player (Mario Object) to `obj`
@@ -3538,7 +2194,7 @@ Checks if `m` is the nearest player (Mario Object) to `obj`
 
 <br />
 
-## [is_point_close_to_object](#is_point_close_to_object)
+## is_point_close_to_object
 
 ### Description
 Checks if a point is within `dist` of `obj`
@@ -3565,7 +2221,7 @@ Checks if a point is within `dist` of `obj`
 
 <br />
 
-## [set_object_visibility](#set_object_visibility)
+## set_object_visibility
 
 ### Description
 Sets an object as visible if within a certain distance of Mario's graphical position
@@ -3589,7 +2245,7 @@ Sets an object as visible if within a certain distance of Mario's graphical posi
 
 <br />
 
-## [obj_return_home_if_safe](#obj_return_home_if_safe)
+## obj_return_home_if_safe
 
 ### Description
 Turns an object towards home if Mario is not near to it
@@ -3616,7 +2272,7 @@ Turns an object towards home if Mario is not near to it
 
 <br />
 
-## [obj_return_and_displace_home](#obj_return_and_displace_home)
+## obj_return_and_displace_home
 
 ### Description
 Randomly displaces an objects home if RNG says to, and turns the object towards its home
@@ -3643,7 +2299,7 @@ Randomly displaces an objects home if RNG says to, and turns the object towards 
 
 <br />
 
-## [obj_check_if_facing_toward_angle](#obj_check_if_facing_toward_angle)
+## obj_check_if_facing_toward_angle
 
 ### Description
 A series of checks using sin and cos to see if a given angle is facing in the same direction
@@ -3669,7 +2325,7 @@ of a given angle, within a certain range
 
 <br />
 
-## [obj_find_wall_displacement](#obj_find_wall_displacement)
+## obj_find_wall_displacement
 
 ### Description
 Finds any wall collisions and returns what the displacement vector would be
@@ -3696,7 +2352,7 @@ Finds any wall collisions and returns what the displacement vector would be
 
 <br />
 
-## [obj_spawn_yellow_coins](#obj_spawn_yellow_coins)
+## obj_spawn_yellow_coins
 
 ### Description
 Spawns a number of coins at the location of an object with a random forward velocity, y velocity, and direction
@@ -3720,7 +2376,7 @@ Spawns a number of coins at the location of an object with a random forward velo
 
 <br />
 
-## [obj_flicker_and_disappear](#obj_flicker_and_disappear)
+## obj_flicker_and_disappear
 
 ### Description
 Controls whether certain objects should flicker/when to despawn
@@ -3744,7 +2400,7 @@ Controls whether certain objects should flicker/when to despawn
 
 <br />
 
-## [current_mario_room_check](#current_mario_room_check)
+## current_mario_room_check
 
 ### Description
 Checks if a given room is Mario's current room, even if on an object
@@ -3767,7 +2423,7 @@ Checks if a given room is Mario's current room, even if on an object
 
 <br />
 
-## [obj_check_floor_death](#obj_check_floor_death)
+## obj_check_floor_death
 
 ### Description
 Checks if `floor`'s type is burning or death plane and if so change the
@@ -3792,7 +2448,7 @@ current object's action accordingly
 
 <br />
 
-## [obj_lava_death](#obj_lava_death)
+## obj_lava_death
 
 ### Description
 Controls an object dying in lava by creating smoke, sinking the object, playing
@@ -3814,7 +2470,7 @@ audio, and eventually despawning it. Returns TRUE when the obj is dead
 
 <br />
 
-## [spawn_orange_number](#spawn_orange_number)
+## spawn_orange_number
 
 ### Description
 Spawns an orange number object relatively, such as those that count up for secrets
@@ -3846,7 +2502,7 @@ Spawns an orange number object relatively, such as those that count up for secre
 <br />
 
 
-## [obj_is_rendering_enabled](#obj_is_rendering_enabled)
+## obj_is_rendering_enabled
 
 ### Description
 Checks if the current object's rendering is enabled
@@ -3867,7 +2523,7 @@ Checks if the current object's rendering is enabled
 
 <br />
 
-## [obj_get_pitch_from_vel](#obj_get_pitch_from_vel)
+## obj_get_pitch_from_vel
 
 ### Description
 Calculates the current object's theoretical pitch from forward velocity and vertical velocity
@@ -3888,7 +2544,7 @@ Calculates the current object's theoretical pitch from forward velocity and vert
 
 <br />
 
-## [obj_set_dist_from_home](#obj_set_dist_from_home)
+## obj_set_dist_from_home
 
 ### Description
 Sets the current object's position to the home with an additional forward vector multiplied by `distFromHome`
@@ -3911,7 +2567,7 @@ Sets the current object's position to the home with an additional forward vector
 
 <br />
 
-## [obj_is_near_to_and_facing_mario](#obj_is_near_to_and_facing_mario)
+## obj_is_near_to_and_facing_mario
 
 ### Description
 Checks if the current object is in `maxDist` to `m` and the angle difference is less than `maxAngleDiff`
@@ -3936,7 +2592,7 @@ Checks if the current object is in `maxDist` to `m` and the angle difference is 
 
 <br />
 
-## [platform_on_track_update_pos_or_spawn_ball](#platform_on_track_update_pos_or_spawn_ball)
+## platform_on_track_update_pos_or_spawn_ball
 
 ### Description
 Handles the platform on track's trajectory marker ball spawning
@@ -3962,7 +2618,7 @@ Handles the platform on track's trajectory marker ball spawning
 
 <br />
 
-## [cur_obj_spin_all_dimensions](#cur_obj_spin_all_dimensions)
+## cur_obj_spin_all_dimensions
 
 ### Description
 Spins an object in every direction with `pitchSpeed` and `rollSpeed`
@@ -3986,7 +2642,7 @@ Spins an object in every direction with `pitchSpeed` and `rollSpeed`
 
 <br />
 
-## [obj_rotate_yaw_and_bounce_off_walls](#obj_rotate_yaw_and_bounce_off_walls)
+## obj_rotate_yaw_and_bounce_off_walls
 
 ### Description
 Approaches the current object's yaw to `targetYaw` by `turnAmount`
@@ -4010,7 +2666,7 @@ Approaches the current object's yaw to `targetYaw` by `turnAmount`
 
 <br />
 
-## [obj_get_pitch_to_home](#obj_get_pitch_to_home)
+## obj_get_pitch_to_home
 
 ### Description
 Gets the current object's theoretical pitch to the home with the lateral distance from it
@@ -4033,7 +2689,7 @@ Gets the current object's theoretical pitch to the home with the lateral distanc
 
 <br />
 
-## [obj_compute_vel_from_move_pitch](#obj_compute_vel_from_move_pitch)
+## obj_compute_vel_from_move_pitch
 
 ### Description
 Computes the current object's forward vel and vertical velocity with the move angle pitch
@@ -4056,7 +2712,7 @@ Computes the current object's forward vel and vertical velocity with the move an
 
 <br />
 
-## [cur_obj_init_anim_extend](#cur_obj_init_anim_extend)
+## cur_obj_init_anim_extend
 
 ### Description
 Initializes an animation for the current object and loops back around if the animation ends
@@ -4079,7 +2735,7 @@ Initializes an animation for the current object and loops back around if the ani
 
 <br />
 
-## [cur_obj_init_anim_and_check_if_end](#cur_obj_init_anim_and_check_if_end)
+## cur_obj_init_anim_and_check_if_end
 
 ### Description
 Initializes an animation for the current object and returns if the animation has ended
@@ -4102,7 +2758,7 @@ Initializes an animation for the current object and returns if the animation has
 
 <br />
 
-## [cur_obj_init_anim_check_frame](#cur_obj_init_anim_check_frame)
+## cur_obj_init_anim_check_frame
 
 ### Description
 Initializes an animation for the current object and checks if the animation frame is a specific frame
@@ -4126,7 +2782,7 @@ Initializes an animation for the current object and checks if the animation fram
 
 <br />
 
-## [cur_obj_set_anim_if_at_end](#cur_obj_set_anim_if_at_end)
+## cur_obj_set_anim_if_at_end
 
 ### Description
 Sets the current object's animation to a new animation if the current animation has ended
@@ -4149,7 +2805,7 @@ Sets the current object's animation to a new animation if the current animation 
 
 <br />
 
-## [cur_obj_play_sound_at_anim_range](#cur_obj_play_sound_at_anim_range)
+## cur_obj_play_sound_at_anim_range
 
 ### Description
 Plays a sound when the animation frame is in a range
@@ -4174,7 +2830,7 @@ Plays a sound when the animation frame is in a range
 
 <br />
 
-## [obj_turn_pitch_toward_mario](#obj_turn_pitch_toward_mario)
+## obj_turn_pitch_toward_mario
 
 ### Description
 Turns the current object towards `m` by `turnAmount` and subtracts and adds `targetOffsetY` to the Y position, effectively cancelling any effect out
@@ -4199,7 +2855,7 @@ Turns the current object towards `m` by `turnAmount` and subtracts and adds `tar
 
 <br />
 
-## [approach_f32_ptr](#approach_f32_ptr)
+## approach_f32_ptr
 
 ### Description
 Approaches a `target` for `px` using `delta`. Returns TRUE if `px` reaches `target`
@@ -4225,7 +2881,7 @@ Approaches a `target` for `px` using `delta`. Returns TRUE if `px` reaches `targ
 
 <br />
 
-## [obj_forward_vel_approach](#obj_forward_vel_approach)
+## obj_forward_vel_approach
 
 ### Description
 Approaches a `target` value with the current object's forward velocity using `delta`
@@ -4249,7 +2905,7 @@ Approaches a `target` value with the current object's forward velocity using `de
 
 <br />
 
-## [obj_y_vel_approach](#obj_y_vel_approach)
+## obj_y_vel_approach
 
 ### Description
 Approaches a `target` value with the current object's vertical velocity using `delta`
@@ -4273,7 +2929,7 @@ Approaches a `target` value with the current object's vertical velocity using `d
 
 <br />
 
-## [obj_move_pitch_approach](#obj_move_pitch_approach)
+## obj_move_pitch_approach
 
 ### Description
 Approaches a `target` value with the current object's move pitch using `delta`
@@ -4297,7 +2953,7 @@ Approaches a `target` value with the current object's move pitch using `delta`
 
 <br />
 
-## [obj_face_pitch_approach](#obj_face_pitch_approach)
+## obj_face_pitch_approach
 
 ### Description
 Approaches a `target` value with the current object's facing pitch using `delta`
@@ -4321,7 +2977,7 @@ Approaches a `target` value with the current object's facing pitch using `delta`
 
 <br />
 
-## [obj_face_yaw_approach](#obj_face_yaw_approach)
+## obj_face_yaw_approach
 
 ### Description
 Approaches a `target` value with the current object's facing yaw using `delta`
@@ -4345,7 +3001,7 @@ Approaches a `target` value with the current object's facing yaw using `delta`
 
 <br />
 
-## [obj_face_roll_approach](#obj_face_roll_approach)
+## obj_face_roll_approach
 
 ### Description
 Approaches a `target` value with the current object's facing roll using `delta`
@@ -4369,7 +3025,7 @@ Approaches a `target` value with the current object's facing roll using `delta`
 
 <br />
 
-## [obj_smooth_turn](#obj_smooth_turn)
+## obj_smooth_turn
 
 ### Description
 Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `angle` reaches `targetAngle`
@@ -4400,7 +3056,7 @@ Smoothly turns `angle` and adjust `angleVel` using parameters. Returns TRUE if `
 
 <br />
 
-## [obj_roll_to_match_yaw_turn](#obj_roll_to_match_yaw_turn)
+## obj_roll_to_match_yaw_turn
 
 ### Description
 Rolls the current object to the move angle subtracted by `targetYaw`, clamping between negative and positive `maxRoll` and using `rollSpeed`
@@ -4425,7 +3081,7 @@ Rolls the current object to the move angle subtracted by `targetYaw`, clamping b
 
 <br />
 
-## [random_linear_offset](#random_linear_offset)
+## random_linear_offset
 
 ### Description
 Generates a random offset with a base and range of `base` to `range`
@@ -4449,7 +3105,7 @@ Generates a random offset with a base and range of `base` to `range`
 
 <br />
 
-## [random_mod_offset](#random_mod_offset)
+## random_mod_offset
 
 ### Description
 Generates a random offset using step multiplied a value between 0 and `mod` (the random function goes to 65535 but wraps around to 0 at `mod`)
@@ -4474,7 +3130,7 @@ Generates a random offset using step multiplied a value between 0 and `mod` (the
 
 <br />
 
-## [obj_random_fixed_turn](#obj_random_fixed_turn)
+## obj_random_fixed_turn
 
 ### Description
 Rotates the current object's move angle yaw using `delta` in either a randomly decided positive or negative direction
@@ -4497,7 +3153,7 @@ Rotates the current object's move angle yaw using `delta` in either a randomly d
 
 <br />
 
-## [obj_grow_then_shrink](#obj_grow_then_shrink)
+## obj_grow_then_shrink
 
 ### Description
 Begin by increasing the current object's scale by `scaleVel`, and slowly decreasing `scaleVel`.
@@ -4526,7 +3182,7 @@ Return -1 once it's reached endScale
 
 <br />
 
-## [oscillate_toward](#oscillate_toward)
+## oscillate_toward
 
 ### Description
 Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`
@@ -4556,7 +3212,7 @@ Oscillates `value` towards `target`. Returns TRUE when `value` reaches `target`
 
 <br />
 
-## [obj_update_blinking](#obj_update_blinking)
+## obj_update_blinking
 
 ### Description
 Update the current object's blinking through `oAnimState`
@@ -4582,7 +3238,7 @@ Update the current object's blinking through `oAnimState`
 
 <br />
 
-## [obj_resolve_object_collisions](#obj_resolve_object_collisions)
+## obj_resolve_object_collisions
 
 ### Description
 Resolves "collisions" with the current object and other objects by offsetting the current object's position. Returns TRUE and the target yaw if there is collision
@@ -4604,7 +3260,7 @@ Resolves "collisions" with the current object and other objects by offsetting th
 
 <br />
 
-## [obj_bounce_off_walls_edges_objects](#obj_bounce_off_walls_edges_objects)
+## obj_bounce_off_walls_edges_objects
 
 ### Description
 Bounces the current object off of walls, edges, and objects. Returns TRUE and the target yaw if there is collision
@@ -4626,7 +3282,7 @@ Bounces the current object off of walls, edges, and objects. Returns TRUE and th
 
 <br />
 
-## [obj_resolve_collisions_and_turn](#obj_resolve_collisions_and_turn)
+## obj_resolve_collisions_and_turn
 
 ### Description
 Resolves collisions and turns the current object towards `targetYaw` using `turnSpeed`
@@ -4650,7 +3306,7 @@ Resolves collisions and turns the current object towards `targetYaw` using `turn
 
 <br />
 
-## [obj_die_if_health_non_positive](#obj_die_if_health_non_positive)
+## obj_die_if_health_non_positive
 
 ### Description
 Spawns mist particles, plays a sound (`oDeathSound`,) spawns coins (`oNumLootCoins`,) and hides the object if the health is less than 0 or deletes the object if the health is 0 or higher
@@ -4671,7 +3327,7 @@ Spawns mist particles, plays a sound (`oDeathSound`,) spawns coins (`oNumLootCoi
 
 <br />
 
-## [obj_unused_die](#obj_unused_die)
+## obj_unused_die
 
 ### Description
 Sets the current object's health to 0 and runs `obj_die_if_health_non_positive()`
@@ -4692,7 +3348,7 @@ Sets the current object's health to 0 and runs `obj_die_if_health_non_positive()
 
 <br />
 
-## [obj_set_knockback_action](#obj_set_knockback_action)
+## obj_set_knockback_action
 
 ### Description
 Sets the current object's action, forward velocity, and vertical velocity to preset values (`OBJ_ACT_*`)
@@ -4715,7 +3371,7 @@ Sets the current object's action, forward velocity, and vertical velocity to pre
 
 <br />
 
-## [obj_set_squished_action](#obj_set_squished_action)
+## obj_set_squished_action
 
 ### Description
 Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUISHED`
@@ -4736,7 +3392,7 @@ Plays `SOUND_OBJ_STOMPED` and sets the current object's action to `OBJ_ACT_SQUIS
 
 <br />
 
-## [obj_die_if_above_lava_and_health_non_positive](#obj_die_if_above_lava_and_health_non_positive)
+## obj_die_if_above_lava_and_health_non_positive
 
 ### Description
 Checks if the object is above lava and has non-positive health. Kills the object if true and returns `TRUE` if above lava
@@ -4757,7 +3413,7 @@ Checks if the object is above lava and has non-positive health. Kills the object
 
 <br />
 
-## [obj_handle_attacks](#obj_handle_attacks)
+## obj_handle_attacks
 
 ### Description
 Sets the object's hitbox, handles attack interactions by calling appropriate attack handlers, and returns the attack type or 0
@@ -4782,7 +3438,7 @@ Sets the object's hitbox, handles attack interactions by calling appropriate att
 
 <br />
 
-## [obj_act_knockback](#obj_act_knockback)
+## obj_act_knockback
 
 ### Description
 Handles the knockback action by updating floor/walls, extending animation, checking lava, and moving the object
@@ -4805,7 +3461,7 @@ Handles the knockback action by updating floor/walls, extending animation, check
 
 <br />
 
-## [obj_act_squished](#obj_act_squished)
+## obj_act_squished
 
 ### Description
 Handles the squished action by scaling the object vertically and horizontally while checking if it's time to die
@@ -4828,7 +3484,7 @@ Handles the squished action by scaling the object vertically and horizontally wh
 
 <br />
 
-## [obj_update_standard_actions](#obj_update_standard_actions)
+## obj_update_standard_actions
 
 ### Description
 Updates standard object actions like knockback and squished. Returns TRUE if action is less than 100, `FALSE` otherwise
@@ -4851,7 +3507,7 @@ Updates standard object actions like knockback and squished. Returns TRUE if act
 
 <br />
 
-## [obj_check_attacks](#obj_check_attacks)
+## obj_check_attacks
 
 ### Description
 Checks the current object's interaction status and sets action to `attackedMarioAction` if Mario has been attacked and runs `obj_die_if_health_non_positive()` if the object is attacked by Mario. Sets the hitbox parameters and resets interaction status to 0
@@ -4875,7 +3531,7 @@ Checks the current object's interaction status and sets action to `attackedMario
 
 <br />
 
-## [obj_move_for_one_second](#obj_move_for_one_second)
+## obj_move_for_one_second
 
 ### Description
 Moves the current object for specifically one second (`oTimer` < 30)
@@ -4898,7 +3554,7 @@ Moves the current object for specifically one second (`oTimer` < 30)
 
 <br />
 
-## [treat_far_home_as_mario](#treat_far_home_as_mario)
+## treat_far_home_as_mario
 
 ### Description
 Treats far home as Mario. Returns the distance and angle to the nearest player
@@ -4922,7 +3578,7 @@ Treats far home as Mario. Returns the distance and angle to the nearest player
 
 <br />
 
-## [obj_spit_fire](#obj_spit_fire)
+## obj_spit_fire
 
 ### Description
 Spawns a small piranha flame object with the given parameters. Used by Bowser, Fly Guy, Piranha Plant, and Fire Spitters
