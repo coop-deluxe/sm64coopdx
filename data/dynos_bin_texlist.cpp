@@ -26,7 +26,7 @@ DataNode<TexData*>* DynOS_TexList_Parse(GfxData* aGfxData, DataNode<TexData*>* a
     aNode->mData = New<TexData*>(aNode->mSize);
     for (u32 i = 0; i != aNode->mSize; ++i) {
         aNode->mData[i] = ParseTexListSymbol(aGfxData, aNode, aNode->mTokens[i]);
-        aGfxData->mPointerList.Add(&aNode->mData[i]);
+        aGfxData->mPointerList.Add({&aNode->mData[i], PTYPE_PNTR_TEX});
     }
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
     return aNode;
@@ -50,13 +50,13 @@ void DynOS_TexList_Write(BinFile* aFile, GfxData* aGfxData, DataNode<TexData*> *
         bool found = false;
         for (auto& _Node : aGfxData->mTextures) {
             if (_Node->mData == aNode->mData[i]) {
-                DynOS_Pointer_Write(aFile, (const void *) (_Node), aGfxData, 0);
+                DynOS_Pointer_Write(aFile, (const void *) (_Node), aGfxData, PTYPE_PNTR_TEX);
                 found = true;
                 break;
             }
         }
         if (!found) {
-            PrintDataError("Could not write texture in texlist");
+            PrintDataError("  ERROR: Could not write texture in texlist");
         }
     }
 }
@@ -71,14 +71,20 @@ DataNode<TexData*>* DynOS_TexList_Load(BinFile *aFile, GfxData *aGfxData) {
     // Name
     _Node->mName.Read(aFile);
 
+    // Size check
+    u32 _DataSize = aFile->Read<u32>();
+    DynOS_Bin_Validate_CheckSize(_DataSize, sizeof(u32), NULL);
+
     // Data
-    _Node->mSize = aFile->Read<u32>();
+    _Node->mSize = _DataSize;
     _Node->mData = New<TexData*>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
+        DynOS_Bin_Validate_CheckEoF(NULL);
+
         u32 _Value = aFile->Read<u32>();
-        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, 0, &_Node->mFlags);
+        void *_Ptr = DynOS_Pointer_Load(aFile, aGfxData, _Value, PTYPE_PNTR_TEX, &_Node->mFlags);
         if (_Ptr == NULL) {
-            PrintDataError("Could not read texture in texlist");
+            PrintDataError("  ERROR: Could not read texture from texlist");
         } else {
             _Node->mData[i] = ((DataNode<TexData>*)_Ptr)->mData;
         }
