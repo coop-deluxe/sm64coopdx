@@ -15,7 +15,7 @@ enum DjuiBuiltinThemes {
 
 enum DjuiThemeElements {
     #define DEFINE_THEME_ELEMENT(name) name,
-    #include "djui_theme_elements.inl"
+    #include "src/pc/djui/djui_theme_elements.inl"
     #undef DEFINE_THEME_ELEMENT
     DJUI_THEME_ELEMENT_COUNT,
 };

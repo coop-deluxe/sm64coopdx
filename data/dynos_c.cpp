@@ -137,8 +137,12 @@ bool dynos_add_actor_custom(s32 modIndex, s32 modFileIndex, const char *filePath
     return DynOS_Actor_AddCustom(modIndex, modFileIndex, filePath, geoName);
 }
 
-const void* dynos_geolayout_get(const char *name) {
+const void *dynos_geolayout_get(const char *name) {
     return DynOS_Actor_GetLayoutFromName(name);
+}
+
+const char *dynos_geolayout_get_name(const void *geoLayout) {
+    return DynOS_Actor_GetNameFromLayout(geoLayout);
 }
 
 bool dynos_actor_get_mod_index_and_token(struct GraphNode *graphNode, u32 tokenIndex, s32 *modIndex, s32 *modFileIndex, const char **token) {
@@ -234,10 +238,6 @@ u64 dynos_level_cmd_get(void *cmd, u64 offset) {
     return DynOS_Level_CmdGet(cmd, offset);
 }
 
-void dynos_level_cmd_next(void *cmd) {
-    DynOS_Level_CmdNext((LvlCmd*) cmd);
-}
-
 void dynos_level_parse_script(const void *script, s32 (*aPreprocessFunction)(u8, void *)) {
     DynOS_Level_ParseScript(script, aPreprocessFunction);
 }
@@ -260,6 +260,10 @@ bool dynos_level_is_vanilla_level(s32 level) {
 
 Collision *dynos_level_get_collision(u32 level, u16 area) {
     return DynOS_Level_GetCollision(level, area);
+}
+
+u8 dynos_level_get_command_size(u8 cmdType) {
+    return DynOS_Lvl_GetCommandSize(cmdType);
 }
 
 // -- Behaviors -- //

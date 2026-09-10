@@ -2889,12 +2889,116 @@ DJUI_THEME_COUNT = 2 --- @type DjuiBuiltinThemes
 --- | `DJUI_THEME_DARK`
 --- | `DJUI_THEME_COUNT`
 
-#define DEFINE_THEME_ELEMENT(name) name                                                 = 0 --- @type DjuiThemeElements
-#include "djui_theme_elements.inl" #undef DEFINE_THEME_ELEMENT DJUI_THEME_ELEMENT_COUNT = 1 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY                     =  0 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_HOVER               =  1 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_DOWN                =  2 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_DISABLED            =  3 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_TEXT                =  4 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED       =  5 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER              =  6 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER        =  7 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN         =  8 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED     =  9 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY                   = 10 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_HOVER             = 11 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_DOWN              = 12 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_DISABLED          = 13 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_TEXT              = 14 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_TEXT_DISABLED     = 15 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER            = 16 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_HOVER      = 17 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_DOWN       = 18 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_DISABLED   = 19 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX                    = 20 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_HOVER              = 21 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_DOWN               = 22 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_DISABLED           = 23 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_TEXT               = 24 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_TEXT_PLACEHOLDER   = 25 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER             = 26 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_HOVER       = 27 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DOWN        = 28 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DISABLED    = 29 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX                    = 30 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_HOVER              = 31 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_DOWN               = 32 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_DISABLED           = 33 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER             = 34 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER       = 35 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN        = 36 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED    = 37 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER                      = 38 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_HOVER                = 39 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_DOWN                 = 40 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_DISABLED             = 41 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER               = 42 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER         = 43 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN          = 44 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED      = 45 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_TEXT                        = 46 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_TEXT_DISABLED               = 47 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE          = 48 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED = 49 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_THREE_PANEL                 = 50 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_THREE_PANEL_BORDER          = 51 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR          = 52 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_COUNT                       = 53 --- @type DjuiThemeElements
 
 --- @alias DjuiThemeElements
---- | `#define DEFINE_THEME_ELEMENT(name) name`
---- | `#include "djui_theme_elements.inl" #undef DEFINE_THEME_ELEMENT DJUI_THEME_ELEMENT_COUNT`
+--- | `DJUI_THEME_ELEMENT_PRIMARY`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_HOVER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_DOWN`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_DISABLED`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_TEXT`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_HOVER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_DOWN`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_TEXT`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_HOVER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_DOWN`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_DISABLED`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_TEXT`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_TEXT_PLACEHOLDER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_HOVER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_DOWN`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_DISABLED`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SLIDER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SLIDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_TEXT`
+--- | `DJUI_THEME_ELEMENT_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE`
+--- | `DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED`
+--- | `DJUI_THEME_ELEMENT_THREE_PANEL`
+--- | `DJUI_THEME_ELEMENT_THREE_PANEL_BORDER`
+--- | `DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR`
+--- | `DJUI_THEME_ELEMENT_COUNT`
 
 --- @type integer
 ENVFX_MODE_NONE = 0
@@ -3163,80 +3267,56 @@ GRAPH_EXTRA_ROTATE_HELD = (1 << 1)
 --- @type integer
 GRAPH_NODE_TYPE_FUNCTIONAL = 0x100
 
---- @type integer
-GRAPH_NODE_TYPE_400 = 0x400
+GRAPH_NODE_TYPE_ROOT                 =                              0x001 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ORTHO_PROJECTION     =                              0x002 --- @type GraphNodeType
+GRAPH_NODE_TYPE_PERSPECTIVE          = 0x003 | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_MASTER_LIST          =                              0x004 --- @type GraphNodeType
+GRAPH_NODE_TYPE_START                =                              0x00A --- @type GraphNodeType
+GRAPH_NODE_TYPE_LEVEL_OF_DETAIL      =                              0x00B --- @type GraphNodeType
+GRAPH_NODE_TYPE_SWITCH_CASE          = 0x00C | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_CAMERA               = 0x014 | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_TRANSLATION_ROTATION =                              0x015 --- @type GraphNodeType
+GRAPH_NODE_TYPE_TRANSLATION          =                              0x016 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ROTATION             =                              0x017 --- @type GraphNodeType
+GRAPH_NODE_TYPE_OBJECT               =                              0x018 --- @type GraphNodeType
+GRAPH_NODE_TYPE_ANIMATED_PART        =                              0x019 --- @type GraphNodeType
+GRAPH_NODE_TYPE_BILLBOARD            =                              0x01A --- @type GraphNodeType
+GRAPH_NODE_TYPE_DISPLAY_LIST         =                              0x01B --- @type GraphNodeType
+GRAPH_NODE_TYPE_SCALE                =                              0x01C --- @type GraphNodeType
+GRAPH_NODE_TYPE_SCALE_XYZ            =                              0x01D --- @type GraphNodeType
+GRAPH_NODE_TYPE_SHADOW               =                              0x028 --- @type GraphNodeType
+GRAPH_NODE_TYPE_OBJECT_PARENT        =                              0x029 --- @type GraphNodeType
+GRAPH_NODE_TYPE_GENERATED_LIST       = 0x02A | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_BACKGROUND           = 0x02C | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_HELD_OBJ             = 0x02E | GRAPH_NODE_TYPE_FUNCTIONAL --- @type GraphNodeType
+GRAPH_NODE_TYPE_CULLING_RADIUS       =                              0x02F --- @type GraphNodeType
+GRAPH_NODE_TYPE_BONE                 =                              0x030 --- @type GraphNodeType
 
---- @type integer
-GRAPH_NODE_TYPE_ROOT = 0x001
-
---- @type integer
-GRAPH_NODE_TYPE_ORTHO_PROJECTION = 0x002
-
---- @type integer
-GRAPH_NODE_TYPE_PERSPECTIVE = (0x003 | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_MASTER_LIST = 0x004
-
---- @type integer
-GRAPH_NODE_TYPE_START = 0x00A
-
---- @type integer
-GRAPH_NODE_TYPE_LEVEL_OF_DETAIL = 0x00B
-
---- @type integer
-GRAPH_NODE_TYPE_SWITCH_CASE = (0x00C | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_CAMERA = (0x014 | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_TRANSLATION_ROTATION = 0x015
-
---- @type integer
-GRAPH_NODE_TYPE_TRANSLATION = 0x016
-
---- @type integer
-GRAPH_NODE_TYPE_ROTATION = 0x017
-
---- @type integer
-GRAPH_NODE_TYPE_OBJECT = 0x018
-
---- @type integer
-GRAPH_NODE_TYPE_ANIMATED_PART = 0x019
-
---- @type integer
-GRAPH_NODE_TYPE_BILLBOARD = 0x01A
-
---- @type integer
-GRAPH_NODE_TYPE_DISPLAY_LIST = 0x01B
-
---- @type integer
-GRAPH_NODE_TYPE_SCALE = 0x01C
-
---- @type integer
-GRAPH_NODE_TYPE_SCALE_XYZ = 0x01D
-
---- @type integer
-GRAPH_NODE_TYPE_SHADOW = 0x028
-
---- @type integer
-GRAPH_NODE_TYPE_OBJECT_PARENT = 0x029
-
---- @type integer
-GRAPH_NODE_TYPE_GENERATED_LIST = (0x02A | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_BACKGROUND = (0x02C | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_HELD_OBJ = (0x02E | GRAPH_NODE_TYPE_FUNCTIONAL)
-
---- @type integer
-GRAPH_NODE_TYPE_CULLING_RADIUS = 0x02F
-
---- @type integer
-GRAPH_NODE_TYPE_BONE = 0x030
+--- @alias GraphNodeType
+--- | `GRAPH_NODE_TYPE_ROOT`
+--- | `GRAPH_NODE_TYPE_ORTHO_PROJECTION`
+--- | `GRAPH_NODE_TYPE_PERSPECTIVE`
+--- | `GRAPH_NODE_TYPE_MASTER_LIST`
+--- | `GRAPH_NODE_TYPE_START`
+--- | `GRAPH_NODE_TYPE_LEVEL_OF_DETAIL`
+--- | `GRAPH_NODE_TYPE_SWITCH_CASE`
+--- | `GRAPH_NODE_TYPE_CAMERA`
+--- | `GRAPH_NODE_TYPE_TRANSLATION_ROTATION`
+--- | `GRAPH_NODE_TYPE_TRANSLATION`
+--- | `GRAPH_NODE_TYPE_ROTATION`
+--- | `GRAPH_NODE_TYPE_OBJECT`
+--- | `GRAPH_NODE_TYPE_ANIMATED_PART`
+--- | `GRAPH_NODE_TYPE_BILLBOARD`
+--- | `GRAPH_NODE_TYPE_DISPLAY_LIST`
+--- | `GRAPH_NODE_TYPE_SCALE`
+--- | `GRAPH_NODE_TYPE_SCALE_XYZ`
+--- | `GRAPH_NODE_TYPE_SHADOW`
+--- | `GRAPH_NODE_TYPE_OBJECT_PARENT`
+--- | `GRAPH_NODE_TYPE_GENERATED_LIST`
+--- | `GRAPH_NODE_TYPE_BACKGROUND`
+--- | `GRAPH_NODE_TYPE_HELD_OBJ`
+--- | `GRAPH_NODE_TYPE_CULLING_RADIUS`
+--- | `GRAPH_NODE_TYPE_BONE`
 
 --- @type integer
 GFX_NUM_MASTER_LISTS = 8
@@ -8520,14 +8600,14 @@ HUD_DISPLAY_FLAGS_EMPHASIZE_POWER  = 0x8000 --- @type HudDisplayFlags
 --- | `HUD_DISPLAY_FLAGS_POWER`
 --- | `HUD_DISPLAY_FLAGS_EMPHASIZE_POWER`
 
-ACT_SELECT_HUD_SCORE            =                                                                                                                                                            1 << 0 --- @type ActSelectHudPart
-ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                            1 << 1 --- @type ActSelectHudPart
-ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                            1 << 2 --- @type ActSelectHudPart
-ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                            1 << 3 --- @type ActSelectHudPart
-ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                            1 << 4 --- @type ActSelectHudPart
-ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                            1 << 5 --- @type ActSelectHudPart
-ACT_SELECT_HUD_NONE             =                                                                                                                                                                 0 --- @type ActSelectHudPart
-ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
+ACT_SELECT_HUD_SCORE            =                                                                                                                                                             1 << 0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_LEVEL_NAME       =                                                                                                                                                             1 << 1 --- @type ActSelectHudPart
+ACT_SELECT_HUD_COURSE_NUM       =                                                                                                                                                             1 << 2 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ACT_NAME         =                                                                                                                                                             1 << 3 --- @type ActSelectHudPart
+ACT_SELECT_HUD_STAR_NUM         =                                                                                                                                                             1 << 4 --- @type ActSelectHudPart
+ACT_SELECT_HUD_PLAYERS_IN_LEVEL =                                                                                                                                                             1 << 5 --- @type ActSelectHudPart
+ACT_SELECT_HUD_NONE             =                                                                                                                                                                  0 --- @type ActSelectHudPart
+ACT_SELECT_HUD_ALL              = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL --- @type ActSelectHudPart
 
 --- @alias ActSelectHudPart
 --- | `ACT_SELECT_HUD_SCORE`
