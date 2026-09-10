@@ -27,7 +27,6 @@ static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
 #if defined(_WIN32)
     [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
 #endif
-    [GFX_WINDOW_BACKEND_DUMMY] = &gfx_window_dummy,
 };
 
 // TODO: figure out how to switch the backend without restarting
@@ -45,6 +44,12 @@ static void (*kb_text_editing)(char*, int) = NULL;
 static void (*m_scroll)(float, float) = NULL;
 
 #define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+
+// Getter for the current window backend API
+static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return &gfx_window_dummy; }
+    return sBackends[currBackend];
+}
 
 void gfx_wm_set_window(SDL_Window *window) {
     sSdlWindow = window;
@@ -70,7 +75,7 @@ static void gfx_wm_set_fullscreen(void) {
         SDL_ShowCursor(1);
         configWindow.exiting_fullscreen = true;
     }
-    sBackends[currBackend]->set_fullscreen();
+    gfx_wm_backend()->set_fullscreen();
 }
 
 static void gfx_wm_reset_dimension_and_pos(void) {
@@ -112,7 +117,12 @@ void gfx_wm_init(const char *window_title) {
 #else
     currBackend = configGraphicsBackend;
 #endif
-    sBackends[currBackend]->init(window_title);
+    if (currBackend != GFX_WINDOW_BACKEND_DUMMY &&
+        (currBackend < GFX_WINDOW_BACKEND_OPENGL || currBackend > GFX_WINDOW_BACKEND_MAX)
+    ) {
+        currBackend = GFX_WINDOW_BACKEND_OPENGL;
+    }
+    gfx_wm_backend()->init(window_title);
 
     gfx_wm_set_fullscreen();
     if (configWindow.fullscreen) {
@@ -226,7 +236,7 @@ void gfx_wm_handle_events(void) {
                 game_exit();
                 break;
         }
-        sBackends[currBackend]->handle_events(event);
+        gfx_wm_backend()->handle_events(event);
     }
 
     if (configWindow.settings_changed) {
@@ -252,28 +262,27 @@ void gfx_wm_set_scroll_callback(void (*on_scroll)(float, float)) {
 }
 
 bool gfx_wm_start_frame(void) {
-    return sBackends[currBackend]->start_frame();
+    return gfx_wm_backend()->start_frame();
 }
 
 void gfx_wm_swap_buffers_begin(void) {
-    sBackends[currBackend]->swap_buffers_begin();
+    gfx_wm_backend()->swap_buffers_begin();
 }
 
 void gfx_wm_swap_buffers_end(void) {
-    sBackends[currBackend]->swap_buffers_end();
+    gfx_wm_backend()->swap_buffers_end();
 }
 
 double gfx_wm_get_time(void) {
-    return sBackends[currBackend]->get_time();
+    return gfx_wm_backend()->get_time();
 }
 
 void gfx_wm_delay(u32 ms) {
-    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     SDL_Delay(ms);
 }
 
 int gfx_wm_get_max_msaa(void) {
-    return sBackends[currBackend]->get_max_msaa();
+    return gfx_wm_backend()->get_max_msaa();
 }
 
 void gfx_wm_set_window_title(const char *title) {
