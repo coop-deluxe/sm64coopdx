@@ -3,10 +3,10 @@
 # Enums
 
 In C, enums are the best tool to map a type to a list of named constant values.<br>
-[Autogen](./smlua.md#autogen) even recognizes enums and associate their values to their underlying type.
+[Autogen](./smlua.md#autogen) even recognizes enums and associates their values with their underlying type.
 
 However, enums are usually used as indices or entries in look-up tables to map them to other values.<br>
-Writing manually those tables can fragment the code and make it harder to maintain (for example, when adding a new entry, you would need to find where the enum is used and can easily miss a spot).
+Writing those tables manually can fragment the code and make it harder to maintain (for example, when adding a new entry, you would need to find where the enum is used and could easily miss a spot).
 
 A solution is to define such tables in a separate `.inl` file, then include that file where it's needed. That way, you have only one file to maintain.
 
@@ -28,7 +28,7 @@ GRAPH_NODE_TYPE(GRAPH_NODE_TYPE_LEVEL_OF_DETAIL)
 ```
 First column is the constant name.
 
-If needed, define explicitly the value of each:
+If needed, explicitly define the value of each constant:
 ```c
 // src/engine/graph_node_types.inl
 
@@ -73,7 +73,7 @@ GRAPH_NODE_TYPE(GRAPH_NODE_TYPE_START,            0x00A,                        
 GRAPH_NODE_TYPE(GRAPH_NODE_TYPE_LEVEL_OF_DETAIL,  0x00B,                              GraphNodeLevelOfDetail)
 ...
 ```
-Third column holds the C type of the `GraphNode`.
+The third column holds the C type of the `GraphNode`.
 
 Now, create the function using these:
 ```c
