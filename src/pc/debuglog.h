@@ -83,9 +83,9 @@ static inline void _debuglog_print_log(const char* color, const char* logType, c
 #define LOG_INFO(...)
 #define LOG_ERROR(...)
 #else
-#define LOG_DEBUG(...) (configDebugPrint ? ( _debuglog_print_log("", "DEBUG", __FILE__, __VA_ARGS__) ) : 0)
-#define LOG_INFO(...)  ((configDebugInfo || gCLIOpts.headless) ? ( _debuglog_print_log("", "INFO",  __FILE__, __VA_ARGS__) ) : 0)
-#define LOG_ERROR(...) (configDebugError ? ( _debuglog_print_log("\x1b[31m", "ERROR", __FILE__, __VA_ARGS__) ) : 0)
+#define LOG_DEBUG(...) { if (configDebugPrint) { _debuglog_print_log("", "DEBUG", __FILE__, __VA_ARGS__); } }
+#define LOG_INFO(...)  { if (configDebugInfo || gCLIOpts.headless) { _debuglog_print_log("", "INFO",  __FILE__, __VA_ARGS__); } }
+#define LOG_ERROR(...) { if (configDebugError) { _debuglog_print_log("\x1b[31m", "ERROR", __FILE__, __VA_ARGS__); } }
 #endif
 #define LOG_CONSOLE(...)  { snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__), djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_INFO); }
 

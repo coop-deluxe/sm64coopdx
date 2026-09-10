@@ -78,7 +78,7 @@ extern SkyboxTexture clouds_skybox_ptrlist;
 extern SkyboxTexture ssl_skybox_ptrlist;
 extern SkyboxTexture water_skybox_ptrlist;
 extern SkyboxTexture wdw_skybox_ptrlist;
-Texture* gCustomSkyboxPtrList[80] = { NULL };
+Texture* gCustomSkyboxPtrList[MAX_SKYBOX_TILES] = { NULL };
 
 SkyboxTexture *sSkyboxTextures[10] = {
     &water_skybox_ptrlist,
@@ -234,13 +234,16 @@ void draw_skybox_tile_grid(Gfx **dlist, s8 background, s8 player, s8 colorIndex)
             s32 tileIndex = tileRow + tileCol;
 
             // UGLY HACK: if the camera moves weird after a level transition this can go too high
-            if (tileIndex < 0)  { tileIndex = 0;  }
-            if (tileIndex > 79) { tileIndex = 79; }
+            if (tileIndex < 0) { tileIndex = 0; }
+            if (tileIndex >= MAX_SKYBOX_TILES) { tileIndex = MAX_SKYBOX_TILES - 1; }
             const Texture* texture = NULL;
             if (background < 0 || background >= 10) {
                 texture = gCustomSkyboxPtrList[tileIndex];
             } else {
                 texture = (*(SkyboxTexture *) segmented_to_virtual(sSkyboxTextures[background]))[tileIndex];
+            }
+            if (!texture) {
+                continue;
             }
 
             f32 r = gSkyboxColor[0] / 255.0f;

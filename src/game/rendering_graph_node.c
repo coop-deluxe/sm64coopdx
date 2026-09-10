@@ -1670,8 +1670,10 @@ static void geo_process_object(struct Object *node) {
                 }
                 gCurGraphNodeObject = (struct GraphNodeObject *) node;
                 node->header.gfx.sharedChild->parent = &node->header.gfx.node;
+                geo_save_object_gfx_state();
                 geo_sanitize_object_gfx();
                 geo_process_node_and_siblings(node->header.gfx.sharedChild);
+                geo_load_object_gfx_state();
                 node->header.gfx.sharedChild->parent = NULL;
                 gCurGraphNodeObject = NULL;
                 gCurMarioBodyState = NULL;

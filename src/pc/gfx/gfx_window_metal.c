@@ -20,9 +20,11 @@
 #include "pc/debuglog.h"
 
 static SDL_Window *sSdlWindow;
+static bool sAppliedVsync = false;
 
 static inline void gfx_window_metal_set_vsync(const bool enabled) {
     gfx_metal_api.set_vsync(enabled);
+    sAppliedVsync = enabled;
 }
 
 static void gfx_window_metal_set_fullscreen(void) {
@@ -54,6 +56,9 @@ static void gfx_window_metal_handle_events(SDL_Event event) {
 }
 
 static bool gfx_window_metal_start_frame(void) {
+    if (sAppliedVsync != configWindow.vsync) {
+        gfx_window_metal_set_vsync(configWindow.vsync);
+    }
     return true;
 }
 

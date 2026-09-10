@@ -60,6 +60,7 @@ struct GfxDimensions {
     float aspect_ratio;
     float x_adjust_ratio;
     uint32_t x_adjust_4by3;
+    uint32_t y_adjust_4by3;
 };
 
 struct GfxTexture {

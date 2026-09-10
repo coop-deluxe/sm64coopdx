@@ -18,6 +18,7 @@ extern "C" {
 typedef bool (*kb_callback_t)(int code);
 
 enum GfxWindowBackend {
+    GFX_WINDOW_BACKEND_DUMMY = -1,
     #ifdef _WIN32
         GFX_WINDOW_BACKEND_DIRECTX,
     #endif
@@ -25,7 +26,6 @@ enum GfxWindowBackend {
         GFX_WINDOW_BACKEND_METAL,
     #endif
     GFX_WINDOW_BACKEND_OPENGL,
-    GFX_WINDOW_BACKEND_DUMMY,
     GFX_WINDOW_BACKEND_COUNT,
     GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
 };
