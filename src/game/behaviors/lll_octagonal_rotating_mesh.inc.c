@@ -1,66 +1,67 @@
 // lll_octagonal_rotating_mesh.c.inc
 
-s16 D_8032F860[] = { 2,  30,      0x4000, 0, 1,   220, 900, 30, 1,  30, 0,   -30, 2,
+static s16 sLllOctagonalMeshAction0[] = { 2,  30,      0x4000, 0, 1,   220, 900, 30, 1,  30, 0,   -30, 2,
                      30, -0x4000, 0,      1, 220, 900, 30,  1,  30, 0,  -30, 3,   0 };
-s16 D_8032F894[] = { 4,  0,      0, 0, 1,   475, 900, 30, 1,  30, 0,   -30, 2,
+static s16 sLllOctagonalMeshAction1[] = { 4,  0,      0, 0, 1,   475, 900, 30, 1,  30, 0,   -30, 2,
                      30, 0x8000, 0, 1, 475, 900, 30,  1,  30, 0,  -30, 3,   0 };
-s16 *D_8032F8C8[] = { D_8032F860, D_8032F894 };
+static s16 *sLllOctagonalMeshActionList[] = { sLllOctagonalMeshAction0, sLllOctagonalMeshAction1 };
 
 
-s32 lll_octagonal_mesh_move(s16 *a0, s32 a1) {
-    if (!BHV_ARR_CHECK(D_8032F860, a1, s16)) { return 0; }
-    switch (a0[a1]) {
+s32 lll_octagonal_mesh_move(s16 *actionTable, s32 actionOffset) {
+    if (!BHV_ARR_CHECK(sLllOctagonalMeshAction0, actionOffset, s16)) { return 0; }
+    switch (actionTable[actionOffset]) {
         case 4:
-            o->oMoveAngleYaw = a0[a1 + 2];
-            o->oForwardVel = a0[a1 + 3] / 100.0f;
+            o->oMoveAngleYaw = actionTable[actionOffset + 2];
+            o->oForwardVel = actionTable[actionOffset + 3] / 100.0f;
             if (cur_obj_is_mario_on_platform()) {
-                a1 += 4;
+                actionOffset += 4;
                 o->oTimer = 0;
             }
             break;
         case 2:
-            o->oMoveAngleYaw = a0[a1 + 2];
-            o->oForwardVel = a0[a1 + 3] / 100.0f;
-            if (o->oTimer > a0[a1 + 1]) {
-                a1 += 4;
+            o->oMoveAngleYaw = actionTable[actionOffset + 2];
+            o->oForwardVel = actionTable[actionOffset + 3] / 100.0f;
+            if (o->oTimer > actionTable[actionOffset + 1]) {
+                actionOffset += 4;
                 o->oTimer = 0;
             }
             break;
         case 1:
-            approach_f32_signed(&o->oForwardVel, a0[a1 + 2] / 100.0f, a0[a1 + 3] / 100.0f);
-            if (o->oTimer > a0[a1 + 1]) {
-                a1 += 4;
+            approach_f32_signed(&o->oForwardVel, actionTable[actionOffset + 2] / 100.0f, actionTable[actionOffset + 3] / 100.0f);
+            if (o->oTimer > actionTable[actionOffset + 1]) {
+                actionOffset += 4;
                 o->oTimer = 0;
             }
             break;
         case 3:
             o->oForwardVel = 0.0f;
-            a1 = 0;
+            actionOffset = 0;
             break;
     }
-    return a1;
+    return actionOffset;
 }
 
-s32 lll_octagonal_mesh_find_y_offset(s32 *a0, f32 *a1, s32 a2, s32 a3) {
+s32 lll_octagonal_mesh_find_y_offset(s32 *standTimer, f32 *posOffset, s32 standTimerInc, s32 moveDownAmount) {
     if (cur_obj_is_any_player_on_platform()) {
-        if (a0[0] < 0x4000)
-            a0[0] += a2;
-        else
-            a0[0] = 0x4000;
+        if (standTimer[0] < 0x4000) {
+            standTimer[0] += standTimerInc;
+        } else {
+            standTimer[0] = 0x4000;
+        }
     } else {
-        if (a0[0] > 0)
-            a0[0] -= a2;
-        else
-            a0[0] = 0;
+        if (standTimer[0] > 0) {
+            standTimer[0] -= standTimerInc;
+        } else {
+            standTimer[0] = 0;
+        }
     }
-    a1[0] = sins(a0[0]) * a3;
-    if (a0[0] == 0 || a0[0] == 0x4000)
-        return 1;
-    else
-        return 0;
+
+    posOffset[0] = sins(standTimer[0]) * moveDownAmount;
+    return standTimer[0] == 0 || standTimer[0] == 0x4000;
 }
 
 void bhv_lll_moving_octagonal_mesh_platform_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oHorizontalMovementUnkF8);
@@ -71,8 +72,8 @@ void bhv_lll_moving_octagonal_mesh_platform_loop(void) {
     if (o->oAction == 0) {
         o->oHorizontalMovementUnkF8 = 0;
         o->oAction++;
-    } else if (BHV_ARR_CHECK(D_8032F8C8, o->oBehParams2ndByte, s16*)) {
-        o->oHorizontalMovementUnkF8 = lll_octagonal_mesh_move(D_8032F8C8[o->oBehParams2ndByte], o->oHorizontalMovementUnkF8);
+    } else if (BHV_ARR_CHECK(sLllOctagonalMeshActionList, o->oBehParams2ndByte, s16*)) {
+        o->oHorizontalMovementUnkF8 = lll_octagonal_mesh_move(sLllOctagonalMeshActionList[o->oBehParams2ndByte], o->oHorizontalMovementUnkF8);
     }
     print_debug_top_down_objectinfo("number %d\n", o->oHorizontalMovementUnkF8);
     cur_obj_move_using_fvel_and_gravity();

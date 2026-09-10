@@ -33,16 +33,21 @@ s16 gTTC2DRotatorTimeBetweenTurns[][4] = {
     },
 };
 
-/**
- * Init function for bhvTTC2DRotator.
- */
-void bhv_ttc_2d_rotator_init(void) {
+static void bhv_ttc_2d_rotater_set_to_ttc_speed_setting() {
     if (o->oBehParams2ndByte >= 0 && o->oBehParams2ndByte < 2 && gTTCSpeedSetting >= 0 && gTTCSpeedSetting < 4) {
         o->oTTC2DRotatorMinTimeUntilNextTurn = gTTC2DRotatorTimeBetweenTurns[o->oBehParams2ndByte][gTTCSpeedSetting];
         o->oTTC2DRotatorIncrement = o->oTTC2DRotatorSpeed = gTTC2DRotatorSpeeds[o->oBehParams2ndByte];
     }
+}
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+/**
+ * Init function for bhvTTC2DRotator.
+ */
+void bhv_ttc_2d_rotator_init(void) {
+    bhv_ttc_2d_rotater_set_to_ttc_speed_setting();
+
+    // syncs using a standard distance-based system
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTC2DRotatorMinTimeUntilNextTurn);
@@ -61,6 +66,10 @@ void bhv_ttc_2d_rotator_init(void) {
  */
 void bhv_ttc_2d_rotator_update(void) {
     s32 startYaw = o->oFaceAngleYaw;
+
+    if (gTTCSpeedSetting != TTC_SPEED_RANDOM) {
+        bhv_ttc_2d_rotater_set_to_ttc_speed_setting();
+    }
 
     if (o->oTTC2DRotatorRandomDirTimer != 0) {
         o->oTTC2DRotatorRandomDirTimer -= 1;

@@ -13,19 +13,17 @@ static struct ObjectHitbox sBubbaHitbox = {
 };
 
 void bubba_act_0(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
-    f32 sp24;
-
-    sp24 = cur_obj_lateral_dist_to_home();
+    f32 distFromHome = cur_obj_lateral_dist_to_home();
 
     treat_far_home_as_mario(2000.0f, &distanceToPlayer, &angleToPlayer);
 
     o->oAnimState = 0;
 
-    o->oBubbaUnk1AC = obj_get_pitch_to_home(sp24);
+    o->oBubbaUnk1AC = obj_get_pitch_to_home(distFromHome);
 
     approach_f32_ptr(&o->oBubbaUnkF4, 5.0f, 0.5f);
 
@@ -53,8 +51,8 @@ void bubba_act_0(void) {
 }
 
 void bubba_act_1(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -84,13 +82,12 @@ void bubba_act_1(void) {
         }
     } else {
         if (player && abs_angle_diff(player->oFaceAngleYaw, angleToPlayer) < 0x3000) {
-            s16 val04 = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
+            s16 targetYaw = 0x4000 - atan2s(800.0f, distanceToPlayer - 800.0f);
             if ((s16)(o->oMoveAngleYaw - angleToPlayer) < 0) {
-                val04 = -val04;
+                targetYaw = -targetYaw;
             }
 
-            o->oBubbaUnk1AE = angleToPlayer + val04;
-            ;
+            o->oBubbaUnk1AE = angleToPlayer + targetYaw;
         } else {
             o->oBubbaUnk1AE = angleToPlayer;
         }
@@ -109,6 +106,7 @@ void bubba_act_1(void) {
 }
 
 void bhv_bubba_loop(void) {
+    // syncing uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oBubbaUnkF4);
@@ -124,12 +122,10 @@ void bhv_bubba_loop(void) {
         sync_object_init_field(o, o->oMoveAnglePitch);
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
-
-    UNUSED s32 unused;
 
     o->oInteractionSubtype &= ~INT_SUBTYPE_EATS_MARIO;
     if (marioState) {
@@ -160,9 +156,9 @@ void bhv_bubba_loop(void) {
 
     if (o->oMoveFlags & OBJ_MOVE_MASK_IN_WATER) {
         if (o->oMoveFlags & OBJ_MOVE_ENTERED_WATER) {
-            struct Object *sp38 = spawn_object(o, MODEL_WATER_SPLASH, bhvWaterSplash);
-            if (sp38 != NULL) {
-                obj_scale(sp38, 3.0f);
+            struct Object *waterSplashObj = spawn_object(o, MODEL_WATER_SPLASH, bhvWaterSplash);
+            if (waterSplashObj != NULL) {
+                obj_scale(waterSplashObj, 3.0f);
             }
 
             o->oBubbaUnk108 = o->oVelY;
@@ -170,9 +166,9 @@ void bhv_bubba_loop(void) {
         } else {
             approach_f32_ptr(&o->oBubbaUnk108, 0.0f, 4.0f);
             if ((o->oBubbaUnk10C -= o->oBubbaUnk108) > 1.0f) {
-                s16 sp36 = random_u16();
+                s16 randNum = random_u16();
                 o->oBubbaUnk10C -= 1.0f;
-                spawn_object_relative(0, 150.0f * coss(sp36), 0x64, 150.0f * sins(sp36), o,
+                spawn_object_relative(0, 150.0f * coss(randNum), 0x64, 150.0f * sins(randNum), o,
                                       MODEL_WHITE_PARTICLE_SMALL, bhvSmallParticleSnow);
             }
         }

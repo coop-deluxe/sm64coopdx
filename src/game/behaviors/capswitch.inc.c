@@ -8,21 +8,24 @@ void cap_switch_act_0(void) {
     o->oPosY += 71.0f;
     spawn_object_relative_with_scale(0, 0, -71, 0, 0.5f, o, MODEL_CAP_SWITCH_BASE, bhvCapSwitchBase);
     if (gCurrLevelNum != LEVEL_UNKNOWN_32) {
-        if (save_file_get_flags() & BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32)) {
+        if (save_file_get_flags() & BHV_ARR(gCapSwitchSaveFlags, o->oBehParams2ndByte, s32)) {
             o->oAction = 3;
             o->header.gfx.scale[1] = 0.1f;
-        } else
+        } else {
             o->oAction = 1;
-    } else
+        }
+    } else {
         o->oAction = 1;
+    }
 }
 
 void cap_switch_act_1(void) {
     if (capSwitchForcePress || cur_obj_is_mario_on_platform()) {
-        save_file_set_flags(BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32));
+        save_file_set_flags(BHV_ARR(gCapSwitchSaveFlags, o->oBehParams2ndByte, s32));
         o->oAction = 2;
         cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);
         if (!capSwitchForcePress) {
+            o->globalPlayerIndex = gNetworkPlayerLocal->globalIndex;
             capSwitchForcePress = TRUE;
             network_send_object(o);
         }
@@ -34,7 +37,6 @@ u8 cap_switch_act_2_continue_dialog(void) { return o->oAction == 2 && o->oTimer 
 
 void cap_switch_act_2(void) {
     capSwitchForcePress = FALSE;
-    s32 sp1C;
     if (o->oTimer < 5) {
         cur_obj_scale_over_time(2, 4, 0.5f, 0.1f);
         if (o->oTimer == 4) {
@@ -44,10 +46,11 @@ void cap_switch_act_2(void) {
             queue_rumble_data_object(o, 5, 80);
         }
     } else {
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        if (marioState && should_start_or_continue_dialog(marioState, o)) {
-            sp1C = cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 1, 0x0C, CUTSCENE_CAP_SWITCH_PRESS, 0, cap_switch_act_2_continue_dialog);
-            if (sp1C) { o->oAction = 3; }
+        if (o->globalPlayerIndex >= MAX_PLAYERS) { o->globalPlayerIndex = 0; }
+        struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+        if (is_player_active(marioState) && marioState->visibleToObjects && should_start_or_continue_dialog(marioState, o)) {
+            s32 dialogResponse = cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 1, 0x0C, CUTSCENE_CAP_SWITCH_PRESS, 0, cap_switch_act_2_continue_dialog);
+            if (dialogResponse) { o->oAction = 3; }
         }
     }
 }
@@ -60,8 +63,11 @@ void (*sCapSwitchActions[])(void) = { cap_switch_act_0, cap_switch_act_1,
                                       cap_switch_act_2, cap_switch_act_3 };
 
 void bhv_cap_switch_loop(void) {
+    // syncing here is very simple and uses an event based system. Normally it reads from the save file,
+    // but if the button is pressed while other players exist it just sends the object to everyone else
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        sync_object_init_field(o, o->globalPlayerIndex);
         sync_object_init_field(o, capSwitchForcePress);
     }
 

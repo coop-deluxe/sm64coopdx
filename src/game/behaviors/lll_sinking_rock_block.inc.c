@@ -1,6 +1,7 @@
 // lll_sinking_rock_block.c.inc
 
 void bhv_lll_sinking_rock_block_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 1000.0f);
         sync_object_init_field(o, o->oSinkWhenSteppedOnUnk104);

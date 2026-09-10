@@ -1,6 +1,6 @@
-struct Struct80331C38 {
-    s16 unk00;
-    s16 unk02;
+struct SkeeterRelativePos {
+    s16 relativePosX;
+    s16 relativePosZ;
 };
 
 struct ObjectHitbox sSkeeterHitbox = {
@@ -15,7 +15,7 @@ struct ObjectHitbox sSkeeterHitbox = {
     .hurtboxHeight = 90,
 };
 
-struct Struct80331C38 D_80331C38[] = {
+struct SkeeterRelativePos sSkeeterRelativePositions[] = {
     { 0xFF7E, 0xFF42 },
     { 0x0082, 0xFF42 },
     { 0xFF4C, 0x0082 },
@@ -26,7 +26,7 @@ static void skeeter_spawn_waves(void) {
     s32 i;
 
     for (i = 0; i < 4; i++) {
-        spawn_object_relative_with_scale(0, D_80331C38[i].unk00, 0, D_80331C38[i].unk02, 0.8f, o,
+        spawn_object_relative_with_scale(0, sSkeeterRelativePositions[i].relativePosX, 0, sSkeeterRelativePositions[i].relativePosZ, 0.8f, o,
                                          MODEL_IDLE_WATER_WAVE, bhvSkeeterWave);
     }
 }
@@ -96,15 +96,13 @@ static void skeeter_act_walk(void) {
     s32 distanceToPlayer = o->oDistanceToMario;
     s32 angleToPlayer = o->oAngleToMario;
 
-    f32 sp24;
-
     if (!(o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND)) {
         o->oAction = SKEETER_ACT_IDLE;
     } else {
         obj_forward_vel_approach(o->oSkeeterUnkFC, 0.4f);
-        sp24 = 0.12f * o->oForwardVel;
+        f32 animAccel = 0.12f * o->oForwardVel;
 
-        cur_obj_init_animation_with_accel_and_sound(2, sp24);
+        cur_obj_init_animation_with_accel_and_sound(2, animAccel);
         cur_obj_play_sound_at_anim_range(3, 13, SOUND_OBJ_SKEETER_WALK);
 
         if (o->oSkeeterUnkF8 != 0) {
@@ -141,6 +139,7 @@ static void skeeter_act_walk(void) {
 }
 
 void bhv_skeeter_update(void) {
+    // uses standard distance-based system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oSkeeterTargetAngle);
@@ -155,7 +154,7 @@ void bhv_skeeter_update(void) {
 
     o->oDeathSound = SOUND_OBJ_SNUFIT_SKEETER_DEATH;
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
     treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);

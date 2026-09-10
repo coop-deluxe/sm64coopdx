@@ -1971,6 +1971,21 @@ int smlua_func_bhv_ukiki_cage_loop(lua_State* L) {
     return 0;
 }
 
+int smlua_func_bhv_bitfs_sinking_platform_init(lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_bitfs_sinking_platform_init", 0, top);
+        return 0;
+    }
+
+    bhv_bitfs_sinking_platform_init();
+
+    return 0;
+}
+
 int smlua_func_bhv_bitfs_sinking_platform_loop(lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
@@ -1982,6 +1997,21 @@ int smlua_func_bhv_bitfs_sinking_platform_loop(lua_State* L) {
     }
 
     bhv_bitfs_sinking_platform_loop();
+
+    return 0;
+}
+
+int smlua_func_bhv_bitfs_sinking_cage_platform_init(lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_bitfs_sinking_cage_platform_init", 0, top);
+        return 0;
+    }
+
+    bhv_bitfs_sinking_cage_platform_init();
 
     return 0;
 }
@@ -2042,6 +2072,21 @@ int smlua_func_bhv_tilting_inverted_pyramid_loop(lua_State* L) {
     }
 
     bhv_tilting_inverted_pyramid_loop();
+
+    return 0;
+}
+
+int smlua_func_bhv_squishable_platform_init(lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_squishable_platform_init", 0, top);
+        return 0;
+    }
+
+    bhv_squishable_platform_init();
 
     return 0;
 }
@@ -3860,6 +3905,21 @@ int smlua_func_bhv_sushi_shark_collision_loop(lua_State* L) {
     return 0;
 }
 
+int smlua_func_bhv_jrb_sliding_box_init(lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_jrb_sliding_box_init", 0, top);
+        return 0;
+    }
+
+    bhv_jrb_sliding_box_init();
+
+    return 0;
+}
+
 int smlua_func_bhv_jrb_sliding_box_loop(lua_State* L) {
     if (!gCurrentObject) { return 0; }
     if (L == NULL) { return 0; }
@@ -3871,6 +3931,21 @@ int smlua_func_bhv_jrb_sliding_box_loop(lua_State* L) {
     }
 
     bhv_jrb_sliding_box_loop();
+
+    return 0;
+}
+
+int smlua_func_bhv_ship_part_3_init(lua_State* L) {
+    if (!gCurrentObject) { return 0; }
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "bhv_ship_part_3_init", 0, top);
+        return 0;
+    }
+
+    bhv_ship_part_3_init();
 
     return 0;
 }
@@ -17384,26 +17459,6 @@ int smlua_func_stuck_in_ground_handler(lua_State* L) {
 
     return 0;
 }
-
-/*
-int smlua_func_jumbo_star_offset(lua_State* L) {
-    if (L == NULL) { return 0; }
-
-    int top = lua_gettop(L);
-    if (top != 1) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "jumbo_star_offset", 1, top);
-        return 0;
-    }
-
-    struct MarioState* m = (struct MarioState*)smlua_to_cobject(L, 1, LOT_MARIOSTATE);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "jumbo_star_offset"); return 0; }
-
-    extern UNUSED static void jumbo_star_offset(struct MarioState* m);
-    UNIMPLEMENTED -->(L, jumbo_star_offset(m));
-
-    return 0;
-}
-*/
 
 int smlua_func_generate_yellow_sparkles(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -36473,11 +36528,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_unused_particle_spawn_loop", smlua_func_bhv_unused_particle_spawn_loop);
     smlua_bind_function(L, "bhv_ukiki_cage_star_loop", smlua_func_bhv_ukiki_cage_star_loop);
     smlua_bind_function(L, "bhv_ukiki_cage_loop", smlua_func_bhv_ukiki_cage_loop);
+    smlua_bind_function(L, "bhv_bitfs_sinking_platform_init", smlua_func_bhv_bitfs_sinking_platform_init);
     smlua_bind_function(L, "bhv_bitfs_sinking_platform_loop", smlua_func_bhv_bitfs_sinking_platform_loop);
+    smlua_bind_function(L, "bhv_bitfs_sinking_cage_platform_init", smlua_func_bhv_bitfs_sinking_cage_platform_init);
     smlua_bind_function(L, "bhv_bitfs_sinking_cage_platform_loop", smlua_func_bhv_bitfs_sinking_cage_platform_loop);
     smlua_bind_function(L, "bhv_ddd_moving_pole_loop", smlua_func_bhv_ddd_moving_pole_loop);
     smlua_bind_function(L, "bhv_platform_normals_init", smlua_func_bhv_platform_normals_init);
     smlua_bind_function(L, "bhv_tilting_inverted_pyramid_loop", smlua_func_bhv_tilting_inverted_pyramid_loop);
+    smlua_bind_function(L, "bhv_squishable_platform_init", smlua_func_bhv_squishable_platform_init);
     smlua_bind_function(L, "bhv_squishable_platform_loop", smlua_func_bhv_squishable_platform_loop);
     smlua_bind_function(L, "bhv_beta_moving_flames_spawn_loop", smlua_func_bhv_beta_moving_flames_spawn_loop);
     smlua_bind_function(L, "bhv_beta_moving_flames_loop", smlua_func_bhv_beta_moving_flames_loop);
@@ -36599,7 +36657,9 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "bhv_bowsers_sub_loop", smlua_func_bhv_bowsers_sub_loop);
     smlua_bind_function(L, "bhv_sushi_shark_loop", smlua_func_bhv_sushi_shark_loop);
     smlua_bind_function(L, "bhv_sushi_shark_collision_loop", smlua_func_bhv_sushi_shark_collision_loop);
+    smlua_bind_function(L, "bhv_jrb_sliding_box_init", smlua_func_bhv_jrb_sliding_box_init);
     smlua_bind_function(L, "bhv_jrb_sliding_box_loop", smlua_func_bhv_jrb_sliding_box_loop);
+    smlua_bind_function(L, "bhv_ship_part_3_init", smlua_func_bhv_ship_part_3_init);
     smlua_bind_function(L, "bhv_ship_part_3_loop", smlua_func_bhv_ship_part_3_loop);
     smlua_bind_function(L, "bhv_sunken_ship_part_loop", smlua_func_bhv_sunken_ship_part_loop);
     smlua_bind_function(L, "bhv_white_puff_1_loop", smlua_func_bhv_white_puff_1_loop);
@@ -37437,7 +37497,6 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "common_death_handler", smlua_func_common_death_handler);
     smlua_bind_function(L, "launch_mario_until_land", smlua_func_launch_mario_until_land);
     smlua_bind_function(L, "stuck_in_ground_handler", smlua_func_stuck_in_ground_handler);
-    //smlua_bind_function(L, "jumbo_star_offset", smlua_func_jumbo_star_offset); <--- UNIMPLEMENTED
     smlua_bind_function(L, "generate_yellow_sparkles", smlua_func_generate_yellow_sparkles);
     smlua_bind_function(L, "mario_execute_cutscene_action", smlua_func_mario_execute_cutscene_action);
 

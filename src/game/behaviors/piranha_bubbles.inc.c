@@ -38,13 +38,12 @@ void bhv_piranha_plant_bubble_loop(void) {
     // TODO: rename lastFrame if it is inaccurate
     if (parent->header.gfx.animInfo.curAnim == NULL) { return; }
     s32 lastFrame = parent->header.gfx.animInfo.curAnim->loopEnd - 2;
-    s32 UNUSED unused;
     f32 doneShrinkingFrame; // the first frame after shrinking is done
     f32 beginGrowingFrame;  // the frame just before growing begins
 
     cur_obj_set_pos_relative(parent, 0, 72.0f, 180.0f);
 
-    struct Object* parentPlayer = nearest_player_to_object(parent);
+    struct Object *parentPlayer = nearest_player_to_object(parent);
     s32 distanceToParentPlayer = parentPlayer ? dist_between_objects(parent, parentPlayer) : 10000;
 
     switch (o->oAction) {

@@ -1365,6 +1365,9 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oKoopaRaceEndpointRaceStatus);
     bhv_constant(oKoopaRaceEndpointUnk100);
     bhv_constant(oKoopaRaceEndpointRaceEnded);
+    bhv_constant(oKoopaRaceEndpointRaceCheated);
+    bhv_constant(oKoopaRaceEndpointRaceStartTime);
+    bhv_constant(oKoopaRaceEndpointRaceWinner);
 
     /* KoopaShellFlame */
     bhv_constant(oKoopaShellFlameUnkF4);
@@ -1731,6 +1734,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oTTCTreadmillSpeed);
     bhv_constant(oTTCTreadmillTargetSpeed);
     bhv_constant(oTTCTreadmillTimeUntilSwitch);
+    bhv_constant(oTTCTreadmillPrevTTCSpeed);
 
     /* TTCMovingBar */
     bhv_constant(oTTCMovingBarDelay);
@@ -1886,7 +1890,7 @@ s64 DynOS_Bhv_ParseBehaviorScriptConstants(const String &_Arg, bool *found) {
     bhv_constant(oWigglerTimeUntilRandomTurn);
     bhv_constant(oWigglerTargetYaw);
     bhv_constant(oWigglerWalkAwayFromWallTimer);
-    bhv_constant(oWigglerUnused);
+    bhv_constant(oWigglerFinishedTalking);
     bhv_constant(oWigglerTextStatus);
 
     /* LllWoodPiece */

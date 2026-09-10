@@ -34,7 +34,10 @@ void bhv_ttc_treadmill_init(void) {
 
     sMasterTreadmill = NULL;
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    o->oTTCTreadmillPrevTTCSpeed = gTTCSpeedSetting;
+
+    // uses standard distance-based syncing
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCTreadmillSpeed);
@@ -47,6 +50,14 @@ void bhv_ttc_treadmill_init(void) {
  * Update function for bhvTTCTreadmill. It calls cur_obj_compute_vel_xz afterward.
  */
 void bhv_ttc_treadmill_update(void) {
+    if (gTTCSpeedSetting >= 0 && gTTCSpeedSetting <= 3 && o->oTTCTreadmillPrevTTCSpeed != gTTCSpeedSetting) {
+        *o->oTTCTreadmillBigSurface = *o->oTTCTreadmillSmallSurface = gTTCTreadmillSpeeds[gTTCSpeedSetting];
+        o->oTTCTreadmillTimeUntilSwitch = random_mod_offset(10, 20, 7);
+        o->oTTCTreadmillTargetSpeed = random_sign() * 50.0f;
+        o->oTimer = 0;
+        o->oTTCTreadmillPrevTTCSpeed = gTTCSpeedSetting;
+    }
+
     if (sMasterTreadmill == o || sMasterTreadmill == NULL) {
         sMasterTreadmill = o;
 

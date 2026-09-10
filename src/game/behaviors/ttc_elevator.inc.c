@@ -19,12 +19,12 @@ static s8 sTTCElevatorSpeeds[] = {
 void bhv_ttc_elevator_init(void) {
     // If behParam is nonzero, then move 100 * behParam units. Otherwise default
     // to 500
-    f32 peakOffset =
-        ((o->oBehParams >> 16) & 0xFFFF) != 0 ? 100.0f * ((o->oBehParams >> 16) & 0xFFFF) : 500.0f;
+    f32 peakOffset = ((o->oBehParams >> 16) & 0xFFFF) != 0 ? 100.0f * ((o->oBehParams >> 16) & 0xFFFF) : 500.0f;
 
     o->oTTCElevatorPeakY = o->oPosY + peakOffset;
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based sync system
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCElevatorDir);

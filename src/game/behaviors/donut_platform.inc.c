@@ -29,6 +29,7 @@ void bhv_donut_platform_spawner_update(void) {
 }
 
 void bhv_donut_platform_update(void) {
+    // distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oGravity);

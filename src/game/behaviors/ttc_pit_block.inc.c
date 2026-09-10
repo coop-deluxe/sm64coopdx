@@ -47,6 +47,7 @@ void bhv_ttc_pit_block_init(void) {
         o->oPosY += 330.0f;
     }
 
+    // uses standard distance-based syncing
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;

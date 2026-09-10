@@ -6,7 +6,6 @@ void bhv_ambient_light_update(void) {
     );
 }
 
-
 void bhv_point_light_init(void) {
     o->oLightID = le_add_light(
         // position

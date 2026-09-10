@@ -46,8 +46,9 @@ void grindel_thwomp_act_0(void) {
     if (o->oBehParams2ndByte + 40 < o->oTimer) {
         o->oAction = 1;
         o->oPosY += 5.0f;
-    } else
+    } else {
         o->oPosY += 10.0f;
+    }
 }
 
 void (*sGrindelThwompActions[])(void) = { grindel_thwomp_act_0, grindel_thwomp_act_1,
@@ -55,6 +56,8 @@ void (*sGrindelThwompActions[])(void) = { grindel_thwomp_act_0, grindel_thwomp_a
                                           grindel_thwomp_act_4 };
 
 void bhv_grindel_thwomp_loop(void) {
+    // uses standard distance-based sync. We can't use the area timer because there is randomness to this action
+    // so instead we sync on action change
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);

@@ -6,7 +6,6 @@
  */
 
 void bhv_unused_particle_spawn_loop(void) {
-    s32 i;
     cur_obj_update_floor_and_walls();
     cur_obj_move_standard(78);
 
@@ -17,7 +16,7 @@ void bhv_unused_particle_spawn_loop(void) {
     if (obj_check_if_collided_with_object(o, gMarioObject)) {
         obj_mark_for_deletion(o);
 
-        for (i = 0; i < 10; i++) {
+        for (s32 i = 0; i < 10; i++) {
             spawn_object(o, MODEL_PURPLE_MARBLE, bhvPurpleParticle);
         }
     }

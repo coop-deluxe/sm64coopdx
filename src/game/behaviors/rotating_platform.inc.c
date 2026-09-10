@@ -16,6 +16,7 @@ static void bhv_wf_rotating_wooden_platform_run_once(void) {
 }
 
 void bhv_wf_rotating_wooden_platform_init(void) {
+    // syncs via the area timer
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 380;
@@ -38,12 +39,12 @@ void bhv_wf_rotating_wooden_platform_loop(void) {
 }
 
 void bhv_rotating_platform_loop(void) {
-    s8 sp1F = o->oBehParams >> 24;
+    s8 speed = o->oBehParams >> 24;
     if (o->oTimer == 0 && BHV_ARR_CHECK(sWFRotatingPlatformData, o->oBehParams2ndByte, struct WFRotatingPlatformData)) {
         obj_set_collision_data(o, sWFRotatingPlatformData[o->oBehParams2ndByte].collisionData);
         o->oCollisionDistance = sWFRotatingPlatformData[o->oBehParams2ndByte].collisionDistance;
         cur_obj_scale(sWFRotatingPlatformData[o->oBehParams2ndByte].scale * 0.01f);
     }
-    o->oAngleVelYaw = sp1F << 4;
+    o->oAngleVelYaw = speed << 4;
     o->oFaceAngleYaw += o->oAngleVelYaw;
 }

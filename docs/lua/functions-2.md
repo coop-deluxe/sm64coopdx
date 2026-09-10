@@ -1926,6 +1926,27 @@ Behavior loop function for Ukiki cage
 
 <br />
 
+## [bhv_bitfs_sinking_platform_init](#bhv_bitfs_sinking_platform_init)
+
+### Description
+Behavior init function for Bowser in the Fire Sea sinking platform
+
+### Lua Example
+`bhv_bitfs_sinking_platform_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_bitfs_sinking_platform_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_bitfs_sinking_platform_loop](#bhv_bitfs_sinking_platform_loop)
 
 ### Description
@@ -1942,6 +1963,27 @@ Behavior loop function for Bowser in the Fire Sea sinking platform
 
 ### C Prototype
 `void bhv_bitfs_sinking_platform_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_bitfs_sinking_cage_platform_init](#bhv_bitfs_sinking_cage_platform_init)
+
+### Description
+Behavior init function for Bowser in the Fire Sea sinking cage platform
+
+### Lua Example
+`bhv_bitfs_sinking_cage_platform_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_bitfs_sinking_cage_platform_init(void);`
 
 [:arrow_up_small:](#)
 
@@ -2026,6 +2068,27 @@ Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting i
 
 ### C Prototype
 `void bhv_tilting_inverted_pyramid_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_squishable_platform_init](#bhv_squishable_platform_init)
+
+### Description
+Behavior init function for squishable platform
+
+### Lua Example
+`bhv_squishable_platform_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_squishable_platform_init(void);`
 
 [:arrow_up_small:](#)
 
@@ -4573,6 +4636,27 @@ Behavior loop function for Sushi Shark collision
 
 <br />
 
+## [bhv_jrb_sliding_box_init](#bhv_jrb_sliding_box_init)
+
+### Description
+Behavior init function for Jolly Roger Bay sliding box
+
+### Lua Example
+`bhv_jrb_sliding_box_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_jrb_sliding_box_init(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [bhv_jrb_sliding_box_loop](#bhv_jrb_sliding_box_loop)
 
 ### Description
@@ -4589,6 +4673,27 @@ Behavior loop function for Jolly Roger Bay sliding box
 
 ### C Prototype
 `void bhv_jrb_sliding_box_loop(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [bhv_ship_part_3_init](#bhv_ship_part_3_init)
+
+### Description
+Behavior init function for Jolly Roger Bay ship part 3
+
+### Lua Example
+`bhv_ship_part_3_init()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void bhv_ship_part_3_init(void);`
 
 [:arrow_up_small:](#)
 

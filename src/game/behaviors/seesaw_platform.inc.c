@@ -26,6 +26,7 @@ void bhv_seesaw_platform_init(void) {
         o->oCollisionDistance = 2000.0f;
     }
 
+    // uses a standard distance-based sync system
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 1000.0f);
         if (so) {

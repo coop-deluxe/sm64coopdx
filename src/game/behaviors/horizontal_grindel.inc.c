@@ -2,6 +2,7 @@
 void bhv_horizontal_grindel_init(void) {
     o->oHorizontalGrindelTargetYaw = o->oMoveAngleYaw;
 
+    // uses standard distance-based syncing
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oHorizontalGrindelOnGround);
     sync_object_init_field(o, o->oHorizontalGrindelTargetYaw);

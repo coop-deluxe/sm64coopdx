@@ -581,7 +581,7 @@ u8 is_player_in_local_area(struct MarioState* m) {
 /* |description|Gets the nearest active Mario who isn't bubbled to `obj`|descriptionEnd| */
 struct MarioState* nearest_mario_state_to_object(struct Object *obj) {
     if (!obj) { return NULL; }
-    struct MarioState* nearest = NULL;
+    struct MarioState *nearest = NULL;
     f32 nearestDist = 0;
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (!gMarioStates[i].marioObj) { continue; }
@@ -842,11 +842,20 @@ s8 current_mario_room_check(s16 room) {
 /**
  * Triggers dialog when Mario is facing an object and controls it while in the dialog.
  */
-s16 trigger_obj_dialog_when_facing(struct MarioState* m, s32 *inDialog, s32 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
+s16 trigger_obj_dialog_when_facing(struct MarioState *m, s32 *inDialog, s32 dialogID, f32 dist, s32 actionArg, u8 (*inContinueDialogFunction)(void)) {
     if (!o) { return 0; }
     if (!m || !inDialog) { return 0; }
-    s16 dialogueResponse;
 
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        // make sure no other mario is reading the dialog
+        struct MarioState *marioState = &gMarioStates[i];
+        if (marioState == m) { continue; }
+        if (!is_player_active(marioState)) { continue; }
+        if (marioState->dialogId != dialogID) { continue; }
+        return 0;
+    }
+
+    s16 dialogueResponse = 0;
     s32 angleToPlayer = obj_angle_to_object(o, m->marioObj);
 
     if ((is_point_within_radius_of_mario(o->oPosX, o->oPosY, o->oPosZ, (s32) dist) == TRUE

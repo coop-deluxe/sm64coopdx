@@ -17,12 +17,14 @@ void bhv_bouncing_fireball_flame_loop(void) {
                 o->oVelY = 50.0f;
                 o->oForwardVel = 30.0f;
             }
-            if (o->oMoveFlags & (OBJ_MOVE_UNDERWATER_ON_GROUND | OBJ_MOVE_AT_WATER_SURFACE | OBJ_MOVE_ON_GROUND) && o->oTimer > 100)
+            if (o->oMoveFlags & (OBJ_MOVE_UNDERWATER_ON_GROUND | OBJ_MOVE_AT_WATER_SURFACE | OBJ_MOVE_ON_GROUND) && o->oTimer > 100) {
                 obj_mark_for_deletion(o);
+            }
             break;
     }
-    if (o->oTimer > 300)
+    if (o->oTimer > 300) {
         obj_mark_for_deletion(o);
+    }
     cur_obj_move_standard(78);
     o->oInteractStatus = 0;
 }
@@ -31,29 +33,34 @@ void bhv_bouncing_fireball_loop(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
-    struct Object *sp2C;
-    f32 sp28;
+    struct Object *spawnedFlameObject;
+    f32 scaleMultiplier;
     switch (o->oAction) {
         case 0:
-            if (distanceToPlayer < 2000.0f)
+            if (distanceToPlayer < 2000.0f) {
                 o->oAction = 1;
+            }
             break;
         case 1:
-            sp2C = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
-            sp28 = (10 - o->oTimer) * 0.5;
-            if (sp2C != NULL) {
-                obj_scale_xyz(sp2C, sp28, sp28, sp28);
-                if (o->oTimer == 0)
-                    obj_become_tangible(sp2C);
+            spawnedFlameObject = spawn_object(o, MODEL_RED_FLAME, bhvBouncingFireballFlame);
+            scaleMultiplier = (10 - o->oTimer) * 0.5;
+            if (spawnedFlameObject != NULL) {
+                obj_scale_xyz(spawnedFlameObject, scaleMultiplier, scaleMultiplier, scaleMultiplier);
+                if (o->oTimer == 0) {
+                    obj_become_tangible(spawnedFlameObject);
+                }
             }
-            if (o->oTimer > 10)
+            if (o->oTimer > 10) {
                 o->oAction++;
+            }
             break;
         case 2:
-            if (o->oTimer == 0)
+            if (o->oTimer == 0) {
                 o->oBouncingFireBallUnkF4 = random_float() * 100.0f;
-            if (o->oBouncingFireBallUnkF4 + 100 < o->oTimer)
+            }
+            if (o->oBouncingFireBallUnkF4 + 100 < o->oTimer) {
                 o->oAction = 0;
+            }
             break;
     }
 }

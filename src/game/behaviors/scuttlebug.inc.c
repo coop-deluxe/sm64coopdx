@@ -25,6 +25,7 @@ s32 update_angle_from_move_flags(INOUT s32 *angle) {
 }
 
 void bhv_scuttlebug_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -45,8 +46,9 @@ void bhv_scuttlebug_loop(void) {
         && cur_obj_set_hitbox_and_die_if_attacked(&sScuttlebugHitbox, SOUND_OBJ_DYING_ENEMY1,
                                               o->oScuttlebugUnkF4))
         o->oSubAction = 3;
-    if (o->oSubAction != 1)
+    if (o->oSubAction != 1) {
         o->oScuttlebugUnkF8 = 0;
+    }
     switch (o->oSubAction) {
         case 0:
             if (o->oMoveFlags & OBJ_MOVE_LANDED)
@@ -80,16 +82,19 @@ void bhv_scuttlebug_loop(void) {
                         o->oScuttlebugUnkF8 = 0;
                 }
             }
-            if (update_angle_from_move_flags(&o->oAngleToMario))
+            if (update_angle_from_move_flags(&o->oAngleToMario)) {
                 o->oSubAction = 2;
+            }
             cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x200);
             break;
         case 2:
             o->oForwardVel = 5.0f;
-            if ((s16) o->oMoveAngleYaw == (s16)o->oAngleToMario)
+            if ((s16) o->oMoveAngleYaw == (s16)o->oAngleToMario) {
                 o->oSubAction = 1;
-            if (o->oPosY - o->oHomeY < -200.0f)
+            }
+            if (o->oPosY - o->oHomeY < -200.0f) {
                 obj_mark_for_deletion(o);
+            }
             cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
             break;
         case 3:
@@ -112,23 +117,25 @@ void bhv_scuttlebug_loop(void) {
         case 5:
             o->oForwardVel = 2.0f;
             o->oScuttlebugUnkFC++;
-            if (o->oScuttlebugUnkFC > 30)
+            if (o->oScuttlebugUnkFC > 30) {
                 o->oSubAction = 0;
+            }
             break;
     }
-    f32 sp18;
+    f32 animAccel;
     if (o->oForwardVel < 10.0f) {
-        sp18 = 1.0f;
+        animAccel = 1.0f;
     } else {
-        sp18 = 3.0f;
+        animAccel = 3.0f;
     }
-    cur_obj_init_animation_with_accel_and_sound(0, sp18);
+    cur_obj_init_animation_with_accel_and_sound(0, animAccel);
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         set_obj_anim_with_accel_and_sound(1, 23, SOUND_OBJ2_SCUTTLEBUG_WALK);
     }
     if (o->parentObj != o) {
-        if (obj_is_hidden(o))
+        if (obj_is_hidden(o)) {
             obj_mark_for_deletion(o);
+        }
         if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED && o->parentObj) {
             o->parentObj->oScuttlebugSpawnerUnk88 = 1;
             network_send_object(o->parentObj);
@@ -138,6 +145,7 @@ void bhv_scuttlebug_loop(void) {
 }
 
 void bhv_scuttlebug_spawn_loop(void) {
+    // uses an event based syncing system. Syncs when scuttle bug has been spawned or has despawned
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -148,10 +156,10 @@ void bhv_scuttlebug_spawn_loop(void) {
         }
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (marioState && marioState->playerIndex != 0) { return; }
 
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oAction == 0) {

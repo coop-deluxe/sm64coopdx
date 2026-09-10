@@ -35,20 +35,18 @@ void clam_act_0(void) {
 }
 
 void clam_act_1(void) {
-    s16 val06;
-    s16 val04;
-    s16 val02;
+    s16 bubbleX, bubbleZ;
 
     struct Object* player = nearest_player_to_object(o);
     if (o->oTimer > 150 && player == gMarioStates[0].marioObj) {
         o->oAction = 0;
         if (sync_object_is_owned_locally(o->oSyncID)) { network_send_object(o); }
     } else if (obj_is_rendering_enabled() && cur_obj_init_anim_check_frame(1, 8)) {
-        for (val06 = -0x2000; val06 < 0x2000; val06 += 0x555) {
-            val04 = (s16)(100.0f * sins(val06));
-            val02 = (s16)(100.0f * coss(val06));
+        for (s16 i = -0x2000; i < 0x2000; i += 0x555) {
+            bubbleX = (s16)(100.0f * sins(i));
+            bubbleZ = (s16)(100.0f * coss(i));
 
-            spawn_object_relative(0, val04, 30, val02, o, MODEL_BUBBLE, bhvBubbleMaybe);
+            spawn_object_relative(0, bubbleX, 30, bubbleZ, o, MODEL_BUBBLE, bhvBubbleMaybe);
         }
     } else if (cur_obj_check_anim_frame(30)) {
         cur_obj_become_intangible();
@@ -56,6 +54,7 @@ void clam_act_1(void) {
 }
 
 void bhv_clam_loop(void) {
+    // uses a distance-based event system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);

@@ -67,9 +67,7 @@ static u8 sGoombaAttackHandlers[][6] = {
  * Update function for goomba triplet spawner.
  */
 void bhv_goomba_triplet_spawner_update(void) {
-    UNUSED s32 unused1;
     s16 goombaFlag;
-    UNUSED s16 unused2;
     s32 angle;
     s32 dAngle;
     s16 dx;
@@ -80,9 +78,7 @@ void bhv_goomba_triplet_spawner_update(void) {
     if (o->oAction == GOOMBA_TRIPLET_SPAWNER_ACT_UNLOADED) {
         // The spawner is capable of spawning more than 3 goombas, but this
         // is not used in the game
-        dAngle =
-            0x10000
-            / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
+        dAngle = 0x10000 / (((o->oBehParams2ndByte & GOOMBA_TRIPLET_SPAWNER_BP_EXTRA_GOOMBAS_MASK) >> 2) + 3);
 
         for (angle = 0, goombaFlag = 1 << 8; angle < 0xFFFF; angle += dAngle, goombaFlag <<= 1) {
             // Only spawn goombas which haven't been killed yet
@@ -116,6 +112,7 @@ void bhv_goomba_init(void) {
 
     o->oGravity = -8.0f / 3.0f * o->oGoombaScale;
 
+    // uses distance-based sync system
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oGoombaTargetYaw);
     sync_object_init_field(o, o->oGoombaWalkTimer);
@@ -168,7 +165,7 @@ static void goomba_act_walk(void) {
     if (o->oGoombaTurningAwayFromWall) {
         o->oGoombaTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oGoombaTargetYaw, 0x200);
     } else {
-        struct Object* player = nearest_player_to_object(o);
+        struct Object *player = nearest_player_to_object(o);
         s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
         s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
         treat_far_home_as_mario(1000.0f, &distanceToPlayer, &angleToPlayer);
@@ -230,7 +227,7 @@ static void goomba_act_attacked_mario(void) {
     } else {
         //! This can happen even when the goomba is already in the air. It's
         //  hard to chain these in practice
-        struct Object* player = nearest_player_to_object(o);
+        struct Object *player = nearest_player_to_object(o);
         s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
         goomba_begin_jump();
         o->oGoombaTargetYaw = angleToPlayer;

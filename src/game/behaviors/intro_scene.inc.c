@@ -3,26 +3,27 @@
 void spawn_child_obj_relative(struct Object *parent, s16 xOffset, s16 yOffset, s16 zOffset, s16 pitchOffset,
                    s16 yawOffset, s16 rollOffset, s16 forwardVel,
                    s32 model, const BehaviorScript *behavior) {
-    struct Object *sp1C = spawn_object(parent, model, behavior);
-    if (!sp1C) { return; }
+    struct Object *obj = spawn_object(parent, model, behavior);
+    if (!obj) { return; }
 
-    sp1C->header.gfx.animInfo.animFrame = random_float() * 6.f;
-    sp1C->oEndBirdUnk104 = sCutsceneVars[9].point[0];
+    obj->header.gfx.animInfo.animFrame = random_float() * 6.f;
+    obj->oEndBirdUnk104 = sCutsceneVars[9].point[0];
     sCutsceneVars[9].point[0] += 1.f;
-    sp1C->oPosX += xOffset;
-    sp1C->oPosY += yOffset;
-    if (gCutsceneTimer > 700)
-        sp1C->oPosY += -150.f;
-    sp1C->oPosZ += zOffset;
-    sp1C->oMoveAnglePitch += pitchOffset;
-    sp1C->oMoveAngleYaw += yawOffset;
-    sp1C->oMoveAngleRoll += rollOffset;
-    sp1C->oForwardVel = forwardVel;
+    obj->oPosX += xOffset;
+    obj->oPosY += yOffset;
+
+    if (gCutsceneTimer > 700) {
+        obj->oPosY += -150.f;
+    }
+
+    obj->oPosZ += zOffset;
+    obj->oMoveAnglePitch += pitchOffset;
+    obj->oMoveAngleYaw += yawOffset;
+    obj->oMoveAngleRoll += rollOffset;
+    obj->oForwardVel = forwardVel;
 }
 
 void bhv_intro_scene_loop(void) {
-    UNUSED struct Object *sp34;
-
     if (gCutsceneObjSpawn != 0) {
         gCurrentObject->oPosX = gCamera->pos[0];
         gCurrentObject->oPosY = gCamera->pos[1];
@@ -32,10 +33,10 @@ void bhv_intro_scene_loop(void) {
 
         switch (gCutsceneObjSpawn) {
             case 6:
-                sp34 = spawn_object(gCurrentObject, MODEL_LAKITU, bhvBeginningLakitu);
+                spawn_object(gCurrentObject, MODEL_LAKITU, bhvBeginningLakitu);
                 break;
             case 5:
-                sp34 = spawn_object(gCurrentObject, MODEL_PEACH, bhvBeginningPeach);
+                spawn_object(gCurrentObject, MODEL_PEACH, bhvBeginningPeach);
                 break;
             case 7:
                 spawn_child_obj_relative(gCurrentObject, 0, 205, 500, 0x1000, 0x6000, -0x1E00, 25, MODEL_BIRDS,

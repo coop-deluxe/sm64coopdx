@@ -29,6 +29,7 @@ static void bhv_boo_cage_on_received_post(UNUSED u8 localIndex) {
 }
 
 void bhv_boo_cage_init(void) {
+    // synced using events, only sync when the boo cage has fallen
     struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     if (so == NULL) { return; }
     so->on_received_post = bhv_boo_cage_on_received_post;
@@ -45,8 +46,6 @@ void bhv_boo_cage_init(void) {
  * Update function for bhvBooCage.
  */
 void bhv_boo_cage_loop(void) {
-    UNUSED s32 unused;
-
     obj_set_hitbox(o, &sBooCageHitbox);
 
     switch (o->oAction) {

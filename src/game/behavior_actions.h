@@ -184,8 +184,12 @@ void bhv_unused_particle_spawn_loop(void);
 void bhv_ukiki_cage_star_loop(void);
 /* |description|Behavior loop function for Ukiki cage|descriptionEnd| */
 void bhv_ukiki_cage_loop(void);
+/* |description|Behavior init function for Bowser in the Fire Sea sinking platform|descriptionEnd| */
+void bhv_bitfs_sinking_platform_init(void);
 /* |description|Behavior loop function for Bowser in the Fire Sea sinking platform|descriptionEnd| */
 void bhv_bitfs_sinking_platform_loop(void);
+/* |description|Behavior init function for Bowser in the Fire Sea sinking cage platform|descriptionEnd| */
+void bhv_bitfs_sinking_cage_platform_init(void);
 /* |description|Behavior loop function for Bowser in the Fire Sea sinking cage platform|descriptionEnd| */
 void bhv_bitfs_sinking_cage_platform_loop(void);
 /* |description|Behavior loop function for Dire Dire Docks moving pole|descriptionEnd| */
@@ -194,6 +198,8 @@ void bhv_ddd_moving_pole_loop(void);
 void bhv_platform_normals_init(void);
 /* |description|Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting inverted pyramid|descriptionEnd| */
 void bhv_tilting_inverted_pyramid_loop(void);
+/* |description|Behavior init function for squishable platform|descriptionEnd| */
+void bhv_squishable_platform_init(void);
 /* |description|Behavior loop function for squishable platform|descriptionEnd| */
 void bhv_squishable_platform_loop(void);
 /* |description|Behavior loop function for beta moving flames spawn|descriptionEnd| */
@@ -441,8 +447,12 @@ void bhv_bowsers_sub_loop(void);
 void bhv_sushi_shark_loop(void);
 /* |description|Behavior loop function for Sushi Shark collision|descriptionEnd| */
 void bhv_sushi_shark_collision_loop(void);
+/* |description|Behavior init function for Jolly Roger Bay sliding box|descriptionEnd| */
+void bhv_jrb_sliding_box_init(void);
 /* |description|Behavior loop function for Jolly Roger Bay sliding box|descriptionEnd| */
 void bhv_jrb_sliding_box_loop(void);
+/* |description|Behavior init function for Jolly Roger Bay ship part 3|descriptionEnd| */
+void bhv_ship_part_3_init(void);
 /* |description|Behavior loop function for Jolly Roger Bay ship part 3|descriptionEnd| */
 void bhv_ship_part_3_loop(void);
 /* |description|Behavior loop function for Jolly Roger Bay sunken ship part|descriptionEnd| */

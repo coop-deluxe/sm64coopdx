@@ -8,7 +8,9 @@ void bhv_squarish_path_parent_init(void) {
     o->oPosX += radius;
     o->oPosZ += radius;
 
-    struct SyncObject* so = sync_object_init(o, 2000.0f);
+    // uses non-standard distance-based sync. This is the parent, instead, the parent's child is synced through
+    // this object.
+    struct SyncObject *so = sync_object_init(o, 2000.0f);
     if (so) {
         so->hasStandardFields = FALSE;
         so->maxUpdateRate = 5.0f;
@@ -17,7 +19,7 @@ void bhv_squarish_path_parent_init(void) {
     for (s32 i = 0; i < 2; i++) {
         s16 action = (i == 0) ? 1 : 3;
         s16 offset = (i == 0) ? (-radius) : (radius);
-        struct Object* square = spawn_object(o, MODEL_BITDW_SQUARE_PLATFORM, bhvSquarishPathMoving);
+        struct Object *square = spawn_object(o, MODEL_BITDW_SQUARE_PLATFORM, bhvSquarishPathMoving);
         if (square == NULL) { continue; }
         square->oPosX = o->oPosX + offset;
         square->oPosY = o->oPosY;
@@ -39,12 +41,13 @@ void bhv_squarish_path_parent_init(void) {
 
 void bhv_squarish_path_parent_loop(void) { }
 
-s32 square_plat_set_yaw_until_timer(u16 yaw, s32 a) {
+s32 square_plat_set_yaw_until_timer(u16 yaw, s32 duration) {
     o->oMoveAngleYaw = yaw;
-    if (a < o->oTimer)
+    if (duration < o->oTimer) {
         return 1;
-    else
+    } else {
         return 0;
+    }
 }
 
 void bhv_squarish_path_moving_loop(void) {
@@ -54,20 +57,24 @@ void bhv_squarish_path_moving_loop(void) {
             o->oAction = (o->oBehParams2ndByte & 3) + 1;
             break;
         case 1:
-            if (square_plat_set_yaw_until_timer(0, 60))
+            if (square_plat_set_yaw_until_timer(0, 60)) {
                 o->oAction++;
+            }
             break;
         case 2:
-            if (square_plat_set_yaw_until_timer(0x4000, 60))
+            if (square_plat_set_yaw_until_timer(0x4000, 60)) {
                 o->oAction++;
+            }
             break;
         case 3:
-            if (square_plat_set_yaw_until_timer(0x8000, 60))
+            if (square_plat_set_yaw_until_timer(0x8000, 60)) {
                 o->oAction++;
+            }
             break;
         case 4:
-            if (square_plat_set_yaw_until_timer(0xc000, 60))
+            if (square_plat_set_yaw_until_timer(0xc000, 60)) {
                 o->oAction = 1;
+            }
             break;
         default:
             break;

@@ -2375,6 +2375,9 @@
 | oKoopaRaceEndpointRaceStatus | `integer` |  |
 | oKoopaRaceEndpointUnk100 | `integer` |  |
 | oKoopaRaceEndpointRaceEnded | `integer` |  |
+| oKoopaRaceEndpointRaceCheated | `integer` |  |
+| oKoopaRaceEndpointRaceStartTime | `integer` |  |
+| oKoopaRaceEndpointRaceWinner | `integer` |  |
 | oKoopaShellFlameUnkF4 | `number` |  |
 | oKoopaShellFlameUnkF8 | `number` |  |
 | oCameraLakituBlinkTimer | `integer` |  |
@@ -2455,6 +2458,7 @@
 | oSmallPenguinUnk104 | `number` |  |
 | oSmallPenguinUnk108 | `number` |  |
 | oSmallPenguinUnk110 | `integer` |  |
+| oSmallPenguinFound | `integer` |  |
 | oSLWalkingPenguinWindCollisionXPos | `number` |  |
 | oSLWalkingPenguinWindCollisionZPos | `number` |  |
 | oSLWalkingPenguinCurStep | `integer` |  |
@@ -2599,6 +2603,7 @@
 | oTTCTreadmillSpeed | `number` |  |
 | oTTCTreadmillTargetSpeed | `number` |  |
 | oTTCTreadmillTimeUntilSwitch | `integer` |  |
+| oTTCTreadmillPrevTTCSpeed | `integer` |  |
 | oTTCMovingBarDelay | `integer` |  |
 | oTTCMovingBarStoppedTimer | `integer` |  |
 | oTTCMovingBarOffset | `number` |  |
@@ -2692,7 +2697,7 @@
 | oWigglerTimeUntilRandomTurn | `integer` |  |
 | oWigglerTargetYaw | `integer` |  |
 | oWigglerWalkAwayFromWallTimer | `integer` |  |
-| oWigglerUnused | `integer` |  |
+| oWigglerFinishedTalking | `integer` |  |
 | oWigglerTextStatus | `integer` |  |
 | oLllWoodPieceOscillationTimer | `integer` |  |
 | oWoodenPostTotalMarioAngle | `integer` |  |

@@ -105,7 +105,7 @@ enum InteractionFlag {
 
 #define INT_STATUS_ATTACK_MASK 0x000000FF
 
-#define INT_STATUS_HOOT_GRABBED_BY_MARIO (1 <<  0) /* 0x00000001 */
+#define INT_STATUS_MARIO_STUNNED (1 <<  0) /* 0x00000001 */
 #define INT_STATUS_MARIO_UNK1            (1 <<  1) /* 0x00000002 */
 #define INT_STATUS_MARIO_UNK2            (1 <<  2) /* 0x00000004 */
 #define INT_STATUS_MARIO_DROP_OBJECT     (1 <<  3) /* 0x00000008 */
@@ -123,7 +123,6 @@ enum InteractionFlag {
 #define INT_STATUS_TOUCHED_BOB_OMB       (1 << 23) /* 0x00800000 */
 
 extern s16 gInteractionInvulnerable;
-extern u8 gPssSlideStarted;
 
 /* |description|
 Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.

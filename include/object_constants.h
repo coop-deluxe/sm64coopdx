@@ -414,6 +414,30 @@ enum CoinType { // coinType
     #define BBH_DYNAMIC_SURFACE_ROOM 0
     #define BBH_OUTSIDE_ROOM 13
 
+/* Bowser */
+    /* oAction */
+    #define BOWSER_ACT_DEFAULT 0
+    #define BOWSER_ACT_THROWN 1
+    #define BOWSER_ACT_JUMP_ONTO_STAGE 2
+    #define BOWSER_ACT_DANCE 3
+    #define BOWSER_ACT_DEAD 4
+    #define BOWSER_ACT_WAIT 5
+    #define BOWSER_ACT_INTRO_WALK 6
+    #define BOWSER_ACT_CHARGE_MARIO 7
+    #define BOWSER_ACT_SPIT_FIRE_INTO_SKY 8
+    #define BOWSER_ACT_SPIT_FIRE_ONTO_FLOOR 9
+    #define BOWSER_ACT_HIT_EDGE 10
+    #define BOWSER_ACT_TURN_FROM_EDGE 11
+    #define BOWSER_ACT_HIT_MINE 12
+    #define BOWSER_ACT_BIG_JUMP 13
+    #define BOWSER_ACT_WALK_TO_MARIO 14
+    #define BOWSER_ACT_BREATH_FIRE 15
+    #define BOWSER_ACT_TELEPORT 16
+    #define BOWSER_ACT_QUICK_JUMP 17
+    #define BOWSER_ACT_UNUSED_SLOW_WALK 18
+    #define BOWSER_ACT_TILT_LAVA_PLATFORM 19
+    #define BOWSER_ACT_NOTHING 20
+
 /* Coffin Spawner */
     /* oAction */
     #define COFFIN_SPAWNER_ACT_COFFINS_UNLOADED 0
