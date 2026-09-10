@@ -70,24 +70,13 @@ static void gfx_window_opengl_reset_dimension_and_pos(void) {
 
 static void clamp_window_msaa_before_init() {
     if (!(SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO)) {
-        if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
             return;
         }
     }
 
-#ifdef USE_GLES
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-
     // hidden window
-    SDL_Window *window = SDL_CreateWindow(
-        "",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN
-    );
-
+    SDL_Window *window = SDL_CreateWindow("", 1, 1, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
     if (!window) { return; }
 
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
@@ -102,7 +91,7 @@ static void clamp_window_msaa_before_init() {
     u32 maxMsaa = gfx_window_opengl_get_max_msaa();
     configWindow.msaa = MIN(configWindow.msaa, maxMsaa);
 
-    SDL_GL_DeleteContext(ctx);
+    SDL_GL_DestroyContext(ctx);
     SDL_DestroyWindow(window);
 }
 
