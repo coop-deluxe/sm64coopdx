@@ -11,7 +11,7 @@
 <br />
 
 
-## [spawn_mist_particles_variable](#spawn_mist_particles_variable)
+## spawn_mist_particles_variable
 
 ### Description
 Spawns mist particles around the current object
@@ -36,7 +36,7 @@ Spawns mist particles around the current object
 
 <br />
 
-## [bhv_spawn_star_no_level_exit](#bhv_spawn_star_no_level_exit)
+## bhv_spawn_star_no_level_exit
 
 ### Description
 Spawns a Star parented to `object` that won't make Mario exit the level with an ID corresponding to `params`' first byte
@@ -61,7 +61,7 @@ Spawns a Star parented to `object` that won't make Mario exit the level with an 
 
 <br />
 
-## [spawn_triangle_break_particles](#spawn_triangle_break_particles)
+## spawn_triangle_break_particles
 
 ### Description
 Spawns triangle break particles around the current object
@@ -87,7 +87,7 @@ Spawns triangle break particles around the current object
 
 <br />
 
-## [spawn_mist_from_global](#spawn_mist_from_global)
+## spawn_mist_from_global
 
 ### Description
 Spawns mist particles around the current object
@@ -108,7 +108,7 @@ Spawns mist particles around the current object
 
 <br />
 
-## [clear_particle_flags](#clear_particle_flags)
+## clear_particle_flags
 
 ### Description
 Clears the particle flags of the current object
@@ -131,7 +131,7 @@ Clears the particle flags of the current object
 
 <br />
 
-## [spawn_wind_particles](#spawn_wind_particles)
+## spawn_wind_particles
 
 ### Description
 Spawns wind particles around the current object
@@ -155,7 +155,7 @@ Spawns wind particles around the current object
 
 <br />
 
-## [check_if_moving_over_floor](#check_if_moving_over_floor)
+## check_if_moving_over_floor
 
 ### Description
 Checks if the current object is moving `distance` units over a floor and within a max distance to floor of `maxDistToFloor`
@@ -179,7 +179,7 @@ Checks if the current object is moving `distance` units over a floor and within 
 
 <br />
 
-## [arc_to_goal_pos](#arc_to_goal_pos)
+## arc_to_goal_pos
 
 ### Description
 Calculates the time it takes for the current object to follow an arc from `pos` to `goal`
@@ -205,7 +205,7 @@ Calculates the time it takes for the current object to follow an arc from `pos` 
 
 <br />
 
-## [tox_box_move](#tox_box_move)
+## tox_box_move
 
 ### Description
 Moves Tox Box
@@ -231,7 +231,7 @@ Moves Tox Box
 
 <br />
 
-## [play_penguin_walking_sound](#play_penguin_walking_sound)
+## play_penguin_walking_sound
 
 ### Description
 Plays the penguin walking sound
@@ -254,7 +254,7 @@ Plays the penguin walking sound
 
 <br />
 
-## [update_angle_from_move_flags](#update_angle_from_move_flags)
+## update_angle_from_move_flags
 
 ### Description
 Computes and returns an angle depending on the current object's angle and move flags
@@ -278,7 +278,7 @@ Computes and returns an angle depending on the current object's angle and move f
 
 <br />
 
-## [cur_obj_spawn_strong_wind_particles](#cur_obj_spawn_strong_wind_particles)
+## cur_obj_spawn_strong_wind_particles
 
 ### Description
 Spawns strong wind particles relative to the current object
@@ -305,7 +305,7 @@ Spawns strong wind particles relative to the current object
 
 <br />
 
-## [bhv_star_door_loop_update_render_state](#bhv_star_door_loop_update_render_state)
+## bhv_star_door_loop_update_render_state
 
 ### Description
 Behavior loop function for Star Door, which updates its render state
@@ -326,7 +326,7 @@ Behavior loop function for Star Door, which updates its render state
 
 <br />
 
-## [bhv_cap_switch_loop](#bhv_cap_switch_loop)
+## bhv_cap_switch_loop
 
 ### Description
 Behavior loop function for Cap Switch
@@ -347,7 +347,7 @@ Behavior loop function for Cap Switch
 
 <br />
 
-## [bhv_tiny_star_particles_init](#bhv_tiny_star_particles_init)
+## bhv_tiny_star_particles_init
 
 ### Description
 Behavior init function for tiny Star particles
@@ -368,7 +368,7 @@ Behavior init function for tiny Star particles
 
 <br />
 
-## [bhv_grindel_thwomp_loop](#bhv_grindel_thwomp_loop)
+## bhv_grindel_thwomp_loop
 
 ### Description
 Behavior loop function for Grindel and Thwomp
@@ -389,7 +389,7 @@ Behavior loop function for Grindel and Thwomp
 
 <br />
 
-## [bhv_koopa_shell_underwater_loop](#bhv_koopa_shell_underwater_loop)
+## bhv_koopa_shell_underwater_loop
 
 ### Description
 Behavior loop function for Koopa Shell underwater
@@ -410,7 +410,7 @@ Behavior loop function for Koopa Shell underwater
 
 <br />
 
-## [bhv_door_init](#bhv_door_init)
+## bhv_door_init
 
 ### Description
 Behavior init function for door
@@ -431,7 +431,7 @@ Behavior init function for door
 
 <br />
 
-## [bhv_door_loop](#bhv_door_loop)
+## bhv_door_loop
 
 ### Description
 Behavior loop function for door
@@ -452,7 +452,7 @@ Behavior loop function for door
 
 <br />
 
-## [bhv_star_door_loop](#bhv_star_door_loop)
+## bhv_star_door_loop
 
 ### Description
 Behavior loop function for Star Door
@@ -473,7 +473,7 @@ Behavior loop function for Star Door
 
 <br />
 
-## [bhv_mr_i_loop](#bhv_mr_i_loop)
+## bhv_mr_i_loop
 
 ### Description
 Behavior loop function for Mr. I
@@ -494,7 +494,7 @@ Behavior loop function for Mr. I
 
 <br />
 
-## [bhv_mr_i_body_loop](#bhv_mr_i_body_loop)
+## bhv_mr_i_body_loop
 
 ### Description
 Behavior loop function for Mr. I body
@@ -515,7 +515,7 @@ Behavior loop function for Mr. I body
 
 <br />
 
-## [bhv_mr_i_particle_loop](#bhv_mr_i_particle_loop)
+## bhv_mr_i_particle_loop
 
 ### Description
 Behavior loop function for Mr. I particle
@@ -536,7 +536,7 @@ Behavior loop function for Mr. I particle
 
 <br />
 
-## [bhv_piranha_particle_loop](#bhv_piranha_particle_loop)
+## bhv_piranha_particle_loop
 
 ### Description
 Behavior loop function for Piranha particle
@@ -557,7 +557,7 @@ Behavior loop function for Piranha particle
 
 <br />
 
-## [bhv_giant_pole_loop](#bhv_giant_pole_loop)
+## bhv_giant_pole_loop
 
 ### Description
 Behavior loop function for giant pole
@@ -578,7 +578,7 @@ Behavior loop function for giant pole
 
 <br />
 
-## [bhv_pole_init](#bhv_pole_init)
+## bhv_pole_init
 
 ### Description
 Behavior init function for pole
@@ -599,7 +599,7 @@ Behavior init function for pole
 
 <br />
 
-## [bhv_pole_base_loop](#bhv_pole_base_loop)
+## bhv_pole_base_loop
 
 ### Description
 Behavior loop function for pole base
@@ -620,7 +620,7 @@ Behavior loop function for pole base
 
 <br />
 
-## [bhv_thi_huge_island_top_loop](#bhv_thi_huge_island_top_loop)
+## bhv_thi_huge_island_top_loop
 
 ### Description
 Behavior loop function for Tiny Huge Island huge island top
@@ -641,7 +641,7 @@ Behavior loop function for Tiny Huge Island huge island top
 
 <br />
 
-## [bhv_thi_tiny_island_top_loop](#bhv_thi_tiny_island_top_loop)
+## bhv_thi_tiny_island_top_loop
 
 ### Description
 Behavior loop function for Tiny Huge Island tiny island top
@@ -662,7 +662,7 @@ Behavior loop function for Tiny Huge Island tiny island top
 
 <br />
 
-## [bhv_king_bobomb_loop](#bhv_king_bobomb_loop)
+## bhv_king_bobomb_loop
 
 ### Description
 Behavior loop function for King Bob-omb
@@ -683,7 +683,7 @@ Behavior loop function for King Bob-omb
 
 <br />
 
-## [bhv_bobomb_anchor_mario_loop](#bhv_bobomb_anchor_mario_loop)
+## bhv_bobomb_anchor_mario_loop
 
 ### Description
 Behavior loop function for Bob-omb anchor mario
@@ -704,7 +704,7 @@ Behavior loop function for Bob-omb anchor mario
 
 <br />
 
-## [bhv_beta_chest_bottom_init](#bhv_beta_chest_bottom_init)
+## bhv_beta_chest_bottom_init
 
 ### Description
 Behavior init function for beta chest bottom
@@ -725,7 +725,7 @@ Behavior init function for beta chest bottom
 
 <br />
 
-## [bhv_beta_chest_bottom_loop](#bhv_beta_chest_bottom_loop)
+## bhv_beta_chest_bottom_loop
 
 ### Description
 Behavior loop function for beta chest bottom
@@ -746,7 +746,7 @@ Behavior loop function for beta chest bottom
 
 <br />
 
-## [bhv_beta_chest_lid_loop](#bhv_beta_chest_lid_loop)
+## bhv_beta_chest_lid_loop
 
 ### Description
 Behavior loop function for beta chest lid
@@ -767,7 +767,7 @@ Behavior loop function for beta chest lid
 
 <br />
 
-## [bhv_bubble_wave_init](#bhv_bubble_wave_init)
+## bhv_bubble_wave_init
 
 ### Description
 Behavior init function for bubble wave
@@ -788,7 +788,7 @@ Behavior init function for bubble wave
 
 <br />
 
-## [bhv_bubble_maybe_loop](#bhv_bubble_maybe_loop)
+## bhv_bubble_maybe_loop
 
 ### Description
 Behavior loop function for bubble maybe
@@ -809,7 +809,7 @@ Behavior loop function for bubble maybe
 
 <br />
 
-## [bhv_bubble_player_loop](#bhv_bubble_player_loop)
+## bhv_bubble_player_loop
 
 ### Description
 Behavior loop function for bubble player
@@ -830,7 +830,7 @@ Behavior loop function for bubble player
 
 <br />
 
-## [bhv_water_air_bubble_init](#bhv_water_air_bubble_init)
+## bhv_water_air_bubble_init
 
 ### Description
 Behavior init function for water air bubble
@@ -851,7 +851,7 @@ Behavior init function for water air bubble
 
 <br />
 
-## [bhv_water_air_bubble_loop](#bhv_water_air_bubble_loop)
+## bhv_water_air_bubble_loop
 
 ### Description
 Behavior loop function for water air bubble
@@ -872,7 +872,7 @@ Behavior loop function for water air bubble
 
 <br />
 
-## [bhv_particle_init](#bhv_particle_init)
+## bhv_particle_init
 
 ### Description
 Behavior init function for particle
@@ -893,7 +893,7 @@ Behavior init function for particle
 
 <br />
 
-## [bhv_particle_loop](#bhv_particle_loop)
+## bhv_particle_loop
 
 ### Description
 Behavior loop function for particle
@@ -914,7 +914,7 @@ Behavior loop function for particle
 
 <br />
 
-## [bhv_water_waves_init](#bhv_water_waves_init)
+## bhv_water_waves_init
 
 ### Description
 Behavior init function for water waves
@@ -935,7 +935,7 @@ Behavior init function for water waves
 
 <br />
 
-## [bhv_small_bubbles_loop](#bhv_small_bubbles_loop)
+## bhv_small_bubbles_loop
 
 ### Description
 Behavior loop function for small bubbles
@@ -956,7 +956,7 @@ Behavior loop function for small bubbles
 
 <br />
 
-## [bhv_fish_group_loop](#bhv_fish_group_loop)
+## bhv_fish_group_loop
 
 ### Description
 Behavior loop function for fish group
@@ -977,7 +977,7 @@ Behavior loop function for fish group
 
 <br />
 
-## [bhv_cannon_base_loop](#bhv_cannon_base_loop)
+## bhv_cannon_base_loop
 
 ### Description
 Behavior loop function for cannon base
@@ -998,7 +998,7 @@ Behavior loop function for cannon base
 
 <br />
 
-## [bhv_cannon_barrel_loop](#bhv_cannon_barrel_loop)
+## bhv_cannon_barrel_loop
 
 ### Description
 Behavior loop function for cannon barrel
@@ -1019,7 +1019,7 @@ Behavior loop function for cannon barrel
 
 <br />
 
-## [bhv_cannon_base_unused_loop](#bhv_cannon_base_unused_loop)
+## bhv_cannon_base_unused_loop
 
 ### Description
 Behavior loop function for cannon base unused
@@ -1040,7 +1040,7 @@ Behavior loop function for cannon base unused
 
 <br />
 
-## [common_anchor_mario_behavior](#common_anchor_mario_behavior)
+## common_anchor_mario_behavior
 
 ### Description
 Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuckya anchor objects. When Mario is thrown, sets `forwardVel`, `upwardsVel` and `interactStatusFlags` to him
@@ -1065,7 +1065,7 @@ Common behavior for an object when grabbing Mario. Used by King Bob-omb and Chuc
 
 <br />
 
-## [bhv_chuckya_loop](#bhv_chuckya_loop)
+## bhv_chuckya_loop
 
 ### Description
 Behavior loop function for Chuckya
@@ -1086,7 +1086,7 @@ Behavior loop function for Chuckya
 
 <br />
 
-## [bhv_chuckya_anchor_mario_loop](#bhv_chuckya_anchor_mario_loop)
+## bhv_chuckya_anchor_mario_loop
 
 ### Description
 Behavior loop function for Chuckya mario anchor
@@ -1107,7 +1107,7 @@ Behavior loop function for Chuckya mario anchor
 
 <br />
 
-## [bhv_rotating_platform_loop](#bhv_rotating_platform_loop)
+## bhv_rotating_platform_loop
 
 ### Description
 Behavior loop function for rotating platform
@@ -1128,7 +1128,7 @@ Behavior loop function for rotating platform
 
 <br />
 
-## [bhv_wf_breakable_wall_loop](#bhv_wf_breakable_wall_loop)
+## bhv_wf_breakable_wall_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress breakable wall
@@ -1149,7 +1149,7 @@ Behavior loop function for Whomp's Fortress breakable wall
 
 <br />
 
-## [bhv_kickable_board_loop](#bhv_kickable_board_loop)
+## bhv_kickable_board_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress kickable board
@@ -1170,7 +1170,7 @@ Behavior loop function for Whomp's Fortress kickable board
 
 <br />
 
-## [bhv_tower_door_loop](#bhv_tower_door_loop)
+## bhv_tower_door_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress tower door
@@ -1191,7 +1191,7 @@ Behavior loop function for Whomp's Fortress tower door
 
 <br />
 
-## [bhv_wf_rotating_wooden_platform_init](#bhv_wf_rotating_wooden_platform_init)
+## bhv_wf_rotating_wooden_platform_init
 
 ### Description
 Behavior init function for Whomp's Fortress rotating wooden platform
@@ -1212,7 +1212,7 @@ Behavior init function for Whomp's Fortress rotating wooden platform
 
 <br />
 
-## [bhv_wf_rotating_wooden_platform_loop](#bhv_wf_rotating_wooden_platform_loop)
+## bhv_wf_rotating_wooden_platform_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress rotating wooden platform
@@ -1233,7 +1233,7 @@ Behavior loop function for Whomp's Fortress rotating wooden platform
 
 <br />
 
-## [bhv_fading_warp_loop](#bhv_fading_warp_loop)
+## bhv_fading_warp_loop
 
 ### Description
 Behavior loop function for fading warp
@@ -1254,7 +1254,7 @@ Behavior loop function for fading warp
 
 <br />
 
-## [bhv_warp_loop](#bhv_warp_loop)
+## bhv_warp_loop
 
 ### Description
 Behavior loop function for warp
@@ -1275,7 +1275,7 @@ Behavior loop function for warp
 
 <br />
 
-## [bhv_white_puff_exploding_loop](#bhv_white_puff_exploding_loop)
+## bhv_white_puff_exploding_loop
 
 ### Description
 Behavior loop function for white puff exploding
@@ -1296,7 +1296,7 @@ Behavior loop function for white puff exploding
 
 <br />
 
-## [bhv_spawned_star_init](#bhv_spawned_star_init)
+## bhv_spawned_star_init
 
 ### Description
 Behavior init function for spawned star
@@ -1317,7 +1317,7 @@ Behavior init function for spawned star
 
 <br />
 
-## [bhv_spawned_star_loop](#bhv_spawned_star_loop)
+## bhv_spawned_star_loop
 
 ### Description
 Behavior loop function for Spawned star
@@ -1338,7 +1338,7 @@ Behavior loop function for Spawned star
 
 <br />
 
-## [bhv_coin_init](#bhv_coin_init)
+## bhv_coin_init
 
 ### Description
 Behavior init function for Coin
@@ -1359,7 +1359,7 @@ Behavior init function for Coin
 
 <br />
 
-## [bhv_coin_loop](#bhv_coin_loop)
+## bhv_coin_loop
 
 ### Description
 Behavior loop function for Coin
@@ -1380,7 +1380,7 @@ Behavior loop function for Coin
 
 <br />
 
-## [bhv_coin_inside_boo_loop](#bhv_coin_inside_boo_loop)
+## bhv_coin_inside_boo_loop
 
 ### Description
 Behavior loop function for Coin inside Boo
@@ -1401,7 +1401,7 @@ Behavior loop function for Coin inside Boo
 
 <br />
 
-## [bhv_coin_formation_init](#bhv_coin_formation_init)
+## bhv_coin_formation_init
 
 ### Description
 Behavior init function for Coin formation
@@ -1422,7 +1422,7 @@ Behavior init function for Coin formation
 
 <br />
 
-## [bhv_coin_formation_spawn_loop](#bhv_coin_formation_spawn_loop)
+## bhv_coin_formation_spawn_loop
 
 ### Description
 Behavior loop function for Coin formation spawn
@@ -1443,7 +1443,7 @@ Behavior loop function for Coin formation spawn
 
 <br />
 
-## [bhv_coin_formation_loop](#bhv_coin_formation_loop)
+## bhv_coin_formation_loop
 
 ### Description
 Behavior loop function for Coin formation
@@ -1464,7 +1464,7 @@ Behavior loop function for Coin formation
 
 <br />
 
-## [bhv_temp_coin_loop](#bhv_temp_coin_loop)
+## bhv_temp_coin_loop
 
 ### Description
 Behavior loop function for despawning Coin
@@ -1485,7 +1485,7 @@ Behavior loop function for despawning Coin
 
 <br />
 
-## [bhv_coin_sparkles_loop](#bhv_coin_sparkles_loop)
+## bhv_coin_sparkles_loop
 
 ### Description
 Behavior loop function for Coin sparkles
@@ -1506,7 +1506,7 @@ Behavior loop function for Coin sparkles
 
 <br />
 
-## [bhv_golden_coin_sparkles_loop](#bhv_golden_coin_sparkles_loop)
+## bhv_golden_coin_sparkles_loop
 
 ### Description
 Behavior loop function for golden Coin sparkles
@@ -1527,7 +1527,7 @@ Behavior loop function for golden Coin sparkles
 
 <br />
 
-## [bhv_wall_tiny_star_particle_loop](#bhv_wall_tiny_star_particle_loop)
+## bhv_wall_tiny_star_particle_loop
 
 ### Description
 Behavior loop function for tiny wall star particle
@@ -1548,7 +1548,7 @@ Behavior loop function for tiny wall star particle
 
 <br />
 
-## [bhv_pound_tiny_star_particle_loop](#bhv_pound_tiny_star_particle_loop)
+## bhv_pound_tiny_star_particle_loop
 
 ### Description
 Behavior loop function for tiny pound star particle
@@ -1569,7 +1569,7 @@ Behavior loop function for tiny pound star particle
 
 <br />
 
-## [bhv_pound_tiny_star_particle_init](#bhv_pound_tiny_star_particle_init)
+## bhv_pound_tiny_star_particle_init
 
 ### Description
 Behavior init function for tiny pound star particle
@@ -1590,7 +1590,7 @@ Behavior init function for tiny pound star particle
 
 <br />
 
-## [bhv_punch_tiny_triangle_loop](#bhv_punch_tiny_triangle_loop)
+## bhv_punch_tiny_triangle_loop
 
 ### Description
 Behavior loop function for tiny punch triangle
@@ -1611,7 +1611,7 @@ Behavior loop function for tiny punch triangle
 
 <br />
 
-## [bhv_punch_tiny_triangle_init](#bhv_punch_tiny_triangle_init)
+## bhv_punch_tiny_triangle_init
 
 ### Description
 Behavior init function for tiny punch triangle
@@ -1632,7 +1632,7 @@ Behavior init function for tiny punch triangle
 
 <br />
 
-## [bhv_tumbling_bridge_platform_loop](#bhv_tumbling_bridge_platform_loop)
+## bhv_tumbling_bridge_platform_loop
 
 ### Description
 Behavior loop function for tumbling bridge platform
@@ -1653,7 +1653,7 @@ Behavior loop function for tumbling bridge platform
 
 <br />
 
-## [bhv_tumbling_bridge_loop](#bhv_tumbling_bridge_loop)
+## bhv_tumbling_bridge_loop
 
 ### Description
 Behavior loop function for tumbling bridge
@@ -1674,7 +1674,7 @@ Behavior loop function for tumbling bridge
 
 <br />
 
-## [bhv_elevator_init](#bhv_elevator_init)
+## bhv_elevator_init
 
 ### Description
 Behavior init function for elevator
@@ -1695,7 +1695,7 @@ Behavior init function for elevator
 
 <br />
 
-## [bhv_elevator_loop](#bhv_elevator_loop)
+## bhv_elevator_loop
 
 ### Description
 Behavior loop function for elevator
@@ -1716,7 +1716,7 @@ Behavior loop function for elevator
 
 <br />
 
-## [bhv_water_mist_loop](#bhv_water_mist_loop)
+## bhv_water_mist_loop
 
 ### Description
 Behavior loop function for water mist
@@ -1737,7 +1737,7 @@ Behavior loop function for water mist
 
 <br />
 
-## [bhv_water_mist_spawn_loop](#bhv_water_mist_spawn_loop)
+## bhv_water_mist_spawn_loop
 
 ### Description
 Behavior loop function for water mist spawn
@@ -1758,7 +1758,7 @@ Behavior loop function for water mist spawn
 
 <br />
 
-## [bhv_water_mist_2_loop](#bhv_water_mist_2_loop)
+## bhv_water_mist_2_loop
 
 ### Description
 Behavior loop function for water mist 2
@@ -1779,7 +1779,7 @@ Behavior loop function for water mist 2
 
 <br />
 
-## [bhv_pound_white_puffs_init](#bhv_pound_white_puffs_init)
+## bhv_pound_white_puffs_init
 
 ### Description
 Behavior init function for pound white puffs
@@ -1800,7 +1800,7 @@ Behavior init function for pound white puffs
 
 <br />
 
-## [bhv_ground_sand_init](#bhv_ground_sand_init)
+## bhv_ground_sand_init
 
 ### Description
 Behavior init function for ground sand
@@ -1821,7 +1821,7 @@ Behavior init function for ground sand
 
 <br />
 
-## [bhv_ground_snow_init](#bhv_ground_snow_init)
+## bhv_ground_snow_init
 
 ### Description
 Behavior init function for ground snow
@@ -1842,7 +1842,7 @@ Behavior init function for ground snow
 
 <br />
 
-## [bhv_wind_loop](#bhv_wind_loop)
+## bhv_wind_loop
 
 ### Description
 Behavior loop function for wind
@@ -1863,7 +1863,7 @@ Behavior loop function for wind
 
 <br />
 
-## [bhv_unused_particle_spawn_loop](#bhv_unused_particle_spawn_loop)
+## bhv_unused_particle_spawn_loop
 
 ### Description
 Behavior loop function for unused particle spawn
@@ -1884,7 +1884,7 @@ Behavior loop function for unused particle spawn
 
 <br />
 
-## [bhv_ukiki_cage_star_loop](#bhv_ukiki_cage_star_loop)
+## bhv_ukiki_cage_star_loop
 
 ### Description
 Behavior loop function for Ukiki cage Star
@@ -1905,7 +1905,7 @@ Behavior loop function for Ukiki cage Star
 
 <br />
 
-## [bhv_ukiki_cage_loop](#bhv_ukiki_cage_loop)
+## bhv_ukiki_cage_loop
 
 ### Description
 Behavior loop function for Ukiki cage
@@ -1926,7 +1926,7 @@ Behavior loop function for Ukiki cage
 
 <br />
 
-## [bhv_bitfs_sinking_platform_loop](#bhv_bitfs_sinking_platform_loop)
+## bhv_bitfs_sinking_platform_loop
 
 ### Description
 Behavior loop function for Bowser in the Fire Sea sinking platform
@@ -1947,7 +1947,7 @@ Behavior loop function for Bowser in the Fire Sea sinking platform
 
 <br />
 
-## [bhv_bitfs_sinking_cage_platform_loop](#bhv_bitfs_sinking_cage_platform_loop)
+## bhv_bitfs_sinking_cage_platform_loop
 
 ### Description
 Behavior loop function for Bowser in the Fire Sea sinking cage platform
@@ -1968,7 +1968,7 @@ Behavior loop function for Bowser in the Fire Sea sinking cage platform
 
 <br />
 
-## [bhv_ddd_moving_pole_loop](#bhv_ddd_moving_pole_loop)
+## bhv_ddd_moving_pole_loop
 
 ### Description
 Behavior loop function for Dire Dire Docks moving pole
@@ -1989,7 +1989,7 @@ Behavior loop function for Dire Dire Docks moving pole
 
 <br />
 
-## [bhv_platform_normals_init](#bhv_platform_normals_init)
+## bhv_platform_normals_init
 
 ### Description
 Behavior init function for Bowser in the Dark World, Lethal Lava Land, and Bowser in the Fire Sea platform normals
@@ -2010,7 +2010,7 @@ Behavior init function for Bowser in the Dark World, Lethal Lava Land, and Bowse
 
 <br />
 
-## [bhv_tilting_inverted_pyramid_loop](#bhv_tilting_inverted_pyramid_loop)
+## bhv_tilting_inverted_pyramid_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting inverted pyramid
@@ -2031,7 +2031,7 @@ Behavior loop function for Lethal Lava Land and Bowser in the Fire Sea tilting i
 
 <br />
 
-## [bhv_squishable_platform_loop](#bhv_squishable_platform_loop)
+## bhv_squishable_platform_loop
 
 ### Description
 Behavior loop function for squishable platform
@@ -2052,7 +2052,7 @@ Behavior loop function for squishable platform
 
 <br />
 
-## [bhv_beta_moving_flames_spawn_loop](#bhv_beta_moving_flames_spawn_loop)
+## bhv_beta_moving_flames_spawn_loop
 
 ### Description
 Behavior loop function for beta moving flames spawn
@@ -2073,7 +2073,7 @@ Behavior loop function for beta moving flames spawn
 
 <br />
 
-## [bhv_beta_moving_flames_loop](#bhv_beta_moving_flames_loop)
+## bhv_beta_moving_flames_loop
 
 ### Description
 Behavior loop function for beta moving flames
@@ -2094,7 +2094,7 @@ Behavior loop function for beta moving flames
 
 <br />
 
-## [bhv_rr_rotating_bridge_platform_loop](#bhv_rr_rotating_bridge_platform_loop)
+## bhv_rr_rotating_bridge_platform_loop
 
 ### Description
 Behavior loop function for Rainbow Ride rotating bridge platform
@@ -2115,7 +2115,7 @@ Behavior loop function for Rainbow Ride rotating bridge platform
 
 <br />
 
-## [bhv_flamethrower_loop](#bhv_flamethrower_loop)
+## bhv_flamethrower_loop
 
 ### Description
 Behavior loop function for flamethrower
@@ -2136,7 +2136,7 @@ Behavior loop function for flamethrower
 
 <br />
 
-## [bhv_flamethrower_flame_loop](#bhv_flamethrower_flame_loop)
+## bhv_flamethrower_flame_loop
 
 ### Description
 Behavior loop function for flamethrower flame
@@ -2157,7 +2157,7 @@ Behavior loop function for flamethrower flame
 
 <br />
 
-## [bhv_bouncing_fireball_loop](#bhv_bouncing_fireball_loop)
+## bhv_bouncing_fireball_loop
 
 ### Description
 Behavior loop function for bouncing fireball
@@ -2178,7 +2178,7 @@ Behavior loop function for bouncing fireball
 
 <br />
 
-## [bhv_bouncing_fireball_flame_loop](#bhv_bouncing_fireball_flame_loop)
+## bhv_bouncing_fireball_flame_loop
 
 ### Description
 Behavior loop function for bouncing fireball flame
@@ -2199,7 +2199,7 @@ Behavior loop function for bouncing fireball flame
 
 <br />
 
-## [bhv_bowser_shock_wave_loop](#bhv_bowser_shock_wave_loop)
+## bhv_bowser_shock_wave_loop
 
 ### Description
 Behavior loop function for Bowser shock wave
@@ -2220,7 +2220,7 @@ Behavior loop function for Bowser shock wave
 
 <br />
 
-## [bhv_flame_mario_loop](#bhv_flame_mario_loop)
+## bhv_flame_mario_loop
 
 ### Description
 Behavior loop function for flame Mario
@@ -2241,7 +2241,7 @@ Behavior loop function for flame Mario
 
 <br />
 
-## [bhv_black_smoke_mario_loop](#bhv_black_smoke_mario_loop)
+## bhv_black_smoke_mario_loop
 
 ### Description
 Behavior loop function for black smoke Mario
@@ -2262,7 +2262,7 @@ Behavior loop function for black smoke Mario
 
 <br />
 
-## [bhv_black_smoke_bowser_loop](#bhv_black_smoke_bowser_loop)
+## bhv_black_smoke_bowser_loop
 
 ### Description
 Behavior loop function for black smoke Bowser
@@ -2283,7 +2283,7 @@ Behavior loop function for black smoke Bowser
 
 <br />
 
-## [bhv_black_smoke_upward_loop](#bhv_black_smoke_upward_loop)
+## bhv_black_smoke_upward_loop
 
 ### Description
 Behavior loop function for black smoke upward
@@ -2304,7 +2304,7 @@ Behavior loop function for black smoke upward
 
 <br />
 
-## [bhv_beta_fish_splash_spawner_loop](#bhv_beta_fish_splash_spawner_loop)
+## bhv_beta_fish_splash_spawner_loop
 
 ### Description
 Behavior loop function for beta fish splash spawner
@@ -2325,7 +2325,7 @@ Behavior loop function for beta fish splash spawner
 
 <br />
 
-## [bhv_spindrift_loop](#bhv_spindrift_loop)
+## bhv_spindrift_loop
 
 ### Description
 Behavior loop function for Spindrift
@@ -2346,7 +2346,7 @@ Behavior loop function for Spindrift
 
 <br />
 
-## [bhv_tower_platform_group_init](#bhv_tower_platform_group_init)
+## bhv_tower_platform_group_init
 
 ### Description
 Behavior init function for Whomp's Fortress tower platform group
@@ -2367,7 +2367,7 @@ Behavior init function for Whomp's Fortress tower platform group
 
 <br />
 
-## [bhv_tower_platform_group_loop](#bhv_tower_platform_group_loop)
+## bhv_tower_platform_group_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress tower platform group
@@ -2388,7 +2388,7 @@ Behavior loop function for Whomp's Fortress tower platform group
 
 <br />
 
-## [bhv_wf_sliding_tower_platform_loop](#bhv_wf_sliding_tower_platform_loop)
+## bhv_wf_sliding_tower_platform_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress sliding tower platform
@@ -2409,7 +2409,7 @@ Behavior loop function for Whomp's Fortress sliding tower platform
 
 <br />
 
-## [bhv_wf_elevator_tower_platform_loop](#bhv_wf_elevator_tower_platform_loop)
+## bhv_wf_elevator_tower_platform_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress elevator tower platform
@@ -2430,7 +2430,7 @@ Behavior loop function for Whomp's Fortress elevator tower platform
 
 <br />
 
-## [bhv_wf_solid_tower_platform_loop](#bhv_wf_solid_tower_platform_loop)
+## bhv_wf_solid_tower_platform_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress solid tower platform
@@ -2451,7 +2451,7 @@ Behavior loop function for Whomp's Fortress solid tower platform
 
 <br />
 
-## [bhv_snow_leaf_particle_spawn_init](#bhv_snow_leaf_particle_spawn_init)
+## bhv_snow_leaf_particle_spawn_init
 
 ### Description
 Behavior init function for snow leaf particle spawn
@@ -2472,7 +2472,7 @@ Behavior init function for snow leaf particle spawn
 
 <br />
 
-## [bhv_tree_snow_or_leaf_loop](#bhv_tree_snow_or_leaf_loop)
+## bhv_tree_snow_or_leaf_loop
 
 ### Description
 Behavior loop function for tree snow or leaf particle
@@ -2493,7 +2493,7 @@ Behavior loop function for tree snow or leaf particle
 
 <br />
 
-## [bhv_piranha_plant_bubble_loop](#bhv_piranha_plant_bubble_loop)
+## bhv_piranha_plant_bubble_loop
 
 ### Description
 Behavior loop function for Piranha Plant bubble
@@ -2514,7 +2514,7 @@ Behavior loop function for Piranha Plant bubble
 
 <br />
 
-## [bhv_piranha_plant_waking_bubbles_loop](#bhv_piranha_plant_waking_bubbles_loop)
+## bhv_piranha_plant_waking_bubbles_loop
 
 ### Description
 Behavior loop function for Piranha Plant waking bubbles
@@ -2535,7 +2535,7 @@ Behavior loop function for Piranha Plant waking bubbles
 
 <br />
 
-## [bhv_purple_switch_loop](#bhv_purple_switch_loop)
+## bhv_purple_switch_loop
 
 ### Description
 Behavior loop function for Purple Switch
@@ -2556,7 +2556,7 @@ Behavior loop function for Purple Switch
 
 <br />
 
-## [bhv_hidden_object_loop](#bhv_hidden_object_loop)
+## bhv_hidden_object_loop
 
 ### Description
 Behavior loop function for Wet Dry World hidden breakable box
@@ -2577,7 +2577,7 @@ Behavior loop function for Wet Dry World hidden breakable box
 
 <br />
 
-## [bhv_breakable_box_loop](#bhv_breakable_box_loop)
+## bhv_breakable_box_loop
 
 ### Description
 Behavior loop function for breakable box
@@ -2598,7 +2598,7 @@ Behavior loop function for breakable box
 
 <br />
 
-## [bhv_pushable_loop](#bhv_pushable_loop)
+## bhv_pushable_loop
 
 ### Description
 Behavior loop function for pushable metal box
@@ -2619,7 +2619,7 @@ Behavior loop function for pushable metal box
 
 <br />
 
-## [bhv_small_water_wave_loop](#bhv_small_water_wave_loop)
+## bhv_small_water_wave_loop
 
 ### Description
 Behavior loop function for small water wave
@@ -2640,7 +2640,7 @@ Behavior loop function for small water wave
 
 <br />
 
-## [bhv_yellow_coin_init](#bhv_yellow_coin_init)
+## bhv_yellow_coin_init
 
 ### Description
 Behavior init function for Yellow Coin
@@ -2661,7 +2661,7 @@ Behavior init function for Yellow Coin
 
 <br />
 
-## [bhv_yellow_coin_loop](#bhv_yellow_coin_loop)
+## bhv_yellow_coin_loop
 
 ### Description
 Behavior loop function for Yellow Coin
@@ -2682,7 +2682,7 @@ Behavior loop function for Yellow Coin
 
 <br />
 
-## [bhv_squarish_path_moving_loop](#bhv_squarish_path_moving_loop)
+## bhv_squarish_path_moving_loop
 
 ### Description
 Behavior loop function for Bowser in the Dark World squarish path moving
@@ -2703,7 +2703,7 @@ Behavior loop function for Bowser in the Dark World squarish path moving
 
 <br />
 
-## [bhv_squarish_path_parent_init](#bhv_squarish_path_parent_init)
+## bhv_squarish_path_parent_init
 
 ### Description
 Behavior init function for Bowser in the Dark World squarish path parent
@@ -2724,7 +2724,7 @@ Behavior init function for Bowser in the Dark World squarish path parent
 
 <br />
 
-## [bhv_squarish_path_parent_loop](#bhv_squarish_path_parent_loop)
+## bhv_squarish_path_parent_loop
 
 ### Description
 Behavior loop function for Bowser in the Dark World Ssuarish path parent
@@ -2745,7 +2745,7 @@ Behavior loop function for Bowser in the Dark World Ssuarish path parent
 
 <br />
 
-## [bhv_heave_ho_loop](#bhv_heave_ho_loop)
+## bhv_heave_ho_loop
 
 ### Description
 Behavior loop function for Heave ho
@@ -2766,7 +2766,7 @@ Behavior loop function for Heave ho
 
 <br />
 
-## [bhv_heave_ho_throw_mario_loop](#bhv_heave_ho_throw_mario_loop)
+## bhv_heave_ho_throw_mario_loop
 
 ### Description
 Behavior loop function for Heave ho throwing Mario
@@ -2787,7 +2787,7 @@ Behavior loop function for Heave ho throwing Mario
 
 <br />
 
-## [bhv_ccm_touched_star_spawn_loop](#bhv_ccm_touched_star_spawn_loop)
+## bhv_ccm_touched_star_spawn_loop
 
 ### Description
 Behavior loop function for Cool, Cool Mountain touched Star spawn
@@ -2808,7 +2808,7 @@ Behavior loop function for Cool, Cool Mountain touched Star spawn
 
 <br />
 
-## [bhv_unused_poundable_platform](#bhv_unused_poundable_platform)
+## bhv_unused_poundable_platform
 
 ### Description
 Behavior loop function for unused poundable platform
@@ -2829,7 +2829,7 @@ Behavior loop function for unused poundable platform
 
 <br />
 
-## [bhv_beta_trampoline_top_loop](#bhv_beta_trampoline_top_loop)
+## bhv_beta_trampoline_top_loop
 
 ### Description
 Behavior loop function for beta trampoline top
@@ -2850,7 +2850,7 @@ Behavior loop function for beta trampoline top
 
 <br />
 
-## [bhv_beta_trampoline_spring_loop](#bhv_beta_trampoline_spring_loop)
+## bhv_beta_trampoline_spring_loop
 
 ### Description
 Behavior loop function for beta trampoline spring
@@ -2871,7 +2871,7 @@ Behavior loop function for beta trampoline spring
 
 <br />
 
-## [bhv_jumping_box_loop](#bhv_jumping_box_loop)
+## bhv_jumping_box_loop
 
 ### Description
 Behavior loop function for jumping box
@@ -2892,7 +2892,7 @@ Behavior loop function for jumping box
 
 <br />
 
-## [bhv_boo_cage_init](#bhv_boo_cage_init)
+## bhv_boo_cage_init
 
 ### Description
 Behavior init function for Boo cage
@@ -2913,7 +2913,7 @@ Behavior init function for Boo cage
 
 <br />
 
-## [bhv_boo_cage_loop](#bhv_boo_cage_loop)
+## bhv_boo_cage_loop
 
 ### Description
 Behavior loop function for Boo cage
@@ -2934,7 +2934,7 @@ Behavior loop function for Boo cage
 
 <br />
 
-## [bhv_bowser_key_init](#bhv_bowser_key_init)
+## bhv_bowser_key_init
 
 ### Description
 Behavior init function for Bowser key
@@ -2955,7 +2955,7 @@ Behavior init function for Bowser key
 
 <br />
 
-## [bhv_bowser_key_loop](#bhv_bowser_key_loop)
+## bhv_bowser_key_loop
 
 ### Description
 Behavior loop function for Bowser key
@@ -2976,7 +2976,7 @@ Behavior loop function for Bowser key
 
 <br />
 
-## [bhv_grand_star_init](#bhv_grand_star_init)
+## bhv_grand_star_init
 
 ### Description
 Behavior init function for Grand Star
@@ -2997,7 +2997,7 @@ Behavior init function for Grand Star
 
 <br />
 
-## [bhv_grand_star_loop](#bhv_grand_star_loop)
+## bhv_grand_star_loop
 
 ### Description
 Behavior loop function for Grand Star
@@ -3018,7 +3018,7 @@ Behavior loop function for Grand Star
 
 <br />
 
-## [bhv_beta_boo_key_loop](#bhv_beta_boo_key_loop)
+## bhv_beta_boo_key_loop
 
 ### Description
 Behavior loop function for beta boo key
@@ -3039,7 +3039,7 @@ Behavior loop function for beta boo key
 
 <br />
 
-## [bhv_alpha_boo_key_loop](#bhv_alpha_boo_key_loop)
+## bhv_alpha_boo_key_loop
 
 ### Description
 Behavior loop function for alpha boo key
@@ -3060,7 +3060,7 @@ Behavior loop function for alpha boo key
 
 <br />
 
-## [bhv_bullet_bill_init](#bhv_bullet_bill_init)
+## bhv_bullet_bill_init
 
 ### Description
 Behavior init function for Bullet Bill
@@ -3081,7 +3081,7 @@ Behavior init function for Bullet Bill
 
 <br />
 
-## [bhv_bullet_bill_loop](#bhv_bullet_bill_loop)
+## bhv_bullet_bill_loop
 
 ### Description
 Behavior loop function for Bullet Bill
@@ -3102,7 +3102,7 @@ Behavior loop function for Bullet Bill
 
 <br />
 
-## [bhv_white_puff_smoke_init](#bhv_white_puff_smoke_init)
+## bhv_white_puff_smoke_init
 
 ### Description
 Behavior init function for White puff smoke
@@ -3123,7 +3123,7 @@ Behavior init function for White puff smoke
 
 <br />
 
-## [bhv_bowser_tail_anchor_init](#bhv_bowser_tail_anchor_init)
+## bhv_bowser_tail_anchor_init
 
 ### Description
 Behavior init function for Bowser tail anchor
@@ -3144,7 +3144,7 @@ Behavior init function for Bowser tail anchor
 
 <br />
 
-## [bhv_bowser_tail_anchor_loop](#bhv_bowser_tail_anchor_loop)
+## bhv_bowser_tail_anchor_loop
 
 ### Description
 Behavior loop function for Bowser tail anchor
@@ -3165,7 +3165,7 @@ Behavior loop function for Bowser tail anchor
 
 <br />
 
-## [bhv_bowser_init](#bhv_bowser_init)
+## bhv_bowser_init
 
 ### Description
 Behavior init function for Bowser
@@ -3186,7 +3186,7 @@ Behavior init function for Bowser
 
 <br />
 
-## [bhv_bowser_loop](#bhv_bowser_loop)
+## bhv_bowser_loop
 
 ### Description
 Behavior loop function for Bowser
@@ -3207,7 +3207,7 @@ Behavior loop function for Bowser
 
 <br />
 
-## [bhv_bowser_body_anchor_init](#bhv_bowser_body_anchor_init)
+## bhv_bowser_body_anchor_init
 
 ### Description
 Behavior init function for Bowser body anchor
@@ -3228,7 +3228,7 @@ Behavior init function for Bowser body anchor
 
 <br />
 
-## [bhv_bowser_body_anchor_loop](#bhv_bowser_body_anchor_loop)
+## bhv_bowser_body_anchor_loop
 
 ### Description
 Behavior loop function for Bowser body anchor
@@ -3249,7 +3249,7 @@ Behavior loop function for Bowser body anchor
 
 <br />
 
-## [bhv_bowser_flame_spawn_loop](#bhv_bowser_flame_spawn_loop)
+## bhv_bowser_flame_spawn_loop
 
 ### Description
 Behavior loop function for Bowser flame spawn
@@ -3270,7 +3270,7 @@ Behavior loop function for Bowser flame spawn
 
 <br />
 
-## [bhv_tilting_bowser_lava_platform_init](#bhv_tilting_bowser_lava_platform_init)
+## bhv_tilting_bowser_lava_platform_init
 
 ### Description
 Behavior init function for tilting Bowser in the Fire Sea arena platform
@@ -3291,7 +3291,7 @@ Behavior init function for tilting Bowser in the Fire Sea arena platform
 
 <br />
 
-## [bhv_falling_bowser_platform_loop](#bhv_falling_bowser_platform_loop)
+## bhv_falling_bowser_platform_loop
 
 ### Description
 Behavior loop function for falling Bowser in the Sky arena platform
@@ -3312,7 +3312,7 @@ Behavior loop function for falling Bowser in the Sky arena platform
 
 <br />
 
-## [bhv_blue_bowser_flame_init](#bhv_blue_bowser_flame_init)
+## bhv_blue_bowser_flame_init
 
 ### Description
 Behavior init function for Blue Bowser flame
@@ -3333,7 +3333,7 @@ Behavior init function for Blue Bowser flame
 
 <br />
 
-## [bhv_blue_bowser_flame_loop](#bhv_blue_bowser_flame_loop)
+## bhv_blue_bowser_flame_loop
 
 ### Description
 Behavior loop function for Blue Bowser flame
@@ -3354,7 +3354,7 @@ Behavior loop function for Blue Bowser flame
 
 <br />
 
-## [bhv_flame_floating_landing_init](#bhv_flame_floating_landing_init)
+## bhv_flame_floating_landing_init
 
 ### Description
 Behavior init function for flame floating landing
@@ -3375,7 +3375,7 @@ Behavior init function for flame floating landing
 
 <br />
 
-## [bhv_flame_floating_landing_loop](#bhv_flame_floating_landing_loop)
+## bhv_flame_floating_landing_loop
 
 ### Description
 Behavior loop function for flame floating landing
@@ -3396,7 +3396,7 @@ Behavior loop function for flame floating landing
 
 <br />
 
-## [bhv_blue_flames_group_loop](#bhv_blue_flames_group_loop)
+## bhv_blue_flames_group_loop
 
 ### Description
 Behavior loop function for blue flames group
@@ -3417,7 +3417,7 @@ Behavior loop function for blue flames group
 
 <br />
 
-## [bhv_flame_bouncing_init](#bhv_flame_bouncing_init)
+## bhv_flame_bouncing_init
 
 ### Description
 Behavior init function for flame bouncing
@@ -3438,7 +3438,7 @@ Behavior init function for flame bouncing
 
 <br />
 
-## [bhv_flame_bouncing_loop](#bhv_flame_bouncing_loop)
+## bhv_flame_bouncing_loop
 
 ### Description
 Behavior loop function for flame bouncing
@@ -3459,7 +3459,7 @@ Behavior loop function for flame bouncing
 
 <br />
 
-## [bhv_flame_moving_forward_growing_init](#bhv_flame_moving_forward_growing_init)
+## bhv_flame_moving_forward_growing_init
 
 ### Description
 Behavior init function for flame moving forward growing
@@ -3480,7 +3480,7 @@ Behavior init function for flame moving forward growing
 
 <br />
 
-## [bhv_flame_moving_forward_growing_loop](#bhv_flame_moving_forward_growing_loop)
+## bhv_flame_moving_forward_growing_loop
 
 ### Description
 Behavior loop function for flame moving forward growing
@@ -3501,7 +3501,7 @@ Behavior loop function for flame moving forward growing
 
 <br />
 
-## [bhv_flame_bowser_init](#bhv_flame_bowser_init)
+## bhv_flame_bowser_init
 
 ### Description
 Behavior init function for Bowser flame
@@ -3522,7 +3522,7 @@ Behavior init function for Bowser flame
 
 <br />
 
-## [bhv_flame_bowser_loop](#bhv_flame_bowser_loop)
+## bhv_flame_bowser_loop
 
 ### Description
 Behavior loop function for Bowser flame
@@ -3543,7 +3543,7 @@ Behavior loop function for Bowser flame
 
 <br />
 
-## [bhv_flame_large_burning_out_init](#bhv_flame_large_burning_out_init)
+## bhv_flame_large_burning_out_init
 
 ### Description
 Behavior init function for large flame burning out
@@ -3564,7 +3564,7 @@ Behavior init function for large flame burning out
 
 <br />
 
-## [bhv_blue_fish_movement_loop](#bhv_blue_fish_movement_loop)
+## bhv_blue_fish_movement_loop
 
 ### Description
 Behavior loop function for blue fish movement
@@ -3585,7 +3585,7 @@ Behavior loop function for blue fish movement
 
 <br />
 
-## [bhv_tank_fish_group_loop](#bhv_tank_fish_group_loop)
+## bhv_tank_fish_group_loop
 
 ### Description
 Behavior loop function for tank fish group
@@ -3606,7 +3606,7 @@ Behavior loop function for tank fish group
 
 <br />
 
-## [bhv_checkerboard_elevator_group_init](#bhv_checkerboard_elevator_group_init)
+## bhv_checkerboard_elevator_group_init
 
 ### Description
 Behavior init function for checkerboard elevator group
@@ -3627,7 +3627,7 @@ Behavior init function for checkerboard elevator group
 
 <br />
 
-## [bhv_checkerboard_elevator_group_loop](#bhv_checkerboard_elevator_group_loop)
+## bhv_checkerboard_elevator_group_loop
 
 ### Description
 Behavior loop function for checkerboard elevator group
@@ -3648,7 +3648,7 @@ Behavior loop function for checkerboard elevator group
 
 <br />
 
-## [bhv_checkerboard_platform_init](#bhv_checkerboard_platform_init)
+## bhv_checkerboard_platform_init
 
 ### Description
 Behavior init function for checkerboard platform
@@ -3669,7 +3669,7 @@ Behavior init function for checkerboard platform
 
 <br />
 
-## [bhv_checkerboard_platform_loop](#bhv_checkerboard_platform_loop)
+## bhv_checkerboard_platform_loop
 
 ### Description
 Behavior loop function for checkerboard platform
@@ -3690,7 +3690,7 @@ Behavior loop function for checkerboard platform
 
 <br />
 
-## [bhv_bowser_key_unlock_door_loop](#bhv_bowser_key_unlock_door_loop)
+## bhv_bowser_key_unlock_door_loop
 
 ### Description
 Behavior loop function for Bowser key unlock door
@@ -3711,7 +3711,7 @@ Behavior loop function for Bowser key unlock door
 
 <br />
 
-## [bhv_bowser_key_course_exit_loop](#bhv_bowser_key_course_exit_loop)
+## bhv_bowser_key_course_exit_loop
 
 ### Description
 Behavior loop function for Bowser key course exit
@@ -3732,7 +3732,7 @@ Behavior loop function for Bowser key course exit
 
 <br />
 
-## [bhv_invisible_objects_under_bridge_init](#bhv_invisible_objects_under_bridge_init)
+## bhv_invisible_objects_under_bridge_init
 
 ### Description
 Behavior init function for invisible objects under the Castle bridge
@@ -3753,7 +3753,7 @@ Behavior init function for invisible objects under the Castle bridge
 
 <br />
 
-## [bhv_invisible_objects_under_bridge_loop](#bhv_invisible_objects_under_bridge_loop)
+## bhv_invisible_objects_under_bridge_loop
 
 ### Description
 Behavior loop function for Invisible objects under the Castle bridge
@@ -3774,7 +3774,7 @@ Behavior loop function for Invisible objects under the Castle bridge
 
 <br />
 
-## [bhv_water_level_pillar_init](#bhv_water_level_pillar_init)
+## bhv_water_level_pillar_init
 
 ### Description
 Behavior init function for Castle Basement water level pillar
@@ -3795,7 +3795,7 @@ Behavior init function for Castle Basement water level pillar
 
 <br />
 
-## [bhv_water_level_pillar_loop](#bhv_water_level_pillar_loop)
+## bhv_water_level_pillar_loop
 
 ### Description
 Behavior loop function for Castle Basement water level pillar
@@ -3816,7 +3816,7 @@ Behavior loop function for Castle Basement water level pillar
 
 <br />
 
-## [bhv_ddd_warp_loop](#bhv_ddd_warp_loop)
+## bhv_ddd_warp_loop
 
 ### Description
 Behavior loop function for Castle Basement Dire Dire Docks warp collision
@@ -3837,7 +3837,7 @@ Behavior loop function for Castle Basement Dire Dire Docks warp collision
 
 <br />
 
-## [bhv_moat_grills_loop](#bhv_moat_grills_loop)
+## bhv_moat_grills_loop
 
 ### Description
 Behavior loop function for moat grills
@@ -3858,7 +3858,7 @@ Behavior loop function for moat grills
 
 <br />
 
-## [bhv_rotating_clock_arm_loop](#bhv_rotating_clock_arm_loop)
+## bhv_rotating_clock_arm_loop
 
 ### Description
 Behavior loop function for rotating clock arm
@@ -3879,7 +3879,7 @@ Behavior loop function for rotating clock arm
 
 <br />
 
-## [bhv_ukiki_init](#bhv_ukiki_init)
+## bhv_ukiki_init
 
 ### Description
 Behavior init function for Ukiki
@@ -3900,7 +3900,7 @@ Behavior init function for Ukiki
 
 <br />
 
-## [bhv_ukiki_loop](#bhv_ukiki_loop)
+## bhv_ukiki_loop
 
 ### Description
 Behavior loop function for Ukiki
@@ -3921,7 +3921,7 @@ Behavior loop function for Ukiki
 
 <br />
 
-## [bhv_lll_sinking_rock_block_loop](#bhv_lll_sinking_rock_block_loop)
+## bhv_lll_sinking_rock_block_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land sinking rock block
@@ -3942,7 +3942,7 @@ Behavior loop function for Lethal Lava Land sinking rock block
 
 <br />
 
-## [bhv_lll_moving_octagonal_mesh_platform_loop](#bhv_lll_moving_octagonal_mesh_platform_loop)
+## bhv_lll_moving_octagonal_mesh_platform_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land moving octagonal mesh platform
@@ -3963,7 +3963,7 @@ Behavior loop function for Lethal Lava Land moving octagonal mesh platform
 
 <br />
 
-## [bhv_lll_rotating_block_fire_bars_loop](#bhv_lll_rotating_block_fire_bars_loop)
+## bhv_lll_rotating_block_fire_bars_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land rotating block fire bars
@@ -3984,7 +3984,7 @@ Behavior loop function for Lethal Lava Land rotating block fire bars
 
 <br />
 
-## [bhv_lll_rotating_hex_flame_loop](#bhv_lll_rotating_hex_flame_loop)
+## bhv_lll_rotating_hex_flame_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land rotating hex flame
@@ -4005,7 +4005,7 @@ Behavior loop function for Lethal Lava Land rotating hex flame
 
 <br />
 
-## [bhv_lll_wood_piece_loop](#bhv_lll_wood_piece_loop)
+## bhv_lll_wood_piece_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land wood piece
@@ -4026,7 +4026,7 @@ Behavior loop function for Lethal Lava Land wood piece
 
 <br />
 
-## [bhv_lll_floating_wood_bridge_loop](#bhv_lll_floating_wood_bridge_loop)
+## bhv_lll_floating_wood_bridge_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land floating wood bridge
@@ -4047,7 +4047,7 @@ Behavior loop function for Lethal Lava Land floating wood bridge
 
 <br />
 
-## [bhv_volcano_flames_loop](#bhv_volcano_flames_loop)
+## bhv_volcano_flames_loop
 
 ### Description
 Behavior loop function for Volcano flames
@@ -4068,7 +4068,7 @@ Behavior loop function for Volcano flames
 
 <br />
 
-## [bhv_lll_rotating_hexagonal_ring_loop](#bhv_lll_rotating_hexagonal_ring_loop)
+## bhv_lll_rotating_hexagonal_ring_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land rotating hexagonal ring
@@ -4089,7 +4089,7 @@ Behavior loop function for Lethal Lava Land rotating hexagonal ring
 
 <br />
 
-## [bhv_lll_sinking_rectangular_platform_loop](#bhv_lll_sinking_rectangular_platform_loop)
+## bhv_lll_sinking_rectangular_platform_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land sinking rectangular platform
@@ -4110,7 +4110,7 @@ Behavior loop function for Lethal Lava Land sinking rectangular platform
 
 <br />
 
-## [bhv_lll_sinking_square_platforms_loop](#bhv_lll_sinking_square_platforms_loop)
+## bhv_lll_sinking_square_platforms_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land sinking square platforms
@@ -4131,7 +4131,7 @@ Behavior loop function for Lethal Lava Land sinking square platforms
 
 <br />
 
-## [bhv_koopa_shell_loop](#bhv_koopa_shell_loop)
+## bhv_koopa_shell_loop
 
 ### Description
 Behavior loop function for Koopa Shell
@@ -4152,7 +4152,7 @@ Behavior loop function for Koopa Shell
 
 <br />
 
-## [bhv_koopa_shell_flame_loop](#bhv_koopa_shell_flame_loop)
+## bhv_koopa_shell_flame_loop
 
 ### Description
 Behavior loop function for Koopa Shell flame
@@ -4173,7 +4173,7 @@ Behavior loop function for Koopa Shell flame
 
 <br />
 
-## [bhv_tox_box_loop](#bhv_tox_box_loop)
+## bhv_tox_box_loop
 
 ### Description
 Behavior loop function for Tox Box
@@ -4194,7 +4194,7 @@ Behavior loop function for Tox Box
 
 <br />
 
-## [mario_moving_fast_enough_to_make_piranha_plant_bite](#mario_moving_fast_enough_to_make_piranha_plant_bite)
+## mario_moving_fast_enough_to_make_piranha_plant_bite
 
 ### Description
 Checks if Mario is moving fast enough to make Piranha Plant bite.
@@ -4216,7 +4216,7 @@ This one is a mouthful
 
 <br />
 
-## [bhv_piranha_plant_loop](#bhv_piranha_plant_loop)
+## bhv_piranha_plant_loop
 
 ### Description
 Behavior loop function for Piranha Plant
@@ -4237,7 +4237,7 @@ Behavior loop function for Piranha Plant
 
 <br />
 
-## [bhv_lll_bowser_puzzle_piece_loop](#bhv_lll_bowser_puzzle_piece_loop)
+## bhv_lll_bowser_puzzle_piece_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land bowser puzzle piece
@@ -4258,7 +4258,7 @@ Behavior loop function for Lethal Lava Land bowser puzzle piece
 
 <br />
 
-## [bhv_lll_bowser_puzzle_loop](#bhv_lll_bowser_puzzle_loop)
+## bhv_lll_bowser_puzzle_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land bowser puzzle
@@ -4279,7 +4279,7 @@ Behavior loop function for Lethal Lava Land bowser puzzle
 
 <br />
 
-## [bhv_tuxies_mother_loop](#bhv_tuxies_mother_loop)
+## bhv_tuxies_mother_loop
 
 ### Description
 Behavior loop function for Tuxie's mother
@@ -4300,7 +4300,7 @@ Behavior loop function for Tuxie's mother
 
 <br />
 
-## [bhv_small_penguin_loop](#bhv_small_penguin_loop)
+## bhv_small_penguin_loop
 
 ### Description
 Behavior loop function for small penguin
@@ -4321,7 +4321,7 @@ Behavior loop function for small penguin
 
 <br />
 
-## [bhv_fish_spawner_loop](#bhv_fish_spawner_loop)
+## bhv_fish_spawner_loop
 
 ### Description
 Behavior loop function for fish spawner
@@ -4342,7 +4342,7 @@ Behavior loop function for fish spawner
 
 <br />
 
-## [bhv_fish_loop](#bhv_fish_loop)
+## bhv_fish_loop
 
 ### Description
 Behavior loop function for fish
@@ -4363,7 +4363,7 @@ Behavior loop function for fish
 
 <br />
 
-## [bhv_wdw_express_elevator_loop](#bhv_wdw_express_elevator_loop)
+## bhv_wdw_express_elevator_loop
 
 ### Description
 Behavior loop function for Wet Dry World express elevator
@@ -4384,7 +4384,7 @@ Behavior loop function for Wet Dry World express elevator
 
 <br />
 
-## [bhv_bub_spawner_loop](#bhv_bub_spawner_loop)
+## bhv_bub_spawner_loop
 
 ### Description
 Behavior loop function for Bub spawner
@@ -4405,7 +4405,7 @@ Behavior loop function for Bub spawner
 
 <br />
 
-## [bhv_bub_loop](#bhv_bub_loop)
+## bhv_bub_loop
 
 ### Description
 Behavior loop function for Bub
@@ -4426,7 +4426,7 @@ Behavior loop function for Bub
 
 <br />
 
-## [bhv_exclamation_box_init](#bhv_exclamation_box_init)
+## bhv_exclamation_box_init
 
 ### Description
 Behavior init function for Exclamation Box
@@ -4447,7 +4447,7 @@ Behavior init function for Exclamation Box
 
 <br />
 
-## [bhv_exclamation_box_loop](#bhv_exclamation_box_loop)
+## bhv_exclamation_box_loop
 
 ### Description
 Behavior loop function for Exclamation Box
@@ -4468,7 +4468,7 @@ Behavior loop function for Exclamation Box
 
 <br />
 
-## [bhv_rotating_exclamation_box_loop](#bhv_rotating_exclamation_box_loop)
+## bhv_rotating_exclamation_box_loop
 
 ### Description
 Behavior loop function for rotating exclamation mark
@@ -4489,7 +4489,7 @@ Behavior loop function for rotating exclamation mark
 
 <br />
 
-## [bhv_sound_spawner_init](#bhv_sound_spawner_init)
+## bhv_sound_spawner_init
 
 ### Description
 Behavior init function for sound spawner
@@ -4510,7 +4510,7 @@ Behavior init function for sound spawner
 
 <br />
 
-## [bhv_bowsers_sub_loop](#bhv_bowsers_sub_loop)
+## bhv_bowsers_sub_loop
 
 ### Description
 Behavior loop function for Bowser's submarine
@@ -4531,7 +4531,7 @@ Behavior loop function for Bowser's submarine
 
 <br />
 
-## [bhv_sushi_shark_loop](#bhv_sushi_shark_loop)
+## bhv_sushi_shark_loop
 
 ### Description
 Behavior loop function for Sushi Shark
@@ -4552,7 +4552,7 @@ Behavior loop function for Sushi Shark
 
 <br />
 
-## [bhv_sushi_shark_collision_loop](#bhv_sushi_shark_collision_loop)
+## bhv_sushi_shark_collision_loop
 
 ### Description
 Behavior loop function for Sushi Shark collision
@@ -4573,7 +4573,7 @@ Behavior loop function for Sushi Shark collision
 
 <br />
 
-## [bhv_jrb_sliding_box_loop](#bhv_jrb_sliding_box_loop)
+## bhv_jrb_sliding_box_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay sliding box
@@ -4594,7 +4594,7 @@ Behavior loop function for Jolly Roger Bay sliding box
 
 <br />
 
-## [bhv_ship_part_3_loop](#bhv_ship_part_3_loop)
+## bhv_ship_part_3_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay ship part 3
@@ -4615,7 +4615,7 @@ Behavior loop function for Jolly Roger Bay ship part 3
 
 <br />
 
-## [bhv_sunken_ship_part_loop](#bhv_sunken_ship_part_loop)
+## bhv_sunken_ship_part_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay sunken ship part
@@ -4636,7 +4636,7 @@ Behavior loop function for Jolly Roger Bay sunken ship part
 
 <br />
 
-## [bhv_white_puff_1_loop](#bhv_white_puff_1_loop)
+## bhv_white_puff_1_loop
 
 ### Description
 Behavior loop function for white puff 1
@@ -4657,7 +4657,7 @@ Behavior loop function for white puff 1
 
 <br />
 
-## [bhv_white_puff_2_loop](#bhv_white_puff_2_loop)
+## bhv_white_puff_2_loop
 
 ### Description
 Behavior loop function for white puff 2
@@ -4678,7 +4678,7 @@ Behavior loop function for white puff 2
 
 <br />
 
-## [bhv_blue_coin_number_loop](#bhv_blue_coin_number_loop)
+## bhv_blue_coin_number_loop
 
 ### Description
 Behavior loop function for Blue Coin number
@@ -4699,7 +4699,7 @@ Behavior loop function for Blue Coin number
 
 <br />
 
-## [bhv_blue_coin_switch_init](#bhv_blue_coin_switch_init)
+## bhv_blue_coin_switch_init
 
 ### Description
 Behavior init function for Blue Coin switch
@@ -4720,7 +4720,7 @@ Behavior init function for Blue Coin switch
 
 <br />
 
-## [bhv_blue_coin_switch_loop](#bhv_blue_coin_switch_loop)
+## bhv_blue_coin_switch_loop
 
 ### Description
 Behavior loop function for Blue Coin switch
@@ -4741,7 +4741,7 @@ Behavior loop function for Blue Coin switch
 
 <br />
 
-## [bhv_hidden_blue_coin_loop](#bhv_hidden_blue_coin_loop)
+## bhv_hidden_blue_coin_loop
 
 ### Description
 Behavior loop function for hidden Blue Coin
@@ -4762,7 +4762,7 @@ Behavior loop function for hidden Blue Coin
 
 <br />
 
-## [bhv_openable_cage_door_loop](#bhv_openable_cage_door_loop)
+## bhv_openable_cage_door_loop
 
 ### Description
 Behavior loop function for openable cage door
@@ -4783,7 +4783,7 @@ Behavior loop function for openable cage door
 
 <br />
 
-## [bhv_openable_grill_loop](#bhv_openable_grill_loop)
+## bhv_openable_grill_loop
 
 ### Description
 Behavior loop function for openable grill
@@ -4804,7 +4804,7 @@ Behavior loop function for openable grill
 
 <br />
 
-## [bhv_water_level_diamond_loop](#bhv_water_level_diamond_loop)
+## bhv_water_level_diamond_loop
 
 ### Description
 Behavior loop function for Wet Dry World water level diamond
@@ -4825,7 +4825,7 @@ Behavior loop function for Wet Dry World water level diamond
 
 <br />
 
-## [bhv_init_changing_water_level_loop](#bhv_init_changing_water_level_loop)
+## bhv_init_changing_water_level_loop
 
 ### Description
 Behavior init function for changing water level, called when Wet Dry World is loaded
@@ -4846,7 +4846,7 @@ Behavior init function for changing water level, called when Wet Dry World is lo
 
 <br />
 
-## [bhv_tweester_sand_particle_loop](#bhv_tweester_sand_particle_loop)
+## bhv_tweester_sand_particle_loop
 
 ### Description
 Behavior loop function for Tweester sand particle
@@ -4867,7 +4867,7 @@ Behavior loop function for Tweester sand particle
 
 <br />
 
-## [bhv_tweester_loop](#bhv_tweester_loop)
+## bhv_tweester_loop
 
 ### Description
 Behavior loop function for Tweester
@@ -4888,7 +4888,7 @@ Behavior loop function for Tweester
 
 <br />
 
-## [bhv_merry_go_round_boo_manager_loop](#bhv_merry_go_round_boo_manager_loop)
+## bhv_merry_go_round_boo_manager_loop
 
 ### Description
 Behavior loop function for Merry Go Round Boo manager
@@ -4909,7 +4909,7 @@ Behavior loop function for Merry Go Round Boo manager
 
 <br />
 
-## [bhv_animated_texture_loop](#bhv_animated_texture_loop)
+## bhv_animated_texture_loop
 
 ### Description
 Behavior loop function for animated texture
@@ -4930,7 +4930,7 @@ Behavior loop function for animated texture
 
 <br />
 
-## [bhv_boo_in_castle_loop](#bhv_boo_in_castle_loop)
+## bhv_boo_in_castle_loop
 
 ### Description
 Behavior loop function for the Boo inside the Castle
@@ -4951,7 +4951,7 @@ Behavior loop function for the Boo inside the Castle
 
 <br />
 
-## [bhv_boo_with_cage_init](#bhv_boo_with_cage_init)
+## bhv_boo_with_cage_init
 
 ### Description
 Behavior init function for Boo with cage
@@ -4972,7 +4972,7 @@ Behavior init function for Boo with cage
 
 <br />
 
-## [bhv_boo_with_cage_loop](#bhv_boo_with_cage_loop)
+## bhv_boo_with_cage_loop
 
 ### Description
 Behavior loop function for Boo with cage
@@ -4993,7 +4993,7 @@ Behavior loop function for Boo with cage
 
 <br />
 
-## [bhv_boo_init](#bhv_boo_init)
+## bhv_boo_init
 
 ### Description
 Behavior init function for Boo
@@ -5014,7 +5014,7 @@ Behavior init function for Boo
 
 <br />
 
-## [bhv_big_boo_loop](#bhv_big_boo_loop)
+## bhv_big_boo_loop
 
 ### Description
 Behavior loop function for Big Boo
@@ -5035,7 +5035,7 @@ Behavior loop function for Big Boo
 
 <br />
 
-## [bhv_courtyard_boo_triplet_init](#bhv_courtyard_boo_triplet_init)
+## bhv_courtyard_boo_triplet_init
 
 ### Description
 Behavior init function for Courtyard Boo triplet
@@ -5056,7 +5056,7 @@ Behavior init function for Courtyard Boo triplet
 
 <br />
 
-## [obj_set_secondary_camera_focus](#obj_set_secondary_camera_focus)
+## obj_set_secondary_camera_focus
 
 ### Description
 Sets the secondary camera focus
@@ -5077,7 +5077,7 @@ Sets the secondary camera focus
 
 <br />
 
-## [bhv_boo_loop](#bhv_boo_loop)
+## bhv_boo_loop
 
 ### Description
 Behavior loop function for Boo
@@ -5098,7 +5098,7 @@ Behavior loop function for Boo
 
 <br />
 
-## [bhv_boo_boss_spawned_bridge_loop](#bhv_boo_boss_spawned_bridge_loop)
+## bhv_boo_boss_spawned_bridge_loop
 
 ### Description
 Behavior loop function for Boo boss spawned bridge
@@ -5119,7 +5119,7 @@ Behavior loop function for Boo boss spawned bridge
 
 <br />
 
-## [bhv_bbh_tilting_trap_platform_loop](#bhv_bbh_tilting_trap_platform_loop)
+## bhv_bbh_tilting_trap_platform_loop
 
 ### Description
 Behavior loop function for Big Boo's Haunt tilting trap platform
@@ -5140,7 +5140,7 @@ Behavior loop function for Big Boo's Haunt tilting trap platform
 
 <br />
 
-## [bhv_haunted_bookshelf_loop](#bhv_haunted_bookshelf_loop)
+## bhv_haunted_bookshelf_loop
 
 ### Description
 Behavior loop function for Big Boo's Haunt haunted bookshelf
@@ -5161,7 +5161,7 @@ Behavior loop function for Big Boo's Haunt haunted bookshelf
 
 <br />
 
-## [bhv_merry_go_round_loop](#bhv_merry_go_round_loop)
+## bhv_merry_go_round_loop
 
 ### Description
 Behavior loop function for Big Boo's Haunt Merry Go Round
@@ -5182,7 +5182,7 @@ Behavior loop function for Big Boo's Haunt Merry Go Round
 
 <br />
 
-## [bhv_play_music_track_when_touched_loop](#bhv_play_music_track_when_touched_loop)
+## bhv_play_music_track_when_touched_loop
 
 ### Description
 Behavior loop function for playing a jingle when in a 200 unit radius
@@ -5203,7 +5203,7 @@ Behavior loop function for playing a jingle when in a 200 unit radius
 
 <br />
 
-## [bhv_beta_bowser_anchor_loop](#bhv_beta_bowser_anchor_loop)
+## bhv_beta_bowser_anchor_loop
 
 ### Description
 Behavior loop function for beta Bowser anchor
@@ -5224,7 +5224,7 @@ Behavior loop function for beta Bowser anchor
 
 <br />
 
-## [bhv_static_checkered_platform_loop](#bhv_static_checkered_platform_loop)
+## bhv_static_checkered_platform_loop
 
 ### Description
 Behavior loop function for static checkered platform
@@ -5245,7 +5245,7 @@ Behavior loop function for static checkered platform
 
 <br />
 
-## [bhv_castle_floor_trap_init](#bhv_castle_floor_trap_init)
+## bhv_castle_floor_trap_init
 
 ### Description
 Behavior init function for Bowser in the Dark World floor trap manager
@@ -5266,7 +5266,7 @@ Behavior init function for Bowser in the Dark World floor trap manager
 
 <br />
 
-## [bhv_castle_floor_trap_loop](#bhv_castle_floor_trap_loop)
+## bhv_castle_floor_trap_loop
 
 ### Description
 Behavior loop function for Bowser in the Dark World floor trap manager
@@ -5287,7 +5287,7 @@ Behavior loop function for Bowser in the Dark World floor trap manager
 
 <br />
 
-## [bhv_floor_trap_in_castle_loop](#bhv_floor_trap_in_castle_loop)
+## bhv_floor_trap_in_castle_loop
 
 ### Description
 Behavior loop function for Bowser in the Dark World floor trap
@@ -5308,7 +5308,7 @@ Behavior loop function for Bowser in the Dark World floor trap
 
 <br />
 
-## [bhv_sparkle_spawn_loop](#bhv_sparkle_spawn_loop)
+## bhv_sparkle_spawn_loop
 
 ### Description
 Behavior loop function for sparkle spawner
@@ -5329,7 +5329,7 @@ Behavior loop function for sparkle spawner
 
 <br />
 
-## [bhv_scuttlebug_loop](#bhv_scuttlebug_loop)
+## bhv_scuttlebug_loop
 
 ### Description
 Behavior loop function for Scuttlebug
@@ -5350,7 +5350,7 @@ Behavior loop function for Scuttlebug
 
 <br />
 
-## [bhv_scuttlebug_spawn_loop](#bhv_scuttlebug_spawn_loop)
+## bhv_scuttlebug_spawn_loop
 
 ### Description
 Behavior loop function for Scuttlebug spawner
@@ -5371,7 +5371,7 @@ Behavior loop function for Scuttlebug spawner
 
 <br />
 
-## [bhv_whomp_loop](#bhv_whomp_loop)
+## bhv_whomp_loop
 
 ### Description
 Behavior loop function for Whomp
@@ -5392,7 +5392,7 @@ Behavior loop function for Whomp
 
 <br />
 
-## [bhv_water_splash_spawn_droplets](#bhv_water_splash_spawn_droplets)
+## bhv_water_splash_spawn_droplets
 
 ### Description
 Behavior init function for spawning water splash droplets
@@ -5413,7 +5413,7 @@ Behavior init function for spawning water splash droplets
 
 <br />
 
-## [bhv_water_droplet_loop](#bhv_water_droplet_loop)
+## bhv_water_droplet_loop
 
 ### Description
 Behavior loop function for water droplet
@@ -5434,7 +5434,7 @@ Behavior loop function for water droplet
 
 <br />
 
-## [bhv_water_droplet_splash_init](#bhv_water_droplet_splash_init)
+## bhv_water_droplet_splash_init
 
 ### Description
 Behavior init function for water droplet splash
@@ -5455,7 +5455,7 @@ Behavior init function for water droplet splash
 
 <br />
 
-## [bhv_bubble_splash_init](#bhv_bubble_splash_init)
+## bhv_bubble_splash_init
 
 ### Description
 Behavior init function for bubble splash
@@ -5476,7 +5476,7 @@ Behavior init function for bubble splash
 
 <br />
 
-## [bhv_idle_water_wave_loop](#bhv_idle_water_wave_loop)
+## bhv_idle_water_wave_loop
 
 ### Description
 Behavior loop function for idle water wave
@@ -5497,7 +5497,7 @@ Behavior loop function for idle water wave
 
 <br />
 
-## [bhv_shallow_water_splash_init](#bhv_shallow_water_splash_init)
+## bhv_shallow_water_splash_init
 
 ### Description
 Behavior init function for shallow water splash
@@ -5518,7 +5518,7 @@ Behavior init function for shallow water splash
 
 <br />
 
-## [bhv_wave_trail_shrink](#bhv_wave_trail_shrink)
+## bhv_wave_trail_shrink
 
 ### Description
 Behavior loop function for shrinking water trail
@@ -5539,7 +5539,7 @@ Behavior loop function for shrinking water trail
 
 <br />
 
-## [bhv_strong_wind_particle_loop](#bhv_strong_wind_particle_loop)
+## bhv_strong_wind_particle_loop
 
 ### Description
 Behavior loop function for strong wind particle
@@ -5560,7 +5560,7 @@ Behavior loop function for strong wind particle
 
 <br />
 
-## [bhv_sl_snowman_wind_loop](#bhv_sl_snowman_wind_loop)
+## bhv_sl_snowman_wind_loop
 
 ### Description
 Behavior loop function for Snowman's Land snowman wind
@@ -5581,7 +5581,7 @@ Behavior loop function for Snowman's Land snowman wind
 
 <br />
 
-## [bhv_sl_walking_penguin_loop](#bhv_sl_walking_penguin_loop)
+## bhv_sl_walking_penguin_loop
 
 ### Description
 Behavior loop function for Snowman's Land walking penguin
@@ -5602,7 +5602,7 @@ Behavior loop function for Snowman's Land walking penguin
 
 <br />
 
-## [bhv_menu_button_init](#bhv_menu_button_init)
+## bhv_menu_button_init
 
 ### Description
 Behavior init function for File Select button
@@ -5623,7 +5623,7 @@ Behavior init function for File Select button
 
 <br />
 
-## [bhv_menu_button_loop](#bhv_menu_button_loop)
+## bhv_menu_button_loop
 
 ### Description
 Behavior loop function for File Select button
@@ -5644,7 +5644,7 @@ Behavior loop function for File Select button
 
 <br />
 
-## [bhv_menu_button_manager_init](#bhv_menu_button_manager_init)
+## bhv_menu_button_manager_init
 
 ### Description
 Behavior init function for File Select button manager
@@ -5665,7 +5665,7 @@ Behavior init function for File Select button manager
 
 <br />
 
-## [bhv_menu_button_manager_loop](#bhv_menu_button_manager_loop)
+## bhv_menu_button_manager_loop
 
 ### Description
 Behavior loop function for File Select button manager
@@ -5686,7 +5686,7 @@ Behavior loop function for File Select button manager
 
 <br />
 
-## [bhv_act_selector_star_type_loop](#bhv_act_selector_star_type_loop)
+## bhv_act_selector_star_type_loop
 
 ### Description
 Behavior loop function for Act Selector star type
@@ -5707,7 +5707,7 @@ Behavior loop function for Act Selector star type
 
 <br />
 
-## [bhv_act_selector_init](#bhv_act_selector_init)
+## bhv_act_selector_init
 
 ### Description
 Behavior init function for Act Selector
@@ -5728,7 +5728,7 @@ Behavior init function for Act Selector
 
 <br />
 
-## [bhv_act_selector_loop](#bhv_act_selector_loop)
+## bhv_act_selector_loop
 
 ### Description
 Behavior loop function for Act Selector
@@ -5749,7 +5749,7 @@ Behavior loop function for Act Selector
 
 <br />
 
-## [bhv_moving_yellow_coin_init](#bhv_moving_yellow_coin_init)
+## bhv_moving_yellow_coin_init
 
 ### Description
 Behavior init function for moving Yellow Coin
@@ -5770,7 +5770,7 @@ Behavior init function for moving Yellow Coin
 
 <br />
 
-## [bhv_moving_yellow_coin_loop](#bhv_moving_yellow_coin_loop)
+## bhv_moving_yellow_coin_loop
 
 ### Description
 Behavior loop function for moving Yellow Coin
@@ -5791,7 +5791,7 @@ Behavior loop function for moving Yellow Coin
 
 <br />
 
-## [bhv_moving_blue_coin_init](#bhv_moving_blue_coin_init)
+## bhv_moving_blue_coin_init
 
 ### Description
 Behavior init function for moving Blue Coin
@@ -5812,7 +5812,7 @@ Behavior init function for moving Blue Coin
 
 <br />
 
-## [bhv_moving_blue_coin_loop](#bhv_moving_blue_coin_loop)
+## bhv_moving_blue_coin_loop
 
 ### Description
 Behavior loop function for moving Blue Coin
@@ -5833,7 +5833,7 @@ Behavior loop function for moving Blue Coin
 
 <br />
 
-## [bhv_blue_coin_sliding_jumping_init](#bhv_blue_coin_sliding_jumping_init)
+## bhv_blue_coin_sliding_jumping_init
 
 ### Description
 Behavior init function for Blue Coin sliding jumping
@@ -5854,7 +5854,7 @@ Behavior init function for Blue Coin sliding jumping
 
 <br />
 
-## [bhv_blue_coin_sliding_loop](#bhv_blue_coin_sliding_loop)
+## bhv_blue_coin_sliding_loop
 
 ### Description
 Behavior loop function for Blue Coin sliding
@@ -5875,7 +5875,7 @@ Behavior loop function for Blue Coin sliding
 
 <br />
 
-## [bhv_blue_coin_jumping_loop](#bhv_blue_coin_jumping_loop)
+## bhv_blue_coin_jumping_loop
 
 ### Description
 Behavior loop function for Blue Coin jumping
@@ -5896,7 +5896,7 @@ Behavior loop function for Blue Coin jumping
 
 <br />
 
-## [bhv_seaweed_init](#bhv_seaweed_init)
+## bhv_seaweed_init
 
 ### Description
 Behavior init function for seaweed
@@ -5917,7 +5917,7 @@ Behavior init function for seaweed
 
 <br />
 
-## [bhv_seaweed_bundle_init](#bhv_seaweed_bundle_init)
+## bhv_seaweed_bundle_init
 
 ### Description
 Behavior init function for seaweed bundle
@@ -5938,7 +5938,7 @@ Behavior init function for seaweed bundle
 
 <br />
 
-## [bhv_bobomb_init](#bhv_bobomb_init)
+## bhv_bobomb_init
 
 ### Description
 Behavior init function for Bob-omb
@@ -5959,7 +5959,7 @@ Behavior init function for Bob-omb
 
 <br />
 
-## [bhv_bobomb_loop](#bhv_bobomb_loop)
+## bhv_bobomb_loop
 
 ### Description
 Behavior loop function for Bob-omb
@@ -5980,7 +5980,7 @@ Behavior loop function for Bob-omb
 
 <br />
 
-## [bhv_bobomb_fuse_smoke_init](#bhv_bobomb_fuse_smoke_init)
+## bhv_bobomb_fuse_smoke_init
 
 ### Description
 Behavior init function for Bob-omb fuse smoke
@@ -6001,7 +6001,7 @@ Behavior init function for Bob-omb fuse smoke
 
 <br />
 
-## [bhv_bobomb_buddy_init](#bhv_bobomb_buddy_init)
+## bhv_bobomb_buddy_init
 
 ### Description
 Behavior init function for Bob-omb buddy
@@ -6022,7 +6022,7 @@ Behavior init function for Bob-omb buddy
 
 <br />
 
-## [bhv_bobomb_buddy_loop](#bhv_bobomb_buddy_loop)
+## bhv_bobomb_buddy_loop
 
 ### Description
 Behavior loop function for Bob-omb buddy
@@ -6043,7 +6043,7 @@ Behavior loop function for Bob-omb buddy
 
 <br />
 
-## [bhv_cannon_closed_init](#bhv_cannon_closed_init)
+## bhv_cannon_closed_init
 
 ### Description
 Behavior init function for cannon closed
@@ -6064,7 +6064,7 @@ Behavior init function for cannon closed
 
 <br />
 
-## [bhv_cannon_closed_loop](#bhv_cannon_closed_loop)
+## bhv_cannon_closed_loop
 
 ### Description
 Behavior loop function for cannon closed
@@ -6085,7 +6085,7 @@ Behavior loop function for cannon closed
 
 <br />
 
-## [bhv_whirlpool_init](#bhv_whirlpool_init)
+## bhv_whirlpool_init
 
 ### Description
 Behavior init function for whirlpool
@@ -6106,7 +6106,7 @@ Behavior init function for whirlpool
 
 <br />
 
-## [bhv_whirlpool_loop](#bhv_whirlpool_loop)
+## bhv_whirlpool_loop
 
 ### Description
 Behavior loop function for whirlpool
@@ -6127,7 +6127,7 @@ Behavior loop function for whirlpool
 
 <br />
 
-## [bhv_jet_stream_loop](#bhv_jet_stream_loop)
+## bhv_jet_stream_loop
 
 ### Description
 Behavior loop function for jet stream
@@ -6148,7 +6148,7 @@ Behavior loop function for jet stream
 
 <br />
 
-## [bhv_homing_amp_init](#bhv_homing_amp_init)
+## bhv_homing_amp_init
 
 ### Description
 Behavior init function for Homing Amp
@@ -6169,7 +6169,7 @@ Behavior init function for Homing Amp
 
 <br />
 
-## [bhv_homing_amp_loop](#bhv_homing_amp_loop)
+## bhv_homing_amp_loop
 
 ### Description
 Behavior loop function for Homing Amp
@@ -6190,7 +6190,7 @@ Behavior loop function for Homing Amp
 
 <br />
 
-## [bhv_circling_amp_init](#bhv_circling_amp_init)
+## bhv_circling_amp_init
 
 ### Description
 Behavior init function for Circling Amp
@@ -6211,7 +6211,7 @@ Behavior init function for Circling Amp
 
 <br />
 
-## [bhv_circling_amp_loop](#bhv_circling_amp_loop)
+## bhv_circling_amp_loop
 
 ### Description
 Behavior loop function for Circling Amp
@@ -6232,7 +6232,7 @@ Behavior loop function for Circling Amp
 
 <br />
 
-## [bhv_butterfly_init](#bhv_butterfly_init)
+## bhv_butterfly_init
 
 ### Description
 Behavior init function for Butterfly
@@ -6253,7 +6253,7 @@ Behavior init function for Butterfly
 
 <br />
 
-## [bhv_butterfly_loop](#bhv_butterfly_loop)
+## bhv_butterfly_loop
 
 ### Description
 Behavior loop function for Butterfly
@@ -6274,7 +6274,7 @@ Behavior loop function for Butterfly
 
 <br />
 
-## [bhv_hoot_init](#bhv_hoot_init)
+## bhv_hoot_init
 
 ### Description
 Behavior init function for Hoot
@@ -6295,7 +6295,7 @@ Behavior init function for Hoot
 
 <br />
 
-## [bhv_hoot_loop](#bhv_hoot_loop)
+## bhv_hoot_loop
 
 ### Description
 Behavior loop function for Hoot
@@ -6316,7 +6316,7 @@ Behavior loop function for Hoot
 
 <br />
 
-## [bhv_beta_holdable_object_init](#bhv_beta_holdable_object_init)
+## bhv_beta_holdable_object_init
 
 ### Description
 Behavior init function for beta holdable object
@@ -6337,7 +6337,7 @@ Behavior init function for beta holdable object
 
 <br />
 
-## [bhv_beta_holdable_object_loop](#bhv_beta_holdable_object_loop)
+## bhv_beta_holdable_object_loop
 
 ### Description
 Behavior loop function for beta holdable object
@@ -6358,7 +6358,7 @@ Behavior loop function for beta holdable object
 
 <br />
 
-## [bhv_object_bubble_init](#bhv_object_bubble_init)
+## bhv_object_bubble_init
 
 ### Description
 Behavior init function for bubble object
@@ -6379,7 +6379,7 @@ Behavior init function for bubble object
 
 <br />
 
-## [bhv_object_bubble_loop](#bhv_object_bubble_loop)
+## bhv_object_bubble_loop
 
 ### Description
 Behavior loop function for bubble object
@@ -6400,7 +6400,7 @@ Behavior loop function for bubble object
 
 <br />
 
-## [bhv_object_water_wave_init](#bhv_object_water_wave_init)
+## bhv_object_water_wave_init
 
 ### Description
 Behavior init function for water wave object
@@ -6421,7 +6421,7 @@ Behavior init function for water wave object
 
 <br />
 
-## [bhv_object_water_wave_loop](#bhv_object_water_wave_loop)
+## bhv_object_water_wave_loop
 
 ### Description
 Behavior loop function for water wave object
@@ -6442,7 +6442,7 @@ Behavior loop function for water wave object
 
 <br />
 
-## [bhv_explosion_init](#bhv_explosion_init)
+## bhv_explosion_init
 
 ### Description
 Behavior init function for explosion
@@ -6463,7 +6463,7 @@ Behavior init function for explosion
 
 <br />
 
-## [bhv_explosion_loop](#bhv_explosion_loop)
+## bhv_explosion_loop
 
 ### Description
 Behavior loop function for explosion
@@ -6484,7 +6484,7 @@ Behavior loop function for explosion
 
 <br />
 
-## [bhv_bobomb_bully_death_smoke_init](#bhv_bobomb_bully_death_smoke_init)
+## bhv_bobomb_bully_death_smoke_init
 
 ### Description
 Behavior init function for Bob-omb and Bully death smoke
@@ -6505,7 +6505,7 @@ Behavior init function for Bob-omb and Bully death smoke
 
 <br />
 
-## [bhv_bobomb_explosion_bubble_init](#bhv_bobomb_explosion_bubble_init)
+## bhv_bobomb_explosion_bubble_init
 
 ### Description
 Behavior init function for Bob-omb explosion bubble
@@ -6526,7 +6526,7 @@ Behavior init function for Bob-omb explosion bubble
 
 <br />
 
-## [bhv_bobomb_explosion_bubble_loop](#bhv_bobomb_explosion_bubble_loop)
+## bhv_bobomb_explosion_bubble_loop
 
 ### Description
 Behavior loop function for Bob-omb explosion bubble
@@ -6547,7 +6547,7 @@ Behavior loop function for Bob-omb explosion bubble
 
 <br />
 
-## [bhv_respawner_loop](#bhv_respawner_loop)
+## bhv_respawner_loop
 
 ### Description
 Behavior loop function for respawner
@@ -6568,7 +6568,7 @@ Behavior loop function for respawner
 
 <br />
 
-## [bhv_small_bully_init](#bhv_small_bully_init)
+## bhv_small_bully_init
 
 ### Description
 Behavior init function for Small Bully
@@ -6589,7 +6589,7 @@ Behavior init function for Small Bully
 
 <br />
 
-## [bhv_bully_loop](#bhv_bully_loop)
+## bhv_bully_loop
 
 ### Description
 Behavior loop function for Bully
@@ -6610,7 +6610,7 @@ Behavior loop function for Bully
 
 <br />
 
-## [bhv_big_bully_init](#bhv_big_bully_init)
+## bhv_big_bully_init
 
 ### Description
 Behavior init function for Big Bully
@@ -6631,7 +6631,7 @@ Behavior init function for Big Bully
 
 <br />
 
-## [bhv_big_bully_with_minions_init](#bhv_big_bully_with_minions_init)
+## bhv_big_bully_with_minions_init
 
 ### Description
 Behavior init function for Big Bully with minions
@@ -6652,7 +6652,7 @@ Behavior init function for Big Bully with minions
 
 <br />
 
-## [bhv_big_bully_with_minions_loop](#bhv_big_bully_with_minions_loop)
+## bhv_big_bully_with_minions_loop
 
 ### Description
 Behavior loop function for Big Bully with minions
@@ -6673,7 +6673,7 @@ Behavior loop function for Big Bully with minions
 
 <br />
 
-## [bhv_jet_stream_ring_spawner_loop](#bhv_jet_stream_ring_spawner_loop)
+## bhv_jet_stream_ring_spawner_loop
 
 ### Description
 Behavior loop function for jet stream ring spawner
@@ -6694,7 +6694,7 @@ Behavior loop function for jet stream ring spawner
 
 <br />
 
-## [bhv_jet_stream_water_ring_init](#bhv_jet_stream_water_ring_init)
+## bhv_jet_stream_water_ring_init
 
 ### Description
 Behavior init function for jet stream water ring
@@ -6715,7 +6715,7 @@ Behavior init function for jet stream water ring
 
 <br />
 
-## [bhv_jet_stream_water_ring_loop](#bhv_jet_stream_water_ring_loop)
+## bhv_jet_stream_water_ring_loop
 
 ### Description
 Behavior loop function for jet stream water ring
@@ -6736,7 +6736,7 @@ Behavior loop function for jet stream water ring
 
 <br />
 
-## [bhv_manta_ray_water_ring_init](#bhv_manta_ray_water_ring_init)
+## bhv_manta_ray_water_ring_init
 
 ### Description
 Behavior init function for Manta Ray water ring
@@ -6757,7 +6757,7 @@ Behavior init function for Manta Ray water ring
 
 <br />
 
-## [bhv_manta_ray_water_ring_loop](#bhv_manta_ray_water_ring_loop)
+## bhv_manta_ray_water_ring_loop
 
 ### Description
 Behavior loop function for Manta Ray water ring
@@ -6778,7 +6778,7 @@ Behavior loop function for Manta Ray water ring
 
 <br />
 
-## [bhv_bowser_bomb_loop](#bhv_bowser_bomb_loop)
+## bhv_bowser_bomb_loop
 
 ### Description
 Behavior loop function for Bowser bomb
@@ -6799,7 +6799,7 @@ Behavior loop function for Bowser bomb
 
 <br />
 
-## [bhv_bowser_bomb_explosion_loop](#bhv_bowser_bomb_explosion_loop)
+## bhv_bowser_bomb_explosion_loop
 
 ### Description
 Behavior loop function for Bowser bomb explosion
@@ -6820,7 +6820,7 @@ Behavior loop function for Bowser bomb explosion
 
 <br />
 
-## [bhv_bowser_bomb_smoke_loop](#bhv_bowser_bomb_smoke_loop)
+## bhv_bowser_bomb_smoke_loop
 
 ### Description
 Behavior loop function for Bowser bomb smoke
@@ -6841,7 +6841,7 @@ Behavior loop function for Bowser bomb smoke
 
 <br />
 
-## [bhv_celebration_star_init](#bhv_celebration_star_init)
+## bhv_celebration_star_init
 
 ### Description
 Behavior init function for Celebration Star
@@ -6862,7 +6862,7 @@ Behavior init function for Celebration Star
 
 <br />
 
-## [bhv_celebration_star_loop](#bhv_celebration_star_loop)
+## bhv_celebration_star_loop
 
 ### Description
 Behavior loop function for Celebration Star
@@ -6883,7 +6883,7 @@ Behavior loop function for Celebration Star
 
 <br />
 
-## [bhv_celebration_star_sparkle_loop](#bhv_celebration_star_sparkle_loop)
+## bhv_celebration_star_sparkle_loop
 
 ### Description
 Behavior loop function for Celebration Star sparkle
@@ -6904,7 +6904,7 @@ Behavior loop function for Celebration Star sparkle
 
 <br />
 
-## [bhv_star_key_collection_puff_spawner_loop](#bhv_star_key_collection_puff_spawner_loop)
+## bhv_star_key_collection_puff_spawner_loop
 
 ### Description
 Behavior loop function for Star and key collection puff spawner
@@ -6925,7 +6925,7 @@ Behavior loop function for Star and key collection puff spawner
 
 <br />
 
-## [bhv_lll_drawbridge_spawner_init](#bhv_lll_drawbridge_spawner_init)
+## bhv_lll_drawbridge_spawner_init
 
 ### Description
 Behavior init function for Lethal Lava Land drawbridge spawner
@@ -6946,7 +6946,7 @@ Behavior init function for Lethal Lava Land drawbridge spawner
 
 <br />
 
-## [bhv_lll_drawbridge_spawner_loop](#bhv_lll_drawbridge_spawner_loop)
+## bhv_lll_drawbridge_spawner_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land drawbridge spawner
@@ -6967,7 +6967,7 @@ Behavior loop function for Lethal Lava Land drawbridge spawner
 
 <br />
 
-## [bhv_lll_drawbridge_loop](#bhv_lll_drawbridge_loop)
+## bhv_lll_drawbridge_loop
 
 ### Description
 Behavior loop function for Lethal Lava Land drawbridge
@@ -6988,7 +6988,7 @@ Behavior loop function for Lethal Lava Land drawbridge
 
 <br />
 
-## [bhv_small_bomp_init](#bhv_small_bomp_init)
+## bhv_small_bomp_init
 
 ### Description
 Behavior init function for Small Bomp (Whomp's Fortress moving wall with eyes)
@@ -7009,7 +7009,7 @@ Behavior init function for Small Bomp (Whomp's Fortress moving wall with eyes)
 
 <br />
 
-## [bhv_small_bomp_loop](#bhv_small_bomp_loop)
+## bhv_small_bomp_loop
 
 ### Description
 Behavior loop function for Small Bomp (Whomp's Fortress moving wall with eyes)
@@ -7030,7 +7030,7 @@ Behavior loop function for Small Bomp (Whomp's Fortress moving wall with eyes)
 
 <br />
 
-## [bhv_large_bomp_init](#bhv_large_bomp_init)
+## bhv_large_bomp_init
 
 ### Description
 Behavior init function for Large Bomp (Whomp's Fortress moving wall with eyes)
@@ -7051,7 +7051,7 @@ Behavior init function for Large Bomp (Whomp's Fortress moving wall with eyes)
 
 <br />
 
-## [bhv_large_bomp_loop](#bhv_large_bomp_loop)
+## bhv_large_bomp_loop
 
 ### Description
 Behavior loop function for Large Bomp (Whomp's Fortress moving wall with eyes)
@@ -7072,7 +7072,7 @@ Behavior loop function for Large Bomp (Whomp's Fortress moving wall with eyes)
 
 <br />
 
-## [bhv_wf_sliding_platform_init](#bhv_wf_sliding_platform_init)
+## bhv_wf_sliding_platform_init
 
 ### Description
 Behavior init function for Whomp's Fortress sliding platform
@@ -7093,7 +7093,7 @@ Behavior init function for Whomp's Fortress sliding platform
 
 <br />
 
-## [bhv_wf_sliding_platform_loop](#bhv_wf_sliding_platform_loop)
+## bhv_wf_sliding_platform_loop
 
 ### Description
 Behavior loop function for Whomp's Fortress sliding platform
@@ -7114,7 +7114,7 @@ Behavior loop function for Whomp's Fortress sliding platform
 
 <br />
 
-## [bhv_moneybag_init](#bhv_moneybag_init)
+## bhv_moneybag_init
 
 ### Description
 Behavior init function for Moneybag
@@ -7135,7 +7135,7 @@ Behavior init function for Moneybag
 
 <br />
 
-## [bhv_moneybag_loop](#bhv_moneybag_loop)
+## bhv_moneybag_loop
 
 ### Description
 Behavior loop function for Moneybag
@@ -7156,7 +7156,7 @@ Behavior loop function for Moneybag
 
 <br />
 
-## [bhv_moneybag_hidden_loop](#bhv_moneybag_hidden_loop)
+## bhv_moneybag_hidden_loop
 
 ### Description
 Behavior loop function for Moneybag hidden
@@ -7177,7 +7177,7 @@ Behavior loop function for Moneybag hidden
 
 <br />
 
-## [bhv_bob_pit_bowling_ball_init](#bhv_bob_pit_bowling_ball_init)
+## bhv_bob_pit_bowling_ball_init
 
 ### Description
 Behavior init function for Bob-omb Battlefield pit bowling ball
@@ -7198,7 +7198,7 @@ Behavior init function for Bob-omb Battlefield pit bowling ball
 
 <br />
 
-## [bhv_bob_pit_bowling_ball_loop](#bhv_bob_pit_bowling_ball_loop)
+## bhv_bob_pit_bowling_ball_loop
 
 ### Description
 Behavior loop function for Bob-omb Battlefield pit bowling ball
@@ -7219,7 +7219,7 @@ Behavior loop function for Bob-omb Battlefield pit bowling ball
 
 <br />
 
-## [bhv_free_bowling_ball_init](#bhv_free_bowling_ball_init)
+## bhv_free_bowling_ball_init
 
 ### Description
 Behavior init function for free bowling ball
@@ -7240,7 +7240,7 @@ Behavior init function for free bowling ball
 
 <br />
 
-## [bhv_free_bowling_ball_loop](#bhv_free_bowling_ball_loop)
+## bhv_free_bowling_ball_loop
 
 ### Description
 Behavior loop function for free bowling ball
@@ -7261,7 +7261,7 @@ Behavior loop function for free bowling ball
 
 <br />
 
-## [bhv_bowling_ball_init](#bhv_bowling_ball_init)
+## bhv_bowling_ball_init
 
 ### Description
 Behavior init function for bowling ball
@@ -7282,7 +7282,7 @@ Behavior init function for bowling ball
 
 <br />
 
-## [bhv_bowling_ball_loop](#bhv_bowling_ball_loop)
+## bhv_bowling_ball_loop
 
 ### Description
 Behavior loop function for bowling ball
@@ -7303,7 +7303,7 @@ Behavior loop function for bowling ball
 
 <br />
 
-## [bhv_generic_bowling_ball_spawner_init](#bhv_generic_bowling_ball_spawner_init)
+## bhv_generic_bowling_ball_spawner_init
 
 ### Description
 Behavior init function for generic bowling ball spawner
@@ -7324,7 +7324,7 @@ Behavior init function for generic bowling ball spawner
 
 <br />
 
-## [bhv_generic_bowling_ball_spawner_loop](#bhv_generic_bowling_ball_spawner_loop)
+## bhv_generic_bowling_ball_spawner_loop
 
 ### Description
 Behavior loop function for generic bowling ball spawner
@@ -7345,7 +7345,7 @@ Behavior loop function for generic bowling ball spawner
 
 <br />
 
-## [bhv_thi_bowling_ball_spawner_loop](#bhv_thi_bowling_ball_spawner_loop)
+## bhv_thi_bowling_ball_spawner_loop
 
 ### Description
 Behavior loop function for Tiny Huge Island bowling ball spawner
@@ -7366,7 +7366,7 @@ Behavior loop function for Tiny Huge Island bowling ball spawner
 
 <br />
 
-## [bhv_rr_cruiser_wing_init](#bhv_rr_cruiser_wing_init)
+## bhv_rr_cruiser_wing_init
 
 ### Description
 Behavior init function for Rainbow Ride cruiser wing
@@ -7387,7 +7387,7 @@ Behavior init function for Rainbow Ride cruiser wing
 
 <br />
 
-## [bhv_rr_cruiser_wing_loop](#bhv_rr_cruiser_wing_loop)
+## bhv_rr_cruiser_wing_loop
 
 ### Description
 Behavior loop function for Rainbow Ride cruiser wing
@@ -7408,7 +7408,7 @@ Behavior loop function for Rainbow Ride cruiser wing
 
 <br />
 
-## [bhv_spindel_init](#bhv_spindel_init)
+## bhv_spindel_init
 
 ### Description
 Behavior init function for Spindel
@@ -7429,7 +7429,7 @@ Behavior init function for Spindel
 
 <br />
 
-## [bhv_spindel_loop](#bhv_spindel_loop)
+## bhv_spindel_loop
 
 ### Description
 Behavior loop function for Spindel
@@ -7450,7 +7450,7 @@ Behavior loop function for Spindel
 
 <br />
 
-## [bhv_ssl_moving_pyramid_wall_init](#bhv_ssl_moving_pyramid_wall_init)
+## bhv_ssl_moving_pyramid_wall_init
 
 ### Description
 Behavior init function for Ssl moving pyramid wall
@@ -7471,7 +7471,7 @@ Behavior init function for Ssl moving pyramid wall
 
 <br />
 
-## [bhv_ssl_moving_pyramid_wall_loop](#bhv_ssl_moving_pyramid_wall_loop)
+## bhv_ssl_moving_pyramid_wall_loop
 
 ### Description
 Behavior loop function for Ssl moving pyramid wall
@@ -7492,7 +7492,7 @@ Behavior loop function for Ssl moving pyramid wall
 
 <br />
 
-## [bhv_pyramid_elevator_init](#bhv_pyramid_elevator_init)
+## bhv_pyramid_elevator_init
 
 ### Description
 Behavior init function for Pyramid elevator
@@ -7513,7 +7513,7 @@ Behavior init function for Pyramid elevator
 
 <br />
 
-## [bhv_pyramid_elevator_loop](#bhv_pyramid_elevator_loop)
+## bhv_pyramid_elevator_loop
 
 ### Description
 Behavior loop function for Pyramid elevator
@@ -7534,7 +7534,7 @@ Behavior loop function for Pyramid elevator
 
 <br />
 
-## [bhv_pyramid_elevator_trajectory_marker_ball_loop](#bhv_pyramid_elevator_trajectory_marker_ball_loop)
+## bhv_pyramid_elevator_trajectory_marker_ball_loop
 
 ### Description
 Behavior loop function for Pyramid elevator trajectory marker ball
@@ -7555,7 +7555,7 @@ Behavior loop function for Pyramid elevator trajectory marker ball
 
 <br />
 
-## [bhv_pyramid_top_init](#bhv_pyramid_top_init)
+## bhv_pyramid_top_init
 
 ### Description
 Behavior init function for Pyramid top
@@ -7576,7 +7576,7 @@ Behavior init function for Pyramid top
 
 <br />
 
-## [bhv_pyramid_top_loop](#bhv_pyramid_top_loop)
+## bhv_pyramid_top_loop
 
 ### Description
 Behavior loop function for Pyramid top
@@ -7597,7 +7597,7 @@ Behavior loop function for Pyramid top
 
 <br />
 
-## [bhv_pyramid_top_fragment_init](#bhv_pyramid_top_fragment_init)
+## bhv_pyramid_top_fragment_init
 
 ### Description
 Behavior init function for Pyramid top fragment
@@ -7618,7 +7618,7 @@ Behavior init function for Pyramid top fragment
 
 <br />
 
-## [bhv_pyramid_top_fragment_loop](#bhv_pyramid_top_fragment_loop)
+## bhv_pyramid_top_fragment_loop
 
 ### Description
 Behavior loop function for Pyramid top fragment
@@ -7639,7 +7639,7 @@ Behavior loop function for Pyramid top fragment
 
 <br />
 
-## [bhv_pyramid_pillar_touch_detector_loop](#bhv_pyramid_pillar_touch_detector_loop)
+## bhv_pyramid_pillar_touch_detector_loop
 
 ### Description
 Behavior loop function for Pyramid pillar touch detector
@@ -7660,7 +7660,7 @@ Behavior loop function for Pyramid pillar touch detector
 
 <br />
 
-## [bhv_waterfall_sound_loop](#bhv_waterfall_sound_loop)
+## bhv_waterfall_sound_loop
 
 ### Description
 Behavior loop function for waterfall sound
@@ -7681,7 +7681,7 @@ Behavior loop function for waterfall sound
 
 <br />
 
-## [bhv_volcano_sound_loop](#bhv_volcano_sound_loop)
+## bhv_volcano_sound_loop
 
 ### Description
 Behavior loop function for volcano sound
@@ -7702,7 +7702,7 @@ Behavior loop function for volcano sound
 
 <br />
 
-## [bhv_castle_flag_init](#bhv_castle_flag_init)
+## bhv_castle_flag_init
 
 ### Description
 Behavior init function for castle flag
@@ -7723,7 +7723,7 @@ Behavior init function for castle flag
 
 <br />
 
-## [bhv_birds_sound_loop](#bhv_birds_sound_loop)
+## bhv_birds_sound_loop
 
 ### Description
 Behavior loop function for birds sound
@@ -7744,7 +7744,7 @@ Behavior loop function for birds sound
 
 <br />
 
-## [bhv_ambient_sounds_init](#bhv_ambient_sounds_init)
+## bhv_ambient_sounds_init
 
 ### Description
 Behavior init function for ambient sounds
@@ -7765,7 +7765,7 @@ Behavior init function for ambient sounds
 
 <br />
 
-## [bhv_sand_sound_loop](#bhv_sand_sound_loop)
+## bhv_sand_sound_loop
 
 ### Description
 Behavior loop function for sand sound
@@ -7786,7 +7786,7 @@ Behavior loop function for sand sound
 
 <br />
 
-## [bhv_castle_cannon_grate_init](#bhv_castle_cannon_grate_init)
+## bhv_castle_cannon_grate_init
 
 ### Description
 Behavior init function for Castle cannon grate
@@ -7807,7 +7807,7 @@ Behavior init function for Castle cannon grate
 
 <br />
 
-## [bhv_snowmans_bottom_init](#bhv_snowmans_bottom_init)
+## bhv_snowmans_bottom_init
 
 ### Description
 Behavior init function for Snowman's bottom
@@ -7828,7 +7828,7 @@ Behavior init function for Snowman's bottom
 
 <br />
 
-## [bhv_snowmans_bottom_loop](#bhv_snowmans_bottom_loop)
+## bhv_snowmans_bottom_loop
 
 ### Description
 Behavior loop function for Snowman's bottom
@@ -7849,7 +7849,7 @@ Behavior loop function for Snowman's bottom
 
 <br />
 
-## [bhv_snowmans_head_init](#bhv_snowmans_head_init)
+## bhv_snowmans_head_init
 
 ### Description
 Behavior init function for Snowman's head
@@ -7870,7 +7870,7 @@ Behavior init function for Snowman's head
 
 <br />
 
-## [bhv_snowmans_head_loop](#bhv_snowmans_head_loop)
+## bhv_snowmans_head_loop
 
 ### Description
 Behavior loop function for Snowman's head
@@ -7891,7 +7891,7 @@ Behavior loop function for Snowman's head
 
 <br />
 
-## [bhv_snowmans_body_checkpoint_loop](#bhv_snowmans_body_checkpoint_loop)
+## bhv_snowmans_body_checkpoint_loop
 
 ### Description
 Behavior loop function for Snowman's body checkpoint
@@ -7912,7 +7912,7 @@ Behavior loop function for Snowman's body checkpoint
 
 <br />
 
-## [bhv_big_boulder_init](#bhv_big_boulder_init)
+## bhv_big_boulder_init
 
 ### Description
 Behavior init function for big boulder
@@ -7933,7 +7933,7 @@ Behavior init function for big boulder
 
 <br />
 
-## [bhv_big_boulder_loop](#bhv_big_boulder_loop)
+## bhv_big_boulder_loop
 
 ### Description
 Behavior loop function for big boulder
@@ -7954,7 +7954,7 @@ Behavior loop function for big boulder
 
 <br />
 
-## [bhv_big_boulder_generator_loop](#bhv_big_boulder_generator_loop)
+## bhv_big_boulder_generator_loop
 
 ### Description
 Behavior loop function for big boulder generator
@@ -7975,7 +7975,7 @@ Behavior loop function for big boulder generator
 
 <br />
 
-## [bhv_wing_cap_init](#bhv_wing_cap_init)
+## bhv_wing_cap_init
 
 ### Description
 Behavior init function for Wing Cap
@@ -7996,7 +7996,7 @@ Behavior init function for Wing Cap
 
 <br />
 
-## [bhv_wing_vanish_cap_loop](#bhv_wing_vanish_cap_loop)
+## bhv_wing_vanish_cap_loop
 
 ### Description
 Behavior loop function for Wing and Vanish caps
@@ -8017,7 +8017,7 @@ Behavior loop function for Wing and Vanish caps
 
 <br />
 
-## [bhv_metal_cap_init](#bhv_metal_cap_init)
+## bhv_metal_cap_init
 
 ### Description
 Behavior init function for Metal Cap
@@ -8038,7 +8038,7 @@ Behavior init function for Metal Cap
 
 <br />
 
-## [bhv_metal_cap_loop](#bhv_metal_cap_loop)
+## bhv_metal_cap_loop
 
 ### Description
 Behavior loop function for Metal Cap
@@ -8059,7 +8059,7 @@ Behavior loop function for Metal Cap
 
 <br />
 
-## [bhv_normal_cap_init](#bhv_normal_cap_init)
+## bhv_normal_cap_init
 
 ### Description
 Behavior init function for Normal Cap
@@ -8080,7 +8080,7 @@ Behavior init function for Normal Cap
 
 <br />
 
-## [bhv_normal_cap_loop](#bhv_normal_cap_loop)
+## bhv_normal_cap_loop
 
 ### Description
 Behavior loop function for Normal Cap
@@ -8101,7 +8101,7 @@ Behavior loop function for Normal Cap
 
 <br />
 
-## [bhv_vanish_cap_init](#bhv_vanish_cap_init)
+## bhv_vanish_cap_init
 
 ### Description
 Behavior init function for Vanish Cap
@@ -8122,7 +8122,7 @@ Behavior init function for Vanish Cap
 
 <br />
 
-## [bhv_star_number_loop](#bhv_star_number_loop)
+## bhv_star_number_loop
 
 ### Description
 Behavior loop function for Star number
@@ -8143,7 +8143,7 @@ Behavior loop function for Star number
 
 <br />
 
-## [spawn_star_number](#spawn_star_number)
+## spawn_star_number
 
 ### Description
 Spawns a star number
@@ -8164,7 +8164,7 @@ Spawns a star number
 
 <br />
 
-## [bhv_collect_star_init](#bhv_collect_star_init)
+## bhv_collect_star_init
 
 ### Description
 Behavior init function for collectable Star
@@ -8185,7 +8185,7 @@ Behavior init function for collectable Star
 
 <br />
 
-## [bhv_collect_star_loop](#bhv_collect_star_loop)
+## bhv_collect_star_loop
 
 ### Description
 Behavior loop function for collectable Star
@@ -8206,7 +8206,7 @@ Behavior loop function for collectable Star
 
 <br />
 
-## [bhv_star_spawn_init](#bhv_star_spawn_init)
+## bhv_star_spawn_init
 
 ### Description
 Behavior init function for Star spawn
@@ -8227,7 +8227,7 @@ Behavior init function for Star spawn
 
 <br />
 
-## [bhv_star_spawn_loop](#bhv_star_spawn_loop)
+## bhv_star_spawn_loop
 
 ### Description
 Behavior loop function for Star spawn
@@ -8248,7 +8248,7 @@ Behavior loop function for Star spawn
 
 <br />
 
-## [bhv_hidden_red_coin_star_init](#bhv_hidden_red_coin_star_init)
+## bhv_hidden_red_coin_star_init
 
 ### Description
 Behavior init function for Hidden Red Coin Star
@@ -8269,7 +8269,7 @@ Behavior init function for Hidden Red Coin Star
 
 <br />
 
-## [bhv_hidden_red_coin_star_loop](#bhv_hidden_red_coin_star_loop)
+## bhv_hidden_red_coin_star_loop
 
 ### Description
 Behavior loop function for Hidden Red Coin Star
@@ -8290,7 +8290,7 @@ Behavior loop function for Hidden Red Coin Star
 
 <br />
 
-## [bhv_red_coin_init](#bhv_red_coin_init)
+## bhv_red_coin_init
 
 ### Description
 Behavior init function for Red Coin
@@ -8311,7 +8311,7 @@ Behavior init function for Red Coin
 
 <br />
 
-## [bhv_red_coin_loop](#bhv_red_coin_loop)
+## bhv_red_coin_loop
 
 ### Description
 Behavior loop function for Red Coin
@@ -8332,7 +8332,7 @@ Behavior loop function for Red Coin
 
 <br />
 
-## [bhv_bowser_course_red_coin_star_loop](#bhv_bowser_course_red_coin_star_loop)
+## bhv_bowser_course_red_coin_star_loop
 
 ### Description
 Behavior loop function for Bowser course Red Coin Star
@@ -8353,7 +8353,7 @@ Behavior loop function for Bowser course Red Coin Star
 
 <br />
 
-## [bhv_hidden_star_init](#bhv_hidden_star_init)
+## bhv_hidden_star_init
 
 ### Description
 Behavior init function for Secret Star
@@ -8374,7 +8374,7 @@ Behavior init function for Secret Star
 
 <br />
 
-## [bhv_hidden_star_loop](#bhv_hidden_star_loop)
+## bhv_hidden_star_loop
 
 ### Description
 Behavior loop function for Secret Star
@@ -8395,7 +8395,7 @@ Behavior loop function for Secret Star
 
 <br />
 
-## [bhv_hidden_star_trigger_loop](#bhv_hidden_star_trigger_loop)
+## bhv_hidden_star_trigger_loop
 
 ### Description
 Behavior loop function for Secrets
@@ -8416,7 +8416,7 @@ Behavior loop function for Secrets
 
 <br />
 
-## [bhv_ttm_rolling_log_init](#bhv_ttm_rolling_log_init)
+## bhv_ttm_rolling_log_init
 
 ### Description
 Behavior init function for Tall, Tall Mountain rolling log
@@ -8437,7 +8437,7 @@ Behavior init function for Tall, Tall Mountain rolling log
 
 <br />
 
-## [bhv_rolling_log_loop](#bhv_rolling_log_loop)
+## bhv_rolling_log_loop
 
 ### Description
 Behavior loop function for rolling log
@@ -8458,7 +8458,7 @@ Behavior loop function for rolling log
 
 <br />
 
-## [bhv_lll_rolling_log_init](#bhv_lll_rolling_log_init)
+## bhv_lll_rolling_log_init
 
 ### Description
 Behavior init function for Lethal Lava Land rolling log
@@ -8479,7 +8479,7 @@ Behavior init function for Lethal Lava Land rolling log
 
 <br />
 
-## [bhv_1up_trigger_init](#bhv_1up_trigger_init)
+## bhv_1up_trigger_init
 
 ### Description
 Behavior init function for 1-Up trigger
@@ -8500,7 +8500,7 @@ Behavior init function for 1-Up trigger
 
 <br />
 
-## [bhv_1up_common_init](#bhv_1up_common_init)
+## bhv_1up_common_init
 
 ### Description
 Behavior init function for common 1-Up
@@ -8521,7 +8521,7 @@ Behavior init function for common 1-Up
 
 <br />
 
-## [bhv_1up_walking_loop](#bhv_1up_walking_loop)
+## bhv_1up_walking_loop
 
 ### Description
 Behavior loop function for walking 1-Up
@@ -8542,7 +8542,7 @@ Behavior loop function for walking 1-Up
 
 <br />
 
-## [bhv_1up_running_away_loop](#bhv_1up_running_away_loop)
+## bhv_1up_running_away_loop
 
 ### Description
 Behavior loop function for running away 1-Up
@@ -8563,7 +8563,7 @@ Behavior loop function for running away 1-Up
 
 <br />
 
-## [bhv_1up_sliding_loop](#bhv_1up_sliding_loop)
+## bhv_1up_sliding_loop
 
 ### Description
 Behavior loop function for sliding 1-Up
@@ -8584,7 +8584,7 @@ Behavior loop function for sliding 1-Up
 
 <br />
 
-## [bhv_1up_init](#bhv_1up_init)
+## bhv_1up_init
 
 ### Description
 Behavior init function for 1-Up
@@ -8605,7 +8605,7 @@ Behavior init function for 1-Up
 
 <br />
 
-## [bhv_1up_loop](#bhv_1up_loop)
+## bhv_1up_loop
 
 ### Description
 Behavior loop function for 1-Up
@@ -8626,7 +8626,7 @@ Behavior loop function for 1-Up
 
 <br />
 
-## [bhv_1up_jump_on_approach_loop](#bhv_1up_jump_on_approach_loop)
+## bhv_1up_jump_on_approach_loop
 
 ### Description
 Behavior loop function for jump on approach 1-Up
@@ -8647,7 +8647,7 @@ Behavior loop function for jump on approach 1-Up
 
 <br />
 
-## [bhv_1up_hidden_loop](#bhv_1up_hidden_loop)
+## bhv_1up_hidden_loop
 
 ### Description
 Behavior loop function for hidden 1-Up
@@ -8668,7 +8668,7 @@ Behavior loop function for hidden 1-Up
 
 <br />
 
-## [bhv_1up_hidden_trigger_loop](#bhv_1up_hidden_trigger_loop)
+## bhv_1up_hidden_trigger_loop
 
 ### Description
 Behavior loop function for hidden 1-Up trigger
@@ -8689,7 +8689,7 @@ Behavior loop function for hidden 1-Up trigger
 
 <br />
 
-## [bhv_1up_hidden_in_pole_loop](#bhv_1up_hidden_in_pole_loop)
+## bhv_1up_hidden_in_pole_loop
 
 ### Description
 Behavior loop function for hidden 1-Up in pole (Green Demon)
@@ -8710,7 +8710,7 @@ Behavior loop function for hidden 1-Up in pole (Green Demon)
 
 <br />
 
-## [bhv_1up_hidden_in_pole_trigger_loop](#bhv_1up_hidden_in_pole_trigger_loop)
+## bhv_1up_hidden_in_pole_trigger_loop
 
 ### Description
 Behavior loop function for 1-Up hidden in pole trigger
@@ -8731,7 +8731,7 @@ Behavior loop function for 1-Up hidden in pole trigger
 
 <br />
 
-## [bhv_1up_hidden_in_pole_spawner_loop](#bhv_1up_hidden_in_pole_spawner_loop)
+## bhv_1up_hidden_in_pole_spawner_loop
 
 ### Description
 Behavior loop function for 1-Up hidden in pole spawner
@@ -8752,7 +8752,7 @@ Behavior loop function for 1-Up hidden in pole spawner
 
 <br />
 
-## [bhv_controllable_platform_init](#bhv_controllable_platform_init)
+## bhv_controllable_platform_init
 
 ### Description
 Behavior init function for controllable platform
@@ -8773,7 +8773,7 @@ Behavior init function for controllable platform
 
 <br />
 
-## [bhv_controllable_platform_loop](#bhv_controllable_platform_loop)
+## bhv_controllable_platform_loop
 
 ### Description
 Behavior loop function for controllable platform
@@ -8794,7 +8794,7 @@ Behavior loop function for controllable platform
 
 <br />
 
-## [bhv_controllable_platform_sub_loop](#bhv_controllable_platform_sub_loop)
+## bhv_controllable_platform_sub_loop
 
 ### Description
 Behavior loop function for controllable sub platform
@@ -8815,7 +8815,7 @@ Behavior loop function for controllable sub platform
 
 <br />
 
-## [bhv_breakable_box_small_init](#bhv_breakable_box_small_init)
+## bhv_breakable_box_small_init
 
 ### Description
 Behavior init function for small breakable box
@@ -8836,7 +8836,7 @@ Behavior init function for small breakable box
 
 <br />
 
-## [bhv_breakable_box_small_loop](#bhv_breakable_box_small_loop)
+## bhv_breakable_box_small_loop
 
 ### Description
 Behavior loop function for small breakable box
@@ -8857,7 +8857,7 @@ Behavior loop function for small breakable box
 
 <br />
 
-## [bhv_sliding_snow_mound_loop](#bhv_sliding_snow_mound_loop)
+## bhv_sliding_snow_mound_loop
 
 ### Description
 Behavior loop function for sliding snow mound
@@ -8878,7 +8878,7 @@ Behavior loop function for sliding snow mound
 
 <br />
 
-## [bhv_snow_mound_spawn_loop](#bhv_snow_mound_spawn_loop)
+## bhv_snow_mound_spawn_loop
 
 ### Description
 Behavior loop function for snow mound spawn
@@ -8899,7 +8899,7 @@ Behavior loop function for snow mound spawn
 
 <br />
 
-## [bhv_floating_platform_loop](#bhv_floating_platform_loop)
+## bhv_floating_platform_loop
 
 ### Description
 Behavior loop function for floating platform
@@ -8920,7 +8920,7 @@ Behavior loop function for floating platform
 
 <br />
 
-## [bhv_arrow_lift_loop](#bhv_arrow_lift_loop)
+## bhv_arrow_lift_loop
 
 ### Description
 Behavior loop function for Wet Dry World arrow lift
@@ -8941,7 +8941,7 @@ Behavior loop function for Wet Dry World arrow lift
 
 <br />
 
-## [bhv_orange_number_init](#bhv_orange_number_init)
+## bhv_orange_number_init
 
 ### Description
 Behavior init function for orange number
@@ -8962,7 +8962,7 @@ Behavior init function for orange number
 
 <br />
 
-## [bhv_orange_number_loop](#bhv_orange_number_loop)
+## bhv_orange_number_loop
 
 ### Description
 Behavior loop function for orange number
@@ -8983,7 +8983,7 @@ Behavior loop function for orange number
 
 <br />
 
-## [bhv_manta_ray_init](#bhv_manta_ray_init)
+## bhv_manta_ray_init
 
 ### Description
 Behavior init function for Manta Ray
@@ -9004,7 +9004,7 @@ Behavior init function for Manta Ray
 
 <br />
 
-## [bhv_manta_ray_loop](#bhv_manta_ray_loop)
+## bhv_manta_ray_loop
 
 ### Description
 Behavior loop function for Manta Ray
@@ -9025,7 +9025,7 @@ Behavior loop function for Manta Ray
 
 <br />
 
-## [bhv_falling_pillar_init](#bhv_falling_pillar_init)
+## bhv_falling_pillar_init
 
 ### Description
 Behavior init function for Jolly Roger Bay falling pillar
@@ -9046,7 +9046,7 @@ Behavior init function for Jolly Roger Bay falling pillar
 
 <br />
 
-## [bhv_falling_pillar_loop](#bhv_falling_pillar_loop)
+## bhv_falling_pillar_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay falling pillar
@@ -9067,7 +9067,7 @@ Behavior loop function for Jolly Roger Bay falling pillar
 
 <br />
 
-## [bhv_falling_pillar_hitbox_loop](#bhv_falling_pillar_hitbox_loop)
+## bhv_falling_pillar_hitbox_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay falling pillar hitbox
@@ -9088,7 +9088,7 @@ Behavior loop function for Jolly Roger Bay falling pillar hitbox
 
 <br />
 
-## [bhv_jrb_floating_box_loop](#bhv_jrb_floating_box_loop)
+## bhv_jrb_floating_box_loop
 
 ### Description
 Behavior loop function for Jolly Roger Bay floating box
@@ -9109,7 +9109,7 @@ Behavior loop function for Jolly Roger Bay floating box
 
 <br />
 
-## [bhv_decorative_pendulum_init](#bhv_decorative_pendulum_init)
+## bhv_decorative_pendulum_init
 
 ### Description
 Behavior init function for decorative pendulum
@@ -9130,7 +9130,7 @@ Behavior init function for decorative pendulum
 
 <br />
 
-## [bhv_decorative_pendulum_loop](#bhv_decorative_pendulum_loop)
+## bhv_decorative_pendulum_loop
 
 ### Description
 Behavior loop function for decorative pendulum
@@ -9151,7 +9151,7 @@ Behavior loop function for decorative pendulum
 
 <br />
 
-## [bhv_treasure_chest_ship_init](#bhv_treasure_chest_ship_init)
+## bhv_treasure_chest_ship_init
 
 ### Description
 Behavior init function for treasure chest ship
@@ -9172,7 +9172,7 @@ Behavior init function for treasure chest ship
 
 <br />
 
-## [bhv_treasure_chest_ship_loop](#bhv_treasure_chest_ship_loop)
+## bhv_treasure_chest_ship_loop
 
 ### Description
 Behavior loop function for treasure chest ship
@@ -9193,7 +9193,7 @@ Behavior loop function for treasure chest ship
 
 <br />
 
-## [bhv_treasure_chest_jrb_init](#bhv_treasure_chest_jrb_init)
+## bhv_treasure_chest_jrb_init
 
 ### Description
 Behavior init function for treasure chest jrb
@@ -9214,7 +9214,7 @@ Behavior init function for treasure chest jrb
 
 <br />
 
-## [bhv_treasure_chest_jrb_loop](#bhv_treasure_chest_jrb_loop)
+## bhv_treasure_chest_jrb_loop
 
 ### Description
 Behavior loop function for treasure chest jrb
@@ -9235,7 +9235,7 @@ Behavior loop function for treasure chest jrb
 
 <br />
 
-## [bhv_treasure_chest_init](#bhv_treasure_chest_init)
+## bhv_treasure_chest_init
 
 ### Description
 Behavior init function for treasure chest
@@ -9256,7 +9256,7 @@ Behavior init function for treasure chest
 
 <br />
 
-## [bhv_treasure_chest_loop](#bhv_treasure_chest_loop)
+## bhv_treasure_chest_loop
 
 ### Description
 Behavior loop function for treasure chest
@@ -9277,7 +9277,7 @@ Behavior loop function for treasure chest
 
 <br />
 
-## [bhv_treasure_chest_bottom_init](#bhv_treasure_chest_bottom_init)
+## bhv_treasure_chest_bottom_init
 
 ### Description
 Behavior init function for treasure chest bottom
@@ -9298,7 +9298,7 @@ Behavior init function for treasure chest bottom
 
 <br />
 
-## [bhv_treasure_chest_bottom_loop](#bhv_treasure_chest_bottom_loop)
+## bhv_treasure_chest_bottom_loop
 
 ### Description
 Behavior loop function for treasure chest bottom
@@ -9319,7 +9319,7 @@ Behavior loop function for treasure chest bottom
 
 <br />
 
-## [bhv_treasure_chest_top_loop](#bhv_treasure_chest_top_loop)
+## bhv_treasure_chest_top_loop
 
 ### Description
 Behavior loop function for treasure chest top
@@ -9340,7 +9340,7 @@ Behavior loop function for treasure chest top
 
 <br />
 
-## [bhv_mips_init](#bhv_mips_init)
+## bhv_mips_init
 
 ### Description
 Behavior init function for Mips
@@ -9361,7 +9361,7 @@ Behavior init function for Mips
 
 <br />
 
-## [bhv_mips_loop](#bhv_mips_loop)
+## bhv_mips_loop
 
 ### Description
 Behavior loop function for Mips
@@ -9382,7 +9382,7 @@ Behavior loop function for Mips
 
 <br />
 
-## [bhv_yoshi_init](#bhv_yoshi_init)
+## bhv_yoshi_init
 
 ### Description
 Behavior init function for Yoshi
@@ -9403,7 +9403,7 @@ Behavior init function for Yoshi
 
 <br />
 
-## [bhv_koopa_init](#bhv_koopa_init)
+## bhv_koopa_init
 
 ### Description
 Behavior init function for Koopa
@@ -9424,7 +9424,7 @@ Behavior init function for Koopa
 
 <br />
 
-## [bhv_koopa_update](#bhv_koopa_update)
+## bhv_koopa_update
 
 ### Description
 Behavior loop function for Koopa
@@ -9445,7 +9445,7 @@ Behavior loop function for Koopa
 
 <br />
 
-## [bhv_koopa_race_endpoint_update](#bhv_koopa_race_endpoint_update)
+## bhv_koopa_race_endpoint_update
 
 ### Description
 Behavior loop function for Koopa race endpoint
@@ -9466,7 +9466,7 @@ Behavior loop function for Koopa race endpoint
 
 <br />
 
-## [bhv_pokey_update](#bhv_pokey_update)
+## bhv_pokey_update
 
 ### Description
 Behavior loop function for Pokey
@@ -9487,7 +9487,7 @@ Behavior loop function for Pokey
 
 <br />
 
-## [bhv_pokey_body_part_update](#bhv_pokey_body_part_update)
+## bhv_pokey_body_part_update
 
 ### Description
 Behavior loop function for Pokey body part
@@ -9508,7 +9508,7 @@ Behavior loop function for Pokey body part
 
 <br />
 
-## [bhv_swoop_update](#bhv_swoop_update)
+## bhv_swoop_update
 
 ### Description
 Behavior loop function for Swoop
@@ -9529,7 +9529,7 @@ Behavior loop function for Swoop
 
 <br />
 
-## [bhv_fly_guy_update](#bhv_fly_guy_update)
+## bhv_fly_guy_update
 
 ### Description
 Behavior loop function for Fly Guy
@@ -9550,7 +9550,7 @@ Behavior loop function for Fly Guy
 
 <br />
 
-## [bhv_goomba_init](#bhv_goomba_init)
+## bhv_goomba_init
 
 ### Description
 Behavior init function for Goomba
@@ -9571,7 +9571,7 @@ Behavior init function for Goomba
 
 <br />
 
-## [bhv_goomba_update](#bhv_goomba_update)
+## bhv_goomba_update
 
 ### Description
 Behavior loop function for Goomba
@@ -9592,7 +9592,7 @@ Behavior loop function for Goomba
 
 <br />
 
-## [bhv_goomba_triplet_spawner_update](#bhv_goomba_triplet_spawner_update)
+## bhv_goomba_triplet_spawner_update
 
 ### Description
 Behavior loop function for Goomba triplet spawner
@@ -9613,7 +9613,7 @@ Behavior loop function for Goomba triplet spawner
 
 <br />
 
-## [bhv_chain_chomp_update](#bhv_chain_chomp_update)
+## bhv_chain_chomp_update
 
 ### Description
 Behavior loop function for Chain Chomp
@@ -9634,7 +9634,7 @@ Behavior loop function for Chain Chomp
 
 <br />
 
-## [bhv_chain_chomp_chain_part_update](#bhv_chain_chomp_chain_part_update)
+## bhv_chain_chomp_chain_part_update
 
 ### Description
 Behavior loop function for Chain Chomp chain part
@@ -9655,7 +9655,7 @@ Behavior loop function for Chain Chomp chain part
 
 <br />
 
-## [bhv_wooden_post_update](#bhv_wooden_post_update)
+## bhv_wooden_post_update
 
 ### Description
 Behavior loop function for ground poundable wooden post
@@ -9676,7 +9676,7 @@ Behavior loop function for ground poundable wooden post
 
 <br />
 
-## [bhv_chain_chomp_gate_init](#bhv_chain_chomp_gate_init)
+## bhv_chain_chomp_gate_init
 
 ### Description
 Behavior init function for Chain Chomp gate
@@ -9697,7 +9697,7 @@ Behavior init function for Chain Chomp gate
 
 <br />
 
-## [bhv_chain_chomp_gate_update](#bhv_chain_chomp_gate_update)
+## bhv_chain_chomp_gate_update
 
 ### Description
 Behavior loop function for Chain Chomp gate
@@ -9718,7 +9718,7 @@ Behavior loop function for Chain Chomp gate
 
 <br />
 
-## [bhv_wiggler_update](#bhv_wiggler_update)
+## bhv_wiggler_update
 
 ### Description
 Behavior loop function for Wiggler
@@ -9739,7 +9739,7 @@ Behavior loop function for Wiggler
 
 <br />
 
-## [bhv_wiggler_body_part_update](#bhv_wiggler_body_part_update)
+## bhv_wiggler_body_part_update
 
 ### Description
 Behavior loop function for Wiggler body part
@@ -9760,7 +9760,7 @@ Behavior loop function for Wiggler body part
 
 <br />
 
-## [bhv_enemy_lakitu_update](#bhv_enemy_lakitu_update)
+## bhv_enemy_lakitu_update
 
 ### Description
 Behavior loop function for Enemy Lakitu
@@ -9781,7 +9781,7 @@ Behavior loop function for Enemy Lakitu
 
 <br />
 
-## [bhv_camera_lakitu_init](#bhv_camera_lakitu_init)
+## bhv_camera_lakitu_init
 
 ### Description
 Behavior init function for Camera Lakitu
@@ -9802,7 +9802,7 @@ Behavior init function for Camera Lakitu
 
 <br />
 
-## [bhv_camera_lakitu_update](#bhv_camera_lakitu_update)
+## bhv_camera_lakitu_update
 
 ### Description
 Behavior loop function for Camera Lakitu
@@ -9823,7 +9823,7 @@ Behavior loop function for Camera Lakitu
 
 <br />
 
-## [bhv_cloud_update](#bhv_cloud_update)
+## bhv_cloud_update
 
 ### Description
 Behavior loop function for cloud
@@ -9844,7 +9844,7 @@ Behavior loop function for cloud
 
 <br />
 
-## [bhv_cloud_part_update](#bhv_cloud_part_update)
+## bhv_cloud_part_update
 
 ### Description
 Behavior loop function for cloud part
@@ -9865,7 +9865,7 @@ Behavior loop function for cloud part
 
 <br />
 
-## [bhv_spiny_update](#bhv_spiny_update)
+## bhv_spiny_update
 
 ### Description
 Behavior loop function for Spiny
@@ -9886,7 +9886,7 @@ Behavior loop function for Spiny
 
 <br />
 
-## [bhv_monty_mole_init](#bhv_monty_mole_init)
+## bhv_monty_mole_init
 
 ### Description
 Behavior init function for Monty Mole
@@ -9907,7 +9907,7 @@ Behavior init function for Monty Mole
 
 <br />
 
-## [bhv_monty_mole_update](#bhv_monty_mole_update)
+## bhv_monty_mole_update
 
 ### Description
 Behavior loop function for Monty Mole
@@ -9928,7 +9928,7 @@ Behavior loop function for Monty Mole
 
 <br />
 
-## [bhv_monty_mole_hole_update](#bhv_monty_mole_hole_update)
+## bhv_monty_mole_hole_update
 
 ### Description
 Behavior loop function for Monty Mole hole
@@ -9949,7 +9949,7 @@ Behavior loop function for Monty Mole hole
 
 <br />
 
-## [bhv_monty_mole_rock_update](#bhv_monty_mole_rock_update)
+## bhv_monty_mole_rock_update
 
 ### Description
 Behavior loop function for Monty Mole rock
@@ -9970,7 +9970,7 @@ Behavior loop function for Monty Mole rock
 
 <br />
 
-## [bhv_platform_on_track_init](#bhv_platform_on_track_init)
+## bhv_platform_on_track_init
 
 ### Description
 Behavior init function for platform on track
@@ -9991,7 +9991,7 @@ Behavior init function for platform on track
 
 <br />
 
-## [bhv_platform_on_track_update](#bhv_platform_on_track_update)
+## bhv_platform_on_track_update
 
 ### Description
 Behavior loop function for platform on track
@@ -10012,7 +10012,7 @@ Behavior loop function for platform on track
 
 <br />
 
-## [bhv_track_ball_update](#bhv_track_ball_update)
+## bhv_track_ball_update
 
 ### Description
 Behavior loop function for track ball
@@ -10033,7 +10033,7 @@ Behavior loop function for track ball
 
 <br />
 
-## [bhv_seesaw_platform_init](#bhv_seesaw_platform_init)
+## bhv_seesaw_platform_init
 
 ### Description
 Behavior init function for seesaw platform
@@ -10054,7 +10054,7 @@ Behavior init function for seesaw platform
 
 <br />
 
-## [bhv_seesaw_platform_update](#bhv_seesaw_platform_update)
+## bhv_seesaw_platform_update
 
 ### Description
 Behavior loop function for seesaw platform
@@ -10075,7 +10075,7 @@ Behavior loop function for seesaw platform
 
 <br />
 
-## [bhv_ferris_wheel_axle_init](#bhv_ferris_wheel_axle_init)
+## bhv_ferris_wheel_axle_init
 
 ### Description
 Behavior init function for ferris wheel axle
@@ -10096,7 +10096,7 @@ Behavior init function for ferris wheel axle
 
 <br />
 
-## [bhv_ferris_wheel_platform_init](#bhv_ferris_wheel_platform_init)
+## bhv_ferris_wheel_platform_init
 
 ### Description
 Behavior init function for ferris wheel platform
@@ -10117,7 +10117,7 @@ Behavior init function for ferris wheel platform
 
 <br />
 
-## [bhv_ferris_wheel_platform_update](#bhv_ferris_wheel_platform_update)
+## bhv_ferris_wheel_platform_update
 
 ### Description
 Behavior loop function for ferris wheel platform
@@ -10138,7 +10138,7 @@ Behavior loop function for ferris wheel platform
 
 <br />
 
-## [bhv_water_bomb_spawner_update](#bhv_water_bomb_spawner_update)
+## bhv_water_bomb_spawner_update
 
 ### Description
 Behavior loop function for water bomb spawner
@@ -10159,7 +10159,7 @@ Behavior loop function for water bomb spawner
 
 <br />
 
-## [bhv_water_bomb_update](#bhv_water_bomb_update)
+## bhv_water_bomb_update
 
 ### Description
 Behavior loop function for water bomb
@@ -10180,7 +10180,7 @@ Behavior loop function for water bomb
 
 <br />
 
-## [bhv_water_bomb_shadow_update](#bhv_water_bomb_shadow_update)
+## bhv_water_bomb_shadow_update
 
 ### Description
 Behavior loop function for water bomb shadow
@@ -10201,7 +10201,7 @@ Behavior loop function for water bomb shadow
 
 <br />
 
-## [bhv_ttc_rotating_solid_init](#bhv_ttc_rotating_solid_init)
+## bhv_ttc_rotating_solid_init
 
 ### Description
 Behavior init function for Tick Tock Clock rotating solid
@@ -10222,7 +10222,7 @@ Behavior init function for Tick Tock Clock rotating solid
 
 <br />
 
-## [bhv_ttc_rotating_solid_update](#bhv_ttc_rotating_solid_update)
+## bhv_ttc_rotating_solid_update
 
 ### Description
 Behavior loop function for Tick Tock Clock rotating solid
@@ -10243,7 +10243,7 @@ Behavior loop function for Tick Tock Clock rotating solid
 
 <br />
 
-## [bhv_ttc_pendulum_init](#bhv_ttc_pendulum_init)
+## bhv_ttc_pendulum_init
 
 ### Description
 Behavior init function for Tick Tock Clock pendulum
@@ -10264,7 +10264,7 @@ Behavior init function for Tick Tock Clock pendulum
 
 <br />
 
-## [bhv_ttc_pendulum_update](#bhv_ttc_pendulum_update)
+## bhv_ttc_pendulum_update
 
 ### Description
 Behavior loop function for Tick Tock Clock pendulum
@@ -10285,7 +10285,7 @@ Behavior loop function for Tick Tock Clock pendulum
 
 <br />
 
-## [bhv_ttc_treadmill_init](#bhv_ttc_treadmill_init)
+## bhv_ttc_treadmill_init
 
 ### Description
 Behavior init function for Tick Tock Clock treadmill
@@ -10306,7 +10306,7 @@ Behavior init function for Tick Tock Clock treadmill
 
 <br />
 
-## [bhv_ttc_treadmill_update](#bhv_ttc_treadmill_update)
+## bhv_ttc_treadmill_update
 
 ### Description
 Behavior loop function for Tick Tock Clock treadmill
@@ -10327,7 +10327,7 @@ Behavior loop function for Tick Tock Clock treadmill
 
 <br />
 
-## [bhv_ttc_moving_bar_init](#bhv_ttc_moving_bar_init)
+## bhv_ttc_moving_bar_init
 
 ### Description
 Behavior init function for Tick Tock Clock moving bar
@@ -10348,7 +10348,7 @@ Behavior init function for Tick Tock Clock moving bar
 
 <br />
 
-## [bhv_ttc_moving_bar_update](#bhv_ttc_moving_bar_update)
+## bhv_ttc_moving_bar_update
 
 ### Description
 Behavior loop function for Tick Tock Clock moving bar
@@ -10369,7 +10369,7 @@ Behavior loop function for Tick Tock Clock moving bar
 
 <br />
 
-## [bhv_ttc_cog_init](#bhv_ttc_cog_init)
+## bhv_ttc_cog_init
 
 ### Description
 Behavior init function for Tick Tock Clock cog
@@ -10390,7 +10390,7 @@ Behavior init function for Tick Tock Clock cog
 
 <br />
 
-## [bhv_ttc_cog_update](#bhv_ttc_cog_update)
+## bhv_ttc_cog_update
 
 ### Description
 Behavior loop function for Tick Tock Clock cog
@@ -10411,7 +10411,7 @@ Behavior loop function for Tick Tock Clock cog
 
 <br />
 
-## [bhv_ttc_pit_block_init](#bhv_ttc_pit_block_init)
+## bhv_ttc_pit_block_init
 
 ### Description
 Behavior init function for Tick Tock Clock pit block
@@ -10432,7 +10432,7 @@ Behavior init function for Tick Tock Clock pit block
 
 <br />
 
-## [bhv_ttc_pit_block_update](#bhv_ttc_pit_block_update)
+## bhv_ttc_pit_block_update
 
 ### Description
 Behavior loop function for Tick Tock Clock pit block
@@ -10453,7 +10453,7 @@ Behavior loop function for Tick Tock Clock pit block
 
 <br />
 
-## [bhv_ttc_elevator_init](#bhv_ttc_elevator_init)
+## bhv_ttc_elevator_init
 
 ### Description
 Behavior init function for Tick Tock Clock elevator
@@ -10474,7 +10474,7 @@ Behavior init function for Tick Tock Clock elevator
 
 <br />
 
-## [bhv_ttc_elevator_update](#bhv_ttc_elevator_update)
+## bhv_ttc_elevator_update
 
 ### Description
 Behavior loop function for Tick Tock Clock elevator
@@ -10495,7 +10495,7 @@ Behavior loop function for Tick Tock Clock elevator
 
 <br />
 
-## [bhv_ttc_2d_rotator_init](#bhv_ttc_2d_rotator_init)
+## bhv_ttc_2d_rotator_init
 
 ### Description
 Behavior init function for Tick Tock Clock 2D rotator
@@ -10516,7 +10516,7 @@ Behavior init function for Tick Tock Clock 2D rotator
 
 <br />
 
-## [bhv_ttc_2d_rotator_update](#bhv_ttc_2d_rotator_update)
+## bhv_ttc_2d_rotator_update
 
 ### Description
 Behavior loop function for Tick Tock Clock 2D rotator
@@ -10537,7 +10537,7 @@ Behavior loop function for Tick Tock Clock 2D rotator
 
 <br />
 
-## [bhv_ttc_spinner_update](#bhv_ttc_spinner_update)
+## bhv_ttc_spinner_update
 
 ### Description
 Behavior loop function for Tick Tock Clock spinner
@@ -10558,7 +10558,7 @@ Behavior loop function for Tick Tock Clock spinner
 
 <br />
 
-## [bhv_mr_blizzard_init](#bhv_mr_blizzard_init)
+## bhv_mr_blizzard_init
 
 ### Description
 Behavior init function for Mr. Blizzard
@@ -10579,7 +10579,7 @@ Behavior init function for Mr. Blizzard
 
 <br />
 
-## [bhv_mr_blizzard_update](#bhv_mr_blizzard_update)
+## bhv_mr_blizzard_update
 
 ### Description
 Behavior loop function for Mr. Blizzard
@@ -10600,7 +10600,7 @@ Behavior loop function for Mr. Blizzard
 
 <br />
 
-## [bhv_mr_blizzard_snowball](#bhv_mr_blizzard_snowball)
+## bhv_mr_blizzard_snowball
 
 ### Description
 Behavior loop function for Mr. Blizzard's snowball
@@ -10621,7 +10621,7 @@ Behavior loop function for Mr. Blizzard's snowball
 
 <br />
 
-## [bhv_sliding_plat_2_init](#bhv_sliding_plat_2_init)
+## bhv_sliding_plat_2_init
 
 ### Description
 Behavior init function for sliding platform 2 in Rainbow Ride and Bowser courses
@@ -10642,7 +10642,7 @@ Behavior init function for sliding platform 2 in Rainbow Ride and Bowser courses
 
 <br />
 
-## [bhv_sliding_plat_2_loop](#bhv_sliding_plat_2_loop)
+## bhv_sliding_plat_2_loop
 
 ### Description
 Behavior loop function for sliding platform 2 in Rainbow Ride and Bowser courses
@@ -10663,7 +10663,7 @@ Behavior loop function for sliding platform 2 in Rainbow Ride and Bowser courses
 
 <br />
 
-## [bhv_rotating_octagonal_plat_init](#bhv_rotating_octagonal_plat_init)
+## bhv_rotating_octagonal_plat_init
 
 ### Description
 Behavior init function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
@@ -10684,7 +10684,7 @@ Behavior init function for Rotating octagonal platform in Rainbow Ride and Bowse
 
 <br />
 
-## [bhv_rotating_octagonal_plat_loop](#bhv_rotating_octagonal_plat_loop)
+## bhv_rotating_octagonal_plat_loop
 
 ### Description
 Behavior loop function for Rotating octagonal platform in Rainbow Ride and Bowser in the Sky
@@ -10705,7 +10705,7 @@ Behavior loop function for Rotating octagonal platform in Rainbow Ride and Bowse
 
 <br />
 
-## [bhv_animates_on_floor_switch_press_init](#bhv_animates_on_floor_switch_press_init)
+## bhv_animates_on_floor_switch_press_init
 
 ### Description
 Behavior init function for animates on floor switch press in Rainbow Ride and Bowser courses
@@ -10726,7 +10726,7 @@ Behavior init function for animates on floor switch press in Rainbow Ride and Bo
 
 <br />
 
-## [bhv_animates_on_floor_switch_press_loop](#bhv_animates_on_floor_switch_press_loop)
+## bhv_animates_on_floor_switch_press_loop
 
 ### Description
 Behavior loop function for animates on floor switch press in Rainbow Ride and Bowser courses
@@ -10747,7 +10747,7 @@ Behavior loop function for animates on floor switch press in Rainbow Ride and Bo
 
 <br />
 
-## [bhv_activated_back_and_forth_platform_init](#bhv_activated_back_and_forth_platform_init)
+## bhv_activated_back_and_forth_platform_init
 
 ### Description
 Behavior init function for activated back and forth platform in Bowser courses
@@ -10768,7 +10768,7 @@ Behavior init function for activated back and forth platform in Bowser courses
 
 <br />
 
-## [bhv_activated_back_and_forth_platform_update](#bhv_activated_back_and_forth_platform_update)
+## bhv_activated_back_and_forth_platform_update
 
 ### Description
 Behavior loop function for activated back and forth platform in Bowser courses
@@ -10789,7 +10789,7 @@ Behavior loop function for activated back and forth platform in Bowser courses
 
 <br />
 
-## [bhv_recovery_heart_loop](#bhv_recovery_heart_loop)
+## bhv_recovery_heart_loop
 
 ### Description
 Behavior loop function for Recovery Heart
@@ -10810,7 +10810,7 @@ Behavior loop function for Recovery Heart
 
 <br />
 
-## [bhv_water_bomb_cannon_loop](#bhv_water_bomb_cannon_loop)
+## bhv_water_bomb_cannon_loop
 
 ### Description
 Behavior loop function for water bomb cannon
@@ -10831,7 +10831,7 @@ Behavior loop function for water bomb cannon
 
 <br />
 
-## [bhv_bubble_cannon_barrel_loop](#bhv_bubble_cannon_barrel_loop)
+## bhv_bubble_cannon_barrel_loop
 
 ### Description
 Behavior loop function for bubble cannon barrel
@@ -10852,7 +10852,7 @@ Behavior loop function for bubble cannon barrel
 
 <br />
 
-## [bhv_unagi_init](#bhv_unagi_init)
+## bhv_unagi_init
 
 ### Description
 Behavior init function for Unagi
@@ -10873,7 +10873,7 @@ Behavior init function for Unagi
 
 <br />
 
-## [bhv_unagi_loop](#bhv_unagi_loop)
+## bhv_unagi_loop
 
 ### Description
 Behavior loop function for Unagi
@@ -10894,7 +10894,7 @@ Behavior loop function for Unagi
 
 <br />
 
-## [bhv_unagi_subobject_loop](#bhv_unagi_subobject_loop)
+## bhv_unagi_subobject_loop
 
 ### Description
 Behavior loop function for Unagi subobject
@@ -10915,7 +10915,7 @@ Behavior loop function for Unagi subobject
 
 <br />
 
-## [bhv_dorrie_update](#bhv_dorrie_update)
+## bhv_dorrie_update
 
 ### Description
 Behavior loop function for Dorrie
@@ -10936,7 +10936,7 @@ Behavior loop function for Dorrie
 
 <br />
 
-## [bhv_haunted_chair_init](#bhv_haunted_chair_init)
+## bhv_haunted_chair_init
 
 ### Description
 Behavior init function for Haunted Chair
@@ -10957,7 +10957,7 @@ Behavior init function for Haunted Chair
 
 <br />
 
-## [bhv_haunted_chair_loop](#bhv_haunted_chair_loop)
+## bhv_haunted_chair_loop
 
 ### Description
 Behavior loop function for Haunted Chair
@@ -10978,7 +10978,7 @@ Behavior loop function for Haunted Chair
 
 <br />
 
-## [bhv_mad_piano_update](#bhv_mad_piano_update)
+## bhv_mad_piano_update
 
 ### Description
 Behavior loop function for Mad Piano
@@ -10999,7 +10999,7 @@ Behavior loop function for Mad Piano
 
 <br />
 
-## [bhv_flying_bookend_loop](#bhv_flying_bookend_loop)
+## bhv_flying_bookend_loop
 
 ### Description
 Behavior loop function for flying bookend
@@ -11020,7 +11020,7 @@ Behavior loop function for flying bookend
 
 <br />
 
-## [bhv_bookend_spawn_loop](#bhv_bookend_spawn_loop)
+## bhv_bookend_spawn_loop
 
 ### Description
 Behavior loop function for Bookend spawn
@@ -11041,7 +11041,7 @@ Behavior loop function for Bookend spawn
 
 <br />
 
-## [bhv_haunted_bookshelf_manager_loop](#bhv_haunted_bookshelf_manager_loop)
+## bhv_haunted_bookshelf_manager_loop
 
 ### Description
 Behavior loop function for haunted bookshelf manager
@@ -11062,7 +11062,7 @@ Behavior loop function for haunted bookshelf manager
 
 <br />
 
-## [bhv_book_switch_loop](#bhv_book_switch_loop)
+## bhv_book_switch_loop
 
 ### Description
 Behavior loop function for Book switch
@@ -11083,7 +11083,7 @@ Behavior loop function for Book switch
 
 <br />
 
-## [bhv_fire_piranha_plant_init](#bhv_fire_piranha_plant_init)
+## bhv_fire_piranha_plant_init
 
 ### Description
 Behavior init function for Fire Piranha Plant
@@ -11104,7 +11104,7 @@ Behavior init function for Fire Piranha Plant
 
 <br />
 
-## [bhv_fire_piranha_plant_update](#bhv_fire_piranha_plant_update)
+## bhv_fire_piranha_plant_update
 
 ### Description
 Behavior loop function for Fire Piranha Plant
@@ -11125,7 +11125,7 @@ Behavior loop function for Fire Piranha Plant
 
 <br />
 
-## [bhv_small_piranha_flame_loop](#bhv_small_piranha_flame_loop)
+## bhv_small_piranha_flame_loop
 
 ### Description
 Behavior loop function for Small Piranha flame
@@ -11146,7 +11146,7 @@ Behavior loop function for Small Piranha flame
 
 <br />
 
-## [bhv_fire_spitter_update](#bhv_fire_spitter_update)
+## bhv_fire_spitter_update
 
 ### Description
 Behavior loop function for Fire spitter
@@ -11167,7 +11167,7 @@ Behavior loop function for Fire spitter
 
 <br />
 
-## [bhv_fly_guy_flame_loop](#bhv_fly_guy_flame_loop)
+## bhv_fly_guy_flame_loop
 
 ### Description
 Behavior loop function for Fly Guy flame
@@ -11188,7 +11188,7 @@ Behavior loop function for Fly Guy flame
 
 <br />
 
-## [bhv_snufit_loop](#bhv_snufit_loop)
+## bhv_snufit_loop
 
 ### Description
 Behavior loop function for Snufit
@@ -11209,7 +11209,7 @@ Behavior loop function for Snufit
 
 <br />
 
-## [bhv_snufit_balls_loop](#bhv_snufit_balls_loop)
+## bhv_snufit_balls_loop
 
 ### Description
 Behavior loop function for Snufit balls
@@ -11230,7 +11230,7 @@ Behavior loop function for Snufit balls
 
 <br />
 
-## [bhv_horizontal_grindel_init](#bhv_horizontal_grindel_init)
+## bhv_horizontal_grindel_init
 
 ### Description
 Behavior init function for horizontal Grindel
@@ -11251,7 +11251,7 @@ Behavior init function for horizontal Grindel
 
 <br />
 
-## [bhv_horizontal_grindel_update](#bhv_horizontal_grindel_update)
+## bhv_horizontal_grindel_update
 
 ### Description
 Behavior loop function for horizontal Grindel
@@ -11272,7 +11272,7 @@ Behavior loop function for horizontal Grindel
 
 <br />
 
-## [bhv_eyerok_boss_init](#bhv_eyerok_boss_init)
+## bhv_eyerok_boss_init
 
 ### Description
 Behavior init function for Eyerok boss
@@ -11293,7 +11293,7 @@ Behavior init function for Eyerok boss
 
 <br />
 
-## [bhv_eyerok_boss_loop](#bhv_eyerok_boss_loop)
+## bhv_eyerok_boss_loop
 
 ### Description
 Behavior loop function for Eyerok boss
@@ -11314,7 +11314,7 @@ Behavior loop function for Eyerok boss
 
 <br />
 
-## [bhv_eyerok_hand_loop](#bhv_eyerok_hand_loop)
+## bhv_eyerok_hand_loop
 
 ### Description
 Behavior loop function for Eyerok hand
@@ -11335,7 +11335,7 @@ Behavior loop function for Eyerok hand
 
 <br />
 
-## [bhv_klepto_init](#bhv_klepto_init)
+## bhv_klepto_init
 
 ### Description
 Behavior init function for Klepto
@@ -11356,7 +11356,7 @@ Behavior init function for Klepto
 
 <br />
 
-## [bhv_klepto_update](#bhv_klepto_update)
+## bhv_klepto_update
 
 ### Description
 Behavior loop function for Klepto
@@ -11377,7 +11377,7 @@ Behavior loop function for Klepto
 
 <br />
 
-## [bhv_bird_update](#bhv_bird_update)
+## bhv_bird_update
 
 ### Description
 Behavior loop function for bird
@@ -11398,7 +11398,7 @@ Behavior loop function for bird
 
 <br />
 
-## [bhv_racing_penguin_init](#bhv_racing_penguin_init)
+## bhv_racing_penguin_init
 
 ### Description
 Behavior init function for Racing Penguin
@@ -11419,7 +11419,7 @@ Behavior init function for Racing Penguin
 
 <br />
 
-## [bhv_racing_penguin_update](#bhv_racing_penguin_update)
+## bhv_racing_penguin_update
 
 ### Description
 Behavior loop function for Racing Penguin
@@ -11440,7 +11440,7 @@ Behavior loop function for Racing Penguin
 
 <br />
 
-## [bhv_penguin_race_finish_line_update](#bhv_penguin_race_finish_line_update)
+## bhv_penguin_race_finish_line_update
 
 ### Description
 Behavior loop function for Penguin race finish line
@@ -11461,7 +11461,7 @@ Behavior loop function for Penguin race finish line
 
 <br />
 
-## [bhv_penguin_race_shortcut_check_update](#bhv_penguin_race_shortcut_check_update)
+## bhv_penguin_race_shortcut_check_update
 
 ### Description
 Behavior loop function for Penguin race shortcut check
@@ -11482,7 +11482,7 @@ Behavior loop function for Penguin race shortcut check
 
 <br />
 
-## [bhv_coffin_spawner_loop](#bhv_coffin_spawner_loop)
+## bhv_coffin_spawner_loop
 
 ### Description
 Behavior loop function for coffin spawner
@@ -11503,7 +11503,7 @@ Behavior loop function for coffin spawner
 
 <br />
 
-## [bhv_coffin_loop](#bhv_coffin_loop)
+## bhv_coffin_loop
 
 ### Description
 Behavior loop function for coffin
@@ -11524,7 +11524,7 @@ Behavior loop function for coffin
 
 <br />
 
-## [bhv_clam_loop](#bhv_clam_loop)
+## bhv_clam_loop
 
 ### Description
 Behavior loop function for Clam
@@ -11545,7 +11545,7 @@ Behavior loop function for Clam
 
 <br />
 
-## [bhv_skeeter_update](#bhv_skeeter_update)
+## bhv_skeeter_update
 
 ### Description
 Behavior loop function for Skeeter
@@ -11566,7 +11566,7 @@ Behavior loop function for Skeeter
 
 <br />
 
-## [bhv_skeeter_wave_update](#bhv_skeeter_wave_update)
+## bhv_skeeter_wave_update
 
 ### Description
 Behavior loop function for Skeeter wave
@@ -11587,7 +11587,7 @@ Behavior loop function for Skeeter wave
 
 <br />
 
-## [bhv_swing_platform_init](#bhv_swing_platform_init)
+## bhv_swing_platform_init
 
 ### Description
 Behavior init function for swing platform
@@ -11608,7 +11608,7 @@ Behavior init function for swing platform
 
 <br />
 
-## [bhv_swing_platform_update](#bhv_swing_platform_update)
+## bhv_swing_platform_update
 
 ### Description
 Behavior loop function for swing platform
@@ -11629,7 +11629,7 @@ Behavior loop function for swing platform
 
 <br />
 
-## [bhv_donut_platform_spawner_update](#bhv_donut_platform_spawner_update)
+## bhv_donut_platform_spawner_update
 
 ### Description
 Behavior loop function for donut platform spawner
@@ -11650,7 +11650,7 @@ Behavior loop function for donut platform spawner
 
 <br />
 
-## [bhv_donut_platform_update](#bhv_donut_platform_update)
+## bhv_donut_platform_update
 
 ### Description
 Behavior loop function for donut platform
@@ -11671,7 +11671,7 @@ Behavior loop function for donut platform
 
 <br />
 
-## [bhv_ddd_pole_init](#bhv_ddd_pole_init)
+## bhv_ddd_pole_init
 
 ### Description
 Behavior init function for Dire Dire Docks pole
@@ -11692,7 +11692,7 @@ Behavior init function for Dire Dire Docks pole
 
 <br />
 
-## [bhv_ddd_pole_update](#bhv_ddd_pole_update)
+## bhv_ddd_pole_update
 
 ### Description
 Behavior loop function for Dire Dire Docks pole
@@ -11713,7 +11713,7 @@ Behavior loop function for Dire Dire Docks pole
 
 <br />
 
-## [bhv_red_coin_star_marker_init](#bhv_red_coin_star_marker_init)
+## bhv_red_coin_star_marker_init
 
 ### Description
 Behavior init function for Red Coin Star marker
@@ -11734,7 +11734,7 @@ Behavior init function for Red Coin Star marker
 
 <br />
 
-## [bhv_triplet_butterfly_update](#bhv_triplet_butterfly_update)
+## bhv_triplet_butterfly_update
 
 ### Description
 Behavior loop function for a triplet of butterflies
@@ -11755,7 +11755,7 @@ Behavior loop function for a triplet of butterflies
 
 <br />
 
-## [bhv_bubba_loop](#bhv_bubba_loop)
+## bhv_bubba_loop
 
 ### Description
 Behavior loop function for Bubba
@@ -11776,7 +11776,7 @@ Behavior loop function for Bubba
 
 <br />
 
-## [bhv_intro_lakitu_loop](#bhv_intro_lakitu_loop)
+## bhv_intro_lakitu_loop
 
 ### Description
 Behavior loop function for intro Lakitu
@@ -11797,7 +11797,7 @@ Behavior loop function for intro Lakitu
 
 <br />
 
-## [bhv_intro_peach_loop](#bhv_intro_peach_loop)
+## bhv_intro_peach_loop
 
 ### Description
 Behavior loop function for intro Peach
@@ -11818,7 +11818,7 @@ Behavior loop function for intro Peach
 
 <br />
 
-## [bhv_end_birds_1_loop](#bhv_end_birds_1_loop)
+## bhv_end_birds_1_loop
 
 ### Description
 Behavior loop function for first end birds
@@ -11839,7 +11839,7 @@ Behavior loop function for first end birds
 
 <br />
 
-## [bhv_end_birds_2_loop](#bhv_end_birds_2_loop)
+## bhv_end_birds_2_loop
 
 ### Description
 Behavior loop function for second end birds
@@ -11860,7 +11860,7 @@ Behavior loop function for second end birds
 
 <br />
 
-## [bhv_intro_scene_loop](#bhv_intro_scene_loop)
+## bhv_intro_scene_loop
 
 ### Description
 Behavior loop function for intro scene
@@ -11881,7 +11881,7 @@ Behavior loop function for intro scene
 
 <br />
 
-## [bhv_yoshi_loop](#bhv_yoshi_loop)
+## bhv_yoshi_loop
 
 ### Description
 Behavior loop function for Yoshi
@@ -11902,7 +11902,7 @@ Behavior loop function for Yoshi
 
 <br />
 
-## [bhv_volcano_trap_loop](#bhv_volcano_trap_loop)
+## bhv_volcano_trap_loop
 
 ### Description
 Behavior loop function for volcano trap
@@ -11923,7 +11923,7 @@ Behavior loop function for volcano trap
 
 <br />
 
-## [uv_update_scroll](#uv_update_scroll)
+## uv_update_scroll
 
 ### Description
 Behavior loop function for UV texture scrolling
@@ -11944,7 +11944,7 @@ Behavior loop function for UV texture scrolling
 
 <br />
 
-## [bhv_ambient_light_update](#bhv_ambient_light_update)
+## bhv_ambient_light_update
 
 ### Description
 Behavior loop function for the lighting engine ambient light. Takes the first 3 behavior parameter bytes for RGB color
@@ -11965,7 +11965,7 @@ Behavior loop function for the lighting engine ambient light. Takes the first 3 
 
 <br />
 
-## [bhv_point_light_init](#bhv_point_light_init)
+## bhv_point_light_init
 
 ### Description
 Behavior init function for the lighting engine point light. Takes the first 3 behavior parameter bytes for RGB color and the last for radius
@@ -11986,7 +11986,7 @@ Behavior init function for the lighting engine point light. Takes the first 3 be
 
 <br />
 
-## [bhv_point_light_loop](#bhv_point_light_loop)
+## bhv_point_light_loop
 
 ### Description
 Behavior loop function for the lighting engine point light
@@ -12007,7 +12007,7 @@ Behavior loop function for the lighting engine point light
 
 <br />
 
-## [spawn_default_star](#spawn_default_star)
+## spawn_default_star
 
 ### Description
 Spawns a Star with an ID corresponding to the current object's first behavior parameter byte
@@ -12032,7 +12032,7 @@ Spawns a Star with an ID corresponding to the current object's first behavior pa
 
 <br />
 
-## [spawn_red_coin_cutscene_star](#spawn_red_coin_cutscene_star)
+## spawn_red_coin_cutscene_star
 
 ### Description
 Spawns a Red Coin cutscene star with an ID corresponding to the current object's first behavior parameter byte
@@ -12057,7 +12057,7 @@ Spawns a Red Coin cutscene star with an ID corresponding to the current object's
 
 <br />
 
-## [spawn_no_exit_star](#spawn_no_exit_star)
+## spawn_no_exit_star
 
 ### Description
 Spawns a Star that won't make Mario exit the level with an ID corresponding to the current object's first behavior parameter byte

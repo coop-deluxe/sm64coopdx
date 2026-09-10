@@ -11,7 +11,7 @@
 <br />
 
 
-## [clear_move_flag](#clear_move_flag)
+## clear_move_flag
 
 ### Description
 Clears the `flag` from the `bitSet`
@@ -36,7 +36,7 @@ Clears the `flag` from the `bitSet`
 
 <br />
 
-## [set_room_override](#set_room_override)
+## set_room_override
 
 ### Description
 Overrides the current room Mario is in. Set to -1 to reset override
@@ -59,7 +59,7 @@ Overrides the current room Mario is in. Set to -1 to reset override
 
 <br />
 
-## [obj_update_pos_from_parent_transformation](#obj_update_pos_from_parent_transformation)
+## obj_update_pos_from_parent_transformation
 
 ### Description
 Updates an object's position based on a parent transformation matrix
@@ -83,7 +83,7 @@ Updates an object's position based on a parent transformation matrix
 
 <br />
 
-## [obj_apply_scale_to_matrix](#obj_apply_scale_to_matrix)
+## obj_apply_scale_to_matrix
 
 ### Description
 Applies an object's scale to a transformation matrix
@@ -108,7 +108,7 @@ Applies an object's scale to a transformation matrix
 
 <br />
 
-## [create_transformation_from_matrices](#create_transformation_from_matrices)
+## create_transformation_from_matrices
 
 ### Description
 Combines two transformation matrices into a single result matrix
@@ -133,7 +133,7 @@ Combines two transformation matrices into a single result matrix
 
 <br />
 
-## [obj_set_held_state](#obj_set_held_state)
+## obj_set_held_state
 
 ### Description
 Sets an object's held state based on the behavior script it will perform
@@ -157,7 +157,7 @@ Sets an object's held state based on the behavior script it will perform
 
 <br />
 
-## [lateral_dist_between_objects](#lateral_dist_between_objects)
+## lateral_dist_between_objects
 
 ### Description
 Calculates the lateral (XZ) distance between two objects
@@ -181,7 +181,7 @@ Calculates the lateral (XZ) distance between two objects
 
 <br />
 
-## [dist_between_objects](#dist_between_objects)
+## dist_between_objects
 
 ### Description
 Calculates the 3D distance between two objects
@@ -205,7 +205,7 @@ Calculates the 3D distance between two objects
 
 <br />
 
-## [dist_between_object_and_point](#dist_between_object_and_point)
+## dist_between_object_and_point
 
 ### Description
 Calculates the 3D distance between an object and a point
@@ -231,7 +231,7 @@ Calculates the 3D distance between an object and a point
 
 <br />
 
-## [cur_obj_forward_vel_approach_upward](#cur_obj_forward_vel_approach_upward)
+## cur_obj_forward_vel_approach_upward
 
 ### Description
 Increases the current object's forward velocity toward target by increment
@@ -255,7 +255,7 @@ Increases the current object's forward velocity toward target by increment
 
 <br />
 
-## [approach_f32_signed](#approach_f32_signed)
+## approach_f32_signed
 
 ### Description
 Approaches a value toward a target using signed increments. Returns `TRUE` when target is reached
@@ -281,7 +281,7 @@ Approaches a value toward a target using signed increments. Returns `TRUE` when 
 
 <br />
 
-## [approach_f32_symmetric](#approach_f32_symmetric)
+## approach_f32_symmetric
 
 ### Description
 Approaches a value toward a target using symmetric increments
@@ -306,7 +306,7 @@ Approaches a value toward a target using symmetric increments
 
 <br />
 
-## [approach_s16_symmetric](#approach_s16_symmetric)
+## approach_s16_symmetric
 
 ### Description
 Approaches a 16-bit value toward a target using symmetric increments
@@ -331,7 +331,7 @@ Approaches a 16-bit value toward a target using symmetric increments
 
 <br />
 
-## [cur_obj_rotate_yaw_toward](#cur_obj_rotate_yaw_toward)
+## cur_obj_rotate_yaw_toward
 
 ### Description
 Rotates the current object's yaw angle toward a target. Returns `TRUE` when target is reached
@@ -355,7 +355,7 @@ Rotates the current object's yaw angle toward a target. Returns `TRUE` when targ
 
 <br />
 
-## [obj_angle_to_object](#obj_angle_to_object)
+## obj_angle_to_object
 
 ### Description
 Calculates the angle from one object to another in yaw
@@ -379,7 +379,7 @@ Calculates the angle from one object to another in yaw
 
 <br />
 
-## [obj_pitch_to_object](#obj_pitch_to_object)
+## obj_pitch_to_object
 
 ### Description
 Calculates the pitch angle from one object to another
@@ -403,7 +403,7 @@ Calculates the pitch angle from one object to another
 
 <br />
 
-## [obj_angle_to_point](#obj_angle_to_point)
+## obj_angle_to_point
 
 ### Description
 Calculates the yaw angle from an object to a point
@@ -428,7 +428,7 @@ Calculates the yaw angle from an object to a point
 
 <br />
 
-## [obj_turn_toward_object](#obj_turn_toward_object)
+## obj_turn_toward_object
 
 ### Description
 Rotates an object's specified angle toward another object by `turnAmount`
@@ -454,7 +454,7 @@ Rotates an object's specified angle toward another object by `turnAmount`
 
 <br />
 
-## [obj_set_parent_relative_pos](#obj_set_parent_relative_pos)
+## obj_set_parent_relative_pos
 
 ### Description
 Sets an object's position relative to its parent
@@ -480,7 +480,7 @@ Sets an object's position relative to its parent
 
 <br />
 
-## [obj_set_pos](#obj_set_pos)
+## obj_set_pos
 
 ### Description
 Sets an object's position in 3D space
@@ -506,7 +506,7 @@ Sets an object's position in 3D space
 
 <br />
 
-## [obj_set_angle](#obj_set_angle)
+## obj_set_angle
 
 ### Description
 Sets an object's face and move angles to the same pitch, yaw, and roll
@@ -532,7 +532,7 @@ Sets an object's face and move angles to the same pitch, yaw, and roll
 
 <br />
 
-## [obj_set_move_angle](#obj_set_move_angle)
+## obj_set_move_angle
 
 ### Description
 Sets an object's movement angle (pitch, yaw, roll)
@@ -558,7 +558,7 @@ Sets an object's movement angle (pitch, yaw, roll)
 
 <br />
 
-## [obj_set_face_angle](#obj_set_face_angle)
+## obj_set_face_angle
 
 ### Description
 Sets an object's face angle (pitch, yaw, roll)
@@ -584,7 +584,7 @@ Sets an object's face angle (pitch, yaw, roll)
 
 <br />
 
-## [obj_set_gfx_angle](#obj_set_gfx_angle)
+## obj_set_gfx_angle
 
 ### Description
 Sets the graphics angle for an object (pitch, yaw, roll)
@@ -610,7 +610,7 @@ Sets the graphics angle for an object (pitch, yaw, roll)
 
 <br />
 
-## [obj_set_gfx_pos](#obj_set_gfx_pos)
+## obj_set_gfx_pos
 
 ### Description
 Sets the graphics position for an object in 3D space
@@ -636,7 +636,7 @@ Sets the graphics position for an object in 3D space
 
 <br />
 
-## [obj_set_gfx_scale](#obj_set_gfx_scale)
+## obj_set_gfx_scale
 
 ### Description
 Sets the graphics scale for an object in X, Y, Z dimensions
@@ -662,7 +662,7 @@ Sets the graphics scale for an object in X, Y, Z dimensions
 
 <br />
 
-## [spawn_water_droplet](#spawn_water_droplet)
+## spawn_water_droplet
 
 ### Description
 Spawns a water droplet object with the specified parameters
@@ -686,7 +686,7 @@ Spawns a water droplet object with the specified parameters
 
 <br />
 
-## [obj_build_relative_transform](#obj_build_relative_transform)
+## obj_build_relative_transform
 
 ### Description
 Builds a relative transformation matrix for an object based on parent-relative position and face angle
@@ -709,7 +709,7 @@ Builds a relative transformation matrix for an object based on parent-relative p
 
 <br />
 
-## [cur_obj_move_using_vel](#cur_obj_move_using_vel)
+## cur_obj_move_using_vel
 
 ### Description
 Moves the current object using its velocity vector
@@ -730,7 +730,7 @@ Moves the current object using its velocity vector
 
 <br />
 
-## [obj_copy_graph_y_offset](#obj_copy_graph_y_offset)
+## obj_copy_graph_y_offset
 
 ### Description
 Copies the graph Y offset from one object to another
@@ -754,7 +754,7 @@ Copies the graph Y offset from one object to another
 
 <br />
 
-## [obj_copy_pos_and_angle](#obj_copy_pos_and_angle)
+## obj_copy_pos_and_angle
 
 ### Description
 Copies both position and angles from one object to another
@@ -778,7 +778,7 @@ Copies both position and angles from one object to another
 
 <br />
 
-## [obj_copy_pos](#obj_copy_pos)
+## obj_copy_pos
 
 ### Description
 Copies position from one object to another
@@ -802,7 +802,7 @@ Copies position from one object to another
 
 <br />
 
-## [obj_copy_angle](#obj_copy_angle)
+## obj_copy_angle
 
 ### Description
 Copies move and face angles from one object to another
@@ -826,7 +826,7 @@ Copies move and face angles from one object to another
 
 <br />
 
-## [obj_set_gfx_pos_from_pos](#obj_set_gfx_pos_from_pos)
+## obj_set_gfx_pos_from_pos
 
 ### Description
 Synchronizes an object's graphics position with its physical position
@@ -849,7 +849,7 @@ Synchronizes an object's graphics position with its physical position
 
 <br />
 
-## [obj_init_animation](#obj_init_animation)
+## obj_init_animation
 
 ### Description
 Initializes an animation for an object by index
@@ -873,7 +873,7 @@ Initializes an animation for an object by index
 
 <br />
 
-## [linear_mtxf_mul_vec3f](#linear_mtxf_mul_vec3f)
+## linear_mtxf_mul_vec3f
 
 ### Description
 Multiplies a vector by a matrix of the form:
@@ -903,7 +903,7 @@ i.e. a matrix representing a linear transformation over 3 space
 
 <br />
 
-## [linear_mtxf_transpose_mul_vec3f](#linear_mtxf_transpose_mul_vec3f)
+## linear_mtxf_transpose_mul_vec3f
 
 ### Description
 Multiplies a vector by the transpose of a matrix of the form:
@@ -933,7 +933,7 @@ i.e. a matrix representing a linear transformation over 3 space
 
 <br />
 
-## [obj_apply_scale_to_transform](#obj_apply_scale_to_transform)
+## obj_apply_scale_to_transform
 
 ### Description
 Applies an object's scale to its transformation matrix
@@ -956,7 +956,7 @@ Applies an object's scale to its transformation matrix
 
 <br />
 
-## [obj_copy_scale](#obj_copy_scale)
+## obj_copy_scale
 
 ### Description
 Copies the scale from one object to another
@@ -980,7 +980,7 @@ Copies the scale from one object to another
 
 <br />
 
-## [obj_scale_xyz](#obj_scale_xyz)
+## obj_scale_xyz
 
 ### Description
 Sets an object's scale independently for X, Y, Z dimensions
@@ -1006,7 +1006,7 @@ Sets an object's scale independently for X, Y, Z dimensions
 
 <br />
 
-## [obj_scale](#obj_scale)
+## obj_scale
 
 ### Description
 Sets an object's uniform scale for all dimensions
@@ -1030,7 +1030,7 @@ Sets an object's uniform scale for all dimensions
 
 <br />
 
-## [cur_obj_scale](#cur_obj_scale)
+## cur_obj_scale
 
 ### Description
 Sets the current object's uniform scale for all dimensions
@@ -1053,7 +1053,7 @@ Sets the current object's uniform scale for all dimensions
 
 <br />
 
-## [cur_obj_init_animation](#cur_obj_init_animation)
+## cur_obj_init_animation
 
 ### Description
 Initializes an animation for the current object by index
@@ -1076,7 +1076,7 @@ Initializes an animation for the current object by index
 
 <br />
 
-## [cur_obj_init_animation_with_sound](#cur_obj_init_animation_with_sound)
+## cur_obj_init_animation_with_sound
 
 ### Description
 Initializes an animation for the current object and sets sound state
@@ -1099,7 +1099,7 @@ Initializes an animation for the current object and sets sound state
 
 <br />
 
-## [obj_init_animation_with_accel_and_sound](#obj_init_animation_with_accel_and_sound)
+## obj_init_animation_with_accel_and_sound
 
 ### Description
 Initializes an animation with acceleration and sound state for an object
@@ -1124,7 +1124,7 @@ Initializes an animation with acceleration and sound state for an object
 
 <br />
 
-## [cur_obj_init_animation_with_accel_and_sound](#cur_obj_init_animation_with_accel_and_sound)
+## cur_obj_init_animation_with_accel_and_sound
 
 ### Description
 Initializes an animation with acceleration and sound state for the current object
@@ -1148,7 +1148,7 @@ Initializes an animation with acceleration and sound state for the current objec
 
 <br />
 
-## [cur_obj_enable_rendering_and_become_tangible](#cur_obj_enable_rendering_and_become_tangible)
+## cur_obj_enable_rendering_and_become_tangible
 
 ### Description
 Enables rendering and tangibility for an object
@@ -1171,7 +1171,7 @@ Enables rendering and tangibility for an object
 
 <br />
 
-## [cur_obj_enable_rendering](#cur_obj_enable_rendering)
+## cur_obj_enable_rendering
 
 ### Description
 Enables rendering for the current object
@@ -1192,7 +1192,7 @@ Enables rendering for the current object
 
 <br />
 
-## [cur_obj_disable_rendering_and_become_intangible](#cur_obj_disable_rendering_and_become_intangible)
+## cur_obj_disable_rendering_and_become_intangible
 
 ### Description
 Disables rendering and makes an object intangible
@@ -1215,7 +1215,7 @@ Disables rendering and makes an object intangible
 
 <br />
 
-## [cur_obj_disable_rendering](#cur_obj_disable_rendering)
+## cur_obj_disable_rendering
 
 ### Description
 Disables rendering for the current object
@@ -1236,7 +1236,7 @@ Disables rendering for the current object
 
 <br />
 
-## [cur_obj_unhide](#cur_obj_unhide)
+## cur_obj_unhide
 
 ### Description
 Makes the current object visible by removing the invisible flag
@@ -1257,7 +1257,7 @@ Makes the current object visible by removing the invisible flag
 
 <br />
 
-## [cur_obj_hide](#cur_obj_hide)
+## cur_obj_hide
 
 ### Description
 Hides the current object by setting the invisible flag
@@ -1278,7 +1278,7 @@ Hides the current object by setting the invisible flag
 
 <br />
 
-## [cur_obj_set_pos_relative](#cur_obj_set_pos_relative)
+## cur_obj_set_pos_relative
 
 ### Description
 Sets the current object's position relative to another object's facing direction
@@ -1304,7 +1304,7 @@ Sets the current object's position relative to another object's facing direction
 
 <br />
 
-## [cur_obj_set_pos_relative_to_parent](#cur_obj_set_pos_relative_to_parent)
+## cur_obj_set_pos_relative_to_parent
 
 ### Description
 Sets the current object's position relative to its parent's facing direction
@@ -1329,7 +1329,7 @@ Sets the current object's position relative to its parent's facing direction
 
 <br />
 
-## [cur_obj_unused_init_on_floor](#cur_obj_unused_init_on_floor)
+## cur_obj_unused_init_on_floor
 
 ### Description
 Unused function that initializes the current object on the floor
@@ -1350,7 +1350,7 @@ Unused function that initializes the current object on the floor
 
 <br />
 
-## [obj_set_face_angle_to_move_angle](#obj_set_face_angle_to_move_angle)
+## obj_set_face_angle_to_move_angle
 
 ### Description
 Synchronizes an object's face angle with its move angle
@@ -1373,7 +1373,7 @@ Synchronizes an object's face angle with its move angle
 
 <br />
 
-## [get_object_list_from_behavior](#get_object_list_from_behavior)
+## get_object_list_from_behavior
 
 ### Description
 Retrieves the object list type that a behavior script belongs to
@@ -1396,7 +1396,7 @@ Retrieves the object list type that a behavior script belongs to
 
 <br />
 
-## [cur_obj_nearest_object_with_behavior](#cur_obj_nearest_object_with_behavior)
+## cur_obj_nearest_object_with_behavior
 
 ### Description
 Finds the nearest object with the specified behavior to the current object
@@ -1419,7 +1419,7 @@ Finds the nearest object with the specified behavior to the current object
 
 <br />
 
-## [cur_obj_dist_to_nearest_object_with_behavior](#cur_obj_dist_to_nearest_object_with_behavior)
+## cur_obj_dist_to_nearest_object_with_behavior
 
 ### Description
 Calculates the distance from the current object to the nearest object with specified behavior
@@ -1442,7 +1442,7 @@ Calculates the distance from the current object to the nearest object with speci
 
 <br />
 
-## [cur_obj_find_nearest_pole](#cur_obj_find_nearest_pole)
+## cur_obj_find_nearest_pole
 
 ### Description
 Finds the nearest pole-like object to the current object
@@ -1463,7 +1463,7 @@ Finds the nearest pole-like object to the current object
 
 <br />
 
-## [cur_obj_find_nearest_object_with_behavior](#cur_obj_find_nearest_object_with_behavior)
+## cur_obj_find_nearest_object_with_behavior
 
 ### Description
 Finds the nearest object with specified behavior and returns distance via pointer
@@ -1487,7 +1487,7 @@ Finds the nearest object with specified behavior and returns distance via pointe
 
 <br />
 
-## [cur_obj_count_objects_with_behavior](#cur_obj_count_objects_with_behavior)
+## cur_obj_count_objects_with_behavior
 
 ### Description
 Counts objects with specified behavior within distance of current object
@@ -1511,7 +1511,7 @@ Counts objects with specified behavior within distance of current object
 
 <br />
 
-## [find_unimportant_object](#find_unimportant_object)
+## find_unimportant_object
 
 ### Description
 Finds an unimportant object from the unimportant object list
@@ -1532,7 +1532,7 @@ Finds an unimportant object from the unimportant object list
 
 <br />
 
-## [count_unimportant_objects](#count_unimportant_objects)
+## count_unimportant_objects
 
 ### Description
 Counts the number of unimportant objects in the unimportant object list
@@ -1553,7 +1553,7 @@ Counts the number of unimportant objects in the unimportant object list
 
 <br />
 
-## [count_objects_with_behavior](#count_objects_with_behavior)
+## count_objects_with_behavior
 
 ### Description
 Counts the number of objects with the specified behavior
@@ -1576,7 +1576,7 @@ Counts the number of objects with the specified behavior
 
 <br />
 
-## [delete_all_objects_with_behavior](#delete_all_objects_with_behavior)
+## delete_all_objects_with_behavior
 
 ### Description
 Deletes all objects with the specified behavior
@@ -1599,7 +1599,7 @@ Deletes all objects with the specified behavior
 
 <br />
 
-## [find_object_with_behavior](#find_object_with_behavior)
+## find_object_with_behavior
 
 ### Description
 Finds any object with the specified behavior
@@ -1622,7 +1622,7 @@ Finds any object with the specified behavior
 
 <br />
 
-## [cur_obj_find_nearby_held_actor](#cur_obj_find_nearby_held_actor)
+## cur_obj_find_nearby_held_actor
 
 ### Description
 Finds an object with specified behavior within `maxDist` that is being held by a player
@@ -1646,7 +1646,7 @@ Finds an object with specified behavior within `maxDist` that is being held by a
 
 <br />
 
-## [cur_obj_reset_timer_and_subaction](#cur_obj_reset_timer_and_subaction)
+## cur_obj_reset_timer_and_subaction
 
 ### Description
 Resets the current object's timer and sub-action to 0
@@ -1667,7 +1667,7 @@ Resets the current object's timer and sub-action to 0
 
 <br />
 
-## [cur_obj_change_action](#cur_obj_change_action)
+## cur_obj_change_action
 
 ### Description
 Changes the current object's action and resets timer and subaction
@@ -1690,7 +1690,7 @@ Changes the current object's action and resets timer and subaction
 
 <br />
 
-## [cur_obj_set_vel_from_mario_vel](#cur_obj_set_vel_from_mario_vel)
+## cur_obj_set_vel_from_mario_vel
 
 ### Description
 Sets the current object's forward velocity based on Mario's velocity with scaling
@@ -1715,7 +1715,7 @@ Sets the current object's forward velocity based on Mario's velocity with scalin
 
 <br />
 
-## [cur_obj_reverse_animation](#cur_obj_reverse_animation)
+## cur_obj_reverse_animation
 
 ### Description
 Decreases the current object's animation frame by one
@@ -1736,7 +1736,7 @@ Decreases the current object's animation frame by one
 
 <br />
 
-## [cur_obj_extend_animation_if_at_end](#cur_obj_extend_animation_if_at_end)
+## cur_obj_extend_animation_if_at_end
 
 ### Description
 Extends the current object's animation frame if at loop end
@@ -1757,7 +1757,7 @@ Extends the current object's animation frame if at loop end
 
 <br />
 
-## [cur_obj_check_if_near_animation_end](#cur_obj_check_if_near_animation_end)
+## cur_obj_check_if_near_animation_end
 
 ### Description
 Checks if the current object's animation is near the end
@@ -1778,7 +1778,7 @@ Checks if the current object's animation is near the end
 
 <br />
 
-## [cur_obj_check_if_at_animation_end](#cur_obj_check_if_at_animation_end)
+## cur_obj_check_if_at_animation_end
 
 ### Description
 Checks if the current object's animation is at the end
@@ -1799,7 +1799,7 @@ Checks if the current object's animation is at the end
 
 <br />
 
-## [cur_obj_check_anim_frame](#cur_obj_check_anim_frame)
+## cur_obj_check_anim_frame
 
 ### Description
 Checks if the current object's animation is at a specific frame
@@ -1822,7 +1822,7 @@ Checks if the current object's animation is at a specific frame
 
 <br />
 
-## [cur_obj_check_anim_frame_in_range](#cur_obj_check_anim_frame_in_range)
+## cur_obj_check_anim_frame_in_range
 
 ### Description
 Checks if the current object's animation frame is within a range
@@ -1846,7 +1846,7 @@ Checks if the current object's animation frame is within a range
 
 <br />
 
-## [mario_is_in_air_action](#mario_is_in_air_action)
+## mario_is_in_air_action
 
 ### Description
 Checks if Mario is in an air action
@@ -1869,7 +1869,7 @@ Checks if Mario is in an air action
 
 <br />
 
-## [mario_is_dive_sliding](#mario_is_dive_sliding)
+## mario_is_dive_sliding
 
 ### Description
 Checks if Mario is performing a dive slide action
@@ -1892,7 +1892,7 @@ Checks if Mario is performing a dive slide action
 
 <br />
 
-## [cur_obj_set_y_vel_and_animation](#cur_obj_set_y_vel_and_animation)
+## cur_obj_set_y_vel_and_animation
 
 ### Description
 Sets the current object's vertical velocity and initializes an animation
@@ -1916,7 +1916,7 @@ Sets the current object's vertical velocity and initializes an animation
 
 <br />
 
-## [cur_obj_unrender_and_reset_state](#cur_obj_unrender_and_reset_state)
+## cur_obj_unrender_and_reset_state
 
 ### Description
 Disables rendering, makes intangible, and resets animation and action
@@ -1940,7 +1940,7 @@ Disables rendering, makes intangible, and resets animation and action
 
 <br />
 
-## [cur_obj_move_after_thrown_or_dropped](#cur_obj_move_after_thrown_or_dropped)
+## cur_obj_move_after_thrown_or_dropped
 
 ### Description
 Moves an object after being thrown or dropped with gravity applied
@@ -1964,7 +1964,7 @@ Moves an object after being thrown or dropped with gravity applied
 
 <br />
 
-## [cur_obj_get_thrown_or_placed](#cur_obj_get_thrown_or_placed)
+## cur_obj_get_thrown_or_placed
 
 ### Description
 Handles object state when it's been thrown or placed by a player
@@ -1989,7 +1989,7 @@ Handles object state when it's been thrown or placed by a player
 
 <br />
 
-## [cur_obj_get_dropped](#cur_obj_get_dropped)
+## cur_obj_get_dropped
 
 ### Description
 Handles object state when it's been dropped by a player
@@ -2010,7 +2010,7 @@ Handles object state when it's been dropped by a player
 
 <br />
 
-## [mario_set_flag](#mario_set_flag)
+## mario_set_flag
 
 ### Description
 Sets a flag on Mario's state
@@ -2033,7 +2033,7 @@ Sets a flag on Mario's state
 
 <br />
 
-## [cur_obj_clear_interact_status_flag](#cur_obj_clear_interact_status_flag)
+## cur_obj_clear_interact_status_flag
 
 ### Description
 Clears a flag from the current object's interaction status
@@ -2056,7 +2056,7 @@ Clears a flag from the current object's interaction status
 
 <br />
 
-## [obj_mark_for_deletion](#obj_mark_for_deletion)
+## obj_mark_for_deletion
 
 ### Description
 Marks an object to be unloaded at the end of the frame
@@ -2079,7 +2079,7 @@ Marks an object to be unloaded at the end of the frame
 
 <br />
 
-## [cur_obj_disable](#cur_obj_disable)
+## cur_obj_disable
 
 ### Description
 Disables the current object by hiding, disabling rendering, and making intangible
@@ -2100,7 +2100,7 @@ Disables the current object by hiding, disabling rendering, and making intangibl
 
 <br />
 
-## [cur_obj_become_intangible](#cur_obj_become_intangible)
+## cur_obj_become_intangible
 
 ### Description
 Makes the current object intangible
@@ -2121,7 +2121,7 @@ Makes the current object intangible
 
 <br />
 
-## [cur_obj_become_tangible](#cur_obj_become_tangible)
+## cur_obj_become_tangible
 
 ### Description
 Makes the current object tangible
@@ -2142,7 +2142,7 @@ Makes the current object tangible
 
 <br />
 
-## [obj_become_tangible](#obj_become_tangible)
+## obj_become_tangible
 
 ### Description
 Makes an object tangible
@@ -2165,7 +2165,7 @@ Makes an object tangible
 
 <br />
 
-## [cur_obj_update_floor_height](#cur_obj_update_floor_height)
+## cur_obj_update_floor_height
 
 ### Description
 Updates the current object's floor height based on its position
@@ -2186,7 +2186,7 @@ Updates the current object's floor height based on its position
 
 <br />
 
-## [cur_obj_update_floor_height_and_get_floor](#cur_obj_update_floor_height_and_get_floor)
+## cur_obj_update_floor_height_and_get_floor
 
 ### Description
 Updates the current object's floor height and returns the floor surface under it
@@ -2207,7 +2207,7 @@ Updates the current object's floor height and returns the floor surface under it
 
 <br />
 
-## [apply_drag_to_value](#apply_drag_to_value)
+## apply_drag_to_value
 
 ### Description
 Applies nonlinear drag to a value pointer based on drag strength
@@ -2231,7 +2231,7 @@ Applies nonlinear drag to a value pointer based on drag strength
 
 <br />
 
-## [cur_obj_apply_drag_xz](#cur_obj_apply_drag_xz)
+## cur_obj_apply_drag_xz
 
 ### Description
 Applies drag to the current object's horizontal velocity components
@@ -2254,7 +2254,7 @@ Applies drag to the current object's horizontal velocity components
 
 <br />
 
-## [cur_obj_move_xz](#cur_obj_move_xz)
+## cur_obj_move_xz
 
 ### Description
 Attempts to move the current object in XZ, handling floor slope, edges, and room boundaries
@@ -2278,7 +2278,7 @@ Attempts to move the current object in XZ, handling floor slope, edges, and room
 
 <br />
 
-## [cur_obj_move_update_underwater_flags](#cur_obj_move_update_underwater_flags)
+## cur_obj_move_update_underwater_flags
 
 ### Description
 Updates underwater movement flags and vertical damping while submerged
@@ -2299,7 +2299,7 @@ Updates underwater movement flags and vertical damping while submerged
 
 <br />
 
-## [cur_obj_move_update_ground_air_flags](#cur_obj_move_update_ground_air_flags)
+## cur_obj_move_update_ground_air_flags
 
 ### Description
 Updates ground and air movement flags after a vertical move
@@ -2323,7 +2323,7 @@ Updates ground and air movement flags after a vertical move
 
 <br />
 
-## [cur_obj_move_y_and_get_water_level](#cur_obj_move_y_and_get_water_level)
+## cur_obj_move_y_and_get_water_level
 
 ### Description
 Applies gravity and buoyancy to vertical velocity and returns the water level at the current XZ position
@@ -2347,7 +2347,7 @@ Applies gravity and buoyancy to vertical velocity and returns the water level at
 
 <br />
 
-## [cur_obj_move_y](#cur_obj_move_y)
+## cur_obj_move_y
 
 ### Description
 Moves the current object vertically while handling ground, water surface, and underwater states
@@ -2372,7 +2372,7 @@ Moves the current object vertically while handling ground, water surface, and un
 
 <br />
 
-## [cur_obj_unused_resolve_wall_collisions](#cur_obj_unused_resolve_wall_collisions)
+## cur_obj_unused_resolve_wall_collisions
 
 ### Description
 Performs a wall collision sweep for the current object if the radius is positive
@@ -2396,7 +2396,7 @@ Performs a wall collision sweep for the current object if the radius is positive
 
 <br />
 
-## [abs_angle_diff](#abs_angle_diff)
+## abs_angle_diff
 
 ### Description
 Returns the absolute difference between two 16-bit angles
@@ -2420,7 +2420,7 @@ Returns the absolute difference between two 16-bit angles
 
 <br />
 
-## [cur_obj_move_xz_using_fvel_and_yaw](#cur_obj_move_xz_using_fvel_and_yaw)
+## cur_obj_move_xz_using_fvel_and_yaw
 
 ### Description
 Sets the current object's horizontal velocity from forward speed and yaw, then moves it in XZ
@@ -2441,7 +2441,7 @@ Sets the current object's horizontal velocity from forward speed and yaw, then m
 
 <br />
 
-## [cur_obj_move_y_with_terminal_vel](#cur_obj_move_y_with_terminal_vel)
+## cur_obj_move_y_with_terminal_vel
 
 ### Description
 Moves the current object vertically and caps downward speed at terminal velocity
@@ -2462,7 +2462,7 @@ Moves the current object vertically and caps downward speed at terminal velocity
 
 <br />
 
-## [cur_obj_compute_vel_xz](#cur_obj_compute_vel_xz)
+## cur_obj_compute_vel_xz
 
 ### Description
 Computes the current object's horizontal velocity from forward speed and yaw
@@ -2483,7 +2483,7 @@ Computes the current object's horizontal velocity from forward speed and yaw
 
 <br />
 
-## [increment_velocity_toward_range](#increment_velocity_toward_range)
+## increment_velocity_toward_range
 
 ### Description
 Returns a signed velocity increment that moves a value toward a target range around center
@@ -2509,7 +2509,7 @@ Returns a signed velocity increment that moves a value toward a target range aro
 
 <br />
 
-## [obj_check_if_collided_with_object](#obj_check_if_collided_with_object)
+## obj_check_if_collided_with_object
 
 ### Description
 Checks whether obj1's collided object list contains obj2
@@ -2533,7 +2533,7 @@ Checks whether obj1's collided object list contains obj2
 
 <br />
 
-## [cur_obj_set_behavior](#cur_obj_set_behavior)
+## cur_obj_set_behavior
 
 ### Description
 Sets the current object's behavior script
@@ -2556,7 +2556,7 @@ Sets the current object's behavior script
 
 <br />
 
-## [obj_set_behavior](#obj_set_behavior)
+## obj_set_behavior
 
 ### Description
 Sets the specified object's behavior script
@@ -2580,7 +2580,7 @@ Sets the specified object's behavior script
 
 <br />
 
-## [cur_obj_has_behavior](#cur_obj_has_behavior)
+## cur_obj_has_behavior
 
 ### Description
 Checks whether the current object has the specified behavior
@@ -2603,7 +2603,7 @@ Checks whether the current object has the specified behavior
 
 <br />
 
-## [obj_has_behavior](#obj_has_behavior)
+## obj_has_behavior
 
 ### Description
 Checks whether an object has the specified behavior
@@ -2627,7 +2627,7 @@ Checks whether an object has the specified behavior
 
 <br />
 
-## [cur_obj_lateral_dist_from_obj_to_home](#cur_obj_lateral_dist_from_obj_to_home)
+## cur_obj_lateral_dist_from_obj_to_home
 
 ### Description
 Calculates the lateral distance from another object to the current object's home position
@@ -2650,7 +2650,7 @@ Calculates the lateral distance from another object to the current object's home
 
 <br />
 
-## [cur_obj_lateral_dist_from_mario_to_home](#cur_obj_lateral_dist_from_mario_to_home)
+## cur_obj_lateral_dist_from_mario_to_home
 
 ### Description
 Calculates Mario's lateral distance to the current object's home position
@@ -2671,7 +2671,7 @@ Calculates Mario's lateral distance to the current object's home position
 
 <br />
 
-## [cur_obj_lateral_dist_to_home](#cur_obj_lateral_dist_to_home)
+## cur_obj_lateral_dist_to_home
 
 ### Description
 Calculates the current object's lateral distance to its home position
@@ -2692,7 +2692,7 @@ Calculates the current object's lateral distance to its home position
 
 <br />
 
-## [cur_obj_outside_home_square](#cur_obj_outside_home_square)
+## cur_obj_outside_home_square
 
 ### Description
 Checks whether the current object is outside a square centered on its home position
@@ -2715,7 +2715,7 @@ Checks whether the current object is outside a square centered on its home posit
 
 <br />
 
-## [cur_obj_outside_home_rectangle](#cur_obj_outside_home_rectangle)
+## cur_obj_outside_home_rectangle
 
 ### Description
 Checks whether the current object is outside a rectangle centered on its home position
@@ -2741,7 +2741,7 @@ Checks whether the current object is outside a rectangle centered on its home po
 
 <br />
 
-## [cur_obj_set_pos_to_home](#cur_obj_set_pos_to_home)
+## cur_obj_set_pos_to_home
 
 ### Description
 Teleports the current object to its home position
@@ -2762,7 +2762,7 @@ Teleports the current object to its home position
 
 <br />
 
-## [cur_obj_set_pos_to_home_and_stop](#cur_obj_set_pos_to_home_and_stop)
+## cur_obj_set_pos_to_home_and_stop
 
 ### Description
 Teleports the current object to its home position and stops its motion
@@ -2783,7 +2783,7 @@ Teleports the current object to its home position and stops its motion
 
 <br />
 
-## [cur_obj_shake_y](#cur_obj_shake_y)
+## cur_obj_shake_y
 
 ### Description
 Shakes the current object vertically by alternating upward and downward offsets
@@ -2806,7 +2806,7 @@ Shakes the current object vertically by alternating upward and downward offsets
 
 <br />
 
-## [cur_obj_start_cam_event](#cur_obj_start_cam_event)
+## cur_obj_start_cam_event
 
 ### Description
 Starts a camera event and makes the current object the secondary camera focus
@@ -2830,7 +2830,7 @@ Starts a camera event and makes the current object the secondary camera focus
 
 <br />
 
-## [set_mario_interact_hoot_if_in_range](#set_mario_interact_hoot_if_in_range)
+## set_mario_interact_hoot_if_in_range
 
 ### Description
 Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistanceToMario`
@@ -2855,7 +2855,7 @@ Sets Mario's interact status to hoot-grabbed if Mario is within range `maxDistan
 
 <br />
 
-## [obj_set_billboard](#obj_set_billboard)
+## obj_set_billboard
 
 ### Description
 Enables billboard rendering for an object
@@ -2878,7 +2878,7 @@ Enables billboard rendering for an object
 
 <br />
 
-## [obj_set_cylboard](#obj_set_cylboard)
+## obj_set_cylboard
 
 ### Description
 Enables cylindrical billboard rendering for an object
@@ -2901,7 +2901,7 @@ Enables cylindrical billboard rendering for an object
 
 <br />
 
-## [cur_obj_set_billboard_if_vanilla_cam](#cur_obj_set_billboard_if_vanilla_cam)
+## cur_obj_set_billboard_if_vanilla_cam
 
 ### Description
 Chooses the appropriate billboard type for the current object based on camera mode
@@ -2922,7 +2922,7 @@ Chooses the appropriate billboard type for the current object based on camera mo
 
 <br />
 
-## [obj_set_hitbox_radius_and_height](#obj_set_hitbox_radius_and_height)
+## obj_set_hitbox_radius_and_height
 
 ### Description
 Sets an object's hitbox radius and height
@@ -2947,7 +2947,7 @@ Sets an object's hitbox radius and height
 
 <br />
 
-## [obj_set_hurtbox_radius_and_height](#obj_set_hurtbox_radius_and_height)
+## obj_set_hurtbox_radius_and_height
 
 ### Description
 Sets an object's hurtbox radius and height
@@ -2972,7 +2972,7 @@ Sets an object's hurtbox radius and height
 
 <br />
 
-## [cur_obj_set_hitbox_radius_and_height](#cur_obj_set_hitbox_radius_and_height)
+## cur_obj_set_hitbox_radius_and_height
 
 ### Description
 Sets the current object's hitbox radius and height
@@ -2996,7 +2996,7 @@ Sets the current object's hitbox radius and height
 
 <br />
 
-## [cur_obj_set_hurtbox_radius_and_height](#cur_obj_set_hurtbox_radius_and_height)
+## cur_obj_set_hurtbox_radius_and_height
 
 ### Description
 Sets the current object's hurtbox radius and height
@@ -3020,7 +3020,7 @@ Sets the current object's hurtbox radius and height
 
 <br />
 
-## [obj_spawn_loot_coins](#obj_spawn_loot_coins)
+## obj_spawn_loot_coins
 
 ### Description
 Spawns loot coins from an object using the specified behavior, jitter, and model
@@ -3048,7 +3048,7 @@ Spawns loot coins from an object using the specified behavior, jitter, and model
 
 <br />
 
-## [obj_spawn_loot_blue_coins](#obj_spawn_loot_blue_coins)
+## obj_spawn_loot_blue_coins
 
 ### Description
 Spawns blue loot coins from an object
@@ -3074,7 +3074,7 @@ Spawns blue loot coins from an object
 
 <br />
 
-## [obj_spawn_loot_yellow_coins](#obj_spawn_loot_yellow_coins)
+## obj_spawn_loot_yellow_coins
 
 ### Description
 Spawns yellow loot coins from an object
@@ -3099,7 +3099,7 @@ Spawns yellow loot coins from an object
 
 <br />
 
-## [cur_obj_spawn_loot_coin_at_mario_pos](#cur_obj_spawn_loot_coin_at_mario_pos)
+## cur_obj_spawn_loot_coin_at_mario_pos
 
 ### Description
 Spawns a yellow coin at Mario's position and decrements the current object's loot count
@@ -3122,7 +3122,7 @@ Spawns a yellow coin at Mario's position and decrements the current object's loo
 
 <br />
 
-## [cur_obj_abs_y_dist_to_home](#cur_obj_abs_y_dist_to_home)
+## cur_obj_abs_y_dist_to_home
 
 ### Description
 Returns the absolute vertical distance from the object to its home position
@@ -3143,7 +3143,7 @@ Returns the absolute vertical distance from the object to its home position
 
 <br />
 
-## [cur_obj_advance_looping_anim](#cur_obj_advance_looping_anim)
+## cur_obj_advance_looping_anim
 
 ### Description
 Advances the current object animation frame and returns the normalized frame progress
@@ -3164,7 +3164,7 @@ Advances the current object animation frame and returns the normalized frame pro
 
 <br />
 
-## [cur_obj_detect_steep_floor](#cur_obj_detect_steep_floor)
+## cur_obj_detect_steep_floor
 
 ### Description
 Checks whether the object is moving into a steep floor or death plane and returns a collision code
@@ -3187,7 +3187,7 @@ Checks whether the object is moving into a steep floor or death plane and return
 
 <br />
 
-## [cur_obj_resolve_wall_collisions](#cur_obj_resolve_wall_collisions)
+## cur_obj_resolve_wall_collisions
 
 ### Description
 Resolves wall collisions for the current object and returns `TRUE` if it hit a steep wall
@@ -3208,7 +3208,7 @@ Resolves wall collisions for the current object and returns `TRUE` if it hit a s
 
 <br />
 
-## [cur_obj_update_floor](#cur_obj_update_floor)
+## cur_obj_update_floor
 
 ### Description
 Updates the current object's floor pointer, floor type, and floor room based on the surface below it
@@ -3229,7 +3229,7 @@ Updates the current object's floor pointer, floor type, and floor room based on 
 
 <br />
 
-## [cur_obj_update_floor_and_resolve_wall_collisions](#cur_obj_update_floor_and_resolve_wall_collisions)
+## cur_obj_update_floor_and_resolve_wall_collisions
 
 ### Description
 Updates the floor and resolves walls for the current object, setting move flags accordingly
@@ -3252,7 +3252,7 @@ Updates the floor and resolves walls for the current object, setting move flags 
 
 <br />
 
-## [cur_obj_update_floor_and_walls](#cur_obj_update_floor_and_walls)
+## cur_obj_update_floor_and_walls
 
 ### Description
 Updates the current object floor and wall state using a default steep slope threshold
@@ -3273,7 +3273,7 @@ Updates the current object floor and wall state using a default steep slope thre
 
 <br />
 
-## [cur_obj_move_standard](#cur_obj_move_standard)
+## cur_obj_move_standard
 
 ### Description
 Updates the current object velocity and position using standard gravity, drag, and slope behavior
@@ -3296,7 +3296,7 @@ Updates the current object velocity and position using standard gravity, drag, a
 
 <br />
 
-## [cur_obj_within_12k_bounds](#cur_obj_within_12k_bounds)
+## cur_obj_within_12k_bounds
 
 ### Description
 Checks whether the current object is within a 12,000-unit world bound on all axes
@@ -3317,7 +3317,7 @@ Checks whether the current object is within a 12,000-unit world bound on all axe
 
 <br />
 
-## [cur_obj_move_using_vel_and_gravity](#cur_obj_move_using_vel_and_gravity)
+## cur_obj_move_using_vel_and_gravity
 
 ### Description
 Applies object velocity and gravity directly to the object's position with no terminal velocity
@@ -3338,7 +3338,7 @@ Applies object velocity and gravity directly to the object's position with no te
 
 <br />
 
-## [cur_obj_move_using_fvel_and_gravity](#cur_obj_move_using_fvel_and_gravity)
+## cur_obj_move_using_fvel_and_gravity
 
 ### Description
 Computes the object's XZ velocity from forward velocity then applies gravity-based movement
@@ -3359,7 +3359,7 @@ Computes the object's XZ velocity from forward velocity then applies gravity-bas
 
 <br />
 
-## [obj_set_pos_relative](#obj_set_pos_relative)
+## obj_set_pos_relative
 
 ### Description
 Sets an object position relative to another object using local left, up, and forward offsets
@@ -3386,7 +3386,7 @@ Sets an object position relative to another object using local left, up, and for
 
 <br />
 
-## [cur_obj_angle_to_home](#cur_obj_angle_to_home)
+## cur_obj_angle_to_home
 
 ### Description
 Returns the yaw angle from the current object toward its home position
@@ -3407,7 +3407,7 @@ Returns the yaw angle from the current object toward its home position
 
 <br />
 
-## [obj_set_gfx_pos_at_obj_pos](#obj_set_gfx_pos_at_obj_pos)
+## obj_set_gfx_pos_at_obj_pos
 
 ### Description
 Copies an object's world position and orientation into another object's graphics node
@@ -3431,7 +3431,7 @@ Copies an object's world position and orientation into another object's graphics
 
 <br />
 
-## [obj_translate_local](#obj_translate_local)
+## obj_translate_local
 
 ### Description
 Transforms the vector at `localTranslateIndex` into the object's local coordinates, and then adds it to the vector at `posIndex`
@@ -3456,7 +3456,7 @@ Transforms the vector at `localTranslateIndex` into the object's local coordinat
 
 <br />
 
-## [obj_build_transform_from_pos_and_angle](#obj_build_transform_from_pos_and_angle)
+## obj_build_transform_from_pos_and_angle
 
 ### Description
 Copies an object's position and rotation into its transform matrix using the specified field indices
@@ -3481,7 +3481,7 @@ Copies an object's position and rotation into its transform matrix using the spe
 
 <br />
 
-## [obj_set_throw_matrix_from_transform](#obj_set_throw_matrix_from_transform)
+## obj_set_throw_matrix_from_transform
 
 ### Description
 Sets the object's graphics throw matrix from its transform and applies object scale if needed
@@ -3504,7 +3504,7 @@ Sets the object's graphics throw matrix from its transform and applies object sc
 
 <br />
 
-## [obj_build_transform_relative_to_parent](#obj_build_transform_relative_to_parent)
+## obj_build_transform_relative_to_parent
 
 ### Description
 Builds the object's world transform relative to its parent and updates its world position
@@ -3527,7 +3527,7 @@ Builds the object's world transform relative to its parent and updates its world
 
 <br />
 
-## [obj_create_transform_from_self](#obj_create_transform_from_self)
+## obj_create_transform_from_self
 
 ### Description
 Initializes the object's own transform matrix from its current world position
@@ -3550,7 +3550,7 @@ Initializes the object's own transform matrix from its current world position
 
 <br />
 
-## [cur_obj_rotate_move_angle_using_vel](#cur_obj_rotate_move_angle_using_vel)
+## cur_obj_rotate_move_angle_using_vel
 
 ### Description
 Rotates the current object's move angles by its angular velocity components
@@ -3571,7 +3571,7 @@ Rotates the current object's move angles by its angular velocity components
 
 <br />
 
-## [cur_obj_rotate_face_angle_using_vel](#cur_obj_rotate_face_angle_using_vel)
+## cur_obj_rotate_face_angle_using_vel
 
 ### Description
 Rotates the current object's face angles by its angular velocity components
@@ -3592,7 +3592,7 @@ Rotates the current object's face angles by its angular velocity components
 
 <br />
 
-## [cur_obj_set_face_angle_to_move_angle](#cur_obj_set_face_angle_to_move_angle)
+## cur_obj_set_face_angle_to_move_angle
 
 ### Description
 Copies the current object's move angles into its face angles
@@ -3613,7 +3613,7 @@ Copies the current object's move angles into its face angles
 
 <br />
 
-## [cur_obj_follow_path](#cur_obj_follow_path)
+## cur_obj_follow_path
 
 ### Description
 Advances path-following state and returns whether a waypoint or path end was reached
@@ -3636,7 +3636,7 @@ Advances path-following state and returns whether a waypoint or path end was rea
 
 <br />
 
-## [chain_segment_init](#chain_segment_init)
+## chain_segment_init
 
 ### Description
 Initializes a chain segment's position and orientation to identity values
@@ -3659,7 +3659,7 @@ Initializes a chain segment's position and orientation to identity values
 
 <br />
 
-## [random_f32_around_zero](#random_f32_around_zero)
+## random_f32_around_zero
 
 ### Description
 Returns a random floating-point value within +/- diameter/2
@@ -3682,7 +3682,7 @@ Returns a random floating-point value within +/- diameter/2
 
 <br />
 
-## [obj_scale_random](#obj_scale_random)
+## obj_scale_random
 
 ### Description
 Randomly scales an object within a range and applies a minimum scale
@@ -3707,7 +3707,7 @@ Randomly scales an object within a range and applies a minimum scale
 
 <br />
 
-## [obj_translate_xyz_random](#obj_translate_xyz_random)
+## obj_translate_xyz_random
 
 ### Description
 Applies a random translation to an object on all three axes
@@ -3731,7 +3731,7 @@ Applies a random translation to an object on all three axes
 
 <br />
 
-## [obj_translate_xz_random](#obj_translate_xz_random)
+## obj_translate_xz_random
 
 ### Description
 Applies a random translation to an object on the X and Z axes
@@ -3755,7 +3755,7 @@ Applies a random translation to an object on the X and Z axes
 
 <br />
 
-## [obj_build_vel_from_transform](#obj_build_vel_from_transform)
+## obj_build_vel_from_transform
 
 ### Description
 Builds the object's world velocity from its transform basis vectors
@@ -3778,7 +3778,7 @@ Builds the object's world velocity from its transform basis vectors
 
 <br />
 
-## [cur_obj_set_pos_via_transform](#cur_obj_set_pos_via_transform)
+## cur_obj_set_pos_via_transform
 
 ### Description
 Moves the current object using its transform-derived velocity
@@ -3799,7 +3799,7 @@ Moves the current object using its transform-derived velocity
 
 <br />
 
-## [cur_obj_reflect_move_angle_off_wall](#cur_obj_reflect_move_angle_off_wall)
+## cur_obj_reflect_move_angle_off_wall
 
 ### Description
 Reflects the current object's move angle across its wall normal
@@ -3820,7 +3820,7 @@ Reflects the current object's move angle across its wall normal
 
 <br />
 
-## [cur_obj_spawn_particles](#cur_obj_spawn_particles)
+## cur_obj_spawn_particles
 
 ### Description
 Spawns particles based on information in a SpawnParticlesInfo structure
@@ -3843,7 +3843,7 @@ Spawns particles based on information in a SpawnParticlesInfo structure
 
 <br />
 
-## [obj_set_hitbox](#obj_set_hitbox)
+## obj_set_hitbox
 
 ### Description
 Sets an object's hitbox and hurtbox quantities then makes it tangible
@@ -3867,7 +3867,7 @@ Sets an object's hitbox and hurtbox quantities then makes it tangible
 
 <br />
 
-## [signum_positive](#signum_positive)
+## signum_positive
 
 ### Description
 Returns 1 for non-negative values and -1 for negative values
@@ -3890,7 +3890,7 @@ Returns 1 for non-negative values and -1 for negative values
 
 <br />
 
-## [cur_obj_wait_then_blink](#cur_obj_wait_then_blink)
+## cur_obj_wait_then_blink
 
 ### Description
 Makes the current object blink after a delay and returns `TRUE` when blinking is complete
@@ -3914,7 +3914,7 @@ Makes the current object blink after a delay and returns `TRUE` when blinking is
 
 <br />
 
-## [cur_obj_is_mario_ground_pounding_platform](#cur_obj_is_mario_ground_pounding_platform)
+## cur_obj_is_mario_ground_pounding_platform
 
 ### Description
 Returns `TRUE` if any active player is ground-pounding the current platform object
@@ -3935,7 +3935,7 @@ Returns `TRUE` if any active player is ground-pounding the current platform obje
 
 <br />
 
-## [obj_is_mario_ground_pounding_platform](#obj_is_mario_ground_pounding_platform)
+## obj_is_mario_ground_pounding_platform
 
 ### Description
 Checks whether a MarioState is ground-pounding the specified platform object
@@ -3959,7 +3959,7 @@ Checks whether a MarioState is ground-pounding the specified platform object
 
 <br />
 
-## [spawn_mist_particles](#spawn_mist_particles)
+## spawn_mist_particles
 
 ### Description
 Spawns mist particles at the current object without playing sound
@@ -3980,7 +3980,7 @@ Spawns mist particles at the current object without playing sound
 
 <br />
 
-## [spawn_mist_particles_with_sound](#spawn_mist_particles_with_sound)
+## spawn_mist_particles_with_sound
 
 ### Description
 Spawns mist particles at the current object and plays the specified sound
@@ -4003,7 +4003,7 @@ Spawns mist particles at the current object and plays the specified sound
 
 <br />
 
-## [cur_obj_push_mario_away](#cur_obj_push_mario_away)
+## cur_obj_push_mario_away
 
 ### Description
 Pushes any player within a radius away from the current object on the XZ plane
@@ -4026,7 +4026,7 @@ Pushes any player within a radius away from the current object on the XZ plane
 
 <br />
 
-## [cur_obj_push_mario_away_from_cylinder](#cur_obj_push_mario_away_from_cylinder)
+## cur_obj_push_mario_away_from_cylinder
 
 ### Description
 Pushes any player within a vertical cylinder away from the current object
@@ -4050,7 +4050,7 @@ Pushes any player within a vertical cylinder away from the current object
 
 <br />
 
-## [bhv_dust_smoke_loop](#bhv_dust_smoke_loop)
+## bhv_dust_smoke_loop
 
 ### Description
 Behavior loop function for dust smoke
@@ -4071,7 +4071,7 @@ Behavior loop function for dust smoke
 
 <br />
 
-## [cur_obj_scale_over_time](#cur_obj_scale_over_time)
+## cur_obj_scale_over_time
 
 ### Description
 Smoothly scales between `minScale` and `maxScale` the current object over a `duration` using enabled `axes` (1 = x, 2 = y, 4 = z, can be combined)
@@ -4097,7 +4097,7 @@ Smoothly scales between `minScale` and `maxScale` the current object over a `dur
 
 <br />
 
-## [cur_obj_set_pos_to_home_with_debug](#cur_obj_set_pos_to_home_with_debug)
+## cur_obj_set_pos_to_home_with_debug
 
 ### Description
 Moves an object to its home position while applying debug position offsets
@@ -4118,7 +4118,7 @@ Moves an object to its home position while applying debug position offsets
 
 <br />
 
-## [cur_obj_is_mario_on_platform](#cur_obj_is_mario_on_platform)
+## cur_obj_is_mario_on_platform
 
 ### Description
 Returns `TRUE` if Mario is currently standing on the current platform object
@@ -4139,7 +4139,7 @@ Returns `TRUE` if Mario is currently standing on the current platform object
 
 <br />
 
-## [cur_obj_is_any_player_on_platform](#cur_obj_is_any_player_on_platform)
+## cur_obj_is_any_player_on_platform
 
 ### Description
 Returns `TRUE` if any player is standing on the current platform object
@@ -4160,7 +4160,7 @@ Returns `TRUE` if any player is standing on the current platform object
 
 <br />
 
-## [cur_obj_shake_y_until](#cur_obj_shake_y_until)
+## cur_obj_shake_y_until
 
 ### Description
 Oscillates the current object vertically until a specified number of cycles passes
@@ -4184,7 +4184,7 @@ Oscillates the current object vertically until a specified number of cycles pass
 
 <br />
 
-## [cur_obj_move_up_and_down](#cur_obj_move_up_and_down)
+## cur_obj_move_up_and_down
 
 ### Description
 Moves the current object up and down along a preset displacement table
@@ -4207,7 +4207,7 @@ Moves the current object up and down along a preset displacement table
 
 <br />
 
-## [spawn_star_with_no_lvl_exit](#spawn_star_with_no_lvl_exit)
+## spawn_star_with_no_lvl_exit
 
 ### Description
 Spawns a star object without triggering level exit behavior
@@ -4231,7 +4231,7 @@ Spawns a star object without triggering level exit behavior
 
 <br />
 
-## [spawn_base_star_with_no_lvl_exit](#spawn_base_star_with_no_lvl_exit)
+## spawn_base_star_with_no_lvl_exit
 
 ### Description
 Spawns a base star with default parameters and no level exit behavior
@@ -4252,7 +4252,7 @@ Spawns a base star with default parameters and no level exit behavior
 
 <br />
 
-## [cur_obj_mario_far_away](#cur_obj_mario_far_away)
+## cur_obj_mario_far_away
 
 ### Description
 Returns `TRUE` if the current object is farther than 2000 units from every active Mario
@@ -4273,7 +4273,7 @@ Returns `TRUE` if the current object is farther than 2000 units from every activ
 
 <br />
 
-## [is_mario_moving_fast_or_in_air](#is_mario_moving_fast_or_in_air)
+## is_mario_moving_fast_or_in_air
 
 ### Description
 Returns `TRUE` if the current Mario is moving faster than threshold or is airborne
@@ -4296,7 +4296,7 @@ Returns `TRUE` if the current Mario is moving faster than threshold or is airbor
 
 <br />
 
-## [is_item_in_array](#is_item_in_array)
+## is_item_in_array
 
 ### Description
 Checks whether a signed item appears in a terminated array
@@ -4320,7 +4320,7 @@ Checks whether a signed item appears in a terminated array
 
 <br />
 
-## [bhv_init_room](#bhv_init_room)
+## bhv_init_room
 
 ### Description
 Sets the current object's room based on the floor surface underneath it
@@ -4341,7 +4341,7 @@ Sets the current object's room based on the floor surface underneath it
 
 <br />
 
-## [cur_obj_enable_rendering_if_mario_in_room](#cur_obj_enable_rendering_if_mario_in_room)
+## cur_obj_enable_rendering_if_mario_in_room
 
 ### Description
 Enables rendering for the current object if any active player is in a connected room
@@ -4362,7 +4362,7 @@ Enables rendering for the current object if any active player is in a connected 
 
 <br />
 
-## [cur_obj_set_hitbox_and_die_if_attacked](#cur_obj_set_hitbox_and_die_if_attacked)
+## cur_obj_set_hitbox_and_die_if_attacked
 
 ### Description
 Gives the current object a hitbox and kills it if attacked, with optional loot suppression
@@ -4387,7 +4387,7 @@ Gives the current object a hitbox and kills it if attacked, with optional loot s
 
 <br />
 
-## [obj_explode_and_spawn_coins](#obj_explode_and_spawn_coins)
+## obj_explode_and_spawn_coins
 
 ### Description
 Explodes the current object, spawns particles, and optionally spawns coins
@@ -4411,7 +4411,7 @@ Explodes the current object, spawns particles, and optionally spawns coins
 
 <br />
 
-## [cur_obj_if_hit_wall_bounce_away](#cur_obj_if_hit_wall_bounce_away)
+## cur_obj_if_hit_wall_bounce_away
 
 ### Description
 Sets the current object to bounce away if it hit a wall
@@ -4432,7 +4432,7 @@ Sets the current object to bounce away if it hit a wall
 
 <br />
 
-## [cur_obj_hide_if_mario_far_away_y](#cur_obj_hide_if_mario_far_away_y)
+## cur_obj_hide_if_mario_far_away_y
 
 ### Description
 Hides the current object if Mario is too far above or below it, otherwise ensures it is visible
@@ -4455,7 +4455,7 @@ Hides the current object if Mario is too far above or below it, otherwise ensure
 
 <br />
 
-## [obj_is_hidden](#obj_is_hidden)
+## obj_is_hidden
 
 ### Description
 Returns `TRUE` if the given object is currently hidden from rendering
@@ -4478,7 +4478,7 @@ Returns `TRUE` if the given object is currently hidden from rendering
 
 <br />
 
-## [enable_time_stop](#enable_time_stop)
+## enable_time_stop
 
 ### Description
 Enables global time stop state
@@ -4499,7 +4499,7 @@ Enables global time stop state
 
 <br />
 
-## [enable_time_stop_if_alone](#enable_time_stop_if_alone)
+## enable_time_stop_if_alone
 
 ### Description
 Enables time stop only when the local player is alone
@@ -4520,7 +4520,7 @@ Enables time stop only when the local player is alone
 
 <br />
 
-## [disable_time_stop](#disable_time_stop)
+## disable_time_stop
 
 ### Description
 Disables global time stop state
@@ -4541,7 +4541,7 @@ Disables global time stop state
 
 <br />
 
-## [set_time_stop_flags](#set_time_stop_flags)
+## set_time_stop_flags
 
 ### Description
 Sets global time stop flags
@@ -4564,7 +4564,7 @@ Sets global time stop flags
 
 <br />
 
-## [set_time_stop_flags_if_alone](#set_time_stop_flags_if_alone)
+## set_time_stop_flags_if_alone
 
 ### Description
 Sets time stop flags only if the local player is alone
@@ -4587,7 +4587,7 @@ Sets time stop flags only if the local player is alone
 
 <br />
 
-## [clear_time_stop_flags](#clear_time_stop_flags)
+## clear_time_stop_flags
 
 ### Description
 Clears selected global time stop flags
@@ -4610,7 +4610,7 @@ Clears selected global time stop flags
 
 <br />
 
-## [cur_obj_can_mario_activate_textbox](#cur_obj_can_mario_activate_textbox)
+## cur_obj_can_mario_activate_textbox
 
 ### Description
 Checks whether Mario can activate the current object's textbox within a vertical and horizontal range
@@ -4636,7 +4636,7 @@ Checks whether Mario can activate the current object's textbox within a vertical
 
 <br />
 
-## [cur_obj_end_dialog](#cur_obj_end_dialog)
+## cur_obj_end_dialog
 
 ### Description
 Ends dialog state for the current object and records Mario's response
@@ -4661,7 +4661,7 @@ Ends dialog state for the current object and records Mario's response
 
 <br />
 
-## [cur_obj_has_model](#cur_obj_has_model)
+## cur_obj_has_model
 
 ### Description
 Checks whether the current object uses the specified model geometry
@@ -4684,7 +4684,7 @@ Checks whether the current object uses the specified model geometry
 
 <br />
 
-## [cur_obj_align_gfx_with_floor](#cur_obj_align_gfx_with_floor)
+## cur_obj_align_gfx_with_floor
 
 ### Description
 Aligns the current object's graphics with the floor normal at its position
@@ -4705,7 +4705,7 @@ Aligns the current object's graphics with the floor normal at its position
 
 <br />
 
-## [mario_is_within_rectangle](#mario_is_within_rectangle)
+## mario_is_within_rectangle
 
 ### Description
 Returns `TRUE` if Mario's position lies within a 2D rectangle on the XZ plane
@@ -4731,7 +4731,7 @@ Returns `TRUE` if Mario's position lies within a 2D rectangle on the XZ plane
 
 <br />
 
-## [cur_obj_shake_screen](#cur_obj_shake_screen)
+## cur_obj_shake_screen
 
 ### Description
 Shakes the camera around the current object with a given intensity
@@ -4754,7 +4754,7 @@ Shakes the camera around the current object with a given intensity
 
 <br />
 
-## [obj_attack_collided_from_other_object](#obj_attack_collided_from_other_object)
+## obj_attack_collided_from_other_object
 
 ### Description
 Marks another object as attacked by the current object and returns whether it collided
@@ -4777,7 +4777,7 @@ Marks another object as attacked by the current object and returns whether it co
 
 <br />
 
-## [cur_obj_was_attacked_or_ground_pounded](#cur_obj_was_attacked_or_ground_pounded)
+## cur_obj_was_attacked_or_ground_pounded
 
 ### Description
 Returns `TRUE` if the current object was attacked or ground-pounded and clears interact status
@@ -4798,7 +4798,7 @@ Returns `TRUE` if the current object was attacked or ground-pounded and clears i
 
 <br />
 
-## [obj_copy_behavior_params](#obj_copy_behavior_params)
+## obj_copy_behavior_params
 
 ### Description
 Copies behavior parameters from one object to another
@@ -4822,7 +4822,7 @@ Copies behavior parameters from one object to another
 
 <br />
 
-## [cur_obj_init_animation_and_anim_frame](#cur_obj_init_animation_and_anim_frame)
+## cur_obj_init_animation_and_anim_frame
 
 ### Description
 Initializes the current object's animation and sets a specific frame
@@ -4846,7 +4846,7 @@ Initializes the current object's animation and sets a specific frame
 
 <br />
 
-## [cur_obj_init_animation_and_check_if_near_end](#cur_obj_init_animation_and_check_if_near_end)
+## cur_obj_init_animation_and_check_if_near_end
 
 ### Description
 Initializes the current object's animation and checks if it is near the end
@@ -4869,7 +4869,7 @@ Initializes the current object's animation and checks if it is near the end
 
 <br />
 
-## [cur_obj_init_animation_and_extend_if_at_end](#cur_obj_init_animation_and_extend_if_at_end)
+## cur_obj_init_animation_and_extend_if_at_end
 
 ### Description
 Initializes the current object's animation and extends it if the animation has ended
@@ -4892,7 +4892,7 @@ Initializes the current object's animation and extends it if the animation has e
 
 <br />
 
-## [cur_obj_check_grabbed_mario](#cur_obj_check_grabbed_mario)
+## cur_obj_check_grabbed_mario
 
 ### Description
 Checks whether the current object has grabbed Mario and becomes intangible if so
@@ -4913,7 +4913,7 @@ Checks whether the current object has grabbed Mario and becomes intangible if so
 
 <br />
 
-## [player_performed_grab_escape_action](#player_performed_grab_escape_action)
+## player_performed_grab_escape_action
 
 ### Description
 Returns `TRUE` if the player performed an escape action during a grab
@@ -4934,7 +4934,7 @@ Returns `TRUE` if the player performed an escape action during a grab
 
 <br />
 
-## [cur_obj_unused_play_footstep_sound](#cur_obj_unused_play_footstep_sound)
+## cur_obj_unused_play_footstep_sound
 
 ### Description
 Plays a footstep sound when the current animation reaches one of two frames
@@ -4959,7 +4959,7 @@ Plays a footstep sound when the current animation reaches one of two frames
 
 <br />
 
-## [enable_time_stop_including_mario](#enable_time_stop_including_mario)
+## enable_time_stop_including_mario
 
 ### Description
 Enables time stop for the world and Mario/doors
@@ -4980,7 +4980,7 @@ Enables time stop for the world and Mario/doors
 
 <br />
 
-## [disable_time_stop_including_mario](#disable_time_stop_including_mario)
+## disable_time_stop_including_mario
 
 ### Description
 Disables time stop for the world and Mario/doors
@@ -5001,7 +5001,7 @@ Disables time stop for the world and Mario/doors
 
 <br />
 
-## [cur_obj_check_interacted](#cur_obj_check_interacted)
+## cur_obj_check_interacted
 
 ### Description
 Returns `TRUE` if the current object has been interacted with and clears the status
@@ -5022,7 +5022,7 @@ Returns `TRUE` if the current object has been interacted with and clears the sta
 
 <br />
 
-## [cur_obj_spawn_loot_blue_coin](#cur_obj_spawn_loot_blue_coin)
+## cur_obj_spawn_loot_blue_coin
 
 ### Description
 Spawns a blue coin from the current object when sufficient loot coins are available
@@ -5043,7 +5043,7 @@ Spawns a blue coin from the current object when sufficient loot coins are availa
 
 <br />
 
-## [cur_obj_spawn_star_at_y_offset](#cur_obj_spawn_star_at_y_offset)
+## cur_obj_spawn_star_at_y_offset
 
 ### Description
 Temporarily shifts the current object's Y position and spawns a star
@@ -5069,7 +5069,7 @@ Temporarily shifts the current object's Y position and spawns a star
 
 <br />
 
-## [cur_obj_set_home_once](#cur_obj_set_home_once)
+## cur_obj_set_home_once
 
 ### Description
 Sets the current object's home position once and marks it as initialized
@@ -5090,7 +5090,7 @@ Sets the current object's home position once and marks it as initialized
 
 <br />
 
-## [get_trajectory_length](#get_trajectory_length)
+## get_trajectory_length
 
 ### Description
 Gets the number of steps in a trajectory until the end marker
@@ -5119,7 +5119,7 @@ Gets the number of steps in a trajectory until the end marker
 <br />
 
 
-## [set_object_respawn_info_bits](#set_object_respawn_info_bits)
+## set_object_respawn_info_bits
 
 ### Description
 Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0xFF, this prevents the object from respawning after leaving and re-entering the area
@@ -5149,7 +5149,7 @@ Runs an OR operator on the `obj`'s respawn info with `bits` << 8. If `bits` is 0
 <br />
 
 
-## [apply_platform_displacement](#apply_platform_displacement)
+## apply_platform_displacement
 
 ### Description
 Apply one frame of platform rotation to the object using the given platform
@@ -5179,7 +5179,7 @@ Apply one frame of platform rotation to the object using the given platform
 <br />
 
 
-## [queue_rumble_data](#queue_rumble_data)
+## queue_rumble_data
 
 ### Description
 Queues rumble data with `time` and `level`
@@ -5203,7 +5203,7 @@ Queues rumble data with `time` and `level`
 
 <br />
 
-## [queue_rumble_data_object](#queue_rumble_data_object)
+## queue_rumble_data_object
 
 ### Description
 Queues rumble data for object with `time` and `level`, factoring in its distance from Mario
@@ -5228,7 +5228,7 @@ Queues rumble data for object with `time` and `level`, factoring in its distance
 
 <br />
 
-## [queue_rumble_data_mario](#queue_rumble_data_mario)
+## queue_rumble_data_mario
 
 ### Description
 Queues rumble data with `time` and `level` only if `m` is the local Mario
@@ -5253,7 +5253,7 @@ Queues rumble data with `time` and `level` only if `m` is the local Mario
 
 <br />
 
-## [queue_rumble_decay](#queue_rumble_decay)
+## queue_rumble_decay
 
 ### Description
 Queues rumble `decay`
@@ -5276,7 +5276,7 @@ Queues rumble `decay`
 
 <br />
 
-## [is_rumble_finished_and_queue_empty](#is_rumble_finished_and_queue_empty)
+## is_rumble_finished_and_queue_empty
 
 ### Description
 Checks if rumble is finished and there is no rumble queued
@@ -5297,7 +5297,7 @@ Checks if rumble is finished and there is no rumble queued
 
 <br />
 
-## [reset_rumble_timers](#reset_rumble_timers)
+## reset_rumble_timers
 
 ### Description
 Resets rumble timers only if `m` is the local Mario
@@ -5320,7 +5320,7 @@ Resets rumble timers only if `m` is the local Mario
 
 <br />
 
-## [reset_rumble_timers_vibrate](#reset_rumble_timers_vibrate)
+## reset_rumble_timers_vibrate
 
 ### Description
 Resets rumble timers and sets vibrate based on `level`
@@ -5344,7 +5344,7 @@ Resets rumble timers and sets vibrate based on `level`
 
 <br />
 
-## [queue_rumble_submerged](#queue_rumble_submerged)
+## queue_rumble_submerged
 
 ### Description
 Queues rumble data for submerged actions
@@ -5365,7 +5365,7 @@ Queues rumble data for submerged actions
 
 <br />
 
-## [cancel_rumble](#cancel_rumble)
+## cancel_rumble
 
 ### Description
 Cancels all currently queued rumble data
@@ -5392,7 +5392,7 @@ Cancels all currently queued rumble data
 <br />
 
 
-## [get_level_num_from_course_num](#get_level_num_from_course_num)
+## get_level_num_from_course_num
 
 ### Description
 Gets the course number's corresponding level number
@@ -5415,7 +5415,7 @@ Gets the course number's corresponding level number
 
 <br />
 
-## [get_level_course_num](#get_level_course_num)
+## get_level_course_num
 
 ### Description
 Gets the level number's corresponding course number
@@ -5438,7 +5438,7 @@ Gets the level number's corresponding course number
 
 <br />
 
-## [touch_coin_score_age](#touch_coin_score_age)
+## touch_coin_score_age
 
 ### Description
 Marks the coin score for a specific course as the newest among all save files. Adjusts the age of other scores to reflect the update.
@@ -5463,7 +5463,7 @@ Useful for leaderboard tracking or displaying recent progress
 
 <br />
 
-## [save_file_do_save](#save_file_do_save)
+## save_file_do_save
 
 ### Description
 Saves the current state of the game into a specified save file. Includes data verification and backup management.
@@ -5488,7 +5488,7 @@ Useful for maintaining game progress during play or when saving manually
 
 <br />
 
-## [save_file_erase](#save_file_erase)
+## save_file_erase
 
 ### Description
 Erases all data in a specified save file, including backup slots. Marks the save file as modified and performs a save to apply the changes.
@@ -5512,7 +5512,7 @@ Useful for resetting a save file to its default state
 
 <br />
 
-## [save_file_erase_current_backup_save](#save_file_erase_current_backup_save)
+## save_file_erase_current_backup_save
 
 ### Description
 Erases the backup data for the current save file without affecting the primary save data. Reloads the save file afterward
@@ -5533,7 +5533,7 @@ Erases the backup data for the current save file without affecting the primary s
 
 <br />
 
-## [save_file_reload](#save_file_reload)
+## save_file_reload
 
 ### Description
 Reloads the save file data into memory, optionally resetting all save files. Marks the save file as modified.
@@ -5557,7 +5557,7 @@ Useful for reloading state after data corruption or during development debugging
 
 <br />
 
-## [save_file_get_max_coin_score](#save_file_get_max_coin_score)
+## save_file_get_max_coin_score
 
 ### Description
 Determines the maximum coin score for a course across all save files. Returns the score along with the file index of the save containing it.
@@ -5581,7 +5581,7 @@ Useful for leaderboard-style comparisons and overall progress tracking
 
 <br />
 
-## [save_file_get_course_star_count](#save_file_get_course_star_count)
+## save_file_get_course_star_count
 
 ### Description
 Calculates the total number of stars collected in a specific course for a given save file.
@@ -5606,7 +5606,7 @@ Useful for determining completion status of individual levels
 
 <br />
 
-## [save_file_get_total_star_count](#save_file_get_total_star_count)
+## save_file_get_total_star_count
 
 ### Description
 Calculates the total number of stars collected across multiple courses within a specified range.
@@ -5632,7 +5632,7 @@ Useful for determining the overall progress toward game completion
 
 <br />
 
-## [save_file_set_flags](#save_file_set_flags)
+## save_file_set_flags
 
 ### Description
 Adds new flags to the save file's flag bitmask.
@@ -5656,7 +5656,7 @@ Useful for updating progress or triggering new gameplay features
 
 <br />
 
-## [save_file_clear_flags](#save_file_clear_flags)
+## save_file_clear_flags
 
 ### Description
 Clears specific flags in the current save file. The flags are specified as a bitmask in the `flags` parameter. Ensures that the save file remains valid after clearing.
@@ -5680,7 +5680,7 @@ Useful for removing specific game states, such as collected items or completed o
 
 <br />
 
-## [save_file_get_flags](#save_file_get_flags)
+## save_file_get_flags
 
 ### Description
 Retrieves the bitmask of flags representing the current state of the save file. Flags indicate collected items, completed objectives, and other game states.
@@ -5702,7 +5702,7 @@ Useful for checking specific game progress details
 
 <br />
 
-## [save_file_get_star_flags](#save_file_get_star_flags)
+## save_file_get_star_flags
 
 ### Description
 Retrieves the bitmask of stars collected in a specific course or castle secret stars (-1).
@@ -5727,7 +5727,7 @@ Useful for evaluating level progress and completion
 
 <br />
 
-## [save_file_set_star_flags](#save_file_set_star_flags)
+## save_file_set_star_flags
 
 ### Description
 Adds specific star flags to the save file, indicating collected stars for a course or castle secret stars. Updates the save file flags as necessary.
@@ -5753,7 +5753,7 @@ Useful for recording progress after star collection
 
 <br />
 
-## [save_file_remove_star_flags](#save_file_remove_star_flags)
+## save_file_remove_star_flags
 
 ### Description
 Removes specific star flags from the save file. This modifies the bitmask representing collected stars for a course or castle secret stars.
@@ -5779,7 +5779,7 @@ Useful for undoing progress or debugging collected stars
 
 <br />
 
-## [save_file_get_course_coin_score](#save_file_get_course_coin_score)
+## save_file_get_course_coin_score
 
 ### Description
 Returns the highest coin score for a specified course in the save file. Performs checks to ensure the coin score is valid.
@@ -5804,7 +5804,7 @@ Useful for tracking player achievements and high scores
 
 <br />
 
-## [save_file_set_course_coin_score](#save_file_set_course_coin_score)
+## save_file_set_course_coin_score
 
 ### Description
 Updates the coin score for a specific course in the save file. The new score is provided in the `coinScore` parameter.
@@ -5830,7 +5830,7 @@ Useful for manually setting achievements such as high coin counts in individual 
 
 <br />
 
-## [save_file_is_cannon_unlocked](#save_file_is_cannon_unlocked)
+## save_file_is_cannon_unlocked
 
 ### Description
 Checks whether the cannon in the specified course is unlocked. Returns true if the cannon is unlocked, otherwise false.
@@ -5855,7 +5855,7 @@ Useful for tracking course-specific progress and enabling shortcuts
 
 <br />
 
-## [save_file_set_cannon_unlocked](#save_file_set_cannon_unlocked)
+## save_file_set_cannon_unlocked
 
 ### Description
 Unlocks the cannon in the current course
@@ -5876,7 +5876,7 @@ Unlocks the cannon in the current course
 
 <br />
 
-## [save_file_get_cap_pos](#save_file_get_cap_pos)
+## save_file_get_cap_pos
 
 ### Description
 Retrieves the current position of Mario's cap, if it is on the ground in the current level and area. The position is stored in the provided `capPos` parameter.
@@ -5900,7 +5900,7 @@ Useful for tracking the cap's location after it has been dropped or lost
 
 <br />
 
-## [save_file_get_sound_mode](#save_file_get_sound_mode)
+## save_file_get_sound_mode
 
 ### Description
 Returns the current sound mode (e.g., stereo, mono) stored in the save file.
@@ -5928,7 +5928,7 @@ Useful for checking the audio output preferences when loading a save
 <br />
 
 
-## [sequence_player_get_tempo](#sequence_player_get_tempo)
+## sequence_player_get_tempo
 
 ### Description
 Gets the `tempo` of `player`
@@ -5951,7 +5951,7 @@ Gets the `tempo` of `player`
 
 <br />
 
-## [sequence_player_set_tempo](#sequence_player_set_tempo)
+## sequence_player_set_tempo
 
 ### Description
 Sets the `tempo` of `player`. Resets when another sequence is played
@@ -5975,7 +5975,7 @@ Sets the `tempo` of `player`. Resets when another sequence is played
 
 <br />
 
-## [sequence_player_get_tempo_acc](#sequence_player_get_tempo_acc)
+## sequence_player_get_tempo_acc
 
 ### Description
 Gets the `tempoAcc` (tempo accumulation) of `player`
@@ -5998,7 +5998,7 @@ Gets the `tempoAcc` (tempo accumulation) of `player`
 
 <br />
 
-## [sequence_player_set_tempo_acc](#sequence_player_set_tempo_acc)
+## sequence_player_set_tempo_acc
 
 ### Description
 Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequence is played
@@ -6022,7 +6022,7 @@ Sets the `tempoAcc` (tempo accumulation) of `player`. Resets when another sequen
 
 <br />
 
-## [sequence_player_get_transposition](#sequence_player_get_transposition)
+## sequence_player_get_transposition
 
 ### Description
 Gets the `transposition` (pitch) of `player`
@@ -6045,7 +6045,7 @@ Gets the `transposition` (pitch) of `player`
 
 <br />
 
-## [sequence_player_set_transposition](#sequence_player_set_transposition)
+## sequence_player_set_transposition
 
 ### Description
 Sets the `transposition` (pitch) of `player`. Resets when another sequence is played
@@ -6069,7 +6069,7 @@ Sets the `transposition` (pitch) of `player`. Resets when another sequence is pl
 
 <br />
 
-## [sequence_player_get_volume](#sequence_player_get_volume)
+## sequence_player_get_volume
 
 ### Description
 Gets the volume of `player`
@@ -6092,7 +6092,7 @@ Gets the volume of `player`
 
 <br />
 
-## [sequence_player_get_fade_volume](#sequence_player_get_fade_volume)
+## sequence_player_get_fade_volume
 
 ### Description
 Gets the fade volume of `player`
@@ -6115,7 +6115,7 @@ Gets the fade volume of `player`
 
 <br />
 
-## [sequence_player_set_fade_volume](#sequence_player_set_fade_volume)
+## sequence_player_set_fade_volume
 
 ### Description
 Sets the fade volume of `player`
@@ -6139,7 +6139,7 @@ Sets the fade volume of `player`
 
 <br />
 
-## [sequence_player_get_mute_volume_scale](#sequence_player_get_mute_volume_scale)
+## sequence_player_get_mute_volume_scale
 
 ### Description
 Gets the mute volume scale of `player`
@@ -6168,7 +6168,7 @@ Gets the mute volume scale of `player`
 <br />
 
 
-## [get_mario_vanilla_animation](#get_mario_vanilla_animation)
+## get_mario_vanilla_animation
 
 ### Description
 Gets a vanilla mario Animation with `index`
@@ -6191,7 +6191,7 @@ Gets a vanilla mario Animation with `index`
 
 <br />
 
-## [smlua_anim_util_set_animation](#smlua_anim_util_set_animation)
+## smlua_anim_util_set_animation
 
 ### Description
 Sets the animation of `obj` to the animation `name` corresponds to
@@ -6215,7 +6215,7 @@ Sets the animation of `obj` to the animation `name` corresponds to
 
 <br />
 
-## [smlua_anim_util_get_current_animation_name](#smlua_anim_util_get_current_animation_name)
+## smlua_anim_util_get_current_animation_name
 
 ### Description
 Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
@@ -6244,7 +6244,7 @@ Gets the name of the current animation playing on `obj`, returns `nil` if there'
 <br />
 
 
-## [smlua_audio_utils_reset_all](#smlua_audio_utils_reset_all)
+## smlua_audio_utils_reset_all
 
 ### Description
 Resets all custom sequences back to vanilla
@@ -6265,7 +6265,7 @@ Resets all custom sequences back to vanilla
 
 <br />
 
-## [smlua_audio_utils_replace_sequence](#smlua_audio_utils_replace_sequence)
+## smlua_audio_utils_replace_sequence
 
 ### Description
 Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m64 with `bankId` and `defaultVolume`
@@ -6291,7 +6291,7 @@ Replaces the sequence corresponding to `sequenceId` with one called `m64Name`.m6
 
 <br />
 
-## [smlua_audio_utils_allocate_sequence](#smlua_audio_utils_allocate_sequence)
+## smlua_audio_utils_allocate_sequence
 
 ### Description
 Allocates a new sequence ID
@@ -6312,7 +6312,7 @@ Allocates a new sequence ID
 
 <br />
 
-## [audio_load](#audio_load)
+## audio_load
 
 ### Description
 Loads an `audio` by `filename` (with extension)
@@ -6336,7 +6336,7 @@ Loads an `audio` by `filename` (with extension)
 
 <br />
 
-## [audio_play](#audio_play)
+## audio_play
 
 ### Description
 Plays an `audio` stream with `volume`. `restart` sets the elapsed time back to 0.
@@ -6399,7 +6399,7 @@ Plays an `audio`
 
 <br />
 
-## [audio_pause](#audio_pause)
+## audio_pause
 
 ### Description
 Pauses an `audio`
@@ -6422,7 +6422,7 @@ Pauses an `audio`
 
 <br />
 
-## [audio_stop](#audio_stop)
+## audio_stop
 
 ### Description
 Stops an `audio`
@@ -6445,7 +6445,7 @@ Stops an `audio`
 
 <br />
 
-## [audio_destroy](#audio_destroy)
+## audio_destroy
 
 ### Description
 Destroys an `audio`
@@ -6468,7 +6468,7 @@ Destroys an `audio`
 
 <br />
 
-## [audio_reload](#audio_reload)
+## audio_reload
 
 ### Description
 Reloads a destroyed `audio`
@@ -6491,7 +6491,7 @@ Reloads a destroyed `audio`
 
 <br />
 
-## [audio_copy](#audio_copy)
+## audio_copy
 
 ### Description
 Copies an `audio`
@@ -6514,7 +6514,7 @@ Copies an `audio`
 
 <br />
 
-## [audio_get_volume](#audio_get_volume)
+## audio_get_volume
 
 ### Description
 Gets the volume of an `audio`
@@ -6537,7 +6537,7 @@ Gets the volume of an `audio`
 
 <br />
 
-## [audio_set_volume](#audio_set_volume)
+## audio_set_volume
 
 ### Description
 Sets the volume of an `audio`
@@ -6561,7 +6561,7 @@ Sets the volume of an `audio`
 
 <br />
 
-## [audio_get_pan](#audio_get_pan)
+## audio_get_pan
 
 ### Description
 Gets the pan of an `audio`
@@ -6584,7 +6584,7 @@ Gets the pan of an `audio`
 
 <br />
 
-## [audio_set_pan](#audio_set_pan)
+## audio_set_pan
 
 ### Description
 Sets the pan of an `audio`
@@ -6608,7 +6608,7 @@ Sets the pan of an `audio`
 
 <br />
 
-## [audio_get_length](#audio_get_length)
+## audio_get_length
 
 ### Description
 Gets the length of an `audio` in seconds
@@ -6631,7 +6631,7 @@ Gets the length of an `audio` in seconds
 
 <br />
 
-## [audio_get_position](#audio_get_position)
+## audio_get_position
 
 ### Description
 Gets the position of an `audio` in seconds
@@ -6654,7 +6654,7 @@ Gets the position of an `audio` in seconds
 
 <br />
 
-## [audio_set_position](#audio_set_position)
+## audio_set_position
 
 ### Description
 Sets the position of an `audio` in seconds
@@ -6678,7 +6678,7 @@ Sets the position of an `audio` in seconds
 
 <br />
 
-## [audio_get_looping](#audio_get_looping)
+## audio_get_looping
 
 ### Description
 Gets if an `audio` is looping or not
@@ -6701,7 +6701,7 @@ Gets if an `audio` is looping or not
 
 <br />
 
-## [audio_set_looping](#audio_set_looping)
+## audio_set_looping
 
 ### Description
 Sets if an `audio` is looping or not
@@ -6725,7 +6725,7 @@ Sets if an `audio` is looping or not
 
 <br />
 
-## [audio_get_playing](#audio_get_playing)
+## audio_get_playing
 
 ### Description
 Gets if an `audio` is playing
@@ -6748,7 +6748,7 @@ Gets if an `audio` is playing
 
 <br />
 
-## [audio_set_playing](#audio_set_playing)
+## audio_set_playing
 
 ### Description
 Sets if an `audio` is playing
@@ -6772,7 +6772,7 @@ Sets if an `audio` is playing
 
 <br />
 
-## [audio_get_loop_points](#audio_get_loop_points)
+## audio_get_loop_points
 
 ### Description
 Gets an `audio`'s loop points in samples
@@ -6796,7 +6796,7 @@ Gets an `audio`'s loop points in samples
 
 <br />
 
-## [audio_set_loop_points](#audio_set_loop_points)
+## audio_set_loop_points
 
 ### Description
 Sets an `audio`'s loop points in samples
@@ -6821,7 +6821,7 @@ Sets an `audio`'s loop points in samples
 
 <br />
 
-## [audio_get_frequency](#audio_get_frequency)
+## audio_get_frequency
 
 ### Description
 Gets the frequency of an `audio`
@@ -6844,7 +6844,7 @@ Gets the frequency of an `audio`
 
 <br />
 
-## [audio_set_frequency](#audio_set_frequency)
+## audio_set_frequency
 
 ### Description
 Sets the frequency of an `audio`
@@ -6868,7 +6868,7 @@ Sets the frequency of an `audio`
 
 <br />
 
-## [audio_get_volume_channel](#audio_get_volume_channel)
+## audio_get_volume_channel
 
 ### Description
 Gets the volume channel of an `audio`
@@ -6891,7 +6891,7 @@ Gets the volume channel of an `audio`
 
 <br />
 
-## [audio_set_volume_channel](#audio_set_volume_channel)
+## audio_set_volume_channel
 
 ### Description
 Sets the volume channel of an `audio`
@@ -6915,7 +6915,7 @@ Sets the volume channel of an `audio`
 
 <br />
 
-## [audio_get_sample_rate](#audio_get_sample_rate)
+## audio_get_sample_rate
 
 ### Description
 Gets the sample rate of an `audio`
@@ -6944,7 +6944,7 @@ Gets the sample rate of an `audio`
 <br />
 
 
-## [camera_reset_overrides](#camera_reset_overrides)
+## camera_reset_overrides
 
 ### Description
 Resets camera config overrides
@@ -6965,7 +6965,7 @@ Resets camera config overrides
 
 <br />
 
-## [camera_freeze](#camera_freeze)
+## camera_freeze
 
 ### Description
 Freezes the camera by not updating it
@@ -6986,7 +6986,7 @@ Freezes the camera by not updating it
 
 <br />
 
-## [camera_unfreeze](#camera_unfreeze)
+## camera_unfreeze
 
 ### Description
 Unfreezes the camera
@@ -7007,7 +7007,7 @@ Unfreezes the camera
 
 <br />
 
-## [camera_is_frozen](#camera_is_frozen)
+## camera_is_frozen
 
 ### Description
 Checks if the camera is frozen
@@ -7028,7 +7028,7 @@ Checks if the camera is frozen
 
 <br />
 
-## [camera_romhack_allow_only_mods](#camera_romhack_allow_only_mods)
+## camera_romhack_allow_only_mods
 
 ### Description
 Sets if only mods are allowed to modify the camera (Enabling prevents the player from modifying the camera through the settings)
@@ -7051,7 +7051,7 @@ Sets if only mods are allowed to modify the camera (Enabling prevents the player
 
 <br />
 
-## [camera_set_romhack_override](#camera_set_romhack_override)
+## camera_set_romhack_override
 
 ### Description
 Sets the romhack camera override status
@@ -7074,7 +7074,7 @@ Sets the romhack camera override status
 
 <br />
 
-## [camera_romhack_allow_switchable](#camera_romhack_allow_switchable)
+## camera_romhack_allow_switchable
 
 ### Description
 Sets if the romhack camera should allow water/flying switching, triggered with the L button
@@ -7097,7 +7097,7 @@ Sets if the romhack camera should allow water/flying switching, triggered with t
 
 <br />
 
-## [camera_allow_toxic_gas_camera](#camera_allow_toxic_gas_camera)
+## camera_allow_toxic_gas_camera
 
 ### Description
 Sets if the romhack camera should fly above poison gas
@@ -7120,7 +7120,7 @@ Sets if the romhack camera should fly above poison gas
 
 <br />
 
-## [camera_romhack_allow_dpad_usage](#camera_romhack_allow_dpad_usage)
+## camera_romhack_allow_dpad_usage
 
 ### Description
 Sets if the romhack camera should allow D-Pad movement
@@ -7143,7 +7143,7 @@ Sets if the romhack camera should allow D-Pad movement
 
 <br />
 
-## [camera_romhack_set_collisions](#camera_romhack_set_collisions)
+## camera_romhack_set_collisions
 
 ### Description
 Toggles collision settings for the ROM hack camera.
@@ -7167,7 +7167,7 @@ This enables or disables specific collision behaviors in modded levels
 
 <br />
 
-## [camera_romhack_set_zoomed_in_dist](#camera_romhack_set_zoomed_in_dist)
+## camera_romhack_set_zoomed_in_dist
 
 ### Description
 Sets the romhack camera's zoomed in distance (Default: 900)
@@ -7190,7 +7190,7 @@ Sets the romhack camera's zoomed in distance (Default: 900)
 
 <br />
 
-## [camera_romhack_set_zoomed_out_dist](#camera_romhack_set_zoomed_out_dist)
+## camera_romhack_set_zoomed_out_dist
 
 ### Description
 Sets the romhack camera's zoomed out additional distance (Default: 500)
@@ -7213,7 +7213,7 @@ Sets the romhack camera's zoomed out additional distance (Default: 500)
 
 <br />
 
-## [camera_romhack_set_zoomed_in_height](#camera_romhack_set_zoomed_in_height)
+## camera_romhack_set_zoomed_in_height
 
 ### Description
 Sets the romhack camera's zoomed in height (Default: 300)
@@ -7236,7 +7236,7 @@ Sets the romhack camera's zoomed in height (Default: 300)
 
 <br />
 
-## [camera_romhack_set_zoomed_out_height](#camera_romhack_set_zoomed_out_height)
+## camera_romhack_set_zoomed_out_height
 
 ### Description
 Sets the romhack camera's zoomed out additional height (Default: 150)
@@ -7259,7 +7259,7 @@ Sets the romhack camera's zoomed out additional height (Default: 150)
 
 <br />
 
-## [camera_romhack_get_zoomed_in_dist](#camera_romhack_get_zoomed_in_dist)
+## camera_romhack_get_zoomed_in_dist
 
 ### Description
 Gets the romhack camera's zoomed in distance
@@ -7280,7 +7280,7 @@ Gets the romhack camera's zoomed in distance
 
 <br />
 
-## [camera_romhack_get_zoomed_out_dist](#camera_romhack_get_zoomed_out_dist)
+## camera_romhack_get_zoomed_out_dist
 
 ### Description
 Gets the romhack camera's additional zoomed out distance
@@ -7301,7 +7301,7 @@ Gets the romhack camera's additional zoomed out distance
 
 <br />
 
-## [camera_romhack_get_zoomed_in_height](#camera_romhack_get_zoomed_in_height)
+## camera_romhack_get_zoomed_in_height
 
 ### Description
 Gets the romhack camera's zoomed in height
@@ -7322,7 +7322,7 @@ Gets the romhack camera's zoomed in height
 
 <br />
 
-## [camera_romhack_get_zoomed_out_height](#camera_romhack_get_zoomed_out_height)
+## camera_romhack_get_zoomed_out_height
 
 ### Description
 Gets the romhack camera's additional zoomed out height
@@ -7343,7 +7343,7 @@ Gets the romhack camera's additional zoomed out height
 
 <br />
 
-## [camera_get_romhack_override](#camera_get_romhack_override)
+## camera_get_romhack_override
 
 ### Description
 Gets the current romhack camera override status
@@ -7364,7 +7364,7 @@ Gets the current romhack camera override status
 
 <br />
 
-## [camera_romhack_get_allow_switchable](#camera_romhack_get_allow_switchable)
+## camera_romhack_get_allow_switchable
 
 ### Description
 Gets if the romhack camera should allow water/flying switching
@@ -7385,7 +7385,7 @@ Gets if the romhack camera should allow water/flying switching
 
 <br />
 
-## [camera_get_allow_toxic_gas_camera](#camera_get_allow_toxic_gas_camera)
+## camera_get_allow_toxic_gas_camera
 
 ### Description
 Gets if the romhack camera should fly above poison gas
@@ -7406,7 +7406,7 @@ Gets if the romhack camera should fly above poison gas
 
 <br />
 
-## [camera_romhack_get_allow_dpad_usage](#camera_romhack_get_allow_dpad_usage)
+## camera_romhack_get_allow_dpad_usage
 
 ### Description
 Gets if the romhack camera should allow D-Pad movement
@@ -7427,7 +7427,7 @@ Gets if the romhack camera should allow D-Pad movement
 
 <br />
 
-## [camera_romhack_get_collisions](#camera_romhack_get_collisions)
+## camera_romhack_get_collisions
 
 ### Description
 Gets if the romhack camera has surface collisions
@@ -7448,7 +7448,7 @@ Gets if the romhack camera has surface collisions
 
 <br />
 
-## [camera_config_is_free_cam_enabled](#camera_config_is_free_cam_enabled)
+## camera_config_is_free_cam_enabled
 
 ### Description
 Checks if Free Camera is enabled
@@ -7469,7 +7469,7 @@ Checks if Free Camera is enabled
 
 <br />
 
-## [camera_config_is_analog_cam_enabled](#camera_config_is_analog_cam_enabled)
+## camera_config_is_analog_cam_enabled
 
 ### Description
 Checks if Analog Camera is enabled
@@ -7490,7 +7490,7 @@ Checks if Analog Camera is enabled
 
 <br />
 
-## [camera_config_is_dpad_enabled](#camera_config_is_dpad_enabled)
+## camera_config_is_dpad_enabled
 
 ### Description
 Checks if Freecam DPad Behavior is enabled
@@ -7511,7 +7511,7 @@ Checks if Freecam DPad Behavior is enabled
 
 <br />
 
-## [camera_config_is_collision_enabled](#camera_config_is_collision_enabled)
+## camera_config_is_collision_enabled
 
 ### Description
 Checks if Camera Collision is enabled
@@ -7532,7 +7532,7 @@ Checks if Camera Collision is enabled
 
 <br />
 
-## [camera_config_is_mouse_look_enabled](#camera_config_is_mouse_look_enabled)
+## camera_config_is_mouse_look_enabled
 
 ### Description
 Checks if Mouse Look is enabled
@@ -7553,7 +7553,7 @@ Checks if Mouse Look is enabled
 
 <br />
 
-## [camera_config_is_x_inverted](#camera_config_is_x_inverted)
+## camera_config_is_x_inverted
 
 ### Description
 Checks if camera X is inverted
@@ -7574,7 +7574,7 @@ Checks if camera X is inverted
 
 <br />
 
-## [camera_config_is_y_inverted](#camera_config_is_y_inverted)
+## camera_config_is_y_inverted
 
 ### Description
 Checks if camera Y is inverted
@@ -7595,7 +7595,7 @@ Checks if camera Y is inverted
 
 <br />
 
-## [camera_config_get_x_sensitivity](#camera_config_get_x_sensitivity)
+## camera_config_get_x_sensitivity
 
 ### Description
 Gets camera X sensitivity
@@ -7616,7 +7616,7 @@ Gets camera X sensitivity
 
 <br />
 
-## [camera_config_get_y_sensitivity](#camera_config_get_y_sensitivity)
+## camera_config_get_y_sensitivity
 
 ### Description
 Gets camera Y sensitivity
@@ -7637,7 +7637,7 @@ Gets camera Y sensitivity
 
 <br />
 
-## [camera_config_get_aggression](#camera_config_get_aggression)
+## camera_config_get_aggression
 
 ### Description
 Gets camera aggression
@@ -7658,7 +7658,7 @@ Gets camera aggression
 
 <br />
 
-## [camera_config_get_pan_level](#camera_config_get_pan_level)
+## camera_config_get_pan_level
 
 ### Description
 Gets camera pan level
@@ -7679,7 +7679,7 @@ Gets camera pan level
 
 <br />
 
-## [camera_config_get_deceleration](#camera_config_get_deceleration)
+## camera_config_get_deceleration
 
 ### Description
 Gets camera deceleration
@@ -7700,7 +7700,7 @@ Gets camera deceleration
 
 <br />
 
-## [camera_config_get_centering](#camera_config_get_centering)
+## camera_config_get_centering
 
 ### Description
 Gets if the L button will center the camera
@@ -7721,7 +7721,7 @@ Gets if the L button will center the camera
 
 <br />
 
-## [camera_config_enable_free_cam](#camera_config_enable_free_cam)
+## camera_config_enable_free_cam
 
 ### Description
 Overrides if Free Camera is enabled
@@ -7744,7 +7744,7 @@ Overrides if Free Camera is enabled
 
 <br />
 
-## [camera_config_enable_analog_cam](#camera_config_enable_analog_cam)
+## camera_config_enable_analog_cam
 
 ### Description
 Overrides if Analog Camera is enabled
@@ -7767,7 +7767,7 @@ Overrides if Analog Camera is enabled
 
 <br />
 
-## [camera_config_enable_centering](#camera_config_enable_centering)
+## camera_config_enable_centering
 
 ### Description
 Overrides if the L button will center the camera
@@ -7790,7 +7790,7 @@ Overrides if the L button will center the camera
 
 <br />
 
-## [camera_config_enable_dpad](#camera_config_enable_dpad)
+## camera_config_enable_dpad
 
 ### Description
 Overrides if Freecam DPad Behavior is enabled
@@ -7813,7 +7813,7 @@ Overrides if Freecam DPad Behavior is enabled
 
 <br />
 
-## [camera_config_enable_collisions](#camera_config_enable_collisions)
+## camera_config_enable_collisions
 
 ### Description
 Overrides if Camera Collision is enabled
@@ -7836,7 +7836,7 @@ Overrides if Camera Collision is enabled
 
 <br />
 
-## [camera_config_enable_mouse_look](#camera_config_enable_mouse_look)
+## camera_config_enable_mouse_look
 
 ### Description
 Overrides if camera mouse look is enabled
@@ -7859,7 +7859,7 @@ Overrides if camera mouse look is enabled
 
 <br />
 
-## [camera_config_invert_x](#camera_config_invert_x)
+## camera_config_invert_x
 
 ### Description
 Overrides if camera X is inverted
@@ -7882,7 +7882,7 @@ Overrides if camera X is inverted
 
 <br />
 
-## [camera_config_invert_y](#camera_config_invert_y)
+## camera_config_invert_y
 
 ### Description
 Overrides if camera Y is inverted
@@ -7905,7 +7905,7 @@ Overrides if camera Y is inverted
 
 <br />
 
-## [camera_config_set_x_sensitivity](#camera_config_set_x_sensitivity)
+## camera_config_set_x_sensitivity
 
 ### Description
 Overrides camera X sensitivity
@@ -7928,7 +7928,7 @@ Overrides camera X sensitivity
 
 <br />
 
-## [camera_config_set_y_sensitivity](#camera_config_set_y_sensitivity)
+## camera_config_set_y_sensitivity
 
 ### Description
 Overrides camera Y sensitivity
@@ -7951,7 +7951,7 @@ Overrides camera Y sensitivity
 
 <br />
 
-## [camera_config_set_aggression](#camera_config_set_aggression)
+## camera_config_set_aggression
 
 ### Description
 Overrides camera aggression
@@ -7974,7 +7974,7 @@ Overrides camera aggression
 
 <br />
 
-## [camera_config_set_pan_level](#camera_config_set_pan_level)
+## camera_config_set_pan_level
 
 ### Description
 Overrides camera pan level
@@ -7997,7 +7997,7 @@ Overrides camera pan level
 
 <br />
 
-## [camera_config_set_deceleration](#camera_config_set_deceleration)
+## camera_config_set_deceleration
 
 ### Description
 Overrides camera deceleration
@@ -8020,7 +8020,7 @@ Overrides camera deceleration
 
 <br />
 
-## [camera_get_checking_surfaces](#camera_get_checking_surfaces)
+## camera_get_checking_surfaces
 
 ### Description
 Checks if the camera should account for surfaces
@@ -8041,7 +8041,7 @@ Checks if the camera should account for surfaces
 
 <br />
 
-## [camera_set_checking_surfaces](#camera_set_checking_surfaces)
+## camera_set_checking_surfaces
 
 ### Description
 Sets if the camera should account for surfaces
@@ -8064,7 +8064,7 @@ Sets if the camera should account for surfaces
 
 <br />
 
-## [center_free_camera](#center_free_camera)
+## center_free_camera
 
 ### Description
 Centers the free camera.
@@ -8081,6 +8081,368 @@ This function is designed for rotating the camera to face Mario's facing angle w
 
 ### C Prototype
 `void center_free_camera(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_collision_utils.h
+
+<br />
+
+
+## collision_find_floor
+
+### Description
+Finds a potential floor at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local surfaceValue = collision_find_floor(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## collision_find_ceil
+
+### Description
+Finds a potential ceiling at the given `x`, `y`, and `z` values
+
+### Lua Example
+`local surfaceValue = collision_find_ceil(x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## get_water_surface_pseudo_floor
+
+### Description
+Gets the generated water floor surface used when riding a shell
+
+### Lua Example
+`local surfaceValue = get_water_surface_pseudo_floor()`
+
+### Parameters
+- None
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_water_surface_pseudo_floor(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_util_get
+
+### Description
+Gets the `Collision` with `name`
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get(const char* name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## collision_get_temp_wall_collision_data
+
+### Description
+Returns a temporary wall collision data pointer
+
+### Lua Example
+`local wallCollisionDataValue = collision_get_temp_wall_collision_data()`
+
+### Parameters
+- None
+
+### Returns
+- [WallCollisionData](structs.md#WallCollisionData)
+
+### C Prototype
+`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## get_surface_from_wcd_index
+
+### Description
+Gets the surface corresponding to `index` from `wcd`
+
+### Lua Example
+`local surfaceValue = get_surface_from_wcd_index(wcd, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| wcd | [WallCollisionData](structs.md#WallCollisionData) |
+| index | `integer` |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_util_get_current_terrain_collision
+
+### Description
+Gets the current level terrain collision
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get_current_terrain_collision()`
+
+### Parameters
+- None
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision* smlua_collision_util_get_current_terrain_collision(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_util_get_level_collision
+
+### Description
+Gets the `level` terrain collision from `area`
+
+### Lua Example
+`local pointerValue = smlua_collision_util_get_level_collision(level, area)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| level | `integer` |
+| area | `integer` |
+
+### Returns
+- `Pointer` <`Collision`>
+
+### C Prototype
+`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_util_find_surface_types
+
+### Description
+Gets a table of the surface types from `data`
+
+### Lua Example
+`smlua_collision_util_find_surface_types(data)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| data | `Pointer` <`Collision`> |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_util_find_surface_types(Collision* data);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_add_surface
+
+### Description
+Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.
+Returns the new surface, or `nil` if the triangle is degenerate (zero area).
+Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
+
+### Lua Example
+`local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dynamic | `boolean` |
+| surfaceType | `integer` |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Surface](structs.md#Surface)
+
+### C Prototype
+`struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_move_surface
+
+### Description
+Moves an existing collision surface to new vertex positions.
+Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.
+The previous vertices are preserved for interpolation
+
+### Lua Example
+`smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+| vertex1 | [Vec3s](structs.md#Vec3s) |
+| vertex2 | [Vec3s](structs.md#Vec3s) |
+| vertex3 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_collision_delete_surface
+
+### Description
+Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
+
+### Lua Example
+`smlua_collision_delete_surface(surface)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surface | [Surface](structs.md#Surface) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_collision_delete_surface(struct Surface *surface);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## surface_is_quicksand
+
+### Description
+Checks if the surface is quicksand
+
+### Lua Example
+`local booleanValue = surface_is_quicksand(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_quicksand(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## surface_is_not_hard
+
+### Description
+Checks if the surface is not a hard surface
+
+### Lua Example
+`local booleanValue = surface_is_not_hard(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_not_hard(struct Surface* surf);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## surface_is_painting_warp
+
+### Description
+Checks if the surface is a painting warp
+
+### Lua Example
+`local booleanValue = surface_is_painting_warp(surf)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| surf | [Surface](structs.md#Surface) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool surface_is_painting_warp(struct Surface* surf);`
 
 [:arrow_up_small:](#)
 
