@@ -252,7 +252,7 @@ static void djui_text_render_single_char(struct DjuiText* text, char* c) {
         return;
     }
 
-    create_dl_translation_matrix(DJUI_MTX_NOPUSH, sTextRenderX - sTextRenderLastX, (sTextRenderY - sTextRenderLastY) * -1.0f, 0);
+    create_dl_translation_matrix(DJUI_MTX_NOPUSH, sTextRenderX - sTextRenderLastX, sTextRenderY - sTextRenderLastY, 0);
     text->font->render_char(c);
 
     sTextRenderLastX = sTextRenderX;

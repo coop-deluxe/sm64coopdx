@@ -20,6 +20,7 @@ bool djui_rect_render(struct DjuiBase* base) {
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedWidth, translatedHeight, 1.0f);
 
     // render
+    djui_gfx_update_combine_mode(CS_COLOR);
     gDPSetEnvColor(gDisplayListHead++, base->color.r, base->color.g, base->color.b, base->color.a);
     gSPDisplayList(gDisplayListHead++, base->gradient ? dl_djui_menu_rect : dl_djui_simple_rect);
 

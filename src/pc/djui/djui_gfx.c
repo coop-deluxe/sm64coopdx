@@ -11,42 +11,126 @@
 #include "pc/debuglog.h"
 #include "engine/math_util.h"
 
+static Mat4 sDjuiCoordinateMtx = {
+    { 1,   0, 0, 0 },
+    { 0,  -1, 0, 0 },
+    { 0,   0, 1, 0 },
+    { 0, 240, 0, 1 },
+};
+
 const Gfx dl_djui_display_list_begin[] = {
     gsSPTextureAddrDjui(1),
+    gsSPMatrix(&sDjuiCoordinateMtx, G_MTX_MODELVIEW | G_MTX_MUL | G_MTX_PUSH),
     gsSPEndDisplayList(),
 };
 
 const Gfx dl_djui_display_list_end[] = {
     gsSPTextureAddrDjui(0),
+    gsSPPopMatrix(G_MTX_MODELVIEW),
     gsSPEndDisplayList(),
 };
 
 void djui_gfx_displaylist_begin(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_begin);
+
+    // translate to DJUI coordinate system
+    sDjuiCoordinateMtx[3][0] = GFX_DIMENSIONS_FROM_LEFT_EDGE(0);
 }
 
 void djui_gfx_displaylist_end(void) {
     gSPDisplayList(gDisplayListHead++, dl_djui_display_list_end);
 }
 
+struct CombinerState gCombinerState = { 0 };
+bool gCombinerUpdated = false;
+bool gCombinerOverride = false;
+u32 gCombinerCycleType = G_CYC_FILL;
+static Gfx sDjuiCombineMode = { 0 };
+
+static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
+    if (alpha) {
+        switch (source) {
+            default:                return G_ACMUX_0;
+            case CS_1:              return G_ACMUX_1;
+            case CS_TEXTURE:
+            case CS_TEXTURE_ALPHA:  return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
+            case CS_COLOR:
+            case CS_COLOR_ALPHA:    return G_ACMUX_ENVIRONMENT;
+            case CS_TEXT:
+            case CS_TEXT_ALPHA:     return G_ACMUX_PRIMITIVE;
+            case CS_COMBINED:
+            case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
+        }
+    } else {
+        switch (source) {
+            default:                return G_CCMUX_0;
+            case CS_1:              return G_CCMUX_1;
+            case CS_TEXTURE:        return cycle ? G_CCMUX_TEXEL1 : G_CCMUX_TEXEL0;
+            case CS_COLOR:          return G_CCMUX_ENVIRONMENT;
+            case CS_TEXT:           return G_CCMUX_PRIMITIVE;
+            case CS_COMBINED:       return G_CCMUX_COMBINED;
+            case CS_TEXTURE_ALPHA:  return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
+            case CS_COLOR_ALPHA:    return G_CCMUX_ENV_ALPHA;
+            case CS_TEXT_ALPHA:     return G_CCMUX_PRIMITIVE_ALPHA;
+            case CS_COMBINED_ALPHA: return G_CCMUX_COMBINED_ALPHA;
+            case CS_NOISE:          return G_CCMUX_NOISE;
+        }
+    }
+}
+
+void djui_gfx_update_combine_mode(enum CombinerSource mode) {
+    u32 cycleType = G_CYC_1CYCLE;
+
+    if (gCombinerOverride) {
+        cycleType = gCombinerState.is2cycle << G_MDSFT_CYCLETYPE;
+
+        if (gCombinerUpdated) {
+            u8 p[16] = { 0 }; // i >> 3 = cycle, (i >> 2) & 1 = alpha, i & 3 = component
+            for (u8 i = 0; i < 8 * (gCombinerState.is2cycle + 1); i++) {
+                p[i] = djui_gfx_translate_combiner_source(i >> 3, (i >> 2) & 1,
+                    gCombinerState.cycle[i >> 3][(i >> 2) & 1][i & 3]);
+            }
+
+            gDPSetCombineLERPNoString(&sDjuiCombineMode,
+                p[ 0], p[ 1], p[ 2], p[ 3],
+                p[ 4], p[ 5], p[ 6], p[ 7],
+                p[ 8], p[ 9], p[10], p[11],
+                p[12], p[13], p[14], p[15]
+            );
+            gCombinerUpdated = false;
+        }
+        
+        *(gDisplayListHead++) = sDjuiCombineMode;
+    } else switch (mode) {
+        case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
+        case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
+        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycleType = G_CYC_2CYCLE; break;
+        default: break;
+    }
+
+    if (gCombinerCycleType != cycleType) {
+        gDPSetCycleType(gDisplayListHead++, cycleType);
+        gCombinerCycleType = cycleType;
+    }
+}
+
 static const Vtx vertex_djui_menu_rect[] = {
-    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 0, 0 }, { 0x96, 0x96, 0x96, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 static const Vtx vertex_djui_simple_rect[] = {
-    {{{ 0, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0, 0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_menu_rect[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
-    gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_menu_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
@@ -57,7 +141,6 @@ const Gfx dl_djui_menu_rect[] = {
 const Gfx dl_djui_simple_rect[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
-    gsDPSetCombineMode(G_CC_FADE, G_CC_FADE),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPVertexNonGlobal(vertex_djui_simple_rect, 4, 0),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
@@ -88,16 +171,15 @@ f32 djui_gfx_get_scale(void) {
 /////////////////////////////////////////////
 
 static const Vtx vertex_djui_image[] = {
-    {{{ 0, -1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1, -1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 1,  0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
-    {{{ 0,  0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 1, 0 }, 0, {   0,  2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 1, 0 }, 0, { 2048, 2048 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 1, 0, 0 }, 0, { 2048,    0 }, { 0xff, 0xff, 0xff, 0xff }}},
+    {{{ 0, 0, 0 }, 0, { 0,       0 }, { 0xff, 0xff, 0xff, 0xff }}},
 };
 
 const Gfx dl_djui_image[] = {
     gsDPPipeSync(),
     gsSPClearGeometryMode(G_LIGHTING | G_CULL_BOTH),
-    gsDPSetCombineMode(G_CC_FADEA, G_CC_FADEA),
     gsDPSetRenderMode(G_RM_XLU_SURF, G_RM_XLU_SURF2),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON),
     gsDPLoadTextureBlock(NULL, G_IM_FMT_RGBA, G_IM_SIZ_16b, 64, 64, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0),
@@ -106,7 +188,7 @@ const Gfx dl_djui_image[] = {
     // gsSPExecuteDjui(G_TEXCLIP_DJUI),
     gsSP2Triangles(0,  1,  2, 0x0,  0,  2,  3, 0x0),
     gsSPTexture(0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF),
-    gsDPSetCombineMode(G_CC_SHADE, G_CC_SHADE),
+    gsDPSetCombineMode(G_CC_SHADE, G_CC_PASS2),
     gsSPSetGeometryMode(G_LIGHTING | G_CULL_BACK),
     gsSPEndDisplayList(),
 };
@@ -116,6 +198,7 @@ inline static u8 djui_gfx_power_of_two(u32 value) {
 }
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter) {
+    djui_gfx_update_combine_mode(CS_TEXTURE);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
@@ -140,13 +223,13 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
     f32 aspect = tileH ? ((f32)tileW / (f32)tileH) : 1;
 
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[0] = (Vtx) {{{ 0,          1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect, 0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, 1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + 1, ((tileY + tileH) * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,          0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_FADEA);
+    djui_gfx_update_combine_mode(CS_TEXTURE);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
 
@@ -162,14 +245,13 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
     gSP2TrianglesDjui(gDisplayListHead++, 0,  1,  2, 0x0,  0,  2,  3, 0x0);
 
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
 void djui_gfx_render_texture_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
+    djui_gfx_update_combine_mode(CS_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, djui_hud_get_filter() ? G_TF_BILERP : G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -195,15 +277,13 @@ void djui_gfx_render_texture_font(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
 void djui_gfx_render_texture_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
 void djui_gfx_render_texture_tile_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_2CYCLE);
+    djui_gfx_update_combine_mode(CS_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -233,10 +313,10 @@ void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 
     // this should be tested carefully. it definitely fixes some stuff, but what does it break?
     f32 offsetX = (-1024.0f / (f32)w) + 1;
     f32 offsetY = (-1024.0f / (f32)h) + 1;
-    vtx[0] = (Vtx) {{{ 0,          -1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[2] = (Vtx) {{{ 1 * aspect,  0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[1] = (Vtx) {{{ 1 * aspect, -1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
-    vtx[3] = (Vtx) {{{ 0,           0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[0] = (Vtx) {{{ 0,          1, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[2] = (Vtx) {{{ 1 * aspect, 0, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[1] = (Vtx) {{{ 1 * aspect, 1, 0 }, 0, { ((tileX + tileW) * 2048.0f) / (f32)w + offsetX, ((tileY + tileH) * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
+    vtx[3] = (Vtx) {{{ 0,          0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + offsetX, ( tileY          * 2048.0f) / (f32)h + offsetY }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
     *(gDisplayListHead++) = (Gfx) gsSPExecuteDjui(G_TEXOVERRIDE_DJUI);
@@ -247,8 +327,7 @@ void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 
 
 void djui_gfx_render_texture_tile_font_end() {
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
-    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_SHADE);
-    gDPSetCycleType(gDisplayListHead++, G_CYC_1CYCLE);
+    gDPSetCombineMode(gDisplayListHead++, G_CC_SHADE, G_CC_PASS2);
     gSPSetGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BACK);
 }
 
@@ -257,23 +336,24 @@ void djui_gfx_render_texture_tile_font_end() {
 void djui_gfx_position_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
-    *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
-    *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+
+    *x *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *y *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
-    *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *width  *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *height *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
     gfx_get_dimensions(&windowWidth, &windowHeight);
 
-    *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
+    *size *= ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 bool djui_gfx_add_clipping_specific(struct DjuiBase* base, f32 dX, f32 dY, f32 dW, f32 dH) {

@@ -3991,6 +3991,19 @@ function djui_hud_set_color(r, g, b, a)
     -- ...
 end
 
+--- @param prevR integer
+--- @param prevG integer
+--- @param prevB integer
+--- @param prevA integer
+--- @param r integer
+--- @param g integer
+--- @param b integer
+--- @param a integer
+--- Interpolates the current DJUI HUD global color
+function djui_hud_set_color_interpolated(prevR, prevG, prevB, prevA, r, g, b, a)
+    -- ...
+end
+
 --- Resets the current DJUI HUD global color
 function djui_hud_reset_color()
     -- ...
@@ -4016,6 +4029,30 @@ function djui_hud_reset_text_color()
     -- ...
 end
 
+--- @param cycles integer
+--- Sets the number of cycles used by the combiner
+function djui_hud_set_combiner_cycles(cycles)
+    -- ...
+end
+
+--- @param cycle integer
+--- @param alpha boolean
+--- @param a CombinerSource
+--- @param b CombinerSource
+--- @param c CombinerSource
+--- @param d CombinerSource
+--- Sets the current DJUI HUD combiner.<br>
+--- Each part uses the following equation: `P = (A - B) * C + D`.<br>
+--- Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+function djui_hud_set_combiner(cycle, alpha, a, b, c, d)
+    -- ...
+end
+
+--- Resets the current DJUI HUD combiner
+function djui_hud_reset_combiner()
+    -- ...
+end
+
 --- @return integer rotation
 --- @return number pivotX
 --- @return number pivotY
@@ -4038,7 +4075,7 @@ end
 --- @param rotation integer
 --- @param pivotX number
 --- @param pivotY number
---- Sets the current DJUI HUD rotation interpolated
+--- Interpolates the current DJUI HUD rotation
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
     -- ...
 end
@@ -4061,7 +4098,7 @@ end
 --- @param prevTextVAlign number
 --- @param textHAlign number
 --- @param textVAlign number
---- Sets the current DJUI HUD text alignment interpolated
+--- Interpolates the current DJUI HUD text alignment
 function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
 end
