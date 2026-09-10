@@ -21,21 +21,21 @@ static struct DjuiCheckbox* sRandomStageCheckbox = NULL;
 // static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
 
 struct MainMenuSounds gMainMenuSounds[] = {
-    { "Title Screen", SEQ_MENU_TITLE_SCREEN },
-    { "File Select", SEQ_MENU_FILE_SELECT },
-    { "Grass", SEQ_LEVEL_GRASS },
-    { "Water", SEQ_LEVEL_WATER },
-    { "Snow", SEQ_LEVEL_SNOW },
-    { "Slide", SEQ_LEVEL_SLIDE },
-    { "Bowser Stage", SEQ_LEVEL_KOOPA_ROAD },
-    { "Bowser Fight", SEQ_LEVEL_BOSS_KOOPA },
-    { "Spooky", SEQ_LEVEL_SPOOKY },
-    { "Hot", SEQ_LEVEL_HOT },
-    { "Underground", SEQ_LEVEL_UNDERGROUND },
-    { "Bowser Finale", SEQ_LEVEL_BOSS_KOOPA_FINAL },
-    { "Staff Roll", SEQ_EVENT_CUTSCENE_CREDITS },
-    { "Stage Music", STAGE_MUSIC },
-    { "Inside the Castle", SEQ_LEVEL_INSIDE_CASTLE },
+    { "TITLE_SCREEN", SEQ_MENU_TITLE_SCREEN },
+    { "FILE_SELECT", SEQ_MENU_FILE_SELECT },
+    { "GRASS", SEQ_LEVEL_GRASS },
+    { "WATER", SEQ_LEVEL_WATER },
+    { "SNOW", SEQ_LEVEL_SNOW },
+    { "SLIDE", SEQ_LEVEL_SLIDE },
+    { "BOWSER_STAGE", SEQ_LEVEL_KOOPA_ROAD },
+    { "BOWSER_FIGHT", SEQ_LEVEL_BOSS_KOOPA },
+    { "SPOOKY", SEQ_LEVEL_SPOOKY },
+    { "HOT", SEQ_LEVEL_HOT },
+    { "UNDERGROUND", SEQ_LEVEL_UNDERGROUND },
+    { "BOWSER_FINALE", SEQ_LEVEL_BOSS_KOOPA_FINAL },
+    { "STAFF_ROLL", SEQ_EVENT_CUTSCENE_CREDITS },
+    { "STAGE_MUSIC", STAGE_MUSIC },
+    { "INSIDE_THE_CASTLE", SEQ_LEVEL_INSIDE_CASTLE },
 };
 
 void djui_panel_main_menu_create(struct DjuiBase* caller);
@@ -135,18 +135,18 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
             if (configMenuStaffRoll) {
                 numSounds -= 1;
             }
-            char* soundChoices[sizeof(gMainMenuSounds)];
+            char *soundChoices[sizeof(gMainMenuSounds)];
 
             // loop thru all sounds names, and add those to the soundChoices string array
             for (u32 i = 0; i < numSounds; i++) {
-                soundChoices[i] = gMainMenuSounds[i].name;
+                soundChoices[i] = djui_language_get("MUSIC", gMainMenuSounds[i].key);
             }
 
             char *levelChoices[gMenuLevelsCount];
 
             // construct level choices
             for (u32 i = 0; i < gMenuLevelsCount; i++) {
-                levelChoices[i] = (char *)gMenuLevels[i].name;
+                levelChoices[i] = djui_language_get("LEVELS", gMenuLevels[i].key);
             }
 
             struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, gMenuLevelsCount, &configMenuLevel, NULL);

@@ -183,7 +183,7 @@ struct CreditsEntry sCreditsSequence[] = {
 
 struct MenuLevel gMenuLevels[] = {
     {
-        .name = "Castle Grounds",
+        .key = "CASTLE_GROUNDS",
         .level = LEVEL_CASTLE_GROUNDS,
         .area = 1,
         .act = 1,
@@ -196,7 +196,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Bob-omb Battlefield",
+        .key = "BOB_OMB_BATTLEFIELD",
         .level = LEVEL_BOB,
         .area = 1,
         .act = 1,
@@ -212,7 +212,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Whomp's Fortress",
+        .key = "WHOMPS_FORTRESS",
         .level = LEVEL_WF,
         .area = 1,
         .act = 2,
@@ -225,7 +225,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "WMOTR",
+        .key = "WMOTR",
         .level = LEVEL_WMOTR,
         .area = 1,
         .act = 1,
@@ -238,7 +238,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Jolly Roger Bay",
+        .key = "JOLLY_ROGER_BAY",
         .level = LEVEL_JRB,
         .area = 1,
         .act = 1,
@@ -251,7 +251,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Shifting Sand Land",
+        .key = "SHIFTING_SAND_LAND",
         .level = LEVEL_SSL,
         .area = 1,
         .act = 1,
@@ -267,7 +267,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Tall Tall Mountain",
+        .key = "TALL_TALL_MOUNTAIN",
         .level = LEVEL_TTM,
         .area = 1,
         .act = 1,
@@ -283,7 +283,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Snowman's Land",
+        .key = "SNOWMANS_LAND",
         .level = LEVEL_SL,
         .area = 1,
         .act = 1,
@@ -296,7 +296,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Big Boo's Haunt",
+        .key = "BIG_BOOS_HAUNT",
         .level = LEVEL_BBH,
         .area = 1,
         .act = 1,
@@ -312,7 +312,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Lethal Lava Land",
+        .key = "LETHAL_LAVA_LAND",
         .level = LEVEL_LLL,
         .area = 1,
         .act = 1,
@@ -325,7 +325,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Tiny-Huge Island",
+        .key = "TINY_HUGE_ISLAND",
         .level = LEVEL_THI,
         .area = 2,
         .act = 1,
@@ -341,7 +341,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Hazy Maze Cave",
+        .key = "HAZY_MAZE_CAVE",
         .level = LEVEL_HMC,
         .area = 1,
         .act = 1,
@@ -357,7 +357,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Cool, Cool Mountain",
+        .key = "COOL_COOL_MOUNTAIN",
         .level = LEVEL_CCM,
         .area = 1,
         .act = 1,
@@ -370,7 +370,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Rainbow Ride",
+        .key = "RAINBOW_RIDE",
         .level = LEVEL_RR,
         .area = 1,
         .act = 1,
@@ -386,7 +386,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "BITDW",
+        .key = "BITDW",
         .level = LEVEL_BITDW,
         .area = 1,
         .act = 1,
@@ -399,7 +399,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "PSS",
+        .key = "PSS",
         .level = LEVEL_PSS,
         .area = 1,
         .act = 1,
@@ -412,7 +412,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Tick Tock Clock",
+        .key = "TICK_TOCK_CLOCK",
         .level = LEVEL_TTC,
         .area = 1,
         .act = 1,
@@ -428,7 +428,7 @@ struct MenuLevel gMenuLevels[] = {
         }
     },
     {
-        .name = "Wet-Dry World",
+        .key = "WET_DRY_WORLD",
         .level = LEVEL_WDW,
         .area = 1,
         .act = 1,
@@ -441,7 +441,7 @@ struct MenuLevel gMenuLevels[] = {
         .behaviorsToRemove = { NULL }
     },
     {
-        .name = "Castle",
+        .key = "CASTLE",
         .level = LEVEL_CASTLE,
         .area = 1,
         .act = 1,
