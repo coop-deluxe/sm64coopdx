@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-unsigned int configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
+unsigned int configGraphicsBackend                = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
