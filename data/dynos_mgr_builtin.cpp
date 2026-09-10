@@ -374,6 +374,7 @@ static const void *sDynosBuiltinActors[] = {
     define_builtin(toads_cap_geo),
     define_builtin(toads_metal_cap_geo),
     define_builtin(toads_wing_cap_geo),
+    define_builtin(toads_winged_metal_cap_geo),
     define_builtin(waluigi_geo),
     define_builtin(waluigis_cap_geo),
     define_builtin(waluigis_metal_cap_geo),
