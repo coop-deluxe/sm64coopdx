@@ -11,16 +11,19 @@ static s32 sPanelsEntered = 0;
 static const char *sCurrentPanelId = NULL;
 static const char *sPanelHeaderTitle = NULL;
 static bool sPanelHideBackButton = false;
+static struct DjuiBase *sLastActiveBase = NULL;
 
 void mod_menu_push_panel(const char *panelId, OPTIONAL const char *headerTitle, OPTIONAL bool hideBackButton) {
     if (sPanelsEntered > 0 && (u32)gLuaActiveMod->index == sModActive) {
         sCurrentPanelId = panelId;
         sPanelHeaderTitle = headerTitle;
         sPanelHideBackButton = hideBackButton;
-        djui_panel_mod_menu_mod_create(NULL);
+        sLastActiveBase->bTag = true;
+        djui_panel_mod_menu_mod_create(sLastActiveBase);
         sCurrentPanelId = NULL;
         sPanelHeaderTitle = NULL;
         sPanelHideBackButton = false;
+        sLastActiveBase = NULL;
     }
 }
 
@@ -41,6 +44,7 @@ static char *to_uppercase(char *str) {
 }
 
 void djui_panel_mod_menu_mod_button(struct DjuiBase *caller) {
+    sLastActiveBase = caller;
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[caller->tag];
     smlua_call_mod_menu_element_hook(modMenuElement, caller->tag);
     struct DjuiButton *button = (struct DjuiButton *)caller;
@@ -54,6 +58,7 @@ void djui_panel_mod_menu_mod_button(struct DjuiBase *caller) {
 }
 
 static void djui_panel_mod_menu_mod_checkbox(struct DjuiBase *caller) {
+    sLastActiveBase = caller;
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[caller->tag];
     smlua_call_mod_menu_element_hook(modMenuElement, caller->tag);
     struct DjuiCheckbox *checkbox = (struct DjuiCheckbox *)caller;
@@ -61,6 +66,7 @@ static void djui_panel_mod_menu_mod_checkbox(struct DjuiBase *caller) {
 }
 
 static void djui_panel_mod_menu_mod_slider(struct DjuiBase *caller) {
+    sLastActiveBase = caller;
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[caller->tag];
     smlua_call_mod_menu_element_hook(modMenuElement, caller->tag);
     struct DjuiSlider *slider = (struct DjuiSlider *)caller;
@@ -68,6 +74,7 @@ static void djui_panel_mod_menu_mod_slider(struct DjuiBase *caller) {
 }
 
 static void djui_panel_mod_menu_mod_inputbox(struct DjuiBase *caller) {
+    sLastActiveBase = caller;
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *)caller;
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[caller->tag];
     snprintf(modMenuElement->stringValue, sizeof(modMenuElement->stringValue), "%s", inputbox->buffer);
@@ -75,6 +82,7 @@ static void djui_panel_mod_menu_mod_inputbox(struct DjuiBase *caller) {
 }
 
 static void djui_panel_mod_menu_mod_selectionbox(struct DjuiBase *caller) {
+    sLastActiveBase = caller;
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[caller->tag];
     smlua_call_mod_menu_element_hook(modMenuElement, caller->tag);
     struct DjuiSelectionbox *selectionbox = (struct DjuiSelectionbox *)caller;
@@ -155,7 +163,7 @@ void djui_panel_mod_menu_mod_destroy(struct DjuiBase *base) {
 
 void djui_panel_mod_menu_mod_create(struct DjuiBase *caller) {
     struct Mod *mod = NULL;
-    if (caller) {
+    if (caller && !caller->bTag) {
         for (int i = 0; i < gActiveMods.entryCount; i++) {
             if (gActiveMods.entries[i]->index == caller->tag) {
                 mod = gActiveMods.entries[i];
