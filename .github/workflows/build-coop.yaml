@@ -66,17 +66,17 @@ jobs:
               if: ${{ matrix.platform.name == 'Windows' }}
               uses: msys2/setup-msys2@v2
               with:
-                msystem: mingw64
+                msystem: ucrt64
                 update: true
                 install: >
                     unzip
                     make
                     git
-                    mingw-w64-x86_64-pkgconf
-                    mingw-w64-x86_64-gcc
-                    mingw-w64-x86_64-glew
-                    mingw-w64-x86_64-sdl3
-                    python3
+                    mingw-w64-ucrt-x86_64-gcc
+                    mingw-w64-ucrt-x86_64-glew
+                    mingw-w64-ucrt-x86_64-sdl3
+                    mingw-w64-ucrt-x86_64-python
+                    mingw-w64-ucrt-x86_64-pkg-config
                     zip
 
             - name: Install dependencies
