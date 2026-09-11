@@ -1371,33 +1371,11 @@ int smlua_func_collision_find_surface_on_ray(lua_State* L) {
  // graph node //
 ////////////////
 
-typedef struct { s16 type; u16 lot; } GraphNodeLot;
-static GraphNodeLot graphNodeLots[] = {
-    { GRAPH_NODE_TYPE_ANIMATED_PART, LOT_GRAPHNODEANIMATEDPART },
-    { GRAPH_NODE_TYPE_BACKGROUND, LOT_GRAPHNODEBACKGROUND },
-    { GRAPH_NODE_TYPE_BILLBOARD, LOT_GRAPHNODEBILLBOARD },
-    { GRAPH_NODE_TYPE_CAMERA, LOT_GRAPHNODECAMERA },
-    { GRAPH_NODE_TYPE_CULLING_RADIUS, LOT_GRAPHNODECULLINGRADIUS },
-    { GRAPH_NODE_TYPE_DISPLAY_LIST, LOT_GRAPHNODEDISPLAYLIST },
-    { GRAPH_NODE_TYPE_FUNCTIONAL, LOT_FNGRAPHNODE },
-    { GRAPH_NODE_TYPE_GENERATED_LIST, LOT_GRAPHNODEGENERATED },
-    { GRAPH_NODE_TYPE_HELD_OBJ, LOT_GRAPHNODEHELDOBJECT },
-    { GRAPH_NODE_TYPE_LEVEL_OF_DETAIL, LOT_GRAPHNODELEVELOFDETAIL },
-    { GRAPH_NODE_TYPE_MASTER_LIST, LOT_GRAPHNODEMASTERLIST },
-    { GRAPH_NODE_TYPE_OBJECT, LOT_GRAPHNODEOBJECT },
-    { GRAPH_NODE_TYPE_OBJECT_PARENT, LOT_GRAPHNODEOBJECTPARENT },
-    { GRAPH_NODE_TYPE_ORTHO_PROJECTION, LOT_GRAPHNODEORTHOPROJECTION },
-    { GRAPH_NODE_TYPE_PERSPECTIVE, LOT_GRAPHNODEPERSPECTIVE },
-    { GRAPH_NODE_TYPE_ROOT, LOT_GRAPHNODE },
-    { GRAPH_NODE_TYPE_ROTATION, LOT_GRAPHNODEROTATION },
-    { GRAPH_NODE_TYPE_SCALE, LOT_GRAPHNODESCALE },
-    { GRAPH_NODE_TYPE_SCALE_XYZ, LOT_GRAPHNODESCALEXYZ },
-    { GRAPH_NODE_TYPE_SHADOW, LOT_GRAPHNODESHADOW },
-    { GRAPH_NODE_TYPE_START, LOT_GRAPHNODESTART },
-    { GRAPH_NODE_TYPE_SWITCH_CASE, LOT_GRAPHNODESWITCHCASE },
-    { GRAPH_NODE_TYPE_TRANSLATION, LOT_GRAPHNODETRANSLATION },
-    { GRAPH_NODE_TYPE_TRANSLATION_ROTATION, LOT_GRAPHNODETRANSLATIONROTATION },
-    { GRAPH_NODE_TYPE_BONE, LOT_GRAPHNODEBONE },
+typedef struct { s16 type; u16 lot; } GraphNodeLOT;
+static GraphNodeLOT sGraphNodeTypeToLOT[] = {
+#define GRAPH_NODE_TYPE(_name_, _value_, _type_, _lot_) { _name_, _lot_ },
+#include "src/engine/graph_node_types.inl"
+#undef GRAPH_NODE_TYPE
 };
 
 int smlua_func_cast_graph_node(lua_State* L) {
@@ -1417,13 +1395,13 @@ int smlua_func_cast_graph_node(lua_State* L) {
     }
 
     u16 lot = 0;
-    for (u8 i = 0; i < ARRAY_COUNT(graphNodeLots); i++) {
-        if (graphNode->type != graphNodeLots[i].type) continue;
-        lot = graphNodeLots[i].lot;
+    for (u8 i = 0; i < ARRAY_COUNT(sGraphNodeTypeToLOT); i++) {
+        if (graphNode->type != sGraphNodeTypeToLOT[i].type) continue;
+        lot = sGraphNodeTypeToLOT[i].lot;
         break;
     }
     if (lot == 0) {
-        LOG_LUA("cast_graph_node: Invalid GraphNode type");
+        LOG_LUA("cast_graph_node: Invalid GraphNode type: %d", graphNode->type);
         return 0;
     }
 

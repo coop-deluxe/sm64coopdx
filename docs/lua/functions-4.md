@@ -6,613 +6,12 @@
 
 
 ---
-# functions from lighting_engine.h
-
-<br />
-
-
-## [le_is_enabled](#le_is_enabled)
-
-### Description
-Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
-
-### Lua Example
-`local booleanValue = le_is_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_is_enabled(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_mode](#le_set_mode)
-
-### Description
-Sets the lighting engine mode to `mode`
-
-### Lua Example
-`le_set_mode(mode)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mode | [enum LEMode](constants.md#enum-LEMode) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_mode(enum LEMode mode);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_mode](#le_get_mode)
-
-### Description
-Gets the lighting engine mode
-
-### Lua Example
-`local enumValue = le_get_mode()`
-
-### Parameters
-- None
-
-### Returns
-- [enum LEMode](constants.md#enum-LEMode)
-
-### C Prototype
-`enum LEMode le_get_mode(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_tone_mapping](#le_set_tone_mapping)
-
-### Description
-Sets the lighting engine's tone mapping mode to `toneMapping`
-
-### Lua Example
-`le_set_tone_mapping(toneMapping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_ambient_color](#le_get_ambient_color)
-
-### Description
-Outputs the lighting engine's ambient color to `out`
-
-### Lua Example
-`le_get_ambient_color(out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_ambient_color(VEC_OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_ambient_color](#le_set_ambient_color)
-
-### Description
-Sets the lighting engine ambient color
-
-### Lua Example
-`le_set_ambient_color(r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_max_lights_per_vertex](#le_set_max_lights_per_vertex)
-
-### Description
-Sets the max amount of lights that can affect a vertex
-
-### Lua Example
-`le_set_max_lights_per_vertex(count)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| count | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_max_lights_per_vertex(u8 count);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_enabled](#le_set_enabled)
-
-### Description
-This will let the user control the lighting engine in real time to disable or enable it.
-
-### Lua Example
-`le_set_enabled(value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| value | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_enabled(bool value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_color](#le_calculate_lighting_color)
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_color_with_normal](#le_calculate_lighting_color_with_normal)
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| normal | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, VEC_OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_calculate_lighting_dir](#le_calculate_lighting_dir)
-
-### Description
-Calculates the lighting direction from a position and outputs the result in `out`
-
-### Lua Example
-`le_calculate_lighting_dir(pos, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_dir(Vec3f pos, VEC_OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_add_light](#le_add_light)
-
-### Description
-Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
-
-### Lua Example
-`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-| intensity | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_remove_light](#le_remove_light)
-
-### Description
-Removes a lighting engine point light corresponding to `id`
-
-### Lua Example
-`le_remove_light(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_remove_light(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_count](#le_get_light_count)
-
-### Description
-Gets the total number of lights currently loaded in the lighting engine
-
-### Lua Example
-`local integerValue = le_get_light_count()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_get_light_count(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_light_exists](#le_light_exists)
-
-### Description
-Checks if a lighting engine point light corresponding to `id` exists
-
-### Lua Example
-`local booleanValue = le_light_exists(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_light_exists(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_pos](#le_get_light_pos)
-
-### Description
-Outputs a lighting engine point light's position to `out`
-
-### Lua Example
-`le_get_light_pos(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_pos(s16 id, VEC_OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_pos](#le_set_light_pos)
-
-### Description
-Sets a lighting engine point light's position to `x`, `y`, `z`
-
-### Lua Example
-`le_set_light_pos(id, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_color](#le_get_light_color)
-
-### Description
-Outputs a lighting engine point light's color to `out`
-
-### Lua Example
-`le_get_light_color(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_color(s16 id, VEC_OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_color](#le_set_light_color)
-
-### Description
-Sets a lighting engine point light's color to `r`, `g`, `b`
-
-### Lua Example
-`le_set_light_color(id, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_radius](#le_get_light_radius)
-
-### Description
-Gets a lighting engine point light's `radius`
-
-### Lua Example
-`local numberValue = le_get_light_radius(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_radius(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_radius](#le_set_light_radius)
-
-### Description
-Sets a lighting engine point light's `radius`
-
-### Lua Example
-`le_set_light_radius(id, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_radius(s16 id, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_intensity](#le_get_light_intensity)
-
-### Description
-Gets a lighting engine point light's `intensity`
-
-### Lua Example
-`local numberValue = le_get_light_intensity(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_intensity(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_intensity](#le_set_light_intensity)
-
-### Description
-Sets a lighting engine point light's `intensity`
-
-### Lua Example
-`le_set_light_intensity(id, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| intensity | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_intensity(s16 id, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_get_light_use_surface_normals](#le_get_light_use_surface_normals)
-
-### Description
-Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`local booleanValue = le_get_light_use_surface_normals(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_get_light_use_surface_normals(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [le_set_light_use_surface_normals](#le_set_light_use_surface_normals)
-
-### Description
-Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`le_set_light_use_surface_normals(id, useSurfaceNormals)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| useSurfaceNormals | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
 # functions from load.h
 
 <br />
 
 
-## [set_sound_bank_override](#set_sound_bank_override)
+## set_sound_bank_override
 
 ### Description
 Overrides the soundbank, set to -1 to reset
@@ -641,7 +40,7 @@ Overrides the soundbank, set to -1 to reset
 <br />
 
 
-## [is_anim_at_end](#is_anim_at_end)
+## is_anim_at_end
 
 ### Description
 Checks if Mario's current animation has reached its final frame (i.e., the last valid frame in the animation).
@@ -665,7 +64,7 @@ Useful for deciding when to transition out of an animation-driven action
 
 <br />
 
-## [is_anim_past_end](#is_anim_past_end)
+## is_anim_past_end
 
 ### Description
 Checks if Mario's current animation has passed the second-to-last valid frame (i.e., effectively at or beyond its final frames).
@@ -689,7 +88,7 @@ Useful for advanced checks where slightly early transitions or timing are needed
 
 <br />
 
-## [set_mario_animation](#set_mario_animation)
+## set_mario_animation
 
 ### Description
 Sets Mario's current animation to `targetAnimID` at a default acceleration (no speed change)
@@ -713,7 +112,7 @@ Sets Mario's current animation to `targetAnimID` at a default acceleration (no s
 
 <br />
 
-## [set_mario_anim_with_accel](#set_mario_anim_with_accel)
+## set_mario_anim_with_accel
 
 ### Description
 Sets Mario's current animation to `targetAnimID` with a custom `accel` value to speed up or slow down the animation.
@@ -739,7 +138,7 @@ Useful for controlling animation timing, e.g., slow-motion or fast-forward effec
 
 <br />
 
-## [set_character_animation](#set_character_animation)
+## set_character_animation
 
 ### Description
 Sets the character-specific animation at its default rate (no acceleration)
@@ -763,7 +162,7 @@ Sets the character-specific animation at its default rate (no acceleration)
 
 <br />
 
-## [set_character_anim_with_accel](#set_character_anim_with_accel)
+## set_character_anim_with_accel
 
 ### Description
 Sets a character-specific animation where the animation speed is adjusted by `accel`.
@@ -789,7 +188,7 @@ Useful for varying animation speeds based on context or dynamic conditions (e.g.
 
 <br />
 
-## [set_anim_to_frame](#set_anim_to_frame)
+## set_anim_to_frame
 
 ### Description
 Sets the current animation frame to a specific `animFrame`
@@ -813,7 +212,7 @@ Sets the current animation frame to a specific `animFrame`
 
 <br />
 
-## [is_anim_past_frame](#is_anim_past_frame)
+## is_anim_past_frame
 
 ### Description
 Checks if Mario's current animation is past a specified `animFrame`.
@@ -838,7 +237,7 @@ Useful for conditional logic where an action can branch after reaching a specifi
 
 <br />
 
-## [find_mario_anim_flags_and_translation](#find_mario_anim_flags_and_translation)
+## find_mario_anim_flags_and_translation
 
 ### Description
 Retrieves the current animation flags and calculates the translation for Mario's animation, rotating it into the global coordinate system based on `yaw`.
@@ -864,7 +263,7 @@ Useful for determining positional offsets from animations (e.g., stepping forwar
 
 <br />
 
-## [update_mario_pos_for_anim](#update_mario_pos_for_anim)
+## update_mario_pos_for_anim
 
 ### Description
 Applies the translation from Mario's current animation to his world position. Considers animation flags (horizontal/vertical translation)
@@ -887,7 +286,7 @@ Applies the translation from Mario's current animation to his world position. Co
 
 <br />
 
-## [return_mario_anim_y_translation](#return_mario_anim_y_translation)
+## return_mario_anim_y_translation
 
 ### Description
 Determines the vertical translation from Mario's animation (how much the animation moves Mario up or down). Returns the y-component of the animation's translation.
@@ -911,7 +310,7 @@ Useful for adjusting Mario's vertical position based on an ongoing animation (e.
 
 <br />
 
-## [play_sound_if_no_flag](#play_sound_if_no_flag)
+## play_sound_if_no_flag
 
 ### Description
 Plays a sound if Mario does not currently have a specific flag set. Once played, the flag is set to prevent immediate repeats
@@ -936,7 +335,7 @@ Plays a sound if Mario does not currently have a specific flag set. Once played,
 
 <br />
 
-## [play_mario_jump_sound](#play_mario_jump_sound)
+## play_mario_jump_sound
 
 ### Description
 Plays Mario's jump sound if it hasn't been played yet since the last action change. This helps avoid overlapping jump voice lines on repeated jumps
@@ -959,7 +358,7 @@ Plays Mario's jump sound if it hasn't been played yet since the last action chan
 
 <br />
 
-## [adjust_sound_for_speed](#adjust_sound_for_speed)
+## adjust_sound_for_speed
 
 ### Description
 Adjusts the pitch/volume of Mario's movement-based sounds according to his forward velocity (`m.forwardVel`).
@@ -983,7 +382,7 @@ Useful for adding dynamic audio feedback based on Mario's running or walking spe
 
 <br />
 
-## [play_sound_and_spawn_particles](#play_sound_and_spawn_particles)
+## play_sound_and_spawn_particles
 
 ### Description
 Plays the specified sound effect and spawns surface-appropriate particles (e.g., water splash, snow, sand). Checks if Mario is metal to adjust audio accordingly
@@ -1008,7 +407,7 @@ Plays the specified sound effect and spawns surface-appropriate particles (e.g.,
 
 <br />
 
-## [play_mario_action_sound](#play_mario_action_sound)
+## play_mario_action_sound
 
 ### Description
 Plays an action sound once per action, optionally spawning wave or dust particles depending on the surface. This sets the `MARIO_ACTION_SOUND_PLAYED` flag to prevent repeats
@@ -1033,7 +432,7 @@ Plays an action sound once per action, optionally spawning wave or dust particle
 
 <br />
 
-## [play_mario_landing_sound](#play_mario_landing_sound)
+## play_mario_landing_sound
 
 ### Description
 Plays a normal landing sound (or metal landing sound if Mario is metal) and spawns appropriate particle effects (water splash, dust, etc.)
@@ -1057,7 +456,7 @@ Plays a normal landing sound (or metal landing sound if Mario is metal) and spaw
 
 <br />
 
-## [play_mario_landing_sound_once](#play_mario_landing_sound_once)
+## play_mario_landing_sound_once
 
 ### Description
 A variant of `play_mario_landing_sound` that ensures the sound is only played once per action. Uses `play_mario_action_sound` internally
@@ -1081,7 +480,7 @@ A variant of `play_mario_landing_sound` that ensures the sound is only played on
 
 <br />
 
-## [play_mario_heavy_landing_sound](#play_mario_heavy_landing_sound)
+## play_mario_heavy_landing_sound
 
 ### Description
 Plays a heavier, more forceful landing sound, possibly for ground pounds or large impacts. Takes into account whether Mario has a metal cap equipped.
@@ -1106,7 +505,7 @@ Useful for making big impact landings stand out aurally
 
 <br />
 
-## [play_mario_heavy_landing_sound_once](#play_mario_heavy_landing_sound_once)
+## play_mario_heavy_landing_sound_once
 
 ### Description
 A variant of `play_mario_heavy_landing_sound` that ensures the sound is only played once per action (using `play_mario_action_sound` internally).
@@ -1131,7 +530,7 @@ Useful for consistent heavy landing effects without repetition
 
 <br />
 
-## [play_mario_sound](#play_mario_sound)
+## play_mario_sound
 
 ### Description
 Plays a given action sound (like a jump or landing) and also a Mario voice line if certain conditions are met. It manages flags to avoid repeated sounds
@@ -1156,7 +555,7 @@ Plays a given action sound (like a jump or landing) and also a Mario voice line 
 
 <br />
 
-## [mario_is_crouching](#mario_is_crouching)
+## mario_is_crouching
 
 ### Description
 Returns true if Mario is in any of the crouching or crawling states, checking his current action
@@ -1179,7 +578,7 @@ Returns true if Mario is in any of the crouching or crawling states, checking hi
 
 <br />
 
-## [mario_is_ground_pound_landing](#mario_is_ground_pound_landing)
+## mario_is_ground_pound_landing
 
 ### Description
 Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND` or any ground action with `INT_GROUND_POUND` interaction)
@@ -1202,7 +601,7 @@ Returns true if Mario is in a ground pound landing state (`ACT_GROUND_POUND_LAND
 
 <br />
 
-## [mario_can_bubble](#mario_can_bubble)
+## mario_can_bubble
 
 ### Description
 Checks whether Mario can become bubbled under certain game conditions (multiplayer bubble mechanic). Returns false if already bubbled or if not allowed by settings
@@ -1225,7 +624,7 @@ Checks whether Mario can become bubbled under certain game conditions (multiplay
 
 <br />
 
-## [mario_set_bubbled](#mario_set_bubbled)
+## mario_set_bubbled
 
 ### Description
 Transitions Mario into a bubbled state (if available in multiplayer), decrementing lives by default and preventing normal movement
@@ -1249,7 +648,7 @@ Transitions Mario into a bubbled state (if available in multiplayer), decrementi
 
 <br />
 
-## [mario_set_forward_vel](#mario_set_forward_vel)
+## mario_set_forward_vel
 
 ### Description
 Sets Mario's forward velocity (`m.forwardVel`) and updates `slideVelX/Z` and `m.vel` accordingly, based on `m.faceAngle.y`.
@@ -1274,7 +673,7 @@ Useful for controlling Mario's speed and direction in various actions (jumping, 
 
 <br />
 
-## [mario_get_floor_class](#mario_get_floor_class)
+## mario_get_floor_class
 
 ### Description
 Retrieves the slipperiness class of Mario's current floor, ranging from not slippery to very slippery. Considers terrain types and special surfaces.
@@ -1298,7 +697,7 @@ Useful for controlling friction, movement speed adjustments, and whether Mario s
 
 <br />
 
-## [mario_get_terrain_sound_addend](#mario_get_terrain_sound_addend)
+## mario_get_terrain_sound_addend
 
 ### Description
 Computes a value added to terrain sounds, depending on the floor's type (sand, snow, water, etc.) and slipperiness. This returns a sound 'addend' used with sound effects.
@@ -1322,7 +721,7 @@ Useful for playing context-specific footstep or movement sounds
 
 <br />
 
-## [resolve_and_return_wall_collisions](#resolve_and_return_wall_collisions)
+## resolve_and_return_wall_collisions
 
 ### Description
 Checks for and resolves wall collisions at a given position `pos`, returning the last wall encountered. Primarily used to prevent Mario from going through walls.
@@ -1348,7 +747,7 @@ Useful for collision detection when updating Mario's movement or adjusting his p
 
 <br />
 
-## [resolve_and_return_wall_collisions_data](#resolve_and_return_wall_collisions_data)
+## resolve_and_return_wall_collisions_data
 
 ### Description
 Similar to `resolve_and_return_wall_collisions` but also returns detailed collision data (`WallCollisionData`). This can handle multiple walls and store them for further checks
@@ -1374,7 +773,7 @@ Similar to `resolve_and_return_wall_collisions` but also returns detailed collis
 
 <br />
 
-## [vec3f_find_ceil](#vec3f_find_ceil)
+## vec3f_find_ceil
 
 ### Description
 Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
@@ -1400,7 +799,7 @@ Returns the ceiling height and surface
 
 <br />
 
-## [vec3f_mario_ceil](#vec3f_mario_ceil)
+## vec3f_mario_ceil
 
 ### Description
 Finds the ceiling from a vec3f horizontally and a height (with 80 vertical buffer).
@@ -1427,7 +826,7 @@ Returns the ceiling height and surface
 
 <br />
 
-## [mario_facing_downhill](#mario_facing_downhill)
+## mario_facing_downhill
 
 ### Description
 Determines if Mario is facing downhill relative to his floor angle, optionally accounting for forward velocity direction. Returns true if he is oriented down the slope.
@@ -1452,7 +851,7 @@ Useful for deciding if Mario will walk or slide on sloped floors
 
 <br />
 
-## [mario_floor_is_slippery](#mario_floor_is_slippery)
+## mario_floor_is_slippery
 
 ### Description
 Checks whether Mario's current floor is slippery based on both the floor's surface class and Mario's environment (e.g., special slides).
@@ -1476,7 +875,7 @@ Useful for deciding if Mario should transition to sliding or maintain normal tra
 
 <br />
 
-## [mario_floor_is_slope](#mario_floor_is_slope)
+## mario_floor_is_slope
 
 ### Description
 Checks whether Mario's floor is a slope, i.e., not flat but not necessarily steep. This depends on the floor's surface class and angle
@@ -1499,7 +898,7 @@ Checks whether Mario's floor is a slope, i.e., not flat but not necessarily stee
 
 <br />
 
-## [mario_floor_is_steep](#mario_floor_is_steep)
+## mario_floor_is_steep
 
 ### Description
 Checks whether Mario's floor is steep enough to cause special behavior, such as forcing slides or preventing certain actions. Returns true if the slope is too steep.
@@ -1523,7 +922,7 @@ Useful for restricting normal movement on surfaces with extreme angles
 
 <br />
 
-## [find_floor_height_relative_polar](#find_floor_height_relative_polar)
+## find_floor_height_relative_polar
 
 ### Description
 Finds the floor height relative to Mario's current position given a polar displacement (`angleFromMario`, `distFromMario`).
@@ -1549,7 +948,7 @@ Useful for determining height differentials ahead or behind Mario, e.g. for slop
 
 <br />
 
-## [find_floor_slope](#find_floor_slope)
+## find_floor_slope
 
 ### Description
 Returns a slope angle based on comparing the floor heights slightly in front and behind Mario. It essentially calculates how steep the ground is in a specific yaw direction.
@@ -1574,7 +973,7 @@ Useful for slope-based calculations such as setting walking or sliding behaviors
 
 <br />
 
-## [update_mario_sound_and_camera](#update_mario_sound_and_camera)
+## update_mario_sound_and_camera
 
 ### Description
 Updates the background noise and camera modes based on Mario's action. Especially relevant for actions like first-person view or sleeping.
@@ -1598,7 +997,7 @@ Useful for synchronizing camera behavior and ambient sounds with Mario's state c
 
 <br />
 
-## [set_steep_jump_action](#set_steep_jump_action)
+## set_steep_jump_action
 
 ### Description
 Transitions Mario into ACT_STEEP_JUMP if the floor is too steep, adjusting his forward velocity and orientation accordingly.
@@ -1622,7 +1021,7 @@ Useful for forcing special jump states on surfaces exceeding normal slope limits
 
 <br />
 
-## [set_mario_y_vel_based_on_fspeed](#set_mario_y_vel_based_on_fspeed)
+## set_mario_y_vel_based_on_fspeed
 
 ### Description
 Adjusts Mario's vertical velocity (`m.vel.y`) based on his forward speed. This function also accounts for conditions like quicksand to halve velocity
@@ -1647,7 +1046,7 @@ Adjusts Mario's vertical velocity (`m.vel.y`) based on his forward speed. This f
 
 <br />
 
-## [set_mario_action](#set_mario_action)
+## set_mario_action
 
 ### Description
 Sets Mario's action to the specified `action` and `actionArg`, routing through group-specific transition functions (e.g., airborne actions). Resets sound flags and updates internal timers
@@ -1672,7 +1071,7 @@ Sets Mario's action to the specified `action` and `actionArg`, routing through g
 
 <br />
 
-## [set_jump_from_landing](#set_jump_from_landing)
+## set_jump_from_landing
 
 ### Description
 When Mario lands on the ground, decides whether to jump again (single, double, triple) or enter a steep jump if the floor is very steep. Handles quicksand logic as well
@@ -1695,7 +1094,7 @@ When Mario lands on the ground, decides whether to jump again (single, double, t
 
 <br />
 
-## [set_jumping_action](#set_jumping_action)
+## set_jumping_action
 
 ### Description
 Sets Mario to a jumping action (regular, double, triple, or steep jump) if conditions allow it. If the floor is too steep or if in quicksand, it changes the action accordingly
@@ -1720,7 +1119,7 @@ Sets Mario to a jumping action (regular, double, triple, or steep jump) if condi
 
 <br />
 
-## [drop_and_set_mario_action](#drop_and_set_mario_action)
+## drop_and_set_mario_action
 
 ### Description
 Drops any currently held object and sets Mario to a new action. This function is typically used when Mario transitions to states where he cannot hold objects
@@ -1745,7 +1144,7 @@ Drops any currently held object and sets Mario to a new action. This function is
 
 <br />
 
-## [hurt_and_set_mario_action](#hurt_and_set_mario_action)
+## hurt_and_set_mario_action
 
 ### Description
 Increments Mario's `hurtCounter` and immediately sets a new action. Often used when Mario takes damage and transitions into a knockback or stunned action.
@@ -1771,7 +1170,7 @@ Increments Mario's `hurtCounter` and immediately sets a new action. Often used w
 
 <br />
 
-## [check_common_action_exits](#check_common_action_exits)
+## check_common_action_exits
 
 ### Description
 Checks for inputs that cause common action transitions (jump, freefall, walking, sliding).
@@ -1795,7 +1194,7 @@ Useful for quickly exiting certain stationary actions when Mario begins moving o
 
 <br />
 
-## [check_common_hold_action_exits](#check_common_hold_action_exits)
+## check_common_hold_action_exits
 
 ### Description
 Checks for inputs that cause common hold-action transitions (hold jump, hold freefall, hold walking, hold sliding)
@@ -1818,7 +1217,7 @@ Checks for inputs that cause common hold-action transitions (hold jump, hold fre
 
 <br />
 
-## [transition_submerged_to_walking](#transition_submerged_to_walking)
+## transition_submerged_to_walking
 
 ### Description
 Transitions Mario from being underwater to a walking state. Resets camera to the default mode and can handle object-holding states.
@@ -1842,7 +1241,7 @@ Useful for restoring standard ground movement when emerging from water
 
 <br />
 
-## [set_water_plunge_action](#set_water_plunge_action)
+## set_water_plunge_action
 
 ### Description
 Transitions Mario into a "water plunge" action, used when he enters water from above. Adjusts position, velocity, and camera mode
@@ -1865,7 +1264,7 @@ Transitions Mario into a "water plunge" action, used when he enters water from a
 
 <br />
 
-## [execute_mario_action](#execute_mario_action)
+## execute_mario_action
 
 ### Description
 Main driver for Mario's behavior. Executes the current action group (stationary, moving, airborne, etc.) in a loop until no further action changes are necessary
@@ -1888,7 +1287,7 @@ Main driver for Mario's behavior. Executes the current action group (stationary,
 
 <br />
 
-## [force_idle_state](#force_idle_state)
+## force_idle_state
 
 ### Description
 Forces Mario into an idle state, either `ACT_IDLE` or `ACT_WATER_IDLE` depending on whether he is submerged.
@@ -1912,7 +1311,7 @@ Useful for quickly resetting Mario's state to an idle pose under special conditi
 
 <br />
 
-## [init_single_mario](#init_single_mario)
+## init_single_mario
 
 ### Description
 Initializes the fields of a single `MarioState` structure when the player spawns or respawns. Sets starting position, velocity, action, and various internal flags
@@ -1935,7 +1334,7 @@ Initializes the fields of a single `MarioState` structure when the player spawns
 
 <br />
 
-## [set_mario_particle_flags](#set_mario_particle_flags)
+## set_mario_particle_flags
 
 ### Description
 Sets Mario's particle flags to spawn various visual effects (dust, water splashes, etc.), with an option to clear or set new flags
@@ -1960,7 +1359,7 @@ Sets Mario's particle flags to spawn various visual effects (dust, water splashe
 
 <br />
 
-## [mario_update_wall](#mario_update_wall)
+## mario_update_wall
 
 ### Description
 Updates Mario's wall information based on wall collisions (`WallCollisionData`). Chooses the most relevant wall depending on the level's collision fix settings
@@ -1984,7 +1383,7 @@ Updates Mario's wall information based on wall collisions (`WallCollisionData`).
 
 <br />
 
-## [get_mario_state_from_object](#get_mario_state_from_object)
+## get_mario_state_from_object
 
 ### Description
 Gets the MarioState corresponding to the provided object if the object is a Mario object
@@ -2013,7 +1412,7 @@ Gets the MarioState corresponding to the provided object if the object is a Mari
 <br />
 
 
-## [play_flip_sounds](#play_flip_sounds)
+## play_flip_sounds
 
 ### Description
 Plays a spinning sound at specific animation frames for flips (usually side flips or certain jump flips).
@@ -2040,7 +1439,7 @@ If the current animation frame matches any of the specified frames, it triggers 
 
 <br />
 
-## [play_far_fall_sound](#play_far_fall_sound)
+## play_far_fall_sound
 
 ### Description
 Plays a unique sound when Mario has fallen a significant distance without being invulnerable, twirling, or flying.
@@ -2064,7 +1463,7 @@ If the fall exceeds a threshold, triggers a "long fall" exclamation. Also sets a
 
 <br />
 
-## [play_knockback_sound](#play_knockback_sound)
+## play_knockback_sound
 
 ### Description
 Plays a knockback sound effect if Mario is hit or knocked back with significant velocity. The specific sound differs
@@ -2088,7 +1487,7 @@ depending on whether Mario's forward velocity is high enough to be considered a 
 
 <br />
 
-## [lava_boost_on_wall](#lava_boost_on_wall)
+## lava_boost_on_wall
 
 ### Description
 Allows Mario to 'lava boost' off a lava wall, reorienting him to face away from the wall and adjusting forward velocity.
@@ -2113,7 +1512,7 @@ Useful for handling collisions with lava walls, giving Mario a strong upward/for
 
 <br />
 
-## [check_fall_damage](#check_fall_damage)
+## check_fall_damage
 
 ### Description
 Evaluates whether Mario should take fall damage based on the height difference between his peak and current position.
@@ -2140,7 +1539,7 @@ Useful for determining if Mario's fall warrants a health penalty or a special la
 
 <br />
 
-## [check_kick_or_dive_in_air](#check_kick_or_dive_in_air)
+## check_kick_or_dive_in_air
 
 ### Description
 Checks if Mario should perform a kick or a dive while in mid-air, depending on his current forward velocity.
@@ -2164,7 +1563,7 @@ Pressing the B button in the air can trigger a jump kick (at lower speeds) or a 
 
 <br />
 
-## [should_get_stuck_in_ground](#should_get_stuck_in_ground)
+## should_get_stuck_in_ground
 
 ### Description
 Determines whether Mario should become stuck in the ground after landing, specifically for soft terrain such as snow
@@ -2189,7 +1588,7 @@ Returns true if Mario should be stuck, false otherwise
 
 <br />
 
-## [check_fall_damage_or_get_stuck](#check_fall_damage_or_get_stuck)
+## check_fall_damage_or_get_stuck
 
 ### Description
 Checks if Mario should get stuck in the ground after a large fall onto soft terrain (like snow or sand) or if he
@@ -2215,7 +1614,7 @@ action changes to being stuck in the ground. Otherwise, normal fall damage logic
 
 <br />
 
-## [check_horizontal_wind](#check_horizontal_wind)
+## check_horizontal_wind
 
 ### Description
 Checks for the presence of a horizontal wind surface under Mario. If found, applies a push force to Mario's horizontal
@@ -2239,7 +1638,7 @@ velocity. Caps speed at certain thresholds, updates Mario's forward velocity and
 
 <br />
 
-## [update_air_with_turn](#update_air_with_turn)
+## update_air_with_turn
 
 ### Description
 Updates Mario's air movement while allowing him to turn. Checks horizontal wind and applies a moderate amount of drag,
@@ -2263,7 +1662,7 @@ approaches the forward velocity toward zero if no input is pressed, and modifies
 
 <br />
 
-## [update_air_without_turn](#update_air_without_turn)
+## update_air_without_turn
 
 ### Description
 Updates Mario's air movement without directly turning his facing angle to match his intended yaw. Instead, Mario can
@@ -2287,7 +1686,7 @@ move sideways relative to his current facing direction. Also checks horizontal w
 
 <br />
 
-## [update_lava_boost_or_twirling](#update_lava_boost_or_twirling)
+## update_lava_boost_or_twirling
 
 ### Description
 Updates Mario's movement when in actions like lava boost or twirling in mid-air. Applies player input to adjust forward velocity
@@ -2311,7 +1710,7 @@ and facing angle, but in a more restricted manner compared to standard jump move
 
 <br />
 
-## [update_flying_yaw](#update_flying_yaw)
+## update_flying_yaw
 
 ### Description
 Calculates and applies a change in Mario's yaw while flying, based on horizontal stick input. Approaches a target yaw velocity
@@ -2335,7 +1734,7 @@ and sets Mario's roll angle to simulate banking turns. This results in a more na
 
 <br />
 
-## [update_flying_pitch](#update_flying_pitch)
+## update_flying_pitch
 
 ### Description
 Calculates and applies a change in Mario's pitch while flying, based on vertical stick input. Approaches a target pitch velocity
@@ -2359,7 +1758,7 @@ and clamps the final pitch angle to a certain range, simulating a smooth flight 
 
 <br />
 
-## [update_flying](#update_flying)
+## update_flying
 
 ### Description
 Handles the complete flying logic for Mario (usually with the wing cap). Continuously updates pitch and yaw based on controller input,
@@ -2383,7 +1782,7 @@ applies drag, and adjusts forward velocity. Also updates Mario's model angles fo
 
 <br />
 
-## [common_air_action_step](#common_air_action_step)
+## common_air_action_step
 
 ### Description
 Performs a standard step update for air actions without knockback, typically used for jumps or freefalls.
@@ -2411,7 +1810,7 @@ Handles how Mario lands, hits walls, grabs ledges, or grabs ceilings. Optionally
 
 <br />
 
-## [common_air_knockback_step](#common_air_knockback_step)
+## common_air_knockback_step
 
 ### Description
 A shared step update used for airborne knockback states (both forward and backward). Updates velocity, calls `perform_air_step`,
@@ -2439,7 +1838,7 @@ and handles wall collisions or landing transitions to appropriate ground knockba
 
 <br />
 
-## [check_wall_kick](#check_wall_kick)
+## check_wall_kick
 
 ### Description
 Checks if Mario should wall kick after performing an air hit against a wall. If the input conditions (e.g., pressing A)
@@ -2463,7 +1862,7 @@ and the `wallKickTimer` allow, Mario transitions to `ACT_WALL_KICK_AIR`
 
 <br />
 
-## [check_common_airborne_cancels](#check_common_airborne_cancels)
+## check_common_airborne_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current air action. This includes transitioning
@@ -2488,7 +1887,7 @@ if on certain wind surfaces. Also resets `m.quicksandDepth`
 
 <br />
 
-## [mario_execute_airborne_action](#mario_execute_airborne_action)
+## mario_execute_airborne_action
 
 ### Description
 Executes Mario's current airborne action by first checking common airborne cancels, then playing a far-fall sound if needed.
@@ -2518,7 +1917,7 @@ Dispatches to the appropriate action function, such as jump, double jump, freefa
 <br />
 
 
-## [add_tree_leaf_particles](#add_tree_leaf_particles)
+## add_tree_leaf_particles
 
 ### Description
 Spawns leaf particles when Mario climbs a tree, if he is sufficiently high above the floor.
@@ -2542,7 +1941,7 @@ In Shifting Sand Land, the leaf effect spawns higher due to the taller palm tree
 
 <br />
 
-## [play_climbing_sounds](#play_climbing_sounds)
+## play_climbing_sounds
 
 ### Description
 Plays the appropriate climbing sound effect depending on whether Mario is on a tree or a pole. If `b == 1`, it plays the "climbing up" sound; otherwise, it plays the "sliding down" sound
@@ -2566,7 +1965,7 @@ Plays the appropriate climbing sound effect depending on whether Mario is on a t
 
 <br />
 
-## [set_pole_position](#set_pole_position)
+## set_pole_position
 
 ### Description
 Sets Mario's position and alignment while he is on a climbable pole or tree. This function checks collisions with floors and ceilings, and updates Mario's action if he leaves the pole or touches the floor.
@@ -2591,7 +1990,7 @@ Useful for ensuring Mario's correct placement and transitions when climbing pole
 
 <br />
 
-## [perform_hanging_step](#perform_hanging_step)
+## perform_hanging_step
 
 ### Description
 Performs a single step of movement while Mario is hanging from a ceiling. It handles wall collisions and checks the floor and ceiling to determine if Mario remains hanging, leaves the ceiling, or hits it
@@ -2615,7 +2014,7 @@ Performs a single step of movement while Mario is hanging from a ceiling. It han
 
 <br />
 
-## [update_hang_moving](#update_hang_moving)
+## update_hang_moving
 
 ### Description
 Updates Mario's velocity and position while he is moving across a hangable ceiling. It calls `perform_hanging_step()` to handle collisions and movement logic, returning a status code indicating if Mario is still hanging or if he left the ceiling
@@ -2638,7 +2037,7 @@ Updates Mario's velocity and position while he is moving across a hangable ceili
 
 <br />
 
-## [update_hang_stationary](#update_hang_stationary)
+## update_hang_stationary
 
 ### Description
 Keeps Mario stationary while he is hanging from a ceiling. This function zeroes out his velocity and ensures he remains aligned with the ceiling
@@ -2661,7 +2060,7 @@ Keeps Mario stationary while he is hanging from a ceiling. This function zeroes 
 
 <br />
 
-## [let_go_of_ledge](#let_go_of_ledge)
+## let_go_of_ledge
 
 ### Description
 Handles Mario letting go of a ledge by adjusting his position and setting his velocity to make him fall away from the ledge. The action then transitions to a 'soft bonk' state
@@ -2684,7 +2083,7 @@ Handles Mario letting go of a ledge by adjusting his position and setting his ve
 
 <br />
 
-## [climb_up_ledge](#climb_up_ledge)
+## climb_up_ledge
 
 ### Description
 Moves Mario onto the top of a ledge once he finishes climbing it. This shifts Mario forward slightly on the ledge and updates his animation accordingly
@@ -2707,7 +2106,7 @@ Moves Mario onto the top of a ledge once he finishes climbing it. This shifts Ma
 
 <br />
 
-## [update_ledge_climb_camera](#update_ledge_climb_camera)
+## update_ledge_climb_camera
 
 ### Description
 Gradually adjusts the camera position to track Mario as he climbs a ledge. This creates a smoother view transition from the ledge-grab camera angle to Mario's new location on top of the ledge
@@ -2730,7 +2129,7 @@ Gradually adjusts the camera position to track Mario as he climbs a ledge. This 
 
 <br />
 
-## [update_ledge_climb](#update_ledge_climb)
+## update_ledge_climb
 
 ### Description
 Updates Mario's climb onto a ledge by setting the chosen climbing animation and transitioning to the specified end action (e.g., standing idle) once the animation finishes. If the end action is `ACT_IDLE`, Mario is placed on top of the ledge
@@ -2755,7 +2154,7 @@ Updates Mario's climb onto a ledge by setting the chosen climbing animation and 
 
 <br />
 
-## [mario_pop_bubble](#mario_pop_bubble)
+## mario_pop_bubble
 
 ### Description
 Makes Mario act like he was popped from a bubble. Useful for custom bubble popping behaviors.
@@ -2778,7 +2177,7 @@ Makes Mario act like he was popped from a bubble. Useful for custom bubble poppi
 
 <br />
 
-## [check_common_automatic_cancels](#check_common_automatic_cancels)
+## check_common_automatic_cancels
 
 ### Description
 Checks if Mario should cancel his current automatic action, primarily by detecting if he falls into deep water. If so, transitions him to the water-plunge state
@@ -2801,7 +2200,7 @@ Checks if Mario should cancel his current automatic action, primarily by detecti
 
 <br />
 
-## [mario_execute_automatic_action](#mario_execute_automatic_action)
+## mario_execute_automatic_action
 
 ### Description
 Executes Mario's current automatic action (e.g., climbing a pole, hanging, ledge-grabbing) by calling the corresponding function. It also checks for common cancellations, like falling into water.
@@ -2831,7 +2230,7 @@ Returns true if the action was canceled and a new action was set, or false other
 <br />
 
 
-## [get_credits_str_width](#get_credits_str_width)
+## get_credits_str_width
 
 ### Description
 Calculates the pixel width of a given credits string. Each space is counted as 4 pixels, and any other character as 7 pixels. Stops counting at the null terminator
@@ -2854,7 +2253,7 @@ Calculates the pixel width of a given credits string. Each space is counted as 4
 
 <br />
 
-## [bhv_end_peach_loop](#bhv_end_peach_loop)
+## bhv_end_peach_loop
 
 ### Description
 Handles Peach's final cutscene animation. Cycles through frames based on the global `sEndPeachAnimation` value
@@ -2875,7 +2274,7 @@ Handles Peach's final cutscene animation. Cycles through frames based on the glo
 
 <br />
 
-## [bhv_end_toad_loop](#bhv_end_toad_loop)
+## bhv_end_toad_loop
 
 ### Description
 Handles Toad's final cutscene animation. Chooses which animation index to use based on Toad's x-position, then progresses through the animation frames as it nears completion
@@ -2896,7 +2295,7 @@ Handles Toad's final cutscene animation. Chooses which animation index to use ba
 
 <br />
 
-## [get_star_collection_dialog](#get_star_collection_dialog)
+## get_star_collection_dialog
 
 ### Description
 Determines which (if any) dialog to show when Mario collects a star. Checks milestone star counts against `prevNumStarsForDialog`, and returns a dialog ID if a milestone is reached. Otherwise, returns 0
@@ -2919,7 +2318,7 @@ Determines which (if any) dialog to show when Mario collects a star. Checks mile
 
 <br />
 
-## [handle_save_menu](#handle_save_menu)
+## handle_save_menu
 
 ### Description
 Handles interactions with the save menu after collecting a star/key. Checks the user's selection (e.g., Save and Continue) and performs the corresponding action, such as saving the file or returning Mario to idle
@@ -2942,7 +2341,7 @@ Handles interactions with the save menu after collecting a star/key. Checks the 
 
 <br />
 
-## [cutscene_take_cap_off](#cutscene_take_cap_off)
+## cutscene_take_cap_off
 
 ### Description
 Transitions Mario's state from wearing the cap on his head to holding it in his hand. Clears the `MARIO_CAP_ON_HEAD` flag, sets the `MARIO_CAP_IN_HAND` flag, and plays the 'take cap off' sound
@@ -2965,7 +2364,7 @@ Transitions Mario's state from wearing the cap on his head to holding it in his 
 
 <br />
 
-## [cutscene_put_cap_on](#cutscene_put_cap_on)
+## cutscene_put_cap_on
 
 ### Description
 Transitions Mario's state from having the cap in his hand to wearing it on his head. Clears the `MARIO_CAP_IN_HAND` flag, sets the `MARIO_CAP_ON_HEAD` flag, and plays the 'put cap on' sound
@@ -2988,7 +2387,7 @@ Transitions Mario's state from having the cap in his hand to wearing it on his h
 
 <br />
 
-## [mario_ready_to_speak](#mario_ready_to_speak)
+## mario_ready_to_speak
 
 ### Description
 Checks if Mario's current action allows him to speak. For Mario to be ready, his action must be in a 'stationary' or 'moving' group (or waiting for dialog), and he must not be riding a shell, invulnerable, or in first-person mode
@@ -3011,7 +2410,7 @@ Checks if Mario's current action allows him to speak. For Mario to be ready, his
 
 <br />
 
-## [should_start_or_continue_dialog](#should_start_or_continue_dialog)
+## should_start_or_continue_dialog
 
 ### Description
 Checks if the dialog from a specified `object` should start or continue for this particular Mario. Ensures Mario is visible to enemies (i.e., not in certain invulnerable states) and, for remote players, validates the correct dialog object
@@ -3035,7 +2434,7 @@ Checks if the dialog from a specified `object` should start or continue for this
 
 <br />
 
-## [general_star_dance_handler](#general_star_dance_handler)
+## general_star_dance_handler
 
 ### Description
 Manages the star collection dance sequence for Mario, both on land and in water. Plays music, spawns the celebration star, increments the star count, and triggers level exits or dialogs at the correct times
@@ -3059,7 +2458,7 @@ Manages the star collection dance sequence for Mario, both on land and in water.
 
 <br />
 
-## [common_death_handler](#common_death_handler)
+## common_death_handler
 
 ### Description
 Handles shared logic for Mario's various death states. Plays the specified death animation (`animation`), checks for a specific frame (`frameToDeathWarp`) to trigger a warp or bubble state if allowed, and sets Mario's eye state to 'dead'
@@ -3084,7 +2483,7 @@ Handles shared logic for Mario's various death states. Plays the specified death
 
 <br />
 
-## [launch_mario_until_land](#launch_mario_until_land)
+## launch_mario_until_land
 
 ### Description
 Launches Mario forward with a given velocity (`forwardVel`) and sets his animation. Continues moving him through the air until he lands, then changes Mario's action to `endAction`
@@ -3110,7 +2509,7 @@ Launches Mario forward with a given velocity (`forwardVel`) and sets his animati
 
 <br />
 
-## [stuck_in_ground_handler](#stuck_in_ground_handler)
+## stuck_in_ground_handler
 
 ### Description
 Handles the cutscene and animation sequence for when Mario is stuck in the ground (head, butt, or feet). Plays a designated `animation`, checks specific frames (`unstuckFrame`, `target2`, `target3`) for sound effects or transitions, and frees Mario to the `endAction` once the animation completes
@@ -3138,7 +2537,7 @@ Handles the cutscene and animation sequence for when Mario is stuck in the groun
 
 <br />
 
-## [generate_yellow_sparkles](#generate_yellow_sparkles)
+## generate_yellow_sparkles
 
 ### Description
 Spawns yellow sparkles in a circular pattern around a specified point (`x`, `y`, `z`) within a given `radius`. Frequently seen during end cutscenes when objects like stars or Peach appear
@@ -3164,7 +2563,7 @@ Spawns yellow sparkles in a circular pattern around a specified point (`x`, `y`,
 
 <br />
 
-## [mario_execute_cutscene_action](#mario_execute_cutscene_action)
+## mario_execute_cutscene_action
 
 ### Description
 Executes Mario's current cutscene action based on his `action` field. Includes various story-related sequences like entering doors, collecting stars, and final boss cutscenes. Delegates to the appropriate function for each cutscene action
@@ -3193,7 +2592,7 @@ Executes Mario's current cutscene action based on his `action` field. Includes v
 <br />
 
 
-## [tilt_body_running](#tilt_body_running)
+## tilt_body_running
 
 ### Description
 Tilts Mario's body according to his running speed and slope angle.
@@ -3217,7 +2616,7 @@ Calculates a pitch offset used while running to simulate leaning forward at high
 
 <br />
 
-## [play_step_sound](#play_step_sound)
+## play_step_sound
 
 ### Description
 Checks the current animation frame against two specified frames to trigger footstep sounds.
@@ -3243,7 +2642,7 @@ Also chooses specific sounds if Mario is wearing Metal Cap or is in quicksand
 
 <br />
 
-## [align_with_floor](#align_with_floor)
+## align_with_floor
 
 ### Description
 Aligns Mario's position and model transformation matrix to match the floor's angle. Specifically: Sets Mario's vertical position to be at `m.floorHeight` plus any active character animation offset and adjusts Mario's `throwMatrix` so that his body appears flush with the floor
@@ -3266,7 +2665,7 @@ Aligns Mario's position and model transformation matrix to match the floor's ang
 
 <br />
 
-## [begin_walking_action](#begin_walking_action)
+## begin_walking_action
 
 ### Description
 Sets Mario's facing yaw to his intended yaw, applies a specified forward velocity, and transitions to the given action (e.g., `ACT_WALKING`).
@@ -3292,7 +2691,7 @@ Sets Mario's facing yaw to his intended yaw, applies a specified forward velocit
 
 <br />
 
-## [check_ledge_climb_down](#check_ledge_climb_down)
+## check_ledge_climb_down
 
 ### Description
 Checks if Mario is near an edge while moving slowly and the floor below that edge is significantly lower.
@@ -3316,7 +2715,7 @@ If the conditions are met, transitions Mario into a ledge-climb-down action and 
 
 <br />
 
-## [slide_bonk](#slide_bonk)
+## slide_bonk
 
 ### Description
 Handles the scenario where Mario slides into a wall. If Mario is moving fast, reflects his velocity and transitions to a fast knockback, Otherwise, stops his forward velocity and sets a slower knockback
@@ -3341,7 +2740,7 @@ Handles the scenario where Mario slides into a wall. If Mario is moving fast, re
 
 <br />
 
-## [set_triple_jump_action](#set_triple_jump_action)
+## set_triple_jump_action
 
 ### Description
 Determines the proper triple jump action based on Mario's forward velocity and the Wing Cap flag: Normal triple jump, flying triple jump, or just a single jump if not enough speed
@@ -3366,7 +2765,7 @@ Determines the proper triple jump action based on Mario's forward velocity and t
 
 <br />
 
-## [update_sliding_angle](#update_sliding_angle)
+## update_sliding_angle
 
 ### Description
 Adjusts Mario's slide velocity and facing angle when on a slope.
@@ -3393,7 +2792,7 @@ Handles facing-direction changes and maximum speed limits
 
 <br />
 
-## [update_sliding](#update_sliding)
+## update_sliding
 
 ### Description
 Updates Mario's sliding state each frame, applying additional friction or acceleration based on the surface's slipperiness.
@@ -3419,7 +2818,7 @@ Returns `true` if sliding has stopped
 
 <br />
 
-## [apply_slope_accel](#apply_slope_accel)
+## apply_slope_accel
 
 ### Description
 Applies acceleration or deceleration based on the slope of the floor.
@@ -3443,7 +2842,7 @@ On downward slopes, Mario gains speed, while on upward slopes, Mario loses speed
 
 <br />
 
-## [apply_landing_accel](#apply_landing_accel)
+## apply_landing_accel
 
 ### Description
 Applies friction-like deceleration if the floor is flat, or slope-based acceleration if the floor is sloped.
@@ -3468,7 +2867,7 @@ Capped in such a way that Mario eventually stops or stabilizes on flatter ground
 
 <br />
 
-## [update_shell_speed](#update_shell_speed)
+## update_shell_speed
 
 ### Description
 Controls Mario's speed when riding a Koopa Shell on the ground.
@@ -3491,7 +2890,7 @@ Controls Mario's speed when riding a Koopa Shell on the ground.
 
 <br />
 
-## [apply_slope_decel](#apply_slope_decel)
+## apply_slope_decel
 
 ### Description
 Approaches Mario's forward velocity toward zero at a rate dependent on the floor's slipperiness.
@@ -3516,7 +2915,7 @@ This function can completely stop Mario if the slope is gentle enough or if fric
 
 <br />
 
-## [update_decelerating_speed](#update_decelerating_speed)
+## update_decelerating_speed
 
 ### Description
 Gradually reduces Mario's forward speed to zero over time on level ground, unless otherwise influenced by slope or friction.
@@ -3540,7 +2939,7 @@ Returns true if Mario's speed reaches zero, meaning he has stopped
 
 <br />
 
-## [update_walking_speed](#update_walking_speed)
+## update_walking_speed
 
 ### Description
 Updates Mario's walking speed based on player input and floor conditions (e.g., a slow floor or quicksand).
@@ -3564,7 +2963,7 @@ Caps speed at a certain value and may reduce it slightly on steep slopes
 
 <br />
 
-## [should_begin_sliding](#should_begin_sliding)
+## should_begin_sliding
 
 ### Description
 Checks if Mario should begin sliding, based on player input (facing downhill, pressing the analog stick backward, or on a slide terrain), and current floor steepness.
@@ -3588,7 +2987,7 @@ Returns true if conditions to slide are met.
 
 <br />
 
-## [analog_stick_held_back](#analog_stick_held_back)
+## analog_stick_held_back
 
 ### Description
 Checks if the analog stick is held significantly behind Mario's current facing angle.
@@ -3612,7 +3011,7 @@ Returns true if the stick is far enough in the opposite direction, indicating Ma
 
 <br />
 
-## [check_ground_dive_or_punch](#check_ground_dive_or_punch)
+## check_ground_dive_or_punch
 
 ### Description
 Checks if the B button was pressed to either initiate a dive (if moving fast enough) or a punch (if moving slowly).
@@ -3636,7 +3035,7 @@ Returns `true` if the action was changed to either a dive or a punching attack
 
 <br />
 
-## [begin_braking_action](#begin_braking_action)
+## begin_braking_action
 
 ### Description
 Begins a braking action if Mario's forward velocity is high enough or transitions to a decelerating action otherwise.
@@ -3660,7 +3059,7 @@ Also handles the scenario where Mario is up against a wall, transitioning to a s
 
 <br />
 
-## [anim_and_audio_for_walk](#anim_and_audio_for_walk)
+## anim_and_audio_for_walk
 
 ### Description
 Handles the animation and audio (footstep sounds) for normal walking or running.
@@ -3684,7 +3083,7 @@ The specific animation used (tiptoe, walk, or run) depends on Mario's current sp
 
 <br />
 
-## [anim_and_audio_for_hold_walk](#anim_and_audio_for_hold_walk)
+## anim_and_audio_for_hold_walk
 
 ### Description
 Plays the appropriate animation and footstep sounds for walking while carrying a lighter object (like a small box).
@@ -3708,7 +3107,7 @@ Adjusts the animation speed dynamically based on Mario's velocity
 
 <br />
 
-## [anim_and_audio_for_heavy_walk](#anim_and_audio_for_heavy_walk)
+## anim_and_audio_for_heavy_walk
 
 ### Description
 Plays the appropriate animation and footstep sounds for walking while carrying a heavy object.
@@ -3732,7 +3131,7 @@ Sets the character animation speed based on Mario's intended movement speed
 
 <br />
 
-## [push_or_sidle_wall](#push_or_sidle_wall)
+## push_or_sidle_wall
 
 ### Description
 When Mario hits a wall during movement, decides whether he's pushing against the wall or sidling along it. Plays pushing animations and sounds if he's head-on, sidles along the wall if he's more angled
@@ -3756,7 +3155,7 @@ When Mario hits a wall during movement, decides whether he's pushing against the
 
 <br />
 
-## [tilt_body_walking](#tilt_body_walking)
+## tilt_body_walking
 
 ### Description
 Applies a left/right tilt to Mario's torso (and some pitch if running fast) while walking or running.
@@ -3781,7 +3180,7 @@ The tilt is based on his change in yaw and current speed, giving a leaning appea
 
 <br />
 
-## [tilt_body_ground_shell](#tilt_body_ground_shell)
+## tilt_body_ground_shell
 
 ### Description
 Tilts Mario's torso and head while riding a shell on the ground to reflect turning.
@@ -3806,7 +3205,7 @@ Similar to other tilt functions but tuned for shell-riding speeds and angles
 
 <br />
 
-## [tilt_body_butt_slide](#tilt_body_butt_slide)
+## tilt_body_butt_slide
 
 ### Description
 Tilts Mario's torso while butt sliding based on analog input direction and magnitude.
@@ -3830,7 +3229,7 @@ Gives the appearance that Mario is balancing or leaning into a turn
 
 <br />
 
-## [common_slide_action](#common_slide_action)
+## common_slide_action
 
 ### Description
 Applies shared logic for sliding-related actions while playing sliding sounds, managing ground steps (falling off edges, hitting walls), updates animation
@@ -3856,7 +3255,7 @@ Applies shared logic for sliding-related actions while playing sliding sounds, m
 
 <br />
 
-## [common_slide_action_with_jump](#common_slide_action_with_jump)
+## common_slide_action_with_jump
 
 ### Description
 Builds on `common_slide_action` by also allowing Mario to jump out of a slide if A is pressed after a short delay.
@@ -3884,7 +3283,7 @@ If the sliding slows enough, Mario transitions to a specified stopping action
 
 <br />
 
-## [stomach_slide_action](#stomach_slide_action)
+## stomach_slide_action
 
 ### Description
 Updates Mario's sliding state where he is on his stomach. Similar to other slide actions but has a chance to roll out if A or B is pressed.
@@ -3911,7 +3310,7 @@ Uses `common_slide_action` for the core movement logic
 
 <br />
 
-## [common_ground_knockback_action](#common_ground_knockback_action)
+## common_ground_knockback_action
 
 ### Description
 Handles knockback on the ground (getting hit while on the ground) with shared logic for multiple knockback states. Applies deceleration or minimal momentum, chooses appropriate landing action if Mario leaves the ground, and handles death transitions if Mario's health is depleted
@@ -3938,7 +3337,7 @@ Handles knockback on the ground (getting hit while on the ground) with shared lo
 
 <br />
 
-## [common_landing_action](#common_landing_action)
+## common_landing_action
 
 ### Description
 Applies movement upon landing from a jump or fall. Adjusts velocity based on slope or friction, checks for transitions like sliding or hitting a wall, handles small dust particles if moving fast
@@ -3963,7 +3362,7 @@ Applies movement upon landing from a jump or fall. Adjusts velocity based on slo
 
 <br />
 
-## [quicksand_jump_land_action](#quicksand_jump_land_action)
+## quicksand_jump_land_action
 
 ### Description
 Handles a special landing in quicksand after a jump. Over several frames, Mario emerges from the quicksand.
@@ -3991,7 +3390,7 @@ First part of the animation reduces his quicksand depth. Ends with a normal land
 
 <br />
 
-## [check_common_moving_cancels](#check_common_moving_cancels)
+## check_common_moving_cancels
 
 ### Description
 Performs common checks when Mario is in a moving state, transitions to water plunge if underwater, handles squished or shockwave bounce scenarios, and checks for death conditions
@@ -4014,7 +3413,7 @@ Performs common checks when Mario is in a moving state, transitions to water plu
 
 <br />
 
-## [mario_execute_moving_action](#mario_execute_moving_action)
+## mario_execute_moving_action
 
 ### Description
 Executes Mario's current moving actions by: checking common cancellations (e.g., water plunge, squish, death), handling quicksand updates, and switching to the correct sub-action handler based on `m.action`
@@ -4043,7 +3442,7 @@ Executes Mario's current moving actions by: checking common cancellations (e.g.,
 <br />
 
 
-## [animated_stationary_ground_step](#animated_stationary_ground_step)
+## animated_stationary_ground_step
 
 ### Description
 Performs a stationary step, sets `m`'s animation and sets action to `endAction` once the animation finishes
@@ -4068,7 +3467,7 @@ Performs a stationary step, sets `m`'s animation and sets action to `endAction` 
 
 <br />
 
-## [mario_update_punch_sequence](#mario_update_punch_sequence)
+## mario_update_punch_sequence
 
 ### Description
 Updates Mario's punching state
@@ -4091,7 +3490,7 @@ Updates Mario's punching state
 
 <br />
 
-## [check_common_object_cancels](#check_common_object_cancels)
+## check_common_object_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current object action. This includes transitioning
@@ -4116,7 +3515,7 @@ if Mario is dead
 
 <br />
 
-## [mario_execute_object_action](#mario_execute_object_action)
+## mario_execute_object_action
 
 ### Description
 Executes Mario's current object action by first checking common object cancels, then updating quicksand state.
@@ -4146,7 +3545,7 @@ Dispatches to the appropriate action function, such as punching, throwing, picki
 <br />
 
 
-## [check_common_idle_cancels](#check_common_idle_cancels)
+## check_common_idle_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current idle action.
@@ -4169,7 +3568,7 @@ Checks for and handles common conditions that would cancel Mario's current idle 
 
 <br />
 
-## [check_common_hold_idle_cancels](#check_common_hold_idle_cancels)
+## check_common_hold_idle_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current idle holding object action.
@@ -4192,7 +3591,7 @@ Checks for and handles common conditions that would cancel Mario's current idle 
 
 <br />
 
-## [play_anim_sound](#play_anim_sound)
+## play_anim_sound
 
 ### Description
 Plays a `sound` if Mario's action state and animation frame match the parameters
@@ -4218,7 +3617,7 @@ Plays a `sound` if Mario's action state and animation frame match the parameters
 
 <br />
 
-## [stopping_step](#stopping_step)
+## stopping_step
 
 ### Description
 Runs a stationary step, sets the character animation, and changes action if the animation has ended
@@ -4243,7 +3642,7 @@ Runs a stationary step, sets the character animation, and changes action if the 
 
 <br />
 
-## [landing_step](#landing_step)
+## landing_step
 
 ### Description
 Runs a stationary step, sets the character animation, and changes action if the animation has ended
@@ -4268,7 +3667,7 @@ Runs a stationary step, sets the character animation, and changes action if the 
 
 <br />
 
-## [check_common_landing_cancels](#check_common_landing_cancels)
+## check_common_landing_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current landing action.
@@ -4292,7 +3691,7 @@ Checks for and handles common conditions that would cancel Mario's current landi
 
 <br />
 
-## [check_common_stationary_cancels](#check_common_stationary_cancels)
+## check_common_stationary_cancels
 
 ### Description
 Checks for and handles common conditions that would cancel Mario's current stationary action.
@@ -4315,7 +3714,7 @@ Checks for and handles common conditions that would cancel Mario's current stati
 
 <br />
 
-## [mario_execute_stationary_action](#mario_execute_stationary_action)
+## mario_execute_stationary_action
 
 ### Description
 Executes Mario's current object action by first checking common stationary cancels, then updating quicksand state.
@@ -4345,7 +3744,7 @@ Dispatches to the appropriate action function, such as idle, sleeping, crouching
 <br />
 
 
-## [set_swimming_at_surface_particles](#set_swimming_at_surface_particles)
+## set_swimming_at_surface_particles
 
 ### Description
 Sets Mario's particle flags if he's at the surface of a water box
@@ -4369,7 +3768,7 @@ Sets Mario's particle flags if he's at the surface of a water box
 
 <br />
 
-## [perform_water_full_step](#perform_water_full_step)
+## perform_water_full_step
 
 ### Description
 Performs a full water movement step where ceilings, floors, and walls are handled. Generally, you should use `perform_water_step` for the full step functionality
@@ -4393,7 +3792,7 @@ Performs a full water movement step where ceilings, floors, and walls are handle
 
 <br />
 
-## [apply_water_current](#apply_water_current)
+## apply_water_current
 
 ### Description
 Calculates a water current and outputs it in `step`
@@ -4417,7 +3816,7 @@ Calculates a water current and outputs it in `step`
 
 <br />
 
-## [perform_water_step](#perform_water_step)
+## perform_water_step
 
 ### Description
 Performs a water step
@@ -4440,7 +3839,7 @@ Performs a water step
 
 <br />
 
-## [float_surface_gfx](#float_surface_gfx)
+## float_surface_gfx
 
 ### Description
 Controls the bobbing that happens when you swim near the water surface
@@ -4463,7 +3862,7 @@ Controls the bobbing that happens when you swim near the water surface
 
 <br />
 
-## [mario_execute_submerged_action](#mario_execute_submerged_action)
+## mario_execute_submerged_action
 
 ### Description
 Executes Mario's current submerged action by first checking common submerged cancels, then setting quicksand depth and head angles to 0.
@@ -4493,7 +3892,7 @@ Dispatches to the appropriate action function, such as breaststroke, flutterkick
 <br />
 
 
-## [bhv_toad_message_init](#bhv_toad_message_init)
+## bhv_toad_message_init
 
 ### Description
 Behavior init function for NPC Toad
@@ -4514,7 +3913,7 @@ Behavior init function for NPC Toad
 
 <br />
 
-## [bhv_toad_message_loop](#bhv_toad_message_loop)
+## bhv_toad_message_loop
 
 ### Description
 Behavior loop function for NPC Toad
@@ -4535,7 +3934,7 @@ Behavior loop function for NPC Toad
 
 <br />
 
-## [bhv_unlock_door_star_init](#bhv_unlock_door_star_init)
+## bhv_unlock_door_star_init
 
 ### Description
 Behavior init function for Star Door unlock object
@@ -4556,7 +3955,7 @@ Behavior init function for Star Door unlock object
 
 <br />
 
-## [bhv_unlock_door_star_loop](#bhv_unlock_door_star_loop)
+## bhv_unlock_door_star_loop
 
 ### Description
 Behavior loop function for Star Door unlock object
@@ -4577,7 +3976,7 @@ Behavior loop function for Star Door unlock object
 
 <br />
 
-## [geo_get_mario_state](#geo_get_mario_state)
+## geo_get_mario_state
 
 ### Description
 When used in a geo function, retrieve the MarioState associated to the current processed object
@@ -4598,7 +3997,7 @@ When used in a geo function, retrieve the MarioState associated to the current p
 
 <br />
 
-## [geo_get_body_state](#geo_get_body_state)
+## geo_get_body_state
 
 ### Description
 When used in a geo function, retrieve the MarioBodyState associated to the current processed object
@@ -4619,7 +4018,7 @@ When used in a geo function, retrieve the MarioBodyState associated to the curre
 
 <br />
 
-## [geo_get_mario_object](#geo_get_mario_object)
+## geo_get_mario_object
 
 ### Description
 When used in a geo function, retrieve the Mario object associated to the current processed object if it is a valid Mario or mirror Mario, return `nil` otherwise
@@ -4646,7 +4045,7 @@ When used in a geo function, retrieve the Mario object associated to the current
 <br />
 
 
-## [get_additive_y_vel_for_jumps](#get_additive_y_vel_for_jumps)
+## get_additive_y_vel_for_jumps
 
 ### Description
 Always returns zero. May have been originally used for beta trampolines
@@ -4667,7 +4066,7 @@ Always returns zero. May have been originally used for beta trampolines
 
 <br />
 
-## [mario_bonk_reflection](#mario_bonk_reflection)
+## mario_bonk_reflection
 
 ### Description
 Reflects Mario off a wall if he is colliding with one and flips forward velocity if `negateSpeed` is TRUE
@@ -4691,7 +4090,7 @@ Reflects Mario off a wall if he is colliding with one and flips forward velocity
 
 <br />
 
-## [mario_update_quicksand](#mario_update_quicksand)
+## mario_update_quicksand
 
 ### Description
 Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non instant quicksand
@@ -4715,7 +4114,7 @@ Updates Mario's state in quicksand, sinks him at `sinkingSpeed` if he's in non i
 
 <br />
 
-## [mario_push_off_steep_floor](#mario_push_off_steep_floor)
+## mario_push_off_steep_floor
 
 ### Description
 Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
@@ -4740,7 +4139,7 @@ Pushes Mario off a steep floor and sets his action to `action` with `actionArg`
 
 <br />
 
-## [mario_update_moving_sand](#mario_update_moving_sand)
+## mario_update_moving_sand
 
 ### Description
 Pushes Mario in the direction of the quicksand based on the floor surface
@@ -4763,7 +4162,7 @@ Pushes Mario in the direction of the quicksand based on the floor surface
 
 <br />
 
-## [mario_update_windy_ground](#mario_update_windy_ground)
+## mario_update_windy_ground
 
 ### Description
 Pushes Mario in the direction of the wind based on the floor surface
@@ -4786,7 +4185,7 @@ Pushes Mario in the direction of the wind based on the floor surface
 
 <br />
 
-## [stop_and_set_height_to_floor](#stop_and_set_height_to_floor)
+## stop_and_set_height_to_floor
 
 ### Description
 Sets all of Mario's velocity variables to 0 and sets his Y position to the floor height
@@ -4809,7 +4208,7 @@ Sets all of Mario's velocity variables to 0 and sets his Y position to the floor
 
 <br />
 
-## [stationary_ground_step](#stationary_ground_step)
+## stationary_ground_step
 
 ### Description
 Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND_STEP_*` result
@@ -4832,7 +4231,7 @@ Performs a full Mario stationary physics step (4 substeps) and returns a `GROUND
 
 <br />
 
-## [perform_ground_step](#perform_ground_step)
+## perform_ground_step
 
 ### Description
 Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STEP_*` result
@@ -4855,7 +4254,7 @@ Performs a full Mario ground physics step (4 substeps) and returns a `GROUND_STE
 
 <br />
 
-## [perform_air_step](#perform_air_step)
+## perform_air_step
 
 ### Description
 Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` result
@@ -4879,7 +4278,7 @@ Performs a full Mario air physics step (4 substeps) and returns an `AIR_STEP_*` 
 
 <br />
 
-## [set_vel_from_pitch_and_yaw](#set_vel_from_pitch_and_yaw)
+## set_vel_from_pitch_and_yaw
 
 ### Description
 Sets Mario's velocity to his forward velocity multiplied by the cosine and sine of his pitch and yaw
@@ -4908,7 +4307,7 @@ Sets Mario's velocity to his forward velocity multiplied by the cosine and sine 
 <br />
 
 
-## [sins](#sins)
+## sins
 
 ### Description
 Calculates the sine of the given angle, where the angle is specified as a signed 16-bit integer representing a fixed-point "SM64 angle". This function returns a floating-point result corresponding to sin(angle)
@@ -4931,7 +4330,7 @@ Calculates the sine of the given angle, where the angle is specified as a signed
 
 <br />
 
-## [coss](#coss)
+## coss
 
 ### Description
 Calculates the cosine of the given angle, where the angle is specified as a signed 16-bit integer representing a fixed-point "SM64 angle". The function returns a floating-point value corresponding to cos(angle)
@@ -4954,7 +4353,7 @@ Calculates the cosine of the given angle, where the angle is specified as a sign
 
 <br />
 
-## [atan2s](#atan2s)
+## atan2s
 
 ### Description
 Computes the arctangent of y/x and returns the angle as a signed 16-bit integer, typically representing a direction in the SM64 fixed-point angle format. This can be used to find an angle between x and y coordinates
@@ -4978,7 +4377,7 @@ Computes the arctangent of y/x and returns the angle as a signed 16-bit integer,
 
 <br />
 
-## [atan2f](#atan2f)
+## atan2f
 
 ### Description
 Computes the arctangent of a/b and returns it as a floating-point angle in radians. This is the floating-point equivalent of `atan2s`, allowing more precise angle calculations
@@ -5002,7 +4401,7 @@ Computes the arctangent of a/b and returns it as a floating-point angle in radia
 
 <br />
 
-## [approach_s32](#approach_s32)
+## approach_s32
 
 ### Description
 Gradually moves an integer `current` value toward a `target` value, increasing it by `inc` if it is too low, or decreasing it by `dec` if it is too high. This is often used for smooth transitions or animations
@@ -5028,7 +4427,7 @@ Gradually moves an integer `current` value toward a `target` value, increasing i
 
 <br />
 
-## [approach_f32](#approach_f32)
+## approach_f32
 
 ### Description
 Similar to `approach_s32`, but operates on floating-point numbers. It moves `current` toward `target` by increasing it by `inc` if below target, or decreasing it by `dec` if above target, creating a smooth interpolation
@@ -5054,7 +4453,7 @@ Similar to `approach_s32`, but operates on floating-point numbers. It moves `cur
 
 <br />
 
-## [spline_get_weights](#spline_get_weights)
+## spline_get_weights
 
 ### Description
 Computes spline interpolation weights for a given parameter `t` and stores these weights in `result`. This is used in spline-based animations to find intermediate positions between keyframes
@@ -5080,7 +4479,7 @@ Computes spline interpolation weights for a given parameter `t` and stores these
 
 <br />
 
-## [anim_spline_init](#anim_spline_init)
+## anim_spline_init
 
 ### Description
 Initializes a spline-based animation for the `MarioState` structure `m` using the provided array of 3D signed-integer vectors `keyFrames`. This sets up the animation so that it can be advanced by polling
@@ -5104,7 +4503,7 @@ Initializes a spline-based animation for the `MarioState` structure `m` using th
 
 <br />
 
-## [anim_spline_poll](#anim_spline_poll)
+## anim_spline_poll
 
 ### Description
 Advances the spline-based animation associated with `m` and stores the current interpolated position in `result`. It returns the animation's status, allowing the caller to determine if the animation is ongoing or has completed
@@ -5128,7 +4527,7 @@ Advances the spline-based animation associated with `m` and stores the current i
 
 <br />
 
-## [vec3f_rotate_zxy](#vec3f_rotate_zxy)
+## vec3f_rotate_zxy
 
 ### Description
 Rotates the 3D floating-point vector `v` by the angles specified in the 3D signed-integer vector `rotate`, applying the rotations in the order Z, then X, then Y. The rotated vector replaces `v`
@@ -5152,7 +4551,7 @@ Rotates the 3D floating-point vector `v` by the angles specified in the 3D signe
 
 <br />
 
-## [vec3f_rotate_around_n](#vec3f_rotate_around_n)
+## vec3f_rotate_around_n
 
 ### Description
 Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation `r` (in sm64 angle units), and stores the result in `dest`
@@ -5178,7 +4577,7 @@ Rotates the 3D floating-point vector `v` around the vector `n`, given a rotation
 
 <br />
 
-## [vec3f_project](#vec3f_project)
+## vec3f_project
 
 ### Description
 Projects the 3D floating-point vector `v` onto another 3D floating-point vector `onto`. The resulting projection, stored in `dest`, represents how much of `v` lies along the direction of `onto`
@@ -5203,7 +4602,7 @@ Projects the 3D floating-point vector `v` onto another 3D floating-point vector 
 
 <br />
 
-## [vec3f_transform](#vec3f_transform)
+## vec3f_transform
 
 ### Description
 Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it by the rotation vector `rotation`, and finally translates it by the vector `translation`. The resulting vector is stored in `dest`
@@ -5230,7 +4629,7 @@ Scales the 3D floating-point vector `v` by the vector `scale`, then rotates it b
 
 <br />
 
-## [vec3f_get_dist_and_angle](#vec3f_get_dist_and_angle)
+## vec3f_get_dist_and_angle
 
 ### Description
 Calculates the distance between two points in 3D space (`from` and `to`), as well as the pitch and yaw angles that describe the direction from `from` to `to`. Returns the calculated distance, pitch and yaw
@@ -5256,7 +4655,7 @@ Calculates the distance between two points in 3D space (`from` and `to`), as wel
 
 <br />
 
-## [vec3f_set_dist_and_angle](#vec3f_set_dist_and_angle)
+## vec3f_set_dist_and_angle
 
 ### Description
 Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the point `from`. This can be used to place objects around a reference point at specific angles and distances
@@ -5283,7 +4682,7 @@ Positions the point `to` at a given `dist`, `pitch`, and `yaw` relative to the p
 
 <br />
 
-## [find_vector_perpendicular_to_plane](#find_vector_perpendicular_to_plane)
+## find_vector_perpendicular_to_plane
 
 ### Description
 Determines a vector that is perpendicular (normal) to the plane defined by three given 3D floating-point points `a`, `b`, and `c`. The resulting perpendicular vector is stored in `dest`
@@ -5309,7 +4708,7 @@ Determines a vector that is perpendicular (normal) to the plane defined by three
 
 <br />
 
-## [mtxf_lookat](#mtxf_lookat)
+## mtxf_lookat
 
 ### Description
 Adjusts the 4x4 floating-point matrix `mtx` so that it represents a viewing transformation looking from the point `from` toward the point `to`, with a given roll angle. This creates a view matrix oriented toward `to`
@@ -5335,7 +4734,7 @@ Adjusts the 4x4 floating-point matrix `mtx` so that it represents a viewing tran
 
 <br />
 
-## [mtxf_rotate_zxy_and_translate](#mtxf_rotate_zxy_and_translate)
+## mtxf_rotate_zxy_and_translate
 
 ### Description
 Rotates `dest` according to the angles in `rotate` using ZXY order, and then translates it by the 3D floating-point vector `translate`. This effectively positions and orients `dest` in 3D space
@@ -5360,7 +4759,7 @@ Rotates `dest` according to the angles in `rotate` using ZXY order, and then tra
 
 <br />
 
-## [mtxf_rotate_xyz_and_translate](#mtxf_rotate_xyz_and_translate)
+## mtxf_rotate_xyz_and_translate
 
 ### Description
 Rotates `dest` using angles in XYZ order, and then translates it by the 3D floating-point vector `b` and applies the rotations described by `c`. This sets up `dest` with a specific orientation and position in space
@@ -5385,7 +4784,7 @@ Rotates `dest` using angles in XYZ order, and then translates it by the 3D float
 
 <br />
 
-## [mtxf_billboard](#mtxf_billboard)
+## mtxf_billboard
 
 ### Description
 Transforms a 4x4 floating-point matrix `mtx` into a "billboard" oriented toward the camera or a given direction. The billboard is placed at `position` and rotated by `angle`. This is useful for objects that should always face the viewer
@@ -5411,7 +4810,7 @@ Transforms a 4x4 floating-point matrix `mtx` into a "billboard" oriented toward 
 
 <br />
 
-## [mtxf_cylboard](#mtxf_cylboard)
+## mtxf_cylboard
 
 ### Description
 Creates a "cylindrical billboard" transformation from the 4x4 matrix `mtx` placed at `position` with a given `angle`. Unlike a full billboard, this might allow rotation around one axis while still facing the viewer on others
@@ -5437,7 +4836,7 @@ Creates a "cylindrical billboard" transformation from the 4x4 matrix `mtx` place
 
 <br />
 
-## [mtxf_align_terrain_normal](#mtxf_align_terrain_normal)
+## mtxf_align_terrain_normal
 
 ### Description
 Aligns `dest` so that it fits the orientation of a terrain surface defined by its normal vector `upDir`. The transformation is positioned at `pos` and oriented with a given `yaw`. This is often used to make objects sit naturally on uneven ground
@@ -5463,7 +4862,7 @@ Aligns `dest` so that it fits the orientation of a terrain surface defined by it
 
 <br />
 
-## [mtxf_align_terrain_triangle](#mtxf_align_terrain_triangle)
+## mtxf_align_terrain_triangle
 
 ### Description
 Aligns `mtx` to fit onto a terrain triangle at `pos`, applying a given `yaw` and scaling by `radius`. This helps position objects so they match the orientation of the terrain's surface
@@ -5489,7 +4888,7 @@ Aligns `mtx` to fit onto a terrain triangle at `pos`, applying a given `yaw` and
 
 <br />
 
-## [mtxf_mul](#mtxf_mul)
+## mtxf_mul
 
 ### Description
 Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing the product in `dest`. This can be used for combining multiple transformations into one
@@ -5514,7 +4913,7 @@ Multiplies two 4x4 floating-point matrices `a` and `b` (in that order), storing 
 
 <br />
 
-## [mtxf_mul_vec3s](#mtxf_mul_vec3s)
+## mtxf_mul_vec3s
 
 ### Description
 Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `mtx`, which applies the transformation to the point
@@ -5538,7 +4937,7 @@ Multiplies the 3D signed-integer vector `b` with the 4x4 floating-point matrix `
 
 <br />
 
-## [mtxf_rotate_xy](#mtxf_rotate_xy)
+## mtxf_rotate_xy
 
 ### Description
 Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the XY plane typically means pivoting around the Z axis
@@ -5562,7 +4961,7 @@ Rotates the matrix `mtx` in the XY plane by the given `angle`. Rotating in the X
 
 <br />
 
-## [mtxf_inverse](#mtxf_inverse)
+## mtxf_inverse
 
 ### Description
 Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. The `src` matrix *must* be affine!
@@ -5586,7 +4985,7 @@ Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Ap
 
 <br />
 
-## [mtxf_inverse_non_affine](#mtxf_inverse_non_affine)
+## mtxf_inverse_non_affine
 
 ### Description
 Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Applying the inverse transformation undoes whatever `src` did, returning points back to their original coordinate space. Returns `false` if the inversion failed.
@@ -5610,7 +5009,7 @@ Inverts the 4x4 floating-point matrix `src` and stores the inverse in `dest`. Ap
 
 <br />
 
-## [mtxf_ortho](#mtxf_ortho)
+## mtxf_ortho
 
 ### Description
 Creates a orthographic matrix based on the bounds provided. This can be used to get an orthographic projection matrix.
@@ -5639,7 +5038,7 @@ Creates a orthographic matrix based on the bounds provided. This can be used to 
 
 <br />
 
-## [get_pos_from_transform_mtx](#get_pos_from_transform_mtx)
+## get_pos_from_transform_mtx
 
 ### Description
 Extracts the position (translation component) from the transformation matrix `objMtx` relative to the coordinate system defined by `camMtx` and stores that 3D position in `dest`. This can be used to get the object's coordinates in camera space
@@ -5664,7 +5063,7 @@ Extracts the position (translation component) from the transformation matrix `ob
 
 <br />
 
-## [get_world_mtx_from_transform](#get_world_mtx_from_transform)
+## get_world_mtx_from_transform
 
 ### Description
 Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and store the resulting matrix in `dest`. This can be used to get the object's transforms in world space.
@@ -5695,7 +5094,7 @@ Strip the camera-view matrix `camMtx` off of a model-view matrix `objMtx` and st
 <br />
 
 
-## [replace_value_if_not_zero](#replace_value_if_not_zero)
+## replace_value_if_not_zero
 
 ### Description
 Returns `replacement` if `replacement` is not zero. Otherwise, returns `value`
@@ -5719,7 +5118,7 @@ Returns `replacement` if `replacement` is not zero. Otherwise, returns `value`
 
 <br />
 
-## [sm64_to_radians](#sm64_to_radians)
+## sm64_to_radians
 
 ### Description
 Converts an angle from SM64 format to radians
@@ -5742,7 +5141,7 @@ Converts an angle from SM64 format to radians
 
 <br />
 
-## [radians_to_sm64](#radians_to_sm64)
+## radians_to_sm64
 
 ### Description
 Converts an angle from radians to SM64 format
@@ -5765,7 +5164,7 @@ Converts an angle from radians to SM64 format
 
 <br />
 
-## [sm64_to_degrees](#sm64_to_degrees)
+## sm64_to_degrees
 
 ### Description
 Converts an angle from SM64 format to degrees
@@ -5788,7 +5187,7 @@ Converts an angle from SM64 format to degrees
 
 <br />
 
-## [degrees_to_sm64](#degrees_to_sm64)
+## degrees_to_sm64
 
 ### Description
 Converts an angle from degrees to SM64 format
@@ -5817,7 +5216,7 @@ Converts an angle from degrees to SM64 format
 <br />
 
 
-## [mtxf_zero](#mtxf_zero)
+## mtxf_zero
 
 ### Description
 Sets the 4x4 floating-point matrix `mtx` to all zeros.
@@ -5841,7 +5240,7 @@ Unless you really need this-It's reccomended to use mtxf_identity instead.
 
 <br />
 
-## [mtxf_copy](#mtxf_copy)
+## mtxf_copy
 
 ### Description
 Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `dest` contains the same matrix values as `src`
@@ -5865,7 +5264,7 @@ Copies the 4x4 floating-point matrix `src` into `dest`. After this operation, `d
 
 <br />
 
-## [mtxf_identity](#mtxf_identity)
+## mtxf_identity
 
 ### Description
 Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity matrix leaves points unchanged when they are transformed by it which is useful for matrix math
@@ -5888,7 +5287,7 @@ Sets the 4x4 floating-point matrix `mtx` to the identity matrix. The identity ma
 
 <br />
 
-## [mtxf_translate](#mtxf_translate)
+## mtxf_translate
 
 ### Description
 Sets the 4x4 floating-point matrix `dest` to the translation matrix decribed by the 3D floating-point vector `b`. This matrix is used to shift any transformed point by `b`
@@ -5912,7 +5311,7 @@ Sets the 4x4 floating-point matrix `dest` to the translation matrix decribed by 
 
 <br />
 
-## [mtxf_scale_vec3f](#mtxf_scale_vec3f)
+## mtxf_scale_vec3f
 
 ### Description
 Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3D floating-point vector `s`, and stores the result in `dest`. This enlarges or shrinks objects in 3D space
@@ -5943,7 +5342,7 @@ Scales the 4x4 floating-point matrix `mtx` by the scaling factors found in the 3
 <br />
 
 
-## [vec3f_zero](#vec3f_zero)
+## vec3f_zero
 
 ### Description
 Sets the components of the 3D floating-point vector `v` to 0
@@ -5966,7 +5365,7 @@ Sets the components of the 3D floating-point vector `v` to 0
 
 <br />
 
-## [vec3f_copy](#vec3f_copy)
+## vec3f_copy
 
 ### Description
 Copies the contents of a 3D floating-point vector (`src`) into another 3D floating-point vector (`dest`)
@@ -5990,7 +5389,7 @@ Copies the contents of a 3D floating-point vector (`src`) into another 3D floati
 
 <br />
 
-## [vec3f_set](#vec3f_set)
+## vec3f_set
 
 ### Description
 Sets the values of the 3D floating-point vector `dest` to the given x, y, and z values
@@ -6016,7 +5415,7 @@ Sets the values of the 3D floating-point vector `dest` to the given x, y, and z 
 
 <br />
 
-## [vec3f_add](#vec3f_add)
+## vec3f_add
 
 ### Description
 Adds the components of the 3D floating-point vector `a` to `dest`
@@ -6040,7 +5439,7 @@ Adds the components of the 3D floating-point vector `a` to `dest`
 
 <br />
 
-## [vec3f_sum](#vec3f_sum)
+## vec3f_sum
 
 ### Description
 Adds the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
@@ -6065,7 +5464,7 @@ Adds the components of two 3D floating-point vectors `a` and `b` and stores the 
 
 <br />
 
-## [vec3f_sub](#vec3f_sub)
+## vec3f_sub
 
 ### Description
 Subtracts the components of the 3D floating-point vector `a` from `dest`
@@ -6089,7 +5488,7 @@ Subtracts the components of the 3D floating-point vector `a` from `dest`
 
 <br />
 
-## [vec3f_dif](#vec3f_dif)
+## vec3f_dif
 
 ### Description
 Subtracts the components of the 3D floating-point vector `b` from the components of `a` and stores the result in `dest`
@@ -6114,7 +5513,7 @@ Subtracts the components of the 3D floating-point vector `b` from the components
 
 <br />
 
-## [vec3f_mul](#vec3f_mul)
+## vec3f_mul
 
 ### Description
 Multiplies each component of the 3D floating-point vector `dest` by the scalar value `a`
@@ -6138,7 +5537,7 @@ Multiplies each component of the 3D floating-point vector `dest` by the scalar v
 
 <br />
 
-## [vec3f_mult](#vec3f_mult)
+## vec3f_mult
 
 ### Description
 Multiplies the components of the 3D floating-point vector `dest` with the components of `a`
@@ -6162,7 +5561,7 @@ Multiplies the components of the 3D floating-point vector `dest` with the compon
 
 <br />
 
-## [vec3f_prod](#vec3f_prod)
+## vec3f_prod
 
 ### Description
 Multiplies the components of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
@@ -6187,7 +5586,7 @@ Multiplies the components of two 3D floating-point vectors `a` and `b` and store
 
 <br />
 
-## [vec3f_div](#vec3f_div)
+## vec3f_div
 
 ### Description
 Divides each component of the 3D floating-point vector `dest` by the scalar value `a`
@@ -6211,7 +5610,7 @@ Divides each component of the 3D floating-point vector `dest` by the scalar valu
 
 <br />
 
-## [vec3f_length](#vec3f_length)
+## vec3f_length
 
 ### Description
 Calculates the length (magnitude) of the 3D floating-point vector `a`
@@ -6234,7 +5633,7 @@ Calculates the length (magnitude) of the 3D floating-point vector `a`
 
 <br />
 
-## [vec3f_normalize](#vec3f_normalize)
+## vec3f_normalize
 
 ### Description
 Normalizes the 3D floating-point vector `v` so that its length (magnitude) becomes 1, while retaining its direction
@@ -6257,7 +5656,7 @@ Normalizes the 3D floating-point vector `v` so that its length (magnitude) becom
 
 <br />
 
-## [vec3f_set_magnitude](#vec3f_set_magnitude)
+## vec3f_set_magnitude
 
 ### Description
 Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its direction
@@ -6281,7 +5680,7 @@ Sets the length (magnitude) of 3D floating-point vector `v`, while retaining its
 
 <br />
 
-## [vec3f_dot](#vec3f_dot)
+## vec3f_dot
 
 ### Description
 Computes the dot product of the two 3D floating-point vectors `a` and `b`
@@ -6305,7 +5704,7 @@ Computes the dot product of the two 3D floating-point vectors `a` and `b`
 
 <br />
 
-## [vec3f_cross](#vec3f_cross)
+## vec3f_cross
 
 ### Description
 Computes the cross product of two 3D floating-point vectors `a` and `b` and stores the result in `dest`
@@ -6330,7 +5729,7 @@ Computes the cross product of two 3D floating-point vectors `a` and `b` and stor
 
 <br />
 
-## [vec3f_combine](#vec3f_combine)
+## vec3f_combine
 
 ### Description
 Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
@@ -6357,7 +5756,7 @@ Takes two 3D floating-point vectors `vecA` and `vecB`, multiplies them by `sclA`
 
 <br />
 
-## [vec3f_dist](#vec3f_dist)
+## vec3f_dist
 
 ### Description
 Calculates the distance between two 3D floating-point vectors `v1` and `v2`
@@ -6381,7 +5780,7 @@ Calculates the distance between two 3D floating-point vectors `v1` and `v2`
 
 <br />
 
-## [vec3f_hdist](#vec3f_hdist)
+## vec3f_hdist
 
 ### Description
 Calculates the horizontal distance between two 3D floating-point vectors `v1` and `v2`, as if their y component was 0
@@ -6405,7 +5804,7 @@ Calculates the horizontal distance between two 3D floating-point vectors `v1` an
 
 <br />
 
-## [vec3f_is_zero](#vec3f_is_zero)
+## vec3f_is_zero
 
 ### Description
 Returns `true` if all components of the 3D floating-point vector `v` are zero
@@ -6428,7 +5827,7 @@ Returns `true` if all components of the 3D floating-point vector `v` are zero
 
 <br />
 
-## [vec3f_to_vec3i](#vec3f_to_vec3i)
+## vec3f_to_vec3i
 
 ### Description
 Converts a 3D floating-point vector `a` into a 3D integer vector and stores the result in `dest`
@@ -6452,7 +5851,7 @@ Converts a 3D floating-point vector `a` into a 3D integer vector and stores the 
 
 <br />
 
-## [vec3f_to_vec3s](#vec3f_to_vec3s)
+## vec3f_to_vec3s
 
 ### Description
 Converts a 3D floating-point vector `a` into a 3D short integer vector and stores the result in `dest`
@@ -6471,6 +5870,1350 @@ Converts a 3D floating-point vector `a` into a 3D short integer vector and store
 
 ### C Prototype
 `Vec3sp vec3f_to_vec3s(VEC_OUT Vec3s dest, Vec3f a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_vec3i.inl
+
+<br />
+
+
+## vec3i_zero
+
+### Description
+Sets the components of the 3D integer vector `v` to 0
+
+### Lua Example
+`local vec3iValue = vec3i_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_zero(VEC_OUT Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_copy
+
+### Description
+Copies the contents of a 3D integer vector (`src`) into another 3D integer vector (`dest`)
+
+### Lua Example
+`local vec3iValue = vec3i_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| src | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_copy(VEC_OUT Vec3i dest, Vec3i src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_set
+
+### Description
+Sets the values of the 3D integer vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local vec3iValue = vec3i_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_set(VEC_OUT Vec3i dest, s32 x, s32 y, s32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_add
+
+### Description
+Adds the components of the 3D integer vector `a` to `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_add(VEC_OUT Vec3i dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_sum
+
+### Description
+Adds the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_sum(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_sub
+
+### Description
+Subtracts the components of the 3D integer vector `a` from `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_sub(VEC_OUT Vec3i dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_dif
+
+### Description
+Subtracts the components of the 3D integer vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_dif(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_mul
+
+### Description
+Multiplies each component of the 3D integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local vec3iValue = vec3i_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | `number` |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_mul(VEC_OUT Vec3i dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_mult
+
+### Description
+Multiplies the components of the 3D integer vector `dest` with the components of `a`
+
+### Lua Example
+`local vec3iValue = vec3i_mult(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_mult(VEC_OUT Vec3i dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_prod
+
+### Description
+Multiplies the components of two 3D integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_prod(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_prod(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_div
+
+### Description
+Divides each component of the 3D integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local vec3iValue = vec3i_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | `number` |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_div(VEC_OUT Vec3i dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_length
+
+### Description
+Calculates the length (magnitude) of the 3D integer vector `a`
+
+### Lua Example
+`local numberValue = vec3i_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_length(Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_normalize
+
+### Description
+Normalizes the 3D integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local vec3iValue = vec3i_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_normalize(VEC_OUT Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_set_magnitude
+
+### Description
+Sets the length (magnitude) of 3D integer vector `v`, while retaining its direction
+
+### Lua Example
+`local vec3iValue = vec3i_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+| mag | `number` |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_set_magnitude(VEC_OUT Vec3i v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_dot
+
+### Description
+Computes the dot product of the two 3D integer vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3i_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_dot(Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_cross
+
+### Description
+Computes the cross product of two 3D integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3i](structs.md#Vec3i) |
+| b | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_cross(VEC_OUT Vec3i dest, Vec3i a, Vec3i b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_combine
+
+### Description
+Takes two 3D integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3i_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| vecA | [Vec3i](structs.md#Vec3i) |
+| vecB | [Vec3i](structs.md#Vec3i) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3i_combine(VEC_OUT Vec3i dest, Vec3i vecA, Vec3i vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_dist
+
+### Description
+Calculates the distance between two 3D integer vectors `v1` and `v2`
+
+### Lua Example
+`local numberValue = vec3i_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3i](structs.md#Vec3i) |
+| v2 | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_dist(Vec3i v1, Vec3i v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_hdist
+
+### Description
+Calculates the horizontal distance between two 3D integer vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3i_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3i](structs.md#Vec3i) |
+| v2 | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3i_hdist(Vec3i v1, Vec3i v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_is_zero
+
+### Description
+Returns `true` if all components of the 3D integer vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3i_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3i_is_zero(Vec3i v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_to_vec3f
+
+### Description
+Converts a 3D integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+
+### Lua Example
+`local vec3fValue = vec3i_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3f](structs.md#Vec3f)
+
+### C Prototype
+`Vec3fp vec3i_to_vec3f(VEC_OUT Vec3f dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3i_to_vec3s
+
+### Description
+Converts a 3D integer vector `a` into a 3D short integer vector and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3i_to_vec3s(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3i](structs.md#Vec3i) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3i_to_vec3s(VEC_OUT Vec3s dest, Vec3i a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from math_util_vec3s.inl
+
+<br />
+
+
+## vec3s_zero
+
+### Description
+Sets the components of the 3D short integer vector `v` to 0
+
+### Lua Example
+`local vec3sValue = vec3s_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_zero(VEC_OUT Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_copy
+
+### Description
+Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
+
+### Lua Example
+`local vec3sValue = vec3s_copy(dest, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| src | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_copy(VEC_OUT Vec3s dest, Vec3s src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_set
+
+### Description
+Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
+
+### Lua Example
+`local vec3sValue = vec3s_set(dest, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| x | `integer` |
+| y | `integer` |
+| z | `integer` |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_set(VEC_OUT Vec3s dest, s16 x, s16 y, s16 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_add
+
+### Description
+Adds the components of the 3D short integer vector `a` to `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_add(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_add(VEC_OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_sum
+
+### Description
+Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_sum(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_sum(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_sub
+
+### Description
+Subtracts the components of the 3D short integer vector `a` from `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_sub(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_sub(VEC_OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_dif
+
+### Description
+Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_dif(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_dif(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_mul
+
+### Description
+Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local vec3sValue = vec3s_mul(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_mul(VEC_OUT Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_mult
+
+### Description
+Multiplies the components of the 3D short integer vector `dest` with the components of `a`
+
+### Lua Example
+`local vec3sValue = vec3s_mult(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_mult(VEC_OUT Vec3s dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_prod
+
+### Description
+Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_prod(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_prod(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_div
+
+### Description
+Divides each component of the 3D short integer vector `dest` by the scalar value `a`
+
+### Lua Example
+`local vec3sValue = vec3s_div(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | `number` |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_div(VEC_OUT Vec3s dest, f32 a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_length
+
+### Description
+Calculates the length (magnitude) of the 3D short integer vector `a`
+
+### Lua Example
+`local numberValue = vec3s_length(a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_length(Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_normalize
+
+### Description
+Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
+
+### Lua Example
+`local vec3sValue = vec3s_normalize(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_normalize(VEC_OUT Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_set_magnitude
+
+### Description
+Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
+
+### Lua Example
+`local vec3sValue = vec3s_set_magnitude(v, mag)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+| mag | `number` |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_set_magnitude(VEC_OUT Vec3s v, f32 mag);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_dot
+
+### Description
+Computes the dot product of the two 3D short integer vectors `a` and `b`
+
+### Lua Example
+`local numberValue = vec3s_dot(a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dot(Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_cross
+
+### Description
+Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_cross(dest, a, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_cross(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_combine
+
+### Description
+Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
+
+### Lua Example
+`local vec3sValue = vec3s_combine(dest, vecA, vecB, sclA, sclB)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3s](structs.md#Vec3s) |
+| vecA | [Vec3s](structs.md#Vec3s) |
+| vecB | [Vec3s](structs.md#Vec3s) |
+| sclA | `number` |
+| sclB | `number` |
+
+### Returns
+- [Vec3s](structs.md#Vec3s)
+
+### C Prototype
+`Vec3sp vec3s_combine(VEC_OUT Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_dist
+
+### Description
+Calculates the distance between two 3D short integer vectors `v1` and `v2`
+
+### Lua Example
+`local numberValue = vec3s_dist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_hdist
+
+### Description
+Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
+
+### Lua Example
+`local numberValue = vec3s_hdist(v1, v2)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v1 | [Vec3s](structs.md#Vec3s) |
+| v2 | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 vec3s_hdist(Vec3s v1, Vec3s v2);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_is_zero
+
+### Description
+Returns `true` if all components of the 3D short integer vector `v` are zero
+
+### Lua Example
+`local booleanValue = vec3s_is_zero(v)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| v | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool vec3s_is_zero(Vec3s v);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_to_vec3f
+
+### Description
+Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
+
+### Lua Example
+`local vec3fValue = vec3s_to_vec3f(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3f](structs.md#Vec3f)
+
+### C Prototype
+`Vec3fp vec3s_to_vec3f(VEC_OUT Vec3f dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## vec3s_to_vec3i
+
+### Description
+Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
+
+### Lua Example
+`local vec3iValue = vec3s_to_vec3i(dest, a)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dest | [Vec3i](structs.md#Vec3i) |
+| a | [Vec3s](structs.md#Vec3s) |
+
+### Returns
+- [Vec3i](structs.md#Vec3i)
+
+### C Prototype
+`Vec3ip vec3s_to_vec3i(VEC_OUT Vec3i dest, Vec3s a);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from misc.h
+
+<br />
+
+
+## smooth_step
+
+### Description
+Smoothly steps between `edge0` and `edge1` with `x` as delta
+
+### Lua Example
+`local numberValue = smooth_step(edge0, edge1, x)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| edge0 | `number` |
+| edge1 | `number` |
+| x | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`float smooth_step(float edge0, float edge1, float x);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## update_all_mario_stars
+
+### Description
+Updates every Mario state's star count with the save file total star count
+
+### Lua Example
+`update_all_mario_stars()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void update_all_mario_stars(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## clock_elapsed
+
+### Description
+Gets the current clock elapsed time
+
+### Lua Example
+`local numberValue = clock_elapsed()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 clock_elapsed(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## clock_elapsed_f64
+
+### Description
+Gets the current clock elapsed time with double precision
+
+### Lua Example
+`local numberValue = clock_elapsed_f64()`
+
+### Parameters
+- None
+
+### Returns
+- `number`
+
+### C Prototype
+`f64 clock_elapsed_f64(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## clock_elapsed_ticks
+
+### Description
+Gets the current clock elapsed time in frames
+
+### Lua Example
+`local integerValue = clock_elapsed_ticks()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 clock_elapsed_ticks(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## clock_is_date
+
+### Description
+Checks whether it is the day given
+
+### Lua Example
+`local booleanValue = clock_is_date(month, day)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| month | `integer` |
+| day | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool clock_is_date(u8 month, u8 day);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## delta_interpolate_f32
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local numberValue = delta_interpolate_f32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `number` |
+| b | `number` |
+| delta | `number` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## delta_interpolate_s32
+
+### Description
+Linearly interpolates between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_s32(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## delta_interpolate_angle
+
+### Description
+Interpolates angle between `a` and `b` with `delta`
+
+### Lua Example
+`local integerValue = delta_interpolate_angle(a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| a | `integer` |
+| b | `integer` |
+| delta | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 delta_interpolate_angle(s16 a, s16 b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## delta_interpolate_vec3f
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3f(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3f](structs.md#Vec3f) |
+| a | [Vec3f](structs.md#Vec3f) |
+| b | [Vec3f](structs.md#Vec3f) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## delta_interpolate_vec3s
+
+### Description
+Linearly interpolates `res` between `a` and `b` with `delta`
+
+### Lua Example
+`delta_interpolate_vec3s(res, a, b, delta)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| res | [Vec3s](structs.md#Vec3s) |
+| a | [Vec3s](structs.md#Vec3s) |
+| b | [Vec3s](structs.md#Vec3s) |
+| delta | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void delta_interpolate_vec3s(VEC_OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);`
 
 [:arrow_up_small:](#)
 
