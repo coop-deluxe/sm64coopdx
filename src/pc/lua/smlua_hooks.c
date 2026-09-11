@@ -2045,6 +2045,10 @@ int smlua_update_mod_menu_element_selectionbox(lua_State* L) {
     if (uintValue < modMenuElement->choicesCount) {
         modMenuElement->uintValue = uintValue;
     }
+
+    if (modMenuElement->uintValue < modMenuElement->choicesCount) {
+        modMenuElement->uintValue = 0;
+    }
     return 1;
 }
 
