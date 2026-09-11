@@ -105,6 +105,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
                 case DATA_TYPE_LIGHT_T:         DynOS_LightT_Load    (_File, _GfxData); break;
                 case DATA_TYPE_AMBIENT_T:       DynOS_AmbientT_Load  (_File, _GfxData); break;
                 case DATA_TYPE_TEXTURE:         DynOS_Tex_Load       (_File, _GfxData); break;
+                case DATA_TYPE_TEXTURE_RAW:     DynOS_Tex_LoadRaw    (_File, _GfxData); break;
                 case DATA_TYPE_TEXTURE_LIST:    DynOS_TexList_Load   (_File, _GfxData); break;
                 case DATA_TYPE_VERTEX:          DynOS_Vtx_Load       (_File, _GfxData); break;
                 case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load       (_File, _GfxData); break;
@@ -114,13 +115,16 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
                 case DATA_TYPE_GFXDYNCMD:       DynOS_GfxDynCmd_Load (_File, _GfxData); break;
                 default:                        _Done = true;                           break;
             }
+            if (_GfxData->mErrorCount > 0) {
+                PrintError("  %u error(s): Failed to load actor '%s'", _GfxData->mErrorCount, aActorName);
+                break;
+            }
         }
         BinFile::Close(_File);
     }
 
     // If something went wrong, do not register actor
     if (_GfxData && _GfxData->mErrorCount > 0) {
-        PrintError("  %u error(s) occurred during loading: Actor '%s' will not be enabled", _GfxData->mErrorCount, aActorName);
         DynOS_Gfx_Free(_GfxData);
         return NULL;
     }
@@ -176,7 +180,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         _GfxData->mErrorCount                 = 0;
         _GfxData->mDataIdentifier             = _GeoNode->mDataIdentifier;
         _GfxData->mPackFolder                 = aPackFolder;
-        _GfxData->mPointerList                = { NULL }; // The NULL pointer is needed, so we add it here
+        _GfxData->mPointerList                = { {NULL, 0} }; // The NULL pointer is needed, so we add it here
         _GfxData->mPointerOffsetList          = { };
         _GfxData->mLuaPointerList             = { };
         _GfxData->mLuaTokenList               = { };

@@ -4,6 +4,7 @@
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
 
+#define MAX_SKYBOX_TILES 80
 
 extern s8 gReadOnlyBackground;
 extern s8 gOverrideBackground;

@@ -20,10 +20,10 @@ static inline bool ShouldUseF32Vtx(DataNode<Vtx>* aNode) {
     return false;
 }
 
-static inline bool IsUsingF32Vtx(Vec3f ob) {
-    return ob[0] == F32VTX_SENTINEL_0 &&
-           ob[1] == F32VTX_SENTINEL_1 &&
-           ob[2] == F32VTX_SENTINEL_2;
+static inline bool IsUsingF32Vtx(s16 x, s16 y, s16 z) {
+    return x == F32VTX_SENTINEL_0 &&
+           y == F32VTX_SENTINEL_1 &&
+           z == F32VTX_SENTINEL_2;
 }
 
   /////////////
@@ -113,11 +113,40 @@ void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData) {
     // Name
     _Node->mName.Read(aFile);
 
-    // Data
+    u32 _DataSize = aFile->Read<u32>();
+
+    // Check F32VTX sentinel
+    u32 _VtxSize = (
+        3 * sizeof(s16) +
+        3 * sizeof(s16) +
+        3 * sizeof(s8) +
+        sizeof(u8)
+    );
     bool isUsingF32Vtx = false;
-    _Node->mSize = aFile->Read<u32>();
+    if (_DataSize > 0) {
+        s32 _FileOffset = aFile->Offset();
+        s16 x = aFile->Read<s16>();
+        s16 y = aFile->Read<s16>();
+        s16 z = aFile->Read<s16>();
+        isUsingF32Vtx = IsUsingF32Vtx(x, y, z);
+        if (isUsingF32Vtx) {
+            aFile->SetOffset(_FileOffset + _VtxSize); // Skip first vertex (sentinel)
+            _VtxSize += 3 * (sizeof(f32) - sizeof(s16)); // Correct element size
+            _DataSize--;
+        } else {
+            aFile->SetOffset(_FileOffset);
+        }
+    }
+
+    // Size check
+    DynOS_Bin_Validate_CheckSize(_DataSize, _VtxSize,);
+
+    // Data
+    _Node->mSize = _DataSize;
     _Node->mData = vtx_allocate_internal(NULL, _Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
+        DynOS_Bin_Validate_CheckEoF();
+
         if (isUsingF32Vtx) {
             _Node->mData[i].n.ob[0] = aFile->Read<f32>();
             _Node->mData[i].n.ob[1] = aFile->Read<f32>();
@@ -134,12 +163,6 @@ void DynOS_Vtx_Load(BinFile *aFile, GfxData *aGfxData) {
         _Node->mData[i].n.n[1]  = aFile->Read<s8> ();
         _Node->mData[i].n.n[2]  = aFile->Read<s8> ();
         _Node->mData[i].n.a     = aFile->Read<u8> ();
-
-        // Check sentinel on first vertex
-        if (!isUsingF32Vtx && i == 0 && IsUsingF32Vtx(_Node->mData[i].n.ob)) {
-            _Node->mSize--; i--;
-            isUsingF32Vtx = true;
-        }
     }
 
     // Billboard check

@@ -41,6 +41,7 @@ bool packet_read_lnt(struct Packet* p, struct LSTNetworkType* lnt);
 
 CObject *smlua_push_object(lua_State* L, u16 lot, void* p, void *extraInfo);
 CPointer *smlua_push_pointer(lua_State* L, u16 lvt, void* p, void *extraInfo);
+void smlua_push_boolean_field(int index, const char* name, bool val);
 void smlua_push_integer_field(int index, const char* name, lua_Integer val);
 void smlua_push_number_field(int index, const char* name, lua_Number val);
 void smlua_push_string_field(int index, const char* name, const char* val);
@@ -62,6 +63,14 @@ s64 smlua_get_integer_mod_variable(u16 modIndex, const char* variable);
 s64 smlua_get_any_integer_mod_variable(const char* variable);
 LuaFunction smlua_get_function_mod_variable(u16 modIndex, const char *variable);
 LuaFunction smlua_get_any_function_mod_variable(const char *variable);
+bool smlua_find_lua_param(uintptr_t *param, uintptr_t value, u32 luaParams, u32 luaParamFlag);
+
+#define smlua_get_lua_param(paramName, paramType, paramValue, luaParams, luaParamFlag, ...) \
+    uintptr_t paramName##Param; \
+    if (!smlua_find_lua_param(&paramName##Param, paramValue, luaParams, luaParamFlag)) { \
+        __VA_ARGS__ \
+    } \
+    paramType paramName = (paramType) paramName##Param;
 
 void smlua_logline(void);
 void smlua_dump_stack(void);

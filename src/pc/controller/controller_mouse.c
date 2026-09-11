@@ -28,6 +28,7 @@ void controller_mouse_read_window(void) {
 
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
     mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
+    mouse_window_y -= gfx_current_dimensions.y_adjust_4by3;
 }
 
 void controller_mouse_read_relative(void) {

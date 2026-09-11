@@ -3,6 +3,7 @@
 
 #include <PR/ultratypes.h>
 
+#define MAX_LEVEL_SCRIPT_STACK_SIZE 32
 #define MAX_PAINTING_WARP_NODES 45
 
 struct LevelCommand;

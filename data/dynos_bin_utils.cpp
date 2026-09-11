@@ -211,76 +211,58 @@ s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found) {
 void DynOS_Gfx_Free(GfxData* aGfxData) {
     if (aGfxData) {
         for (auto& _Node : aGfxData->mLights) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mLight0s) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mLightTs) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mAmbientTs) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mTextures) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mTextureLists) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mVertices) {
-            free(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mDisplayLists) {
-            free(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mGeoLayouts) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mAnimations) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mCollisions) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mBehaviorScripts) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mLevelScripts) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mMacroObjects) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mTrajectories) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mMovtexs) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mMovtexQCs) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         for (auto& _Node : aGfxData->mRooms) {
-            Delete(_Node->mData);
-            Delete(_Node);
+            DeleteNode(_Node);
         }
         Delete(aGfxData);
     }

@@ -1,170 +1,120 @@
 #include "dynos.cpp.h"
 #include <map>
-#include <assert.h>
 extern "C" {
 #include "include/level_commands.h"
-#include "include/model_ids.h"
-#include "include/behavior_data.h"
-#include "include/surface_terrains.h"
-#include "include/seq_ids.h"
-#include "level_commands.h"
-#include "game/level_update.h"
-#include "include/dialog_ids.h"
-#include "levels/scripts.h"
-#include "levels/menu/header.h"
-#include "game/area.h"
 }
-
-#define POINTER 0xD34DB33F
 
 struct LevelScriptCommand {
     u8 id;
     u8 size;
-    u8 ptrIdx[2];
+    LevelScript command[16];
 };
 
-static bool sCommandMapFilled = false;
-static std::map<u8, struct LevelScriptCommand> sCommandMap;
+#define LVL_COMMAND_ID(...) \
+    (u8) (((LevelScript[]){ __VA_ARGS__ })[0])
+
+#define LVL_COMMAND(cmd) { \
+    LVL_COMMAND_ID(cmd), { \
+        .id = LVL_COMMAND_ID(cmd), \
+        .size = 4 * (u8) (sizeof((LevelScript[]){ cmd }) / sizeof(LevelScript)), \
+        .command = { cmd } \
+    } \
+}
+
+static std::map<u8, struct LevelScriptCommand> sLevelScriptCommands = {
+#define LVL_SYMBOL(_cat_, _symb_, _numArgs_, _ptrOff_, _ptrType_, ...) LVL_COMMAND(CALL_MACRO(_symb_, __VA_ARGS__)),
+#include "dynos_bin_lvl_symbols.inl"
+#undef LVL_SYMBOL
+};
 
 static u8 sCurCommandId = 0xFF;
-static u8 sCurCommandOffset = 0xFF;
-
-#define ADD_COMMAND(_cmd) {               \
-    LevelScript _script[] = { _cmd };     \
-    size_t _size = ARRAY_COUNT(_script);  \
-    LvlCmd_Add(_script, _size);           \
-}
-
-static void LvlCmd_Add(LevelScript script[], size_t size) {
-    // make sure size isn't crazy
-    assert(size < 0xFF);
-
-    // find the single pointer index
-    u8 ptrIdx[2] = { 0xFF, 0xFF };
-    for (u8 i = 0; i < size; i++) {
-        if (script[i] != POINTER) { continue; }
-        if (ptrIdx[0] == 0xFF) {
-            ptrIdx[0] = i;
-        } else {
-            assert(ptrIdx[1] == 0xFF);
-            ptrIdx[1] = i;
-        }
-    }
-
-    // extract the id and make sure it's unique
-    u8 id = (u8)(script[0] & 0xFF);
-    if (sCommandMap.count(id) != 0) { return; }
-
-    // add the command to the map
-    sCommandMap[id] = {
-        .id = id,
-        .size = (u8)size,
-        .ptrIdx = { ptrIdx[0], ptrIdx[1] },
-    };
-}
-
-static void LvlCmd_Init() {
-    ADD_COMMAND(EXECUTE(0, 0, 0, POINTER));
-    ADD_COMMAND(EXIT_AND_EXECUTE(0, 0, 0, POINTER));
-    ADD_COMMAND(EXIT());
-    ADD_COMMAND(SLEEP(0));
-    ADD_COMMAND(SLEEP_BEFORE_EXIT(0));
-    ADD_COMMAND(JUMP(POINTER));
-    ADD_COMMAND(JUMP_LINK(POINTER));
-    ADD_COMMAND(RETURN());
-    ADD_COMMAND(JUMP_LINK_PUSH_ARG(0));
-    ADD_COMMAND(JUMP_N_TIMES());
-    ADD_COMMAND(LOOP_BEGIN());
-    ADD_COMMAND(LOOP_UNTIL(0, 0));
-    ADD_COMMAND(JUMP_IF(0, 0, POINTER));
-    ADD_COMMAND(JUMP_LINK_IF(0, 0, POINTER));
-    ADD_COMMAND(SKIP_IF(0, 0));
-    ADD_COMMAND(SKIP());
-    ADD_COMMAND(SKIP_NOP());
-    ADD_COMMAND(CALL(0, POINTER));
-    ADD_COMMAND(CALL_LOOP(0, POINTER));
-    ADD_COMMAND(SET_REG(0));
-    ADD_COMMAND(PUSH_POOL());
-    ADD_COMMAND(POP_POOL());
-    ADD_COMMAND(FIXED_LOAD(0, 0, 0));
-    ADD_COMMAND(LOAD_RAW(0, 0, 0));
-    ADD_COMMAND(LOAD_MIO0(0, 0, 0));
-    ADD_COMMAND(LOAD_MARIO_HEAD(0));
-    ADD_COMMAND(LOAD_MIO0_TEXTURE(0, 0, 0));
-    ADD_COMMAND(INIT_LEVEL());
-    ADD_COMMAND(CLEAR_LEVEL());
-    ADD_COMMAND(ALLOC_LEVEL_POOL());
-    ADD_COMMAND(FREE_LEVEL_POOL());
-    ADD_COMMAND(AREA(0, POINTER));
-    ADD_COMMAND(END_AREA());
-    ADD_COMMAND(LOAD_MODEL_FROM_DL(0, 0, 0));
-    ADD_COMMAND(LOAD_MODEL_FROM_GEO(0, POINTER));
-    ADD_COMMAND(CMD23(0, 0, 0));
-    ADD_COMMAND(OBJECT_WITH_ACTS(0, 0, 0, 0, 0, 0, 0, 0, POINTER, 0));
-    ADD_COMMAND(OBJECT(0, 0, 0, 0, 0, 0, 0, 0, POINTER));
-    ADD_COMMAND(MARIO(0, 0, POINTER));
-    ADD_COMMAND(WARP_NODE(0, 0, 0, 0, 0));
-    ADD_COMMAND(PAINTING_WARP_NODE(0, 0, 0, 0, 0));
-    ADD_COMMAND(INSTANT_WARP(0, 0, 0, 0, 0));
-    ADD_COMMAND(LOAD_AREA(0));
-    ADD_COMMAND(CMD2A(0));
-    ADD_COMMAND(MARIO_POS(0, 0, 0, 0, 0));
-    ADD_COMMAND(CMD2C());
-    ADD_COMMAND(CMD2D());
-    ADD_COMMAND(TERRAIN(POINTER));
-    ADD_COMMAND(ROOMS(POINTER));
-    ADD_COMMAND(SHOW_DIALOG(0, 0));
-    ADD_COMMAND(TERRAIN_TYPE(0));
-    ADD_COMMAND(NOP());
-    ADD_COMMAND(TRANSITION(0, 0, 0, 0, 0));
-    ADD_COMMAND(BLACKOUT(0));
-    ADD_COMMAND(GAMMA(0));
-    ADD_COMMAND(SET_BACKGROUND_MUSIC(0, 0));
-    ADD_COMMAND(SET_MENU_MUSIC(0));
-    ADD_COMMAND(STOP_MUSIC(0));
-    ADD_COMMAND(MACRO_OBJECTS(POINTER));
-    ADD_COMMAND(CMD3A(0, 0, 0, 0, 0));
-    ADD_COMMAND(WHIRLPOOL(0, 0, 0, 0, 0, 0));
-    ADD_COMMAND(GET_OR_SET(0, 0));
-    ADD_COMMAND(ADV_DEMO());
-    ADD_COMMAND(CLEAR_DEMO_PTR());
-    ADD_COMMAND(OBJECT_WITH_ACTS_EXT(0, 0, 0, 0, 0, 0, 0, 0, POINTER, 0));
-    ADD_COMMAND(OBJECT_WITH_ACTS_EXT2(POINTER, 0, 0, 0, 0, 0, 0, 0, POINTER, 0));
-    ADD_COMMAND(OBJECT_EXT(0, 0, 0, 0, 0, 0, 0, 0, POINTER));
-    ADD_COMMAND(OBJECT_EXT2(POINTER, 0, 0, 0, 0, 0, 0, 0, POINTER));
-    ADD_COMMAND(LOAD_MODEL_FROM_GEO_EXT(0, POINTER));
-    ADD_COMMAND(JUMP_AREA_EXT(0, 0, POINTER));
-    ADD_COMMAND(OBJECT_EXT_LUA_PARAMS(0, 0, 0, 0, 0, 0, 0, 0, 0, POINTER, 0));
-    ADD_COMMAND(SHOW_DIALOG_EXT(0, 0, 0))
-}
+static u8 sCurCommandIndex = 0;
 
 void DynOS_Lvl_Validate_Begin() {
-    // fill our command map if it hasn't been initialized
-    if (!sCommandMapFilled) {
-        LvlCmd_Init();
-        sCommandMapFilled = true;
-    }
-
-    // set current command info to defaults
     sCurCommandId = 0xFF;
-    sCurCommandOffset = 0xFF;
+    sCurCommandIndex = 0;
 }
 
-bool DynOS_Lvl_Validate_RequirePointer(u32 value) {
+bool DynOS_Lvl_Validate_GetPointerTypes(u32 aValue, u8 &outCommandId, u32 &outPtrTypes) {
     // figure out which command we're inside
-    if (sCurCommandId == 0xFF || sCurCommandOffset >= sCommandMap[sCurCommandId].size) {
-        u8 id = (u8)(value & 0xFF);
+    if (sCurCommandId == 0xFF || sCurCommandIndex >= sLevelScriptCommands[sCurCommandId].size / 4) {
+        u8 id = (u8) aValue;
+
+        // verify id
+        if (sLevelScriptCommands.count(id) == 0) {
+            outCommandId = sCurCommandId;
+            return false;
+        }
+
+        // set current
         sCurCommandId = id;
-        sCurCommandOffset = 0;
+        sCurCommandIndex = 0;
     }
 
     // figure out if we expect a pointer
-    bool ret = (
-        sCurCommandOffset == sCommandMap[sCurCommandId].ptrIdx[0]
-        || sCurCommandOffset == sCommandMap[sCurCommandId].ptrIdx[1]);
+    // index 0 contains the id and size, it's never a pointer
+    if (sCurCommandIndex == 0) {
+        outPtrTypes = 0;
+    } else {
+        outPtrTypes = sLevelScriptCommands[sCurCommandId].command[sCurCommandIndex];
+    }
 
-    // advance command offset
-    sCurCommandOffset++;
+    // advance command index
+    sCurCommandIndex++;
 
-    return ret;
+    outCommandId = sCurCommandId;
+    return true;
+}
+
+bool DynOS_Lvl_Validate_CheckCommands(GfxData *aGfxData, const DataNode<LevelScript> *aNode, bool isLoad) {
+
+    // Check unterminated command (Load only)
+    if (isLoad && sCurCommandId != 0xFF && sCurCommandIndex < sLevelScriptCommands[sCurCommandId].size / 4) {
+        PrintDataError("  ERROR: Validation failed for level %s: Unterminated command: %02X", aNode->mName.begin(), sCurCommandId);
+        return false;
+    }
+
+    // Check commands
+    Array<u8> lvlCommandIds;
+    if (!DynOS_Bin_Validate_GetCommandIds<u8, 0>(aGfxData, aNode, sLevelScriptCommands, lvlCommandIds)) {
+        return false;
+    }
+
+    // Level script must have at least 1 command
+    if (lvlCommandIds.Count() < 1) {
+        PrintDataError("  ERROR: Validation failed for level %s: Not enough commands (%d).", aNode->mName.begin(), lvlCommandIds.Count());
+        return false;
+    }
+
+    // Penultimate command cannot be a SKIP command
+    static const Array<u8> sLvlSkipCommands = {
+        LVL_COMMAND_ID(SKIP()),
+        LVL_COMMAND_ID(SKIP_IF(0, 0)),
+        LVL_COMMAND_ID(SKIP_NOP()),
+    };
+    if (lvlCommandIds.Count() >= 2 && sLvlSkipCommands.Find(lvlCommandIds[lvlCommandIds.Count() - 2]) != -1) {
+        PrintDataError("  ERROR: Validation failed for level %s: Penultimate command of the script cannot be one of:\n    SKIP, SKIP_IF, SKIP_NOP", aNode->mName.begin());
+        return false;
+    }
+
+    // Last command must be a terminating command
+    static const Array<u8> sLvlEndCommands = {
+        LVL_COMMAND_ID(EXIT()),
+        LVL_COMMAND_ID(EXIT_AND_EXECUTE(0, 0, 0, 0)),
+        LVL_COMMAND_ID(JUMP(0)),
+        LVL_COMMAND_ID(RETURN()),
+    };
+    if (sLvlEndCommands.Find(lvlCommandIds[lvlCommandIds.Count() - 1]) == -1) {
+        PrintDataError("  ERROR: Validation failed for level %s: Last command of the script must be one of:\n    EXIT, EXIT_AND_EXECUTE, JUMP, RETURN", aNode->mName.begin());
+        return false;
+    }
+
+    return true;
+}
+
+u8 DynOS_Lvl_GetCommandSize(u8 aCmdType) {
+    if (sLevelScriptCommands.count(aCmdType) != 0) {
+        return sLevelScriptCommands[aCmdType].size;
+    }
+    return 0;
 }

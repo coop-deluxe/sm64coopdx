@@ -6,6 +6,7 @@ extern "C" {
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "game/area.h"
 #include "game/level_update.h"
+#include "engine/level_script.h"
 }
 
 //
@@ -52,17 +53,30 @@ static Array<DynosWarp> sDynosLevelWarps[LEVEL_COUNT] = { Array<DynosWarp>() };
 static Collision *sDynosLevelCollision[LEVEL_COUNT][MAX_AREAS] = { NULL };
 static s32 sDynosCustomLevelSlot[LEVEL_UNKNOWN_2 + 1] = { 0 };
 
+struct LvlCmd {
+    u8 mType;
+    // u8 mSize; // ignored, anything could lie about its size
+};
+
 u64 DynOS_Level_CmdGet(void *aCmd, u64 aOffset) {
-    u64 _Offset = (((aOffset) & 3llu) | (((aOffset) & ~3llu) << (sizeof(void *) >> 3llu)));
-    u64 value = 0;
-    memcpy(&value, (void *) ((uintptr_t) aCmd + _Offset), sizeof(value));
-    return value;
+    if (aCmd) {
+        u64 _Offset = CMD_PROCESS_OFFSET(aOffset);
+        u64 value = 0;
+        memcpy(&value, (void *) (u64(aCmd) + _Offset), sizeof(value));
+        return value;
+    }
+    return 0;
 }
 
-LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
-    u64 aCmdSize = aCmd->mSize;
-    u64 _Offset = (((aCmdSize) & 3llu) | (((aCmdSize) & ~3llu) << (sizeof(void *) >> 3llu)));
-    return (LvlCmd*) (u64(aCmd) + _Offset);
+static LvlCmd *DynOS_Level_CmdNext(LvlCmd *aCmd) {
+    if (aCmd) {
+        u64 aCmdSize = DynOS_Lvl_GetCommandSize(aCmd->mType);
+        if (aCmdSize != 0) {
+            u64 _Offset = CMD_PROCESS_OFFSET(aCmdSize);
+            return (LvlCmd *) (u64(aCmd) + _Offset);
+        }
+    }
+    return NULL;
 }
 
 //
@@ -92,7 +106,7 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         // AREA
         case 0x1F: {
             sDynosAreaIndex = (u8) DynOS_Level_CmdGet(aCmd, 2);
-            if (sDynosAreaIndex >= MAX_AREAS) { return 3; } // Not allowed
+            if (sDynosAreaIndex >= MAX_AREAS) { return DYNOS_LEVEL_PARSE_STOP; } // Not allowed, area index out of bounds
         } break;
 
         // OBJECT
@@ -141,7 +155,7 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         // SLEEP or SLEEP_BEFORE_EXIT
         case 0x03:
         case 0x04:
-            return 3;
+            return DYNOS_LEVEL_PARSE_STOP;
 
         // TERRAIN
         case 0x2E: {
@@ -149,7 +163,7 @@ static s32 DynOS_Level_PreprocessScript(u8 aType, void *aCmd) {
         } break;
     }
 
-    return 0;
+    return DYNOS_LEVEL_PARSE_CONTINUE;
 }
 
 // Runs only once
@@ -259,31 +273,36 @@ Collision *DynOS_Level_GetCollision(u32 aLevel, u16 aArea) {
 //
 
 struct Stack {
-    u64 mData[32];
+    u64 mData[MAX_LEVEL_SCRIPT_STACK_SIZE];
     s32 mBaseIndex;
     s32 mTopIndex;
 };
 
 template <typename T>
-static void StackPush(Stack& aStack, const T &aValue) {
-    if (aStack.mTopIndex >= 0) {
-        aStack.mData[aStack.mTopIndex] = u64(aValue);
-        aStack.mTopIndex++;
+static bool StackPush(Stack& aStack, const T &aValue) {
+    if (aStack.mTopIndex < 0 || aStack.mTopIndex >= MAX_LEVEL_SCRIPT_STACK_SIZE) {
+        return false;
     }
+
+    aStack.mData[aStack.mTopIndex] = u64(aValue);
+    aStack.mTopIndex++;
+    return true;
 }
 
 template <typename T>
-static T StackPop(Stack& aStack) {
-    if (aStack.mTopIndex <= 0) {
-        return (T) 0;
+static bool StackPop(Stack& aStack, T &outValue) {
+    if (aStack.mTopIndex <= 0 || aStack.mTopIndex > MAX_LEVEL_SCRIPT_STACK_SIZE) {
+        return false;
     }
+
     aStack.mTopIndex--;
-    return (T) aStack.mData[aStack.mTopIndex];
+    outValue = (T) aStack.mData[aStack.mTopIndex];
+    return true;
 }
 
 static LvlCmd *DynOS_Level_CmdExecute(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd));
-    StackPush(aStack, aStack.mBaseIndex);
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; }
+    if (!StackPush(aStack, aStack.mBaseIndex)) { return NULL; }
     aStack.mBaseIndex = aStack.mTopIndex;
     return (LvlCmd *) DynOS_Level_CmdGet(aCmd, 12);
 }
@@ -293,10 +312,12 @@ static LvlCmd *DynOS_Level_CmdExitAndExecute(Stack &aStack, LvlCmd *aCmd) {
     return (LvlCmd *) DynOS_Level_CmdGet(aCmd, 12);
 }
 
-static LvlCmd *DynOS_Level_CmdExit(Stack &aStack, LvlCmd *aCmd) {
+static LvlCmd *DynOS_Level_CmdExit(Stack &aStack, UNUSED LvlCmd *aCmd) {
     aStack.mTopIndex = aStack.mBaseIndex;
-    aStack.mBaseIndex = StackPop<s32>(aStack);
-    return StackPop<LvlCmd *>(aStack);
+    if (!StackPop(aStack, aStack.mBaseIndex)) { return NULL; }
+    LvlCmd *outCmd;
+    if (!StackPop(aStack, outCmd)) { return NULL; }
+    return outCmd;
 }
 
 static LvlCmd *DynOS_Level_CmdJump(Stack &aStack, LvlCmd *aCmd) {
@@ -304,17 +325,19 @@ static LvlCmd *DynOS_Level_CmdJump(Stack &aStack, LvlCmd *aCmd) {
 }
 
 static LvlCmd *DynOS_Level_CmdJumpLink(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd));
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; }
     return (LvlCmd *) DynOS_Level_CmdGet(aCmd, 4);
 }
 
 static LvlCmd *DynOS_Level_CmdReturn(Stack &aStack, UNUSED LvlCmd *aCmd) {
-    return StackPop<LvlCmd *>(aStack);
+    LvlCmd *outCmd;
+    if (!StackPop(aStack, outCmd)) { return NULL; }
+    return outCmd;
 }
 
 static LvlCmd *DynOS_Level_CmdJumpLinkPushArg(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd));
-    StackPush(aStack, DynOS_Level_CmdGet(aCmd, 2));
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; }
+    if (!StackPush(aStack, DynOS_Level_CmdGet(aCmd, 2))) { return NULL; }
     return DynOS_Level_CmdNext(aCmd);
 }
 
@@ -324,8 +347,8 @@ static LvlCmd *DynOS_Level_CmdJumpRepeat(Stack &aStack, LvlCmd *aCmd) {
 }
 
 static LvlCmd *DynOS_Level_CmdLoopBegin(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd));
-    StackPush(aStack, 0);
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; }
+    if (!StackPush(aStack, 0)) { return NULL; }
     return DynOS_Level_CmdNext(aCmd);
 }
 
@@ -335,12 +358,12 @@ static LvlCmd *DynOS_Level_CmdLoopUntil(Stack &aStack, LvlCmd *aCmd) {
 }
 
 static LvlCmd *DynOS_Level_CmdJumpIf(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd)); /* Not an error, that's intentional */
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; } /* Not an error, that's intentional */
     return (LvlCmd *) DynOS_Level_CmdGet(aCmd, 8);
 }
 
 static LvlCmd *DynOS_Level_CmdJumpLinkIf(Stack &aStack, LvlCmd *aCmd) {
-    StackPush(aStack, DynOS_Level_CmdNext(aCmd));
+    if (!StackPush(aStack, DynOS_Level_CmdNext(aCmd))) { return NULL; }
     return (LvlCmd *) DynOS_Level_CmdGet(aCmd, 8);
 }
 
@@ -353,11 +376,11 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
     Stack _Stack;
     _Stack.mBaseIndex = -1;
     _Stack.mTopIndex = 0;
-    for (LvlCmd *_Cmd = (LvlCmd *) aScript; _Cmd != NULL;) {
+    for (LvlCmd *_Cmd = (LvlCmd *) aScript; _Cmd != NULL && DynOS_Lvl_GetCommandSize(_Cmd->mType) != 0;) {
         u8 _CmdType = (_Cmd->mType & 0xFF);
         s32 _Action = aPreprocessFunction(_CmdType, (void *) _Cmd);
         switch (_Action) {
-            case 0:
+            case DYNOS_LEVEL_PARSE_CONTINUE:
                 switch (_CmdType) {
                     case 0x00: _Cmd = DynOS_Level_CmdExecute(_Stack, _Cmd);         break;
                     case 0x01: _Cmd = DynOS_Level_CmdExitAndExecute(_Stack, _Cmd);  break;
@@ -378,15 +401,15 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
                     default: _Cmd = DynOS_Level_CmdNext(_Cmd); break;
                 } break;
 
-            case 1:
+            case DYNOS_LEVEL_PARSE_SKIP:
                 _Cmd = DynOS_Level_CmdNext(_Cmd);
                 break;
 
-            case 2:
+            case DYNOS_LEVEL_PARSE_RETURN:
                 _Cmd = DynOS_Level_CmdReturn(_Stack, _Cmd);
                 break;
 
-            case 3:
+            case DYNOS_LEVEL_PARSE_STOP:
                 return;
         }
     }
