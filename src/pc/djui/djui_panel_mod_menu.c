@@ -18,7 +18,7 @@ void mod_menu_push_panel(const char *panelId, OPTIONAL const char *headerTitle, 
         sCurrentPanelId = panelId;
         sPanelHeaderTitle = headerTitle;
         sPanelHideBackButton = hideBackButton;
-        sLastActiveBase->bTag = true;
+        if (sLastActiveBase) { sLastActiveBase->bTag = true; }
         djui_panel_mod_menu_mod_create(sLastActiveBase);
         sCurrentPanelId = NULL;
         sPanelHeaderTitle = NULL;
