@@ -27,7 +27,8 @@ void djui_gfx_render_texture_tile_font_begin();
 void djui_gfx_render_texture_tile_font(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, u32 tileX, u32 tileY, u32 tileW, u32 tileH);
 void djui_gfx_render_texture_tile_font_end();
 
-void gfx_get_dimensions(u32* width, u32* height);
+void gfx_get_dimensions(u32 *width, u32 *height);
+void gfx_get_adjusted_dimensions(u32 *width, u32 *height);
 
 void djui_gfx_position_translate(f32* x, f32* y);
 void djui_gfx_scale_translate(f32* width, f32* height);

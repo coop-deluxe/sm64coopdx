@@ -3038,6 +3038,45 @@ G_TEXRECTFLIP = 0xe5
 G_TEXRECT = 0xe4
 
 --- @type integer
+G_ZBUFFER = 0x00000001
+
+--- @type integer
+G_SHADE = 0x00000004
+
+--- @type integer
+G_FOG = 0x00010000
+
+--- @type integer
+G_LIGHTING = 0x00020000
+
+--- @type integer
+G_TEXTURE_GEN = 0x00040000
+
+--- @type integer
+G_TEXTURE_GEN_LINEAR = 0x00080000
+
+--- @type integer
+G_LOD = 0x00100000
+
+--- @type integer
+G_LIGHT_MAP_EXT = 0x00000800
+
+--- @type integer
+G_LIGHTING_ENGINE_EXT = 0x00004000
+
+--- @type integer
+G_PACKED_NORMALS_EXT = 0x00000080
+
+--- @type integer
+G_CULL_INVERT_EXT = 0x00000100
+
+--- @type integer
+G_FRESNEL_COLOR_EXT = 0x00000040
+
+--- @type integer
+G_FRESNEL_ALPHA_EXT = 0x00400000
+
+--- @type integer
 G_VTX_EXT = 0x11
 
 --- @type integer
@@ -3074,6 +3113,129 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
 
+CCS_0         =  0 --- @type ColorCombinerSource
+CCS_TEXEL0    =  1 --- @type ColorCombinerSource
+CCS_TEXEL1    =  2 --- @type ColorCombinerSource
+CCS_PRIM      =  3 --- @type ColorCombinerSource
+CCS_SHADE     =  4 --- @type ColorCombinerSource
+CCS_ENV       =  5 --- @type ColorCombinerSource
+CCS_TEXEL0A   =  6 --- @type ColorCombinerSource
+CCS_LOD       =  7 --- @type ColorCombinerSource
+CCS_1         =  8 --- @type ColorCombinerSource
+CCS_TEXEL1A   =  9 --- @type ColorCombinerSource
+CCS_COMBINED  = 10 --- @type ColorCombinerSource
+CCS_COMBINEDA = 11 --- @type ColorCombinerSource
+CCS_PRIMA     = 12 --- @type ColorCombinerSource
+CCS_SHADEA    = 13 --- @type ColorCombinerSource
+CCS_ENVA      = 14 --- @type ColorCombinerSource
+CCS_NOISE     = 15 --- @type ColorCombinerSource
+CCS_COUNT     = 16 --- @type ColorCombinerSource
+
+--- @alias ColorCombinerSource
+--- | `CCS_0`
+--- | `CCS_TEXEL0`
+--- | `CCS_TEXEL1`
+--- | `CCS_PRIM`
+--- | `CCS_SHADE`
+--- | `CCS_ENV`
+--- | `CCS_TEXEL0A`
+--- | `CCS_LOD`
+--- | `CCS_1`
+--- | `CCS_TEXEL1A`
+--- | `CCS_COMBINED`
+--- | `CCS_COMBINEDA`
+--- | `CCS_PRIMA`
+--- | `CCS_SHADEA`
+--- | `CCS_ENVA`
+--- | `CCS_NOISE`
+--- | `CCS_COUNT`
+
+SHADER_0         =  0 --- @type CcShaderInput
+SHADER_INPUT_1   =  1 --- @type CcShaderInput
+SHADER_INPUT_2   =  2 --- @type CcShaderInput
+SHADER_INPUT_3   =  3 --- @type CcShaderInput
+SHADER_INPUT_4   =  4 --- @type CcShaderInput
+SHADER_INPUT_5   =  5 --- @type CcShaderInput
+SHADER_INPUT_6   =  6 --- @type CcShaderInput
+SHADER_INPUT_7   =  7 --- @type CcShaderInput
+SHADER_INPUT_8   =  8 --- @type CcShaderInput
+SHADER_TEXEL0    =  9 --- @type CcShaderInput
+SHADER_TEXEL0A   = 10 --- @type CcShaderInput
+SHADER_TEXEL1    = 11 --- @type CcShaderInput
+SHADER_TEXEL1A   = 12 --- @type CcShaderInput
+SHADER_1         = 13 --- @type CcShaderInput
+SHADER_COMBINED  = 14 --- @type CcShaderInput
+SHADER_COMBINEDA = 15 --- @type CcShaderInput
+SHADER_NOISE     = 16 --- @type CcShaderInput
+
+--- @alias CcShaderInput
+--- | `SHADER_0`
+--- | `SHADER_INPUT_1`
+--- | `SHADER_INPUT_2`
+--- | `SHADER_INPUT_3`
+--- | `SHADER_INPUT_4`
+--- | `SHADER_INPUT_5`
+--- | `SHADER_INPUT_6`
+--- | `SHADER_INPUT_7`
+--- | `SHADER_INPUT_8`
+--- | `SHADER_TEXEL0`
+--- | `SHADER_TEXEL0A`
+--- | `SHADER_TEXEL1`
+--- | `SHADER_TEXEL1A`
+--- | `SHADER_1`
+--- | `SHADER_COMBINED`
+--- | `SHADER_COMBINEDA`
+--- | `SHADER_NOISE`
+
+--- @type integer
+SHADER_OPT_ALPHA = (1 << 24)
+
+--- @type integer
+SHADER_OPT_FOG = (1 << 25)
+
+--- @type integer
+SHADER_OPT_TEXTURE_EDGE = (1 << 26)
+
+--- @type integer
+SHADER_OPT_NOISE = (1 << 27)
+
+CM_FLAG_USE_ALPHA      = 1 << 0 --- @type CombineModeFlags
+CM_FLAG_USE_FOG        = 1 << 1 --- @type CombineModeFlags
+CM_FLAG_TEXTURE_EDGE   = 1 << 2 --- @type CombineModeFlags
+CM_FLAG_USE_DITHER     = 1 << 3 --- @type CombineModeFlags
+CM_FLAG_USE_2CYCLE     = 1 << 4 --- @type CombineModeFlags
+CM_FLAG_LIGHT_MAP      = 1 << 5 --- @type CombineModeFlags
+CM_FLAG_TEX_PERSP      = 1 << 6 --- @type CombineModeFlags
+CM_FLAG_WORLD_GEOMETRY = 1 << 7 --- @type CombineModeFlags
+
+--- @alias CombineModeFlags
+--- | `CM_FLAG_USE_ALPHA`
+--- | `CM_FLAG_USE_FOG`
+--- | `CM_FLAG_TEXTURE_EDGE`
+--- | `CM_FLAG_USE_DITHER`
+--- | `CM_FLAG_USE_2CYCLE`
+--- | `CM_FLAG_LIGHT_MAP`
+--- | `CM_FLAG_TEX_PERSP`
+--- | `CM_FLAG_WORLD_GEOMETRY`
+
+--- @type integer
+SHADER_CMD_LENGTH = 16
+
+--- @type integer
+CC_MAX_SHADERS = 64
+
+--- @type integer
+CC_MAX_INPUTS = 8
+
+PASS_FILTER_LINEAR  = 0 --- @type PassFilter
+PASS_FILTER_NEAREST = 1 --- @type PassFilter
+PASS_FILTER_COUNT   = 2 --- @type PassFilter
+
+--- @alias PassFilter
+--- | `PASS_FILTER_LINEAR`
+--- | `PASS_FILTER_NEAREST`
+--- | `PASS_FILTER_COUNT`
+
 SHADER_FLAG_HUE           = 0 --- @type ShaderFlag
 SHADER_FLAG_SATURATION    = 1 --- @type ShaderFlag
 SHADER_FLAG_BRIGHTNESS    = 2 --- @type ShaderFlag
@@ -3094,6 +3256,23 @@ SHADER_FLAG_MAX           = 8 --- @type ShaderFlag
 --- | `SHADER_FLAG_POSTERIZATION`
 --- | `SHADER_FLAG_SCANLINES`
 --- | `SHADER_FLAG_MAX`
+
+--- @type integer
+MAX_CUSTOM_FRAME_PASSES = 64
+
+--- @type integer
+MAX_FRAME_PASSES = MAX_CUSTOM_FRAME_PASSES + 1
+
+SHADER_STAGE_VERTEX   = 0 --- @type ShaderStage
+SHADER_STAGE_FRAGMENT = 1 --- @type ShaderStage
+SHADER_STAGE_ANY      = 2 --- @type ShaderStage
+SHADER_STAGE_COUNT    = 3 --- @type ShaderStage
+
+--- @alias ShaderStage
+--- | `SHADER_STAGE_VERTEX`
+--- | `SHADER_STAGE_FRAGMENT`
+--- | `SHADER_STAGE_ANY`
+--- | `SHADER_STAGE_COUNT`
 
 --- @type integer
 GRAPH_RENDER_ACTIVE = (1 << 0)
@@ -3731,7 +3910,7 @@ HUD_DISPLAY_DEFAULT               = HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_CO
 --- | `HUD_DISPLAY_DEFAULT`
 
 --- @type integer
-LE_MAX_LIGHTS = 1024
+LE_MAX_LIGHTS = 512
 
 LE_MODE_AFFECT_ALL_SHADED_AND_COLORED = 0 --- @type LEMode
 LE_MODE_AFFECT_ALL_SHADED             = 1 --- @type LEMode
@@ -8343,7 +8522,16 @@ HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
 HOOK_ON_DYNOS_PACK_TOGGLED                  = 66 --- @type LuaHookedEventType
 HOOK_BEFORE_PLAY_MODE_UPDATE                = 67 --- @type LuaHookedEventType
 HOOK_ON_PLAY_MODE_UPDATE                    = 68 --- @type LuaHookedEventType
-HOOK_MAX                                    = 69 --- @type LuaHookedEventType
+HOOK_ON_REFRESH_SHADERS                     = 69 --- @type LuaHookedEventType
+HOOK_ON_VERTEX_SHADER_CREATE                = 70 --- @type LuaHookedEventType
+HOOK_ON_FRAGMENT_SHADER_CREATE              = 71 --- @type LuaHookedEventType
+HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE   = 72 --- @type LuaHookedEventType
+HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE = 73 --- @type LuaHookedEventType
+HOOK_BEFORE_DRAW_GEOMETRY                   = 74 --- @type LuaHookedEventType
+HOOK_ON_DRAW_GEOMETRY                       = 75 --- @type LuaHookedEventType
+HOOK_ON_DRAW_TRIANGLE                       = 76 --- @type LuaHookedEventType
+HOOK_ON_SET_SHADER_PROGRAM                  = 77 --- @type LuaHookedEventType
+HOOK_MAX                                    = 78 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8415,6 +8603,15 @@ HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 --- | `HOOK_ON_DYNOS_PACK_TOGGLED`
 --- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
 --- | `HOOK_ON_PLAY_MODE_UPDATE`
+--- | `HOOK_ON_REFRESH_SHADERS`
+--- | `HOOK_ON_VERTEX_SHADER_CREATE`
+--- | `HOOK_ON_FRAGMENT_SHADER_CREATE`
+--- | `HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE`
+--- | `HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE`
+--- | `HOOK_BEFORE_DRAW_GEOMETRY`
+--- | `HOOK_ON_DRAW_GEOMETRY`
+--- | `HOOK_ON_DRAW_TRIANGLE`
+--- | `HOOK_ON_SET_SHADER_PROGRAM`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue

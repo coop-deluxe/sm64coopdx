@@ -29,6 +29,13 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [gfx_shader_set_bool_array](#gfx_shader_set_bool_array)
+   - [gfx_shader_set_int_array](#gfx_shader_set_int_array)
+   - [gfx_shader_set_float_array](#gfx_shader_set_float_array)
+   - [gfx_shader_set_vec2_array](#gfx_shader_set_vec2_array)
+   - [gfx_shader_set_vec3_array](#gfx_shader_set_vec3_array)
+   - [gfx_shader_set_vec4_array](#gfx_shader_set_vec4_array)
+   - [gfx_shader_set_mat4_array](#gfx_shader_set_mat4_array)
 
 <br />
 
@@ -1266,6 +1273,7 @@
    - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
+   - [mtxf_ortho](functions-4.md#mtxf_ortho)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
    - [get_world_mtx_from_transform](functions-4.md#get_world_mtx_from_transform)
 
@@ -2000,6 +2008,26 @@
    - [gfx_resize](functions-7.md#gfx_resize)
    - [gfx_delete](functions-7.md#gfx_delete)
    - [gfx_delete_all](functions-7.md#gfx_delete_all)
+   - [gfx_set_culling_enabled](functions-7.md#gfx_set_culling_enabled)
+   - [gfx_is_culling_enabled](functions-7.md#gfx_is_culling_enabled)
+   - [gfx_get_render_api_name](functions-7.md#gfx_get_render_api_name)
+   - [gfx_is_legacy_renderer](functions-7.md#gfx_is_legacy_renderer)
+   - [gfx_reload_shaders](functions-7.md#gfx_reload_shaders)
+   - [gfx_color_combiner_get_features](functions-7.md#gfx_color_combiner_get_features)
+   - [gfx_shader_set_shader_stage](functions-7.md#gfx_shader_set_shader_stage)
+   - [gfx_shader_set_uniform_buffer](functions-7.md#gfx_shader_set_uniform_buffer)
+   - [gfx_shader_reset_uniform_buffer](functions-7.md#gfx_shader_reset_uniform_buffer)
+   - [gfx_shader_set_bool](functions-7.md#gfx_shader_set_bool)
+   - [gfx_shader_set_int](functions-7.md#gfx_shader_set_int)
+   - [gfx_shader_set_float](functions-7.md#gfx_shader_set_float)
+   - [gfx_shader_set_vec2](functions-7.md#gfx_shader_set_vec2)
+   - [gfx_shader_set_vec3](functions-7.md#gfx_shader_set_vec3)
+   - [gfx_shader_set_vec4](functions-7.md#gfx_shader_set_vec4)
+   - [gfx_shader_set_mat4](functions-7.md#gfx_shader_set_mat4)
+   - [gfx_shader_create_frame_pass](functions-7.md#gfx_shader_create_frame_pass)
+   - [gfx_shader_remove_frame_pass](functions-7.md#gfx_shader_remove_frame_pass)
+   - [gfx_shader_get_current_frame_pass_index](functions-7.md#gfx_shader_get_current_frame_pass_index)
+   - [gfx_shader_get_current_frame_pass](functions-7.md#gfx_shader_get_current_frame_pass)
    - [vtx_get_from_name](functions-7.md#vtx_get_from_name)
    - [vtx_get_name](functions-7.md#vtx_get_name)
    - [vtx_get_count](functions-7.md#vtx_get_count)
@@ -3211,6 +3239,178 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 | gfx | [Gfx](./structs.md#Gfx) |
 | command | `string` |
 | parameters... | `integer` \| `string` \| [Gfx](./structs.md#Gfx) \| [Texture](./structs.md#Texture) \| [Vtx](./structs.md#Vtx) |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_bool_array
+
+### Description
+Pass an array of booleans to a custom uniform shader location.
+
+### Lua Example
+```lua
+local toggles = { true, false, true, true }
+gfx_shader_set_bool_array("uBools", toggles)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `bool` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_int_array
+
+### Description
+Pass an array of integers to a custom uniform shader location.
+
+### Lua Example
+```lua
+local indices = { 0, 4, 8, 12 }
+gfx_shader_set_int_array("uIndices", indices)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `integer` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_float_array
+
+### Description
+Pass an array of floating-point numbers to a custom uniform shader location.
+
+### Lua Example
+```lua
+local weights = { 0.1, 0.5, 1.25, 0.0 }
+gfx_shader_set_float_array("uWeights", weights)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `number` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec2_array
+
+### Description
+Pass an array of 2D vectors (vec2) to a custom uniform shader location using a flat number array.
+
+### Lua Example
+```lua
+-- Represents two vec2 elements: (1.0, 2.0) and (3.0, 4.0)
+local positions = { 1.0, 2.0, 3.0, 4.0 }
+gfx_shader_set_vec2_array("uPositions", positions)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `number` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec3_array
+
+### Description
+Pass an array of 3D vectors (vec3) to a custom uniform shader location using a flat number array.
+
+### Lua Example
+```lua
+-- Represents two vec3 colors: RGB(1, 0, 0) and RGB(0, 1, 0)
+local colors = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 }
+gfx_shader_set_vec3_array("uColors", colors)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `number` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec4_array
+
+### Description
+Pass an array of 4D vectors (vec4) to a custom uniform shader location using a flat number array.
+
+### Lua Example
+```lua
+-- Represents two vec4 points: (x, y, z, w)
+local points = { 0.0, 0.0, 0.0, 1.0, 10.0, 5.0, 2.0, 1.0 }
+gfx_shader_set_vec4_array("uPoints", points)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `number` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_mat4_array
+
+### Description
+Pass an array of 4x4 matrices (mat4) to a custom uniform shader location using a flat array of 16 numbers per matrix.
+
+### Lua Example
+```lua
+-- table containing 16 elements for a 4x4 matrix
+local matrix = gMat4Identity()
+gfx_shader_set_mat4_array("uIdentityMatrix", matrix)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| values | `table` of `number` |
 
 ### Returns
 - None

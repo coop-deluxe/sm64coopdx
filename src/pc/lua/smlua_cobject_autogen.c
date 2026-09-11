@@ -25,6 +25,9 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/game/paintings.h"
 #include "src/pc/djui/djui_types.h"
+#include "src/pc/gfx/gfx_cc.h"
+#include "src/pc/gfx/gfx_pc.h"
+#include "src/pc/gfx/gfx_shader.h"
 #include "src/game/level_update.h"
 #include "src/game/first_person_cam.h"
 #include "src/game/player_palette.h"
@@ -143,6 +146,14 @@ static struct LuaObjectField sColorFields[LUA_COLOR_FIELD_COUNT] = {
     { "r", LVT_U8, sizeof(u8) * 0, false, LOT_NONE, 1, sizeof(u8) },
 };
 
+#define LUA_COLORRGBA_FIELD_COUNT 4
+static struct LuaObjectField sColorRGBAFields[LUA_COLORRGBA_FIELD_COUNT] = {
+    { "a", LVT_U8, sizeof(u8) * 3, false, LOT_NONE, 1, sizeof(u8) },
+    { "b", LVT_U8, sizeof(u8) * 2, false, LOT_NONE, 1, sizeof(u8) },
+    { "g", LVT_U8, sizeof(u8) * 1, false, LOT_NONE, 1, sizeof(u8) },
+    { "r", LVT_U8, sizeof(u8) * 0, false, LOT_NONE, 1, sizeof(u8) },
+};
+
 struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     [LOT_NONE] = { LOT_NONE, NULL, 0 },
     [LOT_VEC2F] = { LOT_VEC2F, sVec2fFields, LUA_VEC2F_FIELD_COUNT },
@@ -156,6 +167,7 @@ struct LuaObjectTable sLuaObjectTable[LOT_MAX] = {
     [LOT_VEC4S] = { LOT_VEC4S, sVec4sFields, LUA_VEC4S_FIELD_COUNT },
     [LOT_MAT4] = { LOT_MAT4, sMat4Fields, LUA_MAT4_FIELD_COUNT },
     [LOT_COLOR] = { LOT_COLOR, sColorFields, LUA_COLOR_FIELD_COUNT },
+    [LOT_COLORRGBA] = { LOT_COLORRGBA, sColorRGBAFields, LUA_COLORRGBA_FIELD_COUNT },
     [LOT_ARRAY] = { LOT_ARRAY, NULL, 0 },
     [LOT_POINTER] = { LOT_POINTER, NULL, 0 },
 };
@@ -376,6 +388,17 @@ static struct LuaObjectField sBehaviorValuesFields[LUA_BEHAVIOR_VALUES_FIELD_COU
     { "dialogs",                  LVT_COBJECT, offsetof(struct BehaviorValues, dialogs),                  true,  LOT_BEHAVIORDIALOGS      },
     { "starsNeededForDialog",     LVT_COBJECT, offsetof(struct BehaviorValues, starsNeededForDialog),     true,  LOT_STARSNEEDEDFORDIALOG },
     { "trajectories",             LVT_COBJECT, offsetof(struct BehaviorValues, trajectories),             true,  LOT_BEHAVIORTRAJECTORIES },
+};
+
+#define LUA_CCFEATURES_FIELD_COUNT 7
+static struct LuaObjectField sCCFeaturesFields[LUA_CCFEATURES_FIELD_COUNT] = {
+    { "color_alpha_same", LVT_BOOL, offsetof(struct CCFeatures, color_alpha_same), false, LOT_NONE, 2, sizeof(bool) },
+    { "do_mix",           LVT_BOOL, offsetof(struct CCFeatures, do_mix),           false, LOT_NONE, 4, sizeof(bool) },
+    { "do_multiply",      LVT_BOOL, offsetof(struct CCFeatures, do_multiply),      false, LOT_NONE, 4, sizeof(bool) },
+    { "do_noise",         LVT_BOOL, offsetof(struct CCFeatures, do_noise),         false, LOT_NONE                  },
+    { "do_single",        LVT_BOOL, offsetof(struct CCFeatures, do_single),        false, LOT_NONE, 4, sizeof(bool) },
+    { "num_inputs",       LVT_S32,  offsetof(struct CCFeatures, num_inputs),       false, LOT_NONE                  },
+    { "used_textures",    LVT_BOOL, offsetof(struct CCFeatures, used_textures),    false, LOT_NONE, 2, sizeof(bool) },
 };
 
 #define LUA_CAMERA_FIELD_COUNT 15
@@ -696,6 +719,26 @@ static struct LuaObjectField sCharacterFields[LUA_CHARACTER_FIELD_COUNT] = {
     { "type",                               LVT_S32,       offsetof(struct Character, type),                               true, LOT_NONE                                         },
 };
 
+#define LUA_COLOR_COMBINER_FIELD_COUNT 4
+static struct LuaObjectField sColorCombinerFields[LUA_COLOR_COMBINER_FIELD_COUNT] = {
+    { "cm",                   LVT_COBJECT, offsetof(struct ColorCombiner, cm),                   true,  LOT_COMBINEMODE               },
+    { "hash",                 LVT_U64,     offsetof(struct ColorCombiner, hash),                 false, LOT_NONE                      },
+    { "shader_commands",      LVT_U8,      offsetof(struct ColorCombiner, shader_commands),      false, LOT_NONE,      16, sizeof(u8) },
+    { "shader_input_mapping", LVT_U8,      offsetof(struct ColorCombiner, shader_input_mapping), false, LOT_NONE,      16, sizeof(u8) },
+};
+
+#define LUA_COMBINE_MODE_FIELD_COUNT 8
+static struct LuaObjectField sCombineModeFields[LUA_COMBINE_MODE_FIELD_COUNT] = {
+    { "all_values",    LVT_U8,  offsetof(struct CombineMode, all_values),    false, LOT_NONE, 16, sizeof(u8) },
+    { "alpha1",        LVT_U32, offsetof(struct CombineMode, alpha1),        false, LOT_NONE                 },
+    { "alpha2",        LVT_U32, offsetof(struct CombineMode, alpha2),        false, LOT_NONE                 },
+    { "flags",         LVT_U32, offsetof(struct CombineMode, flags),         false, LOT_NONE                 },
+    { "geometry_mode", LVT_U32, offsetof(struct CombineMode, geometry_mode), false, LOT_NONE                 },
+    { "hash",          LVT_S64, offsetof(struct CombineMode, hash),          false, LOT_NONE                 },
+    { "rgb1",          LVT_U32, offsetof(struct CombineMode, rgb1),          false, LOT_NONE                 },
+    { "rgb2",          LVT_U32, offsetof(struct CombineMode, rgb2),          false, LOT_NONE                 },
+};
+
 #define LUA_CONTROLLER_FIELD_COUNT 11
 static struct LuaObjectField sControllerFields[LUA_CONTROLLER_FIELD_COUNT] = {
     { "buttonDown",     LVT_U16, offsetof(struct Controller, buttonDown),     false, LOT_NONE },
@@ -832,6 +875,15 @@ static struct LuaObjectField sFirstPersonCameraFields[LUA_FIRST_PERSON_CAMERA_FI
 static struct LuaObjectField sFnGraphNodeFields[LUA_FN_GRAPH_NODE_FIELD_COUNT] = {
 //  { "func", LVT_???,     offsetof(struct FnGraphNode, func), false, LOT_???       }, <--- UNIMPLEMENTED
     { "node", LVT_COBJECT, offsetof(struct FnGraphNode, node), true,  LOT_GRAPHNODE },
+};
+
+#define LUA_FRAME_PASS_FIELD_COUNT 5
+static struct LuaObjectField sFramePassFields[LUA_FRAME_PASS_FIELD_COUNT] = {
+    { "clearColor",        LVT_COBJECT, offsetof(struct FramePass, clearColor),        true,  LOT_COLORRGBA },
+    { "drawWorldGeometry", LVT_BOOL,    offsetof(struct FramePass, drawWorldGeometry), false, LOT_NONE      },
+    { "height",            LVT_U32,     offsetof(struct FramePass, height),            false, LOT_NONE      },
+    { "passFilter",        LVT_S32,     offsetof(struct FramePass, passFilter),        false, LOT_NONE      },
+    { "width",             LVT_U32,     offsetof(struct FramePass, width),             false, LOT_NONE      },
 };
 
 #define LUA_GFX_FIELD_COUNT 2
@@ -2730,10 +2782,13 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BEHAVIORDIALOGS,              sBehaviorDialogsFields,              LUA_BEHAVIOR_DIALOGS_FIELD_COUNT                },
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
     { LOT_BEHAVIORVALUES,               sBehaviorValuesFields,               LUA_BEHAVIOR_VALUES_FIELD_COUNT                 },
+    { LOT_CCFEATURES,                   sCCFeaturesFields,                   LUA_CCFEATURES_FIELD_COUNT                      },
     { LOT_CAMERA,                       sCameraFields,                       LUA_CAMERA_FIELD_COUNT                          },
     { LOT_CAMERAFOVSTATUS,              sCameraFOVStatusFields,              LUA_CAMERA_FOVSTATUS_FIELD_COUNT                },
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
+    { LOT_COLORCOMBINER,                sColorCombinerFields,                LUA_COLOR_COMBINER_FIELD_COUNT                  },
+    { LOT_COMBINEMODE,                  sCombineModeFields,                  LUA_COMBINE_MODE_FIELD_COUNT                    },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
     { LOT_CUSTOMLEVELINFO,              sCustomLevelInfoFields,              LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT               },
     { LOT_CUSTOMWARPNODE,               sCustomWarpNodeFields,               LUA_CUSTOM_WARP_NODE_FIELD_COUNT                },
@@ -2748,6 +2803,7 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_EXCLAMATIONBOXCONTENT,        sExclamationBoxContentFields,        LUA_EXCLAMATION_BOX_CONTENT_FIELD_COUNT         },
     { LOT_FIRSTPERSONCAMERA,            sFirstPersonCameraFields,            LUA_FIRST_PERSON_CAMERA_FIELD_COUNT             },
     { LOT_FNGRAPHNODE,                  sFnGraphNodeFields,                  LUA_FN_GRAPH_NODE_FIELD_COUNT                   },
+    { LOT_FRAMEPASS,                    sFramePassFields,                    LUA_FRAME_PASS_FIELD_COUNT                      },
     { LOT_GFX,                          sGfxFields,                          LUA_GFX_FIELD_COUNT                             },
     { LOT_GLOBALOBJECTANIMATIONS,       sGlobalObjectAnimationsFields,       LUA_GLOBAL_OBJECT_ANIMATIONS_FIELD_COUNT        },
     { LOT_GLOBALOBJECTCOLLISIONDATA,    sGlobalObjectCollisionDataFields,    LUA_GLOBAL_OBJECT_COLLISION_DATA_FIELD_COUNT    },
@@ -2828,6 +2884,7 @@ const char *sLuaLotNames[] = {
     [LOT_VEC4S] = "Vec4s",
     [LOT_MAT4] = "Mat4",
     [LOT_COLOR] = "Color",
+    [LOT_COLORRGBA] = "ColorRGBA",
     [LOT_ARRAY] = "Array",
     [LOT_POINTER] = "Pointer",
     [LOT_MAX] = "Max",
@@ -2838,10 +2895,13 @@ const char *sLuaLotNames[] = {
     [LOT_BEHAVIORDIALOGS] = "BehaviorDialogs",
     [LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
     [LOT_BEHAVIORVALUES] = "BehaviorValues",
+    [LOT_CCFEATURES] = "CCFeatures",
     [LOT_CAMERA] = "Camera",
     [LOT_CAMERAFOVSTATUS] = "CameraFOVStatus",
     [LOT_CHAINSEGMENT] = "ChainSegment",
     [LOT_CHARACTER] = "Character",
+    [LOT_COLORCOMBINER] = "ColorCombiner",
+    [LOT_COMBINEMODE] = "CombineMode",
     [LOT_CONTROLLER] = "Controller",
     [LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
     [LOT_CUSTOMWARPNODE] = "CustomWarpNode",
@@ -2856,6 +2916,7 @@ const char *sLuaLotNames[] = {
     [LOT_EXCLAMATIONBOXCONTENT] = "ExclamationBoxContent",
     [LOT_FIRSTPERSONCAMERA] = "FirstPersonCamera",
     [LOT_FNGRAPHNODE] = "FnGraphNode",
+    [LOT_FRAMEPASS] = "FramePass",
     [LOT_GFX] = "Gfx",
     [LOT_GLOBALOBJECTANIMATIONS] = "GlobalObjectAnimations",
     [LOT_GLOBALOBJECTCOLLISIONDATA] = "GlobalObjectCollisionData",

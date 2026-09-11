@@ -16,6 +16,9 @@
 #include "engine/surface_load.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/utils/misc.h"
+#include "pc/gfx/gfx_rendering_api.h"
+#include "pc/gfx/gfx_pc.h"
+#include "pc/gfx/gfx_shader.h"
 #include "include/level_misc_macros.h"
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
@@ -1427,9 +1430,9 @@ int smlua_func_get_uncolored_string(lua_State* L) {
     return 1;
 }
 
-  //////////////////
- // display list //
-//////////////////
+  /////////
+ // gfx //
+/////////
 
 static int get_gfx_command_specifiers_count(const char *command) {
     int count = 0;
@@ -1475,6 +1478,99 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
+static int smlua_gfx_shader_set_array(lua_State *L, const char *funcName, enum ShaderUniformType type, u32 numElements) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const char *name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) {
+        LOG_LUA("%s: Failed to convert parameter 1", funcName);
+        return 0;
+    }
+
+    if (lua_type(L, 2) != LUA_TTABLE) {
+        LOG_LUA_LINE("Invalid type passed to %s: %s", funcName, luaL_typename(L, 2));
+        return 0;
+    }
+
+    // the uniform buffer size is whichever is larger between these 2, since there are no functions
+    // to get the current shader stage active. This works just fine for our purposes
+    size_t vertexUniformBufferSize = gfx_get_current_rendering_api()->get_uniform_buffer_size(SHADER_STAGE_VERTEX, gSelectedVertexUniformBuffer);
+    size_t fragmentUniformBufferSize = gfx_get_current_rendering_api()->get_uniform_buffer_size(SHADER_STAGE_FRAGMENT, gSelectedFragmentUniformBuffer);
+    size_t uniformBufferSize = MAX(vertexUniformBufferSize, fragmentUniformBufferSize);
+    if (uniformBufferSize == 0) { return 0; }
+
+    size_t totalElements = lua_rawlen(L, 2);
+
+    u32 maxElementsFromBuffer = (u32)(uniformBufferSize / (type == SHADER_UNIFORM_TYPE_BOOL || type == SHADER_UNIFORM_TYPE_INT ? sizeof(int) : sizeof(f32)));
+    if (totalElements > maxElementsFromBuffer) { totalElements = maxElementsFromBuffer; }
+
+    if (type == SHADER_UNIFORM_TYPE_BOOL || type == SHADER_UNIFORM_TYPE_INT) {
+        size_t rawSize = totalElements * sizeof(int);
+        size_t alignedSize = (rawSize + 15) & ~15;
+
+        int *values = malloc(alignedSize);
+        if (values == NULL) { return 0; }
+
+        for (u32 i = 1; i <= totalElements; i++) {
+            lua_rawgeti(L, 2, i);
+            if (type == SHADER_UNIFORM_TYPE_BOOL) {
+                values[i - 1] = lua_isboolean(L, -1) ? (lua_toboolean(L, -1) ? 1 : 0) : (lua_tointeger(L, -1) != 0 ? 1 : 0);
+            } else {
+                values[i - 1] = (int)lua_tointeger(L, -1);
+            }
+            lua_pop(L, 1);
+        }
+
+        gfx_get_current_rendering_api()->set_uniform(NULL, name, type, values, totalElements / numElements);
+        free(values);
+    } else {
+        size_t rawSize = totalElements * sizeof(f32);
+        size_t alignedSize = (rawSize + 15) & ~15;
+
+        f32 *buffer = malloc(alignedSize);
+        if (buffer == NULL) { return 0; }
+
+        for (u32 i = 1; i <= totalElements; i++) {
+            lua_rawgeti(L, 2, i);
+            buffer[i - 1] = (f32)lua_tonumber(L, -1);
+            lua_pop(L, 1);
+        }
+
+        gfx_get_current_rendering_api()->set_uniform(NULL, name, type, buffer, totalElements / numElements);
+        free(buffer);
+    }
+
+    return 1;
+}
+
+int smlua_func_gfx_shader_set_bool_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_bool_array", SHADER_UNIFORM_TYPE_BOOL, 1);
+}
+
+int smlua_func_gfx_shader_set_int_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_int_array", SHADER_UNIFORM_TYPE_INT, 1);
+}
+
+int smlua_func_gfx_shader_set_float_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_float_array", SHADER_UNIFORM_TYPE_FLOAT, 1);
+}
+
+int smlua_func_gfx_shader_set_vec2_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_vec2_array", SHADER_UNIFORM_TYPE_VEC2, 2);
+}
+
+int smlua_func_gfx_shader_set_vec3_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_vec3_array", SHADER_UNIFORM_TYPE_VEC3, 3);
+}
+
+int smlua_func_gfx_shader_set_vec4_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_vec4_array", SHADER_UNIFORM_TYPE_VEC4, 4);
+}
+
+int smlua_func_gfx_shader_set_mat4_array(lua_State *L) {
+    return smlua_gfx_shader_set_array(L, "gfx_shader_set_mat4_array", SHADER_UNIFORM_TYPE_MAT4, 16);
+}
+
   //////////
  // bind //
 //////////
@@ -1508,4 +1604,11 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
+    smlua_bind_function(L, "gfx_shader_set_bool_array", smlua_func_gfx_shader_set_bool_array);
+    smlua_bind_function(L, "gfx_shader_set_int_array", smlua_func_gfx_shader_set_int_array);
+    smlua_bind_function(L, "gfx_shader_set_float_array", smlua_func_gfx_shader_set_float_array);
+    smlua_bind_function(L, "gfx_shader_set_vec2_array", smlua_func_gfx_shader_set_vec2_array);
+    smlua_bind_function(L, "gfx_shader_set_vec3_array", smlua_func_gfx_shader_set_vec3_array);
+    smlua_bind_function(L, "gfx_shader_set_vec4_array", smlua_func_gfx_shader_set_vec4_array);
+    smlua_bind_function(L, "gfx_shader_set_mat4_array", smlua_func_gfx_shader_set_mat4_array);
 }

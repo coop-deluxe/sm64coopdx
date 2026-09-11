@@ -708,6 +708,10 @@ ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
+
+  ifeq ($(OSX_BUILD),1)
+    INCLUDE_DIRS += include/metal-cpp
+  endif
 endif
 
 # Configure backend flags
@@ -729,7 +733,7 @@ else ifeq ($(TARGET_RPI),1)
 else ifeq ($(TARGET_RK3588),1)
   BACKEND_LDFLAGS += -lGLESv2
 else ifeq ($(OSX_BUILD),1)
-  BACKEND_LDFLAGS += -framework OpenGL `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
+  BACKEND_LDFLAGS += -framework OpenGL -framework Metal -framework Foundation -framework QuartzCore `pkg-config --libs glew` -mmacosx-version-min=$(MIN_MACOS_VERSION)
   EXTRA_CPP_FLAGS += -stdlib=libc++ -std=c++17 -mmacosx-version-min=$(MIN_MACOS_VERSION)
 else
   BACKEND_LDFLAGS += -lGL
@@ -753,6 +757,35 @@ ifeq ($(WINDOWS_BUILD),1)
 else
   BACKEND_LDFLAGS += `$(SDLCONFIG) --libs`
 endif
+
+# glslang and spirv-tools
+ifeq ($(WINDOWS_BUILD),1)
+  BACKEND_LDFLAGS += -lglslang -lMachineIndependent -lGenericCodeGen -lOSDependent -lSPIRV -lSPIRV-Tools -lSPIRV-Tools-opt -lglslang-default-resource-limits
+else ifeq ($(OSX_BUILD),1)
+  BACKEND_LDFLAGS += -lglslang -lSPIRV -lSPIRV-Tools -lSPIRV-Tools-opt -lglslang-default-resource-limits
+else
+  ifeq ($(TARGET_RPI),1)
+    ARCH_DIR := linux_arm
+  else ifeq ($(TARGET_RK3588),1)
+    ARCH_DIR := linux_arm
+  else
+    ARCH_DIR := linux_x86_64
+  endif
+
+  BACKEND_CFLAGS += -Ilib/glslang/include -Ilib/spirv-tools/include
+  BACKEND_LDFLAGS += -Llib/glslang/$(ARCH_DIR) -Llib/spirv-tools/$(ARCH_DIR) -lglslang -lMachineIndependent -lGenericCodeGen -lOSDependent -lSPIRV -lglslang-default-resource-limits -lSPIRV-Tools-opt -lSPIRV-Tools
+endif
+
+# SPIR-V Cross
+ifeq ($(WINDOWS_BUILD),1)
+  SPIRV_CROSS_LIBS := -lspirv-cross-c -lspirv-cross-hlsl -lspirv-cross-msl -lspirv-cross-glsl -lspirv-cross-cpp -lspirv-cross-reflect -lspirv-cross-core -lSPIRV-Tools-opt -lSPIRV-Tools
+else ifeq ($(OSX_BUILD),1)
+  SPIRV_CROSS_LIBS := $(BREW_PREFIX)/lib/libspirv-cross-c.a $(BREW_PREFIX)/lib/libspirv-cross-hlsl.a $(BREW_PREFIX)/lib/libspirv-cross-msl.a $(BREW_PREFIX)/lib/libspirv-cross-glsl.a $(BREW_PREFIX)/lib/libspirv-cross-cpp.a $(BREW_PREFIX)/lib/libspirv-cross-reflect.a $(BREW_PREFIX)/lib/libspirv-cross-core.a
+else
+  SPIRV_CROSS_LIBS := -Wl,-Bstatic -lspirv-cross-c -lspirv-cross-glsl -lspirv-cross-hlsl -lspirv-cross-msl -lspirv-cross-cpp -lspirv-cross-reflect -lspirv-cross-core -Wl,-Bdynamic
+endif
+
+BACKEND_LDFLAGS += $(SPIRV_CROSS_LIBS)
 
 C_DEFINES += $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
@@ -1582,6 +1615,8 @@ all:
 		echo '    <string>icon</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <key>CFBundleDisplayName</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '    <string>sm64coopdx</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+    echo '    <key>LSApplicationCategoryType</key>' >> $(APP_CONTENTS_DIR)/Info.plist; \
+    echo '    <string>public.app-category.games</string>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</dict>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		echo '</plist>' >> $(APP_CONTENTS_DIR)/Info.plist; \
 		chmod +x $(APP_MACOS_DIR)/sm64coopdx; \

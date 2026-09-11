@@ -1,5 +1,6 @@
 #include "smlua_gfx_utils.h"
 #include "pc/pc_main.h"
+#include "pc/gfx/gfx_pc.h"
 #include "game/rendering_graph_node.h"
 #include "game/skybox.h"
 #include "geo_commands.h"
@@ -427,6 +428,147 @@ void gfx_delete(Gfx *gfx) {
 void gfx_delete_all() {
     dynos_gfx_delete_all();
 }
+
+///
+
+void gfx_set_culling_enabled(bool enable) {
+    gCullingEnabled = enable;
+}
+
+bool gfx_is_culling_enabled() {
+    return gCullingEnabled;
+}
+
+const char *gfx_get_render_api_name() {
+    return gfx_get_current_rendering_api()->get_name();
+}
+
+bool gfx_is_legacy_renderer() {
+    return gfx_get_current_rendering_api()->is_legacy();
+}
+
+void gfx_reload_shaders() {
+    gfx_remove_all_color_combiners();
+    gfx_get_current_rendering_api()->remove_shaders();
+    smlua_call_event_hooks(HOOK_ON_REFRESH_SHADERS);
+}
+
+struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc) {
+    static struct CCFeatures sCcf = { 0 };
+    gfx_cc_get_features(cc, &sCcf);
+    return &sCcf;
+}
+
+void gfx_shader_set_shader_stage(enum ShaderStage stage) {
+    if (stage < 0 || stage >= SHADER_STAGE_COUNT) { return; }
+    gSelectedShaderStage = stage;
+}
+
+static void set_vertex_uniform_buffer(const char *name) {
+    char uniqueName[MAX_SHADER_VARIABLE_NAME];
+    snprintf(uniqueName, sizeof(uniqueName), "_VS_%s", name);
+    gfx_get_current_rendering_api()->set_uniform_buffer(SHADER_STAGE_VERTEX, uniqueName);
+}
+
+static void set_fragment_uniform_buffer(const char *name) {
+    char uniqueName[MAX_SHADER_VARIABLE_NAME];
+    snprintf(uniqueName, sizeof(uniqueName), "_FS_%s", name);
+    gfx_get_current_rendering_api()->set_uniform_buffer(SHADER_STAGE_FRAGMENT, uniqueName);
+}
+
+void gfx_shader_set_uniform_buffer(const char *name) {
+    if (gfx_shader_stage_is(SHADER_STAGE_VERTEX)) {
+        set_vertex_uniform_buffer(name);
+    }
+
+    if (gfx_shader_stage_is(SHADER_STAGE_FRAGMENT)) {
+        set_fragment_uniform_buffer(name);
+    }
+}
+
+void gfx_shader_reset_uniform_buffer(void) {
+    if (gfx_shader_stage_is(SHADER_STAGE_VERTEX)) {
+        gSelectedVertexUniformBuffer = 0;
+    }
+
+    if (gfx_shader_stage_is(SHADER_STAGE_FRAGMENT)) {
+        gSelectedFragmentUniformBuffer = 0;
+    }
+}
+
+void gfx_shader_set_bool(const char *name, bool value) {
+    int valAsInt = value ? 1 : 0;
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_BOOL, &valAsInt, 1);
+}
+
+void gfx_shader_set_int(const char *name, int value) {
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_INT, &value, 1);
+}
+
+void gfx_shader_set_float(const char *name, f32 value) {
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_FLOAT, &value, 1);
+}
+
+void gfx_shader_set_vec2(const char *name, f32 x, f32 y) {
+    f32 vec[2] = { x, y };
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC2, vec, 1);
+}
+
+void gfx_shader_set_vec3(const char *name, f32 x, f32 y, f32 z) {
+    f32 vec[3] = { x, y, z };
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC3, vec, 1);
+}
+
+void gfx_shader_set_vec4(const char *name, f32 x, f32 y, f32 z, f32 w) {
+    f32 vec[4] = { x, y, z, w };
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC4, vec, 1);
+}
+
+void gfx_shader_set_mat4(const char *name, const Mat4 mat4) {
+    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_MAT4, mat4, 1);
+}
+
+int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass) {
+    // iterates through frame passes until it finds one that's inactive
+    for (int i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
+        struct FramePass *framePass = &gFramePasses[i];
+        if (framePass->active) { continue; }
+
+        memset(framePass, 0, sizeof(struct FramePass));
+
+        // set default values
+        framePass->active = true;
+        framePass->clearColor[3] = 255; // clear color is black from memset, set alpha to 255
+
+        *retFramePass = framePass;
+
+        return i;
+    }
+
+    LOG_LUA("gfx_shader_create_frame_pass: Ran out of frame passes to allocate!")
+    return -1;
+}
+
+void gfx_shader_remove_frame_pass(int framePassIndex) {
+    if (framePassIndex < 0 || framePassIndex >= MAX_CUSTOM_FRAME_PASSES) { return; }
+
+    struct FramePass *framePass = &gFramePasses[framePassIndex];
+    if (!framePass->active) { return; }
+
+    gfx_get_current_rendering_api()->delete_framebuffer(framePass);
+    memset(framePass, 0, sizeof(struct FramePass));
+}
+
+int gfx_shader_get_current_frame_pass_index() {
+    return gCurrentFramePassIndex;
+}
+
+struct FramePass *gfx_shader_get_current_frame_pass() {
+    if (gCurrentFramePassIndex < 0) { return NULL; }
+    return &gFramePasses[gCurrentFramePassIndex];
+}
+
+///
 
 Vtx *vtx_get_from_name(const char *name, RET u32 *count) {
     *count = 0;

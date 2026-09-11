@@ -48,7 +48,6 @@
 #endif
 
 static SDL_Window *sSdlWindow;
-static SDL_GLContext sGlContext = NULL;
 static bool sAppliedVsync = false;
 
   //////////////////////////
@@ -118,11 +117,9 @@ static void gfx_window_opengl_init(const char *window_title) {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-#ifdef USE_GLES
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);  // These attributes allow for hardware acceleration on RPis.
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
@@ -132,7 +129,14 @@ static void gfx_window_opengl_init(const char *window_title) {
         xpos, ypos, configWindow.w, configWindow.h,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
-    sGlContext = SDL_GL_CreateContext(sSdlWindow);
+    SDL_GLContext ctx = SDL_GL_CreateContext(sSdlWindow);
+
+    if (!ctx) {
+        // try again with 4.1
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        ctx = SDL_GL_CreateContext(sSdlWindow);
+    }
 
     gfx_wm_set_window(sSdlWindow);
     if (gfx_window_opengl_set_vsync(configWindow.vsync) == 0) {

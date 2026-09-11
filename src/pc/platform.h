@@ -15,6 +15,10 @@
 
 #define SYS_MAX_PATH 4096
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // casting a float to a s16 is actually undefined behavior! What happens on Arm vs
 // Intel differs. Arm has different behavior from Intel, which it and the N64 wraps X around.
 // We can replicate the n64s behavior by modulating the float to within bounds and then
@@ -52,3 +56,7 @@ void sys_swap_backslashes(char* buffer);
 
 // shows an error message in some way and terminates the game
 void sys_fatal(const char *fmt, ...) __attribute__ ((noreturn));
+
+#ifdef __cplusplus
+}
+#endif

@@ -55,11 +55,22 @@ static void gfx_dummy_renderer_unload_shader(UNUSED struct ShaderProgram *old_pr
 static void gfx_dummy_renderer_load_shader(UNUSED struct ShaderProgram *new_prg) {
 }
 
+static void gfx_dummy_renderer_remove_shaders(void) {
+}
+
 static struct ShaderProgram *gfx_dummy_renderer_create_and_load_new_shader(UNUSED struct ColorCombiner* cc) {
     return NULL;
 }
 
+static struct ShaderProgram *gfx_dummy_renderer_create_or_load_post_process_shader(void) {
+    return NULL;
+}
+
 static struct ShaderProgram *gfx_dummy_renderer_lookup_shader(UNUSED struct ColorCombiner* cc) {
+    return NULL;
+}
+
+static struct ShaderProgram *gfx_dummy_renderer_lookup_shader_using_index(UNUSED u8 shaderIndex, UNUSED u8 framePassIndex) {
     return NULL;
 }
 
@@ -69,11 +80,36 @@ static void gfx_dummy_renderer_shader_get_info(UNUSED struct ShaderProgram *prg,
     used_textures[1] = false;
 }
 
+static void gfx_dummy_renderer_create_framebuffer(UNUSED struct FramePass *framePass) {
+}
+
+static void gfx_dummy_renderer_delete_framebuffer(UNUSED struct FramePass *framePass) {
+}
+
+static void gfx_dummy_renderer_set_framebuffer(UNUSED struct FramePass *framePass) {
+}
+
+static void gfx_dummy_renderer_reset_framebuffer(void) {
+}
+
+static size_t gfx_dummy_renderer_get_uniform_buffer_size(UNUSED enum ShaderStage stage, UNUSED int bufferIndex) {
+    return 0;
+}
+
+static void gfx_dummy_renderer_set_uniform_buffer(UNUSED enum ShaderStage stage, UNUSED const char *name) {
+}
+
+static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED ShaderUniformType type, UNUSED UNUSED const void *data, UNUSED u32 numElements) {
+}
+
 static uint32_t gfx_dummy_renderer_new_texture(void) {
     return 0;
 }
 
 static void gfx_dummy_renderer_select_texture(UNUSED int tile, UNUSED uint32_t texture_id) {
+}
+
+static void gfx_dummy_renderer_bind_texture_raw(UNUSED int tile, UNUSED uint64_t texture_id) {
 }
 
 static void gfx_dummy_renderer_upload_texture(UNUSED const uint8_t *rgba32_buf, UNUSED int width, UNUSED int height) {
@@ -100,6 +136,9 @@ static void gfx_dummy_renderer_set_scissor(UNUSED int x, UNUSED int y, UNUSED in
 static void gfx_dummy_renderer_set_use_alpha(UNUSED bool use_alpha) {
 }
 
+static void gfx_dummy_renderer_set_vsync(UNUSED bool enabled) {
+}
+
 static void gfx_dummy_renderer_draw_triangles(UNUSED float buf_vbo[], UNUSED size_t buf_vbo_len, UNUSED size_t buf_vbo_num_tris) {
 }
 
@@ -122,6 +161,10 @@ static const char* gfx_dummy_renderer_get_name(void) {
     return "Headless";
 }
 
+static bool gfx_dummy_renderer_is_legacy(void) {
+    return false;
+}
+
 static void gfx_dummy_renderer_shutdown(void) {
 }
 
@@ -140,11 +183,22 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_z_is_from_0_to_1,
     gfx_dummy_renderer_unload_shader,
     gfx_dummy_renderer_load_shader,
+    gfx_dummy_renderer_remove_shaders,
     gfx_dummy_renderer_create_and_load_new_shader,
+    gfx_dummy_renderer_create_or_load_post_process_shader,
     gfx_dummy_renderer_lookup_shader,
+    gfx_dummy_renderer_lookup_shader_using_index,
     gfx_dummy_renderer_shader_get_info,
+    gfx_dummy_renderer_create_framebuffer,
+    gfx_dummy_renderer_delete_framebuffer,
+    gfx_dummy_renderer_set_framebuffer,
+    gfx_dummy_renderer_reset_framebuffer,
+    gfx_dummy_renderer_get_uniform_buffer_size,
+    gfx_dummy_renderer_set_uniform_buffer,
+    gfx_dummy_renderer_set_uniform,
     gfx_dummy_renderer_new_texture,
     gfx_dummy_renderer_select_texture,
+    gfx_dummy_renderer_bind_texture_raw,
     gfx_dummy_renderer_upload_texture,
     gfx_dummy_renderer_set_sampler_parameters,
     gfx_dummy_renderer_set_depth_test,
@@ -153,6 +207,7 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_set_viewport,
     gfx_dummy_renderer_set_scissor,
     gfx_dummy_renderer_set_use_alpha,
+    gfx_dummy_renderer_set_vsync,
     gfx_dummy_renderer_draw_triangles,
     gfx_dummy_renderer_init,
     gfx_dummy_renderer_on_resize,
@@ -160,5 +215,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_end_frame,
     gfx_dummy_renderer_finish_render,
     gfx_dummy_renderer_get_name,
+    gfx_dummy_renderer_is_legacy,
     gfx_dummy_renderer_shutdown
 };

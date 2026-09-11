@@ -4,7 +4,7 @@
 
 --- @param objFieldTable table<any, "u32"|"s32"|"f32"|table> Table of object field names and types
 --- Defines a custom set of overlapping object fields.
---- 
+---
 --- - The `fieldTable` table's keys must start with the letter `o` and the values must be either `"u32"`, `"s32"`, `"f32"` or a table with fields `type` and `global`, for example `{ type = "u32", global = true }`.
 --- - If, for a field, `global` is `true`, the field will be defined for all mods.
 ---
@@ -27,7 +27,7 @@ end
 --- @param standardSync boolean Automatically syncs common fields and syncs with distance. If `false`, all syncing must be done with `network_send_object`
 --- @param fieldTable table<string> The fields to sync
 --- Enables synchronization on an object.
---- 
+---
 --- - Setting `standardSync` to `true` will automatically synchronize the object at a rate that is determined based on player distance. The commonly used object fields will be automatically synchronized.
 --- - Setting `standardSync` to `false` will not automatically synchronize the object, or add commonly used object fields. The mod must manually call `network_send_object()` when fields have changed.
 --- - The `fieldTable` parameter can be `nil`, or a list of object fields.
@@ -563,7 +563,7 @@ end
 --- @param values table The table containing animation values
 --- @param index table The table containing animation indices
 --- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
---- 
+---
 --- ### Lua Example
 --- ```lua
 --- smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
@@ -644,7 +644,7 @@ end
 --- - `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
 --- - `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
 --- - `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
---- 
+---
 --- ### Lua Example
 --- ```lua
 --- local contents = get_exclamation_box_contents()
@@ -663,12 +663,12 @@ end
 --- @return GraphNode | GraphNodeAnimatedPart | GraphNodeBackground | GraphNodeBillboard | GraphNodeCamera | GraphNodeCullingRadius | GraphNodeDisplayList | GraphNodeGenerated | GraphNodeHeldObject | GraphNodeLevelOfDetail | GraphNodeMasterList | GraphNodeObject | GraphNodeObjectParent | GraphNodeOrthoProjection | GraphNodePerspective | GraphNodeRotation | GraphNodeScale | GraphNodeShadow | GraphNodeStart | GraphNodeSwitchCase | GraphNodeTranslation | GraphNodeTranslationRotation | GraphNodeBone
 --- Returns the specific GraphNode(...) the node is part of.
 --- Basically the reverse of `.node` or `.fnNode`.
---- 
+---
 --- ### Lua Example
 --- ```lua
 --- local marioGfx = gMarioStates[0].marioObj.header.gfx -- GraphNodeObject
 --- local node = marioGfx.node -- GraphNode
---- 
+---
 --- print(marioGfx == cast_graph_node(node)) -- true
 --- ```
 function cast_graph_node(node)
@@ -716,5 +716,100 @@ end
 --- gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 --- ```
 function gfx_set_command(gfx, command, ...)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values boolean[] An array of booleans
+--- Pass an array of booleans to a custom uniform shader location.
+---
+--- ### Lua Example
+--- ```lua
+--- local toggles = { true, false, true, true }
+--- gfx_shader_set_bool_array("uBools", toggles)
+--- ```
+function gfx_shader_set_bool_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values integer[] An array of integers
+--- Pass an array of integers to a custom uniform shader location.
+---
+--- ### Lua Example
+--- ```lua
+--- local indices = { 0, 4, 8, 12 }
+--- gfx_shader_set_int_array("uIndices", indices)
+--- ```
+function gfx_shader_set_int_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values number[] An array of floating-point numbers
+--- Pass an array of floating-point numbers to a custom uniform shader location.
+---
+--- ### Lua Example
+--- ```lua
+--- local weights = { 0.1, 0.5, 1.25, 0.0 }
+--- gfx_shader_set_float_array("uWeights", weights)
+--- ```
+function gfx_shader_set_float_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values number[] A flat number array representing 2D vectors
+--- Pass an array of 2D vectors (vec2) to a custom uniform shader location using a flat number array.
+---
+--- ### Lua Example
+--- ```lua
+--- -- Represents two vec2 elements: (1.0, 2.0) and (3.0, 4.0)
+--- local positions = { 1.0, 2.0, 3.0, 4.0 }
+--- gfx_shader_set_vec2_array("uPositions", positions)
+--- ```
+function gfx_shader_set_vec2_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values number[] A flat number array representing 3D vectors
+--- Pass an array of 3D vectors (vec3) to a custom uniform shader location using a flat number array.
+---
+--- ### Lua Example
+--- ```lua
+--- -- Represents two vec3 colors: RGB(1, 0, 0) and RGB(0, 1, 0)
+--- local colors = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 }
+--- gfx_shader_set_vec3_array("uColors", colors)
+--- ```
+function gfx_shader_set_vec3_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values number[] A flat number array representing 4D vectors
+--- Pass an array of 4D vectors (vec4) to a custom uniform shader location using a flat number array.
+---
+--- ### Lua Example
+--- ```lua
+--- -- Represents two vec4 points: (x, y, z, w)
+--- local points = { 0.0, 0.0, 0.0, 1.0, 10.0, 5.0, 2.0, 1.0 }
+--- gfx_shader_set_vec4_array("uPoints", points)
+--- ```
+function gfx_shader_set_vec4_array(name, values)
+    -- ...
+end
+
+--- @param name string The name of the uniform shader location
+--- @param values number[] A flat array of 16 numbers per 4x4 matrix
+--- Pass an array of 4x4 matrices (mat4) to a custom uniform shader location using a flat array of 16 numbers per matrix.
+---
+--- ### Lua Example
+--- ```lua
+--- -- table containing 16 elements for a 4x4 matrix
+--- local matrix = gMat4Identity()
+--- gfx_shader_set_mat4_array("uIdentityMatrix", matrix)
+--- ```
+function gfx_shader_set_mat4_array(name, values)
     -- ...
 end

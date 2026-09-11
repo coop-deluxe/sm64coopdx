@@ -14,6 +14,7 @@
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_gfx_utils.h"
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/utils/smlua_gfx_utils.h"
@@ -754,6 +755,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gLuaVolumeLevel = 127;
     gLuaVolumeSfx = 127;
     gLuaVolumeEnv = 127;
+    gCullingEnabled = true;
 
     struct Controller* cnt = gPlayer1Controller;
     cnt->rawStickX = 0;
@@ -777,6 +779,12 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     first_person_reset();
 
     le_shutdown();
+    gfx_remove_all_color_combiners();
+    gfx_get_current_rendering_api()->remove_shaders();
+    // remove all custom frame passes
+    for (int i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
+        gfx_shader_remove_frame_pass(i);
+    }
 
     extern void save_file_load_all(UNUSED u8 reload);
     save_file_load_all(TRUE);

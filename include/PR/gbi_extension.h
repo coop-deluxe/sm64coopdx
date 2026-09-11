@@ -8,7 +8,7 @@
 // For RDP commands, use decrementing numbers starting from ff.
 // Please update the following table when implementing a new command.
 //
-// RSP ->                     09 0a 0b 0c 0d 0e 0f
+// RSP ->                  08 09 0a 0b 0c 0d 0e 0f
 //             14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
 // 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
 // 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f
@@ -20,7 +20,7 @@
 // 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f
 // a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af
 // b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf
-// c0 c1 c2 c3 c4 c5 c6 c7                        
+// c0 c1 c2 c3 c4 c5 c6 c7
 // d0                                       <- RDP
 //
 //
@@ -64,8 +64,6 @@
 #define G_TRI2_EXT         0x12
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
-
-#define G_MTX_INVERSE_CAMERA_EXT   0x08
 
 #define	gsSPTextureAddrDjui(c) \
 {{ \
@@ -191,17 +189,17 @@
  * value. This is useful for making surfaces fade between transparent when
  * viewed straight-on and opaque when viewed at a large angle, or for applying a
  * fake "outline" around the border of meshes.
- * 
+ *
  * If using Fresnel, you need to set the camera world position whenever you set
  * the VP matrix, viewport, etc. See SPCameraWorld.
- * 
+ *
  * The RSP does:
  * s16 dotProduct = dot(vertex normal, camera pos - vertex pos);
  * dotProduct = abs(dotProduct); // 0 = points to side, 7FFF = points at or away
  * s32 factor = ((scale * dotProduct) >> 15) + offset;
  * s16 result = clamp(factor << 8, 0, 7FFF);
  * color_or_alpha = result >> 7;
- * 
+ *
  * At dotMax, color_or_alpha = FF, result = 7F80, factor = 7F
  * At dotMin, color_or_alpha = 00, result = 0, factor = 0
  * 7F = ((scale * dotMax) >> 15) + offset
@@ -211,7 +209,7 @@
  *           scale = 3F8000 / (dotMax - dotMin)                <--
  * offset = -(((3F8000 / (dotMax - dotMin)) * dotMin) >> 15)
  * offset = -((7F * dotMin) / (dotMax - dotMin))               <--
- * 
+ *
  * To convert in the opposite direction:
  * ((7F - offset) << 15) / scale = dotMax
  * ((00 - offset) << 15) / scale = dotMin

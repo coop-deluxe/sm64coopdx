@@ -36,7 +36,6 @@ extern "C" {
 
 #include "gfx_window_manager.h"
 #include "gfx_rendering_api.h"
-#include "gfx_direct3d_common.h"
 #include "gfx_screen_config.h"
 #include "gfx_pc.h"
 

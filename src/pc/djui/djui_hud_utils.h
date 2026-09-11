@@ -59,7 +59,6 @@ struct GlobalTextures {
 };
 
 extern struct GlobalTextures gGlobalTextures;
-extern f32 gDjuiHudUtilsZ;
 extern bool gDjuiHudLockMouse;
 
 void djui_hud_clear_interp_data();

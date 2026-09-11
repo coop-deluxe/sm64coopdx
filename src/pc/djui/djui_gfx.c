@@ -72,7 +72,7 @@ f32 round_to_multiple_f(f32 value, f32 multiple) {
 f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
-        gfx_get_dimensions(&windowWidth, &windowHeight);
+        gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
         return clamp(round_to_multiple_f(((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f, 0.5f), 0.5f, 1.5f);
     } else {
         switch (configDjuiScale) {
@@ -256,14 +256,14 @@ void djui_gfx_render_texture_tile_font_end() {
 
 void djui_gfx_position_translate(f32* x, f32* y) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
     *x = GFX_DIMENSIONS_FROM_LEFT_EDGE(0) + *x * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *y = SCREEN_HEIGHT - *y * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }
 
 void djui_gfx_scale_translate(f32* width, f32* height) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
 
     *width  = *width * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
     *height = *height * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
@@ -271,7 +271,7 @@ void djui_gfx_scale_translate(f32* width, f32* height) {
 
 void djui_gfx_size_translate(f32* size) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
 
     *size = *size * ((f32)SCREEN_HEIGHT / (f32)windowHeight) * djui_gfx_get_scale();
 }

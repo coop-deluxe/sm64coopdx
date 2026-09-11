@@ -33,8 +33,15 @@
 - [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
+- [gfx_cc.h](#gfx_cch)
+    - [enum ColorCombinerSource](#enum-ColorCombinerSource)
+    - [enum CcShaderInput](#enum-CcShaderInput)
+    - [enum CombineModeFlags](#enum-CombineModeFlags)
 - [gfx_pc.h](#gfx_pch)
+    - [enum PassFilter](#enum-PassFilter)
     - [enum ShaderFlag](#enum-ShaderFlag)
+- [gfx_shader.h](#gfx_shaderh)
+    - [enum ShaderStage](#enum-ShaderStage)
 - [graph_node.h](#graph_nodeh)
     - [enum GraphNodeType](#enum-GraphNodeType)
 - [hardcoded.h](#hardcodedh)
@@ -1386,12 +1393,25 @@
 - G_SETSCISSOR
 - G_TEXRECTFLIP
 - G_TEXRECT
+- G_ZBUFFER
+- G_SHADE
+- G_FOG
+- G_LIGHTING
+- G_TEXTURE_GEN
+- G_TEXTURE_GEN_LINEAR
+- G_LOD
 
 [:arrow_up_small:](#)
 
 <br />
 
 ## gbi_extension.h
+- G_LIGHT_MAP_EXT
+- G_LIGHTING_ENGINE_EXT
+- G_PACKED_NORMALS_EXT
+- G_CULL_INVERT_EXT
+- G_FRESNEL_COLOR_EXT
+- G_FRESNEL_ALPHA_EXT
 - G_VTX_EXT
 - G_SETENVRGB
 - G_PPARTTOCOLOR
@@ -1422,7 +1442,81 @@
 
 <br />
 
+## gfx_cc.h
+
+### enum ColorCombinerSource
+| Identifier | Value |
+| :--------- | :---- |
+| CCS_0 | 0 |
+| CCS_TEXEL0 | 1 |
+| CCS_TEXEL1 | 2 |
+| CCS_PRIM | 3 |
+| CCS_SHADE | 4 |
+| CCS_ENV | 5 |
+| CCS_TEXEL0A | 6 |
+| CCS_LOD | 7 |
+| CCS_1 | 8 |
+| CCS_TEXEL1A | 9 |
+| CCS_COMBINED | 10 |
+| CCS_COMBINEDA | 11 |
+| CCS_PRIMA | 12 |
+| CCS_SHADEA | 13 |
+| CCS_ENVA | 14 |
+| CCS_NOISE | 15 |
+| CCS_COUNT | 16 |
+
+### enum CcShaderInput
+| Identifier | Value |
+| :--------- | :---- |
+| SHADER_0 | 0 |
+| SHADER_INPUT_1 | 1 |
+| SHADER_INPUT_2 | 2 |
+| SHADER_INPUT_3 | 3 |
+| SHADER_INPUT_4 | 4 |
+| SHADER_INPUT_5 | 5 |
+| SHADER_INPUT_6 | 6 |
+| SHADER_INPUT_7 | 7 |
+| SHADER_INPUT_8 | 8 |
+| SHADER_TEXEL0 | 9 |
+| SHADER_TEXEL0A | 10 |
+| SHADER_TEXEL1 | 11 |
+| SHADER_TEXEL1A | 12 |
+| SHADER_1 | 13 |
+| SHADER_COMBINED | 14 |
+| SHADER_COMBINEDA | 15 |
+| SHADER_NOISE | 16 |
+- SHADER_OPT_ALPHA
+- SHADER_OPT_FOG
+- SHADER_OPT_TEXTURE_EDGE
+- SHADER_OPT_NOISE
+
+### enum CombineModeFlags
+| Identifier | Value |
+| :--------- | :---- |
+| CM_FLAG_USE_ALPHA | 1 << 0 |
+| CM_FLAG_USE_FOG | 1 << 1 |
+| CM_FLAG_TEXTURE_EDGE | 1 << 2 |
+| CM_FLAG_USE_DITHER | 1 << 3 |
+| CM_FLAG_USE_2CYCLE | 1 << 4 |
+| CM_FLAG_LIGHT_MAP | 1 << 5 |
+| CM_FLAG_TEX_PERSP | 1 << 6 |
+| CM_FLAG_WORLD_GEOMETRY | 1 << 7 |
+- SHADER_CMD_LENGTH
+- CC_MAX_SHADERS
+- CC_MAX_INPUTS
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## gfx_pc.h
+
+### enum PassFilter
+| Identifier | Value |
+| :--------- | :---- |
+| PASS_FILTER_LINEAR | 0 |
+| PASS_FILTER_NEAREST | 1 |
+| PASS_FILTER_COUNT | 2 |
 
 ### enum ShaderFlag
 | Identifier | Value |
@@ -1436,6 +1530,22 @@
 | SHADER_FLAG_POSTERIZATION | 6 |
 | SHADER_FLAG_SCANLINES | 7 |
 | SHADER_FLAG_MAX | 8 |
+- MAX_CUSTOM_FRAME_PASSES
+- MAX_FRAME_PASSES
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader.h
+
+### enum ShaderStage
+| Identifier | Value |
+| :--------- | :---- |
+| SHADER_STAGE_VERTEX | 0 |
+| SHADER_STAGE_FRAGMENT | 1 |
+| SHADER_STAGE_ANY | 2 |
+| SHADER_STAGE_COUNT | 3 |
 
 [:arrow_up_small:](#)
 
@@ -3763,7 +3873,16 @@
 | HOOK_ON_DYNOS_PACK_TOGGLED | 66 |
 | HOOK_BEFORE_PLAY_MODE_UPDATE | 67 |
 | HOOK_ON_PLAY_MODE_UPDATE | 68 |
-| HOOK_MAX | 69 |
+| HOOK_ON_REFRESH_SHADERS | 69 |
+| HOOK_ON_VERTEX_SHADER_CREATE | 70 |
+| HOOK_ON_FRAGMENT_SHADER_CREATE | 71 |
+| HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE | 72 |
+| HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE | 73 |
+| HOOK_BEFORE_DRAW_GEOMETRY | 74 |
+| HOOK_ON_DRAW_GEOMETRY | 75 |
+| HOOK_ON_DRAW_TRIANGLE | 76 |
+| HOOK_ON_SET_SHADER_PROGRAM | 77 |
+| HOOK_MAX | 78 |
 
 [:arrow_up_small:](#)
 

@@ -72,10 +72,17 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
 
-#if defined(_WIN32)
-        static char *gfxBackendChoices[] = { "OpenGL", "DirectX 11" };
-        djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, ARRAY_COUNT(gfxBackendChoices), &configGraphicsBackend, djui_panel_display_update_restart_text);
+        if (GFX_WINDOW_BACKEND_COUNT > 1) {
+            char *gfxBackendChoices[GFX_WINDOW_BACKEND_COUNT] = {
+#ifdef OSX_BUILD
+                (char *)gfx_metal_api.get_name(),
+#elif defined(_WIN32)
+                (char *)gfx_direct3d11_api.get_name(),
 #endif
+                (char *)gfx_opengl_api.get_name(),
+            };
+            djui_selectionbox_create(body, DLANG(DISPLAY, GRAPHICS_BACKEND), gfxBackendChoices, GFX_WINDOW_BACKEND_COUNT, &configGraphicsBackend, djui_panel_display_update_restart_text);
+        }
 
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FRAMERATE_MODE), framerateModeChoices, 3, &configFramerateMode, djui_panel_display_framerate_mode_change);

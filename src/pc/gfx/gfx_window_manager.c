@@ -9,6 +9,7 @@
 
 #include "gfx_window_manager.h"
 #include "gfx_window_opengl.h"
+#include "gfx_window_metal.h"
 #include "gfx_window_dxgi.h"
 #include "gfx_screen_config.h"
 
@@ -21,12 +22,16 @@
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
+#include "pc/debuglog.h"
 
 static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
-    [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
 #if defined(_WIN32)
     [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
 #endif
+#if defined(__APPLE__)
+    [GFX_WINDOW_BACKEND_METAL] = &gfx_window_metal,
+#endif
+    [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
 };
 
 // TODO: figure out how to switch the backend without restarting
@@ -112,8 +117,8 @@ void gfx_wm_init(const char *window_title) {
 
     SDL_StopTextInput();
 
-#if defined(_WIN32)
-    currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
+#if defined(_WIN32) || defined(__APPLE__)
+    currBackend = gCLIOpts.backend < GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
 #else
     currBackend = configGraphicsBackend;
 #endif
@@ -195,7 +200,7 @@ static void gfx_wm_ondropfile(char* path) {
 
 void gfx_wm_handle_events(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_Event event;
+    SDL_Event event = { 0 };
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_TEXTINPUT:

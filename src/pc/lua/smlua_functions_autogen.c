@@ -441,6 +441,38 @@ void smlua_push_color(Color src, int index) {
     smlua_push_integer_field(index, "b", src[2]);
 }
 
+void smlua_new_colorrgba(ColorRGBA src) {
+    struct lua_State *L = gLuaState;
+    lua_newtable(L);
+    int tableIndex = lua_gettop(L);
+    lua_pushstring(L, "r");
+    lua_pushinteger(L, src[0]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "g");
+    lua_pushinteger(L, src[1]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "b");
+    lua_pushinteger(L, src[2]);
+    lua_settable(L, tableIndex);
+    lua_pushstring(L, "a");
+    lua_pushinteger(L, src[3]);
+    lua_settable(L, tableIndex);
+}
+
+void smlua_get_colorrgba(ColorRGBA dest, int index) {
+    dest[0] = smlua_get_integer_field(index, "r");
+    dest[1] = smlua_get_integer_field(index, "g");
+    dest[2] = smlua_get_integer_field(index, "b");
+    dest[3] = smlua_get_integer_field(index, "a");
+}
+
+void smlua_push_colorrgba(ColorRGBA src, int index) {
+    smlua_push_integer_field(index, "r", src[0]);
+    smlua_push_integer_field(index, "g", src[1]);
+    smlua_push_integer_field(index, "b", src[2]);
+    smlua_push_integer_field(index, "a", src[3]);
+}
+
 
 
   ////////////
@@ -19486,6 +19518,36 @@ int smlua_func_mtxf_inverse_non_affine(lua_State* L) {
     return 1;
 }
 
+int smlua_func_mtxf_ortho(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mtxf_ortho", 7, top);
+        return 0;
+    }
+
+    Mat4 dest; smlua_get_mat4(dest, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mtxf_ortho"); return 0; }
+    f32 boundBottom = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mtxf_ortho"); return 0; }
+    f32 boundTop = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mtxf_ortho"); return 0; }
+    f32 boundLeft = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "mtxf_ortho"); return 0; }
+    f32 boundRight = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "mtxf_ortho"); return 0; }
+    f32 near = smlua_to_number(L, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "mtxf_ortho"); return 0; }
+    f32 far = smlua_to_number(L, 7);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "mtxf_ortho"); return 0; }
+
+    mtxf_ortho(dest, boundBottom, boundTop, boundLeft, boundRight, near, far);
+    smlua_push_mat4(dest, 1);
+
+    return 0;
+}
+
 int smlua_func_get_pos_from_transform_mtx(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -31958,6 +32020,352 @@ int smlua_func_gfx_delete_all(lua_State* L) {
     return 0;
 }
 
+int smlua_func_gfx_set_culling_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_culling_enabled", 1, top);
+        return 0;
+    }
+
+    bool enable = smlua_to_boolean(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_culling_enabled"); return 0; }
+
+    gfx_set_culling_enabled(enable);
+
+    return 0;
+}
+
+int smlua_func_gfx_is_culling_enabled(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_is_culling_enabled", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, gfx_is_culling_enabled());
+
+    return 1;
+}
+
+int smlua_func_gfx_get_render_api_name(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_render_api_name", 0, top);
+        return 0;
+    }
+
+    lua_pushstring(L, gfx_get_render_api_name());
+
+    return 1;
+}
+
+int smlua_func_gfx_is_legacy_renderer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_is_legacy_renderer", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, gfx_is_legacy_renderer());
+
+    return 1;
+}
+
+int smlua_func_gfx_reload_shaders(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_reload_shaders", 0, top);
+        return 0;
+    }
+
+    gfx_reload_shaders();
+
+    return 0;
+}
+
+int smlua_func_gfx_color_combiner_get_features(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_color_combiner_get_features", 1, top);
+        return 0;
+    }
+
+    struct ColorCombiner* cc = (struct ColorCombiner*)smlua_to_cobject(L, 1, LOT_COLORCOMBINER);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_color_combiner_get_features"); return 0; }
+
+    smlua_push_object(L, LOT_CCFEATURES, gfx_color_combiner_get_features(cc), NULL);
+
+    return 1;
+}
+
+int smlua_func_gfx_shader_set_shader_stage(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_shader_stage", 1, top);
+        return 0;
+    }
+
+    enum ShaderStage stage = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_shader_stage"); return 0; }
+
+    gfx_shader_set_shader_stage(stage);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_uniform_buffer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_uniform_buffer", 1, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_uniform_buffer"); return 0; }
+
+    gfx_shader_set_uniform_buffer(name);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_reset_uniform_buffer(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_reset_uniform_buffer", 0, top);
+        return 0;
+    }
+
+    gfx_shader_reset_uniform_buffer();
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_bool(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_bool", 2, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_bool"); return 0; }
+    bool value = smlua_to_boolean(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_bool"); return 0; }
+
+    gfx_shader_set_bool(name, value);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_int(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_int", 2, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_int"); return 0; }
+    int value = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_int"); return 0; }
+
+    gfx_shader_set_int(name, value);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_float(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_float", 2, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_float"); return 0; }
+    f32 value = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_float"); return 0; }
+
+    gfx_shader_set_float(name, value);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_vec2(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_vec2", 3, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_vec2"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_vec2"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_shader_set_vec2"); return 0; }
+
+    gfx_shader_set_vec2(name, x, y);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_vec3(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 4) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_vec3", 4, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_vec3"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_vec3"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_shader_set_vec3"); return 0; }
+    f32 z = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_shader_set_vec3"); return 0; }
+
+    gfx_shader_set_vec3(name, x, y, z);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_vec4(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 5) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_vec4", 5, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_vec4"); return 0; }
+    f32 x = smlua_to_number(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_vec4"); return 0; }
+    f32 y = smlua_to_number(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "gfx_shader_set_vec4"); return 0; }
+    f32 z = smlua_to_number(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "gfx_shader_set_vec4"); return 0; }
+    f32 w = smlua_to_number(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "gfx_shader_set_vec4"); return 0; }
+
+    gfx_shader_set_vec4(name, x, y, z, w);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_set_mat4(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_set_mat4", 2, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_set_mat4"); return 0; }
+    Mat4 mat4; smlua_get_mat4(mat4, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_set_mat4"); return 0; }
+
+    gfx_shader_set_mat4(name, mat4);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_create_frame_pass(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_create_frame_pass", 0, top);
+        return 0;
+    }
+
+    struct FramePass* retFramePass;
+
+    lua_pushinteger(L, gfx_shader_create_frame_pass(&retFramePass));
+
+    smlua_push_object(L, LOT_FRAMEPASS, retFramePass, NULL);
+
+    return 2;
+}
+
+int smlua_func_gfx_shader_remove_frame_pass(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_remove_frame_pass", 1, top);
+        return 0;
+    }
+
+    int framePassIndex = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_remove_frame_pass"); return 0; }
+
+    gfx_shader_remove_frame_pass(framePassIndex);
+
+    return 0;
+}
+
+int smlua_func_gfx_shader_get_current_frame_pass_index(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_get_current_frame_pass_index", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, gfx_shader_get_current_frame_pass_index());
+
+    return 1;
+}
+
+int smlua_func_gfx_shader_get_current_frame_pass(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_get_current_frame_pass", 0, top);
+        return 0;
+    }
+
+    smlua_push_object(L, LOT_FRAMEPASS, gfx_shader_get_current_frame_pass(), NULL);
+
+    return 1;
+}
+
 int smlua_func_vtx_get_from_name(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -37554,6 +37962,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mtxf_rotate_xy", smlua_func_mtxf_rotate_xy);
     smlua_bind_function(L, "mtxf_inverse", smlua_func_mtxf_inverse);
     smlua_bind_function(L, "mtxf_inverse_non_affine", smlua_func_mtxf_inverse_non_affine);
+    smlua_bind_function(L, "mtxf_ortho", smlua_func_mtxf_ortho);
     smlua_bind_function(L, "get_pos_from_transform_mtx", smlua_func_get_pos_from_transform_mtx);
     smlua_bind_function(L, "get_world_mtx_from_transform", smlua_func_get_world_mtx_from_transform);
 
@@ -38257,6 +38666,26 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_resize", smlua_func_gfx_resize);
     smlua_bind_function(L, "gfx_delete", smlua_func_gfx_delete);
     smlua_bind_function(L, "gfx_delete_all", smlua_func_gfx_delete_all);
+    smlua_bind_function(L, "gfx_set_culling_enabled", smlua_func_gfx_set_culling_enabled);
+    smlua_bind_function(L, "gfx_is_culling_enabled", smlua_func_gfx_is_culling_enabled);
+    smlua_bind_function(L, "gfx_get_render_api_name", smlua_func_gfx_get_render_api_name);
+    smlua_bind_function(L, "gfx_is_legacy_renderer", smlua_func_gfx_is_legacy_renderer);
+    smlua_bind_function(L, "gfx_reload_shaders", smlua_func_gfx_reload_shaders);
+    smlua_bind_function(L, "gfx_color_combiner_get_features", smlua_func_gfx_color_combiner_get_features);
+    smlua_bind_function(L, "gfx_shader_set_shader_stage", smlua_func_gfx_shader_set_shader_stage);
+    smlua_bind_function(L, "gfx_shader_set_uniform_buffer", smlua_func_gfx_shader_set_uniform_buffer);
+    smlua_bind_function(L, "gfx_shader_reset_uniform_buffer", smlua_func_gfx_shader_reset_uniform_buffer);
+    smlua_bind_function(L, "gfx_shader_set_bool", smlua_func_gfx_shader_set_bool);
+    smlua_bind_function(L, "gfx_shader_set_int", smlua_func_gfx_shader_set_int);
+    smlua_bind_function(L, "gfx_shader_set_float", smlua_func_gfx_shader_set_float);
+    smlua_bind_function(L, "gfx_shader_set_vec2", smlua_func_gfx_shader_set_vec2);
+    smlua_bind_function(L, "gfx_shader_set_vec3", smlua_func_gfx_shader_set_vec3);
+    smlua_bind_function(L, "gfx_shader_set_vec4", smlua_func_gfx_shader_set_vec4);
+    smlua_bind_function(L, "gfx_shader_set_mat4", smlua_func_gfx_shader_set_mat4);
+    smlua_bind_function(L, "gfx_shader_create_frame_pass", smlua_func_gfx_shader_create_frame_pass);
+    smlua_bind_function(L, "gfx_shader_remove_frame_pass", smlua_func_gfx_shader_remove_frame_pass);
+    smlua_bind_function(L, "gfx_shader_get_current_frame_pass_index", smlua_func_gfx_shader_get_current_frame_pass_index);
+    smlua_bind_function(L, "gfx_shader_get_current_frame_pass", smlua_func_gfx_shader_get_current_frame_pass);
     smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
     smlua_bind_function(L, "vtx_get_name", smlua_func_vtx_get_name);
     smlua_bind_function(L, "vtx_get_count", smlua_func_vtx_get_count);
