@@ -3,7 +3,6 @@
 #include "pc/controller/controller_mouse.h"
 #include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
-#include "pc/debuglog.h"
 
 #define CURSOR_GFX_MAX_SIZE 20
 
