@@ -2021,6 +2021,7 @@
    - [level_register](functions-7.md#level_register)
    - [level_is_vanilla_level](functions-7.md#level_is_vanilla_level)
    - [warp_to_warpnode](functions-7.md#warp_to_warpnode)
+   - [warp_with_transition](functions-7.md#warp_with_transition)
    - [warp_to_level](functions-7.md#warp_to_level)
    - [warp_restart_level](functions-7.md#warp_restart_level)
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
@@ -2951,7 +2952,7 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
+| levelNum | [LevelNum](./structs.md#LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -3004,7 +3005,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
+| level | [ConsoleMessageLevel](./structs.md#ConsoleMessageLevel) |
 
 ### Returns
 - None
