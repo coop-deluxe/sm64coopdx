@@ -1812,6 +1812,35 @@ Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
 
 <br />
 
+## [warp_with_transition](#warp_with_transition)
+
+### Description
+Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
+
+### Lua Example
+`local booleanValue = warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+| aTransType | `integer` |
+| aTime | `integer` |
+| aColor | [Color](structs.md#Color) |
+| aWarpId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## [warp_to_level](#warp_to_level)
 
 ### Description
@@ -1920,35 +1949,6 @@ Warps back to the castle from `aLevel`
 
 ### C Prototype
 `bool warp_to_castle(s32 aLevel);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [warp_with_transition](#warp_with_transition)
-
-### Description
-Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
-
-### Lua Example
-`local booleanValue = warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| aLevel | `integer` |
-| aArea | `integer` |
-| aAct | `integer` |
-| aTransType | `integer` |
-| aTime | `integer` |
-| aColor | [Color](structs.md#Color) |
-| aWarpId | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);`
 
 [:arrow_up_small:](#)
 

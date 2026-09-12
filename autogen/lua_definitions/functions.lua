@@ -11963,6 +11963,19 @@ end
 --- @param aLevel integer
 --- @param aArea integer
 --- @param aAct integer
+--- @param aTransType integer
+--- @param aTime integer
+--- @param aColor Color
+--- @param aWarpId? integer
+--- @return boolean
+--- Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
+function warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)
+    -- ...
+end
+
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
 --- @return boolean
 --- Warps to `aArea` of `aLevel` in `aAct`
 function warp_to_level(aLevel, aArea, aAct)
@@ -11992,19 +12005,6 @@ end
 --- @return boolean
 --- Warps back to the castle from `aLevel`
 function warp_to_castle(aLevel)
-    -- ...
-end
-
---- @param aLevel integer
---- @param aArea integer
---- @param aAct integer
---- @param aTransType integer
---- @param aTime integer
---- @param aColor Color
---- @param aWarpId? integer
---- @return boolean
---- Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
-function warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)
     -- ...
 end
 

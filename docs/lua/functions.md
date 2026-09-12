@@ -2029,12 +2029,12 @@
    - [level_register](functions-7.md#level_register)
    - [level_is_vanilla_level](functions-7.md#level_is_vanilla_level)
    - [warp_to_warpnode](functions-7.md#warp_to_warpnode)
+   - [warp_with_transition](functions-7.md#warp_with_transition)
    - [warp_to_level](functions-7.md#warp_to_level)
    - [warp_restart_level](functions-7.md#warp_restart_level)
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
    - [warp_exit_level](functions-7.md#warp_exit_level)
    - [warp_to_castle](functions-7.md#warp_to_castle)
-   - [warp_with_transition](functions-7.md#warp_with_transition)
    - [level_create_warp_node](functions-7.md#level_create_warp_node)
    - [level_create_warp_node_with_object](functions-7.md#level_create_warp_node_with_object)
    - [level_get_warp_node](functions-7.md#level_get_warp_node)
@@ -2960,7 +2960,7 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [LevelNum](./structs.md#LevelNum) \| `integer` |
+| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -3013,7 +3013,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [ConsoleMessageLevel](./structs.md#ConsoleMessageLevel) |
+| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
 
 ### Returns
 - None

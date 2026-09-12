@@ -922,11 +922,11 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
 
 void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone);
 bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId);
 bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct);
 bool DynOS_Warp_RestartLevel();
 bool DynOS_Warp_ExitLevel(s32 aDelay);
 bool DynOS_Warp_ToCastle(s32 aLevel);
-bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId);
 
 //
 // Builtin

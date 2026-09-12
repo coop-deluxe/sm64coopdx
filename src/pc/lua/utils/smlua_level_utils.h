@@ -44,6 +44,8 @@ s16 level_register(const char* scriptEntryName, s16 courseNum, const char* fullN
 bool level_is_vanilla_level(s16 levelNum);
 /* |description|Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`|descriptionEnd| */
 bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
+/* |description|Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`|descriptionEnd| */
+bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);
 /* |description|Warps to `aArea` of `aLevel` in `aAct`|descriptionEnd| */
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 /* |description|Restarts the current level|descriptionEnd| */
@@ -54,8 +56,6 @@ bool warp_to_start_level(void);
 bool warp_exit_level(s32 aDelay);
 /* |description|Warps back to the castle from `aLevel`|descriptionEnd| */
 bool warp_to_castle(s32 aLevel);
-/* |description|Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`|descriptionEnd| */
-bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);
 
 /* |description|
 Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.
