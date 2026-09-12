@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "djui.h"
 #include "djui_panel.h"
 #include "djui_panel_menu.h"
@@ -43,6 +44,32 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
         return;
     }
     configAmountOfPlayers = atoi(sPlayerAmount->buffer);
+}
+
+static void djui_panel_host_fastdl_text_change(struct DjuiBase* caller) {
+    struct DjuiInputbox* inputbox = (struct DjuiInputbox*)caller;
+
+    // sanitize as the URL is typed: drop everything the FastDL receiver would reject
+    char cleaned[FASTDL_URL_MAX] = { 0 };
+    u16 writeIndex = 0;
+    for (u16 i = 0; inputbox->buffer[i] != '\0' && writeIndex < FASTDL_URL_MAX - 1; i++) {
+        char c = inputbox->buffer[i];
+        if (c < 0x21 || c > 0x7E || c == '\\' || c == '"') { continue; }
+        cleaned[writeIndex++] = c;
+    }
+    cleaned[writeIndex] = '\0';
+
+    snprintf(configFastDlUrl, FASTDL_URL_MAX, "%s", cleaned);
+
+    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
+    struct DjuiColor* textColor = &theme->interactables.textColor;
+    bool valid = (configFastDlUrl[0] == '\0') ||
+                 (strncmp(configFastDlUrl, "http://", 7) == 0 || strncmp(configFastDlUrl, "https://", 8) == 0);
+    if (valid) {
+        djui_inputbox_set_text_color(inputbox, textColor->r, textColor->g, textColor->b, textColor->a);
+    } else {
+        djui_inputbox_set_text_color(inputbox, 255, 0, 0, 255);
+    }
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
@@ -93,6 +120,23 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             djui_inputbox_set_text(inputbox1, limitString);
             djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_player_text_change);
             sPlayerAmount = inputbox1;
+        }
+
+        struct DjuiRect* rect2 = djui_rect_container_create(body, 32);
+        {
+            struct DjuiText* text2 = djui_text_create(&rect2->base, DLANG(HOST_SETTINGS, FASTDL_URL));
+            djui_base_set_size_type(&text2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_color(&text2->base, 220, 220, 220, 255);
+            djui_base_set_size(&text2->base, 0.585f, 64);
+            djui_base_set_alignment(&text2->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+            djui_text_set_drop_shadow(text2, 64, 64, 64, 100);
+
+            struct DjuiInputbox* inputbox2 = djui_inputbox_create(&rect2->base, FASTDL_URL_MAX);
+            djui_base_set_size_type(&inputbox2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputbox2->base, 0.45f, 32);
+            djui_base_set_alignment(&inputbox2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_inputbox_set_text(inputbox2, configFastDlUrl);
+            djui_interactable_hook_value_change(&inputbox2->base, djui_panel_host_fastdl_text_change);
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

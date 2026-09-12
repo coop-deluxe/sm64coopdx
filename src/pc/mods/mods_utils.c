@@ -15,6 +15,17 @@
 #include <mach-o/dyld.h>
 #endif
 
+bool mod_should_cache(struct Mod *mod) {
+    char modNameLowercase[MOD_NAME_SIZE];
+    memcpy(modNameLowercase, mod->name, MOD_NAME_SIZE * sizeof(char));
+    sys_strlwr(modNameLowercase);
+    bool shouldCache = (
+        !strstr(modNameLowercase, "(wip)") &&
+        !strstr(modNameLowercase, "[wip]")
+    );
+    return shouldCache;
+}
+
 void mods_size_enforce(struct Mods* mods) {
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* mod = mods->entries[i];
