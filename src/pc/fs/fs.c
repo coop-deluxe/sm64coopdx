@@ -14,6 +14,7 @@
 #include <fileapi.h>
 #endif
 
+#include "types.h"
 #include "macros.h"
 #include "../platform.h"
 #include "fs.h"
@@ -425,4 +426,42 @@ bool fs_sys_rmdir(const char *name) {
 #else
     return rmdir(name) == 0;
 #endif
+}
+
+bool fs_sys_load_file(const char *path, char **outContents, size_t *outSize) {
+    // open file with the task to read
+    FILE *file = fopen(path, "r");
+    if (!file) { return false; }
+
+    // get size of file
+    fseek(file, 0, SEEK_END);
+    s64 fileSize = ftell(file);
+    if (fileSize <= 0) {
+        fclose(file);
+        return false;
+    }
+    size_t size = (size_t)fileSize;
+    rewind(file); // reset file cursor
+
+    // allocate file contents with the size discovered above
+    char *fileContents = malloc(size);
+    if (!fileContents) {
+        fclose(file);
+        return false;
+    }
+
+    // read the data
+    size_t readData = fread(fileContents, 1, size, file);
+    fclose(file);
+
+    // if we couldnt read the entire file, return early
+    if (readData < size) {
+        free(fileContents);
+        return false;
+    }
+
+    *outContents = fileContents;
+    *outSize = (size_t)size;
+
+    return true;
 }

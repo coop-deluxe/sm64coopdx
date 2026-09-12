@@ -48,8 +48,9 @@ There are a few fields that exist for mods. Fields can be set at the very top of
 | Category | Notes |
 | -------- | ----- |
 | `name` | The name of the mod. This name is the name used in game |
+| `id` | A unique identifier for the mod. Useful if other mods need to find/communicate with your mod. It is recommended to configure this to something unique |
 | `description` | A description of the mod. Appears when hovering over a mod to turn it on/off |
-| `incompatible` | A list of tags to be marked as incompatible. This is an opt-in system. If 2 mods contain an equivalent incompatible tag, then they both won't be able to be enabled together. Tags are separated with a space character, or a whitespace. |
+| `incompatible` | A list of tags to be marked as incompatible. This is an opt-in system. If 2 mods contain an equivalent incompatible tag, then they both won't be able to be enabled together. Tags are separated with a space character, or a whitespace |
 | `category` | The category of a mod. Leaving this empty will have the mod be in the `misc` category. The list of categories can be found in game by going to Host, Mods, then looping through the Categories select box. Note that categories are all lowercase, they are also only in English. So for category Utility, you want to put in your mod `-- category: utility` |
 | `pausable` | A boolean of whether or not to allow the game to be frozen when paused in singleplayer. By default this is true, so by default you can pause in singleplayer and become frozen. To make this not the case, use `-- pausable: false`. |
 | `ignore-script-warnings` | A boolean of whether or not to ignore script warnings. Don't touch this for your mods, but for documentation sake, this will suppress warnings that your script may have. This does not suppress errors, it only suppresses warnings, which are quite rare. |
@@ -64,5 +65,7 @@ An example of some of these would be:
 ```
 
 When you've configured the mod the way you like, you are ready to go! Open up the game, select the mod, and you should see your mod appear!
+
+*Note: For more advanced configuration, consider using a [mod manifest](mod-manifest.md).*
 
 You can read up on more documentation. Go back to the [main page](../lua.md) and go through some of the guides if you are just getting started. A good first place to look is the [hooks documentation](hooks.md). Happy modding!

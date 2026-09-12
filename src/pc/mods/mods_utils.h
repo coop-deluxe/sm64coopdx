@@ -1,5 +1,4 @@
-#ifndef MODS_UTILS_H
-#define MODS_UTILS_H
+#pragma once
 
 #include <PR/ultratypes.h>
 #include "types.h"
@@ -15,6 +14,7 @@ bool mod_file_create_directories(struct Mod* mod, struct ModFile* modFile);
 bool str_starts_with(const char *string, const char *prefix);
 bool str_ends_with(const char *string, const char *suffix);
 
+int pathcmp(const char *path, const char *path2);
 bool path_ends_with(const char* path, const char* suffix);
 bool path_ends_with_filepath(const char *path, const char *filepath);
 
@@ -29,5 +29,3 @@ void resolve_relative_path(const char* base, const char* path, char* output);
 bool path_is_relative_to(const char* fullPath, const char* baseDir);
 bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath);
 bool path_has_traversal(const char *path);
-
-#endif

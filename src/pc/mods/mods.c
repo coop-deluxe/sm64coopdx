@@ -297,7 +297,7 @@ void mods_enable(char* relativePath) {
 
     for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
-        if (!strcmp(relativePath, mod->relativePath)) {
+        if (!pathcmp(relativePath, mod->relativePath)) {
             mod->enabled = true;
             break;
         }
