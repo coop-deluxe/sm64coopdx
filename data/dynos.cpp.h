@@ -844,7 +844,8 @@ void PrintError(const char *aFmt, Args... aArgs) {
 #define PrintDataError(...) { \
     if (log_type_should_print(LOG_TYPE_ERROR)) { \
     if (aGfxData && aGfxData->mErrorCount == 0) { Print("  ERROR!"); } \
-    Print(__VA_ARGS__); \
+    log_to_terminal(__VA_ARGS__); \
+    log_to_terminal("\r\n"); \
     PrintConsole(LOG_TYPE_ERROR, __VA_ARGS__); \
     } \
     if (aGfxData) { aGfxData->mErrorCount++; } \
