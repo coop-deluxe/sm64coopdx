@@ -6,6 +6,7 @@
 #include "pc/lua/smlua_hooks.h"
 #include "pc/commands.h"
 #include "pc/configfile.h"
+#include "pc/controller/controller_keyboard.h"
 #include "djui.h"
 #include "engine/math_util.h"
 
@@ -29,6 +30,15 @@ static s32 sCommandsTabCompletionIndex = -1;
 static char sCommandsTabCompletionOriginalText[MAX_CHAT_MSG_LENGTH];
 static s32 sPlayersTabCompletionIndex = -1;
 static char sPlayersTabCompletionOriginalText[MAX_CHAT_MSG_LENGTH];
+static bool sTabCompletionUndoAvailable = false;
+static char sTabCompletionUndoText[MAX_CHAT_MSG_LENGTH];
+static u16 sTabCompletionUndoCursorPosition = 0;
+
+static void reset_tab_completion_undo(void) {
+    sTabCompletionUndoAvailable = false;
+    sTabCompletionUndoText[0] = '\0';
+    sTabCompletionUndoCursorPosition = 0;
+}
 
 void reset_tab_completion_commands(void) {
     sCommandsTabCompletionIndex = -1;
@@ -558,6 +568,24 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
     char previousText[MAX_CHAT_MSG_LENGTH];
     snprintf(previousText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
 
+    bool isModifier = scancode == SCANCODE_SHIFT_LEFT
+                   || scancode == SCANCODE_SHIFT_RIGHT
+                   || scancode == SCANCODE_CONTROL_LEFT
+                   || scancode == SCANCODE_CONTROL_RIGHT
+                   || scancode == SCANCODE_ALT_LEFT
+                   || scancode == SCANCODE_ALT_RIGHT;
+    if (scancode != SCANCODE_TAB && scancode != SCANCODE_BACKSPACE && !isModifier) {
+        reset_tab_completion_undo();
+    }
+
+    if (scancode == SCANCODE_BACKSPACE && sTabCompletionUndoAvailable) {
+        djui_inputbox_set_text(gDjuiChatBox->chatInput, sTabCompletionUndoText);
+        djui_inputbox_move_cursor_to_position(gDjuiChatBox->chatInput, sTabCompletionUndoCursorPosition);
+        reset_tab_completion_all();
+        reset_tab_completion_undo();
+        return true;
+    }
+
     switch (scancode) {
         case SCANCODE_UP:
             if (!configUseStandardKeyBindingsChat && (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/')) {
@@ -591,16 +619,28 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
         case SCANCODE_END:
             gDjuiChatBox->scrollY -= pageAmount;
             break;
-        case SCANCODE_TAB:
+        case SCANCODE_TAB: {
+            bool hadUndoAvailable = sTabCompletionUndoAvailable;
+            if (!hadUndoAvailable) {
+                snprintf(sTabCompletionUndoText, MAX_CHAT_MSG_LENGTH, "%s", previousText);
+                sTabCompletionUndoCursorPosition = gDjuiChatBox->chatInput->selection[0];
+                sTabCompletionUndoAvailable = true;
+            }
             handle_tab_completion(gDjuiInputHeldShift != 0);
+            if (!hadUndoAvailable && strcmp(previousText, gDjuiChatBox->chatInput->buffer) == 0) {
+                reset_tab_completion_undo();
+            }
             return true;
+        }
         case SCANCODE_ENTER:
             reset_tab_completion_all();
+            reset_tab_completion_undo();
             sent_history_reset_navigation(&sentHistory);
             djui_chat_box_input_enter(gDjuiChatBox->chatInput);
             return true;
         case SCANCODE_ESCAPE:
             reset_tab_completion_all();
+            reset_tab_completion_undo();
             sent_history_reset_navigation(&sentHistory);
             djui_chat_box_input_escape(gDjuiChatBox->chatInput);
             return true;
@@ -625,11 +665,13 @@ static void djui_chat_box_input_on_text_input(struct DjuiBase *base, char* text)
     djui_inputbox_on_text_input(base, text);
     if (isTextDifferent) {
         reset_tab_completion_all();
+        reset_tab_completion_undo();
     }
 }
 
 static void djui_chat_box_input_on_text_editing(struct DjuiBase *base, char* text, int cursorPos) {
     djui_inputbox_on_text_editing(base, text, cursorPos);
+    reset_tab_completion_undo();
 }
 
 static void djui_chat_box_input_on_scroll(UNUSED struct DjuiBase *base, UNUSED float x, float y) {

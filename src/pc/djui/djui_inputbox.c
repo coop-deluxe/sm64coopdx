@@ -1,10 +1,12 @@
 #include <string.h>
+#include <strings.h>
 #include <stdio.h>
 #include "djui.h"
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"
 #include "pc/gfx/gfx_window_manager.h"
 #include "pc/pc_main.h"
+#include "pc/lua/smlua_hooks.h"
 #include "game/segment2.h"
 #include "pc/controller/controller_keyboard.h"
 
@@ -17,6 +19,117 @@ u8 gDjuiInputHeldShift   = 0;
 u8 gDjuiInputHeldControl = 0;
 u8 gDjuiInputHeldAlt     = 0;
 static u8 sCursorBlink = 0;
+
+enum DjuiInputboxChatTokenStatus {
+    DJUI_INPUTBOX_CHAT_TOKEN_DEFAULT,
+    DJUI_INPUTBOX_CHAT_TOKEN_INCOMPLETE,
+    DJUI_INPUTBOX_CHAT_TOKEN_INVALID,
+    DJUI_INPUTBOX_CHAT_TOKEN_WRONG_CASE,
+};
+
+struct DjuiInputboxChatStyle {
+    const char *mainCommandStart;
+    const char *mainCommandEnd;
+    const char *subcommandStart;
+    const char *subcommandEnd;
+    enum DjuiInputboxChatTokenStatus mainCommandStatus;
+    enum DjuiInputboxChatTokenStatus subcommandStatus;
+};
+
+static void djui_inputbox_free_string_list(char **list) {
+    if (list == NULL) { return; }
+    for (s32 i = 0; list[i] != NULL; i++) {
+        free(list[i]);
+    }
+    free(list);
+}
+
+static enum DjuiInputboxChatTokenStatus djui_inputbox_get_chat_token_status(char **validTokens, const char *token, size_t tokenLength) {
+    bool foundWrongCase = false;
+    bool foundIncomplete = false;
+
+    for (s32 i = 0; validTokens != NULL && validTokens[i] != NULL; i++) {
+        size_t validTokenLength = strlen(validTokens[i]);
+        if (validTokenLength == tokenLength) {
+            if (strncmp(validTokens[i], token, tokenLength) == 0) {
+                return DJUI_INPUTBOX_CHAT_TOKEN_DEFAULT;
+            }
+            if (strncasecmp(validTokens[i], token, tokenLength) == 0) {
+                foundWrongCase = true;
+            }
+        } else if (validTokenLength > tokenLength && strncasecmp(validTokens[i], token, tokenLength) == 0) {
+            foundIncomplete = true;
+        }
+    }
+
+    if (foundWrongCase) { return DJUI_INPUTBOX_CHAT_TOKEN_WRONG_CASE; }
+    if (foundIncomplete) { return DJUI_INPUTBOX_CHAT_TOKEN_INCOMPLETE; }
+    return DJUI_INPUTBOX_CHAT_TOKEN_INVALID;
+}
+
+static void djui_inputbox_get_chat_style(const char *input, struct DjuiInputboxChatStyle *style) {
+    memset(style, 0, sizeof(*style));
+    if (input[0] != '/') { return; }
+
+    const char *mainCommand = input + 1;
+    const char *mainCommandEnd = strchr(mainCommand, ' ');
+    if (mainCommandEnd == NULL) {
+        mainCommandEnd = input + strlen(input);
+    }
+
+    style->mainCommandStart = input;
+    style->mainCommandEnd = mainCommandEnd;
+
+    char **mainCommands = smlua_get_chat_maincommands_list();
+    style->mainCommandStatus = djui_inputbox_get_chat_token_status(mainCommands, mainCommand, mainCommandEnd - mainCommand);
+    djui_inputbox_free_string_list(mainCommands);
+
+    if (*mainCommandEnd == '\0' || style->mainCommandStatus == DJUI_INPUTBOX_CHAT_TOKEN_INVALID) { return; }
+
+    char mainCommandBuffer[MAX_CHAT_MSG_LENGTH];
+    snprintf(mainCommandBuffer, sizeof(mainCommandBuffer), "%.*s", (s32)(mainCommandEnd - mainCommand), mainCommand);
+    char **subcommands = smlua_get_chat_subcommands_list(mainCommandBuffer);
+    if (subcommands == NULL) { return; }
+
+    const char *subcommand = mainCommandEnd + 1;
+    while (*subcommand == ' ') {
+        subcommand++;
+    }
+    const char *subcommandEnd = strchr(subcommand, ' ');
+    if (subcommandEnd == NULL) {
+        subcommandEnd = input + strlen(input);
+    }
+
+    if (subcommand < subcommandEnd) {
+        style->subcommandStart = subcommand;
+        style->subcommandEnd = subcommandEnd;
+        style->subcommandStatus = djui_inputbox_get_chat_token_status(subcommands, subcommand, subcommandEnd - subcommand);
+    }
+    djui_inputbox_free_string_list(subcommands);
+}
+
+static struct DjuiColor djui_inputbox_get_chat_token_color(struct DjuiColor textColor, enum DjuiInputboxChatTokenStatus status) {
+    switch (status) {
+        case DJUI_INPUTBOX_CHAT_TOKEN_INCOMPLETE:
+            textColor.r = (textColor.r * 2 + 255 * 3) / 5;
+            textColor.g = (textColor.g * 2 + 128 * 3) / 5;
+            textColor.b = (textColor.b * 2 + 16 * 3) / 5;
+            break;
+        case DJUI_INPUTBOX_CHAT_TOKEN_INVALID:
+            textColor.r = (textColor.r * 2 + 255 * 3) / 5;
+            textColor.g = (textColor.g * 2 + 32 * 3) / 5;
+            textColor.b = (textColor.b * 2 + 32 * 3) / 5;
+            break;
+        case DJUI_INPUTBOX_CHAT_TOKEN_WRONG_CASE:
+            textColor.r = (textColor.r * 2 + 255 * 3) / 5;
+            textColor.g = (textColor.g * 2 + 208 * 3) / 5;
+            textColor.b = (textColor.b * 2 + 32 * 3) / 5;
+            break;
+        default:
+            break;
+    }
+    return textColor;
+}
 
 static void djui_inputbox_update_style(struct DjuiBase* base) {
     struct DjuiInputbox* inputbox = (struct DjuiInputbox*)base;
@@ -603,7 +716,15 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     char* c = inputbox->buffer;
     f32 drawX = inputbox->viewX;
     f32 additionalShift = 0;
-    bool wasInsideSelection = false;
+    bool isChatInput = (gDjuiChatBox != NULL && gDjuiChatBox->chatInput == inputbox);
+    struct DjuiInputboxChatStyle chatStyle;
+    char *colorCodeEnd = NULL;
+    const char *bufferEnd = inputbox->buffer + strlen(inputbox->buffer);
+    struct DjuiColor formattingColor = inputbox->textColor;
+    memset(&chatStyle, 0, sizeof(chatStyle));
+    if (isChatInput) {
+        djui_inputbox_get_chat_style(inputbox->buffer, &chatStyle);
+    }
 
     font->render_begin();
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
@@ -619,23 +740,31 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
         if (*c == '\0') { break; }
 
-        // deal with seleciton color
-        if (selection[0] != selection[1]) {
-            bool insideSelection = (i >= selection[0]) && (i < selection[1]);
-            if (insideSelection && !wasInsideSelection) {
-                gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, 255);
-            } else if (!insideSelection && wasInsideSelection) {
-                gDPSetEnvColor(gDisplayListHead++, inputbox->textColor.r, inputbox->textColor.g, inputbox->textColor.b, inputbox->textColor.a);
-            }
-            wasInsideSelection = insideSelection;
+        if (colorCodeEnd != NULL && c >= colorCodeEnd) {
+            colorCodeEnd = NULL;
         }
+        if (isChatInput && colorCodeEnd == NULL) {
+            djui_text_parse_color(c, bufferEnd, true, &inputbox->textColor, &colorCodeEnd, &formattingColor);
+        }
+
+        struct DjuiColor characterColor = inputbox->textColor;
+        bool insideSelection = selection[0] != selection[1] && i >= selection[0] && i < selection[1];
+        if (insideSelection) {
+            characterColor = (struct DjuiColor) { 255, 255, 255, 255 };
+        } else if (colorCodeEnd != NULL) {
+            characterColor = formattingColor;
+        } else if (chatStyle.mainCommandStart != NULL && c >= chatStyle.mainCommandStart && c < chatStyle.mainCommandEnd) {
+            characterColor = djui_inputbox_get_chat_token_color(characterColor, chatStyle.mainCommandStatus);
+        } else if (chatStyle.subcommandStart != NULL && c >= chatStyle.subcommandStart && c < chatStyle.subcommandEnd) {
+            characterColor = djui_inputbox_get_chat_token_color(characterColor, chatStyle.subcommandStatus);
+        }
+        gDPSetEnvColor(gDisplayListHead++, characterColor.r, characterColor.g, characterColor.b, characterColor.a);
 
         // render character
         djui_inputbox_render_char(inputbox, c, &drawX, &additionalShift);
         c = djui_unicode_next_char(c);
     }
 
-    bool isChatInput = (gDjuiChatBox != NULL && gDjuiChatBox->chatInput == inputbox);
     if (isChatInput && djui_interactable_is_input_focus(&inputbox->base)) {
         char *previewText = djui_chat_box_get_next_tab_completion_preview(inputbox->buffer);
         if (previewText != NULL && previewText[0] != '\0') {
