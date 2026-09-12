@@ -37,9 +37,9 @@
 - [gfx_pc.h](#gfx_pch)
     - [enum ShaderFlag](#enum-ShaderFlag)
 - [graph_node.h](#graph_nodeh)
+    - [enum GraphNodeType](#enum-GraphNodeType)
 - [hardcoded.h](#hardcodedh)
     - [enum PauseExitMode](#enum-PauseExitMode)
-- [interaction.c](#interactionc)
 - [interaction.h](#interactionh)
     - [enum InteractionType](#enum-InteractionType)
     - [enum InteractionFlag](#enum-InteractionFlag)
@@ -121,7 +121,7 @@
 
 <br />
 
-## [area.h](#area.h)
+## area.h
 - INSTANT_WARP_INDEX_START
 - INSTANT_WARP_INDEX_STOP
 - MAX_AREAS
@@ -136,7 +136,7 @@
 - WARP_TRANSITION_FADE_FROM_BOWSER
 - WARP_TRANSITION_FADE_INTO_BOWSER
 
-### [enum MenuOption](#MenuOption)
+### enum MenuOption
 | Identifier | Value |
 | :--------- | :---- |
 | MENU_OPT_NONE | 0 |
@@ -156,9 +156,9 @@
 
 <br />
 
-## [behavior_table.h](#behavior_table.h)
+## behavior_table.h
 
-### [enum BehaviorId](#BehaviorId)
+### enum BehaviorId
 | Identifier | Value |
 | :--------- | :---- |
 | id_bhv1Up | 0 |
@@ -708,9 +708,9 @@
 
 <br />
 
-## [camera.h](#camera.h)
+## camera.h
 
-### [enum RomhackCameraOverride](#RomhackCameraOverride)
+### enum RomhackCameraOverride
 | Identifier | Value |
 | :--------- | :---- |
 | RCO_ALL | 0 |
@@ -720,7 +720,7 @@
 | RCO_ALL_VANILLA_EXCEPT_BOWSER | 4 |
 | RCO_DISABLE | 5 |
 
-### [enum RomhackCameraEnable](#RomhackCameraEnable)
+### enum RomhackCameraEnable
 | Identifier | Value |
 | :--------- | :---- |
 | RCE_AUTOMATIC | 0 |
@@ -883,7 +883,7 @@
 - DOOR_LEAVING_SPECIAL
 - DOOR_ENTER_LOBBY
 
-### [enum CameraFov](#CameraFov)
+### enum CameraFov
 | Identifier | Value |
 | :--------- | :---- |
 | CAM_FOV_NONE | 0 |
@@ -916,9 +916,9 @@
 
 <br />
 
-## [characters.h](#characters.h)
+## characters.h
 
-### [enum CharacterType](#CharacterType)
+### enum CharacterType
 | Identifier | Value |
 | :--------- | :---- |
 | CT_MARIO | 0 |
@@ -928,7 +928,7 @@
 | CT_WARIO | 4 |
 | CT_MAX | 5 |
 
-### [enum CharacterSound](#CharacterSound)
+### enum CharacterSound
 | Identifier | Value |
 | :--------- | :---- |
 | CHAR_SOUND_YAH_WAH_HOO | 0 |
@@ -981,7 +981,7 @@
 
 <br />
 
-## [controller_mouse.h](#controller_mouse.h)
+## controller_mouse.h
 - MOUSE_BUTTON_1
 - MOUSE_BUTTON_2
 - MOUSE_BUTTON_3
@@ -995,9 +995,9 @@
 
 <br />
 
-## [course_defines.h](#course_defines.h)
+## course_defines.h
 
-### [enum CourseNum](#CourseNum)
+### enum CourseNum
 | Identifier | Value |
 | :--------- | :---- |
 | COURSE_NONE | 0 |
@@ -1035,9 +1035,9 @@
 
 <br />
 
-## [debuglog.h](#debuglog.h)
+## debuglog.h
 
-### [enum LogType](#LogType)
+### enum LogType
 | Identifier | Value |
 | :--------- | :---- |
 | LOG_TYPE_DEBUG | 0 |
@@ -1050,9 +1050,9 @@
 
 <br />
 
-## [dialog_ids.h](#dialog_ids.h)
+## dialog_ids.h
 
-### [enum DialogId](#DialogId)
+### enum DialogId
 | Identifier | Value |
 | :--------- | :---- |
 | DIALOG_NONE | -1 |
@@ -1232,14 +1232,14 @@
 
 <br />
 
-## [djui_console.h](#djui_console.h)
+## djui_console.h
 - MAX_CONSOLE_INPUT_LENGTH
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [djui_hud_utils.h](#djui_hud_utils.h)
+## djui_hud_utils.h
 - ROTATION_PIVOT_X_LEFT
 - ROTATION_PIVOT_X_CENTER
 - ROTATION_PIVOT_X_RIGHT
@@ -1253,21 +1253,21 @@
 - TEXT_VALIGN_CENTER
 - TEXT_VALIGN_BOTTOM
 
-### [enum HudUtilsResolution](#HudUtilsResolution)
+### enum HudUtilsResolution
 | Identifier | Value |
 | :--------- | :---- |
 | RESOLUTION_DJUI | 0 |
 | RESOLUTION_N64 | 1 |
 | RESOLUTION_COUNT | 2 |
 
-### [enum HudUtilsFilter](#HudUtilsFilter)
+### enum HudUtilsFilter
 | Identifier | Value |
 | :--------- | :---- |
 | FILTER_NEAREST | 0 |
 | FILTER_LINEAR | 1 |
 | FILTER_COUNT | 2 |
 
-### [enum DjuiFontType](#DjuiFontType)
+### enum DjuiFontType
 | Identifier | Value |
 | :--------- | :---- |
 | FONT_LEGACY | -1 |
@@ -1284,9 +1284,9 @@
 
 <br />
 
-## [djui_panel_menu.h](#djui_panel_menu.h)
+## djui_panel_menu.h
 
-### [enum DjuiRainbowColor](#DjuiRainbowColor)
+### enum DjuiRainbowColor
 | Identifier | Value |
 | :--------- | :---- |
 | DJUI_RAINBOW_COLOR_RED | 0 |
@@ -1298,7 +1298,7 @@
 
 <br />
 
-## [envfx_snow.h](#envfx_snow.h)
+## envfx_snow.h
 - ENVFX_MODE_NONE
 - ENVFX_SNOW_NORMAL
 - ENVFX_SNOW_WATER
@@ -1314,12 +1314,12 @@
 
 <br />
 
-## [external.h](#external.h)
+## external.h
 - SEQ_PLAYER_LEVEL
 - SEQ_PLAYER_ENV
 - SEQ_PLAYER_SFX
 
-### [enum DialogSound](#DialogSound)
+### enum DialogSound
 | Identifier | Value |
 | :--------- | :---- |
 | DS_UKIKI | 0 |
@@ -1340,7 +1340,7 @@
 
 <br />
 
-## [first_person_cam.h](#first_person_cam.h)
+## first_person_cam.h
 - FIRST_PERSON_DEFAULT_FOV
 - FIRST_PERSON_MARIO_HEAD_POS
 - FIRST_PERSON_MARIO_HEAD_POS_SHORT
@@ -1349,7 +1349,7 @@
 
 <br />
 
-## [gbi.h](#gbi.h)
+## gbi.h
 - G_COPYMEM
 - G_NOOP
 - G_SETOTHERMODE_H
@@ -1400,7 +1400,7 @@
 
 <br />
 
-## [gbi_extension.h](#gbi_extension.h)
+## gbi_extension.h
 - G_VTX_EXT
 - G_SETENVRGB
 - G_PPARTTOCOLOR
@@ -1410,9 +1410,9 @@
 
 <br />
 
-## [geo_commands.h](#geo_commands.h)
+## geo_commands.h
 
-### [enum SkyBackgroundParams](#SkyBackgroundParams)
+### enum SkyBackgroundParams
 | Identifier | Value |
 | :--------- | :---- |
 | BACKGROUND_OCEAN_SKY | 0 |
@@ -1431,9 +1431,9 @@
 
 <br />
 
-## [gfx_pc.h](#gfx_pc.h)
+## gfx_pc.h
 
-### [enum ShaderFlag](#ShaderFlag)
+### enum ShaderFlag
 | Identifier | Value |
 | :--------- | :---- |
 | SHADER_FLAG_HUE | 0 |
@@ -1450,7 +1450,7 @@
 
 <br />
 
-## [graph_node.h](#graph_node.h)
+## graph_node.h
 - GRAPH_RENDER_ACTIVE
 - GRAPH_RENDER_CHILDREN_FIRST
 - GRAPH_RENDER_BILLBOARD
@@ -1462,31 +1462,34 @@
 - GRAPH_EXTRA_FORCE_3D
 - GRAPH_EXTRA_ROTATE_HELD
 - GRAPH_NODE_TYPE_FUNCTIONAL
-- GRAPH_NODE_TYPE_400
-- GRAPH_NODE_TYPE_ROOT
-- GRAPH_NODE_TYPE_ORTHO_PROJECTION
-- GRAPH_NODE_TYPE_PERSPECTIVE
-- GRAPH_NODE_TYPE_MASTER_LIST
-- GRAPH_NODE_TYPE_START
-- GRAPH_NODE_TYPE_LEVEL_OF_DETAIL
-- GRAPH_NODE_TYPE_SWITCH_CASE
-- GRAPH_NODE_TYPE_CAMERA
-- GRAPH_NODE_TYPE_TRANSLATION_ROTATION
-- GRAPH_NODE_TYPE_TRANSLATION
-- GRAPH_NODE_TYPE_ROTATION
-- GRAPH_NODE_TYPE_OBJECT
-- GRAPH_NODE_TYPE_ANIMATED_PART
-- GRAPH_NODE_TYPE_BILLBOARD
-- GRAPH_NODE_TYPE_DISPLAY_LIST
-- GRAPH_NODE_TYPE_SCALE
-- GRAPH_NODE_TYPE_SCALE_XYZ
-- GRAPH_NODE_TYPE_SHADOW
-- GRAPH_NODE_TYPE_OBJECT_PARENT
-- GRAPH_NODE_TYPE_GENERATED_LIST
-- GRAPH_NODE_TYPE_BACKGROUND
-- GRAPH_NODE_TYPE_HELD_OBJ
-- GRAPH_NODE_TYPE_CULLING_RADIUS
-- GRAPH_NODE_TYPE_BONE
+
+### enum GraphNodeType
+| Identifier | Value |
+| :--------- | :---- |
+| GRAPH_NODE_TYPE_ROOT | 0x001 |
+| GRAPH_NODE_TYPE_ORTHO_PROJECTION | 0x002 |
+| GRAPH_NODE_TYPE_PERSPECTIVE | 0x003 \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_MASTER_LIST | 0x004 |
+| GRAPH_NODE_TYPE_START | 0x00A |
+| GRAPH_NODE_TYPE_LEVEL_OF_DETAIL | 0x00B |
+| GRAPH_NODE_TYPE_SWITCH_CASE | 0x00C \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_CAMERA | 0x014 \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_TRANSLATION_ROTATION | 0x015 |
+| GRAPH_NODE_TYPE_TRANSLATION | 0x016 |
+| GRAPH_NODE_TYPE_ROTATION | 0x017 |
+| GRAPH_NODE_TYPE_OBJECT | 0x018 |
+| GRAPH_NODE_TYPE_ANIMATED_PART | 0x019 |
+| GRAPH_NODE_TYPE_BILLBOARD | 0x01A |
+| GRAPH_NODE_TYPE_DISPLAY_LIST | 0x01B |
+| GRAPH_NODE_TYPE_SCALE | 0x01C |
+| GRAPH_NODE_TYPE_SCALE_XYZ | 0x01D |
+| GRAPH_NODE_TYPE_SHADOW | 0x028 |
+| GRAPH_NODE_TYPE_OBJECT_PARENT | 0x029 |
+| GRAPH_NODE_TYPE_GENERATED_LIST | 0x02A \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_BACKGROUND | 0x02C \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_HELD_OBJ | 0x02E \| GRAPH_NODE_TYPE_FUNCTIONAL |
+| GRAPH_NODE_TYPE_CULLING_RADIUS | 0x02F |
+| GRAPH_NODE_TYPE_BONE | 0x030 |
 - GFX_NUM_MASTER_LISTS
 - GEO_CONTEXT_CREATE
 - GEO_CONTEXT_RENDER
@@ -1499,9 +1502,9 @@
 
 <br />
 
-## [hardcoded.h](#hardcoded.h)
+## hardcoded.h
 
-### [enum PauseExitMode](#PauseExitMode)
+### enum PauseExitMode
 | Identifier | Value |
 | :--------- | :---- |
 | PAUSE_EXIT_VANILLA | 0 |
@@ -1515,15 +1518,9 @@
 
 <br />
 
-## [interaction.c](#interaction.c)
+## interaction.h
 
-[:arrow_up_small:](#)
-
-<br />
-
-## [interaction.h](#interaction.h)
-
-### [enum InteractionType](#InteractionType)
+### enum InteractionType
 | Identifier | Value |
 | :--------- | :---- |
 | INTERACT_HOOT | (1 << 0) |
@@ -1559,7 +1556,7 @@
 | INTERACT_IGLOO_BARRIER | (1 << 30) |
 | INTERACT_PLAYER | (1 << 31) |
 
-### [enum InteractionFlag](#InteractionFlag)
+### enum InteractionFlag
 | Identifier | Value |
 | :--------- | :---- |
 | INT_GROUND_POUND | (1 << 0) |
@@ -1571,7 +1568,7 @@
 | INT_HIT_FROM_ABOVE | (1 << 6) |
 | INT_HIT_FROM_BELOW | (1 << 7) |
 | INT_TWIRL | (1 << 8) |
-| INT_GROUND_POUND_OR_TWIRL | (INT_GROUND_POUND | INT_TWIRL) |
+| INT_GROUND_POUND_OR_TWIRL | (INT_GROUND_POUND \| INT_TWIRL) |
 - INT_ATTACK_NOT_FROM_BELOW
 - INT_ANY_ATTACK
 - INT_ATTACK_NOT_WEAK_FROM_ABOVE
@@ -1622,14 +1619,14 @@
 
 <br />
 
-## [lag_compensation.h](#lag_compensation.h)
+## lag_compensation.h
 - MAX_LOCAL_STATE_HISTORY
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [level_commands.h](#level_commands.h)
+## level_commands.h
 - WARP_CHECKPOINT
 - WARP_NO_CHECKPOINT
 
@@ -1637,9 +1634,9 @@
 
 <br />
 
-## [level_defines.h](#level_defines.h)
+## level_defines.h
 
-### [enum LevelNum](#LevelNum)
+### enum LevelNum
 | Identifier | Value |
 | :--------- | :---- |
 | LEVEL_NONE | 0 |
@@ -1687,9 +1684,9 @@
 
 <br />
 
-## [level_update.h](#level_update.h)
+## level_update.h
 
-### [enum TimerControl](#TimerControl)
+### enum TimerControl
 | Identifier | Value |
 | :--------- | :---- |
 | TIMER_CONTROL_SHOW | 0 |
@@ -1697,7 +1694,7 @@
 | TIMER_CONTROL_STOP | 2 |
 | TIMER_CONTROL_HIDE | 3 |
 
-### [enum WarpOperation](#WarpOperation)
+### enum WarpOperation
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_OP_NONE | 0 |
@@ -1719,7 +1716,7 @@
 | WARP_OP_FORCE_SYNC | 26 |
 | WARP_OP_EXIT | 27 |
 
-### [enum SpecialWarpDestination](#SpecialWarpDestination)
+### enum SpecialWarpDestination
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_SPECIAL_LEVEL_SELECT | -9 |
@@ -1730,7 +1727,7 @@
 | WARP_SPECIAL_ENDING | -1 |
 | WARP_SPECIAL_NONE | 0 |
 
-### [enum WarpFlags](#WarpFlags)
+### enum WarpFlags
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_FLAG_NONE | (0 << 0) |
@@ -1739,7 +1736,7 @@
 | WARP_FLAG_DOOR_IS_WARP | (1 << 2) |
 | WARP_FLAG_EXIT_COURSE | (1 << 3) |
 
-### [enum MarioSpawnType](#MarioSpawnType)
+### enum MarioSpawnType
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_SPAWN_NONE | 0 |
@@ -1764,7 +1761,7 @@
 | MARIO_SPAWN_UNUSED_38 | 38 |
 | MARIO_SPAWN_FADE_FROM_BLACK | 39 |
 
-### [enum WarpNodes](#WarpNodes)
+### enum WarpNodes
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_NODE_MAIN_ENTRY | 0x0A |
@@ -1777,7 +1774,7 @@
 | WARP_NODE_CREDITS_NEXT | 0xF9 |
 | WARP_NODE_CREDITS_END | 0xFA |
 
-### [enum WarpType](#WarpType)
+### enum WarpType
 | Identifier | Value |
 | :--------- | :---- |
 | WARP_TYPE_NOT_WARPING | 0 |
@@ -1789,7 +1786,7 @@
 - PAINTING_WARP_INDEX_FA
 - PAINTING_WARP_INDEX_END
 
-### [enum HUDDisplayFlag](#HUDDisplayFlag)
+### enum HUDDisplayFlag
 | Identifier | Value |
 | :--------- | :---- |
 | HUD_DISPLAY_FLAG_LIVES | 0x0001 |
@@ -1803,23 +1800,23 @@
 | HUD_DISPLAY_FLAG_POWER | 0x0100 |
 | HUD_DISPLAY_FLAG_EMPHASIZE_POWER | 0x8000 |
 | HUD_DISPLAY_NONE | 0x0000 |
-| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES | HUD_DISPLAY_FLAG_COIN_COUNT | HUD_DISPLAY_FLAG_STAR_COUNT | HUD_DISPLAY_FLAG_CAMERA_AND_POWER | HUD_DISPLAY_FLAG_CAMERA | HUD_DISPLAY_FLAG_POWER | HUD_DISPLAY_FLAG_KEYS | HUD_DISPLAY_FLAG_UNKNOWN_0020 |
+| HUD_DISPLAY_DEFAULT | HUD_DISPLAY_FLAG_LIVES \| HUD_DISPLAY_FLAG_COIN_COUNT \| HUD_DISPLAY_FLAG_STAR_COUNT \| HUD_DISPLAY_FLAG_CAMERA_AND_POWER \| HUD_DISPLAY_FLAG_CAMERA \| HUD_DISPLAY_FLAG_POWER \| HUD_DISPLAY_FLAG_KEYS \| HUD_DISPLAY_FLAG_UNKNOWN_0020 |
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [lighting_engine.h](#lighting_engine.h)
+## lighting_engine.h
 - LE_MAX_LIGHTS
 
-### [enum LEMode](#LEMode)
+### enum LEMode
 | Identifier | Value |
 | :--------- | :---- |
 | LE_MODE_AFFECT_ALL_SHADED_AND_COLORED | 0 |
 | LE_MODE_AFFECT_ALL_SHADED | 1 |
 | LE_MODE_AFFECT_ONLY_GEOMETRY_MODE | 2 |
 
-### [enum LEToneMapping](#LEToneMapping)
+### enum LEToneMapping
 | Identifier | Value |
 | :--------- | :---- |
 | LE_TONE_MAPPING_TOTAL_WEIGHTED | 0 |
@@ -1831,9 +1828,9 @@
 
 <br />
 
-## [mario_animation_ids.h](#mario_animation_ids.h)
+## mario_animation_ids.h
 
-### [enum MarioAnimID](#MarioAnimID)
+### enum MarioAnimID
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_ANIM_SLOW_LEDGE_GRAB | 0 |
@@ -2046,7 +2043,7 @@
 | MARIO_ANIM_FORWARD_SPINNING_FLIP | 207 |
 | MARIO_ANIM_TRIPLE_JUMP_FLY | 208 |
 
-### [enum CharacterAnimID](#CharacterAnimID)
+### enum CharacterAnimID
 | Identifier | Value |
 | :--------- | :---- |
 | CHAR_ANIM_SLOW_LEDGE_GRAB | 0 |
@@ -2264,9 +2261,9 @@
 
 <br />
 
-## [mario_geo_switch_case_ids.h](#mario_geo_switch_case_ids.h)
+## mario_geo_switch_case_ids.h
 
-### [enum MarioEyesGSCId](#MarioEyesGSCId)
+### enum MarioEyesGSCId
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_EYES_BLINK | 0 |
@@ -2279,7 +2276,7 @@
 | MARIO_EYES_LOOK_DOWN | 7 |
 | MARIO_EYES_DEAD | 8 |
 
-### [enum MarioHandGSCId](#MarioHandGSCId)
+### enum MarioHandGSCId
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_HAND_FISTS | 0 |
@@ -2289,7 +2286,7 @@
 | MARIO_HAND_HOLDING_WING_CAP | 4 |
 | MARIO_HAND_RIGHT_OPEN | 5 |
 
-### [enum MarioCapGSCId](#MarioCapGSCId)
+### enum MarioCapGSCId
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_HAS_DEFAULT_CAP_ON | 0 |
@@ -2297,7 +2294,7 @@
 | MARIO_HAS_WING_CAP_ON | 2 |
 | MARIO_HAS_WING_CAP_OFF | 3 |
 
-### [enum MarioGrabPosGSCId](#MarioGrabPosGSCId)
+### enum MarioGrabPosGSCId
 | Identifier | Value |
 | :--------- | :---- |
 | GRAB_POS_NULL | 0 |
@@ -2309,7 +2306,7 @@
 
 <br />
 
-## [mod_fs.h](#mod_fs.h)
+## mod_fs.h
 - MOD_FS_COMPRESSION_MIN
 - MOD_FS_COMPRESSION_MAX
 - MOD_FS_COMPRESSION_DEFAULT
@@ -2320,7 +2317,7 @@
 - MOD_FS_URI_PREFIX
 - MOD_FS_URI_FORMAT
 
-### [enum ModFsErrorCode](#ModFsErrorCode)
+### enum ModFsErrorCode
 | Identifier | Value |
 | :--------- | :---- |
 | MOD_FS_ERR_NONE | 0 |
@@ -2347,7 +2344,7 @@
 | MOD_FS_ERR_WRITE_ZIP | 21 |
 | MOD_FS_ERR_WRITE_NOT_ACTIVE_MOD | 22 |
 
-### [enum ModFsFileIntType](#ModFsFileIntType)
+### enum ModFsFileIntType
 | Identifier | Value |
 | :--------- | :---- |
 | INT_TYPE_U8 | 0 |
@@ -2359,13 +2356,13 @@
 | INT_TYPE_S32 | 6 |
 | INT_TYPE_S64 | 7 |
 
-### [enum ModFsFileFloatType](#ModFsFileFloatType)
+### enum ModFsFileFloatType
 | Identifier | Value |
 | :--------- | :---- |
 | FLOAT_TYPE_F32 | 0 |
 | FLOAT_TYPE_F64 | 1 |
 
-### [enum ModFsFileSeek](#ModFsFileSeek)
+### enum ModFsFileSeek
 | Identifier | Value |
 | :--------- | :---- |
 | FILE_SEEK_SET | 0 |
@@ -2376,7 +2373,7 @@
 
 <br />
 
-## [mod_storage.h](#mod_storage.h)
+## mod_storage.h
 - MAX_KEYS
 - MAX_KEY_VALUE_LENGTH
 
@@ -2384,40 +2381,40 @@
 
 <br />
 
-## [network.h](#network.h)
+## network.h
 - SYNC_DISTANCE_ONLY_DEATH
 - SYNC_DISTANCE_ONLY_EVENTS
 - SYNC_DISTANCE_INFINITE
 - PACKET_LENGTH
 
-### [enum NetworkSystemType](#NetworkSystemType)
+### enum NetworkSystemType
 | Identifier | Value |
 | :--------- | :---- |
 | NS_SOCKET | 0 |
 | NS_COOPNET | 1 |
 | NS_MAX | 2 |
 
-### [enum PlayerInteractions](#PlayerInteractions)
+### enum PlayerInteractions
 | Identifier | Value |
 | :--------- | :---- |
 | PLAYER_INTERACTIONS_NONE | 0 |
 | PLAYER_INTERACTIONS_SOLID | 1 |
 | PLAYER_INTERACTIONS_PVP | 2 |
 
-### [enum BouncyLevelBounds](#BouncyLevelBounds)
+### enum BouncyLevelBounds
 | Identifier | Value |
 | :--------- | :---- |
 | BOUNCY_LEVEL_BOUNDS_OFF | 0 |
 | BOUNCY_LEVEL_BOUNDS_ON | 1 |
 | BOUNCY_LEVEL_BOUNDS_ON_CAP | 2 |
 
-### [enum PvpType](#PvpType)
+### enum PvpType
 | Identifier | Value |
 | :--------- | :---- |
 | PLAYER_PVP_CLASSIC | 0 |
 | PLAYER_PVP_REVAMPED | 1 |
 
-### [enum StarExitType](#StarExitType)
+### enum StarExitType
 | Identifier | Value |
 | :--------- | :---- |
 | STAR_LEAVE_LEVEL | 0 |
@@ -2428,7 +2425,7 @@
 
 <br />
 
-## [network_player.h](#network_player.h)
+## network_player.h
 - UNKNOWN_LOCAL_INDEX
 - UNKNOWN_GLOBAL_INDEX
 - UNKNOWN_NETWORK_INDEX
@@ -2438,7 +2435,7 @@
 - USE_REAL_PALETTE_VAR
 - MAX_DESCRIPTION_STRING
 
-### [enum NetworkPlayerType](#NetworkPlayerType)
+### enum NetworkPlayerType
 | Identifier | Value |
 | :--------- | :---- |
 | NPT_UNKNOWN | 0 |
@@ -2450,7 +2447,7 @@
 
 <br />
 
-## [obj_behaviors.c](#obj_behaviors.c)
+## obj_behaviors.c
 - OBJ_COL_FLAG_GROUNDED
 - OBJ_COL_FLAG_HIT_WALL
 - OBJ_COL_FLAG_UNDERWATER
@@ -2461,7 +2458,7 @@
 
 <br />
 
-## [obj_behaviors_2.h](#obj_behaviors_2.h)
+## obj_behaviors_2.h
 - ATTACK_HANDLER_NOP
 - ATTACK_HANDLER_DIE_IF_HEALTH_NON_POSITIVE
 - ATTACK_HANDLER_KNOCKBACK
@@ -2476,7 +2473,7 @@
 
 <br />
 
-## [object_constants.h](#object_constants.h)
+## object_constants.h
 - ACTIVE_FLAG_DEACTIVATED
 - ACTIVE_FLAG_ACTIVE
 - ACTIVE_FLAG_FAR_AWAY
@@ -2584,7 +2581,7 @@
 - BOBOMB_ACT_LAVA_DEATH
 - BOBOMB_ACT_DEATH_PLANE_DEATH
 
-### [enum CoinType](#CoinType)
+### enum CoinType
 | Identifier | Value |
 | :--------- | :---- |
 | COIN_TYPE_NONE | 0 |
@@ -3100,7 +3097,7 @@
 
 <br />
 
-## [object_list_processor.h](#object_list_processor.h)
+## object_list_processor.h
 - TIME_STOP_UNKNOWN_0
 - TIME_STOP_ENABLED
 - TIME_STOP_DIALOG
@@ -3110,7 +3107,7 @@
 - TIME_STOP_ACTIVE
 - OBJECT_POOL_CAPACITY
 
-### [enum ObjectList](#ObjectList)
+### enum ObjectList
 | Identifier | Value |
 | :--------- | :---- |
 | OBJ_LIST_PLAYER | 0 |
@@ -3132,7 +3129,7 @@
 
 <br />
 
-## [os_cont.h](#os_cont.h)
+## os_cont.h
 - CONT_NO_RESPONSE_ERROR
 - CONT_OVERRUN_ERROR
 - CONT_FRAME_ERROR
@@ -3187,11 +3184,11 @@
 
 <br />
 
-## [player_palette.h](#player_palette.h)
+## player_palette.h
 - PALETTES_DIRECTORY
 - MAX_PRESET_PALETTES
 
-### [enum PlayerPart](#PlayerPart)
+### enum PlayerPart
 | Identifier | Value |
 | :--------- | :---- |
 | PANTS | 0 |
@@ -3209,10 +3206,10 @@
 
 <br />
 
-## [save_file.h](#save_file.h)
+## save_file.h
 - NUM_SAVE_FILES
 
-### [enum SaveFileIndex](#SaveFileIndex)
+### enum SaveFileIndex
 | Identifier | Value |
 | :--------- | :---- |
 | SAVE_FILE_A | 0 |
@@ -3246,7 +3243,7 @@
 - SAVE_FLAG_COLLECTED_MIPS_STAR_1
 - SAVE_FLAG_COLLECTED_MIPS_STAR_2
 
-### [enum EuLanguages](#EuLanguages)
+### enum EuLanguages
 | Identifier | Value |
 | :--------- | :---- |
 | LANGUAGE_ENGLISH | 0 |
@@ -3258,11 +3255,11 @@
 
 <br />
 
-## [seq_ids.h](#seq_ids.h)
+## seq_ids.h
 - SEQ_BASE_ID
 - SEQ_VARIATION
 
-### [enum SeqId](#SeqId)
+### enum SeqId
 | Identifier | Value |
 | :--------- | :---- |
 | SEQ_SOUND_PLAYER | 0 |
@@ -3306,7 +3303,7 @@
 
 <br />
 
-## [sm64.h](#sm64.h)
+## sm64.h
 - LAYER_FORCE
 - LAYER_OPAQUE
 - LAYER_OPAQUE_DECAL
@@ -3674,22 +3671,22 @@
 
 <br />
 
-## [smlua_audio_utils.h](#smlua_audio_utils.h)
+## smlua_audio_utils.h
 
-### [enum ModAudioType](#ModAudioType)
+### enum ModAudioType
 | Identifier | Value |
 | :--------- | :---- |
 | MA_TYPE_NONE | 0 |
 | MA_TYPE_SAMPLE | 1 |
 | MA_TYPE_STREAM | 2 |
 
-### [enum ModAudioFlags](#ModAudioFlags)
+### enum ModAudioFlags
 | Identifier | Value |
 | :--------- | :---- |
 | MA_FLAGS_LOADED | (1 << 2) |
 | MA_FLAGS_COPY | (1 << 6) |
 
-### [enum ModAudioChannel](#ModAudioChannel)
+### enum ModAudioChannel
 | Identifier | Value |
 | :--------- | :---- |
 | MA_CHANNEL_MUSIC | 0 |
@@ -3701,9 +3698,9 @@
 
 <br />
 
-## [smlua_hooks.h](#smlua_hooks.h)
+## smlua_hooks.h
 
-### [enum LuaHookedEventType](#LuaHookedEventType)
+### enum LuaHookedEventType
 | Identifier | Value |
 | :--------- | :---- |
 | HOOK_UPDATE | 0 |
@@ -3781,9 +3778,9 @@
 
 <br />
 
-## [smlua_misc_utils.h](#smlua_misc_utils.h)
+## smlua_misc_utils.h
 
-### [enum HudDisplayValue](#HudDisplayValue)
+### enum HudDisplayValue
 | Identifier | Value |
 | :--------- | :---- |
 | HUD_DISPLAY_LIVES | 0 |
@@ -3795,7 +3792,7 @@
 | HUD_DISPLAY_TIMER | 6 |
 | HUD_DISPLAY_CAMERA_STATUS | 7 |
 
-### [enum HudDisplayFlags](#HudDisplayFlags)
+### enum HudDisplayFlags
 | Identifier | Value |
 | :--------- | :---- |
 | HUD_DISPLAY_FLAGS_NONE | 0x0000 |
@@ -3810,7 +3807,7 @@
 | HUD_DISPLAY_FLAGS_POWER | 0x0100 |
 | HUD_DISPLAY_FLAGS_EMPHASIZE_POWER | 0x8000 |
 
-### [enum ActSelectHudPart](#ActSelectHudPart)
+### enum ActSelectHudPart
 | Identifier | Value |
 | :--------- | :---- |
 | ACT_SELECT_HUD_SCORE | 1 << 0 |
@@ -3820,15 +3817,15 @@
 | ACT_SELECT_HUD_STAR_NUM | 1 << 4 |
 | ACT_SELECT_HUD_PLAYERS_IN_LEVEL | 1 << 5 |
 | ACT_SELECT_HUD_NONE | 0 |
-| ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL |
+| ACT_SELECT_HUD_ALL | ACT_SELECT_HUD_SCORE \| ACT_SELECT_HUD_LEVEL_NAME \| ACT_SELECT_HUD_COURSE_NUM \| ACT_SELECT_HUD_ACT_NAME \| ACT_SELECT_HUD_STAR_NUM \| ACT_SELECT_HUD_PLAYERS_IN_LEVEL |
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [smlua_model_utils.h](#smlua_model_utils.h)
+## smlua_model_utils.h
 
-### [enum ModelExtendedId](#ModelExtendedId)
+### enum ModelExtendedId
 | Identifier | Value |
 | :--------- | :---- |
 | E_MODEL_NONE | 0 |
@@ -4218,11 +4215,11 @@
 
 <br />
 
-## [smlua_text_utils.h](#smlua_text_utils.h)
+## smlua_text_utils.h
 - MAX_ACTS
 - MAX_ACTS_AND_100_COINS
 
-### [enum DialogType](#DialogType)
+### enum DialogType
 | Identifier | Value |
 | :--------- | :---- |
 | DIALOG_TYPE_DEFAULT | 0 |
@@ -4235,7 +4232,7 @@
 
 <br />
 
-## [sounds.h](#sounds.h)
+## sounds.h
 - SOUNDARGS_MASK_BANK
 - SOUNDARGS_MASK_SOUNDID
 - SOUNDARGS_MASK_PRIORITY
@@ -4737,7 +4734,7 @@
 
 <br />
 
-## [surface_load.h](#surface_load.h)
+## surface_load.h
 - SURFACE_POOL_STATIC
 - SURFACE_POOL_DYNAMIC
 - SURFACE_POOL_SOC
@@ -4746,7 +4743,7 @@
 
 <br />
 
-## [surface_terrains.h](#surface_terrains.h)
+## surface_terrains.h
 - SURFACE_DEFAULT
 - SURFACE_BURNING
 - SURFACE_RAYCAST
@@ -4926,9 +4923,9 @@
 
 <br />
 
-## [types.h](#types.h)
+## types.h
 
-### [enum SpTaskState](#SpTaskState)
+### enum SpTaskState
 | Identifier | Value |
 | :--------- | :---- |
 | SPTASK_STATE_NOT_STARTED | 0 |
@@ -4937,7 +4934,7 @@
 | SPTASK_STATE_FINISHED | 3 |
 | SPTASK_STATE_FINISHED_DP | 4 |
 
-### [enum AreaTimerType](#AreaTimerType)
+### enum AreaTimerType
 | Identifier | Value |
 | :--------- | :---- |
 | AREA_TIMER_TYPE_NONE | 0 |
@@ -4957,7 +4954,7 @@
 - OBJECT_NUM_FIELDS
 - OBJECT_CUSTOM_FIELDS_START
 
-### [enum MarioAnimPart](#MarioAnimPart)
+### enum MarioAnimPart
 | Identifier | Value |
 | :--------- | :---- |
 | MARIO_ANIM_PART_NONE | 0 |
@@ -4997,7 +4994,7 @@
 
 <br />
 
-## [version.h](#version.h)
+## version.h
 - SM64COOPDX_VERSION
 - VERSION_TEXT
 - VERSION_NUMBER
