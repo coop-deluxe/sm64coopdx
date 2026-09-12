@@ -676,12 +676,7 @@ else
   OBJCOPY := $(CROSS)objcopy
 endif
 
-# thank you apple very cool
-ifeq ($(HOST_OS),Darwin)
-  CP := gcp
-else
-  CP := cp
-endif
+CP := cp
 
 ifeq ($(DISCORD_SDK),1)
   LD := $(CXX)

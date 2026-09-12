@@ -975,10 +975,6 @@
 
 <br />
 
-- level_script.h
-
-<br />
-
 - level_update.h
    - [level_control_timer_running](functions-3.md#level_control_timer_running)
    - [pressed_pause](functions-3.md#pressed_pause)
@@ -994,31 +990,31 @@
 <br />
 
 - lighting_engine.h
-   - [le_is_enabled](functions-4.md#le_is_enabled)
-   - [le_set_mode](functions-4.md#le_set_mode)
-   - [le_get_mode](functions-4.md#le_get_mode)
-   - [le_set_tone_mapping](functions-4.md#le_set_tone_mapping)
-   - [le_get_ambient_color](functions-4.md#le_get_ambient_color)
-   - [le_set_ambient_color](functions-4.md#le_set_ambient_color)
-   - [le_set_max_lights_per_vertex](functions-4.md#le_set_max_lights_per_vertex)
-   - [le_set_enabled](functions-4.md#le_set_enabled)
-   - [le_calculate_lighting_color](functions-4.md#le_calculate_lighting_color)
-   - [le_calculate_lighting_color_with_normal](functions-4.md#le_calculate_lighting_color_with_normal)
-   - [le_calculate_lighting_dir](functions-4.md#le_calculate_lighting_dir)
-   - [le_add_light](functions-4.md#le_add_light)
-   - [le_remove_light](functions-4.md#le_remove_light)
-   - [le_get_light_count](functions-4.md#le_get_light_count)
-   - [le_light_exists](functions-4.md#le_light_exists)
-   - [le_get_light_pos](functions-4.md#le_get_light_pos)
-   - [le_set_light_pos](functions-4.md#le_set_light_pos)
-   - [le_get_light_color](functions-4.md#le_get_light_color)
-   - [le_set_light_color](functions-4.md#le_set_light_color)
-   - [le_get_light_radius](functions-4.md#le_get_light_radius)
-   - [le_set_light_radius](functions-4.md#le_set_light_radius)
-   - [le_get_light_intensity](functions-4.md#le_get_light_intensity)
-   - [le_set_light_intensity](functions-4.md#le_set_light_intensity)
-   - [le_get_light_use_surface_normals](functions-4.md#le_get_light_use_surface_normals)
-   - [le_set_light_use_surface_normals](functions-4.md#le_set_light_use_surface_normals)
+   - [le_is_enabled](functions-3.md#le_is_enabled)
+   - [le_set_mode](functions-3.md#le_set_mode)
+   - [le_get_mode](functions-3.md#le_get_mode)
+   - [le_set_tone_mapping](functions-3.md#le_set_tone_mapping)
+   - [le_get_ambient_color](functions-3.md#le_get_ambient_color)
+   - [le_set_ambient_color](functions-3.md#le_set_ambient_color)
+   - [le_set_max_lights_per_vertex](functions-3.md#le_set_max_lights_per_vertex)
+   - [le_set_enabled](functions-3.md#le_set_enabled)
+   - [le_calculate_lighting_color](functions-3.md#le_calculate_lighting_color)
+   - [le_calculate_lighting_color_with_normal](functions-3.md#le_calculate_lighting_color_with_normal)
+   - [le_calculate_lighting_dir](functions-3.md#le_calculate_lighting_dir)
+   - [le_add_light](functions-3.md#le_add_light)
+   - [le_remove_light](functions-3.md#le_remove_light)
+   - [le_get_light_count](functions-3.md#le_get_light_count)
+   - [le_light_exists](functions-3.md#le_light_exists)
+   - [le_get_light_pos](functions-3.md#le_get_light_pos)
+   - [le_set_light_pos](functions-3.md#le_set_light_pos)
+   - [le_get_light_color](functions-3.md#le_get_light_color)
+   - [le_set_light_color](functions-3.md#le_set_light_color)
+   - [le_get_light_radius](functions-3.md#le_get_light_radius)
+   - [le_set_light_radius](functions-3.md#le_set_light_radius)
+   - [le_get_light_intensity](functions-3.md#le_get_light_intensity)
+   - [le_set_light_intensity](functions-3.md#le_set_light_intensity)
+   - [le_get_light_use_surface_normals](functions-3.md#le_get_light_use_surface_normals)
+   - [le_set_light_use_surface_normals](functions-3.md#le_set_light_use_surface_normals)
 
 <br />
 
@@ -1320,69 +1316,69 @@
 <br />
 
 - math_util_vec3i.inl
-   - [vec3i_zero](functions-5.md#vec3i_zero)
-   - [vec3i_copy](functions-5.md#vec3i_copy)
-   - [vec3i_set](functions-5.md#vec3i_set)
-   - [vec3i_add](functions-5.md#vec3i_add)
-   - [vec3i_sum](functions-5.md#vec3i_sum)
-   - [vec3i_sub](functions-5.md#vec3i_sub)
-   - [vec3i_dif](functions-5.md#vec3i_dif)
-   - [vec3i_mul](functions-5.md#vec3i_mul)
-   - [vec3i_mult](functions-5.md#vec3i_mult)
-   - [vec3i_prod](functions-5.md#vec3i_prod)
-   - [vec3i_div](functions-5.md#vec3i_div)
-   - [vec3i_length](functions-5.md#vec3i_length)
-   - [vec3i_normalize](functions-5.md#vec3i_normalize)
-   - [vec3i_set_magnitude](functions-5.md#vec3i_set_magnitude)
-   - [vec3i_dot](functions-5.md#vec3i_dot)
-   - [vec3i_cross](functions-5.md#vec3i_cross)
-   - [vec3i_combine](functions-5.md#vec3i_combine)
-   - [vec3i_dist](functions-5.md#vec3i_dist)
-   - [vec3i_hdist](functions-5.md#vec3i_hdist)
-   - [vec3i_is_zero](functions-5.md#vec3i_is_zero)
-   - [vec3i_to_vec3f](functions-5.md#vec3i_to_vec3f)
-   - [vec3i_to_vec3s](functions-5.md#vec3i_to_vec3s)
+   - [vec3i_zero](functions-4.md#vec3i_zero)
+   - [vec3i_copy](functions-4.md#vec3i_copy)
+   - [vec3i_set](functions-4.md#vec3i_set)
+   - [vec3i_add](functions-4.md#vec3i_add)
+   - [vec3i_sum](functions-4.md#vec3i_sum)
+   - [vec3i_sub](functions-4.md#vec3i_sub)
+   - [vec3i_dif](functions-4.md#vec3i_dif)
+   - [vec3i_mul](functions-4.md#vec3i_mul)
+   - [vec3i_mult](functions-4.md#vec3i_mult)
+   - [vec3i_prod](functions-4.md#vec3i_prod)
+   - [vec3i_div](functions-4.md#vec3i_div)
+   - [vec3i_length](functions-4.md#vec3i_length)
+   - [vec3i_normalize](functions-4.md#vec3i_normalize)
+   - [vec3i_set_magnitude](functions-4.md#vec3i_set_magnitude)
+   - [vec3i_dot](functions-4.md#vec3i_dot)
+   - [vec3i_cross](functions-4.md#vec3i_cross)
+   - [vec3i_combine](functions-4.md#vec3i_combine)
+   - [vec3i_dist](functions-4.md#vec3i_dist)
+   - [vec3i_hdist](functions-4.md#vec3i_hdist)
+   - [vec3i_is_zero](functions-4.md#vec3i_is_zero)
+   - [vec3i_to_vec3f](functions-4.md#vec3i_to_vec3f)
+   - [vec3i_to_vec3s](functions-4.md#vec3i_to_vec3s)
 
 <br />
 
 - math_util_vec3s.inl
-   - [vec3s_zero](functions-5.md#vec3s_zero)
-   - [vec3s_copy](functions-5.md#vec3s_copy)
-   - [vec3s_set](functions-5.md#vec3s_set)
-   - [vec3s_add](functions-5.md#vec3s_add)
-   - [vec3s_sum](functions-5.md#vec3s_sum)
-   - [vec3s_sub](functions-5.md#vec3s_sub)
-   - [vec3s_dif](functions-5.md#vec3s_dif)
-   - [vec3s_mul](functions-5.md#vec3s_mul)
-   - [vec3s_mult](functions-5.md#vec3s_mult)
-   - [vec3s_prod](functions-5.md#vec3s_prod)
-   - [vec3s_div](functions-5.md#vec3s_div)
-   - [vec3s_length](functions-5.md#vec3s_length)
-   - [vec3s_normalize](functions-5.md#vec3s_normalize)
-   - [vec3s_set_magnitude](functions-5.md#vec3s_set_magnitude)
-   - [vec3s_dot](functions-5.md#vec3s_dot)
-   - [vec3s_cross](functions-5.md#vec3s_cross)
-   - [vec3s_combine](functions-5.md#vec3s_combine)
-   - [vec3s_dist](functions-5.md#vec3s_dist)
-   - [vec3s_hdist](functions-5.md#vec3s_hdist)
-   - [vec3s_is_zero](functions-5.md#vec3s_is_zero)
-   - [vec3s_to_vec3f](functions-5.md#vec3s_to_vec3f)
-   - [vec3s_to_vec3i](functions-5.md#vec3s_to_vec3i)
+   - [vec3s_zero](functions-4.md#vec3s_zero)
+   - [vec3s_copy](functions-4.md#vec3s_copy)
+   - [vec3s_set](functions-4.md#vec3s_set)
+   - [vec3s_add](functions-4.md#vec3s_add)
+   - [vec3s_sum](functions-4.md#vec3s_sum)
+   - [vec3s_sub](functions-4.md#vec3s_sub)
+   - [vec3s_dif](functions-4.md#vec3s_dif)
+   - [vec3s_mul](functions-4.md#vec3s_mul)
+   - [vec3s_mult](functions-4.md#vec3s_mult)
+   - [vec3s_prod](functions-4.md#vec3s_prod)
+   - [vec3s_div](functions-4.md#vec3s_div)
+   - [vec3s_length](functions-4.md#vec3s_length)
+   - [vec3s_normalize](functions-4.md#vec3s_normalize)
+   - [vec3s_set_magnitude](functions-4.md#vec3s_set_magnitude)
+   - [vec3s_dot](functions-4.md#vec3s_dot)
+   - [vec3s_cross](functions-4.md#vec3s_cross)
+   - [vec3s_combine](functions-4.md#vec3s_combine)
+   - [vec3s_dist](functions-4.md#vec3s_dist)
+   - [vec3s_hdist](functions-4.md#vec3s_hdist)
+   - [vec3s_is_zero](functions-4.md#vec3s_is_zero)
+   - [vec3s_to_vec3f](functions-4.md#vec3s_to_vec3f)
+   - [vec3s_to_vec3i](functions-4.md#vec3s_to_vec3i)
 
 <br />
 
 - misc.h
-   - [smooth_step](functions-5.md#smooth_step)
-   - [update_all_mario_stars](functions-5.md#update_all_mario_stars)
-   - [clock_elapsed](functions-5.md#clock_elapsed)
-   - [clock_elapsed_f64](functions-5.md#clock_elapsed_f64)
-   - [clock_elapsed_ticks](functions-5.md#clock_elapsed_ticks)
-   - [clock_is_date](functions-5.md#clock_is_date)
-   - [delta_interpolate_f32](functions-5.md#delta_interpolate_f32)
-   - [delta_interpolate_s32](functions-5.md#delta_interpolate_s32)
-   - [delta_interpolate_angle](functions-5.md#delta_interpolate_angle)
-   - [delta_interpolate_vec3f](functions-5.md#delta_interpolate_vec3f)
-   - [delta_interpolate_vec3s](functions-5.md#delta_interpolate_vec3s)
+   - [smooth_step](functions-4.md#smooth_step)
+   - [update_all_mario_stars](functions-4.md#update_all_mario_stars)
+   - [clock_elapsed](functions-4.md#clock_elapsed)
+   - [clock_elapsed_f64](functions-4.md#clock_elapsed_f64)
+   - [clock_elapsed_ticks](functions-4.md#clock_elapsed_ticks)
+   - [clock_is_date](functions-4.md#clock_is_date)
+   - [delta_interpolate_f32](functions-4.md#delta_interpolate_f32)
+   - [delta_interpolate_s32](functions-4.md#delta_interpolate_s32)
+   - [delta_interpolate_angle](functions-4.md#delta_interpolate_angle)
+   - [delta_interpolate_vec3f](functions-4.md#delta_interpolate_vec3f)
+   - [delta_interpolate_vec3s](functions-4.md#delta_interpolate_vec3s)
 
 <br />
 
@@ -1941,25 +1937,21 @@
 <br />
 
 - smlua_collision_utils.h
-   - [collision_find_floor](functions-7.md#collision_find_floor)
-   - [collision_find_ceil](functions-7.md#collision_find_ceil)
-   - [get_water_surface_pseudo_floor](functions-7.md#get_water_surface_pseudo_floor)
-   - [smlua_collision_util_get](functions-7.md#smlua_collision_util_get)
-   - [collision_get_temp_wall_collision_data](functions-7.md#collision_get_temp_wall_collision_data)
-   - [get_surface_from_wcd_index](functions-7.md#get_surface_from_wcd_index)
-   - [smlua_collision_util_get_current_terrain_collision](functions-7.md#smlua_collision_util_get_current_terrain_collision)
-   - [smlua_collision_util_get_level_collision](functions-7.md#smlua_collision_util_get_level_collision)
-   - [smlua_collision_util_find_surface_types](functions-7.md#smlua_collision_util_find_surface_types)
-   - [smlua_collision_add_surface](functions-7.md#smlua_collision_add_surface)
-   - [smlua_collision_move_surface](functions-7.md#smlua_collision_move_surface)
-   - [smlua_collision_delete_surface](functions-7.md#smlua_collision_delete_surface)
-   - [surface_is_quicksand](functions-7.md#surface_is_quicksand)
-   - [surface_is_not_hard](functions-7.md#surface_is_not_hard)
-   - [surface_is_painting_warp](functions-7.md#surface_is_painting_warp)
-
-<br />
-
-- smlua_deprecated.h
+   - [collision_find_floor](functions-6.md#collision_find_floor)
+   - [collision_find_ceil](functions-6.md#collision_find_ceil)
+   - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
+   - [smlua_collision_util_get](functions-6.md#smlua_collision_util_get)
+   - [collision_get_temp_wall_collision_data](functions-6.md#collision_get_temp_wall_collision_data)
+   - [get_surface_from_wcd_index](functions-6.md#get_surface_from_wcd_index)
+   - [smlua_collision_util_get_current_terrain_collision](functions-6.md#smlua_collision_util_get_current_terrain_collision)
+   - [smlua_collision_util_get_level_collision](functions-6.md#smlua_collision_util_get_level_collision)
+   - [smlua_collision_util_find_surface_types](functions-6.md#smlua_collision_util_find_surface_types)
+   - [smlua_collision_add_surface](functions-6.md#smlua_collision_add_surface)
+   - [smlua_collision_move_surface](functions-6.md#smlua_collision_move_surface)
+   - [smlua_collision_delete_surface](functions-6.md#smlua_collision_delete_surface)
+   - [surface_is_quicksand](functions-6.md#surface_is_quicksand)
+   - [surface_is_not_hard](functions-6.md#surface_is_not_hard)
+   - [surface_is_painting_warp](functions-6.md#surface_is_painting_warp)
 
 <br />
 
@@ -2302,7 +2294,7 @@
 ---
 # manually written functions
 
-## [define_custom_obj_fields](#define_custom_obj_fields)
+## define_custom_obj_fields
 
 ### Description
 Defines a custom set of overlapping object fields.
@@ -2334,7 +2326,7 @@ define_custom_obj_fields({
 
 <br />
 
-## [network_init_object](#network_init_object)
+## network_init_object
 
 ### Description
 Enables synchronization on an object.
@@ -2362,7 +2354,7 @@ network_init_object(obj, true, { 'oCustomField1', 'oCustomField2', 'oCustomField
 
 <br />
 
-## [network_send_object](#network_send_object)
+## network_send_object
 
 ### Description
 Sends a packet that synchronizes an object. This does not need to be called when `standardSync` is enabled.
@@ -2387,7 +2379,7 @@ network_send_object(obj, false)
 
 <br />
 
-## [network_send](#network_send)
+## network_send
 
 ### Description
 Sends a global Lua packet with the values of `dataTable`. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
@@ -2413,7 +2405,7 @@ network_send(reliable, { data1 = 'hello', data2 = 10 })
 
 <br />
 
-## [network_send_to](#network_send_to)
+## network_send_to
 
 ### Description
 Sends a Lua packet with the values of `dataTable` to a specific client through local indices. Received with the `HOOK_ON_PACKET_RECEIVE` hook.
@@ -2440,7 +2432,7 @@ network_send_to(localPlayerIndex, reliable, { data1 = 'hello', data2 = 10 })
 
 <br />
 
-## [network_send_bytestring](#network_send_bytestring)
+## network_send_bytestring
 
 ### Description
 Sends a global Lua packet with the bytestring of `bytestring`. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
@@ -2473,7 +2465,7 @@ network_send_bytestring(reliable, bytestring)
 
 <br />
 
-## [network_send_bytestring_to](#network_send_bytestring_to)
+## network_send_bytestring_to
 
 ### Description
 Sends a Lua packet with the bytestring of `bytestring` to a specific client through local indices. Received with the `HOOK_ON_PACKET_BYTESTRING_RECEIVE` hook.
@@ -2507,7 +2499,7 @@ network_send_bytestring_to(localPlayerIndex, reliable, bytestring)
 
 <br />
 
-## [get_texture_info](#get_texture_info)
+## get_texture_info
 
 ### Description
 Gets the `TextureInfo` of a texture by name.
@@ -2530,7 +2522,7 @@ local texinfo = get_texture_info(textureName)
 
 <br />
 
-## [texture_override_set](#texture_override_set)
+## texture_override_set
 
 ### Description
 Overrides a texture with a custom `TextureInfo`.
@@ -2555,7 +2547,7 @@ texture_override_set("outside_09004000", overrideTexInfo)
 
 <br />
 
-## [texture_override_reset](#texture_override_reset)
+## texture_override_reset
 
 ### Description
 Resets an overridden texture.
@@ -2577,7 +2569,7 @@ texture_override_reset("outside_09004000")
 
 <br />
 
-## [level_parse_script](#level_parse_script)
+## level_parse_script
 
 ### Description
 Parses a level script and passes level data to a function.<br>
@@ -2970,7 +2962,7 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 
 <br />
 
-## [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
+## smlua_anim_util_register_animation
 
 ### Description
 Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
@@ -2999,7 +2991,7 @@ smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values
 
 <br />
 
-## [log_to_console](#log_to_console)
+## log_to_console
 
 ### Description
 Logs a message to the in-game console.
@@ -3022,7 +3014,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 
 <br />
 
-## [add_scroll_target](#add_scroll_target)
+## add_scroll_target
 
 ### Description
 Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`.
@@ -3045,7 +3037,7 @@ add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")
 
 <br />
 
-## [collision_find_surface_on_ray](#collision_find_surface_on_ray)
+## collision_find_surface_on_ray
 
 ### Description
 Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
@@ -3073,7 +3065,7 @@ local hit = collision_find_surface_on_ray(0, 0, 0, 50, 100, 50, 3.0)
 
 <br />
 
-## [set_exclamation_box_contents](#set_exclamation_box_contents)
+## set_exclamation_box_contents
 
 ### Description
 Sets the contents that the exclamation box spawns.
@@ -3106,7 +3098,7 @@ set_exclamation_box_contents({
 
 <br />
 
-## [get_exclamation_box_contents](#get_exclamation_box_contents)
+## get_exclamation_box_contents
 
 ### Description
 Gets the contents that the exclamation box spawns.
@@ -3138,7 +3130,7 @@ end
 
 <br />
 
-## [cast_graph_node](#cast_graph_node)
+## cast_graph_node
 
 ### Description
 Returns the specific GraphNode(...) the node is part of.
@@ -3164,7 +3156,7 @@ print(marioGfx == cast_graph_node(node)) -- true
 
 <br />
 
-## [get_uncolored_string](#get_uncolored_string)
+## get_uncolored_string
 
 ### Description
 Removes color codes from a string.
@@ -3186,7 +3178,7 @@ print(get_uncolored_string("\\#210059\\Colored \\#FF086F\\String")) -- "Colored 
 
 <br />
 
-## [gfx_set_command](#gfx_set_command)
+## gfx_set_command
 
 ### Description
 Sets a display list command on the display list given.
@@ -3234,7 +3226,7 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 <br />
 
 
-## [get_mario_spawn_type](#get_mario_spawn_type)
+## get_mario_spawn_type
 
 ### Description
 Derives a `MARIO_SPAWN_*` constant from `o`
@@ -3257,7 +3249,7 @@ Derives a `MARIO_SPAWN_*` constant from `o`
 
 <br />
 
-## [area_get_warp_node](#area_get_warp_node)
+## area_get_warp_node
 
 ### Description
 Finds a warp node in the current area by its ID. The warp node must exist in the list of warp nodes for the current area.
@@ -3281,7 +3273,7 @@ Useful for locating a specific warp point in the level, such as teleportation zo
 
 <br />
 
-## [area_get_any_warp_node](#area_get_any_warp_node)
+## area_get_any_warp_node
 
 ### Description
 Gets the first warp node found in the area, otherwise returns nil
@@ -3302,7 +3294,7 @@ Gets the first warp node found in the area, otherwise returns nil
 
 <br />
 
-## [area_get_warp_node_from_params](#area_get_warp_node_from_params)
+## area_get_warp_node_from_params
 
 ### Description
 Finds a warp node in the current area using parameters from the provided object. The object's behavior parameters are used to determine the warp node ID.
@@ -3326,7 +3318,7 @@ Useful for associating an object (like a door or warp pipe) with its correspondi
 
 <br />
 
-## [play_transition](#play_transition)
+## play_transition
 
 ### Description
 Plays a screen transition
@@ -3353,7 +3345,7 @@ Plays a screen transition
 
 <br />
 
-## [play_transition_after_delay](#play_transition_after_delay)
+## play_transition_after_delay
 
 ### Description
 Plays a screen transition after a `delay` in frames

@@ -6,380 +6,12 @@
 
 
 ---
-# functions from smlua_collision_utils.h
-
-<br />
-
-
-## [collision_find_floor](#collision_find_floor)
-
-### Description
-Finds a potential floor at the given `x`, `y`, and `z` values
-
-### Lua Example
-`local surfaceValue = collision_find_floor(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* collision_find_floor(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_find_ceil](#collision_find_ceil)
-
-### Description
-Finds a potential ceiling at the given `x`, `y`, and `z` values
-
-### Lua Example
-`local surfaceValue = collision_find_ceil(x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* collision_find_ceil(f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_water_surface_pseudo_floor](#get_water_surface_pseudo_floor)
-
-### Description
-Gets the generated water floor surface used when riding a shell
-
-### Lua Example
-`local surfaceValue = get_water_surface_pseudo_floor()`
-
-### Parameters
-- None
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* get_water_surface_pseudo_floor(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get](#smlua_collision_util_get)
-
-### Description
-Gets the `Collision` with `name`
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get(name)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision* smlua_collision_util_get(const char* name);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [collision_get_temp_wall_collision_data](#collision_get_temp_wall_collision_data)
-
-### Description
-Returns a temporary wall collision data pointer
-
-### Lua Example
-`local wallCollisionDataValue = collision_get_temp_wall_collision_data()`
-
-### Parameters
-- None
-
-### Returns
-- [WallCollisionData](structs.md#WallCollisionData)
-
-### C Prototype
-`struct WallCollisionData* collision_get_temp_wall_collision_data(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [get_surface_from_wcd_index](#get_surface_from_wcd_index)
-
-### Description
-Gets the surface corresponding to `index` from `wcd`
-
-### Lua Example
-`local surfaceValue = get_surface_from_wcd_index(wcd, index)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| wcd | [WallCollisionData](structs.md#WallCollisionData) |
-| index | `integer` |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* get_surface_from_wcd_index(struct WallCollisionData* wcd, s8 index);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get_current_terrain_collision](#smlua_collision_util_get_current_terrain_collision)
-
-### Description
-Gets the current level terrain collision
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get_current_terrain_collision()`
-
-### Parameters
-- None
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision* smlua_collision_util_get_current_terrain_collision(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_get_level_collision](#smlua_collision_util_get_level_collision)
-
-### Description
-Gets the `level` terrain collision from `area`
-
-### Lua Example
-`local pointerValue = smlua_collision_util_get_level_collision(level, area)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| level | `integer` |
-| area | `integer` |
-
-### Returns
-- `Pointer` <`Collision`>
-
-### C Prototype
-`Collision *smlua_collision_util_get_level_collision(u32 level, u16 area);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_util_find_surface_types](#smlua_collision_util_find_surface_types)
-
-### Description
-Gets a table of the surface types from `data`
-
-### Lua Example
-`smlua_collision_util_find_surface_types(data)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| data | `Pointer` <`Collision`> |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_collision_util_find_surface_types(Collision* data);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_add_surface](#smlua_collision_add_surface)
-
-### Description
-Allocates a new collision surface with the given vertices, computes the surface normal and other fields, and inserts it into the spatial partition.
-Returns the new surface, or `nil` if the triangle is degenerate (zero area).
-Set `dynamic` to `true` for surfaces that are cleared each frame, or `false` for persistent static surfaces
-
-### Lua Example
-`local surfaceValue = smlua_collision_add_surface(dynamic, surfaceType, vertex1, vertex2, vertex3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dynamic | `boolean` |
-| surfaceType | `integer` |
-| vertex1 | [Vec3s](structs.md#Vec3s) |
-| vertex2 | [Vec3s](structs.md#Vec3s) |
-| vertex3 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Surface](structs.md#Surface)
-
-### C Prototype
-`struct Surface* smlua_collision_add_surface(bool dynamic, s16 surfaceType, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_move_surface](#smlua_collision_move_surface)
-
-### Description
-Moves an existing collision surface to new vertex positions.
-Recalculates the surface normal, origin offset, and Y bounds, removes the surface from its old spatial partition cells, and re-adds it to the correct cells.
-The previous vertices are preserved for interpolation
-
-### Lua Example
-`smlua_collision_move_surface(surface, vertex1, vertex2, vertex3)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surface | [Surface](structs.md#Surface) |
-| vertex1 | [Vec3s](structs.md#Vec3s) |
-| vertex2 | [Vec3s](structs.md#Vec3s) |
-| vertex3 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_collision_move_surface(struct Surface *surface, Vec3s vertex1, Vec3s vertex2, Vec3s vertex3);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [smlua_collision_delete_surface](#smlua_collision_delete_surface)
-
-### Description
-Fully deletes a collision surface: removes it from the spatial partitions and frees its pool slot.
-
-### Lua Example
-`smlua_collision_delete_surface(surface)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surface | [Surface](structs.md#Surface) |
-
-### Returns
-- None
-
-### C Prototype
-`void smlua_collision_delete_surface(struct Surface *surface);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_quicksand](#surface_is_quicksand)
-
-### Description
-Checks if the surface is quicksand
-
-### Lua Example
-`local booleanValue = surface_is_quicksand(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_quicksand(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_not_hard](#surface_is_not_hard)
-
-### Description
-Checks if the surface is not a hard surface
-
-### Lua Example
-`local booleanValue = surface_is_not_hard(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_not_hard(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## [surface_is_painting_warp](#surface_is_painting_warp)
-
-### Description
-Checks if the surface is a painting warp
-
-### Lua Example
-`local booleanValue = surface_is_painting_warp(surf)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| surf | [Surface](structs.md#Surface) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool surface_is_painting_warp(struct Surface* surf);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from smlua_deprecated.h
-
-<br />
-
-
----
 # functions from smlua_gfx_utils.h
 
 <br />
 
 
-## [get_shader_flag_enabled](#get_shader_flag_enabled)
+## get_shader_flag_enabled
 
 ### Description
 Gets if a custom shader flag (`SHADER_FLAG_*`) is enabled or not
@@ -402,7 +34,7 @@ Gets if a custom shader flag (`SHADER_FLAG_*`) is enabled or not
 
 <br />
 
-## [set_shader_flag_enabled](#set_shader_flag_enabled)
+## set_shader_flag_enabled
 
 ### Description
 Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
@@ -426,7 +58,7 @@ Enables a custom shader flag (`SHADER_FLAG_*`) for the renderer
 
 <br />
 
-## [get_shader_flag_value](#get_shader_flag_value)
+## get_shader_flag_value
 
 ### Description
 Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)
@@ -449,7 +81,7 @@ Gets a value for one of the custom shader flags (`SHADER_FLAG_*`)
 
 <br />
 
-## [set_shader_flag_value](#set_shader_flag_value)
+## set_shader_flag_value
 
 ### Description
 Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the renderer
@@ -473,7 +105,7 @@ Sets a value for one of the custom shader flags (`SHADER_FLAG_*`) for the render
 
 <br />
 
-## [get_global_shader_flags_enabled](#get_global_shader_flags_enabled)
+## get_global_shader_flags_enabled
 
 ### Description
 Gets if custom shader flags are enabled globally
@@ -494,7 +126,7 @@ Gets if custom shader flags are enabled globally
 
 <br />
 
-## [set_global_shader_flags_enabled](#set_global_shader_flags_enabled)
+## set_global_shader_flags_enabled
 
 ### Description
 Enables custom shader flags as a global toggle, useful for disabling without manually going through every effect
@@ -517,7 +149,7 @@ Enables custom shader flags as a global toggle, useful for disabling without man
 
 <br />
 
-## [clear_all_shader_flags](#clear_all_shader_flags)
+## clear_all_shader_flags
 
 ### Description
 Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
@@ -538,7 +170,7 @@ Clears all custom shader flags (`SHADER_FLAG_*`) for the renderer
 
 <br />
 
-## [get_shading_fullbright_enabled](#get_shading_fullbright_enabled)
+## get_shading_fullbright_enabled
 
 ### Description
 Gets if fullbright mode is enabled for shaded materials (`G_LIGHTING`)
@@ -559,7 +191,7 @@ Gets if fullbright mode is enabled for shaded materials (`G_LIGHTING`)
 
 <br />
 
-## [set_shading_fullbright_enabled](#set_shading_fullbright_enabled)
+## set_shading_fullbright_enabled
 
 ### Description
 Enables fullbright mode for shaded materials (`G_LIGHTING`.)
@@ -587,7 +219,7 @@ and compatibility with most models, not having to used specialized env/prim colo
 
 <br />
 
-## [set_override_fov](#set_override_fov)
+## set_override_fov
 
 ### Description
 Sets the override FOV
@@ -610,7 +242,7 @@ Sets the override FOV
 
 <br />
 
-## [set_override_near](#set_override_near)
+## set_override_near
 
 ### Description
 Sets the override near plane
@@ -633,7 +265,7 @@ Sets the override near plane
 
 <br />
 
-## [set_override_far](#set_override_far)
+## set_override_far
 
 ### Description
 Sets the override far plane
@@ -656,7 +288,7 @@ Sets the override far plane
 
 <br />
 
-## [get_lighting_dir](#get_lighting_dir)
+## get_lighting_dir
 
 ### Description
 Gets a value of the global lighting direction
@@ -679,7 +311,7 @@ Gets a value of the global lighting direction
 
 <br />
 
-## [set_lighting_dir](#set_lighting_dir)
+## set_lighting_dir
 
 ### Description
 Sets a value of the global lighting direction
@@ -703,7 +335,7 @@ Sets a value of the global lighting direction
 
 <br />
 
-## [get_lighting_color](#get_lighting_color)
+## get_lighting_color
 
 ### Description
 Gets a value of the global lighting color
@@ -726,7 +358,7 @@ Gets a value of the global lighting color
 
 <br />
 
-## [get_lighting_color_ambient](#get_lighting_color_ambient)
+## get_lighting_color_ambient
 
 ### Description
 Gets a value of the global ambient lighting color
@@ -749,7 +381,7 @@ Gets a value of the global ambient lighting color
 
 <br />
 
-## [set_lighting_color](#set_lighting_color)
+## set_lighting_color
 
 ### Description
 Sets a value of the global lighting color
@@ -773,7 +405,7 @@ Sets a value of the global lighting color
 
 <br />
 
-## [set_lighting_color_ambient](#set_lighting_color_ambient)
+## set_lighting_color_ambient
 
 ### Description
 Sets a value of the global lighting color (run this after `set_lighting_color` for the ambient color to not be overriden)
@@ -797,7 +429,7 @@ Sets a value of the global lighting color (run this after `set_lighting_color` f
 
 <br />
 
-## [get_vertex_color](#get_vertex_color)
+## get_vertex_color
 
 ### Description
 Gets a value of the global vertex shading color
@@ -820,7 +452,7 @@ Gets a value of the global vertex shading color
 
 <br />
 
-## [set_vertex_color](#set_vertex_color)
+## set_vertex_color
 
 ### Description
 Sets a value of the global vertex shading color
@@ -844,7 +476,7 @@ Sets a value of the global vertex shading color
 
 <br />
 
-## [get_fog_color](#get_fog_color)
+## get_fog_color
 
 ### Description
 Gets a value of the global fog color
@@ -867,7 +499,7 @@ Gets a value of the global fog color
 
 <br />
 
-## [set_fog_color](#set_fog_color)
+## set_fog_color
 
 ### Description
 Sets a value of the global fog color
@@ -891,7 +523,7 @@ Sets a value of the global fog color
 
 <br />
 
-## [get_fog_intensity](#get_fog_intensity)
+## get_fog_intensity
 
 ### Description
 Gets the intensity of the fog
@@ -912,7 +544,7 @@ Gets the intensity of the fog
 
 <br />
 
-## [set_fog_intensity](#set_fog_intensity)
+## set_fog_intensity
 
 ### Description
 Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a desirable range)
@@ -935,7 +567,7 @@ Sets the intensity of the fog (this value scales very quickly, 1.0 to 1.1 is a d
 
 <br />
 
-## [get_skybox](#get_skybox)
+## get_skybox
 
 ### Description
 Gets the current skybox
@@ -956,7 +588,7 @@ Gets the current skybox
 
 <br />
 
-## [set_override_skybox](#set_override_skybox)
+## set_override_skybox
 
 ### Description
 Sets the override skybox
@@ -979,7 +611,7 @@ Sets the override skybox
 
 <br />
 
-## [get_skybox_color](#get_skybox_color)
+## get_skybox_color
 
 ### Description
 Gets a value of the global skybox color
@@ -1002,7 +634,7 @@ Gets a value of the global skybox color
 
 <br />
 
-## [set_skybox_color](#set_skybox_color)
+## set_skybox_color
 
 ### Description
 Sets a value of the global skybox color
@@ -1026,7 +658,7 @@ Sets a value of the global skybox color
 
 <br />
 
-## [gfx_parse](#gfx_parse)
+## gfx_parse
 
 ### Description
 Traverses a display list. Takes a Lua function as a parameter, which is called back for each command in the display list with the parameters `cmd` (display list pointer), and `op`
@@ -1050,7 +682,7 @@ Traverses a display list. Takes a Lua function as a parameter, which is called b
 
 <br />
 
-## [gfx_get_op](#gfx_get_op)
+## gfx_get_op
 
 ### Description
 Gets the op of the display list command
@@ -1073,7 +705,7 @@ Gets the op of the display list command
 
 <br />
 
-## [gfx_get_display_list](#gfx_get_display_list)
+## gfx_get_display_list
 
 ### Description
 Gets the display list from a display list command if it has the op `G_DL`
@@ -1096,7 +728,7 @@ Gets the display list from a display list command if it has the op `G_DL`
 
 <br />
 
-## [gfx_get_vertex_buffer](#gfx_get_vertex_buffer)
+## gfx_get_vertex_buffer
 
 ### Description
 Gets the vertex buffer from a display list command if it has the op `G_VTX`
@@ -1119,7 +751,7 @@ Gets the vertex buffer from a display list command if it has the op `G_VTX`
 
 <br />
 
-## [gfx_get_vertex_count](#gfx_get_vertex_count)
+## gfx_get_vertex_count
 
 ### Description
 Gets the number of vertices from a display list command if it has the op `G_VTX`
@@ -1142,7 +774,7 @@ Gets the number of vertices from a display list command if it has the op `G_VTX`
 
 <br />
 
-## [gfx_get_texture](#gfx_get_texture)
+## gfx_get_texture
 
 ### Description
 Gets the texture from a display list command if it has an image related op
@@ -1165,7 +797,7 @@ Gets the texture from a display list command if it has an image related op
 
 <br />
 
-## [gfx_get_from_name](#gfx_get_from_name)
+## gfx_get_from_name
 
 ### Description
 Gets a display list of the current mod from its name.
@@ -1190,7 +822,7 @@ Returns a pointer to the display list and its length
 
 <br />
 
-## [gfx_get_name](#gfx_get_name)
+## gfx_get_name
 
 ### Description
 Gets the name of a display list
@@ -1213,7 +845,7 @@ Gets the name of a display list
 
 <br />
 
-## [gfx_get_length](#gfx_get_length)
+## gfx_get_length
 
 ### Description
 Gets the max length of a display list
@@ -1236,7 +868,7 @@ Gets the max length of a display list
 
 <br />
 
-## [gfx_get_command](#gfx_get_command)
+## gfx_get_command
 
 ### Description
 Gets a command of a display list at position `offset`
@@ -1260,7 +892,7 @@ Gets a command of a display list at position `offset`
 
 <br />
 
-## [gfx_get_next_command](#gfx_get_next_command)
+## gfx_get_next_command
 
 ### Description
 Gets the next command of a given display list pointer. Intended to use in a for loop
@@ -1283,7 +915,7 @@ Gets the next command of a given display list pointer. Intended to use in a for 
 
 <br />
 
-## [gfx_copy](#gfx_copy)
+## gfx_copy
 
 ### Description
 Copies `length` commands from display list `src` to display list `dest`
@@ -1308,7 +940,7 @@ Copies `length` commands from display list `src` to display list `dest`
 
 <br />
 
-## [gfx_create](#gfx_create)
+## gfx_create
 
 ### Description
 Creates a new named display list of `length` commands
@@ -1332,7 +964,7 @@ Creates a new named display list of `length` commands
 
 <br />
 
-## [gfx_resize](#gfx_resize)
+## gfx_resize
 
 ### Description
 Resizes a display list created by `gfx_create`
@@ -1356,7 +988,7 @@ Resizes a display list created by `gfx_create`
 
 <br />
 
-## [gfx_delete](#gfx_delete)
+## gfx_delete
 
 ### Description
 Deletes a display list created by `gfx_create`
@@ -1379,7 +1011,7 @@ Deletes a display list created by `gfx_create`
 
 <br />
 
-## [gfx_delete_all](#gfx_delete_all)
+## gfx_delete_all
 
 ### Description
 Deletes all display lists created by `gfx_create`
@@ -1400,7 +1032,7 @@ Deletes all display lists created by `gfx_create`
 
 <br />
 
-## [vtx_get_from_name](#vtx_get_from_name)
+## vtx_get_from_name
 
 ### Description
 Gets a vertex buffer of the current mod from its name.
@@ -1425,7 +1057,7 @@ Returns a pointer to the vertex buffer and its vertex count
 
 <br />
 
-## [vtx_get_name](#vtx_get_name)
+## vtx_get_name
 
 ### Description
 Gets the name of a vertex buffer
@@ -1448,7 +1080,7 @@ Gets the name of a vertex buffer
 
 <br />
 
-## [vtx_get_count](#vtx_get_count)
+## vtx_get_count
 
 ### Description
 Gets the max count of vertices of a vertex buffer
@@ -1471,7 +1103,7 @@ Gets the max count of vertices of a vertex buffer
 
 <br />
 
-## [vtx_get_vertex](#vtx_get_vertex)
+## vtx_get_vertex
 
 ### Description
 Gets a vertex of a vertex buffer at position `offset`
@@ -1495,7 +1127,7 @@ Gets a vertex of a vertex buffer at position `offset`
 
 <br />
 
-## [vtx_get_next_vertex](#vtx_get_next_vertex)
+## vtx_get_next_vertex
 
 ### Description
 Gets the next vertex of a given vertex pointer. Intended to use in a for loop
@@ -1518,7 +1150,7 @@ Gets the next vertex of a given vertex pointer. Intended to use in a for loop
 
 <br />
 
-## [vtx_copy](#vtx_copy)
+## vtx_copy
 
 ### Description
 Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
@@ -1543,7 +1175,7 @@ Copies `count` vertices from vertex buffer `src` to vertex buffer `dest`
 
 <br />
 
-## [vtx_create](#vtx_create)
+## vtx_create
 
 ### Description
 Creates a new named vertex buffer of `count` vertices
@@ -1567,7 +1199,7 @@ Creates a new named vertex buffer of `count` vertices
 
 <br />
 
-## [vtx_resize](#vtx_resize)
+## vtx_resize
 
 ### Description
 Resizes a vertex buffer created by `vtx_create`
@@ -1591,7 +1223,7 @@ Resizes a vertex buffer created by `vtx_create`
 
 <br />
 
-## [vtx_delete](#vtx_delete)
+## vtx_delete
 
 ### Description
 Deletes a vertex buffer created by `vtx_create`
@@ -1614,7 +1246,7 @@ Deletes a vertex buffer created by `vtx_create`
 
 <br />
 
-## [vtx_delete_all](#vtx_delete_all)
+## vtx_delete_all
 
 ### Description
 Deletes all vertex buffers created by `vtx_create`
@@ -1641,7 +1273,7 @@ Deletes all vertex buffers created by `vtx_create`
 <br />
 
 
-## [smlua_level_util_change_area](#smlua_level_util_change_area)
+## smlua_level_util_change_area
 
 ### Description
 Instantly changes the current area to `areaIndex`
@@ -1664,7 +1296,7 @@ Instantly changes the current area to `areaIndex`
 
 <br />
 
-## [smlua_level_util_get_info](#smlua_level_util_get_info)
+## smlua_level_util_get_info
 
 ### Description
 Gets information on a custom level from `levelNum`
@@ -1687,7 +1319,7 @@ Gets information on a custom level from `levelNum`
 
 <br />
 
-## [smlua_level_util_get_info_from_short_name](#smlua_level_util_get_info_from_short_name)
+## smlua_level_util_get_info_from_short_name
 
 ### Description
 Gets information on a custom level from `shortName`
@@ -1710,7 +1342,7 @@ Gets information on a custom level from `shortName`
 
 <br />
 
-## [smlua_level_util_get_info_from_course_num](#smlua_level_util_get_info_from_course_num)
+## smlua_level_util_get_info_from_course_num
 
 ### Description
 Gets information on a custom level from `courseNum`
@@ -1733,7 +1365,7 @@ Gets information on a custom level from `courseNum`
 
 <br />
 
-## [level_register](#level_register)
+## level_register
 
 ### Description
 Registers a fully custom level. Level ID begins at 50
@@ -1763,7 +1395,7 @@ Registers a fully custom level. Level ID begins at 50
 
 <br />
 
-## [level_is_vanilla_level](#level_is_vanilla_level)
+## level_is_vanilla_level
 
 ### Description
 Checks if `levelNum` is a vanilla level
@@ -1786,7 +1418,7 @@ Checks if `levelNum` is a vanilla level
 
 <br />
 
-## [warp_to_warpnode](#warp_to_warpnode)
+## warp_to_warpnode
 
 ### Description
 Warps to `aWarpId` of `aArea` in `aLevel` during `aAct`
@@ -1841,7 +1473,36 @@ Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWar
 
 <br />
 
-## [warp_to_level](#warp_to_level)
+## [warp_with_transition](#warp_with_transition)
+
+### Description
+Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
+
+### Lua Example
+`local booleanValue = warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| aLevel | `integer` |
+| aArea | `integer` |
+| aAct | `integer` |
+| aTransType | `integer` |
+| aTime | `integer` |
+| aColor | [Color](structs.md#Color) |
+| aWarpId | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## warp_to_level
 
 ### Description
 Warps to `aArea` of `aLevel` in `aAct`
@@ -1866,7 +1527,7 @@ Warps to `aArea` of `aLevel` in `aAct`
 
 <br />
 
-## [warp_restart_level](#warp_restart_level)
+## warp_restart_level
 
 ### Description
 Restarts the current level
@@ -1887,7 +1548,7 @@ Restarts the current level
 
 <br />
 
-## [warp_to_start_level](#warp_to_start_level)
+## warp_to_start_level
 
 ### Description
 Warps to the start level (Castle Grounds by default)
@@ -1908,7 +1569,7 @@ Warps to the start level (Castle Grounds by default)
 
 <br />
 
-## [warp_exit_level](#warp_exit_level)
+## warp_exit_level
 
 ### Description
 Exits the current level after `aDelay`
@@ -1931,7 +1592,7 @@ Exits the current level after `aDelay`
 
 <br />
 
-## [warp_to_castle](#warp_to_castle)
+## warp_to_castle
 
 ### Description
 Warps back to the castle from `aLevel`
@@ -1954,7 +1615,7 @@ Warps back to the castle from `aLevel`
 
 <br />
 
-## [level_create_warp_node](#level_create_warp_node)
+## level_create_warp_node
 
 ### Description
 Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.
@@ -1986,7 +1647,7 @@ If `checkpoint` is true, Mario will warp directly to this node if he enters the 
 
 <br />
 
-## [level_create_warp_node_with_object](#level_create_warp_node_with_object)
+## level_create_warp_node_with_object
 
 ### Description
 Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.
@@ -2023,7 +1684,7 @@ If `checkpoint` is true, Mario will warp directly to this node if he enters the 
 
 <br />
 
-## [level_get_warp_node](#level_get_warp_node)
+## level_get_warp_node
 
 ### Description
 Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.
@@ -2049,7 +1710,7 @@ Only the warp nodes created by `level_create_warp_node` or `level_create_warp_no
 
 <br />
 
-## [level_delete_warp_node](#level_delete_warp_node)
+## level_delete_warp_node
 
 ### Description
 Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.
@@ -2075,7 +1736,7 @@ Only the warp nodes created by `level_create_warp_node` or `level_create_warp_no
 
 <br />
 
-## [level_clear_warp_nodes](#level_clear_warp_nodes)
+## level_clear_warp_nodes
 
 ### Description
 Deletes all the warp nodes in level `levelNum`.
@@ -2105,7 +1766,7 @@ Only the warp nodes created by `level_create_warp_node` or `level_create_warp_no
 <br />
 
 
-## [get_network_area_timer](#get_network_area_timer)
+## get_network_area_timer
 
 ### Description
 Gets the current area's networked timer
@@ -2126,7 +1787,7 @@ Gets the current area's networked timer
 
 <br />
 
-## [get_network_area_random_seed](#get_network_area_random_seed)
+## get_network_area_random_seed
 
 ### Description
 Gets the current area's networked random seed
@@ -2147,7 +1808,7 @@ Gets the current area's networked random seed
 
 <br />
 
-## [get_area_update_counter](#get_area_update_counter)
+## get_area_update_counter
 
 ### Description
 Gets the area update counter incremented when objects are updated
@@ -2168,7 +1829,7 @@ Gets the area update counter incremented when objects are updated
 
 <br />
 
-## [get_temp_s32_pointer](#get_temp_s32_pointer)
+## get_temp_s32_pointer
 
 ### Description
 Returns a temporary signed 32-bit integer pointer with its value set to `initialValue`
@@ -2191,7 +1852,7 @@ Returns a temporary signed 32-bit integer pointer with its value set to `initial
 
 <br />
 
-## [deref_s32_pointer](#deref_s32_pointer)
+## deref_s32_pointer
 
 ### Description
 Gets the signed 32-bit integer value from `pointer`
@@ -2214,7 +1875,7 @@ Gets the signed 32-bit integer value from `pointer`
 
 <br />
 
-## [djui_popup_create_global](#djui_popup_create_global)
+## djui_popup_create_global
 
 ### Description
 Creates a DJUI popup that is broadcasted to every client
@@ -2238,7 +1899,7 @@ Creates a DJUI popup that is broadcasted to every client
 
 <br />
 
-## [djui_is_popup_disabled](#djui_is_popup_disabled)
+## djui_is_popup_disabled
 
 ### Description
 Returns if popups are disabled
@@ -2259,7 +1920,7 @@ Returns if popups are disabled
 
 <br />
 
-## [djui_set_popup_disabled_override](#djui_set_popup_disabled_override)
+## djui_set_popup_disabled_override
 
 ### Description
 Sets if popups are disabled
@@ -2282,7 +1943,7 @@ Sets if popups are disabled
 
 <br />
 
-## [djui_reset_popup_disabled_override](#djui_reset_popup_disabled_override)
+## djui_reset_popup_disabled_override
 
 ### Description
 Resets if popups are disabled
@@ -2303,7 +1964,7 @@ Resets if popups are disabled
 
 <br />
 
-## [djui_is_playerlist_open](#djui_is_playerlist_open)
+## djui_is_playerlist_open
 
 ### Description
 Checks if the DJUI playerlist is open
@@ -2324,7 +1985,7 @@ Checks if the DJUI playerlist is open
 
 <br />
 
-## [djui_attempting_to_open_playerlist](#djui_attempting_to_open_playerlist)
+## djui_attempting_to_open_playerlist
 
 ### Description
 Checks if the DJUI playerlist is attempting to be opened
@@ -2345,7 +2006,7 @@ Checks if the DJUI playerlist is attempting to be opened
 
 <br />
 
-## [djui_get_playerlist_page_index](#djui_get_playerlist_page_index)
+## djui_get_playerlist_page_index
 
 ### Description
 Gets the DJUI playerlist's page index
@@ -2366,7 +2027,7 @@ Gets the DJUI playerlist's page index
 
 <br />
 
-## [djui_is_chatbox_open](#djui_is_chatbox_open)
+## djui_is_chatbox_open
 
 ### Description
 Checks if the DJUI chatbox is open
@@ -2387,7 +2048,7 @@ Checks if the DJUI chatbox is open
 
 <br />
 
-## [djui_menu_get_font](#djui_menu_get_font)
+## djui_menu_get_font
 
 ### Description
 Gets the DJUI menu font
@@ -2408,7 +2069,7 @@ Gets the DJUI menu font
 
 <br />
 
-## [djui_menu_get_theme](#djui_menu_get_theme)
+## djui_menu_get_theme
 
 ### Description
 Gets the DJUI menu theme
@@ -2429,7 +2090,7 @@ Gets the DJUI menu theme
 
 <br />
 
-## [djui_is_playerlist_ping_visible](#djui_is_playerlist_ping_visible)
+## djui_is_playerlist_ping_visible
 
 ### Description
 Checks if the DJUI playerlist ping icon is visible
@@ -2450,7 +2111,7 @@ Checks if the DJUI playerlist ping icon is visible
 
 <br />
 
-## [get_dialog_box_state](#get_dialog_box_state)
+## get_dialog_box_state
 
 ### Description
 Gets the current state of the dialog box
@@ -2471,7 +2132,7 @@ Gets the current state of the dialog box
 
 <br />
 
-## [get_dialog_id](#get_dialog_id)
+## get_dialog_id
 
 ### Description
 Gets the current dialog box ID
@@ -2492,7 +2153,7 @@ Gets the current dialog box ID
 
 <br />
 
-## [get_last_star_or_key](#get_last_star_or_key)
+## get_last_star_or_key
 
 ### Description
 Gets if the last objective collected was a star (0) or a key (1)
@@ -2513,7 +2174,7 @@ Gets if the last objective collected was a star (0) or a key (1)
 
 <br />
 
-## [set_last_star_or_key](#set_last_star_or_key)
+## set_last_star_or_key
 
 ### Description
 Sets if the last objective collected was a star (0) or a key (1)
@@ -2536,7 +2197,7 @@ Sets if the last objective collected was a star (0) or a key (1)
 
 <br />
 
-## [get_last_completed_course_num](#get_last_completed_course_num)
+## get_last_completed_course_num
 
 ### Description
 Gets the last course a star or key was collected in
@@ -2557,7 +2218,7 @@ Gets the last course a star or key was collected in
 
 <br />
 
-## [set_last_completed_course_num](#set_last_completed_course_num)
+## set_last_completed_course_num
 
 ### Description
 Sets the last course a star or key was collected in
@@ -2580,7 +2241,7 @@ Sets the last course a star or key was collected in
 
 <br />
 
-## [get_last_completed_star_num](#get_last_completed_star_num)
+## get_last_completed_star_num
 
 ### Description
 Gets the last collected star's number (1-7)
@@ -2601,7 +2262,7 @@ Gets the last collected star's number (1-7)
 
 <br />
 
-## [set_last_completed_star_num](#set_last_completed_star_num)
+## set_last_completed_star_num
 
 ### Description
 Sets the last collected star's number (1-7)
@@ -2624,7 +2285,7 @@ Sets the last collected star's number (1-7)
 
 <br />
 
-## [get_got_file_coin_hi_score](#get_got_file_coin_hi_score)
+## get_got_file_coin_hi_score
 
 ### Description
 Checks if the save file's coin "HI SCORE" was obtained with the last star or key collection
@@ -2645,7 +2306,7 @@ Checks if the save file's coin "HI SCORE" was obtained with the last star or key
 
 <br />
 
-## [set_got_file_coin_hi_score](#set_got_file_coin_hi_score)
+## set_got_file_coin_hi_score
 
 ### Description
 Sets if the save file's coin "HI SCORE" was obtained with the last star or key collection
@@ -2668,7 +2329,7 @@ Sets if the save file's coin "HI SCORE" was obtained with the last star or key c
 
 <br />
 
-## [get_save_file_modified](#get_save_file_modified)
+## get_save_file_modified
 
 ### Description
 Checks if the save file has been modified without saving
@@ -2689,7 +2350,7 @@ Checks if the save file has been modified without saving
 
 <br />
 
-## [set_save_file_modified](#set_save_file_modified)
+## set_save_file_modified
 
 ### Description
 Sets if the save file has been modified without saving
@@ -2712,7 +2373,7 @@ Sets if the save file has been modified without saving
 
 <br />
 
-## [hud_hide](#hud_hide)
+## hud_hide
 
 ### Description
 Hides the HUD
@@ -2733,7 +2394,7 @@ Hides the HUD
 
 <br />
 
-## [hud_show](#hud_show)
+## hud_show
 
 ### Description
 Shows the HUD
@@ -2754,7 +2415,7 @@ Shows the HUD
 
 <br />
 
-## [hud_is_hidden](#hud_is_hidden)
+## hud_is_hidden
 
 ### Description
 Checks if the HUD is hidden
@@ -2775,7 +2436,7 @@ Checks if the HUD is hidden
 
 <br />
 
-## [hud_get_value](#hud_get_value)
+## hud_get_value
 
 ### Description
 Gets a HUD display value
@@ -2798,7 +2459,7 @@ Gets a HUD display value
 
 <br />
 
-## [hud_set_value](#hud_set_value)
+## hud_set_value
 
 ### Description
 Sets a HUD display value
@@ -2822,7 +2483,7 @@ Sets a HUD display value
 
 <br />
 
-## [hud_render_power_meter](#hud_render_power_meter)
+## hud_render_power_meter
 
 ### Description
 Renders a power meter on the HUD
@@ -2849,7 +2510,7 @@ Renders a power meter on the HUD
 
 <br />
 
-## [hud_render_power_meter_interpolated](#hud_render_power_meter_interpolated)
+## hud_render_power_meter_interpolated
 
 ### Description
 Renders an interpolated power meter on the HUD
@@ -2880,7 +2541,7 @@ Renders an interpolated power meter on the HUD
 
 <br />
 
-## [hud_get_flash](#hud_get_flash)
+## hud_get_flash
 
 ### Description
 Gets if the star counter on the HUD should flash
@@ -2901,7 +2562,7 @@ Gets if the star counter on the HUD should flash
 
 <br />
 
-## [hud_set_flash](#hud_set_flash)
+## hud_set_flash
 
 ### Description
 Sets if the star counter on the HUD should flash
@@ -2924,7 +2585,7 @@ Sets if the star counter on the HUD should flash
 
 <br />
 
-## [act_select_hud_hide](#act_select_hud_hide)
+## act_select_hud_hide
 
 ### Description
 Hides part of the Act Select HUD
@@ -2947,7 +2608,7 @@ Hides part of the Act Select HUD
 
 <br />
 
-## [act_select_hud_show](#act_select_hud_show)
+## act_select_hud_show
 
 ### Description
 Shows part of the Act Select HUD
@@ -2970,7 +2631,7 @@ Shows part of the Act Select HUD
 
 <br />
 
-## [act_select_hud_is_hidden](#act_select_hud_is_hidden)
+## act_select_hud_is_hidden
 
 ### Description
 Checks if part of the Act Select HUD is hidden
@@ -2993,7 +2654,7 @@ Checks if part of the Act Select HUD is hidden
 
 <br />
 
-## [is_game_paused](#is_game_paused)
+## is_game_paused
 
 ### Description
 Checks if the game is paused
@@ -3014,7 +2675,7 @@ Checks if the game is paused
 
 <br />
 
-## [is_pause_menu_hidden](#is_pause_menu_hidden)
+## is_pause_menu_hidden
 
 ### Description
 Gets if the pause menu elements are hidden, useful for creating custom pause menus
@@ -3035,7 +2696,7 @@ Gets if the pause menu elements are hidden, useful for creating custom pause men
 
 <br />
 
-## [set_pause_menu_hidden](#set_pause_menu_hidden)
+## set_pause_menu_hidden
 
 ### Description
 Sets if the pause menu elements are hidden, useful for creating custom pause menus
@@ -3058,7 +2719,7 @@ Sets if the pause menu elements are hidden, useful for creating custom pause men
 
 <br />
 
-## [game_pause](#game_pause)
+## game_pause
 
 ### Description
 Pauses the game
@@ -3079,7 +2740,7 @@ Pauses the game
 
 <br />
 
-## [game_unpause](#game_unpause)
+## game_unpause
 
 ### Description
 Unpauses the game
@@ -3100,7 +2761,7 @@ Unpauses the game
 
 <br />
 
-## [is_transition_playing](#is_transition_playing)
+## is_transition_playing
 
 ### Description
 Checks if a screen transition is playing
@@ -3121,7 +2782,7 @@ Checks if a screen transition is playing
 
 <br />
 
-## [get_current_play_mode](#get_current_play_mode)
+## get_current_play_mode
 
 ### Description
 Gets the current play mode (`PLAY_MODE_*`)
@@ -3142,7 +2803,7 @@ Gets the current play mode (`PLAY_MODE_*`)
 
 <br />
 
-## [get_delayed_warp_op](#get_delayed_warp_op)
+## get_delayed_warp_op
 
 ### Description
 Gets the delayed warp operation type (`WARP_OP_*`)
@@ -3163,7 +2824,7 @@ Gets the delayed warp operation type (`WARP_OP_*`)
 
 <br />
 
-## [allocate_mario_action](#allocate_mario_action)
+## allocate_mario_action
 
 ### Description
 Allocates an action ID with bitwise flags
@@ -3186,7 +2847,7 @@ Allocates an action ID with bitwise flags
 
 <br />
 
-## [get_hand_foot_pos_x](#get_hand_foot_pos_x)
+## get_hand_foot_pos_x
 
 ### Description
 Gets the X coordinate of Mario's hand (0-1) or foot (2-3)
@@ -3211,7 +2872,7 @@ but it is important to note that the positions are not updated off-screen
 
 <br />
 
-## [get_hand_foot_pos_y](#get_hand_foot_pos_y)
+## get_hand_foot_pos_y
 
 ### Description
 Gets the Y coordinate of Mario's hand (0-1) or foot (2-3)
@@ -3236,7 +2897,7 @@ but It is important to note that the positions are not updated off-screen
 
 <br />
 
-## [get_hand_foot_pos_z](#get_hand_foot_pos_z)
+## get_hand_foot_pos_z
 
 ### Description
 Gets the Z coordinate of Mario's hand (0-1) or foot (2-3)
@@ -3261,7 +2922,7 @@ but it is important to note that the positions are not updated off-screen
 
 <br />
 
-## [get_mario_anim_part_pos](#get_mario_anim_part_pos)
+## get_mario_anim_part_pos
 
 ### Description
 Retrieves the animated part position associated to `animPart` from the MarioState `m` and stores it into `pos`. Returns `true` on success or `false` on failure
@@ -3286,7 +2947,7 @@ Retrieves the animated part position associated to `animPart` from the MarioStat
 
 <br />
 
-## [get_mario_anim_part_rot](#get_mario_anim_part_rot)
+## get_mario_anim_part_rot
 
 ### Description
 Retrieves the animated part rotation associated to `animPart` from the MarioState `m` and stores it into `rot`. Returns `true` on success or `false` on failure
@@ -3311,7 +2972,7 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 
 <br />
 
-## [get_mario_anim_part_mtx](#get_mario_anim_part_mtx)
+## get_mario_anim_part_mtx
 
 ### Description
 Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
@@ -3336,7 +2997,7 @@ Retrieves the animated part matrix associated to `animPart` from the MarioState 
 
 <br />
 
-## [get_current_save_file_num](#get_current_save_file_num)
+## get_current_save_file_num
 
 ### Description
 Gets the current save file number (1-indexed)
@@ -3357,7 +3018,7 @@ Gets the current save file number (1-indexed)
 
 <br />
 
-## [save_file_get_using_backup_slot](#save_file_get_using_backup_slot)
+## save_file_get_using_backup_slot
 
 ### Description
 Checks if the save file is using its backup slot
@@ -3378,7 +3039,7 @@ Checks if the save file is using its backup slot
 
 <br />
 
-## [save_file_set_using_backup_slot](#save_file_set_using_backup_slot)
+## save_file_set_using_backup_slot
 
 ### Description
 Sets if the save file should use its backup slot
@@ -3401,7 +3062,7 @@ Sets if the save file should use its backup slot
 
 <br />
 
-## [movtexqc_register](#movtexqc_register)
+## movtexqc_register
 
 ### Description
 Registers a custom moving texture entry (used for vanilla water boxes)
@@ -3427,7 +3088,7 @@ Registers a custom moving texture entry (used for vanilla water boxes)
 
 <br />
 
-## [get_water_level](#get_water_level)
+## get_water_level
 
 ### Description
 Gets the water level in an area corresponding to `index` (0-indexed)
@@ -3450,7 +3111,7 @@ Gets the water level in an area corresponding to `index` (0-indexed)
 
 <br />
 
-## [set_water_level](#set_water_level)
+## set_water_level
 
 ### Description
 Sets the water level in an area corresponding to `index` (0-indexed)
@@ -3475,7 +3136,7 @@ Sets the water level in an area corresponding to `index` (0-indexed)
 
 <br />
 
-## [course_is_main_course](#course_is_main_course)
+## course_is_main_course
 
 ### Description
 Checks if a course is a main course and not the castle or secret levels
@@ -3498,7 +3159,7 @@ Checks if a course is a main course and not the castle or secret levels
 
 <br />
 
-## [get_ttc_speed_setting](#get_ttc_speed_setting)
+## get_ttc_speed_setting
 
 ### Description
 Gets TTC's speed setting
@@ -3519,7 +3180,7 @@ Gets TTC's speed setting
 
 <br />
 
-## [set_ttc_speed_setting](#set_ttc_speed_setting)
+## set_ttc_speed_setting
 
 ### Description
 Sets TTC's speed setting (TTC_SPEED_*)
@@ -3542,7 +3203,7 @@ Sets TTC's speed setting (TTC_SPEED_*)
 
 <br />
 
-## [get_time](#get_time)
+## get_time
 
 ### Description
 Gets the Unix Timestamp
@@ -3563,7 +3224,7 @@ Gets the Unix Timestamp
 
 <br />
 
-## [get_date_and_time](#get_date_and_time)
+## get_date_and_time
 
 ### Description
 Gets the system clock's date and time
@@ -3584,7 +3245,7 @@ Gets the system clock's date and time
 
 <br />
 
-## [get_envfx](#get_envfx)
+## get_envfx
 
 ### Description
 Gets the non overridden environment effect (e.g. snow)
@@ -3605,7 +3266,7 @@ Gets the non overridden environment effect (e.g. snow)
 
 <br />
 
-## [set_override_envfx](#set_override_envfx)
+## set_override_envfx
 
 ### Description
 Sets the override environment effect (e.g. snow)
@@ -3628,7 +3289,7 @@ Sets the override environment effect (e.g. snow)
 
 <br />
 
-## [get_global_timer](#get_global_timer)
+## get_global_timer
 
 ### Description
 Gets the global timer that has been ticking at 30 frames per second since game boot
@@ -3649,7 +3310,7 @@ Gets the global timer that has been ticking at 30 frames per second since game b
 
 <br />
 
-## [get_dialog_response](#get_dialog_response)
+## get_dialog_response
 
 ### Description
 Gets the choice selected inside of a dialog box (0-1)
@@ -3670,7 +3331,7 @@ Gets the choice selected inside of a dialog box (0-1)
 
 <br />
 
-## [get_time_stop_flags](#get_time_stop_flags)
+## get_time_stop_flags
 
 ### Description
 Gets the active time stop flags, used to freeze specific objects during cutscenes
@@ -3691,7 +3352,7 @@ Gets the active time stop flags, used to freeze specific objects during cutscene
 
 <br />
 
-## [get_local_discord_id](#get_local_discord_id)
+## get_local_discord_id
 
 ### Description
 Gets the local discord ID if it isn't disabled, otherwise "0" is returned
@@ -3712,7 +3373,7 @@ Gets the local discord ID if it isn't disabled, otherwise "0" is returned
 
 <br />
 
-## [get_coopnet_id](#get_coopnet_id)
+## get_coopnet_id
 
 ### Description
 Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and the player is connected, otherwise "-1" is returned
@@ -3735,7 +3396,7 @@ Gets the CoopNet ID of a player with `localIndex` if CoopNet is being used and t
 
 <br />
 
-## [get_volume_master](#get_volume_master)
+## get_volume_master
 
 ### Description
 Gets the master volume level
@@ -3756,7 +3417,7 @@ Gets the master volume level
 
 <br />
 
-## [get_volume_level](#get_volume_level)
+## get_volume_level
 
 ### Description
 Gets the volume level of music
@@ -3777,7 +3438,7 @@ Gets the volume level of music
 
 <br />
 
-## [get_volume_sfx](#get_volume_sfx)
+## get_volume_sfx
 
 ### Description
 Gets the volume level of sound effects
@@ -3798,7 +3459,7 @@ Gets the volume level of sound effects
 
 <br />
 
-## [get_volume_env](#get_volume_env)
+## get_volume_env
 
 ### Description
 Gets the volume level of environment sounds effects
@@ -3819,7 +3480,7 @@ Gets the volume level of environment sounds effects
 
 <br />
 
-## [set_volume_master](#set_volume_master)
+## set_volume_master
 
 ### Description
 Sets the master volume level
@@ -3842,7 +3503,7 @@ Sets the master volume level
 
 <br />
 
-## [set_volume_level](#set_volume_level)
+## set_volume_level
 
 ### Description
 Sets the volume level of music
@@ -3865,7 +3526,7 @@ Sets the volume level of music
 
 <br />
 
-## [set_volume_sfx](#set_volume_sfx)
+## set_volume_sfx
 
 ### Description
 Sets the volume level of sound effects
@@ -3888,7 +3549,7 @@ Sets the volume level of sound effects
 
 <br />
 
-## [set_volume_env](#set_volume_env)
+## set_volume_env
 
 ### Description
 Sets the volume level of environment sounds effects
@@ -3911,7 +3572,7 @@ Sets the volume level of environment sounds effects
 
 <br />
 
-## [get_environment_region](#get_environment_region)
+## get_environment_region
 
 ### Description
 Gets an environment region (gas/water boxes) height value
@@ -3934,7 +3595,7 @@ Gets an environment region (gas/water boxes) height value
 
 <br />
 
-## [set_environment_region](#set_environment_region)
+## set_environment_region
 
 ### Description
 Sets an environment region (gas/water boxes) height value
@@ -3958,7 +3619,7 @@ Sets an environment region (gas/water boxes) height value
 
 <br />
 
-## [mod_file_exists](#mod_file_exists)
+## mod_file_exists
 
 ### Description
 Checks if a file exists inside of a mod
@@ -3981,7 +3642,7 @@ Checks if a file exists inside of a mod
 
 <br />
 
-## [get_active_mod](#get_active_mod)
+## get_active_mod
 
 ### Description
 Gets the mod currently being processed
@@ -4002,7 +3663,7 @@ Gets the mod currently being processed
 
 <br />
 
-## [get_mod_files](#get_mod_files)
+## get_mod_files
 
 ### Description
 Gets all files a mod contains
@@ -4026,7 +3687,7 @@ Gets all files a mod contains
 
 <br />
 
-## [set_window_title](#set_window_title)
+## set_window_title
 
 ### Description
 Sets the window title to a custom title
@@ -4049,7 +3710,7 @@ Sets the window title to a custom title
 
 <br />
 
-## [reset_window_title](#reset_window_title)
+## reset_window_title
 
 ### Description
 Resets the window title
@@ -4070,7 +3731,7 @@ Resets the window title
 
 <br />
 
-## [get_os_name](#get_os_name)
+## get_os_name
 
 ### Description
 Gets the name of the operating system the game is running on
@@ -4091,7 +3752,7 @@ Gets the name of the operating system the game is running on
 
 <br />
 
-## [geo_get_current_root](#geo_get_current_root)
+## geo_get_current_root
 
 ### Description
 Gets the current root node being processed
@@ -4112,7 +3773,7 @@ Gets the current root node being processed
 
 <br />
 
-## [geo_get_current_master_list](#geo_get_current_master_list)
+## geo_get_current_master_list
 
 ### Description
 Gets the current master list node being processed
@@ -4133,7 +3794,7 @@ Gets the current master list node being processed
 
 <br />
 
-## [geo_get_current_perspective](#geo_get_current_perspective)
+## geo_get_current_perspective
 
 ### Description
 Gets the current perspective node being processed
@@ -4154,7 +3815,7 @@ Gets the current perspective node being processed
 
 <br />
 
-## [geo_get_current_camera](#geo_get_current_camera)
+## geo_get_current_camera
 
 ### Description
 Gets the current camera node being processed
@@ -4175,7 +3836,7 @@ Gets the current camera node being processed
 
 <br />
 
-## [geo_get_current_held_object](#geo_get_current_held_object)
+## geo_get_current_held_object
 
 ### Description
 Gets the current held object node being processed
@@ -4196,7 +3857,7 @@ Gets the current held object node being processed
 
 <br />
 
-## [geo_skip_interpolation](#geo_skip_interpolation)
+## geo_skip_interpolation
 
 ### Description
 Skips graph node interpolation for a frame
@@ -4220,7 +3881,7 @@ Skips graph node interpolation for a frame
 
 <br />
 
-## [texture_to_lua_table](#texture_to_lua_table)
+## texture_to_lua_table
 
 ### Description
 Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
@@ -4243,7 +3904,7 @@ Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, re
 
 <br />
 
-## [get_texture_name](#get_texture_name)
+## get_texture_name
 
 ### Description
 Gets the name of the provided texture pointer `tex`
@@ -4272,7 +3933,7 @@ Gets the name of the provided texture pointer `tex`
 <br />
 
 
-## [smlua_model_util_get_id](#smlua_model_util_get_id)
+## smlua_model_util_get_id
 
 ### Description
 Gets the extended model ID for the `name` of a `GeoLayout`
@@ -4301,7 +3962,7 @@ Gets the extended model ID for the `name` of a `GeoLayout`
 <br />
 
 
-## [spawn_sync_object](#spawn_sync_object)
+## spawn_sync_object
 
 ### Description
 Spawns a synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
@@ -4330,7 +3991,7 @@ You can change the fields of the object in `objSetupFunction`
 
 <br />
 
-## [spawn_non_sync_object](#spawn_non_sync_object)
+## spawn_non_sync_object
 
 ### Description
 Spawns a non-synchronized object at `x`, `y`, and `z` as a child object of the local Mario with his rotation.
@@ -4359,7 +4020,7 @@ You can change the fields of the object in `objSetupFunction`
 
 <br />
 
-## [obj_has_behavior_id](#obj_has_behavior_id)
+## obj_has_behavior_id
 
 ### Description
 Checks if an object has `behaviorId`
@@ -4383,7 +4044,7 @@ Checks if an object has `behaviorId`
 
 <br />
 
-## [obj_has_model_extended](#obj_has_model_extended)
+## obj_has_model_extended
 
 ### Description
 Checks if an object's model is equal to `modelId`
@@ -4407,7 +4068,7 @@ Checks if an object's model is equal to `modelId`
 
 <br />
 
-## [obj_get_model_id_extended](#obj_get_model_id_extended)
+## obj_get_model_id_extended
 
 ### Description
 Returns an object's extended model id
@@ -4430,7 +4091,7 @@ Returns an object's extended model id
 
 <br />
 
-## [obj_set_model_extended](#obj_set_model_extended)
+## obj_set_model_extended
 
 ### Description
 Sets an object's model to `modelId`
@@ -4454,7 +4115,7 @@ Sets an object's model to `modelId`
 
 <br />
 
-## [get_trajectory](#get_trajectory)
+## get_trajectory
 
 ### Description
 Gets a trajectory by `name`
@@ -4477,7 +4138,7 @@ Gets a trajectory by `name`
 
 <br />
 
-## [geo_get_current_object](#geo_get_current_object)
+## geo_get_current_object
 
 ### Description
 When used in a geo function, retrieve the current processed object
@@ -4498,7 +4159,7 @@ When used in a geo function, retrieve the current processed object
 
 <br />
 
-## [get_current_object](#get_current_object)
+## get_current_object
 
 ### Description
 Gets the object currently being processed
@@ -4519,7 +4180,7 @@ Gets the object currently being processed
 
 <br />
 
-## [get_dialog_object](#get_dialog_object)
+## get_dialog_object
 
 ### Description
 Gets the NPC object Mario is talking to
@@ -4540,7 +4201,7 @@ Gets the NPC object Mario is talking to
 
 <br />
 
-## [get_cutscene_focus](#get_cutscene_focus)
+## get_cutscene_focus
 
 ### Description
 Gets the cutscene focus object
@@ -4561,7 +4222,7 @@ Gets the cutscene focus object
 
 <br />
 
-## [get_secondary_camera_focus](#get_secondary_camera_focus)
+## get_secondary_camera_focus
 
 ### Description
 Gets the secondary camera focus object
@@ -4582,7 +4243,7 @@ Gets the secondary camera focus object
 
 <br />
 
-## [set_cutscene_focus](#set_cutscene_focus)
+## set_cutscene_focus
 
 ### Description
 Sets the cutscene focus object
@@ -4605,7 +4266,7 @@ Sets the cutscene focus object
 
 <br />
 
-## [set_secondary_camera_focus](#set_secondary_camera_focus)
+## set_secondary_camera_focus
 
 ### Description
 Sets the secondary camera focus object
@@ -4628,7 +4289,7 @@ Sets the secondary camera focus object
 
 <br />
 
-## [obj_get_first](#obj_get_first)
+## obj_get_first
 
 ### Description
 Gets the first object in an object list
@@ -4651,7 +4312,7 @@ Gets the first object in an object list
 
 <br />
 
-## [obj_get_first_with_behavior_id](#obj_get_first_with_behavior_id)
+## obj_get_first_with_behavior_id
 
 ### Description
 Gets the first object loaded with `behaviorId`
@@ -4674,7 +4335,7 @@ Gets the first object loaded with `behaviorId`
 
 <br />
 
-## [obj_get_first_with_behavior_id_and_field_s32](#obj_get_first_with_behavior_id_and_field_s32)
+## obj_get_first_with_behavior_id_and_field_s32
 
 ### Description
 Gets the first object loaded with `behaviorId` and object signed 32-bit integer field
@@ -4700,7 +4361,7 @@ Gets the first object loaded with `behaviorId` and object signed 32-bit integer 
 
 <br />
 
-## [obj_get_first_with_behavior_id_and_field_f32](#obj_get_first_with_behavior_id_and_field_f32)
+## obj_get_first_with_behavior_id_and_field_f32
 
 ### Description
 Gets the first object loaded with `behaviorId` and object float field
@@ -4726,7 +4387,7 @@ Gets the first object loaded with `behaviorId` and object float field
 
 <br />
 
-## [obj_get_next](#obj_get_next)
+## obj_get_next
 
 ### Description
 Gets the next object in an object list
@@ -4749,7 +4410,7 @@ Gets the next object in an object list
 
 <br />
 
-## [obj_get_next_with_same_behavior_id](#obj_get_next_with_same_behavior_id)
+## obj_get_next_with_same_behavior_id
 
 ### Description
 Gets the next object loaded with the same behavior ID
@@ -4772,7 +4433,7 @@ Gets the next object loaded with the same behavior ID
 
 <br />
 
-## [obj_get_next_with_same_behavior_id_and_field_s32](#obj_get_next_with_same_behavior_id_and_field_s32)
+## obj_get_next_with_same_behavior_id_and_field_s32
 
 ### Description
 Gets the next object loaded with the same behavior ID and object signed 32-bit integer field
@@ -4798,7 +4459,7 @@ Gets the next object loaded with the same behavior ID and object signed 32-bit i
 
 <br />
 
-## [obj_get_next_with_same_behavior_id_and_field_f32](#obj_get_next_with_same_behavior_id_and_field_f32)
+## obj_get_next_with_same_behavior_id_and_field_f32
 
 ### Description
 Gets the next object loaded with the same behavior ID and object float field
@@ -4824,7 +4485,7 @@ Gets the next object loaded with the same behavior ID and object float field
 
 <br />
 
-## [obj_get_nearest_object_with_behavior_id](#obj_get_nearest_object_with_behavior_id)
+## obj_get_nearest_object_with_behavior_id
 
 ### Description
 Gets the nearest object with `behaviorId` to `o`
@@ -4848,7 +4509,7 @@ Gets the nearest object with `behaviorId` to `o`
 
 <br />
 
-## [obj_count_objects_with_behavior_id](#obj_count_objects_with_behavior_id)
+## obj_count_objects_with_behavior_id
 
 ### Description
 Counts every object with `behaviorId`
@@ -4871,7 +4532,7 @@ Counts every object with `behaviorId`
 
 <br />
 
-## [obj_get_collided_object](#obj_get_collided_object)
+## obj_get_collided_object
 
 ### Description
 Gets the corresponding collided object to an index from `o`
@@ -4895,7 +4556,7 @@ Gets the corresponding collided object to an index from `o`
 
 <br />
 
-## [obj_get_field_u32](#obj_get_field_u32)
+## obj_get_field_u32
 
 ### Description
 Gets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
@@ -4919,7 +4580,7 @@ Gets the unsigned 32-bit integer value of the object field corresponding to `fie
 
 <br />
 
-## [obj_get_field_s32](#obj_get_field_s32)
+## obj_get_field_s32
 
 ### Description
 Gets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
@@ -4943,7 +4604,7 @@ Gets the signed 32-bit integer value of the object field corresponding to `field
 
 <br />
 
-## [obj_get_field_f32](#obj_get_field_f32)
+## obj_get_field_f32
 
 ### Description
 Gets the float value of the object field corresponding to `fieldIndex`
@@ -4967,7 +4628,7 @@ Gets the float value of the object field corresponding to `fieldIndex`
 
 <br />
 
-## [obj_get_field_s16](#obj_get_field_s16)
+## obj_get_field_s16
 
 ### Description
 Gets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
@@ -4992,7 +4653,7 @@ Gets the signed 16-bit integer value of the object field and sub field correspon
 
 <br />
 
-## [obj_set_field_u32](#obj_set_field_u32)
+## obj_set_field_u32
 
 ### Description
 Sets the unsigned 32-bit integer value of the object field corresponding to `fieldIndex`
@@ -5017,7 +4678,7 @@ Sets the unsigned 32-bit integer value of the object field corresponding to `fie
 
 <br />
 
-## [obj_set_field_s32](#obj_set_field_s32)
+## obj_set_field_s32
 
 ### Description
 Sets the signed 32-bit integer value of the object field corresponding to `fieldIndex`
@@ -5042,7 +4703,7 @@ Sets the signed 32-bit integer value of the object field corresponding to `field
 
 <br />
 
-## [obj_set_field_f32](#obj_set_field_f32)
+## obj_set_field_f32
 
 ### Description
 Sets the float value of the object field corresponding to `fieldIndex`
@@ -5067,7 +4728,7 @@ Sets the float value of the object field corresponding to `fieldIndex`
 
 <br />
 
-## [obj_set_field_s16](#obj_set_field_s16)
+## obj_set_field_s16
 
 ### Description
 Sets the signed 16-bit integer value of the object field and sub field corresponding to `fieldSubIndex` and `fieldIndex`
@@ -5093,7 +4754,7 @@ Sets the signed 16-bit integer value of the object field and sub field correspon
 
 <br />
 
-## [obj_get_field_info_from_name](#obj_get_field_info_from_name)
+## obj_get_field_info_from_name
 
 ### Description
 Gets the object field info (index, sub-index and type) from a field name and a specific mod (if provided). Returns `true` if the field is found, `false` otherwise.
@@ -5122,7 +4783,7 @@ This function works with custom object fields as well and is meant to be used wi
 
 <br />
 
-## [obj_get_temp_spawn_particles_info](#obj_get_temp_spawn_particles_info)
+## obj_get_temp_spawn_particles_info
 
 ### Description
 Returns a temporary particle spawn info pointer with its model loaded in from `modelId`
@@ -5145,7 +4806,7 @@ Returns a temporary particle spawn info pointer with its model loaded in from `m
 
 <br />
 
-## [obj_get_temp_water_droplet_params](#obj_get_temp_water_droplet_params)
+## obj_get_temp_water_droplet_params
 
 ### Description
 Returns a temporary water droplet params pointer with its model and behavior loaded in from `modelId` and `behaviorId`
@@ -5169,7 +4830,7 @@ Returns a temporary water droplet params pointer with its model and behavior loa
 
 <br />
 
-## [get_temp_object_hitbox](#get_temp_object_hitbox)
+## get_temp_object_hitbox
 
 ### Description
 Returns a temporary object hitbox pointer
@@ -5190,7 +4851,7 @@ Returns a temporary object hitbox pointer
 
 <br />
 
-## [obj_is_attackable](#obj_is_attackable)
+## obj_is_attackable
 
 ### Description
 Checks if `o` is attackable
@@ -5213,7 +4874,7 @@ Checks if `o` is attackable
 
 <br />
 
-## [obj_is_breakable_object](#obj_is_breakable_object)
+## obj_is_breakable_object
 
 ### Description
 Checks if `o` is breakable
@@ -5236,7 +4897,7 @@ Checks if `o` is breakable
 
 <br />
 
-## [obj_is_bully](#obj_is_bully)
+## obj_is_bully
 
 ### Description
 Checks if `o` is a Bully
@@ -5259,7 +4920,7 @@ Checks if `o` is a Bully
 
 <br />
 
-## [obj_is_coin](#obj_is_coin)
+## obj_is_coin
 
 ### Description
 Checks if `o` is a coin
@@ -5282,7 +4943,7 @@ Checks if `o` is a coin
 
 <br />
 
-## [obj_is_exclamation_box](#obj_is_exclamation_box)
+## obj_is_exclamation_box
 
 ### Description
 Checks if `o` is an exclamation box
@@ -5305,7 +4966,7 @@ Checks if `o` is an exclamation box
 
 <br />
 
-## [obj_is_grabbable](#obj_is_grabbable)
+## obj_is_grabbable
 
 ### Description
 Checks if `o` is grabbable
@@ -5328,7 +4989,7 @@ Checks if `o` is grabbable
 
 <br />
 
-## [obj_is_mushroom_1up](#obj_is_mushroom_1up)
+## obj_is_mushroom_1up
 
 ### Description
 Checks if `o` is a 1-Up Mushroom
@@ -5351,7 +5012,7 @@ Checks if `o` is a 1-Up Mushroom
 
 <br />
 
-## [obj_is_secret](#obj_is_secret)
+## obj_is_secret
 
 ### Description
 Checks if `o` is a secret
@@ -5374,7 +5035,7 @@ Checks if `o` is a secret
 
 <br />
 
-## [obj_is_valid_for_interaction](#obj_is_valid_for_interaction)
+## obj_is_valid_for_interaction
 
 ### Description
 Checks if `o` is activated, tangible, and interactible
@@ -5397,7 +5058,7 @@ Checks if `o` is activated, tangible, and interactible
 
 <br />
 
-## [obj_check_hitbox_overlap](#obj_check_hitbox_overlap)
+## obj_check_hitbox_overlap
 
 ### Description
 Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
@@ -5421,7 +5082,7 @@ Checks if `o1`'s hitbox is colliding with `o2`'s hitbox
 
 <br />
 
-## [obj_check_overlap_with_hitbox_params](#obj_check_overlap_with_hitbox_params)
+## obj_check_overlap_with_hitbox_params
 
 ### Description
 Checks if `o`'s hitbox is colliding with the parameters of a hitbox
@@ -5450,7 +5111,7 @@ Checks if `o`'s hitbox is colliding with the parameters of a hitbox
 
 <br />
 
-## [obj_set_vel](#obj_set_vel)
+## obj_set_vel
 
 ### Description
 Sets an object's velocity to `vx`, `vy`, and `vz`
@@ -5476,7 +5137,7 @@ Sets an object's velocity to `vx`, `vy`, and `vz`
 
 <br />
 
-## [obj_move_xyz](#obj_move_xyz)
+## obj_move_xyz
 
 ### Description
 Moves the object in the direction of `dx`, `dy`, and `dz`
@@ -5502,7 +5163,7 @@ Moves the object in the direction of `dx`, `dy`, and `dz`
 
 <br />
 
-## [set_whirlpools](#set_whirlpools)
+## set_whirlpools
 
 ### Description
 Sets the parameters of one of the two whirlpools (0-indexed) in an area
@@ -5530,7 +5191,7 @@ Sets the parameters of one of the two whirlpools (0-indexed) in an area
 
 <br />
 
-## [obj_skip_interpolation](#obj_skip_interpolation)
+## obj_skip_interpolation
 
 ### Description
 Skips object interpolation for a frame
@@ -5553,7 +5214,7 @@ Skips object interpolation for a frame
 
 <br />
 
-## [obj_anim_skip_interpolation](#obj_anim_skip_interpolation)
+## obj_anim_skip_interpolation
 
 ### Description
 Skips animation interpolation for a frame
@@ -5582,7 +5243,7 @@ Skips animation interpolation for a frame
 <br />
 
 
-## [smlua_text_utils_reset_all](#smlua_text_utils_reset_all)
+## smlua_text_utils_reset_all
 
 ### Description
 Resets every modified dialog back to vanilla
@@ -5603,7 +5264,7 @@ Resets every modified dialog back to vanilla
 
 <br />
 
-## [smlua_text_utils_dialog_get](#smlua_text_utils_dialog_get)
+## smlua_text_utils_dialog_get
 
 ### Description
 Gets the DialogEntry struct for the given `dialogId`
@@ -5626,7 +5287,7 @@ Gets the DialogEntry struct for the given `dialogId`
 
 <br />
 
-## [smlua_text_utils_dialog_replace](#smlua_text_utils_dialog_replace)
+## smlua_text_utils_dialog_replace
 
 ### Description
 Replaces `dialogId` with a custom one
@@ -5654,7 +5315,7 @@ Replaces `dialogId` with a custom one
 
 <br />
 
-## [smlua_text_utils_dialog_restore](#smlua_text_utils_dialog_restore)
+## smlua_text_utils_dialog_restore
 
 ### Description
 Restores a replaced DialogEntry to its original state.
@@ -5677,7 +5338,7 @@ Restores a replaced DialogEntry to its original state.
 
 <br />
 
-## [smlua_text_utils_dialog_is_replaced](#smlua_text_utils_dialog_is_replaced)
+## smlua_text_utils_dialog_is_replaced
 
 ### Description
 Returns whether the dialog with the given ID has been replaced
@@ -5700,7 +5361,7 @@ Returns whether the dialog with the given ID has been replaced
 
 <br />
 
-## [smlua_text_utils_allocate_dialog](#smlua_text_utils_allocate_dialog)
+## smlua_text_utils_allocate_dialog
 
 ### Description
 Allocates a new dialog entry
@@ -5721,7 +5382,7 @@ Allocates a new dialog entry
 
 <br />
 
-## [smlua_text_utils_dialog_get_type](#smlua_text_utils_dialog_get_type)
+## smlua_text_utils_dialog_get_type
 
 ### Description
 Gets the type of a `dialogId`
@@ -5744,7 +5405,7 @@ Gets the type of a `dialogId`
 
 <br />
 
-## [smlua_text_utils_dialog_set_type](#smlua_text_utils_dialog_set_type)
+## smlua_text_utils_dialog_set_type
 
 ### Description
 Sets the type of a `dialogId`
@@ -5768,7 +5429,7 @@ Sets the type of a `dialogId`
 
 <br />
 
-## [smlua_text_utils_dialog_reset_type](#smlua_text_utils_dialog_reset_type)
+## smlua_text_utils_dialog_reset_type
 
 ### Description
 Resets the type of a `dialogId`
@@ -5791,7 +5452,7 @@ Resets the type of a `dialogId`
 
 <br />
 
-## [smlua_text_utils_course_acts_replace](#smlua_text_utils_course_acts_replace)
+## smlua_text_utils_course_acts_replace
 
 ### Description
 Replaces the act names of `courseNum`
@@ -5821,7 +5482,7 @@ Replaces the act names of `courseNum`
 
 <br />
 
-## [smlua_text_utils_secret_star_replace](#smlua_text_utils_secret_star_replace)
+## smlua_text_utils_secret_star_replace
 
 ### Description
 Replaces the secret star course name of `courseNum` with `courseName`
@@ -5845,7 +5506,7 @@ Replaces the secret star course name of `courseNum` with `courseName`
 
 <br />
 
-## [smlua_text_utils_course_name_replace](#smlua_text_utils_course_name_replace)
+## smlua_text_utils_course_name_replace
 
 ### Description
 Replaces the name of `courseNum` with `name`
@@ -5869,7 +5530,7 @@ Replaces the name of `courseNum` with `name`
 
 <br />
 
-## [smlua_text_utils_course_name_get](#smlua_text_utils_course_name_get)
+## smlua_text_utils_course_name_get
 
 ### Description
 Gets the name of `courseNum`
@@ -5892,7 +5553,7 @@ Gets the name of `courseNum`
 
 <br />
 
-## [smlua_text_utils_course_name_mod_index](#smlua_text_utils_course_name_mod_index)
+## smlua_text_utils_course_name_mod_index
 
 ### Description
 Gets the index of the mod that replaced the name of `courseNum`
@@ -5915,7 +5576,7 @@ Gets the index of the mod that replaced the name of `courseNum`
 
 <br />
 
-## [smlua_text_utils_course_name_reset](#smlua_text_utils_course_name_reset)
+## smlua_text_utils_course_name_reset
 
 ### Description
 Resets the name of `courseNum`
@@ -5938,7 +5599,7 @@ Resets the name of `courseNum`
 
 <br />
 
-## [smlua_text_utils_act_name_replace](#smlua_text_utils_act_name_replace)
+## smlua_text_utils_act_name_replace
 
 ### Description
 Replaces the act name of `actNum` in `courseNum` with `name`
@@ -5963,7 +5624,7 @@ Replaces the act name of `actNum` in `courseNum` with `name`
 
 <br />
 
-## [smlua_text_utils_act_name_get](#smlua_text_utils_act_name_get)
+## smlua_text_utils_act_name_get
 
 ### Description
 Gets the act name of `actNum` in `courseNum`
@@ -5987,7 +5648,7 @@ Gets the act name of `actNum` in `courseNum`
 
 <br />
 
-## [smlua_text_utils_act_name_mod_index](#smlua_text_utils_act_name_mod_index)
+## smlua_text_utils_act_name_mod_index
 
 ### Description
 Gets the index of the mod that replaced the act name of `actNum` in `courseNum`
@@ -6011,7 +5672,7 @@ Gets the index of the mod that replaced the act name of `actNum` in `courseNum`
 
 <br />
 
-## [smlua_text_utils_act_name_reset](#smlua_text_utils_act_name_reset)
+## smlua_text_utils_act_name_reset
 
 ### Description
 Resets the act name of `actNum` in `courseNum`
@@ -6035,7 +5696,7 @@ Resets the act name of `actNum` in `courseNum`
 
 <br />
 
-## [smlua_text_utils_castle_secret_stars_replace](#smlua_text_utils_castle_secret_stars_replace)
+## smlua_text_utils_castle_secret_stars_replace
 
 ### Description
 Replaces the castle secret stars text with `name`
@@ -6058,7 +5719,7 @@ Replaces the castle secret stars text with `name`
 
 <br />
 
-## [smlua_text_utils_castle_secret_stars_get](#smlua_text_utils_castle_secret_stars_get)
+## smlua_text_utils_castle_secret_stars_get
 
 ### Description
 Gets the castle secret stars text
@@ -6079,7 +5740,7 @@ Gets the castle secret stars text
 
 <br />
 
-## [smlua_text_utils_castle_secret_stars_mod_index](#smlua_text_utils_castle_secret_stars_mod_index)
+## smlua_text_utils_castle_secret_stars_mod_index
 
 ### Description
 Gets the index of the mod that replaced the castle secret stars text
@@ -6100,7 +5761,7 @@ Gets the index of the mod that replaced the castle secret stars text
 
 <br />
 
-## [smlua_text_utils_castle_secret_stars_reset](#smlua_text_utils_castle_secret_stars_reset)
+## smlua_text_utils_castle_secret_stars_reset
 
 ### Description
 Resets the castle secret stars text
@@ -6121,7 +5782,7 @@ Resets the castle secret stars text
 
 <br />
 
-## [smlua_text_utils_extra_text_replace](#smlua_text_utils_extra_text_replace)
+## smlua_text_utils_extra_text_replace
 
 ### Description
 Replace extra text (e.g. one of the castle's secret stars) with `text`
@@ -6145,7 +5806,7 @@ Replace extra text (e.g. one of the castle's secret stars) with `text`
 
 <br />
 
-## [smlua_text_utils_extra_text_get](#smlua_text_utils_extra_text_get)
+## smlua_text_utils_extra_text_get
 
 ### Description
 Gets the extra text at `index`
@@ -6168,7 +5829,7 @@ Gets the extra text at `index`
 
 <br />
 
-## [smlua_text_utils_extra_text_mod_index](#smlua_text_utils_extra_text_mod_index)
+## smlua_text_utils_extra_text_mod_index
 
 ### Description
 Gets the index of the mod that replaced the extra text at `index`
@@ -6191,7 +5852,7 @@ Gets the index of the mod that replaced the extra text at `index`
 
 <br />
 
-## [smlua_text_utils_extra_text_reset](#smlua_text_utils_extra_text_reset)
+## smlua_text_utils_extra_text_reset
 
 ### Description
 Resets the extra text at `index`
@@ -6214,7 +5875,7 @@ Resets the extra text at `index`
 
 <br />
 
-## [smlua_text_utils_get_language](#smlua_text_utils_get_language)
+## smlua_text_utils_get_language
 
 ### Description
 Gets the current language
@@ -6241,7 +5902,7 @@ Gets the current language
 <br />
 
 
-## [reset_volume](#reset_volume)
+## reset_volume
 
 ### Description
 Resets if music volume has been lowered
@@ -6262,7 +5923,7 @@ Resets if music volume has been lowered
 
 <br />
 
-## [raise_background_noise](#raise_background_noise)
+## raise_background_noise
 
 ### Description
 Raises music volume back up to normal levels
@@ -6285,7 +5946,7 @@ Raises music volume back up to normal levels
 
 <br />
 
-## [lower_background_noise](#lower_background_noise)
+## lower_background_noise
 
 ### Description
 Lowers the volume of music by 40%
@@ -6308,7 +5969,7 @@ Lowers the volume of music by 40%
 
 <br />
 
-## [disable_background_sound](#disable_background_sound)
+## disable_background_sound
 
 ### Description
 Disables background soundbanks
@@ -6329,7 +5990,7 @@ Disables background soundbanks
 
 <br />
 
-## [enable_background_sound](#enable_background_sound)
+## enable_background_sound
 
 ### Description
 Enables background soundbanks
@@ -6350,7 +6011,7 @@ Enables background soundbanks
 
 <br />
 
-## [play_menu_sounds](#play_menu_sounds)
+## play_menu_sounds
 
 ### Description
 Play menu sounds from `SOUND_MENU_FLAG_*` constants and queues rumble if `SOUND_MENU_FLAG_LETGOMARIOFACE` is one of the flags
@@ -6373,7 +6034,7 @@ Play menu sounds from `SOUND_MENU_FLAG_*` constants and queues rumble if `SOUND_
 
 <br />
 
-## [play_painting_eject_sound](#play_painting_eject_sound)
+## play_painting_eject_sound
 
 ### Description
 Plays the painting eject sound effect if it has not already been played
@@ -6394,7 +6055,7 @@ Plays the painting eject sound effect if it has not already been played
 
 <br />
 
-## [play_infinite_stairs_music](#play_infinite_stairs_music)
+## play_infinite_stairs_music
 
 ### Description
 Plays the infinite stairs music if you're in the endless stairs room and have less than `gLevelValues.infiniteStairsRequirement` stars
@@ -6415,7 +6076,7 @@ Plays the infinite stairs music if you're in the endless stairs room and have le
 
 <br />
 
-## [set_background_music](#set_background_music)
+## set_background_music
 
 ### Description
 Sets the background music to `seqArgs` on sequence player `a` with a fade in time of `fadeTimer`
@@ -6440,7 +6101,7 @@ Sets the background music to `seqArgs` on sequence player `a` with a fade in tim
 
 <br />
 
-## [fadeout_music](#fadeout_music)
+## fadeout_music
 
 ### Description
 Fades out level, shell, and cap music
@@ -6463,7 +6124,7 @@ Fades out level, shell, and cap music
 
 <br />
 
-## [fadeout_level_music](#fadeout_level_music)
+## fadeout_level_music
 
 ### Description
 Fades out the level sequence player
@@ -6486,7 +6147,7 @@ Fades out the level sequence player
 
 <br />
 
-## [play_cutscene_music](#play_cutscene_music)
+## play_cutscene_music
 
 ### Description
 Plays and sets the current music to `seqArgs`
@@ -6509,7 +6170,7 @@ Plays and sets the current music to `seqArgs`
 
 <br />
 
-## [play_shell_music](#play_shell_music)
+## play_shell_music
 
 ### Description
 Plays shell music
@@ -6530,7 +6191,7 @@ Plays shell music
 
 <br />
 
-## [stop_shell_music](#stop_shell_music)
+## stop_shell_music
 
 ### Description
 Stops shell music completely
@@ -6551,7 +6212,7 @@ Stops shell music completely
 
 <br />
 
-## [play_cap_music](#play_cap_music)
+## play_cap_music
 
 ### Description
 Plays `seqArgs` as cap music
@@ -6574,7 +6235,7 @@ Plays `seqArgs` as cap music
 
 <br />
 
-## [fadeout_cap_music](#fadeout_cap_music)
+## fadeout_cap_music
 
 ### Description
 Fades out cap music
@@ -6595,7 +6256,7 @@ Fades out cap music
 
 <br />
 
-## [stop_cap_music](#stop_cap_music)
+## stop_cap_music
 
 ### Description
 Stops cap music completely
@@ -6622,7 +6283,7 @@ Stops cap music completely
 <br />
 
 
-## [cur_obj_play_sound_if_visible](#cur_obj_play_sound_if_visible)
+## cur_obj_play_sound_if_visible
 
 ### Description
 Plays a sound if the current object is visible
@@ -6645,7 +6306,7 @@ Plays a sound if the current object is visible
 
 <br />
 
-## [cur_obj_play_sound_and_rumble_if_visible](#cur_obj_play_sound_and_rumble_if_visible)
+## cur_obj_play_sound_and_rumble_if_visible
 
 ### Description
 Plays a sound if the current object is visible and queues rumble for the following sounds: `SOUND_OBJ_BOWSER_WALK`, `SOUND_OBJ_POUNDING_LOUD`, `SOUND_OBJ_WHOMP_LOWPRIO`
@@ -6668,7 +6329,7 @@ Plays a sound if the current object is visible and queues rumble for the followi
 
 <br />
 
-## [create_sound_spawner](#create_sound_spawner)
+## create_sound_spawner
 
 ### Description
 Create a sound spawner for objects that need a sound play once.
@@ -6698,7 +6359,7 @@ Create a sound spawner for objects that need a sound play once.
 <br />
 
 
-## [find_wall_collisions](#find_wall_collisions)
+## find_wall_collisions
 
 ### Description
 Detects wall collisions at a given position and adjusts the position based on the walls found.
@@ -6722,7 +6383,7 @@ Returns the number of wall collisions detected
 
 <br />
 
-## [find_ceil](#find_ceil)
+## find_ceil
 
 ### Description
 Finds the height of the highest ceiling above a given position (x, y, z) and return the corresponding ceil surface.
@@ -6749,7 +6410,7 @@ If no ceiling is found, returns the default height limit of `gLevelValues.cellHe
 
 <br />
 
-## [find_ceil_height](#find_ceil_height)
+## find_ceil_height
 
 ### Description
 Finds the height of the highest ceiling above a given position (x, y, z).
@@ -6775,7 +6436,7 @@ If no ceiling is found, returns the default height limit of `gLevelValues.cellHe
 
 <br />
 
-## [find_floor_height](#find_floor_height)
+## find_floor_height
 
 ### Description
 Finds the height of the highest floor below a given position (x, y, z).
@@ -6801,7 +6462,7 @@ If no floor is found, returns the default floor height of `gLevelValues.floorLow
 
 <br />
 
-## [find_floor](#find_floor)
+## find_floor
 
 ### Description
 Finds the height of the highest floor below a given position (x, y, z) and return the corresponding floor surface.
@@ -6828,7 +6489,7 @@ If no floor is found, returns the default floor height of `gLevelValues.floorLow
 
 <br />
 
-## [find_water_level](#find_water_level)
+## find_water_level
 
 ### Description
 Finds the height of water at a given position (x, z), if the position is within a water region.
@@ -6853,7 +6514,7 @@ If no water is found, returns the default height of `gLevelValues.floorLowerLimi
 
 <br />
 
-## [find_poison_gas_level](#find_poison_gas_level)
+## find_poison_gas_level
 
 ### Description
 Finds the height of the poison gas at a given position (x, z), if the position is within a gas region.
@@ -6878,7 +6539,7 @@ If no gas is found, returns the default height of `gLevelValues.floorLowerLimit`
 
 <br />
 
-## [set_find_wall_direction](#set_find_wall_direction)
+## set_find_wall_direction
 
 ### Description
 Sets whether collision finding functions should check wall directions.
@@ -6903,7 +6564,7 @@ Sets whether collision finding functions should check wall directions.
 
 <br />
 
-## [closest_point_to_triangle](#closest_point_to_triangle)
+## closest_point_to_triangle
 
 ### Description
 Gets the closest point of the triangle to `src` and returns it in `out`.
@@ -6934,7 +6595,7 @@ Gets the closest point of the triangle to `src` and returns it in `out`.
 <br />
 
 
-## [load_object_collision_model](#load_object_collision_model)
+## load_object_collision_model
 
 ### Description
 Loads the object's collision data into dynamic collision.
@@ -6956,7 +6617,7 @@ You must run this every frame in your object's behavior loop for it to have coll
 
 <br />
 
-## [load_static_object_collision](#load_static_object_collision)
+## load_static_object_collision
 
 ### Description
 Loads the object's collision data into static collision.
@@ -6978,7 +6639,7 @@ You may run this only once to capture the object's collision at that frame.
 
 <br />
 
-## [toggle_static_object_collision](#toggle_static_object_collision)
+## toggle_static_object_collision
 
 ### Description
 Toggles a collection of static object surfaces
@@ -7002,7 +6663,7 @@ Toggles a collection of static object surfaces
 
 <br />
 
-## [get_static_object_surface](#get_static_object_surface)
+## get_static_object_surface
 
 ### Description
 Gets a surface corresponding to `index` from the static object collision
@@ -7026,7 +6687,7 @@ Gets a surface corresponding to `index` from the static object collision
 
 <br />
 
-## [remove_static_object_collision](#remove_static_object_collision)
+## remove_static_object_collision
 
 ### Description
 Removes all surfaces belonging to a static object collision and reclaims the SOC metadata
@@ -7049,7 +6710,7 @@ Removes all surfaces belonging to a static object collision and reclaims the SOC
 
 <br />
 
-## [obj_get_surface_from_index](#obj_get_surface_from_index)
+## obj_get_surface_from_index
 
 ### Description
 Gets a surface corresponding to `index` from the surface pool buffer
@@ -7073,7 +6734,7 @@ Gets a surface corresponding to `index` from the surface pool buffer
 
 <br />
 
-## [surface_has_force](#surface_has_force)
+## surface_has_force
 
 ### Description
 Checks if a surface has force
@@ -7102,7 +6763,7 @@ Checks if a surface has force
 <br />
 
 
-## [sync_object_get_random_seed](#sync_object_get_random_seed)
+## sync_object_get_random_seed
 
 ### Description
 Retrieves the random seed of a sync object from its sync ID
@@ -7125,7 +6786,7 @@ Retrieves the random seed of a sync object from its sync ID
 
 <br />
 
-## [sync_object_get_object](#sync_object_get_object)
+## sync_object_get_object
 
 ### Description
 Retrieves an object from a sync ID
@@ -7148,7 +6809,7 @@ Retrieves an object from a sync ID
 
 <br />
 
-## [sync_object_is_initialized](#sync_object_is_initialized)
+## sync_object_is_initialized
 
 ### Description
 Checks if a sync object is initialized using a `syncId`
@@ -7171,7 +6832,7 @@ Checks if a sync object is initialized using a `syncId`
 
 <br />
 
-## [sync_object_is_owned_locally](#sync_object_is_owned_locally)
+## sync_object_is_owned_locally
 
 ### Description
 Checks if a sync object is owned locally using a `syncId`

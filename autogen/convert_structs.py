@@ -680,7 +680,7 @@ def doc_struct_object_fields(struct):
 
 def doc_struct(struct):
     sid = struct['identifier']
-    s = '## [%s](#%s)\n\n' % (sid, sid)
+    s = '## %s\n\n' % (sid)
     s += "| Field | Type | Access |\n"
     s += "| ----- | ---- | ------ |\n"
 
