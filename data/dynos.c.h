@@ -32,7 +32,11 @@ const char* dynos_pack_get_name(s32 index);
 bool dynos_pack_get_enabled(s32 index);
 void dynos_pack_set_enabled(s32 index, bool value);
 bool dynos_pack_get_exists(s32 index);
+const u8* dynos_goddard_get_data(void);
+s32 dynos_goddard_get_size(void);
 void dynos_generate_mod_pack(char* modPath);
+void dynos_goddard_add_head(const char* filePath, const char* headName);
+void dynos_goddard_set_head(const char* headName);
 void dynos_generate_packs(const char* directory);
 
 // -- audio -- //

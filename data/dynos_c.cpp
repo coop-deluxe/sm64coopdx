@@ -109,6 +109,22 @@ void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
 
+const u8* dynos_goddard_get_data(void) {
+    return DynOS_Goddard_GetData();
+}
+
+s32 dynos_goddard_get_size(void) {
+    return DynOS_Goddard_GetSize();
+}
+
+void dynos_goddard_add_head(const char* filePath, const char* headName) {
+    DynOS_Goddard_AddHead(headName, filePath, false);
+}
+
+void dynos_goddard_set_head(const char* headName) {
+    DynOS_Goddard_SetHead(headName);
+}
+
 // -- audio -- //
 
 void dynos_audio_reset_mods() {

@@ -168,6 +168,18 @@ function texture_override_reset(textureName)
     -- ...
 end
 
+--- @param headName string The name of the goddard head
+--- Overrides the goddard head with a custom one.
+--- `headName` must be the name of a goddard head in any active mod's `goddard` folder.
+---
+--- ### Lua Example
+--- ```lua
+--- goddard_set_head("kirby")
+--- ```
+function goddard_set_head(headName)
+    -- ...
+end
+
 --- @class BehaviorData
 --- @field behavior BehaviorId
 --- @field behaviorArg integer

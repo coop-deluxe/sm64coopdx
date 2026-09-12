@@ -529,6 +529,21 @@ int smlua_func_texture_override_reset(lua_State* L) {
     return 1;
 }
 
+  /////////////
+ // goddard //
+/////////////
+
+int smlua_func_goddard_set_head(lua_State* L) {
+    if (!smlua_functions_valid_param_count(L, 1)) { return 0; }
+
+    const char* headName = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("goddard_set_head: Failed to convert parameter 1"); return 0; }
+
+    dynos_goddard_set_head(headName);
+
+    return 1;
+}
+
   ////////////////////////////////
  // level script preprocessing //
 ////////////////////////////////
@@ -1499,6 +1514,7 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "get_texture_info", smlua_func_get_texture_info);
     smlua_bind_function(L, "texture_override_set", smlua_func_texture_override_set);
     smlua_bind_function(L, "texture_override_reset", smlua_func_texture_override_reset);
+    smlua_bind_function(L, "goddard_set_head", smlua_func_goddard_set_head);
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse); // deprecated
     smlua_bind_function(L, "level_parse_script", smlua_func_level_parse_script);
     smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);

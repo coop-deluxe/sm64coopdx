@@ -19,6 +19,7 @@
    - [get_texture_info](#get_texture_info)
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
+   - [goddard_set_head](#goddard_set_head)
    - [level_parse_script](#level_parse_script)
    - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [log_to_console](#log_to_console)
@@ -2568,6 +2569,30 @@ texture_override_reset("outside_09004000")
 
 <br />
 
+## [goddard_set_head](#goddard_set_head)
+
+### Description
+Overrides the goddard head with a custom one.
+`headName` must be the name of a goddard head in any active mod's `goddard` folder.
+
+### Lua Example
+```lua
+goddard_set_head("kirby")
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| headName | `string` |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [level_parse_script](#level_parse_script)
 ## level_parse_script
 
 ### Description
@@ -2951,7 +2976,7 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
+| levelNum | [LevelNum](./structs.md#LevelNum) \| `integer` |
 | func | `function` |
 
 ### Returns
@@ -3004,7 +3029,7 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
+| level | [ConsoleMessageLevel](./structs.md#ConsoleMessageLevel) |
 
 ### Returns
 - None

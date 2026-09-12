@@ -29,9 +29,9 @@
 /// Size of the dynamic object name buffer
 #define DYNOBJ_NAME_SIZE 8
 /// Total number of dynamic `GdObj`s that can be created
-#define DYNOBJ_LIST_SIZE 3000
+#define DYNOBJ_LIST_SIZE 20000
 /// Maximum number of verticies supported when adding vertices node to an `ObjShape`
-#define VTX_BUF_SIZE 3000
+#define VTX_BUF_SIZE 200000
 
 // types
 /// Information about a dynamically created `GdObj`
@@ -1003,11 +1003,16 @@ void chk_shapegen(struct ObjShape *shape) {
                 fatal_printf("unsupported vertex type");
             }
 
-            if (vtxdata->count >= VTX_BUF_SIZE) {
+            if (vtxdata->count == 0) {
+                fatal_printf("shapegen() no vertices");
+            }
+
+            // Keep a sanity cap to prevent pathological allocations.
+            if (vtxdata->count > VTX_BUF_SIZE) {
                 fatal_printf("shapegen() too many vertices");
             }
 
-            vtxbuf = gd_malloc_temp(VTX_BUF_SIZE * sizeof(struct ObjVertex *));
+            vtxbuf = gd_malloc_temp((size_t) vtxdata->count * sizeof(struct ObjVertex *));
             oldObjHead = gGdObjectList;
 
             for (i = 0; i < vtxdata->count; i++) {
@@ -1020,24 +1025,29 @@ void chk_shapegen(struct ObjShape *shape) {
 
             oldObjHead = gGdObjectList;
             for (i = 0; i < facedata->count; i++) {
+                u16 i1 = facedata->data[i][1];
+                u16 i2 = facedata->data[i][2];
+                u16 i3 = facedata->data[i][3];
+                if (i1 >= vtxdata->count || i2 >= vtxdata->count || i3 >= vtxdata->count) {
+                    continue;
+                }
                 //! @bug Call to `make_face_with_colour()` compiles incorrectly
                 //!      due to Goddard only declaring the functions,
                 //!      not prototyping the functions
                 face = make_face_with_colour(1.0, 1.0, 1.0);
                 face->mtlId = (s32) facedata->data[i][0];
-                add_3_vtx_to_face(face, vtxbuf[facedata->data[i][1]], vtxbuf[facedata->data[i][2]],
-                                  vtxbuf[facedata->data[i][3]]);
-                vtxbuf[facedata->data[i][1]]->normal.x += face->normal.x;
-                vtxbuf[facedata->data[i][1]]->normal.y += face->normal.y;
-                vtxbuf[facedata->data[i][1]]->normal.z += face->normal.z;
+                add_3_vtx_to_face(face, vtxbuf[i1], vtxbuf[i2], vtxbuf[i3]);
+                vtxbuf[i1]->normal.x += face->normal.x;
+                vtxbuf[i1]->normal.y += face->normal.y;
+                vtxbuf[i1]->normal.z += face->normal.z;
 
-                vtxbuf[facedata->data[i][2]]->normal.x += face->normal.x;
-                vtxbuf[facedata->data[i][2]]->normal.y += face->normal.y;
-                vtxbuf[facedata->data[i][2]]->normal.z += face->normal.z;
+                vtxbuf[i2]->normal.x += face->normal.x;
+                vtxbuf[i2]->normal.y += face->normal.y;
+                vtxbuf[i2]->normal.z += face->normal.z;
 
-                vtxbuf[facedata->data[i][3]]->normal.x += face->normal.x;
-                vtxbuf[facedata->data[i][3]]->normal.y += face->normal.y;
-                vtxbuf[facedata->data[i][3]]->normal.z += face->normal.z;
+                vtxbuf[i3]->normal.x += face->normal.x;
+                vtxbuf[i3]->normal.y += face->normal.y;
+                vtxbuf[i3]->normal.z += face->normal.z;
             }
 
             if (shape->flag & 0x10) {
