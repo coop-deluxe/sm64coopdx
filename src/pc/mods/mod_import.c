@@ -4,6 +4,7 @@
 #include "pc/utils/miniz/miniz.h"
 #include "pc/debuglog.h"
 #include "data/dynos.c.h"
+#include "pc/network/network.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
 #include "mods.h"

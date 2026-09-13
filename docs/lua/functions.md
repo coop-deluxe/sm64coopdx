@@ -2997,14 +2997,14 @@ Logs a message to the in-game console.
 
 ### Lua Example
 ```lua
-log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
+log_to_console("sm64coopdx FTW", LOG_TYPE_INFO)
 ```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](./constants.md#enum-ConsoleMessageLevel) |
+| logType | [enum LogType](./constants.md#enum-LogType) |
 
 ### Returns
 - None

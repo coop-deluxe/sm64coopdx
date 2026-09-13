@@ -1,5 +1,7 @@
 #include "smlua.h"
+#include "game/level_update.h"
 #include "pc/mods/mods.h"
+#include "pc/network/network.h"
 #include "audio/external.h"
 #include "engine/level_script.h"
 

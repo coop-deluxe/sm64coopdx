@@ -19,6 +19,7 @@
 #include "network/moderator_list.h"
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
+#include "djui/djui_theme.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
@@ -191,10 +192,9 @@ bool         configCameraToxicGas                 = true;
 bool         configLuaProfiler                    = false;
 bool         configDebugPrint                     = false;
 bool         configDebugInfo                      = false;
+bool         configDebugWarning                   = false;
 bool         configDebugError                     = false;
-#ifdef DEVELOPMENT
 bool         configCtxProfiler                    = false;
-#endif
 // player settings
 char         configPlayerName[MAX_CONFIG_STRING]  = "";
 unsigned int configPlayerModel                    = 0;
@@ -349,10 +349,9 @@ static const struct ConfigOption options[] = {
     {.name = "lua_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configLuaProfiler},
     {.name = "debug_print",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugPrint},
     {.name = "debug_info",                     .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugInfo},
+    {.name = "debug_warning",                  .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugWarning},
     {.name = "debug_error",                    .type = CONFIG_TYPE_BOOL, .boolValue   = &configDebugError},
-#ifdef DEVELOPMENT
     {.name = "ctx_profiler",                   .type = CONFIG_TYPE_BOOL, .boolValue   = &configCtxProfiler},
-#endif
     // player settings
     {.name = "coop_player_name",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPlayerName, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coop_player_model",              .type = CONFIG_TYPE_UINT,   .uintValue   = &configPlayerModel},
@@ -699,13 +698,13 @@ static void configfile_load_internal(const char *filename, bool* error) {
     *error = false;
 
 #ifdef DEVELOPMENT
-    printf("Loading configuration from '%s'\n", filename);
+    LOG_INFO("Loading configuration from '%s'", filename);
 #endif
 
     file = fs_open(filename);
     if (file == NULL) {
         // Create a new config file and save defaults
-        printf("Config file '%s' not found. Creating it.\n", filename);
+        LOG_INFO("Config file '%s' not found. Creating it.", filename);
         configfile_save(filename);
         return;
     }
@@ -758,7 +757,7 @@ static void configfile_load_internal(const char *filename, bool* error) {
 
                 if (option == NULL) {
 #ifdef DEVELOPMENT
-                    printf("unknown option '%s'\n", tokens[0]);
+                    LOG_ERROR("unknown option '%s'", tokens[0]);
 #endif
                 } else {
                     switch (option->type) {
@@ -796,14 +795,14 @@ static void configfile_load_internal(const char *filename, bool* error) {
                             goto NEXT_OPTION;
                     }
 #ifdef DEVELOPMENT
-                    printf("option: '%s', value:", tokens[0]);
-                    for (int i = 1; i < numTokens; ++i) printf(" '%s'", tokens[i]);
-                    printf("\n");
+                    log_to_terminal("option: '%s', value:", tokens[0]);
+                    for (int i = 1; i < numTokens; ++i) log_to_terminal(" '%s'", tokens[i]);
+                    log_to_terminal("\n");
 #endif
                 }
             } else {
 #ifdef DEVELOPMENT
-                printf("error: expected value\n");
+                log_to_terminal("error: expected value\n");
 #endif
             }
         }
@@ -954,7 +953,7 @@ void configfile_save(const char *filename) {
         return;
     }
 
-    LOG_INFO("Saving configuration to '%s'\n", filename);
+    LOG_INFO("Saving configuration to '%s'", filename);
 
     for (unsigned int i = 0; i < ARRAY_LEN(options); i++) {
         const struct ConfigOption *option = &options[i];

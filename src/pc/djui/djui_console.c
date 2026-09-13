@@ -4,6 +4,7 @@
 #include "djui_console.h"
 #include "pc/pc_main.h"
 #include "pc/commands.h"
+#include "pc/debuglog.h"
 #include "engine/math_util.h"
 
 #define MAX_CONSOLE_MESSAGES 500
@@ -17,16 +18,16 @@ bool sClearConsoleInput = false;
 
 struct ConsoleQueuedMessage {
     char* message;
-    enum ConsoleMessageLevel level;
+    enum LogType logType;
     struct ConsoleQueuedMessage* next;
 };
 
 struct ConsoleQueuedMessage* sConsoleQueuedMessages = NULL;
 
-static void djui_console_message_queue(const char* message, enum ConsoleMessageLevel level) {
+static void djui_console_message_queue(const char* message, enum LogType logType) {
     struct ConsoleQueuedMessage* queued = malloc(sizeof(struct ConsoleQueuedMessage));
     queued->message = strdup(message);
-    queued->level = level;
+    queued->logType = logType;
     queued->next = NULL;
     if (sConsoleQueuedMessages == NULL) {
         sConsoleQueuedMessages = queued;
@@ -44,7 +45,7 @@ void djui_console_message_dequeue(void) {
     struct ConsoleQueuedMessage* entry = sConsoleQueuedMessages;
     while (entry) {
         struct ConsoleQueuedMessage* next = entry->next;
-        djui_console_message_create(entry->message, entry->level);
+        djui_console_message_create(entry->message, entry->logType);
         free(entry->message);
         free(entry);
         entry = next;
@@ -183,9 +184,9 @@ void djui_console_clear() {
     sDjuiConsoleMessages = 0;
 }
 
-void djui_console_message_create(const char* message, enum ConsoleMessageLevel level) {
+void djui_console_message_create(const char* message, enum LogType logType) {
     if (sDjuiConsoleQueueMessages || !gDjuiConsole) {
-        djui_console_message_queue(message, level);
+        djui_console_message_queue(message, logType);
         return;
     }
     djui_base_compute_tree(&gDjuiConsole->base);
@@ -199,17 +200,16 @@ void djui_console_message_create(const char* message, enum ConsoleMessageLevel l
     djui_base_set_alignment(tBase, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
     djui_base_set_size_type(tBase, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
     djui_base_set_size(tBase, maxTextWidth, 32);
-    switch (level) {
-        case CONSOLE_MESSAGE_INFO:
-            djui_base_set_color(tBase, 220, 220, 220, 255);
-            break;
-        case CONSOLE_MESSAGE_WARNING:
-            djui_base_set_color(tBase, 255, 255, 160, 255);
-            break;
-        case CONSOLE_MESSAGE_ERROR:
-            djui_base_set_color(tBase, 255, 160, 160, 255);
-            break;
+
+    // convert rgb to hex and set color to log type's color
+    u32 r, g, b;
+    if (sscanf(log_type_hex_color_code(logType), "\\#%02x%02x%02x\\", &r, &g, &b) < 3) {
+        // set default color to #dcdcdc if necessary
+        r = 220;
+        g = 220;
+        b = 220;
     }
+    djui_base_set_color(tBase, r, g, b, 255);
 
     // figure out chat message height
     text->base.comp.width = maxTextWidth;

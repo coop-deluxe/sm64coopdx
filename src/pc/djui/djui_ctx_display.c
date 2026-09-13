@@ -4,9 +4,7 @@
 #include "pc/pc_main.h"
 #include "pc/debug_context.h"
 
-#ifdef DEVELOPMENT
-
-static char* sDebugContextNames[] = {
+static char *sDebugContextNames[] = {
     "NONE",
     "TOTAL",
     "NET",
@@ -21,8 +19,6 @@ static char* sDebugContextNames[] = {
     "OTHER",
     "MAX",
 };
-
-#endif
 
 struct DjuiCtxEntry {
     struct DjuiText *name;
@@ -39,7 +35,6 @@ struct DjuiCtxDisplay {
 struct DjuiCtxDisplay *sCtxDisplay = NULL;
 
 void djui_ctx_display_update(void) {
-#ifdef DEVELOPMENT
     if (!configCtxProfiler || sCtxDisplay == NULL) { return; }
 
     // Time we have for a indivdual frame. If we exceed it. We are in the red.
@@ -74,16 +69,13 @@ void djui_ctx_display_update(void) {
         snprintf(timing, 32, "%05d", counterMs);
         djui_text_set_text(entry->timing, timing);
     }
-#endif
 }
 
 void djui_ctx_display_render(void) {
-#ifdef DEVELOPMENT
     if (!configCtxProfiler || sCtxDisplay == NULL) { return; }
 
     djui_rect_render(&sCtxDisplay->base);
     djui_base_render(&sCtxDisplay->base);
-#endif
 }
 
 void djui_ctx_display_on_destroy(UNUSED struct DjuiBase* base) {
