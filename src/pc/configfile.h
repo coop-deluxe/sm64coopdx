@@ -156,6 +156,7 @@ extern bool         configPauseAnywhere;
 extern bool         configMenuStaffRoll;
 extern unsigned int configMenuLevel;
 extern unsigned int configMenuSound;
+extern bool         configMenuEnvSounds;
 extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configDisablePopups;

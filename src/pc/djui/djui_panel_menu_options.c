@@ -21,41 +21,21 @@ static struct DjuiCheckbox* sRandomStageCheckbox = NULL;
 // static struct DjuiCheckbox* sVanillaDemosCheckbox = NULL;
 
 struct MainMenuSounds gMainMenuSounds[] = {
-    { "Title Screen", SEQ_MENU_TITLE_SCREEN },
-    { "File Select", SEQ_MENU_FILE_SELECT },
-    { "Grass", SEQ_LEVEL_GRASS },
-    { "Water", SEQ_LEVEL_WATER },
-    { "Snow", SEQ_LEVEL_SNOW },
-    { "Slide", SEQ_LEVEL_SLIDE },
-    { "Bowser Stage", SEQ_LEVEL_KOOPA_ROAD },
-    { "Bowser Fight", SEQ_LEVEL_BOSS_KOOPA },
-    { "Spooky", SEQ_LEVEL_SPOOKY },
-    { "Hot", SEQ_LEVEL_HOT },
-    { "Underground", SEQ_LEVEL_UNDERGROUND },
-    { "Bowser Finale", SEQ_LEVEL_BOSS_KOOPA_FINAL },
-    { "Staff Roll", SEQ_EVENT_CUTSCENE_CREDITS },
-    { "Stage Music", STAGE_MUSIC },
-};
-
-static char* sLevelChoices[18] = {
-    "CG",
-    "BOB",
-    "WF",
-    "WMOTR",
-    "JRB",
-    "SSL",
-    "TTM",
-    "SL",
-    "BBH",
-    "LLL",
-    "THI",
-    "HMC",
-    "CCM",
-    "RR",
-    "BITDW",
-    "PSS",
-    "TTC",
-    "WDW"
+    { "TITLE_SCREEN", SEQ_MENU_TITLE_SCREEN },
+    { "FILE_SELECT", SEQ_MENU_FILE_SELECT },
+    { "GRASS", SEQ_LEVEL_GRASS },
+    { "WATER", SEQ_LEVEL_WATER },
+    { "SNOW", SEQ_LEVEL_SNOW },
+    { "SLIDE", SEQ_LEVEL_SLIDE },
+    { "BOWSER_STAGE", SEQ_LEVEL_KOOPA_ROAD },
+    { "BOWSER_FIGHT", SEQ_LEVEL_BOSS_KOOPA },
+    { "SPOOKY", SEQ_LEVEL_SPOOKY },
+    { "HOT", SEQ_LEVEL_HOT },
+    { "UNDERGROUND", SEQ_LEVEL_UNDERGROUND },
+    { "BOWSER_FINALE", SEQ_LEVEL_BOSS_KOOPA_FINAL },
+    { "STAFF_ROLL", SEQ_EVENT_CUTSCENE_CREDITS },
+    { "STAGE_MUSIC", STAGE_MUSIC },
+    { "INSIDE_THE_CASTLE", SEQ_LEVEL_INSIDE_CASTLE },
 };
 
 void djui_panel_main_menu_create(struct DjuiBase* caller);
@@ -150,29 +130,37 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
 
         if (gDjuiInMainMenu) {
             // copy sound choices from gMainMenuSounds
-            int numSounds = sizeof(gMainMenuSounds) / sizeof(gMainMenuSounds[0]);
+            u32 numSounds = sizeof(gMainMenuSounds) / sizeof(gMainMenuSounds[0]);
             // if stage roll is on, we shouldn't be allowed to use Stage Music, so remove the entry
             if (configMenuStaffRoll) {
                 numSounds -= 1;
             }
-            char* soundChoices[sizeof(gMainMenuSounds)];
+            char *soundChoices[sizeof(gMainMenuSounds)];
 
             // loop thru all sounds names, and add those to the soundChoices string array
-            for (int i = 0; i < numSounds; i++) {
-                soundChoices[i] = gMainMenuSounds[i].name;
+            for (u32 i = 0; i < numSounds; i++) {
+                soundChoices[i] = djui_language_get("MUSIC", gMainMenuSounds[i].key);
             }
 
-            struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), sLevelChoices, 18, &configMenuLevel, NULL);
+            char *levelChoices[gMenuLevelsCount];
+
+            // construct level choices
+            for (u32 i = 0; i < gMenuLevelsCount; i++) {
+                levelChoices[i] = djui_language_get("LEVELS", gMenuLevels[i].key);
+            }
+
+            struct DjuiSelectionbox* selectionbox1 = djui_selectionbox_create(body, DLANG(MENU_OPTIONS, LEVEL), levelChoices, gMenuLevelsCount, &configMenuLevel, NULL);
             djui_base_set_enabled(&selectionbox1->base, !(configMenuRandom || configMenuStaffRoll));
             sLevelBox = selectionbox1;
             djui_selectionbox_create(body, DLANG(MENU_OPTIONS, MUSIC), soundChoices, numSounds, &configMenuSound, NULL);
             djui_checkbox_create(body, DLANG(MENU_OPTIONS, STAFF_ROLL), &configMenuStaffRoll, djui_panel_staff_roll);
-            struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_level_menu);
-            djui_base_set_enabled(&checkbox2->base, !configMenuStaffRoll);
-            sRandomStageCheckbox = checkbox2;
-            // struct DjuiCheckbox* checkbox3 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, PLAY_VANILLA_DEMOS), &configMenuDemos, stop_demo);
-            // djui_base_set_enabled(&checkbox3->base, !configMenuStaffRoll);
-            // sVanillaDemosCheckbox = checkbox3;
+            djui_checkbox_create(body, DLANG(MENU_OPTIONS, ENV_SOUNDS), &configMenuEnvSounds, NULL);
+            struct DjuiCheckbox* checkbox1 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, RANDOM_STAGE), &configMenuRandom, djui_panel_level_menu);
+            djui_base_set_enabled(&checkbox1->base, !configMenuStaffRoll);
+            sRandomStageCheckbox = checkbox1;
+            // struct DjuiCheckbox* checkbox2 = djui_checkbox_create(body, DLANG(MENU_OPTIONS, PLAY_VANILLA_DEMOS), &configMenuDemos, stop_demo);
+            // djui_base_set_enabled(&checkbox2->base, !configMenuStaffRoll);
+            // sVanillaDemosCheckbox = checkbox2;
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
