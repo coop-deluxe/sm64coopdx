@@ -833,6 +833,12 @@
 
 <br />
 
+- djui_panel_mod_menu.h
+   - [mod_menu_push_panel](functions-3.md#mod_menu_push_panel)
+   - [mod_menu_pop_panel](functions-3.md#mod_menu_pop_panel)
+
+<br />
+
 - djui_popup.h
    - [djui_popup_create](functions-3.md#djui_popup_create)
 

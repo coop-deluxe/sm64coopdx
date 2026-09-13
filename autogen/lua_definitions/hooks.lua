@@ -12,17 +12,17 @@
 --- Allows Lua mods to override existing behaviors or create new ones.
 ---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- function bhv_example_init(obj)
 ---     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
 ---     network_init_object(obj, true, nil)
 --- end
---- 
+---
 --- function bhv_example_loop(obj)
 ---     obj.oPosY = obj.oPosY + 1
 --- end
---- 
+---
 --- id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv_example_loop, "bhvExample")
 --- ```
 function hook_behavior(behaviorId, objectList, replaceBehavior, initFunction, loopFunction, behaviorName)
@@ -38,7 +38,7 @@ end
 --- - The function the mod passes to the hook should return `true` when the command is valid and `false` otherwise.
 ---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- function on_test_command(msg)
 ---     if msg == "on" then
@@ -50,7 +50,7 @@ end
 ---     end
 ---     return false
 --- end
---- 
+---
 --- hook_chat_command("test", "[on|off] turn test on or off", on_test_command)
 --- ```
 function hook_chat_command(command, description, func)
@@ -60,7 +60,7 @@ end
 --- @param command string The command to change the description of
 --- @param description string The description to change to
 --- Updates the description of a chat command.
---- 
+---
 --- ### Lua Example
 --- ```lua
 --- update_chat_command_description("command", "description")
@@ -75,7 +75,7 @@ end
 --- Allows Lua mods to react and respond to console commands. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. You should use `command_message_create` to show any messages to the user. Console messages only appear in the console and terminal.
 ---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- function on_test_command(msg)
 ---     if msg == "on" then
@@ -87,7 +87,7 @@ end
 ---     end
 ---     return false
 --- end
---- 
+---
 --- hook_console_command("test", "[on|off] turn test on or off", on_test_command)
 --- ```
 function hook_console_command(command, description, func)
@@ -97,7 +97,7 @@ end
 --- @param command string The command to change the description of
 --- @param description string The description to change to
 --- Updates the description of a console command.
---- 
+---
 --- ### Lua Example
 --- ```lua
 --- update_console_command_description("command", "description")
@@ -116,7 +116,7 @@ end
 --- function mario_update(m)
 ---     print("Mario update was called for player index ", m.playerIndex)
 --- end
---- 
+---
 --- hook_event(HOOK_MARIO_UPDATE, mario_update)
 --- ```
 function hook_event(hookEventType, func)
@@ -135,12 +135,12 @@ end
 --- Possible `action_hook`s include:
 --- - `every_frame`: Main action code, called once per frame. Returns `true` if action cancelled, else `false`
 --- - `gravity`: Called inside `apply_gravity` when in action
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- ACT_WALL_SLIDE = (0x0BF | ACT_FLAG_AIR | ACT_FLAG_MOVING | ACT_FLAG_ALLOW_VERTICAL_WIND_ACTION)
---- 
+---
 --- function act_wall_slide(m)
 ---     if (m.input & INPUT_A_PRESSED) ~= 0 then
 ---         local rc = set_mario_action(m, ACT_TRIPLE_JUMP, 0)
@@ -151,39 +151,39 @@ end
 ---         m.wallKickTimer = 0
 ---         return rc
 ---     end
---- 
+---
 ---     -- attempt to stick to the wall a bit. if it's 0, sometimes you'll get kicked off of slightly sloped walls
 ---     mario_set_forward_vel(m, -1.0)
---- 
+---
 ---     m.particleFlags = m.particleFlags | PARTICLE_DUST
---- 
+---
 ---     play_sound(SOUND_MOVING_TERRAIN_SLIDE + m.terrainSoundAddend, m.marioObj.header.gfx.cameraToObject)
 ---     set_mario_animation(m, MARIO_ANIM_START_WALLKICK)
---- 
+---
 ---     if perform_air_step(m, 0) == AIR_STEP_LANDED then
 ---         mario_set_forward_vel(m, 0.0)
 ---         if check_fall_damage_or_get_stuck(m, ACT_HARD_BACKWARD_GROUND_KB) == 0 then
 ---             return set_mario_action(m, ACT_FREEFALL_LAND, 0)
 ---         end
 ---     end
---- 
+---
 ---     m.actionTimer = m.actionTimer + 1
 ---     if m.wall == nil and m.actionTimer > 2 then
 ---         mario_set_forward_vel(m, 0.0)
 ---         return set_mario_action(m, ACT_FREEFALL, 0)
 ---     end
---- 
+---
 ---     return 0
 --- end
---- 
+---
 --- function act_wall_slide_gravity(m)
 ---     m.vel.y = m.vel.y - 2
---- 
+---
 ---     if m.vel.y < -15 then
 ---         m.vel.y = -15
 ---     end
 --- end
---- 
+---
 --- function mario_on_set_action(m)
 ---     -- wall slide
 ---     if m.action == ACT_SOFT_BONK then
@@ -191,7 +191,7 @@ end
 ---         set_mario_action(m, ACT_WALL_SLIDE, 0)
 ---     end
 --- end
---- 
+---
 --- hook_event(HOOK_ON_SET_MARIO_ACTION, mario_on_set_action)
 --- hook_mario_action(ACT_WALL_SLIDE, { every_frame = act_wall_slide, gravity = act_wall_slide_gravity } )
 --- ```
@@ -211,16 +211,16 @@ end
 ---   - `tag` will be the same `tag` passed into `hook_on_sync_table_change()`.
 ---   - `oldVal` will be the value before it was set.
 ---   - `newVal` will be the value that it was set to.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- function on_testing_field_changed(tag, oldVal, newVal)
 ---     print("testingField changed:", tag, ",", oldVal, "->", newVal)
 --- end
---- 
+---
 --- hook_on_sync_table_change(gGlobalSyncTable, "testingField", "tag", on_testing_field_changed)
---- 
+---
 --- -- now, when testingField is set, either locally or over the network on_testing_field_changed() will be called
 --- gGlobalSyncTable.testingField = "hello"
 --- ```
@@ -229,29 +229,31 @@ function hook_on_sync_table_change(syncTable, field, tag, func)
 end
 
 --- @param message string The message for the text to show
+--- @param panelId string? The panel to show the text in
 --- @return integer
 --- Allows Lua to add text labels to their designated mod menu submenu.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- indexText = hook_mod_menu_text("Rise and shine, Mr. Freeman.")
 --- ```
-function hook_mod_menu_text(message)
+function hook_mod_menu_text(message, panelId)
     -- ...
 end
 
 --- @param name string The text to show on the button
 --- @param func fun(index:integer) The function that is called when the button is pressed
+--- @param panelId string? The panel to show the button in
 --- @return integer
 --- Allows Lua to add buttons to their designated mod menu submenu.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- local menu1Open = false
 --- local menu2Open = false
---- 
+---
 --- --- @param index integer
 --- local function on_open_menu(index)
 ---     if index == indexButton1 then
@@ -262,27 +264,29 @@ end
 ---         menu2Open = true
 ---     end
 --- end
---- 
+---
 --- -- you can always do separate functions too!
 --- indexButton1 = hook_mod_menu_button("Open Menu 1", on_open_menu)
 --- indexButton2 = hook_mod_menu_button("Open Menu 2", on_open_menu)
+---
 --- ```
-function hook_mod_menu_button(name, func)
+function hook_mod_menu_button(name, func, panelId)
     -- ...
 end
 
 --- @param name string The text to show on the left
 --- @param defaultValue boolean The default state of the checkbox
 --- @param func fun(index:integer, value:boolean) The function that is called when the checkbox is changed
+--- @param panelId string? The panel to show the checkbox in
 --- @return integer
 --- Allows Lua to add checkboxes to their designated mod menu submenu.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- local flyMode = false
 --- local noclipMode = false
---- 
+---
 --- --- @param index integer
 --- --- @param value boolean
 --- local function on_set_player_mode(index, value)
@@ -292,12 +296,12 @@ end
 ---         noclipMode = value
 ---     end
 --- end
---- 
+---
 --- -- you can always do separate functions too!
 --- indexCheckbox1 = hook_mod_menu_checkbox("Fly Mode", false, on_set_player_mode)
 --- indexCheckbox2 = hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode)
 --- ```
-function hook_mod_menu_checkbox(name, defaultValue, func)
+function hook_mod_menu_checkbox(name, defaultValue, func, panelId)
     -- ...
 end
 
@@ -306,21 +310,22 @@ end
 --- @param min integer The lowest the slider can go
 --- @param max integer The highest the slider can go
 --- @param func fun(index:integer, value:integer) The function that is called when the value of the slider changes
+--- @param panelId string? The panel to show the slider in
 --- @return integer
 --- Allows Lua to add sliders to their designated mod menu submenu.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- local timeScale = 0.0
---- 
+---
 --- local function on_set_time_scale(index, value)
 ---     timeScale = value
 --- end
---- 
+---
 --- indexSlider = hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
 --- ```
-function hook_mod_menu_slider(name, defaultValue, min, max, func)
+function hook_mod_menu_slider(name, defaultValue, min, max, func, panelId)
     -- ...
 end
 
@@ -328,28 +333,54 @@ end
 --- @param defaultValue string The default text in the inputbox
 --- @param stringLength integer The max length of the inputbox
 --- @param func fun(index:integer, value:string) The function that is called when the value of the inputbox changes
+--- @param panelId string? The panel to show the inputbox in
 --- @return integer
 --- Allows Lua to add textboxes to their designated mod menu submenu.
---- 
+---
 --- ### Lua Example
---- 
+---
 --- ```lua
 --- --- @param index integer
 --- --- @param value string
 --- local function on_set_network_player_description(index, value)
 ---     network_player_set_description(gNetworkPlayers[0], value, 255, 255, 255, 255)
 --- end
---- 
+---
 --- indexInputbox = hook_mod_menu_inputbox("Network Player Description", "", 100, on_set_network_player_description)
 --- ```
-function hook_mod_menu_inputbox(name, defaultValue, stringLength, func)
+function hook_mod_menu_inputbox(name, defaultValue, stringLength, func, panelId)
+    -- ...
+end
+
+--- @param name string The text to show on the left
+--- @param defaultValue integer The default selected value in the selectionbox
+--- @param choices table The list of choices for the selectionbox, which is a table of strings
+--- @param func fun(index:integer, value:integer) The function that is called when the value of the selectionbox changes
+--- @param panelId string? The panel to show the inputbox in
+--- @return integer
+--- Allows Lua to add selectionboxes to their designated mod menu submenu.
+---
+--- ### Lua Example
+---
+--- ```lua
+--- local spectatorMode = 0
+---
+--- --- @param index integer
+--- --- @param value integer
+--- local function on_set_spectator_mode(index, value)
+---     spectatorMode = value
+--- end
+---
+--- indexSelectionbox = hook_mod_menu_selectionbox("Spectator Mode", 0, { "Not Spectating", "Freecam", "Follow" }, on_set_spectator_mode)
+--- ```
+function hook_mod_menu_selectionbox(name, defaultValue, choices, func, panelId)
     -- ...
 end
 
 --- @param index integer The index of the element returned by `hook_mod_menu` functions
 --- @param name string The name to change to
 --- Updates a mod menu element's name.
---- 
+---
 --- ### Lua Example
 ---
 --- ```lua
@@ -362,7 +393,7 @@ end
 --- @param index integer The index of the element returned by `hook_mod_menu_checkbox`
 --- @param value boolean The boolean value to change to
 --- Updates a mod menu checkbox element's boolean value.
---- 
+---
 --- ### Lua Example
 ---
 --- ```lua
@@ -375,7 +406,7 @@ end
 --- @param index integer The index of the element returned by `hook_mod_menu_slider`
 --- @param value number The number value to change to
 --- Updates a mod menu slider element's numerical value.
---- 
+---
 --- ### Lua Example
 ---
 --- ```lua
@@ -388,12 +419,26 @@ end
 --- @param index integer The index of the element returned by `hook_mod_menu_inputbox`
 --- @param value string The text to change to
 --- Updates a mod menu inputbox element's string value.
---- 
+---
 --- ### Lua Example
 ---
 --- ```lua
 --- update_mod_menu_element_inputbox(indexInputbox, stringValue)
 --- ```
 function update_mod_menu_element_inputbox(index, value)
+    -- ...
+end
+
+--- @param index integer The index of the element returned by `hook_mod_menu_selectionbox`
+--- @param value integer The selection value to change to
+--- @param choices table? A new table of choices
+--- Updates a mod menu selectionbox value and optionally choices.
+---
+--- ### Lua Example
+---
+--- ```lua
+--- update_mod_menu_element_selectionbox(indexSelectionbox, newSelection, { "New", "Choices", "Are", "Cool" })
+--- ```
+function update_mod_menu_element_selectionbox(index, value, choices)
     -- ...
 end
