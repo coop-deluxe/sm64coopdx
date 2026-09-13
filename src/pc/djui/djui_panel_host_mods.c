@@ -6,11 +6,14 @@
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "djui_panel_main.h"
 #include "djui_panel_host.h"
 #include "djui_panel_host_mods.h"
+#include "djui_panel_modlist.h"
+#include "djui_panel_playerlist.h"
 #include "djui_panel_pause.h"
 #include "pc/thread.h"
 
@@ -231,6 +234,34 @@ static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     }
 }
 
+static bool djui_panel_host_mods_reload_panel(UNUSED struct DjuiBase *caller) {
+    if (sDescriptionPanel != NULL) {
+        djui_base_destroy(&sDescriptionPanel->base);
+        sDescriptionPanel = NULL;
+    }
+    sModLayout = NULL;
+    sTooltip = NULL;
+
+    if (gDjuiInMainMenu) {
+        djui_panel_shutdown();
+        gDjuiInMainMenu = true;
+        djui_panel_playerlist_create(NULL);
+        djui_panel_modlist_create(NULL);
+        djui_panel_main_create(NULL);
+        djui_panel_host_create(NULL);
+        djui_panel_host_mods_create(NULL);
+    } else if (gDjuiPanelPauseCreated) {
+        djui_panel_shutdown();
+        djui_panel_playerlist_create(NULL);
+        djui_panel_modlist_create(NULL);
+        djui_panel_pause_create(NULL);
+        djui_panel_host_create(NULL);
+        djui_panel_host_mods_create(NULL);
+    }
+
+    return true;
+}
+
 static void djui_mod_website_open(UNUSED struct DjuiBase* caller) {
     open_url("https://mods.sm64coopdx.com/mods/");
 }
@@ -248,23 +279,34 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
 
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_rebuild_mods_list);
-        sSearchInputbox = searchbox->inputbox;
+        if (gModsInited) {
+            struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_rebuild_mods_list);
+            sSearchInputbox = searchbox->inputbox;
 
-        char* categoryChoices[MOD_CATEGORY_COUNT];
-        for (int i = 0; i < MOD_CATEGORY_COUNT; i++) {
-            categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
+            char* categoryChoices[MOD_CATEGORY_COUNT];
+            for (int i = 0; i < MOD_CATEGORY_COUNT; i++) {
+                categoryChoices[i] = djui_language_get("HOST_MOD_CATEGORIES", sCategories[i].langKey);
+            }
+            djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, MOD_CATEGORY_COUNT, &sSelectedCategory, djui_panel_rebuild_mods_list);
         }
-        djui_selectionbox_create(body, DLANG(HOST_MODS, CATEGORIES), categoryChoices, MOD_CATEGORY_COUNT, &sSelectedCategory, djui_panel_rebuild_mods_list);
 
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         paginated->showMaxCount = true;
         sModLayout = paginated->layout;
-        djui_panel_host_mods_add_mods(&paginated->layout->base);
+        if (gModsInited) {
+            djui_panel_host_mods_add_mods(&paginated->layout->base);
+        } else {
+            struct DjuiText *loadingText = djui_text_create(&paginated->layout->base, "Loading...");
+            djui_base_set_size_type(&loadingText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+            djui_base_set_size(&loadingText->base, 1, 1);
+            djui_text_set_alignment(loadingText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+            djui_text_set_drop_shadow(loadingText, 64, 64, 64, 100);
+            djui_base_hook_on_changed(&loadingText->base, &gModsInited, sizeof(gModsInited), djui_panel_host_mods_reload_panel);
+        }
         djui_paginated_calculate_height(paginated);
         sModPaginated = paginated;
 
-        if (gNetworkType == NT_NONE) {
+        if (gNetworkType == NT_NONE && gModsInited) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 45);
             struct DjuiRect* rect2 = djui_rect_container_create(body, 45);
             {

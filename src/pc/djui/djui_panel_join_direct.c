@@ -193,7 +193,6 @@ void djui_panel_join_direct_do_join(struct DjuiBase* caller) {
     network_reset_reconnect_and_rehost();
     djui_panel_join_direct_ip_text_set_new();
     network_set_system(NS_SOCKET);
-    network_init(NT_CLIENT, false);
     djui_panel_join_message_create(caller);
 }
 

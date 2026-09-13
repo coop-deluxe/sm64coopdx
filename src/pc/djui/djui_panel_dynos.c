@@ -3,6 +3,7 @@
 #include "djui_panel_menu.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 #include "data/dynos.c.h"
 #include "pc/network/network.h"
 #include "djui_panel_main.h"
@@ -27,14 +28,18 @@ static void djui_panel_dynos_local_player_model_only(UNUSED struct DjuiBase* cal
     }
 }
 
-static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
-    dynos_gfx_init();
-
+static bool djui_panel_dynos_reload_panel(UNUSED struct DjuiBase *caller) {
     djui_panel_shutdown();
     gDjuiInMainMenu = true;
     djui_panel_main_create(NULL);
     djui_panel_options_create(NULL);
     djui_panel_dynos_create(NULL);
+    return true;
+}
+
+static void djui_panel_dynos_refresh(UNUSED struct DjuiBase* base) {
+    dynos_gfx_init();
+    djui_panel_dynos_reload_panel(base);
 }
 
 static void djui_panel_dynos_destroy(UNUSED struct DjuiBase* caller) {
@@ -77,23 +82,30 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_dynos_rebuild_list);
-        sSearchInputbox = searchbox->inputbox;
+        if (gDynosPacksInited) {
+            struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_dynos_rebuild_list);
+            sSearchInputbox = searchbox->inputbox;
+        }
 
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
+        paginated->showMaxCount = true;
         struct DjuiBase* layoutBase = &paginated->layout->base;
         sDynosLayout = paginated->layout;
-        djui_panel_dynos_add_packs(layoutBase);
+        if (gDynosPacksInited) {
+            djui_panel_dynos_add_packs(layoutBase);
+        } else {
+            struct DjuiText *loadingText = djui_text_create(layoutBase, "Loading...");
+            djui_base_set_size_type(&loadingText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
+            djui_base_set_size(&loadingText->base, 1, 1);
+            djui_text_set_alignment(loadingText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+            djui_text_set_drop_shadow(loadingText, 64, 64, 64, 100);
+            djui_base_hook_on_changed(&loadingText->base, &gDynosPacksInited, sizeof(gDynosPacksInited), djui_panel_dynos_reload_panel);
+        }
         djui_paginated_calculate_height(paginated);
         sDynosPaginated = paginated;
 
-        struct DjuiRect* space = djui_rect_create(body);
-        djui_base_set_size_type(&space->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&space->base, 0, dynos_pack_get_count() <= 8 ? 16 : 0);
-        djui_base_set_color(&space->base, 0, 0, 0, 0);
-
         djui_checkbox_create(body, DLANG(DYNOS, LOCAL_PLAYER_MODEL_ONLY), &configDynosLocalPlayerModelOnly, djui_panel_dynos_local_player_model_only);
-        if (gNetworkType == NT_NONE) {
+        if (gNetworkType == NT_NONE && gDynosPacksInited) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 45);
             {
                 struct DjuiButton* button1 = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
@@ -106,6 +118,8 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         } else {
             djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
         }
+
+        djui_three_panel_recalculate_body_size(panel);
     }
 
     struct DjuiPanel* p = djui_panel_add(caller, panel, NULL);

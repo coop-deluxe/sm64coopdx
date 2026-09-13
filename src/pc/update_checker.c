@@ -8,8 +8,9 @@
 
 #include "update_checker.h"
 #include "pc/djui/djui.h"
+#include "pc/djui/djui_panel_main.h"
 #include "pc/network/version.h"
-#include "pc/loading.h"
+#include "pc/pc_main.h"
 #include "pc/debuglog.h"
 
 #define URL "https://raw.githubusercontent.com/coop-deluxe/sm64coopdx/refs/heads/main/src/pc/network/version.h"
@@ -31,8 +32,8 @@ struct Version {
 };
 
 bool is_version_newer(struct Version client, struct Version remote) {
-    if (remote.maj != client.maj) return remote.maj > client.maj;
-    if (remote.min != client.min) return remote.min > client.min;
+    if (remote.maj != client.maj) { return remote.maj > client.maj; }
+    if (remote.min != client.min) { return remote.min > client.min; }
     return remote.fix > client.fix;
 }
 
@@ -180,7 +181,7 @@ void get_version_remote(void) {
 }
 
 void check_for_updates(void) {
-    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Checking For Updates"));
+    set_loading_message("Checking for Updates");
 
     get_version_remote();
     if (sRemoteVersionStr[0] == 'v' && is_version_newer(sClientVersion, sRemoteVersion)) {

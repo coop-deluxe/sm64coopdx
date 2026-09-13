@@ -13,6 +13,8 @@ extern ALIGNED8 u8 texture_coopdx_logo[];
 
 bool gDjuiPanelMainCreated = false;
 
+struct DjuiFlowLayout *sFooterFlowLayout = NULL;
+
 static void djui_panel_main_quit_yes(UNUSED struct DjuiBase* caller) {
     game_exit();
 }
@@ -22,6 +24,20 @@ static void djui_panel_main_quit(struct DjuiBase* caller) {
                               DLANG(MAIN, QUIT_TITLE),
                               DLANG(MAIN, QUIT_CONFIRM),
                               djui_panel_main_quit_yes);
+}
+
+static bool djui_panel_main_on_loading_text_change(struct DjuiBase *caller) {
+    struct DjuiText *text = (struct DjuiText *)caller;
+    djui_text_set_text(text, gLoadingMessage);
+    return false;
+}
+
+static bool djui_panel_main_on_game_init(struct DjuiBase *caller) {
+    djui_base_set_visible(caller, false);
+    if (sFooterFlowLayout != NULL) {
+        djui_base_set_size(&sFooterFlowLayout->base, 1.0f, 32.0f);
+    }
+    return false;
 }
 
 void djui_panel_main_create(struct DjuiBase* caller) {
@@ -53,27 +69,45 @@ void djui_panel_main_create(struct DjuiBase* caller) {
             if (!configExCoopTheme) { djui_base_set_location(&button4->base, 0, -30); }
         }
 
-        // these two cannot co-exist for some reason
-        if (gUpdateMessage) {
-            struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
-            djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&message->base, 1.0f, 1.0f);
-            djui_base_set_color(&message->base, 255, 255, 160, 255);
-            djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
-        } else {
-            struct DjuiText* version = djui_text_create(
-                &panel->base,
-                #ifdef COMPILE_TIME
-                    get_version_with_build_date()
-                #else
-                    get_version()
-                #endif
-            );
-            djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&version->base, 1.0f, 1.0f);
-            djui_base_set_color(&version->base, 50, 50, 50, 255);
-            djui_text_set_alignment(version, configExCoopTheme ? DJUI_HALIGN_CENTER : DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+        // due to the nature of three panels, create an empty djui rect here and
+        // never use it :thumbsup:
+        struct DjuiRect *emptyRect = djui_rect_create(&panel->base);
+        djui_base_set_color(&emptyRect->base, 0, 0, 0, 0);
+
+        sFooterFlowLayout = djui_flow_layout_create(&panel->base);
+        djui_flow_layout_set_flow_direction(sFooterFlowLayout, DJUI_FLOW_DIR_DOWN);
+        djui_base_set_alignment(&sFooterFlowLayout->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+        djui_base_set_size_type(&sFooterFlowLayout->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&sFooterFlowLayout->base, 1.0f, gGameInited ? 32.0f : 128.0f);
+        djui_base_set_color(&sFooterFlowLayout->base, 0, 0, 0, 0);
+
+        if (!gGameInited) {
+            struct DjuiText *loadingMessageText = djui_text_create(&sFooterFlowLayout->base, gLoadingMessage);
+            djui_base_set_size_type(&loadingMessageText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&loadingMessageText->base, 1.0f, 64.0f);
+            djui_base_set_color(&loadingMessageText->base, 50, 50, 50, 255);
+            djui_base_hook_on_changed(&loadingMessageText->base, &gLoadingMessage, sizeof(gLoadingMessage), djui_panel_main_on_loading_text_change);
+            djui_base_hook_on_changed(&loadingMessageText->base, &gGameInited, sizeof(gGameInited), djui_panel_main_on_game_init);
+            djui_text_set_alignment(loadingMessageText, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+
+            struct DjuiProgressBar *progressBar = djui_progress_bar_create(&sFooterFlowLayout->base, &gLoadingPercent, 0, 1, false);
+            progressBar->smoothenHigh = 0.75f;
+            progressBar->smoothenLow = 0.25f;
+            djui_base_hook_on_changed(&progressBar->base, &gGameInited, sizeof(gGameInited), djui_panel_main_on_game_init);
         }
+
+        struct DjuiText *version = djui_text_create(
+            &sFooterFlowLayout->base,
+            #ifdef COMPILE_TIME
+                get_version_with_build_date()
+            #else
+                get_version()
+            #endif
+        );
+        djui_base_set_size_type(&version->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&version->base, 1.0f, 32.0f);
+        djui_base_set_color(&version->base, 50, 50, 50, 255);
+        djui_text_set_alignment(version, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
     }
 
     djui_panel_add(caller, panel, NULL);
