@@ -19,6 +19,7 @@
 #include "network/moderator_list.h"
 #include "debuglog.h"
 #include "djui/djui_hud_utils.h"
+#include "djui/djui_theme.h"
 #include "game/save_file.h"
 #include "pc/network/network_player.h"
 #include "pc/pc_main.h"
@@ -33,6 +34,7 @@ enum ConfigOptionType {
     CONFIG_TYPE_STRING,
     CONFIG_TYPE_U64,
     CONFIG_TYPE_COLOR,
+    CONFIG_TYPE_DJUI_COLOR,
 };
 
 struct ConfigOption {
@@ -45,6 +47,7 @@ struct ConfigOption {
         char* stringValue;
         u64* u64Value;
         u8 (*colorValue)[3];
+        struct DjuiColor *djuiColorValue;
     };
     int maxStringLength;
 };
@@ -231,13 +234,12 @@ unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
 // DJUI settings
-unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
+struct DjuiTheme configDjuiTheme                  = { 0 };
 #ifdef HANDHELD
 bool         configDjuiThemeCenter                = false;
 #else
 bool         configDjuiThemeCenter                = true;
 #endif
-bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
 unsigned int configDjuiScale                      = 0;
 // other
@@ -395,10 +397,79 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
+    // DJUI Themes
+    {.name = "djui_theme_primary",                     .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY] },
+    {.name = "djui_theme_primary_hover",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_HOVER] },
+    {.name = "djui_theme_primary_down",                .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_DOWN] },
+    {.name = "djui_theme_primary_disabled",            .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_DISABLED] },
+    {.name = "djui_theme_primary_text",                .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT] },
+    {.name = "djui_theme_primary_text_disabled",       .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED] },
+
+    {.name = "djui_theme_primary_border",              .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER] },
+    {.name = "djui_theme_primary_border_hover",        .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER] },
+    {.name = "djui_theme_primary_border_down",         .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN] },
+    {.name = "djui_theme_primary_border_disabled",     .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED] },
+
+    {.name = "djui_theme_secondary",                   .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY] },
+    {.name = "djui_theme_secondary_hover",             .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_HOVER] },
+    {.name = "djui_theme_secondary_down",              .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_DOWN] },
+    {.name = "djui_theme_secondary_disabled",          .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_DISABLED] },
+    {.name = "djui_theme_secondary_text",              .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_TEXT] },
+    {.name = "djui_theme_secondary_text_disabled",     .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_TEXT_DISABLED] },
+
+    {.name = "djui_theme_secondary_border",            .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_BORDER] },
+    {.name = "djui_theme_secondary_border_hover",      .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_BORDER_HOVER] },
+    {.name = "djui_theme_secondary_border_down",       .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_BORDER_DOWN] },
+    {.name = "djui_theme_secondary_border_disabled",   .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SECONDARY_BORDER_DISABLED] },
+
+    {.name = "djui_theme_inputbox",                    .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX] },
+    {.name = "djui_theme_inputbox_hover",              .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_HOVER] },
+    {.name = "djui_theme_inputbox_down",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_DOWN] },
+    {.name = "djui_theme_inputbox_disabled",           .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_DISABLED] },
+    {.name = "djui_theme_inputbox_text",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_TEXT] },
+    {.name = "djui_theme_inputbox_placeholder",        .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_TEXT_PLACEHOLDER] },
+
+    {.name = "djui_theme_inputbox_border",             .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_BORDER] },
+    {.name = "djui_theme_inputbox_border_hover",       .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_BORDER_HOVER] },
+    {.name = "djui_theme_inputbox_border_down",        .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DOWN] },
+    {.name = "djui_theme_inputbox_border_disabled",    .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DISABLED] },
+
+    {.name = "djui_theme_checkbox",                    .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX] },
+    {.name = "djui_theme_checkbox_hover",              .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_HOVER] },
+    {.name = "djui_theme_checkbox_down",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_DOWN] },
+    {.name = "djui_theme_checkbox_disabled",           .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_DISABLED] },
+
+    {.name = "djui_theme_checkbox_border",             .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_BORDER] },
+    {.name = "djui_theme_checkbox_border_hover",       .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER] },
+    {.name = "djui_theme_checkbox_border_down",        .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN] },
+    {.name = "djui_theme_checkbox_border_disabled",    .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED] },
+
+    {.name = "djui_theme_slider",                      .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER] },
+    {.name = "djui_theme_slider_hover",                .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_HOVER] },
+    {.name = "djui_theme_slider_down",                 .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_DOWN] },
+    {.name = "djui_theme_slider_disabled",             .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_DISABLED] },
+
+    {.name = "djui_theme_slider_border",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_BORDER] },
+    {.name = "djui_theme_slider_border_hover",         .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER] },
+    {.name = "djui_theme_slider_border_down",          .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN] },
+    {.name = "djui_theme_slider_border_disabled",      .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED] },
+
+    {.name = "djui_theme_text",                        .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT] },
+    {.name = "djui_theme_text_disabled",               .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT_DISABLED] },
+
+    {.name = "djui_theme_selectionbox_image",          .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE] },
+    {.name = "djui_theme_selectionbox_image_disabled", .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED] },
+
+    {.name = "djui_theme_three_panel",                 .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_THREE_PANEL] },
+    {.name = "djui_theme_three_panel_border",          .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_THREE_PANEL_BORDER] },
+
+    {.name = "djui_theme_panel_header",                .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR] },
+
+    {.name = "djui_theme_header_font",                 .type = CONFIG_TYPE_UINT, .uintValue = &configDjuiTheme.headerFont },
+    {.name = "djui_theme_use_rainbow_color",           .type = CONFIG_TYPE_BOOL, .boolValue = &configDjuiTheme.useRainbowColor },
+    {.name = "djui_theme_gradients",                   .type = CONFIG_TYPE_BOOL, .boolValue = &configDjuiTheme.gradients },
     // DJUI settings
-    {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiTheme},
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeCenter},
-    {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
     {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
     // other
@@ -418,6 +489,7 @@ struct SecretConfigOption {
         char* stringValue;
         u64* u64Value;
         u8 (*colorValue)[3];
+        struct DjuiColor *djuiColorValue;
     };
     int maxStringLength;
     bool inConfig;
@@ -791,6 +863,15 @@ static void configfile_load_internal(const char *filename, bool* error) {
                                 (*option->colorValue)[i] = temp;
                             }
                             break;
+                        case CONFIG_TYPE_DJUI_COLOR:
+                            if (numTokens > 4) {
+                                sscanf(tokens[1], "%hhx", &option->djuiColorValue->r);
+                                sscanf(tokens[2], "%hhx", &option->djuiColorValue->g);
+                                sscanf(tokens[3], "%hhx", &option->djuiColorValue->b);
+                                sscanf(tokens[4], "%hhx", &option->djuiColorValue->a);
+                                break;
+                            }
+                            // fall through if it's invalid
                         default:
                             LOG_ERROR("Configfile read bad type '%d': %s", (int)option->type, line);
                             goto NEXT_OPTION;
@@ -828,8 +909,11 @@ NEXT_OPTION:
 
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 
-    if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
     if (configDjuiScale >= 5) { configDjuiScale = 0; }
+
+    if (configDjuiThemeFont == FONT_MENU) { configDjuiThemeFont = FONT_NORMAL; }
+    if (configDjuiThemeFont >= FONT_COUNT) { configDjuiThemeFont = FONT_NORMAL; }
+    if (configDjuiTheme.headerFont >= FONT_COUNT) { configDjuiTheme.headerFont = FONT_NORMAL; }
 
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
@@ -895,6 +979,10 @@ void configfile_reset_keybinds(bool extra) {
 }
 
 void configfile_load(void) {
+    // init default theme here
+    configDjuiTheme = gDjuiThemeDark;
+
+    // load configfile
     bool configReadError = false;
 #ifdef DEVELOPMENT
     configfile_load_internal(configfile_name(), &configReadError);
@@ -937,6 +1025,9 @@ static void configfile_save_option(FILE *file, const struct ConfigOption *option
             break;
         case CONFIG_TYPE_COLOR:
             fprintf(file, "%s %02x %02x %02x\n", option->name, (*option->colorValue)[0], (*option->colorValue)[1], (*option->colorValue)[2]);
+            break;
+        case CONFIG_TYPE_DJUI_COLOR:
+            fprintf(file, "%s %02x %02x %02x %02x\n", option->name, option->djuiColorValue->r, option->djuiColorValue->g, option->djuiColorValue->b, option->djuiColorValue->a);
             break;
         default:
             LOG_ERROR("Configfile wrote bad type '%d': %s", (int)option->type, option->name);

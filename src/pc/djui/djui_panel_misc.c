@@ -30,12 +30,12 @@ void djui_panel_options_debug_create(struct DjuiBase* caller) {
 
 #ifndef HANDHELD
 #if defined(_WIN32)
-        djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+        djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_open_user_folder);
 #elif __linux__ || __APPLE__ || __MACH__
-        djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+        djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_open_user_folder);
 #endif
 #endif
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);
@@ -52,23 +52,23 @@ void djui_panel_misc_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(MISC, LUA_PROFILER), &configLuaProfiler, NULL);
 #endif
 
-        djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_NORMAL, djui_panel_language_create);
-        djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_main_menu_create);
-        djui_button_create(body, DLANG(MISC, INFORMATION), DJUI_BUTTON_STYLE_NORMAL, djui_panel_info_create);
+        djui_button_create(body, DLANG(MISC, LANGUAGE), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_language_create);
+        djui_button_create(body, DLANG(MISC, MENU_OPTIONS), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_main_menu_create);
+        djui_button_create(body, DLANG(MISC, INFORMATION), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_info_create);
 #ifdef DEVELOPMENT
-        djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_debug_create);
+        djui_button_create(body, DLANG(MISC, DEBUG), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_debug_create);
 #endif
 
 #ifndef DEVELOPMENT
 #ifndef HANDHELD
 #if defined(_WIN32)
-        djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+        djui_button_create(body, DLANG(OPTIONS, APPDATA), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_open_user_folder);
 #elif __linux__ || __APPLE__ || __MACH__
-        djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_open_user_folder);
+        djui_button_create(body, DLANG(OPTIONS, USER_FOLDER), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_options_open_user_folder);
 #endif
 #endif
 #endif
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

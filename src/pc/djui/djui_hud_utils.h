@@ -33,11 +33,13 @@ enum DjuiFontType {
     FONT_LEGACY = -1,
     FONT_NORMAL = 0,
     FONT_MENU,
+    FONT_MENU_DARK,
     FONT_HUD,
     FONT_ALIASED,
     FONT_CUSTOM_HUD,
     FONT_RECOLOR_HUD,
     FONT_SPECIAL,
+    FONT_CLASSIC,
     FONT_COUNT,
 };
 

@@ -78,7 +78,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
         gDownloadProgress = 0;
         djui_progress_bar_create(body, &gDownloadProgress, 0.0f, 1.0f, false);
 
-        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
+        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_join_message_cancel);
     }
     panel->on_back = djui_panel_join_message_back;
 

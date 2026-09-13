@@ -2026,7 +2026,7 @@ Gets the DJUI menu theme
 - [DjuiTheme](structs.md#DjuiTheme)
 
 ### C Prototype
-`struct DjuiTheme* djui_menu_get_theme(void);`
+`struct DjuiTheme *djui_menu_get_theme(void);`
 
 [:arrow_up_small:](#)
 

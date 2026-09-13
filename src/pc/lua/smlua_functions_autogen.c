@@ -57,6 +57,7 @@
 #include "src/pc/network/sync_object.h"
 #include "src/audio/load.h"
 #include "src/pc/djui/djui_gfx.h"
+#include "src/pc/djui/djui_theme.h"
 
 
   ///////////////
@@ -12666,6 +12667,180 @@ int smlua_func_djui_popup_create(lua_State* L) {
     djui_popup_create(message, lines);
 
     return 0;
+}
+
+  //////////////////
+ // djui_theme.h //
+//////////////////
+
+int smlua_func_djui_theme_get_text_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_text_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_text_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_text_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_default_rect_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_default_rect_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_default_rect_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_default_rect_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_cursor_down_rect_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_cursor_down_rect_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_cursor_down_rect_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_cursor_down_rect_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_hovered_rect_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_hovered_rect_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_hovered_rect_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_hovered_rect_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_default_border_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_default_border_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_default_border_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_default_border_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_cursor_down_border_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_cursor_down_border_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_cursor_down_border_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_cursor_down_border_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_hovered_border_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_hovered_border_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_hovered_border_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_hovered_border_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_rect_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_rect_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_rect_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_rect_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_border_color(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_border_color", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_border_color"); return 0; }
+
+    smlua_push_object(L, LOT_DJUICOLOR, djui_theme_get_border_color(deprecatedTheme), NULL);
+
+    return 1;
+}
+
+int smlua_func_djui_theme_get_hud_font_header(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_theme_get_hud_font_header", 1, top);
+        return 0;
+    }
+
+    struct DjuiDeprecatedTheme* deprecatedTheme = (struct DjuiDeprecatedTheme*)smlua_to_cobject(L, 1, LOT_DJUIDEPRECATEDTHEME);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_theme_get_hud_font_header"); return 0; }
+
+    lua_pushboolean(L, djui_theme_get_hud_font_header(deprecatedTheme));
+
+    return 1;
 }
 
   ////////////////
@@ -37156,6 +37331,18 @@ void smlua_bind_functions_autogen(void) {
 
     // djui_popup.h
     smlua_bind_function(L, "djui_popup_create", smlua_func_djui_popup_create);
+
+    // djui_theme.h
+    smlua_bind_function(L, "djui_theme_get_text_color", smlua_func_djui_theme_get_text_color);
+    smlua_bind_function(L, "djui_theme_get_default_rect_color", smlua_func_djui_theme_get_default_rect_color);
+    smlua_bind_function(L, "djui_theme_get_cursor_down_rect_color", smlua_func_djui_theme_get_cursor_down_rect_color);
+    smlua_bind_function(L, "djui_theme_get_hovered_rect_color", smlua_func_djui_theme_get_hovered_rect_color);
+    smlua_bind_function(L, "djui_theme_get_default_border_color", smlua_func_djui_theme_get_default_border_color);
+    smlua_bind_function(L, "djui_theme_get_cursor_down_border_color", smlua_func_djui_theme_get_cursor_down_border_color);
+    smlua_bind_function(L, "djui_theme_get_hovered_border_color", smlua_func_djui_theme_get_hovered_border_color);
+    smlua_bind_function(L, "djui_theme_get_rect_color", smlua_func_djui_theme_get_rect_color);
+    smlua_bind_function(L, "djui_theme_get_border_color", smlua_func_djui_theme_get_border_color);
+    smlua_bind_function(L, "djui_theme_get_hud_font_header", smlua_func_djui_theme_get_hud_font_header);
 
     // external.h
     smlua_bind_function(L, "play_sound", smlua_func_play_sound);

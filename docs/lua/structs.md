@@ -19,10 +19,8 @@
 - [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
 - [DjuiColor](#DjuiColor)
-- [DjuiInteractableTheme](#DjuiInteractableTheme)
-- [DjuiPanelTheme](#DjuiPanelTheme)
+- [DjuiDeprecatedTheme](#DjuiDeprecatedTheme)
 - [DjuiTheme](#DjuiTheme)
-- [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FnGraphNode](#FnGraphNode)
@@ -803,28 +801,10 @@
 
 <br />
 
-## DjuiInteractableTheme
+## DjuiDeprecatedTheme
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| textColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| disabledTextColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| cursorDownRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredRectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| defaultBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| cursorDownBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| hoveredBorderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## DjuiPanelTheme
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| hudFontHeader | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -834,22 +814,15 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| id | `string` | read-only |
-| name | `string` | read-only |
-| interactables | [DjuiInteractableTheme](structs.md#DjuiInteractableTheme) | read-only |
-| threePanels | [DjuiThreePanelTheme](structs.md#DjuiThreePanelTheme) | read-only |
-| panels | [DjuiPanelTheme](structs.md#DjuiPanelTheme) | read-only |
-
-[:arrow_up_small:](#)
-
-<br />
-
-## DjuiThreePanelTheme
-
-| Field | Type | Access |
-| ----- | ---- | ------ |
-| rectColor | [DjuiColor](structs.md#DjuiColor) | read-only |
-| borderColor | [DjuiColor](structs.md#DjuiColor) | read-only |
+| name | `string` |  |
+| path | `string` |  |
+| elements | `Array` <`DjuiColor`> | read-only, starts at index 0 |
+| headerFont | `integer` |  |
+| useRainbowColor | `boolean` |  |
+| gradients | `boolean` |  |
+| interactables | [DjuiDeprecatedTheme](structs.md#DjuiDeprecatedTheme) | read-only |
+| threePanels | [DjuiDeprecatedTheme](structs.md#DjuiDeprecatedTheme) | read-only |
+| panels | [DjuiDeprecatedTheme](structs.md#DjuiDeprecatedTheme) | read-only |
 
 [:arrow_up_small:](#)
 

@@ -4392,6 +4392,76 @@ function djui_popup_create(message, lines)
     -- ...
 end
 
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_TEXT` of the current menu theme
+function djui_theme_get_text_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY` of the current menu theme
+function djui_theme_get_default_rect_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY_DOWN` of the current menu theme
+function djui_theme_get_cursor_down_rect_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY_HOVER` of the current menu theme
+function djui_theme_get_hovered_rect_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY_BORDER` of the current menu theme
+function djui_theme_get_default_border_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN` of the current menu theme
+function djui_theme_get_cursor_down_border_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER` of the current menu theme
+function djui_theme_get_hovered_border_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_THREE_PANEL` of the current menu theme
+function djui_theme_get_rect_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return DjuiColor
+--- Gets the color of the `DJUI_THEME_ELEMENT_THREE_PANEL_BORDER` of the current menu theme
+function djui_theme_get_border_color(deprecatedTheme)
+    -- ...
+end
+
+--- @param deprecatedTheme DjuiDeprecatedTheme
+--- @return boolean
+--- Gets whether header font of the theme is `FONT_HUD`
+function djui_theme_get_hud_font_header(deprecatedTheme)
+    -- ...
+end
+
 --- @param soundBits integer
 --- @param pos Vec3f
 --- Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)

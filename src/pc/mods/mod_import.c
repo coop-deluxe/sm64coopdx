@@ -1,5 +1,6 @@
 #include "PR/ultratypes.h"
 #include "types.h"
+#include "pc/ini.h"
 #include "pc/platform.h"
 #include "pc/utils/miniz/miniz.h"
 #include "pc/debuglog.h"
@@ -98,6 +99,83 @@ static bool mod_import_palette(char* src) {
     }
 
     LOG_INFO("Imported palette ini: '%s' -> '%s'", src, dst);
+
+    return true;
+}
+
+static bool mod_import_theme(char *src) {
+    const char *themesDirectory = fs_get_write_path(THEMES_DIRECTORY);
+    fs_sys_mkdir(themesDirectory);
+
+    // get the basename
+    char baseName[MAX_DJUI_THEME_NAME_LEN];
+    snprintf(baseName, MAX_DJUI_THEME_NAME_LEN, "%s", path_basename(src));
+
+    // iterate and find the first .
+    char *c = baseName;
+    while (*c != '\0' && *c != '.') {
+        c++;
+    }
+
+    // strip the . and everything after
+    *c = '\0';
+
+    // make sure the name isn't empty
+    if (baseName[0] == '\0') { return false; }
+
+    // get the destination using the basename and the themes dir
+    char dst[SYS_MAX_PATH];
+    snprintf(dst, SYS_MAX_PATH, "%s/%s.json", themesDirectory, baseName);
+
+    // if this file already exists, look for a unique name and use that
+    if (fs_sys_file_exists(dst)) {
+        u32 uniqueIdentifier = 2;
+        do {
+            snprintf(dst, SYS_MAX_PATH, "%s/%s-%u.json", themesDirectory, baseName, uniqueIdentifier);
+            uniqueIdentifier++;
+        } while (fs_sys_file_exists(dst));
+    }
+
+    // open file input
+    FILE *fin = fopen(src, "rb");
+    if (fin == NULL) {
+        LOG_ERROR("Failed to open src path for theme json import");
+        return false;
+    }
+
+    // open file output
+    FILE *fout = fopen(dst, "wb");
+    if (fout == NULL) {
+        LOG_ERROR("Failed to open dst path for theme json import");
+        fclose(fin);
+        return false;
+    }
+
+    // for each read byte, write that same byte to the dest file, effectively copying the file
+    size_t rbytes;
+    size_t wbytes;
+    unsigned char buff[8192];
+    do {
+        rbytes = fread(buff, 1, sizeof(buff), fin);
+        if (rbytes > 0) {
+            wbytes = fwrite(buff, 1, rbytes, fout);
+        } else {
+            wbytes = 0;
+        }
+    } while ((rbytes > 0) && (rbytes == wbytes));
+
+    // close file input and output
+    fclose(fout);
+    fclose(fin);
+
+    if (wbytes) {
+        LOG_ERROR("Write error on theme json import");
+        return false;
+    }
+
+    LOG_INFO("Imported theme json: '%s' -> '%s'", src, dst);
+
+    djui_theme_load(dst);
 
     return true;
 }
@@ -256,6 +334,7 @@ bool mod_import_file(char* path) {
     bool isLua = false;
     bool isDynos = false;
     bool isPalette = false;
+    bool isTheme = false;
     bool ret = false;
 
     if (gNetworkType != NT_NONE && !path_ends_with(path, ".ini")) {
@@ -269,6 +348,9 @@ bool mod_import_file(char* path) {
     } else if (path_ends_with(path, ".ini")) {
         isPalette = true;
         ret = mod_import_palette(path);
+    } else if (path_ends_with(path, ".json")) {
+        isTheme = true;
+        ret = mod_import_theme(path);
     } else if (path_ends_with(path, ".zip")) {
         ret = mod_import_zip(path, &isLua, &isDynos);
     }
@@ -287,6 +369,9 @@ bool mod_import_file(char* path) {
             djui_popup_create(msg, 2);
         } else if (isPalette) {
             djui_language_replace(DLANG(NOTIF, IMPORT_PALETTE_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
+            djui_popup_create(msg, 2);
+        } else if (isTheme) {
+            djui_language_replace(DLANG(NOTIF, IMPORT_THEME_SUCCESS), msg, SYS_MAX_PATH, '@', basename);
             djui_popup_create(msg, 2);
         }
     } else {
