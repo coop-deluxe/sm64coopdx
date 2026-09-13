@@ -57,6 +57,7 @@
 #include "src/pc/network/sync_object.h"
 #include "src/audio/load.h"
 #include "src/pc/djui/djui_gfx.h"
+#include "src/pc/mods/mod_socket.h"
 
 
   ///////////////
@@ -22185,6 +22186,104 @@ int smlua_func_mod_fs_get_last_error(lua_State* L) {
     return 1;
 }
 
+  //////////////////
+ // mod_socket.h //
+//////////////////
+
+int smlua_func_mod_socket_allowed(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_allowed", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, mod_socket_allowed());
+
+    return 1;
+}
+
+int smlua_func_mod_socket_init(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 3) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_init", 3, top);
+        return 0;
+    }
+
+    const char* ip = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_socket_init"); return 0; }
+    int port = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "mod_socket_init"); return 0; }
+    bool TCP = smlua_to_boolean(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "mod_socket_init"); return 0; }
+
+    lua_pushboolean(L, mod_socket_init(ip, port, TCP));
+
+    return 1;
+}
+
+int smlua_func_mod_socket_disconnect(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_disconnect", 0, top);
+        return 0;
+    }
+
+    mod_socket_disconnect();
+
+    return 0;
+}
+
+int smlua_func_mod_socket_send(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_send", 1, top);
+        return 0;
+    }
+
+    const char* data = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "mod_socket_send"); return 0; }
+
+    mod_socket_send(data);
+
+    return 0;
+}
+
+int smlua_func_mod_socket_is_connected(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_is_connected", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, mod_socket_is_connected());
+
+    return 1;
+}
+
+int smlua_func_mod_socket_update(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "mod_socket_update", 0, top);
+        return 0;
+    }
+
+    mod_socket_update();
+
+    return 0;
+}
+
   ///////////////////
  // mod_storage.h //
 ///////////////////
@@ -37695,6 +37794,14 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "mod_fs_hide_errors", smlua_func_mod_fs_hide_errors);
     smlua_bind_function(L, "mod_fs_get_last_error_code", smlua_func_mod_fs_get_last_error_code);
     smlua_bind_function(L, "mod_fs_get_last_error", smlua_func_mod_fs_get_last_error);
+
+    // mod_socket.h
+    smlua_bind_function(L, "mod_socket_allowed", smlua_func_mod_socket_allowed);
+    smlua_bind_function(L, "mod_socket_init", smlua_func_mod_socket_init);
+    smlua_bind_function(L, "mod_socket_disconnect", smlua_func_mod_socket_disconnect);
+    smlua_bind_function(L, "mod_socket_send", smlua_func_mod_socket_send);
+    smlua_bind_function(L, "mod_socket_is_connected", smlua_func_mod_socket_is_connected);
+    smlua_bind_function(L, "mod_socket_update", smlua_func_mod_socket_update);
 
     // mod_storage.h
     smlua_bind_function(L, "mod_storage_save", smlua_func_mod_storage_save);

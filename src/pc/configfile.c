@@ -221,6 +221,7 @@ unsigned int configMenuSound                      = 0;
 bool         configMenuRandom                     = false;
 bool         configMenuDemos                      = false;
 bool         configDisablePopups                  = false;
+bool         configAllowExternal                  = false;
 char         configLanguage[MAX_CONFIG_STRING]    = "";
 bool         configForce4By3                      = false;
 bool         configDynosLocalPlayerModelOnly      = false;
@@ -387,6 +388,7 @@ static const struct ConfigOption options[] = {
     {.name = "player_pvp_mode",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configPvpType},
     // {.name = "coop_menu_demos",                .type = CONFIG_TYPE_BOOL,   .boolValue   = &configMenuDemos},
     {.name = "disable_popups",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDisablePopups},
+    {.name = "allow_external",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configAllowExternal},
     {.name = "language",                       .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configLanguage, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "force_4by3",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configForce4By3},
     {.name = "dynos_local_player_model_only",  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDynosLocalPlayerModelOnly},

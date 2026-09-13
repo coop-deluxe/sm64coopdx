@@ -8343,7 +8343,8 @@ HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
 HOOK_ON_DYNOS_PACK_TOGGLED                  = 66 --- @type LuaHookedEventType
 HOOK_BEFORE_PLAY_MODE_UPDATE                = 67 --- @type LuaHookedEventType
 HOOK_ON_PLAY_MODE_UPDATE                    = 68 --- @type LuaHookedEventType
-HOOK_MAX                                    = 69 --- @type LuaHookedEventType
+HOOK_SOCKET_RECEIVE                         = 69 --- @type LuaHookedEventType
+HOOK_MAX                                    = 70 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8415,6 +8416,7 @@ HOOK_MAX                                    = 69 --- @type LuaHookedEventType
 --- | `HOOK_ON_DYNOS_PACK_TOGGLED`
 --- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
 --- | `HOOK_ON_PLAY_MODE_UPDATE`
+--- | `HOOK_SOCKET_RECEIVE`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue
