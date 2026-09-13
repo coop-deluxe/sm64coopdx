@@ -6,6 +6,8 @@
 #include "pc/network/version.h"
 #include "pc/djui/djui_language.h"
 #include "pc/djui/djui_popup.h"
+#include "pc/djui/djui_panel_host_mods.h"
+#include "pc/djui/mod_category.h"
 #include "pc/mods/mods.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
@@ -15,11 +17,9 @@
 
 #ifdef COOPNET
 
-#define MAX_COOPNET_DESCRIPTION_LENGTH 1024
-
 uint64_t gCoopNetDesiredLobby = 0;
-char gCoopNetPassword[64] = "";
-char sCoopNetDescription[MAX_COOPNET_DESCRIPTION_LENGTH] = "";
+char gCoopNetPassword[COOPNET_MAX_PASSWORD_LEN] = "";
+char sCoopNetDescription[COOPNET_MAX_DESCRIPTION_LEN] = "";
 
 static uint64_t sLocalLobbyId = 0;
 static uint64_t sLocalLobbyOwnerId = 0;
@@ -41,7 +41,7 @@ static void coopnet_on_connected(uint64_t userId) {
 }
 
 static void coopnet_on_disconnected(bool intentional) {
-    LOG_INFO("Coopnet shutdown!");
+    LOG_INFO("coopnet_on_disconnected: Coopnet shutdown!");
     if (!intentional) {
         djui_popup_create(DLANG(NOTIF, COOPNET_DISCONNECTED), 2);
     }
@@ -122,6 +122,10 @@ static void coopnet_on_error(enum MPacketErrorNumber error, uint64_t tag) {
                 djui_popup_create(built, 2);
             }
             break;
+        case MERR_LOBBY_CREATION_FAILED:
+            djui_popup_create(DLANG(NOTIF, LOBBY_CREATION_FAILED), 2);
+            network_shutdown(false, false, false, false);
+            break;
         case MERR_LOBBY_NOT_FOUND:
             djui_popup_create(DLANG(NOTIF, LOBBY_NOT_FOUND), 2);
             network_shutdown(false, false, false, false);
@@ -175,30 +179,103 @@ bool ns_coopnet_is_connected(void) {
 
 static void coopnet_populate_description(void) {
     char* buffer = sCoopNetDescription;
-    int bufferLength = MAX_COOPNET_DESCRIPTION_LENGTH;
+    int bufferLength = COOPNET_MAX_DESCRIPTION_LEN;
     // get version
-    const char* version = get_version();
-    int versionLength = strlen(version);
-    snprintf(buffer, bufferLength, "%s", version);
+    int versionLength = snprintf(buffer, bufferLength, "%s\n", get_version());
     buffer += versionLength;
     bufferLength -= versionLength;
 
-    // get mod strings
-    if (gActiveMods.entryCount <= 0) { return; }
-    char* strings[gActiveMods.entryCount];
-    for (int i = 0; i < gActiveMods.entryCount; i++) {
-        struct Mod* mod = gActiveMods.entries[i];
-        strings[i] = mod->name;
-    }
+    // get mod size
+    int modsSizeLength = snprintf(buffer, bufferLength, "\nTotal Mod Size: %s\n", get_size_string(gActiveMods.size));
+    buffer += modsSizeLength;
+    bufferLength -= modsSizeLength;
 
     // add seperator
-    char* sep = "\n\nMods:\n";
-    snprintf(buffer, bufferLength, "%s", sep);
-    buffer += strlen(sep);
-    bufferLength -= strlen(sep);
+    int sepLength = snprintf(buffer, bufferLength, "Mods:\n");
+    buffer += sepLength;
+    bufferLength -= sepLength;
 
-    // concat mod strings
-    str_seperator_concat(buffer, bufferLength, strings, gActiveMods.entryCount, "\\#\\\n");
+    struct ModCategory modCategories[] = {
+    #define MOD_CATEGORY_DEF(key) { #key, NULL },
+    #define MOD_CATEGORY(key, category) { #key, category },
+    #include "pc/djui/mod_categories.inl"
+    #undef MOD_CATEGORY_DEF
+    #undef MOD_CATEGORY
+    };
+
+    if (gActiveMods.entryCount <= 0) { return; }
+
+    // add mods that are in a category
+    for (size_t i = 0; i < sizeof(modCategories) / sizeof(modCategories[0]); i++) {
+        struct ModCategory category = modCategories[i];
+
+        char* strings[gActiveMods.entryCount];
+        int strIndex = 0;
+        for (int j = 0; j < gActiveMods.entryCount; j++) {
+            struct Mod* mod = gActiveMods.entries[j];
+            char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+            if (modCategory && strstr_lowercased(modCategory, modCategories[i].category)) {
+                strings[strIndex++] = mod->name;
+            }
+        }
+
+        if (strIndex == 0) { continue; }
+        int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", category.langKey));
+        if (s < 0 || s >= bufferLength) {
+            LOG_ERROR("CoopNet description too long, description has been cut off");
+            return;
+        }
+        buffer += s;
+        bufferLength -= s;
+
+        for (int j = 0; j < strIndex; j++) {
+            int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+            if (s < 0 || s >= bufferLength) {
+                LOG_ERROR("CoopNet description too long, description has been cut off");
+                return;
+            }
+            buffer += s;
+            bufferLength -= s;
+        }
+    }
+
+    // add mods that are not in a category
+    char* strings[gActiveMods.entryCount];
+    int strIndex = 0;
+    for (int j = 0; j < gActiveMods.entryCount; j++) {
+        struct Mod* mod = gActiveMods.entries[j];
+        char* modCategory = mod->category != NULL ? mod->category : mod->incompatible;
+        bool doContinue = false;
+        if (modCategory) {
+            for (size_t i = 0; i < sizeof(modCategories) / sizeof(modCategories[0]); i++) {
+                if (strstr_lowercased(modCategory, modCategories[i].category)) {
+                    doContinue = true;
+                    break;
+                }
+            }
+        }
+        if (doContinue) { continue; }
+        strings[strIndex++] = mod->name;
+    }
+
+    if (strIndex == 0) { return; }
+    int s = snprintf(buffer, bufferLength, "\n%s:\n", djui_language_get("HOST_MOD_CATEGORIES", "MISC"));
+    if (s < 0 || s >= bufferLength) {
+        LOG_ERROR("CoopNet description too long, description has been cut off");
+        return;
+    }
+    buffer += s;
+    bufferLength -= s;
+
+    for (int j = 0; j < strIndex; j++) {
+        int s = snprintf(buffer, bufferLength, "%s\\#dcdcdc\\\n", strings[j]);
+        if (s < 0 || s >= bufferLength) {
+            LOG_ERROR("CoopNet description too long, description has been cut off");
+            return;
+        }
+        buffer += s;
+        bufferLength -= s;
+    }
 }
 
 void ns_coopnet_update(void) {
@@ -207,17 +284,17 @@ void ns_coopnet_update(void) {
     coopnet_update();
     if (gNetworkType != NT_NONE && sNetworkType != NT_NONE) {
         if (sNetworkType == NT_SERVER) {
-            char mode[64] = "";
-            mods_get_main_mod_name(mode, 64);
+            char mode[MOD_NAME_SIZE] = "";
+            mods_get_main_mod_name(mode, MOD_NAME_SIZE);
             if (sReconnecting) {
                 LOG_INFO("Update lobby");
                 coopnet_populate_description();
-                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription);
+                coopnet_lobby_update(sLocalLobbyId, GAME_NAME, get_version(), configPlayerName, mode, sCoopNetDescription, gActiveMods.size);
             } else {
                 LOG_INFO("Create lobby");
-                snprintf(gCoopNetPassword, 64, "%s", configPassword);
+                snprintf(gCoopNetPassword, COOPNET_MAX_PASSWORD_LEN, "%s", configPassword);
                 coopnet_populate_description();
-                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription);
+                coopnet_lobby_create(GAME_NAME, get_version(), configPlayerName, mode, (uint16_t)configAmountOfPlayers, gCoopNetPassword, sCoopNetDescription, gActiveMods.size);
             }
         } else if (sNetworkType == NT_CLIENT) {
             LOG_INFO("Join lobby");
@@ -260,7 +337,7 @@ static void ns_coopnet_get_lobby_secret(UNUSED char* destination, UNUSED u32 des
 
 static void ns_coopnet_shutdown(bool reconnecting) {
     if (reconnecting) { return; }
-    LOG_INFO("Coopnet shutdown!");
+    LOG_INFO("ns_coopnet_shutdown: Coopnet shutdown!");
     coopnet_shutdown();
     gCoopNetCallbacks.OnLobbyListGot = NULL;
     gCoopNetCallbacks.OnLobbyListFinish = NULL;

@@ -12,7 +12,7 @@
 
 static struct DjuiFlowLayout* sDynosLayout = NULL;
 static struct DjuiPaginated* sDynosPaginated = NULL;
-static struct DjuiInputbox* sSearchInputbox = NULL;
+static struct DjuiSearchbox* sSearchbox = NULL;
 
 void djui_panel_dynos_create(struct DjuiBase* caller);
 
@@ -51,13 +51,7 @@ static void djui_panel_dynos_add_packs(struct DjuiBase* base) {
         if (!dynos_pack_get_exists(i)) { continue; }
         bool tmp = dynos_pack_get_enabled(i);
         const char* pack = dynos_pack_get_name(i);
-        // filter results
-        if (sSearchInputbox != NULL &&
-            sSearchInputbox->buffer != NULL &&
-            !strstr_lowercased(djui_text_get_uncolored_string(NULL, strlen(pack) + 1, pack), sSearchInputbox->buffer)
-        ) {
-            continue;
-        }
+        if (!djui_searchbox_has_string(sSearchbox, pack)) { continue; }
 
         struct DjuiCheckbox* checkbox1 = djui_checkbox_create(base, pack, &tmp, djui_panel_dynos_apply);
         checkbox1->base.tag = i;
@@ -78,7 +72,7 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_dynos_rebuild_list);
-        sSearchInputbox = searchbox->inputbox;
+        sSearchbox = searchbox;
 
         struct DjuiPaginated* paginated = djui_paginated_create(body, 8);
         struct DjuiBase* layoutBase = &paginated->layout->base;

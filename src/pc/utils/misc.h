@@ -39,6 +39,8 @@ void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
 void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
 
 void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator);
+char *get_size_string(size_t size);
+
 void open_url(const char* url);
 void open_folder(const char* path);
 const char *strstr_lowercased(const char *haystack, const char *needle);
