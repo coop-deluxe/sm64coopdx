@@ -1,21 +1,22 @@
 #include "controller_mouse.h"
 #include "pc/gfx/gfx_pc.h"
+#include "pc/gfx/gfx_window_manager.h"
 #include "pc/djui/djui.h"
 #include "pc/pc_main.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 bool mouse_init_ok;
 
 u32 mouse_buttons;
-s32 mouse_x;
-s32 mouse_y;
+f32 mouse_x;
+f32 mouse_y;
 
 u32 mouse_window_buttons;
 u32 mouse_window_buttons_pressed;
 u32 mouse_window_buttons_released;
-s32 mouse_window_x;
-s32 mouse_window_y;
+f32 mouse_window_x;
+f32 mouse_window_y;
 
 u32 mouse_scroll_timestamp;
 f32 mouse_scroll_x;
@@ -46,14 +47,14 @@ void controller_mouse_read_relative(void) {
 void controller_mouse_enter_relative(void) {
     if (!mouse_relative_enabled) {
         mouse_relative_enabled = true;
-        SDL_SetRelativeMouseMode(SDL_TRUE);
+        SDL_SetWindowRelativeMouseMode(gfx_wm_get_window(), true);
     }
 }
 
 void controller_mouse_leave_relative(void) {
     if (mouse_relative_enabled) {
         mouse_relative_enabled = false;
-        SDL_SetRelativeMouseMode(SDL_FALSE);
+        SDL_SetWindowRelativeMouseMode(gfx_wm_get_window(), false);
     }
 }
 

@@ -294,7 +294,7 @@ static void sys_fatal_impl(const char *msg) {
 
 #else
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 const char *sys_user_path(void) {
     static char path[SYS_MAX_PATH] = { 0 };
