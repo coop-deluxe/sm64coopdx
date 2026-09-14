@@ -254,7 +254,12 @@ static void controller_sdl_read(OSContPad *pad) {
     if ((!sSdlGamepad && !sSdlJoystick) || sLastGamepad != sSelectedGamepad) {
         int numJoysticks;
         SDL_JoystickID *ids = SDL_GetJoysticks(&numJoysticks);
-        if ((int)configGamepadNumber >= numJoysticks) { configGamepadNumber = numJoysticks; }
+        if (ids == NULL) { return; }
+        if ((int)configGamepadNumber >= numJoysticks) { configGamepadNumber = MAX(numJoysticks - 1, 0); }
+        if (numJoysticks <= 0) {
+            SDL_free(ids);
+            return;
+        }
         sSelectedGamepad = ids[configGamepadNumber];
         SDL_free(ids);
 
@@ -340,7 +345,9 @@ static void controller_sdl_read(OSContPad *pad) {
         pad->stick_x = -128;
     } else if (xstick == STICK_RIGHT) {
         pad->stick_x = 127;
-    } if (ystick == STICK_DOWN) {
+    }
+
+    if (ystick == STICK_DOWN) {
         pad->stick_y = -128;
     } else if (ystick == STICK_UP) {
         pad->stick_y = 127;

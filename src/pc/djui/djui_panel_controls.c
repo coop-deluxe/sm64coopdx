@@ -48,10 +48,10 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
         SDL_JoystickID *joysticks = SDL_GetJoysticks(&numJoys);
         if (numJoys <= 0) { numJoys = 1; }
 
-        char** gamepadChoices = calloc(numJoys, sizeof(char *));
+        char **gamepadChoices = calloc(numJoys, sizeof(char *));
 
         if (joysticks) {
-            // Get the names of all connected gamepads, if none is provided, use "Unknown"
+            // get the names of all connected gamepads, if none is provided, use "Unknown"
             for (int i = 0; i < numJoys; i++) {
                 SDL_JoystickID joystick = joysticks[i];
                 const char *joystickName = SDL_GetJoystickNameForID(joystick);
@@ -65,7 +65,7 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             gamepadChoices[0] = strdup("None");
         }
 
-        // Check for repeated names and append a number if necessary
+        // check for repeated names and append a number if necessary
         for (int i = 0; i < numJoys; i++) {
             int count = 1;
             for (int j = 0; j < i; j++) {
@@ -90,10 +90,10 @@ void djui_panel_controls_create(struct DjuiBase* caller) {
             }
         }
 
-        // Create the button
+        // create the button
         djui_selectionbox_create(body, DLANG(CONTROLS, GAMEPAD), gamepadChoices, numJoys, &configGamepadNumber, NULL);
 
-        // Free the memory we don't need anymore
+        // free the memory we don't need anymore
         for (int i = 0; i < numJoys; i++) {
             free(gamepadChoices[i]);
         }
