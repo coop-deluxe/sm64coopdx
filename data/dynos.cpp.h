@@ -25,7 +25,7 @@ extern "C" {
 // Size limits
 #define DYNOS_BIN_FILE_MAX_SIZE (s32) 0x40000000 // 1 GiB
 #define DYNOS_TEX_MIN_WIDTH_HEIGHT 1
-#define DYNOS_TEX_MAX_WIDTH_HEIGHT 4096
+#define DYNOS_TEX_MAX_WIDTH_HEIGHT 16384
 
 // Pointer types
 #define PTYPE_LUAV              (1 <<  0)
