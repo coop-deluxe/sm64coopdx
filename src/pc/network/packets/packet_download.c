@@ -268,13 +268,14 @@ static void network_update_offset_groups(void) {
     for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
         struct OffsetGroup *og = &sOffsetGroup[i];
         if (og->active && !sOffsetGroupsCompleted[og->offset[0] / GROUP_SIZE] && (currentTime - og->requestTime) > CHUNK_GROUP_TIMEOUT) {
-            LOG_INFO("Offset group %llu timed out. Re-requesting...", og->offset[0] / GROUP_SIZE);
+            LOG_INFO("Offset group %llu timed out. Freeing group...", og->offset[0] / GROUP_SIZE);
             og->requestTime = currentTime;
+            og->active = false;
+
             if (sMaxOffsetGroups > 2) {
                 sMaxOffsetGroups--;
             }
             sSuccessCount = 0;
-            network_send_download_request(og->offset[0]);
         }
     }
 
@@ -299,7 +300,7 @@ static void network_update_offset_groups(void) {
     u32 groupProgress[MAX_ACTIVE_OFFSET_GROUPS] = { 0 };
     for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
         struct OffsetGroup *og = &sOffsetGroup[i];
-        if (!og->active) continue;
+        if (!og->active) { continue; }
 
         for (u32 j = 0; j < OFFSET_COUNT; j++) {
             if (og->rx[j]) { groupProgress[i]++; }
