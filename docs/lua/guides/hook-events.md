@@ -72,3 +72,5 @@
 | HOOK_ON_DYNOS_PACK_TOGGLED | Called after a DynOS pack is toggled | `string` dynosPackName, `boolean` enabled |
 | HOOK_BEFORE_PLAY_MODE_UPDATE | Called before the play mode is ran. Return a number to override the play mode to be ran. | `number` playMode |
 | HOOK_ON_PLAY_MODE_UPDATE | Called after the play mode is ran. Return a number to override the change level. | `number` playMode |
+| HOOK_UPDATE_DELTA_TIME | Called once per game update, right after `HOOK_UPDATE`, with the real elapsed time in seconds since the previous update. | `number` dt |
+| HOOK_ON_RENDER_DELTA_TIME | Called once per rendered/displayed frame with the real elapsed time in seconds since the previous rendered frame. Intended for cosmetic/local effects, not synchronized gameplay. | `number` dt |
