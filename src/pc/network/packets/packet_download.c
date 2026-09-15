@@ -33,6 +33,9 @@ static u64 sTotalDownloadBytes = 0;
 static f32 sDownloadStartTime = 0;
 static u64 sDownloadReceivedBytes = 0;
 
+static u32 sMaxOffsetGroups = 2;
+static u32 sSuccessCount = 0;
+
 static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
 static void mark_groups_loaded_from_hash(void);
@@ -139,6 +142,8 @@ void network_start_download_requests(void) {
     gDownloadProgressInf = 0;
     sDownloadStartTime = clock_elapsed();
     sDownloadReceivedBytes = 0;
+    sMaxOffsetGroups = 2;
+    sSuccessCount = 0;
     free(sDownloadBuffer);
     sDownloadBuffer = calloc(1, gRemoteMods.size);
     if (!sDownloadBuffer) {
@@ -238,7 +243,7 @@ static bool network_start_offset_group(struct OffsetGroup *og) {
 
     // sanity check
     if (!foundIndex) {
-        //LOG_INFO("Could not find offset group, may be near the end of the download");
+        LOG_INFO("Could not find offset group, may be near the end of the download");
         return false;
     }
 
@@ -258,13 +263,6 @@ static bool network_start_offset_group(struct OffsetGroup *og) {
 static void network_update_offset_groups(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
-    // if a groups is inactive, start it up
-    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
-        if (!sOffsetGroup[i].active) {
-            network_start_offset_group(&sOffsetGroup[i]);
-        }
-    }
-
     // if there is a timeout, resend the download request
     f32 currentTime = clock_elapsed();
     for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
@@ -272,7 +270,28 @@ static void network_update_offset_groups(void) {
         if (og->active && !sOffsetGroupsCompleted[og->offset[0] / GROUP_SIZE] && (currentTime - og->requestTime) > CHUNK_GROUP_TIMEOUT) {
             LOG_INFO("Offset group %llu timed out. Re-requesting...", og->offset[0] / GROUP_SIZE);
             og->requestTime = currentTime;
+            if (sMaxOffsetGroups > 1) {
+                sMaxOffsetGroups--;
+            }
+            sSuccessCount = 0;
             network_send_download_request(og->offset[0]);
+        }
+    }
+
+    // count number of active groups
+    u32 activeGroups = 0;
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        if (sOffsetGroup[i].active) {
+            activeGroups++;
+        }
+    }
+
+    // if a groups is inactive and we can start a new one, start it up
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        if (!sOffsetGroup[i].active && activeGroups < sMaxOffsetGroups) {
+            if (network_start_offset_group(&sOffsetGroup[i])) {
+                activeGroups++;
+            }
         }
     }
 
@@ -290,9 +309,20 @@ static void network_update_offset_groups(void) {
         if (groupProgress[i] >= OFFSET_COUNT) {
             u64 groupIndex = (og->offset[0] / GROUP_SIZE);
             if (!sOffsetGroupsCompleted[groupIndex]) {
-                //LOG_INFO("Completed group: %llu [ %llu <---> %llu ]", groupIndex, og->offset[0], og->offset[0] + GROUP_SIZE);
+                LOG_INFO("Completed group: %llu [ %llu <---> %llu ]", groupIndex, og->offset[0], og->offset[0] + GROUP_SIZE);
                 sOffsetGroupsCompleted[groupIndex] = true;
             }
+
+            // ramp up speed if we are on a good run of successful finishes
+            sSuccessCount++;
+            if (sSuccessCount >= 4) {
+                if (sMaxOffsetGroups < MAX_ACTIVE_OFFSET_GROUPS) {
+                    sMaxOffsetGroups++;
+                    LOG_INFO("Increasing active group limit to %u", sMaxOffsetGroups);
+                }
+                sSuccessCount = 0;
+            }
+
             // deactivate group for later use
             og->active = false;
         }
@@ -302,7 +332,7 @@ static void network_update_offset_groups(void) {
     bool completedDownload = true;
     for (u64 i = 0; i < sOffsetGroupCount; i++) {
         if (!sOffsetGroupsCompleted[i]) {
-            //LOG_INFO("Not completed: %llu", i);
+            LOG_INFO("Not completed: %llu", i);
             completedDownload = false;
             break;
         }
@@ -331,14 +361,16 @@ static void network_update_offset_groups(void) {
         return;
     }
 
-    // if a group is 50% complete, find an inactive slot to spin it up for the next group
-    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
-        struct OffsetGroup *og = &sOffsetGroup[i];
-        if (og->active && groupProgress[i] >= (OFFSET_COUNT / 2)) {
-            for (u32 j = 0; j < MAX_ACTIVE_OFFSET_GROUPS; j++) {
-                if (!sOffsetGroup[j].active) {
-                    if (network_start_offset_group(&sOffsetGroup[j])) {
-                        goto end_spinup_group;
+    // if a group is 50% complete, attempt to spin up the next group if under capacity
+    if (activeGroups < sMaxOffsetGroups) {
+        for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+            struct OffsetGroup *og = &sOffsetGroup[i];
+            if (og->active && groupProgress[i] >= (OFFSET_COUNT / 2)) {
+                for (u32 j = 0; j < MAX_ACTIVE_OFFSET_GROUPS; j++) {
+                    if (!sOffsetGroup[j].active) {
+                        if (network_start_offset_group(&sOffsetGroup[j])) {
+                            goto end_spinup_group;
+                        }
                     }
                 }
             }
@@ -356,7 +388,7 @@ void network_send_download_request(u64 offset) {
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
 
-    //LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
+    LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
 }
 
 void network_receive_download_request(struct Packet *p) {
@@ -506,7 +538,7 @@ after_group:;
         wroteBytes = chunkLength;
     }
 
-    //LOG_INFO("Received chunk: offset %llu, size %llu", receiveOffset, chunkLength);
+    LOG_INFO("Received chunk: offset %llu, size %llu", receiveOffset, chunkLength);
 
     // update progress
     sTotalDownloadBytes += wroteBytes;
