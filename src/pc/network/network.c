@@ -597,6 +597,9 @@ void network_update(void) {
         gNetworkSystem->update();
     }
 
+    // sync mod files and download buffer
+    network_sync_mod_files_and_download_buffer();
+
     // update reliable and ordered packets
     if (gNetworkType != NT_NONE) {
         network_update_reliable();

@@ -812,16 +812,16 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
 
 #define GFX_SYMBOL_0(...)
 
-#define GFX_SYMBOL_1(_symb_, _numArgs_, _ptrType_, ...) {                    \
-    if (_Symbol == #_symb_) {                                                \
-        UNUSED static const GfxParamType paramTypes[] = { __VA_ARGS__ };     \
-        REPEAT(PARSE_ARG, _numArgs_);                                        \
-        if (_ptrType_) { aGfxData->mPointerList.Add({ aHead, _ptrType_ }); } \
-        Gfx _Gfx[] = { CALL_MACRO(_symb_, LIST_ARGS(GET_ARG, _numArgs_)) };  \
-        memcpy(aHead, _Gfx, sizeof(_Gfx));                                   \
-        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                           \
-        return;                                                              \
-    }                                                                        \
+#define GFX_SYMBOL_1(_symb_, _numArgs_, _ptrType_, ...) {                         \
+    if (_Symbol == #_symb_) {                                                     \
+        UNUSED static const GfxParamType paramTypes[] = { __VA_ARGS__ };          \
+        REPEAT(PARSE_ARG, _numArgs_);                                             \
+        if (_ptrType_ != 0) { aGfxData->mPointerList.Add({ aHead, _ptrType_ }); } \
+        Gfx _Gfx[] = { CALL_MACRO(_symb_, LIST_ARGS(GET_ARG, _numArgs_)) };       \
+        memcpy(aHead, _Gfx, sizeof(_Gfx));                                        \
+        aHead += (sizeof(_Gfx) / sizeof(_Gfx[0]));                                \
+        return;                                                                   \
+    }                                                                             \
 }
 
 #define GFX_SYMBOL(_cat_, ...) \
@@ -1377,8 +1377,11 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
 
     // Count parameters
     // Find the position of each % to retrieve the correct expected type from the command paramInfo
-    u8 paramPos[paramInfo->count];
-    memset(paramPos, 0, sizeof(u8) * paramInfo->count);
+    u8 *paramPos = (u8 *)calloc(paramInfo->count, sizeof(u8));
+    if (!paramPos) {
+        PrintDataErrorGfx("  ERROR: Memory allocation failed.");
+        return "";
+    }
     u8 paramPosIndex = 0;
     u8 paramCount = 1;
     bool inBrackets = false;
@@ -1390,6 +1393,7 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
     }
     if (paramCount != paramInfo->count) {
         PrintDataErrorGfx("  ERROR: Incorrect parameter count. Got %d, expected %d.", paramCount, paramInfo->count);
+        free(paramPos);
         return "";
     }
 
@@ -1402,16 +1406,19 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
             const GfxParamType expectedType = paramInfo->types[paramNum];
             if (expectedType == GFX_PARAM_PTR) {
                 PrintDataErrorGfx("  ERROR: Gfx macro has unsupported type, this macro is not usable");
+                free(paramPos);
                 return "";
             }
             if (expectedType != paramType &&
                 (expectedType != GFX_PARAM_INT || !GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(paramType)) // Allow strings as constants for integer parameters
             ) {
                 PrintDataErrorGfx("  ERROR: Unexpected value type for parameter %d. Got '%c', expected '%c'", paramNum, paramType, expectedType);
+                free(paramPos);
                 return "";
             }
             String value = ResolveParam(L, aGfxData, paramIndex++, paramType);
             if (aGfxData->mErrorCount > 0) {
+                free(paramPos);
                 return "";
             }
             output.append(value.begin());
@@ -1419,6 +1426,7 @@ static std::string ResolveGfxCommand(lua_State *L, GfxData *aGfxData, const char
             output += c;
         }
     }
+    free(paramPos);
     return output;
 }
 

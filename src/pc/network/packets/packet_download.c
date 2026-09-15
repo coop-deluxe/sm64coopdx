@@ -11,20 +11,24 @@
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
 
-#define CHUNK_SIZE 800
+#define CHUNK_SIZE 1200
 #define OFFSET_COUNT 50
+#define CHUNK_GROUP_TIMEOUT 1.5f
 #define GROUP_SIZE (CHUNK_SIZE * OFFSET_COUNT)
+#define MAX_ACTIVE_OFFSET_GROUPS 8
 
 struct OffsetGroup {
     u64 offset[OFFSET_COUNT];
     bool rx[OFFSET_COUNT];
     bool active;
+    f32 requestTime;
 };
 
-static struct OffsetGroup sOffsetGroup[2] = { 0 };
+static struct OffsetGroup sOffsetGroup[MAX_ACTIVE_OFFSET_GROUPS] = { 0 };
 static bool* sOffsetGroupsCompleted = NULL;
 static u64 sOffsetGroupCount = 0;
 
+static u8 *sDownloadBuffer = NULL;
 static u64 sTotalDownloadBytes = 0;
 static f32 sDownloadStartTime = 0;
 static u64 sDownloadReceivedBytes = 0;
@@ -33,12 +37,112 @@ static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
 static void mark_groups_loaded_from_hash(void);
 
+// Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)
+static bool should_cache_mod(struct Mod *mod) {
+    char modNameLowercase[MOD_NAME_SIZE];
+    memcpy(modNameLowercase, mod->name, MOD_NAME_SIZE * sizeof(char));
+    sys_strlwr(modNameLowercase);
+    bool shouldCache = (
+        !strstr(modNameLowercase, "(wip)") &&
+        !strstr(modNameLowercase, "[wip]")
+    );
+    return shouldCache;
+}
+
+static void open_mod_file(struct Mod* mod, struct ModFile* file) {
+    if (file->fp != NULL) {
+        return;
+    }
+
+    char fullPath[SYS_MAX_PATH] = { 0 };
+    if (!mod_file_full_path(fullPath, mod, file)) {
+        LOG_ERROR("unable to concat full path!");
+        return;
+    }
+
+    file->wroteBytes = 0;
+    if (should_cache_mod(mod)) {
+        mod_file_create_directories(mod, file);
+        file->fp = fopen(fullPath, "wb");
+    } else {
+        file->fp = f_open_w(fullPath);
+    }
+    if (file->fp == NULL) {
+        LOG_ERROR("unable to open for write: '%s' - '%s'", fullPath, strerror(errno));
+        return;
+    }
+    LOG_INFO("Opened mod file pointer: %s", fullPath);
+}
+
+void network_sync_mod_files_and_download_buffer(void) {
+    if (!sDownloadBuffer) { return; }
+
+    u64 fileStartOffset = 0;
+
+    for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
+        struct Mod *mod = gRemoteMods.entries[modIndex];
+        if (!mod) { continue; }
+
+        for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
+            struct ModFile *modFile = &mod->files[fileIndex];
+
+            // skip if already written to
+            if (modFile->cachedPath != NULL || modFile->wroteBytes >= modFile->size) {
+                fileStartOffset += modFile->size;
+                continue;
+            }
+
+            // check if the offset group is finished and if we can write to a file
+            u64 startGroup = fileStartOffset / GROUP_SIZE;
+            u64 endGroup = (fileStartOffset + modFile->size) / GROUP_SIZE;
+            bool writeToFile = true;
+
+            for (u64 g = startGroup; g <= endGroup && g < sOffsetGroupCount; g++) {
+                if (!sOffsetGroupsCompleted[g]) {
+                    writeToFile = false;
+                    break;
+                }
+            }
+
+            if (writeToFile) {
+                open_mod_file(mod, modFile);
+                if (modFile->fp != NULL) {
+                    // write to the file
+                    f_write(&sDownloadBuffer[fileStartOffset], sizeof(u8), modFile->size, modFile->fp);
+                    modFile->wroteBytes = modFile->size;
+
+                    // flush and close the file
+                    f_flush(modFile->fp);
+                    f_close(modFile->fp);
+                    modFile->fp = NULL;
+
+                    // configure cachedPath if necessary
+                    if (!should_cache_mod(mod)) {
+                        char modFilePath[SYS_MAX_PATH] = { 0 };
+                        concat_path(modFilePath, mod->basePath, modFile->relativePath);
+                        normalize_path(modFilePath);
+                        modFile->cachedPath = strdup(modFilePath);
+                    }
+                }
+            }
+
+            fileStartOffset += modFile->size;
+        }
+    }
+}
+
 void network_start_download_requests(void) {
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
     gDownloadProgressInf = 0;
     sDownloadStartTime = clock_elapsed();
     sDownloadReceivedBytes = 0;
+    free(sDownloadBuffer);
+    sDownloadBuffer = calloc(1, gRemoteMods.size);
+    if (!sDownloadBuffer) {
+        LOG_ERROR("Failed to allocate download buffer! Can't start!");
+        return;
+    }
 
     sOffsetGroupCount = (gRemoteMods.size / GROUP_SIZE) + 1;
 
@@ -48,8 +152,7 @@ void network_start_download_requests(void) {
 
     sOffsetGroupsCompleted = calloc(sOffsetGroupCount, sizeof(bool));
 
-    memset(&sOffsetGroup[0], 0, sizeof(struct OffsetGroup));
-    memset(&sOffsetGroup[1], 0, sizeof(struct OffsetGroup));
+    memset(sOffsetGroup, 0, sizeof(sOffsetGroup));
 
     mark_groups_loaded_from_hash();
     network_update_offset_groups();
@@ -75,7 +178,7 @@ static void mark_groups_loaded_from_hash(void) {
             } else {
                 // if we haven't loaded from cache, we need this offset group
                 u64 ogIndexStart = fileStartOffset / GROUP_SIZE;
-                u64 ogIndexEnd = (fileStartOffset + mod->size) / GROUP_SIZE;
+                u64 ogIndexEnd = (fileStartOffset + file->size) / GROUP_SIZE;
                 do {
                     if (ogIndexStart < sOffsetGroupCount) {
                         LOG_INFO("Marking group as required: %llu (%s)", ogIndexStart, file->relativePath);
@@ -99,8 +202,7 @@ static void mark_groups_loaded_from_hash(void) {
     free(offsetGroupRequired);
 }
 
-static bool network_start_offset_group(struct OffsetGroup* og) {
-
+static bool network_start_offset_group(struct OffsetGroup *og) {
     // sanity check
     if (og->active) {
         for (u32 i = 0; i < OFFSET_COUNT; i++) {
@@ -112,14 +214,19 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
     bool foundIndex = false;
     u64 offset = 0;
     for (u32 i = 0; i < sOffsetGroupCount; i++) {
-        // skip this offset if its in progress
-        struct OffsetGroup* otherOg = (og == &sOffsetGroup[0])
-            ? &sOffsetGroup[1]
-            : &sOffsetGroup[0];
-        if (otherOg->active && otherOg->offset[0] == (i * GROUP_SIZE)) {
-            continue;
-        }
+        u64 targetOffset = i * GROUP_SIZE;
 
+        // skip this offset if it is already in progress
+        bool inProgress = false;
+        for (u32 group = 0; group < MAX_ACTIVE_OFFSET_GROUPS; group++) {
+            if (&sOffsetGroup[group] != og && sOffsetGroup[group].active && sOffsetGroup[group].offset[0] == targetOffset) {
+                inProgress = true;
+                break;
+            }
+        }
+        if (inProgress) { continue; }
+
+        // set offset group to download if the offset group isn't completed
         if (!sOffsetGroupsCompleted[i]) {
             offset = (i * GROUP_SIZE);
             foundIndex = true;
@@ -129,7 +236,7 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
 
     // sanity check
     if (!foundIndex) {
-        LOG_INFO("Could not find offset group, may be near the end of the download");
+        //LOG_INFO("Could not find offset group, may be near the end of the download");
         return false;
     }
 
@@ -139,6 +246,7 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
         og->rx[i] = (og->offset[i] >= gRemoteMods.size);
     }
     og->active = true;
+    og->requestTime = clock_elapsed();
 
     // send download request
     network_send_download_request(og->offset[0]);
@@ -148,30 +256,43 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
 static void network_update_offset_groups(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
-    // if no groups are active, start one
-    if (!sOffsetGroup[0].active && !sOffsetGroup[1].active) {
-        if (network_start_offset_group(&sOffsetGroup[0])) {
-            return;
+    // if a groups is inactive, start it up
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        if (!sOffsetGroup[i].active) {
+            network_start_offset_group(&sOffsetGroup[i]);
+        }
+    }
+
+    // if there is a timeout, resend the download request
+    f32 currentTime = clock_elapsed();
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        struct OffsetGroup *og = &sOffsetGroup[i];
+        if (og->active && !sOffsetGroupsCompleted[og->offset[0] / GROUP_SIZE] && (currentTime - og->requestTime) > CHUNK_GROUP_TIMEOUT) {
+            LOG_INFO("Offset group %llu timed out. Re-requesting...", og->offset[0] / GROUP_SIZE);
+            og->requestTime = currentTime;
+            network_send_download_request(og->offset[0]);
         }
     }
 
     // figure out group progress
-    u32 groupProgress[2] = { 0 };
-    for (u32 i = 0; i < 2; i++) {
-        struct OffsetGroup* og = &sOffsetGroup[i];
+    u32 groupProgress[MAX_ACTIVE_OFFSET_GROUPS] = { 0 };
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        struct OffsetGroup *og = &sOffsetGroup[i];
+        if (!og->active) continue;
 
-        // count how many chunks were received
         for (u32 j = 0; j < OFFSET_COUNT; j++) {
             if (og->rx[j]) { groupProgress[i]++; }
         }
 
-        // mark finished if finished
+        // mark group finished if all chunks received
         if (groupProgress[i] >= OFFSET_COUNT) {
             u64 groupIndex = (og->offset[0] / GROUP_SIZE);
             if (!sOffsetGroupsCompleted[groupIndex]) {
-                LOG_INFO("Completed group: %llu [ %llu <---> %llu ]", groupIndex, og->offset[0], og->offset[0] + GROUP_SIZE);
+                //LOG_INFO("Completed group: %llu [ %llu <---> %llu ]", groupIndex, og->offset[0], og->offset[0] + GROUP_SIZE);
                 sOffsetGroupsCompleted[groupIndex] = true;
             }
+            // deactivate group for later use
+            og->active = false;
         }
     }
 
@@ -179,18 +300,23 @@ static void network_update_offset_groups(void) {
     bool completedDownload = true;
     for (u64 i = 0; i < sOffsetGroupCount; i++) {
         if (!sOffsetGroupsCompleted[i]) {
-            LOG_INFO("Not completed: %llu", i);
+            //LOG_INFO("Not completed: %llu", i);
             completedDownload = false;
             break;
         }
     }
 
     if (completedDownload) {
-        // close and flush all file pointers
+        // sync one last time to make sure we didn't miss anything
+        network_sync_mod_files_and_download_buffer();
+        // cleanup the download buffer
+        free(sDownloadBuffer);
+        sDownloadBuffer = NULL;
+        // close and flush all file pointers and enable the remote mods
         for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
-            struct Mod* mod = gRemoteMods.entries[modIndex];
+            struct Mod *mod = gRemoteMods.entries[modIndex];
             for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
-                struct ModFile* modFile = &mod->files[fileIndex];
+                struct ModFile *modFile = &mod->files[fileIndex];
                 if (modFile->fp == NULL) { continue; }
                 f_flush(modFile->fp);
                 f_close(modFile->fp);
@@ -203,15 +329,20 @@ static void network_update_offset_groups(void) {
         return;
     }
 
-    // if one group is more than half complete, and the other group is complete, start the other group
-    for (u32 i = 0; i < 2; i++) {
-        u32 o = (i + 1) % 2;
-        struct OffsetGroup* otherOg = &sOffsetGroup[o];
-        if ((groupProgress[i] >= (OFFSET_COUNT/2)) && ((groupProgress[o] >= OFFSET_COUNT) || !otherOg->active)) {
-            network_start_offset_group(otherOg);
-            return;
+    // if a group is 50% complete, find an inactive slot to spin it up for the next group
+    for (u32 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
+        struct OffsetGroup *og = &sOffsetGroup[i];
+        if (og->active && groupProgress[i] >= (OFFSET_COUNT / 2)) {
+            for (u32 j = 0; j < MAX_ACTIVE_OFFSET_GROUPS; j++) {
+                if (!sOffsetGroup[j].active) {
+                    if (network_start_offset_group(&sOffsetGroup[j])) {
+                        goto end_spinup_group;
+                    }
+                }
+            }
         }
     }
+end_spinup_group:;
 }
 
 void network_send_download_request(u64 offset) {
@@ -223,7 +354,7 @@ void network_send_download_request(u64 offset) {
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
 
-    LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
+    //LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
 }
 
 void network_receive_download_request(struct Packet* p) {
@@ -307,50 +438,13 @@ after_filled:;
 
     // send the packet
     struct Packet p = { 0 };
-    packet_init(&p, PACKET_DOWNLOAD, true, PLMT_NONE);
+    packet_init(&p, PACKET_DOWNLOAD, false, PLMT_NONE);
     packet_write(&p, &requestOffset, sizeof(u64));
     packet_write(&p, &chunkFill,    sizeof(u64));
     packet_write(&p, &chunk,        sizeof(u8) * chunkFill);
     network_send_to(0, &p);
 
     //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
-}
-
-// Cache any mod that doesn't have "(wip)" or "[wip]" in its name (case-insensitive)
-static bool should_cache_mod(struct Mod *mod) {
-    char modNameLowercase[MOD_NAME_SIZE];
-    memcpy(modNameLowercase, mod->name, MOD_NAME_SIZE * sizeof(char));
-    sys_strlwr(modNameLowercase);
-    bool shouldCache = (
-        !strstr(modNameLowercase, "(wip)") &&
-        !strstr(modNameLowercase, "[wip]")
-    );
-    return shouldCache;
-}
-
-static void open_mod_file(struct Mod* mod, struct ModFile* file) {
-    if (file->fp != NULL) {
-        return;
-    }
-
-    char fullPath[SYS_MAX_PATH] = { 0 };
-    if (!mod_file_full_path(fullPath, mod, file)) {
-        LOG_ERROR("unable to concat full path!");
-        return;
-    }
-
-    file->wroteBytes = 0;
-    if (should_cache_mod(mod)) {
-        mod_file_create_directories(mod, file);
-        file->fp = fopen(fullPath, "wb");
-    } else {
-        file->fp = f_open_w(fullPath);
-    }
-    if (file->fp == NULL) {
-        LOG_ERROR("unable to open for write: '%s' - '%s'", fullPath, strerror(errno));
-        return;
-    }
-    LOG_INFO("Opened mod file pointer: %s", fullPath);
 }
 
 void network_receive_download(struct Packet* p) {
@@ -381,7 +475,7 @@ void network_receive_download(struct Packet* p) {
 
     // mark the offset group as received
     bool foundGroup = false;
-    for (u64 i = 0; i < 2; i++) {
+    for (u64 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
         struct OffsetGroup* og = &sOffsetGroup[i];
         if (!og->active) { continue; }
         for (u64 j = 0; j < OFFSET_COUNT; j++) {
@@ -404,82 +498,14 @@ after_group:;
         return;
     }
 
-    // write the chunk
+    // write chunk to the download buffer
     u64 wroteBytes = 0;
-    u64 chunkPour = 0;
-    u64 fileStartOffset = 0;
-    for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
-        struct Mod* mod = gRemoteMods.entries[modIndex];
-        if (!mod) {
-            LOG_ERROR("Null mod");
-            continue;
-        }
-
-        // skip past mods to get to the right offset
-        if ((fileStartOffset + mod->size) < receiveOffset) {
-            fileStartOffset += mod->size;
-            continue;
-        }
-
-        if (mod->fileCount > 0 && !mod->files) {
-            LOG_ERROR("Null mod files");
-            continue;
-        }
-
-        for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
-            struct ModFile* modFile = &mod->files[fileIndex];
-
-            // skip past mod files to get to the right offset
-            if ((fileStartOffset + modFile->size) < receiveOffset) {
-                fileStartOffset += modFile->size;
-                continue;
-            }
-
-            // calculate file offset and read length
-            u64 fileWriteOffset = MAX(((s64)receiveOffset - (s64)fileStartOffset), 0);
-            u64 fileWriteLength = MIN((modFile->size - fileWriteOffset), (chunkLength - chunkPour));
-
-            // read from file, filling chunk
-            if (!modFile->cachedPath && (modFile->wroteBytes < modFile->size)) {
-                open_mod_file(mod, modFile);
-                if (modFile->fp == NULL) {
-                    LOG_ERROR("Failed to open file for download write: %s", modFile->cachedPath);
-                    return;
-                }
-                f_seek(modFile->fp, fileWriteOffset, SEEK_SET);
-                f_write(&chunk[chunkPour], sizeof(u8), fileWriteLength, modFile->fp);
-                modFile->wroteBytes += fileWriteLength;
-
-                if (modFile->wroteBytes >= modFile->size) {
-                    f_flush(modFile->fp);
-                    f_close(modFile->fp);
-                    modFile->fp = NULL;
-
-                    // Write cachedPath here so the file doesn't end up in mod.cache
-                    if (!should_cache_mod(mod)) {
-                        char modFilePath[SYS_MAX_PATH] = { 0 };
-                        concat_path(modFilePath, mod->basePath, modFile->relativePath);
-                        normalize_path(modFilePath);
-                        modFile->cachedPath = strdup(modFilePath);
-                    }
-                }
-
-                wroteBytes += fileWriteLength;
-            }
-
-            // increment counters
-            chunkPour       += fileWriteLength;
-            fileStartOffset += modFile->size;
-
-            // check if we've filled the chunk
-            if (chunkPour >= CHUNK_SIZE) {
-                goto after_poured;
-            }
-        }
+    if (sDownloadBuffer && (receiveOffset + chunkLength <= gRemoteMods.size)) {
+        memcpy(&sDownloadBuffer[receiveOffset], chunk, chunkLength);
+        wroteBytes = chunkLength;
     }
-after_poured:;
 
-    LOG_INFO("Received chunk: offset %llu, size %llu", receiveOffset, chunkLength);
+    //LOG_INFO("Received chunk: offset %llu, size %llu", receiveOffset, chunkLength);
 
     // update progress
     sTotalDownloadBytes += wroteBytes;

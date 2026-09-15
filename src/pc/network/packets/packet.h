@@ -356,6 +356,7 @@ void network_receive_mod_list_file(struct Packet* p);
 void network_receive_mod_list_done(struct Packet* p);
 
 // packet_download.c
+void network_sync_mod_files_and_download_buffer(void);
 void network_start_download_requests(void);
 void network_send_next_download_request(void);
 void network_send_download_request(u64 offset);
