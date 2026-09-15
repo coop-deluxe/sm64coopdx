@@ -270,7 +270,7 @@ static void network_update_offset_groups(void) {
         if (og->active && !sOffsetGroupsCompleted[og->offset[0] / GROUP_SIZE] && (currentTime - og->requestTime) > CHUNK_GROUP_TIMEOUT) {
             LOG_INFO("Offset group %llu timed out. Re-requesting...", og->offset[0] / GROUP_SIZE);
             og->requestTime = currentTime;
-            if (sMaxOffsetGroups > 1) {
+            if (sMaxOffsetGroups > 2) {
                 sMaxOffsetGroups--;
             }
             sSuccessCount = 0;
