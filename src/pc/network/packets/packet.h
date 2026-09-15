@@ -356,13 +356,12 @@ void network_receive_mod_list_file(struct Packet* p);
 void network_receive_mod_list_done(struct Packet* p);
 
 // packet_download.c
-void network_sync_mod_files_and_download_buffer(void);
 void network_start_download_requests(void);
-void network_send_next_download_request(void);
 void network_send_download_request(u64 offset);
 void network_receive_download_request(struct Packet* p);
 void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
+void network_download_update(void);
 
 // packet_global_popup.c
 void network_send_global_popup(const char* message, int lines);

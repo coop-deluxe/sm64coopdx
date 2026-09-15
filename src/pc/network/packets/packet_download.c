@@ -15,7 +15,7 @@
 #define OFFSET_COUNT 50
 #define CHUNK_GROUP_TIMEOUT 1.5f
 #define GROUP_SIZE (CHUNK_SIZE * OFFSET_COUNT)
-#define MAX_ACTIVE_OFFSET_GROUPS 8
+#define MAX_ACTIVE_OFFSET_GROUPS 16
 
 struct OffsetGroup {
     u64 offset[OFFSET_COUNT];
@@ -25,7 +25,7 @@ struct OffsetGroup {
 };
 
 static struct OffsetGroup sOffsetGroup[MAX_ACTIVE_OFFSET_GROUPS] = { 0 };
-static bool* sOffsetGroupsCompleted = NULL;
+static bool *sOffsetGroupsCompleted = NULL;
 static u64 sOffsetGroupCount = 0;
 
 static u8 *sDownloadBuffer = NULL;
@@ -74,7 +74,7 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     LOG_INFO("Opened mod file pointer: %s", fullPath);
 }
 
-void network_sync_mod_files_and_download_buffer(void) {
+static void network_sync_mod_files_and_download_buffer(void) {
     if (!sDownloadBuffer) { return; }
 
     u64 fileStartOffset = 0;
@@ -132,6 +132,8 @@ void network_sync_mod_files_and_download_buffer(void) {
 }
 
 void network_start_download_requests(void) {
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
+
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
     gDownloadProgressInf = 0;
@@ -159,7 +161,7 @@ void network_start_download_requests(void) {
 }
 
 static void mark_groups_loaded_from_hash(void) {
-    u8* offsetGroupRequired = calloc(sOffsetGroupCount, sizeof(u8));
+    u8 *offsetGroupRequired = calloc(sOffsetGroupCount, sizeof(u8));
     if (offsetGroupRequired == NULL) {
         LOG_ERROR("Failed to allocate offsetGroupRequired");
         return;
@@ -357,7 +359,7 @@ void network_send_download_request(u64 offset) {
     //LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
 }
 
-void network_receive_download_request(struct Packet* p) {
+void network_receive_download_request(struct Packet *p) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
 
     // receive requested offset
@@ -366,9 +368,8 @@ void network_receive_download_request(struct Packet* p) {
 
     for (u64 i = 0; i < OFFSET_COUNT; i++) {
         u64 sendOffset = requestOffset + (i * CHUNK_SIZE);
-        if (sendOffset >= gActiveMods.size) {
-            break;
-        }
+        if (sendOffset >= gActiveMods.size) { break; }
+
         network_send_download(sendOffset);
     }
 
@@ -376,13 +377,13 @@ void network_receive_download_request(struct Packet* p) {
 }
 
 void network_send_download(u64 requestOffset) {
-    u8 chunk[CHUNK_SIZE] = { 0 };
+    u8 chunk[CHUNK_SIZE];
     u64 chunkFill = 0;
     u64 fileStartOffset = 0;
 
     // fill up chunk
     for (u64 modIndex = 0; modIndex < gActiveMods.entryCount; modIndex++) {
-        struct Mod* mod = gActiveMods.entries[modIndex];
+        struct Mod *mod = gActiveMods.entries[modIndex];
 
         // skip past mods to get to the right offset
         if ((fileStartOffset + mod->size) < requestOffset) {
@@ -391,7 +392,7 @@ void network_send_download(u64 requestOffset) {
         }
 
         for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
-            struct ModFile* modFile = &mod->files[fileIndex];
+            struct ModFile *modFile = &mod->files[fileIndex];
 
             // skip past mod files to get to the right offset
             if ((fileStartOffset + modFile->size) < requestOffset) {
@@ -476,7 +477,7 @@ void network_receive_download(struct Packet* p) {
     // mark the offset group as received
     bool foundGroup = false;
     for (u64 i = 0; i < MAX_ACTIVE_OFFSET_GROUPS; i++) {
-        struct OffsetGroup* og = &sOffsetGroup[i];
+        struct OffsetGroup *og = &sOffsetGroup[i];
         if (!og->active) { continue; }
         for (u64 j = 0; j < OFFSET_COUNT; j++) {
             if (og->offset[j] != receiveOffset) {
@@ -536,4 +537,8 @@ after_group:;
     }
 
     network_update_offset_groups();
+}
+
+void network_download_update() {
+    network_sync_mod_files_and_download_buffer();
 }
