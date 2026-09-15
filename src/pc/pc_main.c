@@ -303,6 +303,15 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_end_frame_render();
         gfx_display_frame();
 
+        static f64 sLastRenderHookTime = 0;
+        f64 renderHookNow = clock_elapsed_f64();
+        f32 renderDt = (sLastRenderHookTime == 0)
+            ? 0.f
+            : (f32)(renderHookNow - sLastRenderHookTime);
+        sLastRenderHookTime = renderHookNow;
+        
+        smlua_call_event_hooks(HOOK_ON_RENDER_DELTA_TIME, renderDt);
+
         // delay if our framerate is capped
         if (shouldDelay) {
             expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
