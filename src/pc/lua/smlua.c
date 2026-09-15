@@ -14,6 +14,7 @@
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/fs/fmem.h"
+#include "pc/utils/misc.h"
 
 extern void smlua_free_custom_field(void *p);
 
@@ -409,6 +410,16 @@ void smlua_update(void) {
     audio_destroy_pending_copies();
 
     smlua_call_event_hooks(HOOK_UPDATE);
+
+    static f64 sLastUpdateTime = 0;
+    f64 now = clock_elapsed_f64();
+    f64 dt = (sLastUpdateTime == 0) ? 0.0 : (now - sLastUpdateTime);
+    sLastUpdateTime = now;
+    
+    if (dt < 0.0) { dt = 0.0; }
+    if (dt > 0.25) { dt = 0.25; }
+    
+    smlua_call_event_hooks(HOOK_UPDATE_DELTA_TIME, (f32)dt);
 
     // Collect our garbage after calling our hooks.
     // If we don't, Lag can quickly build up from our mods.
