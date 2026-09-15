@@ -1993,3 +1993,59 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_UPDATE(s16 playmode, s32 *changeLe
     }
     return hookResult;
 }
+
+bool smlua_call_event_hooks_HOOK_UPDATE_DELTA_TIME(f32 dt) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+    bool hookResult = false;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_UPDATE_DELTA_TIME];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+        lua_pushnumber(L, dt);
+
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'",
+                sLuaHookedEventTypeName[HOOK_UPDATE_DELTA_TIME],
+                hook->mod[i]->relativePath,
+                hook->modFile[i]->relativePath);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        hookResult = true;
+        lua_settop(L, prevTop);
+    }
+
+    return hookResult;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_RENDER_DELTA_TIME(f32 dt) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+    bool hookResult = false;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_RENDER_DELTA_TIME];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+        lua_pushnumber(L, dt);
+
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'",
+                sLuaHookedEventTypeName[HOOK_ON_RENDER_DELTA_TIME],
+                hook->mod[i]->relativePath,
+                hook->modFile[i]->relativePath);
+            lua_settop(L, prevTop);
+            continue;
+        }
+
+        hookResult = true;
+        lua_settop(L, prevTop);
+    }
+
+    return hookResult;
+}
