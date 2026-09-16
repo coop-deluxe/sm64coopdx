@@ -167,16 +167,15 @@ void network_start_download_requests(void) {
     sDownloadReceivedBytes = 0;
     sMaxOffsetGroups = 2;
     sSuccessCount = 0;
+
+    free(sDownloadBuffer);
+    sDownloadBuffer = NULL;
     if (gRemoteMods.size > 0) {
-        free(sDownloadBuffer);
         sDownloadBuffer = calloc(1, gRemoteMods.size);
         if (!sDownloadBuffer) {
             LOG_ERROR("Failed to allocate download buffer! Can't start!");
             return;
         }
-    } else {
-        free(sDownloadBuffer);
-        sDownloadBuffer = NULL;
     }
 
     sOffsetGroupCount = (gRemoteMods.size / GROUP_SIZE) + 1;
