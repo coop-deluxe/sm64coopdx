@@ -89,7 +89,6 @@ u32 gNumVblanks = 0;
 u8 gRenderingInterpolated = 0;
 f32 gRenderingDelta = 0;
 f32 gFramePercentage = 0.f;
-f64 gLastFrameDuration = 0;
 
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
@@ -203,7 +202,7 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
-u32 get_display_refresh_rate(void) {
+static u32 get_display_refresh_rate(void) {
     static u32 refreshRate = 0;
     if (!refreshRate) {
         SDL_DisplayMode mode;
@@ -279,8 +278,7 @@ void produce_interpolation_frames_and_delay(void) {
     f64 targetTime = sFrameTimeStart + sFrameTime;
     s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
 
-    f64 startTime = clock_elapsed_f64();
-    f64 curTime = startTime;
+    f64 curTime = clock_elapsed_f64();
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
     u16 framesDrawn = 0;
@@ -332,7 +330,6 @@ void produce_interpolation_frames_and_delay(void) {
         sFrameTimeStart += sFrameTime;
     }
 
-    gLastFrameDuration = clock_elapsed_f64() - startTime; // grab frame duration
     gRenderingInterpolated = false;
 }
 

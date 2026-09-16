@@ -29,8 +29,6 @@ extern "C" {
 extern struct AudioAPI* gAudioApi;
 extern struct GfxRenderingAPI* gRenderApi;
 
-extern f64 gLastFrameDuration;
-
 extern bool gGameInited;
 extern bool gGfxInited;
 
@@ -41,7 +39,6 @@ extern u8 gLuaVolumeLevel;
 extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
-u32 get_display_refresh_rate(void);
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
 void game_deinit(void);
 void game_exit(void);
