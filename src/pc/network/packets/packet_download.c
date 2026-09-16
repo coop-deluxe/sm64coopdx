@@ -272,6 +272,8 @@ static void network_update_offset_groups(void) {
             og->requestTime = currentTime;
             og->active = false;
 
+            memset(og->rx, 0, sizeof(og->rx));
+
             if (sMaxOffsetGroups > 2) {
                 sMaxOffsetGroups--;
             }
@@ -333,7 +335,6 @@ static void network_update_offset_groups(void) {
     bool completedDownload = true;
     for (u64 i = 0; i < sOffsetGroupCount; i++) {
         if (!sOffsetGroupsCompleted[i]) {
-            LOG_INFO("Not completed: %llu", i);
             completedDownload = false;
             break;
         }
