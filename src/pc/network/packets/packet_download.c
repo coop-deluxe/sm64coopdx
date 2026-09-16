@@ -30,6 +30,7 @@ struct QueuedChunk {
     u64 chunkOffset;
     u64 chunkFill;
     u8 buffer[CHUNK_SIZE];
+    u8 localIndex;
 };
 
 static struct QueuedChunk sQueuedChunks[MAX_QUEUED_CHUNKS] = { 0 };
@@ -92,10 +93,10 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
     LOG_INFO("Opened mod file pointer: %s", fullPath);
 }
 
-static void network_sync_mod_files_and_download_buffer(void) {
-    SOFT_ASSERT(gNetworkType == NT_CLIENT);
+static bool network_sync_mod_files_and_download_buffer(void) {
+    SOFT_ASSERT_RETURN(gNetworkType == NT_CLIENT, true);
 
-    if (!sDownloadBuffer) { return; }
+    if (!sDownloadBuffer) { return true; }
 
     u64 fileStartOffset = 0;
 
@@ -143,12 +144,16 @@ static void network_sync_mod_files_and_download_buffer(void) {
                         normalize_path(modFilePath);
                         modFile->cachedPath = strdup(modFilePath);
                     }
+                } else {
+                    return false;
                 }
             }
 
             fileStartOffset += modFile->size;
         }
     }
+
+    return true;
 }
 
 void network_start_download_requests(void) {
@@ -162,11 +167,13 @@ void network_start_download_requests(void) {
     sDownloadReceivedBytes = 0;
     sMaxOffsetGroups = 2;
     sSuccessCount = 0;
-    free(sDownloadBuffer);
-    sDownloadBuffer = calloc(1, gRemoteMods.size);
-    if (!sDownloadBuffer) {
-        LOG_ERROR("Failed to allocate download buffer! Can't start!");
-        return;
+    if (gRemoteMods.size > 0) {
+        free(sDownloadBuffer);
+        sDownloadBuffer = calloc(1, gRemoteMods.size);
+        if (!sDownloadBuffer) {
+            LOG_ERROR("Failed to allocate download buffer! Can't start!");
+            return;
+        }
     }
 
     sOffsetGroupCount = (gRemoteMods.size / GROUP_SIZE) + 1;
@@ -362,8 +369,17 @@ static void network_update_offset_groups(void) {
     }
 
     if (completedDownload) {
-        // sync one last time to make sure we didn't miss anything
-        network_sync_mod_files_and_download_buffer();
+        // sync mod files and give 3 attempts to write every file
+        u32 writeAttempts = 0;
+        while (!network_sync_mod_files_and_download_buffer() && writeAttempts < 3) {
+            writeAttempts++;
+        }
+
+        if (writeAttempts == 3) {
+            // failed, bail out
+            djui_popup_create(DLANG(NOTIF, LOBBY_JOIN_FAILED), 2);
+            network_shutdown(true, false, false, false);
+        }
 
         // cleanup
         network_download_cleanup();
@@ -387,16 +403,13 @@ static void network_update_offset_groups(void) {
             struct OffsetGroup *og = &sOffsetGroup[i];
             if (og->active && groupProgress[i] >= (OFFSET_COUNT / 2)) {
                 for (u32 j = 0; j < MAX_ACTIVE_OFFSET_GROUPS; j++) {
-                    if (!sOffsetGroup[j].active) {
-                        if (network_start_offset_group(&sOffsetGroup[j])) {
-                            goto end_spinup_group;
-                        }
+                    if (!sOffsetGroup[j].active && network_start_offset_group(&sOffsetGroup[j])) {
+                        return;
                     }
                 }
             }
         }
     }
-end_spinup_group:;
 }
 
 void network_send_download_request(u64 offset) {
@@ -418,13 +431,13 @@ void network_receive_download_request(struct Packet *p) {
     u64 requestOffset;
     packet_read(p, &requestOffset, sizeof(u64));
 
-    network_send_download(requestOffset);
+    network_send_download(requestOffset, p->localIndex);
 
     LOG_INFO("Sending group: %llu [ %llu <---> %llu ]", (requestOffset / GROUP_SIZE), requestOffset, requestOffset + GROUP_SIZE);
 }
 
-void network_send_download(u64 requestOffset) {
-    u8 groupBuffer[GROUP_SIZE];
+void network_send_download(u64 requestOffset, u8 localIndex) {
+    u8 groupBuffer[GROUP_SIZE] = { 0 };
     u64 groupFill = 0;
     u64 fileStartOffset = 0;
 
@@ -489,6 +502,7 @@ after_filled:;
         queuedChunk->chunkOffset = chunkOffset;
         queuedChunk->chunkFill = chunkFill;
         memcpy(queuedChunk->buffer, &groupBuffer[bytesQueued], chunkFill);
+        queuedChunk->localIndex = localIndex;
 
         sQueuedChunksTail = (sQueuedChunksTail + 1) % MAX_QUEUED_CHUNKS;
         sQueuedChunksCount++;
@@ -602,7 +616,7 @@ void network_download_update() {
 
         // get budget using 75% of the frametime we are targeting
         u32 targetFps = MIN((configFramerateMode == RRM_MANUAL ? configFrameLimit : 10000), get_display_refresh_rate());
-        f64 targetFrameTime = 1.0 / (f64)targetFps;
+        f64 targetFrameTime = 1.0 / MAX((f64)targetFps, 1.0f);
         f64 timeBudget = targetFrameTime * 0.75;
 
         f64 startTime = clock_elapsed_f64();
@@ -617,7 +631,7 @@ void network_download_update() {
             packet_write(&p, &queuedChunk->chunkFill, sizeof(u64));
             packet_write(&p, &queuedChunk->buffer, sizeof(u8) * queuedChunk->chunkFill);
 
-            network_send_to(0, &p);
+            network_send_to(queuedChunk->localIndex, &p);
 
             sQueuedChunksHead = (sQueuedChunksHead + 1) % MAX_QUEUED_CHUNKS;
             sQueuedChunksCount--;

@@ -359,7 +359,7 @@ void network_receive_mod_list_done(struct Packet* p);
 void network_start_download_requests(void);
 void network_send_download_request(u64 offset);
 void network_receive_download_request(struct Packet* p);
-void network_send_download(u64 offset);
+void network_send_download(u64 offset, u8 localIndex);
 void network_receive_download(struct Packet* p);
 void network_download_update(void);
 void network_download_cleanup(void);
