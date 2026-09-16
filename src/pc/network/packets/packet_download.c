@@ -427,8 +427,14 @@ void network_send_download(u64 requestOffset) {
         for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
             struct ModFile *modFile = &mod->files[fileIndex];
 
-            u64 fileReadOffset = MAX(((s64)requestOffset - (s64)fileStartOffset), 0);
-            u64 fileReadLength = MIN((modFile->size - fileReadOffset), (GROUP_SIZE - groupFill));
+            u64 currentTargetOffset = requestOffset + groupFill;
+            if (fileStartOffset + modFile->size < currentTargetOffset) {
+                fileStartOffset += modFile->size;
+                continue;
+            }
+
+            u64 fileReadOffset = currentTargetOffset - fileStartOffset;
+            u64 fileReadLength = MIN(modFile->size - fileReadOffset, GROUP_SIZE - groupFill);
 
             // read file
             FILE *fp = fopen(modFile->cachedPath, "rb");
