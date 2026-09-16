@@ -25,6 +25,7 @@ void network_send_mod_list_request(void) {
 
     network_send_to(PACKET_DESTINATION_SERVER, &p);
     LOG_INFO("sending mod list request");
+    snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "Fetching modlist");
     gAllowOrderedPacketClear = 0;
 }
 

@@ -685,6 +685,7 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gNetworkSentJoin = false;
 
     network_forget_all_reliable();
+    network_download_cleanup();
     if (gNetworkSystem == NULL) {
         LOG_ERROR("no network system attached");
     } else {

@@ -362,6 +362,7 @@ void network_receive_download_request(struct Packet* p);
 void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
 void network_download_update(void);
+void network_download_cleanup(void);
 
 // packet_global_popup.c
 void network_send_global_popup(const char* message, int lines);

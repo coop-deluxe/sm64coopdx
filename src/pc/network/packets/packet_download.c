@@ -36,7 +36,7 @@ static u64 sDownloadReceivedBytes = 0;
 static u32 sMaxOffsetGroups = 2;
 static u32 sSuccessCount = 0;
 
-static bool sStartedDownloading = false;
+static bool sIsDownloading = false;
 
 static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
@@ -141,7 +141,7 @@ static void network_sync_mod_files_and_download_buffer(void) {
 void network_start_download_requests(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
-    sStartedDownloading = true;
+    sIsDownloading = true;
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
     gDownloadProgressInf = 0;
@@ -267,7 +267,7 @@ static bool network_start_offset_group(struct OffsetGroup *og) {
 
 static void network_update_offset_groups(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    if (!sStartedDownloading) { return; }
+    if (!sIsDownloading) { return; }
 
     // if there is a timeout, resend the download request
     f32 currentTime = clock_elapsed();
@@ -349,25 +349,19 @@ static void network_update_offset_groups(void) {
     if (completedDownload) {
         // sync one last time to make sure we didn't miss anything
         network_sync_mod_files_and_download_buffer();
-        // cleanup the download buffer
-        free(sDownloadBuffer);
-        sDownloadBuffer = NULL;
-        // close and flush all file pointers and enable the remote mods
+
+        // cleanup
+        network_download_cleanup();
+
+        // enable remote mods
         for (u64 modIndex = 0; modIndex < gRemoteMods.entryCount; modIndex++) {
             struct Mod *mod = gRemoteMods.entries[modIndex];
-            for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
-                struct ModFile *modFile = &mod->files[fileIndex];
-                if (modFile->fp == NULL) { continue; }
-                f_flush(modFile->fp);
-                f_close(modFile->fp);
-                modFile->fp = NULL;
-            }
             mod->enabled = true;
         }
+
         LOG_INFO("Download complete!");
         gDownloadProgress = 1.0f;
         snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "Finalizing");
-        sStartedDownloading = false;
         network_send_join_request();
         return;
     }
@@ -409,86 +403,69 @@ void network_receive_download_request(struct Packet *p) {
     u64 requestOffset;
     packet_read(p, &requestOffset, sizeof(u64));
 
-    for (u64 i = 0; i < OFFSET_COUNT; i++) {
-        u64 sendOffset = requestOffset + (i * CHUNK_SIZE);
-        if (sendOffset >= gActiveMods.size) { break; }
-
-        network_send_download(sendOffset);
-    }
+    network_send_download(requestOffset);
 
     LOG_INFO("Sending group: %llu [ %llu <---> %llu ]", (requestOffset / GROUP_SIZE), requestOffset, requestOffset + GROUP_SIZE);
 }
 
 void network_send_download(u64 requestOffset) {
-    u8 chunk[CHUNK_SIZE];
-    u64 chunkFill = 0;
+    u8 groupBuffer[GROUP_SIZE];
+    u64 groupFill = 0;
     u64 fileStartOffset = 0;
 
-    // fill up chunk
+    // iterate through mods
     for (u64 modIndex = 0; modIndex < gActiveMods.entryCount; modIndex++) {
         struct Mod *mod = gActiveMods.entries[modIndex];
 
-        // skip past mods to get to the right offset
+        // if we are not at the file start offset, increment and continue
         if ((fileStartOffset + mod->size) < requestOffset) {
             fileStartOffset += mod->size;
             continue;
         }
 
+        // iterate through each file in the mod
         for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
             struct ModFile *modFile = &mod->files[fileIndex];
 
-            // skip past mod files to get to the right offset
-            if ((fileStartOffset + modFile->size) < requestOffset) {
-                fileStartOffset += modFile->size;
-                continue;
-            }
-
-            // calculate file offset and read length
             u64 fileReadOffset = MAX(((s64)requestOffset - (s64)fileStartOffset), 0);
-            u64 fileReadLength = MIN((modFile->size - fileReadOffset), (CHUNK_SIZE - chunkFill));
+            u64 fileReadLength = MIN((modFile->size - fileReadOffset), (GROUP_SIZE - groupFill));
 
-            // open file pointer
-            bool opened = false;
-            if (modFile->fp == NULL) {
-                modFile->fp = fopen(modFile->cachedPath, "rb");
-                if (modFile->fp == NULL) {
-                    LOG_ERROR("Failed to open mod file during download: %s", modFile->cachedPath);
-                    return;
-                }
-                opened = true;
+            // read file
+            FILE *fp = fopen(modFile->cachedPath, "rb");
+            if (fp != NULL) {
+                fseek(fp, fileReadOffset, SEEK_SET);
+                fread(&groupBuffer[groupFill], sizeof(u8), fileReadLength, fp);
+                fclose(fp);
+            } else {
+                LOG_ERROR("Failed to open mod file: %s", modFile->cachedPath);
             }
 
-            // read from file, filling chunk
-            fseek(modFile->fp, fileReadOffset, SEEK_SET);
-            fread(&chunk[chunkFill], sizeof(u8), fileReadLength, modFile->fp);
-
-            // close file pointer
-            if (opened) {
-                fclose(modFile->fp);
-                modFile->fp = NULL;
-            }
-
-            // increment counters
-            chunkFill += fileReadLength;
+            groupFill += fileReadLength;
             fileStartOffset += modFile->size;
 
-            // check if we've filled the chunk
-            if (chunkFill >= CHUNK_SIZE) {
+            // if we have filled the group, exit
+            if (groupFill >= GROUP_SIZE) {
                 goto after_filled;
             }
         }
     }
 after_filled:;
 
-    // send the packet
-    struct Packet p = { 0 };
-    packet_init(&p, PACKET_DOWNLOAD, false, PLMT_NONE);
-    packet_write(&p, &requestOffset, sizeof(u64));
-    packet_write(&p, &chunkFill,    sizeof(u64));
-    packet_write(&p, &chunk,        sizeof(u8) * chunkFill);
-    network_send_to(0, &p);
+    // send out all necessary packets
+    u64 bytesSent = 0;
+    while (bytesSent < groupFill) {
+        u64 chunkOffset = requestOffset + bytesSent;
+        u64 chunkFill = MIN(CHUNK_SIZE, groupFill - bytesSent);
 
-    //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
+        struct Packet p = { 0 };
+        packet_init(&p, PACKET_DOWNLOAD, false, PLMT_NONE);
+        packet_write(&p, &chunkOffset, sizeof(u64));
+        packet_write(&p, &chunkFill, sizeof(u64));
+        packet_write(&p, &groupBuffer[bytesSent], sizeof(u8) * chunkFill);
+        network_send_to(0, &p);
+
+        bytesSent += chunkFill;
+    }
 }
 
 void network_receive_download(struct Packet* p) {
@@ -574,19 +551,39 @@ after_group:;
 
         seconds = seconds % 60;
         minutes = minutes % 60;
+        f32 downloadedMB = (f32)sTotalDownloadBytes / (1024.0f * 1024.0f);
+        f32 totalMB = (f32)gRemoteMods.size / (1024.0f * 1024.0f);
+
         if (hours) {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%uh %um %us", hours, minutes, seconds);
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%uh %um %us (%.2fMB/%.2fMB)", hours, minutes, seconds, downloadedMB, totalMB);
         } else if (minutes) {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%um %us", minutes, seconds);
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%um %us (%.2fMB/%.2fMB)", minutes, seconds, downloadedMB, totalMB);
         } else {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%us", seconds);
+            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%us (%.2fMB/%.2fMB)", seconds, downloadedMB, totalMB);
         }
     }
 }
 
 void network_download_update() {
-    if (gNetworkSentJoin) { return; }
-    if (!gDjuiPanelJoinMessageVisible) { sStartedDownloading = false; return; }
+    if (!sIsDownloading) { return; }
     network_sync_mod_files_and_download_buffer();
     network_update_offset_groups();
+}
+
+void network_download_cleanup(void) {
+    sIsDownloading = false;
+
+    free(sDownloadBuffer);
+    sDownloadBuffer = NULL;
+    free(sOffsetGroupsCompleted);
+    sOffsetGroupsCompleted = NULL;
+
+    sTotalDownloadBytes = 0;
+    sDownloadReceivedBytes = 0;
+    sDownloadStartTime = 0;
+    sOffsetGroupCount = 0;
+    sMaxOffsetGroups = 2;
+    sSuccessCount = 0;
+
+    memset(sOffsetGroup, 0, sizeof(sOffsetGroup));
 }

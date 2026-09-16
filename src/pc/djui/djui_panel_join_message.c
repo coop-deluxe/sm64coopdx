@@ -38,18 +38,14 @@ bool djui_panel_join_message_back(struct DjuiBase* caller) {
 void djui_panel_join_message_render_pre(struct DjuiBase* base, UNUSED bool* unused) {
     if (sDisplayingError) { return; }
     struct DjuiText* text1 = (struct DjuiText*)base;
-    u16 lastElapse = (base->tag / DJUI_JOIN_MESSAGE_ELAPSE);
     base->tag = (base->tag + 1) % (DJUI_JOIN_MESSAGE_ELAPSE * 3);
-    u16 elapse = (base->tag / DJUI_JOIN_MESSAGE_ELAPSE);
-    if (lastElapse != elapse) {
-        char tmp[DOWNLOAD_ESTIMATE_LENGTH + 4] = "";
-        switch (base->tag / DJUI_JOIN_MESSAGE_ELAPSE) {
-            case 0:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n...", gDownloadEstimate); break;
-            case 1:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n.",   gDownloadEstimate); break;
-            default: snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n..",  gDownloadEstimate); break;
-        }
-        djui_text_set_text(text1, tmp);
+    char tmp[DOWNLOAD_ESTIMATE_LENGTH + 4] = "";
+    switch (base->tag / DJUI_JOIN_MESSAGE_ELAPSE) {
+        case 0:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n...", gDownloadEstimate); break;
+        case 1:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n.",   gDownloadEstimate); break;
+        default: snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n..",  gDownloadEstimate); break;
     }
+    djui_text_set_text(text1, tmp);
 }
 
 void djui_panel_join_message_create(struct DjuiBase* caller) {
