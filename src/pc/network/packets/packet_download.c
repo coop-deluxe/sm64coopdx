@@ -373,7 +373,7 @@ static void network_update_offset_groups(void) {
     if (completedDownload) {
         // sync mod files and give 3 attempts to write every file
         u32 writeAttempts = 0;
-        while (!network_sync_mod_files_and_download_buffer() && writeAttempts < 3) {
+        while (writeAttempts < 3 && !network_sync_mod_files_and_download_buffer()) {
             writeAttempts++;
         }
 
