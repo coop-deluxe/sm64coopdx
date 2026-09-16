@@ -11,7 +11,7 @@
 bool gDjuiPanelJoinMessageVisible = false;
 float gDownloadProgress = 0;
 float gDownloadProgressInf = 0;
-char gDownloadEstimate[DOWNLOAD_ESTIMATE_LENGTH] = "";
+char gDownloadStatus[DOWNLOAD_STATUS_LENGTH] = "";
 
 static struct DjuiText* sPanelText = NULL;
 static bool sDisplayingError = false;
@@ -39,11 +39,11 @@ void djui_panel_join_message_render_pre(struct DjuiBase* base, UNUSED bool* unus
     if (sDisplayingError) { return; }
     struct DjuiText* text1 = (struct DjuiText*)base;
     base->tag = (base->tag + 1) % (DJUI_JOIN_MESSAGE_ELAPSE * 3);
-    char tmp[DOWNLOAD_ESTIMATE_LENGTH + 4] = "";
+    char tmp[DOWNLOAD_STATUS_LENGTH + 4] = "";
     switch (base->tag / DJUI_JOIN_MESSAGE_ELAPSE) {
-        case 0:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n...", gDownloadEstimate); break;
-        case 1:  snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n.",   gDownloadEstimate); break;
-        default: snprintf(tmp, DOWNLOAD_ESTIMATE_LENGTH + 4, "%s\n..",  gDownloadEstimate); break;
+        case 0:  snprintf(tmp, DOWNLOAD_STATUS_LENGTH + 4, "%s...", gDownloadStatus); break;
+        case 1:  snprintf(tmp, DOWNLOAD_STATUS_LENGTH + 4, "%s.",   gDownloadStatus); break;
+        default: snprintf(tmp, DOWNLOAD_STATUS_LENGTH + 4, "%s..",  gDownloadStatus); break;
     }
     djui_text_set_text(text1, tmp);
 }
@@ -58,7 +58,7 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        snprintf(gDownloadEstimate, 32, " ");
+        snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, " ");
         struct DjuiText* text1 = djui_text_create(body, "\n...");
         djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&text1->base, 1.0f, 32 * 4);

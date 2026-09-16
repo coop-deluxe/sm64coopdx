@@ -179,6 +179,8 @@ void network_start_download_requests(void) {
 
     memset(sOffsetGroup, 0, sizeof(sOffsetGroup));
 
+    snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "Starting Download");
+
     mark_groups_loaded_from_hash();
     network_update_offset_groups();
 }
@@ -374,7 +376,7 @@ static void network_update_offset_groups(void) {
 
         LOG_INFO("Download complete!");
         gDownloadProgress = 1.0f;
-        snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "Finalizing");
+        snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "Finalizing");
         network_send_join_request();
         return;
     }
@@ -440,12 +442,14 @@ void network_send_download(u64 requestOffset) {
         for (u64 fileIndex = 0; fileIndex < mod->fileCount; fileIndex++) {
             struct ModFile *modFile = &mod->files[fileIndex];
 
+            // skip past mod files to get to the right offset
             u64 currentTargetOffset = requestOffset + groupFill;
             if (fileStartOffset + modFile->size < currentTargetOffset) {
                 fileStartOffset += modFile->size;
                 continue;
             }
 
+            // calculate file offset and read length
             u64 fileReadOffset = currentTargetOffset - fileStartOffset;
             u64 fileReadLength = MIN(modFile->size - fileReadOffset, GROUP_SIZE - groupFill);
 
@@ -500,8 +504,8 @@ void network_receive_download(struct Packet* p) {
     }
 
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
-    if (gNetworkSentJoin) {
-        LOG_ERROR("Received download packet when we already finished downloading!");
+    if (!sIsDownloading) {
+        LOG_ERROR("Received download packet when we aren't downloading mods!");
         return;
     }
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
@@ -578,13 +582,15 @@ after_group:;
         minutes = minutes % 60;
         f32 downloadedMB = (f32)sTotalDownloadBytes / (1024.0f * 1024.0f);
         f32 totalMB = (f32)gRemoteMods.size / (1024.0f * 1024.0f);
+        f32 speedMB = (bytesPerSecond) / (1024.0f * 1024.0f);
+        u32 percentDownloaded = (u32)((1.0f - (f32)remaining / (f32)gRemoteMods.size) * 100.0f);
 
         if (hours) {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%uh %um %us (%.2fMB/%.2fMB)", hours, minutes, seconds, downloadedMB, totalMB);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%uh %um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%%%u", hours, minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         } else if (minutes) {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%um %us (%.2fMB/%.2fMB)", minutes, seconds, downloadedMB, totalMB);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%%%u", minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         } else {
-            snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%us (%.2fMB/%.2fMB)", seconds, downloadedMB, totalMB);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n%%%u\n", seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         }
     }
 }
