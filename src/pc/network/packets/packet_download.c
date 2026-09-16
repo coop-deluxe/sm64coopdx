@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <string.h>
 #include "../network.h"
+#include "pc/pc_main.h"
 #include "pc/djui/djui.h"
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
@@ -593,10 +594,15 @@ void network_download_update() {
         // process queued download packets
         if (sQueuedChunksCount == 0) { return; }
 
+        // get budget using 75% of the frametime we are targeting
+        u32 targetFps = MIN((configFramerateMode == RRM_MANUAL ? configFrameLimit : 10000), get_display_refresh_rate());
+        f64 targetFrameTime = 1.0 / (f64)targetFps;
+        f64 timeBudget = targetFrameTime * 0.75;
+
         f64 startTime = clock_elapsed_f64();
         f64 currentTime = clock_elapsed_f64();
 
-        while (sQueuedChunksCount > 0 && currentTime - startTime < 0.008) {
+        while (sQueuedChunksCount > 0 && currentTime - startTime < timeBudget) {
             struct QueuedChunk *queuedChunk = &sQueuedChunks[sQueuedChunksHead];
 
             struct Packet p = { 0 };
