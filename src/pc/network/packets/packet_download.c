@@ -435,7 +435,7 @@ void network_receive_download_request(struct Packet *p) {
 
     network_send_download(requestOffset, p->localIndex);
 
-    LOG_INFO("Sending group: %llu [ %llu <---> %llu ]", (requestOffset / GROUP_SIZE), requestOffset, requestOffset + GROUP_SIZE);
+    LOG_INFO("Sending group to %u: %llu [ %llu <---> %llu ]", p->localIndex, (requestOffset / GROUP_SIZE), requestOffset, requestOffset + GROUP_SIZE);
 }
 
 void network_send_download(u64 requestOffset, u8 localIndex) {
@@ -505,6 +505,9 @@ after_filled:;
         queuedChunk->chunkFill = chunkFill;
         memcpy(queuedChunk->buffer, &groupBuffer[bytesQueued], chunkFill);
         queuedChunk->localIndex = localIndex;
+        if (queuedChunk->localIndex == UNKNOWN_LOCAL_INDEX) {
+            queuedChunk->localIndex = 0;
+        }
 
         sQueuedChunksTail = (sQueuedChunksTail + 1) % MAX_QUEUED_CHUNKS;
         sQueuedChunksCount++;
