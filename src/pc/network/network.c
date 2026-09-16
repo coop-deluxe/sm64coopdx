@@ -598,7 +598,9 @@ void network_update(void) {
     }
 
     // update downloading
-    network_download_update();
+    if (gNetworkType == NT_CLIENT && !gNetworkSentJoin) {
+        network_download_update();
+    }
 
     // update reliable and ordered packets
     if (gNetworkType != NT_NONE) {

@@ -78,6 +78,8 @@ static void open_mod_file(struct Mod* mod, struct ModFile* file) {
 }
 
 static void network_sync_mod_files_and_download_buffer(void) {
+    SOFT_ASSERT(gNetworkType == NT_CLIENT);
+
     if (!sDownloadBuffer) { return; }
 
     u64 fileStartOffset = 0;
@@ -270,14 +272,13 @@ static void network_update_offset_groups(void) {
         if (og->active && !sOffsetGroupsCompleted[og->offset[0] / GROUP_SIZE] && (currentTime - og->requestTime) > CHUNK_GROUP_TIMEOUT) {
             LOG_INFO("Offset group %llu timed out. Freeing group...", og->offset[0] / GROUP_SIZE);
             og->requestTime = currentTime;
-            og->active = false;
-
-            memset(og, 0, sizeof(struct OffsetGroup));
 
             if (sMaxOffsetGroups > 2) {
                 sMaxOffsetGroups--;
             }
             sSuccessCount = 0;
+
+            network_send_download_request(og->offset[0]);
         }
     }
 
@@ -335,6 +336,7 @@ static void network_update_offset_groups(void) {
     bool completedDownload = true;
     for (u64 i = 0; i < sOffsetGroupCount; i++) {
         if (!sOffsetGroupsCompleted[i]) {
+            LOG_INFO("Not completed: %llu", i);
             completedDownload = false;
             break;
         }
@@ -569,10 +571,9 @@ after_group:;
             snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "%us", seconds);
         }
     }
-
-    network_update_offset_groups();
 }
 
 void network_download_update() {
     network_sync_mod_files_and_download_buffer();
+    network_update_offset_groups();
 }
