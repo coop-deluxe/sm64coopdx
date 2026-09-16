@@ -36,6 +36,8 @@ static u64 sDownloadReceivedBytes = 0;
 static u32 sMaxOffsetGroups = 2;
 static u32 sSuccessCount = 0;
 
+static bool sStartedDownloading = false;
+
 static bool network_start_offset_group(struct OffsetGroup* og);
 static void network_update_offset_groups(void);
 static void mark_groups_loaded_from_hash(void);
@@ -139,6 +141,7 @@ static void network_sync_mod_files_and_download_buffer(void) {
 void network_start_download_requests(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
+    sStartedDownloading = true;
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
     gDownloadProgressInf = 0;
@@ -264,6 +267,7 @@ static bool network_start_offset_group(struct OffsetGroup *og) {
 
 static void network_update_offset_groups(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    if (!sStartedDownloading) { return; }
 
     // if there is a timeout, resend the download request
     f32 currentTime = clock_elapsed();
@@ -361,6 +365,9 @@ static void network_update_offset_groups(void) {
             mod->enabled = true;
         }
         LOG_INFO("Download complete!");
+        gDownloadProgress = 1.0f;
+        snprintf(gDownloadEstimate, DOWNLOAD_ESTIMATE_LENGTH, "Finalizing");
+        sStartedDownloading = false;
         network_send_join_request();
         return;
     }
@@ -491,6 +498,10 @@ void network_receive_download(struct Packet* p) {
     }
 
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    if (gNetworkSentJoin) {
+        LOG_ERROR("Received download packet when we already finished downloading!");
+        return;
+    }
     if (p->localIndex != UNKNOWN_LOCAL_INDEX) {
         if (gNetworkPlayerServer == NULL || gNetworkPlayerServer->localIndex != p->localIndex) {
             LOG_ERROR("Received download from known local index '%d'", p->localIndex);
@@ -574,6 +585,8 @@ after_group:;
 }
 
 void network_download_update() {
+    if (gNetworkSentJoin) { return; }
+    if (!gDjuiPanelJoinMessageVisible) { sStartedDownloading = false; return; }
     network_sync_mod_files_and_download_buffer();
     network_update_offset_groups();
 }
