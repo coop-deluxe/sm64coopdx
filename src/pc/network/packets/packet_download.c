@@ -16,6 +16,7 @@
 #define CHUNK_GROUP_TIMEOUT 1.5f
 #define GROUP_SIZE (CHUNK_SIZE * OFFSET_COUNT)
 #define MAX_ACTIVE_OFFSET_GROUPS 32
+#define MAX_QUEUED_CHUNKS (OFFSET_COUNT * MAX_ACTIVE_OFFSET_GROUPS)
 
 struct OffsetGroup {
     u64 offset[OFFSET_COUNT];
@@ -23,6 +24,17 @@ struct OffsetGroup {
     bool active;
     f32 requestTime;
 };
+
+struct QueuedChunk {
+    u64 chunkOffset;
+    u64 chunkFill;
+    u8 buffer[CHUNK_SIZE];
+};
+
+static struct QueuedChunk sQueuedChunks[MAX_QUEUED_CHUNKS] = { 0 };
+static u32 sQueuedChunksHead = 0; // to avoid shifting elements, track using a head and tail
+static u32 sQueuedChunksTail = 0;
+static u32 sQueuedChunksCount = 0;
 
 static struct OffsetGroup sOffsetGroup[MAX_ACTIVE_OFFSET_GROUPS] = { 0 };
 static bool *sOffsetGroupsCompleted = NULL;
@@ -457,20 +469,26 @@ void network_send_download(u64 requestOffset) {
     }
 after_filled:;
 
-    // send out all necessary packets !!! VERY PERFORMANCE HUNGRY !!!
-    u64 bytesSent = 0;
-    while (bytesSent < groupFill) {
-        u64 chunkOffset = requestOffset + bytesSent;
-        u64 chunkFill = MIN(CHUNK_SIZE, groupFill - bytesSent);
+    // queue up packets
+    u64 bytesQueued = 0;
+    while (bytesQueued < groupFill) {
+        if (sQueuedChunksCount >= MAX_QUEUED_CHUNKS) {
+            LOG_ERROR("No space in the queue! Not sending download packet");
+            break;
+        }
 
-        struct Packet p = { 0 };
-        packet_init(&p, PACKET_DOWNLOAD, false, PLMT_NONE);
-        packet_write(&p, &chunkOffset, sizeof(u64));
-        packet_write(&p, &chunkFill, sizeof(u64));
-        packet_write(&p, &groupBuffer[bytesSent], sizeof(u8) * chunkFill);
-        network_send_to(0, &p);
+        u64 chunkOffset = requestOffset + bytesQueued;
+        u64 chunkFill = MIN(CHUNK_SIZE, groupFill - bytesQueued);
 
-        bytesSent += chunkFill;
+        struct QueuedChunk *queuedChunk = &sQueuedChunks[sQueuedChunksTail];
+        queuedChunk->chunkOffset = chunkOffset;
+        queuedChunk->chunkFill = chunkFill;
+        memcpy(queuedChunk->buffer, &groupBuffer[bytesQueued], chunkFill);
+
+        sQueuedChunksTail = (sQueuedChunksTail + 1) % MAX_QUEUED_CHUNKS;
+        sQueuedChunksHead++;
+
+        bytesQueued += chunkFill;
     }
 }
 
@@ -571,6 +589,30 @@ after_group:;
 }
 
 void network_download_update() {
+    if (gNetworkType == NT_SERVER) {
+        // process queued download packets
+        if (sQueuedChunksCount == 0) { return; }
+
+        f64 startTime = clock_elapsed_f64();
+        f64 currentTime = clock_elapsed_f64();
+
+        while (sQueuedChunksCount > 0 && currentTime - startTime < 0.008) {
+            struct QueuedChunk *queuedChunk = &sQueuedChunks[sQueuedChunksHead];
+
+            struct Packet p = { 0 };
+            packet_init(&p, PACKET_DOWNLOAD, false, PLMT_NONE);
+            packet_write(&p, &queuedChunk->chunkOffset, sizeof(u64));
+            packet_write(&p, &queuedChunk->chunkFill, sizeof(u64));
+            packet_write(&p, &queuedChunk->buffer, sizeof(u8) * queuedChunk->chunkFill);
+
+            network_send_to(0, &p);
+
+            sQueuedChunksHead = (sQueuedChunksHead + 1) % MAX_QUEUED_CHUNKS;
+            sQueuedChunksCount--;
+            currentTime = clock_elapsed_f64();
+        }
+    }
+
     if (!sIsDownloading) { return; }
     network_sync_mod_files_and_download_buffer();
     network_update_offset_groups();
@@ -578,6 +620,11 @@ void network_download_update() {
 
 void network_download_cleanup(void) {
     sIsDownloading = false;
+
+    memset(sQueuedChunks, 0, sizeof(sQueuedChunks));
+    sQueuedChunksHead = 0;
+    sQueuedChunksTail = 0;
+    sQueuedChunksCount = 0;
 
     free(sDownloadBuffer);
     sDownloadBuffer = NULL;
