@@ -11,7 +11,7 @@
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
 
-#define CHUNK_SIZE 1200
+#define CHUNK_SIZE 1425 // headers for download packet is 16 bytes for data we send and 8 required bytes for the byte system
 #define OFFSET_COUNT 50
 #define CHUNK_GROUP_TIMEOUT 1.5f
 #define GROUP_SIZE (CHUNK_SIZE * OFFSET_COUNT)
@@ -457,7 +457,7 @@ void network_send_download(u64 requestOffset) {
     }
 after_filled:;
 
-    // send out all necessary packets
+    // send out all necessary packets !!! VERY PERFORMANCE HUNGRY !!!
     u64 bytesSent = 0;
     while (bytesSent < groupFill) {
         u64 chunkOffset = requestOffset + bytesSent;
