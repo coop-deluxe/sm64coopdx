@@ -486,7 +486,7 @@ after_filled:;
         memcpy(queuedChunk->buffer, &groupBuffer[bytesQueued], chunkFill);
 
         sQueuedChunksTail = (sQueuedChunksTail + 1) % MAX_QUEUED_CHUNKS;
-        sQueuedChunksHead++;
+        sQueuedChunksCount++;
 
         bytesQueued += chunkFill;
     }
