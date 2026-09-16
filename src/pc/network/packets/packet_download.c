@@ -433,6 +433,11 @@ void network_receive_download_request(struct Packet *p) {
 }
 
 void network_send_download(u64 requestOffset) {
+    if (sQueuedDownloadPacketsCount + OFFSET_COUNT > MAX_QUEUED_CHUNKS) {
+        LOG_ERROR("No space in the queue! Not reading download group");
+        return;
+    }
+
     u8 groupBuffer[GROUP_SIZE] = { 0 };
     u64 groupFill = 0;
     u64 fileStartOffset = 0;
@@ -499,6 +504,7 @@ after_filled:;
         packet_write(p, &chunkOffset, sizeof(u64));
         packet_write(p, &chunkFill, sizeof(u64));
         packet_write(p, &groupBuffer[bytesQueued], sizeof(u8) * chunkFill);
+        p->addr = gNetworkSystem->dup_addr(0);
 
         sQueuedDownloadPacketsTail = (sQueuedDownloadPacketsTail + 1) % MAX_QUEUED_CHUNKS;
         sQueuedDownloadPacketsCount++;
@@ -623,6 +629,7 @@ void network_download_update() {
 
             network_send_to(0, packet);
 
+            free(packet->addr);
             memset(packet, 0, sizeof(struct Packet));
             sQueuedDownloadPacketsHead = (sQueuedDownloadPacketsHead + 1) % MAX_QUEUED_CHUNKS;
             sQueuedDownloadPacketsCount--;
