@@ -272,7 +272,7 @@ static void network_update_offset_groups(void) {
             og->requestTime = currentTime;
             og->active = false;
 
-            memset(og->rx, 0, sizeof(og->rx));
+            memset(og, 0, sizeof(struct OffsetGroup));
 
             if (sMaxOffsetGroups > 2) {
                 sMaxOffsetGroups--;
