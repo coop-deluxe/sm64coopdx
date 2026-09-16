@@ -174,6 +174,9 @@ void network_start_download_requests(void) {
             LOG_ERROR("Failed to allocate download buffer! Can't start!");
             return;
         }
+    } else {
+        free(sDownloadBuffer);
+        sDownloadBuffer = NULL;
     }
 
     sOffsetGroupCount = (gRemoteMods.size / GROUP_SIZE) + 1;
