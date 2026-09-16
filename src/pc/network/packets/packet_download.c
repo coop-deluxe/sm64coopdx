@@ -586,11 +586,11 @@ after_group:;
         u32 percentDownloaded = (u32)((1.0f - (f32)remaining / (f32)gRemoteMods.size) * 100.0f);
 
         if (hours) {
-            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%uh %um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%%%u", hours, minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%uh %um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%u%%", hours, minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         } else if (minutes) {
-            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%%%u", minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%um %us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n\n%u%%", minutes, seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         } else {
-            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n%%%u\n", seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
+            snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "%us\n(%.2fMB/%.2fMB)\n%.2fMB/s\n%u%%\n", seconds, downloadedMB, totalMB, speedMB, percentDownloaded);
         }
     }
 }
