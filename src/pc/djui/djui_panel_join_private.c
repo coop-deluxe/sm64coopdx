@@ -41,9 +41,8 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
         djui_inputbox_set_text(inputbox1, configJoinPassword);
-
+        djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_private_lobbies_password_text_change);
         sInputboxPassword = inputbox1;
-        djui_interactable_hook_value_change(&sInputboxPassword->base, djui_panel_join_private_lobbies_password_text_change);
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
