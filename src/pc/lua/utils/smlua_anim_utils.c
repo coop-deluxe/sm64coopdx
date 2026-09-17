@@ -146,21 +146,74 @@ void smlua_anim_util_reset(void) {
     sCustomAnimationHead = NULL;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
+static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
+    // Get number of values
+    *length = lua_rawlen(L, index);
+    if (!*length) { LOG_LUA("smlua_to_u16_list: Table must not be empty"); return NULL; }
+    u16 *values = calloc(*length, sizeof(u16));
 
-    // NULL-checks
-    if (!name) {
-        LOG_LUA_LINE("smlua_anim_util_register_animation: Parameter 'name' is NULL");
-        free(values);
-        free(index);
+    // Retrieve values
+    lua_pushnil(L);
+    s32 top = lua_gettop(L);
+    while (lua_next(L, index) != 0) {
+        int indexKey = lua_gettop(L) - 1;
+        int indexValue = lua_gettop(L) - 0;
+
+        lua_Integer key = smlua_to_integer(L, indexKey);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_to_u16_list: Failed to convert table key");
+            free(values);
+            return 0;
+        }
+
+        if (key < 1 || key > *length) {
+            LOG_LUA("smlua_to_u16_list: Table key out of bounds: " LUA_INTEGER_FMT, key);
+            free(values);
+            return 0;
+        }
+
+        u16 value = smlua_to_integer(L, indexValue);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_to_u16_list: Failed to convert table value");
+            free(values);
+            return 0;
+        }
+
+        values[key - 1] = value;
+        lua_settop(L, top);
+    }
+    lua_settop(L, top);
+    return values;
+}
+
+void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index) {
+    if (get_custom_animation_node(name)) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: An animation named '%s' already exists", name);
         return;
     }
 
-    // Check if the name is not already taken
-    if (get_custom_animation_node(name)) {
-        LOG_LUA_LINE("smlua_anim_util_register_animation: An animation named '%s' already exists", name);
-        free(values);
-        free(index);
+    lua_State *L = gLuaState;
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, values);
+    values = lua_gettop(L);
+    u32 valuesLength = 0;
+    u16 *valuesList = smlua_to_u16_list(L, values, &valuesLength);
+
+    if (!valuesList) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Failed to allocate values buffer")
+        lua_pop(L, 1);
+        return;
+    }
+    
+    lua_rawgeti(L, LUA_REGISTRYINDEX, index);
+    index = lua_gettop(L);
+    u32 indexLength = 0;
+    u16 *indexList = smlua_to_u16_list(L, index, &indexLength);
+
+    if (!indexList) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Failed to allocate index buffer")
+        lua_pop(L, 2);
+        free(valuesList);
         return;
     }
 
@@ -174,14 +227,16 @@ void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTr
     node->anim->loopStart = loopStart;
     node->anim->loopEnd = loopEnd;
     node->anim->unusedBoneCount = 0;
-    node->anim->values = values;
-    node->anim->index = index;
+    node->anim->values = valuesList;
+    node->anim->index = indexList;
     node->anim->valuesLength = valuesLength;
     node->anim->indexLength = indexLength;
     node->anim->length = 0;
     node->next = sCustomAnimationHead;
     sCustomAnimationHead = node;
-    LOG_INFO("Registered custom animation: %s", name);
+
+    lua_pop(L, 2);
+    LOG_INFO("smlua_anim_util_register_animation: Registered custom animation with name '%s'", name);
 }
 
 void smlua_anim_util_set_animation(struct Object *obj, const char *name) {
