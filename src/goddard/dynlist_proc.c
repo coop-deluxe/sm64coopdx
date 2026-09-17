@@ -1013,6 +1013,9 @@ void chk_shapegen(struct ObjShape *shape) {
             }
 
             vtxbuf = gd_malloc_temp((size_t) vtxdata->count * sizeof(struct ObjVertex *));
+            if (vtxbuf == NULL) {
+                fatal_printf("shapegen() unable to allocate vertex buffer");
+            }
             oldObjHead = gGdObjectList;
 
             for (i = 0; i < vtxdata->count; i++) {

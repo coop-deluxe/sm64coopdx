@@ -541,7 +541,7 @@ int smlua_func_goddard_set_head(lua_State* L) {
 
     dynos_goddard_set_head(headName);
 
-    return 1;
+    return 0;
 }
 
   ////////////////////////////////

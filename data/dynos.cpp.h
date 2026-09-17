@@ -115,8 +115,8 @@ private:
             return false;
         }
         if (newSize > mCapacity) {
-            mCapacity = MAX(newSize, MAX(256, mCapacity * 2));
-            u8 *newBuffer = (u8 *) calloc(mCapacity, 1);
+            s32 newCapacity = MAX(newSize, MAX(256, mCapacity > DYNOS_BIN_FILE_MAX_SIZE / 2 ? DYNOS_BIN_FILE_MAX_SIZE : mCapacity * 2));
+            u8 *newBuffer = (u8 *) calloc(newCapacity, 1);
             if (!newBuffer) {
                 return false;
             }
@@ -124,6 +124,7 @@ private:
                 memcpy(newBuffer, mData, mSize);
                 free(mData);
             }
+            mCapacity = newCapacity;
             mData = newBuffer;
         }
         mSize = MAX(mSize, newSize);
@@ -171,7 +172,7 @@ public:
     }
 
     static BinFile *OpenB(const u8 *aBuffer, s32 aSize) {
-        if (aSize > DYNOS_BIN_FILE_MAX_SIZE) {
+        if (aSize < 0 || aSize > DYNOS_BIN_FILE_MAX_SIZE) {
             return NULL;
         }
         BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
