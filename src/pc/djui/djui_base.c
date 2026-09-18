@@ -242,6 +242,7 @@ static f32 djui_base_render_border_piece(struct DjuiBase* base, f32 x1, f32 y1, 
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedWidth, translatedHeight, 1.0f);
 
     // render
+    djui_gfx_update_combine_mode(CS_COLOR);
     gDPSetEnvColor(gDisplayListHead++, base->borderColor.r, base->borderColor.g, base->borderColor.b, base->borderColor.a);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 

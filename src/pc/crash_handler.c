@@ -218,8 +218,8 @@ static void crash_handler_produce_one_frame_callback(void) {
     gDPSetPrimColor(gDisplayListHead++, 0, 0, 255, 255, 255, 255);
 
     for (CrashHandlerText* text = sCrashHandlerText; text->s[0] != 0; ++text) {
-        s32 x = GFX_DIMENSIONS_RECT_FROM_LEFT_EDGE(text->x * aspectScale);
-        s32 y = SCREEN_HEIGHT - 8 - text->y * aspectScale;
+        s32 x = text->x * aspectScale;
+        s32 y = 8 + text->y * aspectScale;
         gDPPipeSync(gDisplayListHead++);
         create_dl_translation_matrix(DJUI_MTX_PUSH, x, y, 0);
 

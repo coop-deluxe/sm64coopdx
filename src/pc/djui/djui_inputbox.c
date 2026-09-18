@@ -493,10 +493,12 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         }
     }
 
+    djui_gfx_update_combine_mode(CS_COLOR);
+
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
         if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
-            create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
+            create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, 0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
 
             struct DjuiColor *textColor = &inputbox->textColor;
@@ -520,7 +522,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     }
 
     // render selection box
-    create_dl_translation_matrix(DJUI_MTX_PUSH, x, -0.1f, 0);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, x, 0.1f, 0);
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, width, 0.8f, 1.0f);
     gDPSetEnvColor(gDisplayListHead++, 0, 120, 215, 255);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
@@ -529,7 +531,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     // render selection cursor
     if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
         f32 cX = (inputbox->selection[0] < inputbox->selection[1]) ? x : (x + width);
-        create_dl_translation_matrix(DJUI_MTX_PUSH, cX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
+        create_dl_translation_matrix(DJUI_MTX_PUSH, cX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, 0.1f, 0);
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
         gDPSetEnvColor(gDisplayListHead++, 255, 127, 0, 255);
         gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
