@@ -2021,6 +2021,7 @@
    - [level_register](functions-7.md#level_register)
    - [level_is_vanilla_level](functions-7.md#level_is_vanilla_level)
    - [warp_to_warpnode](functions-7.md#warp_to_warpnode)
+   - [warp_with_transition](functions-7.md#warp_with_transition)
    - [warp_to_level](functions-7.md#warp_to_level)
    - [warp_restart_level](functions-7.md#warp_restart_level)
    - [warp_to_start_level](functions-7.md#warp_to_start_level)
