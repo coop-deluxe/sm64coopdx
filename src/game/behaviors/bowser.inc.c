@@ -1698,28 +1698,32 @@ Gfx *geo_switch_bowser_eyes(s32 run, struct GraphNode *node, UNUSED Mat4 *mtx) {
 }
 
 Gfx *geo_bits_bowser_coloring(s32 run, struct GraphNode *node, UNUSED s32 a2) {
+    Gfx *gfx = NULL;
     Gfx *gfxHead = NULL;
-    struct Object *obj;
-    struct GraphNodeGenerated *sp20;
 
     if (run == 1) {
-        obj = (struct Object *) gCurGraphNodeObject;
-        sp20 = (struct GraphNodeGenerated *) node;
-        if (gCurGraphNodeHeldObject != 0)
+        struct Object *obj = (struct Object *)gCurGraphNodeObject;
+        struct GraphNodeGenerated *graphNode = (struct GraphNodeGenerated *)node;
+
+        if (gCurGraphNodeHeldObject != 0) {
             obj = gCurGraphNodeHeldObject->objNode;
-        if (obj->oOpacity == 0xFF)
-            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | GRAPH_NODE_TYPE_FUNCTIONAL;
-        else
-            sp20->fnNode.node.flags = (sp20->fnNode.node.flags & 0xFF) | (GRAPH_NODE_TYPE_FUNCTIONAL | GRAPH_NODE_TYPE_400);
-        Gfx *gfx = gfxHead = alloc_display_list(2 * sizeof(Gfx));
-        if (gfx == NULL) { return NULL; }
+        }
+
+        if (obj->oOpacity == 0xFF) {
+            graphNode->fnNode.node.flags = (graphNode->fnNode.node.flags & 0xFF) | (LAYER_OPAQUE << 8);
+        } else {
+            graphNode->fnNode.node.flags = (graphNode->fnNode.node.flags & 0xFF) | (LAYER_TRANSPARENT << 8);
+        }
+
+        gfxHead = gfx = alloc_display_list(2 * sizeof(Gfx));
+        if (gfxHead == NULL) { return NULL; }
 
         if (obj->oBowserUnk1B2 != 0) {
-            gSPClearGeometryMode(gfx++, G_LIGHTING);
+            gSPClearGeometryMode(gfxHead++, G_LIGHTING);
         }
-        gSPEndDisplayList(gfx);
+        gSPEndDisplayList(gfxHead);
     }
-    return gfxHead;
+    return gfx;
 }
 
 void falling_bowser_plat_act_0(void) {
