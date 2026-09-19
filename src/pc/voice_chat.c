@@ -62,6 +62,8 @@ static u32 buffer_read(struct VoiceBuffer* buffer, u32 bytes, void* out) {
 }
 
 static void buffer_write(struct VoiceBuffer* buffer, u32 bytes, void* data) {
+    if (buffer->capacity == 0) return;
+
     if (!buffer->bytes) buffer->bytes = malloc(buffer->capacity);
     for (u32 i = 0; i < bytes; i++) {
         buffer->bytes[buffer->head] = data ? ((u8*)data)[i] : 0;
