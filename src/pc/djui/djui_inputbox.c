@@ -355,6 +355,13 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     char* msg = inputbox->buffer;
 
+    // make sure we're not just printing garbage characters
+    char* tinput = text;
+    while (*tinput != '\0') {
+        if (!djui_unicode_valid_char(tinput)) { return; }
+        tinput = djui_unicode_next_char(tinput);
+    }
+
     // erase selection
     if (inputbox->selection[0] != inputbox->selection[1]) {
         djui_inputbox_delete_selection(inputbox);
@@ -362,20 +369,6 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
 
     int msgLen = strlen(msg);
     int textLen = strlen(text);
-
-    // make sure we're not just printing garbage characters
-    bool containsValidAscii = false;
-    char* tinput = text;
-    while (*tinput != '\0') {
-        if (djui_unicode_valid_char(tinput)) {
-            containsValidAscii = true;
-            break;
-        }
-        tinput = djui_unicode_next_char(tinput);
-    }
-    if (!containsValidAscii) {
-        return;
-    }
 
     // truncate
     if (textLen + msgLen >= inputbox->bufferSize) {
