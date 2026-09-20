@@ -345,9 +345,9 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     gfx_wm_start_text_input();
 }
 
-void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_end(struct DjuiBase* base) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
-    inputbox->selection[0] = inputbox->selection[1] = 0;
+    inputbox->selection[1] = inputbox->selection[0];
     gfx_wm_stop_text_input();
 }
 
