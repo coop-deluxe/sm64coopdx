@@ -511,12 +511,6 @@ static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int sc
         case SCANCODE_PAGE_DOWN:
             gDjuiChatBox->scrollY -= configUseStandardKeyBindingsChat ? 15 : pageAmount;
             break;
-        case SCANCODE_POS1:
-            gDjuiChatBox->scrollY += pageAmount;
-            break;
-        case SCANCODE_END:
-            gDjuiChatBox->scrollY -= pageAmount;
-            break;
         case SCANCODE_TAB:
             handle_tab_completion(gDjuiInputHeldShift != 0);
             return true;

@@ -232,6 +232,7 @@ unsigned int configPvpType                        = PLAYER_PVP_CLASSIC;
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
+char         configJoinPassword[MAX_CONFIG_STRING]= "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
 // DJUI settings
 struct DjuiTheme configDjuiTheme                  = { 0 };
@@ -396,6 +397,7 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coopnet_join_password",          .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     // DJUI Themes
     {.name = "djui_theme_primary",                     .type = CONFIG_TYPE_DJUI_COLOR, .djuiColorValue = &configDjuiTheme.elements[DJUI_THEME_ELEMENT_PRIMARY] },
