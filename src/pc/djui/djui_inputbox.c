@@ -358,8 +358,9 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     // make sure we're not just printing garbage characters
     char* tinput = text;
     while (*tinput != '\0') {
-        if (!djui_unicode_valid_char(tinput)) { return; }
+        if (djui_unicode_valid_char(tinput)) { break; }
         tinput = djui_unicode_next_char(tinput);
+        if (*tinput == '\0') { return; }
     }
 
     // erase selection
