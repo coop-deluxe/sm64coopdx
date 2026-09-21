@@ -35,15 +35,12 @@
 #include "menu/intro_geo.h"
 #include "game/envfx_snow.h"
 
-#define CMD_GET(type, offset) (*(type *) (CMD_PROCESS_OFFSET(offset) + (u8 *) sCurrentCmd))
-
-// These are equal
-#define CMD_NEXT ((struct LevelCommand *) ((u8 *) sCurrentCmd + (sCurrentCmd->size << CMD_SIZE_SHIFT)))
-#define NEXT_CMD ((struct LevelCommand *) ((sCurrentCmd->size << CMD_SIZE_SHIFT) + (u8 *) sCurrentCmd))
+#define CMD_GET(type, offset) (cmd_get(offset) ? (*((type *) cmd_get(offset))) : 0)
+#define CMD_NEXT cmd_next()
 
 struct LevelCommand {
     /*00*/ u8 type;
-    /*01*/ u8 size;
+    /*01*/ // u8 size; // ignored, anything could lie about its size
     /*02*/ // variable sized argument data
 };
 
@@ -52,21 +49,74 @@ enum ScriptStatus { SCRIPT_RUNNING = 1, SCRIPT_PAUSED = 0, SCRIPT_PAUSED2 = -1 }
 s32 gLevelScriptModIndex = -1;
 LevelScript* gLevelScriptActive = NULL;
 
-static uintptr_t sStack[32];
+static uintptr_t sStack[MAX_LEVEL_SCRIPT_STACK_SIZE];
+static uintptr_t *sStackLimit = sStack + MAX_LEVEL_SCRIPT_STACK_SIZE;
+static uintptr_t *sStackTop = sStack;
+static uintptr_t *sStackBase = NULL;
 
 static u16 sDelayFrames = 0;
 static u16 sDelayFrames2 = 0;
 
 static s16 sCurrAreaIndex = -1;
 
-static uintptr_t *sStackTop = sStack;
-static uintptr_t *sStackBase = NULL;
-
 static s16 sScriptStatus;
 static s32 sRegister;
 static struct LevelCommand *sCurrentCmd;
 
 static u8 sFinishedLoadingPerm = false;
+
+inline static u8 *cmd_get(size_t offset) {
+    if (sCurrentCmd) {
+        return (u8 *) sCurrentCmd + CMD_PROCESS_OFFSET(offset);
+    }
+    return NULL;
+}
+
+inline static struct LevelCommand *cmd_next() {
+    if (sCurrentCmd) {
+        u8 size = dynos_level_get_command_size(sCurrentCmd->type);
+        if (size != 0) {
+            return (struct LevelCommand *) ((u8 *) sCurrentCmd + (size << CMD_SIZE_SHIFT));
+        }
+    }
+    return NULL;
+}
+
+inline static bool level_stack_push(uintptr_t value) {
+    if (sStackTop < sStack || sStackTop >= sStackLimit) {
+        return false;
+    }
+
+    *sStackTop = value;
+    sStackTop++;
+    return true;
+}
+
+inline static bool level_stack_pop(uintptr_t *output) {
+    if (sStackTop <= sStack || sStackTop > sStackLimit) {
+        return false;
+    }
+
+    sStackTop--;
+    *output = *sStackTop;
+    return true;
+}
+
+#define stack_push(value) { \
+    if (!level_stack_push((uintptr_t) value)) { \
+        sCurrentCmd = NULL; \
+        return; \
+    } \
+}
+
+#define stack_pop(value) { \
+    uintptr_t _value_; \
+    if (!level_stack_pop(&_value_)) { \
+        sCurrentCmd = NULL; \
+        return; \
+    } \
+    value = (typeof(value)) _value_; \
+}
 
 static s32 eval_script_area(s32 arg) {
     return (sWarpDest.areaIdx == arg);
@@ -125,11 +175,11 @@ void area_check_red_coin_or_secret(void *arg, bool isMacroObject) {
 static void level_cmd_load_and_execute(void) {
     load_segment(CMD_GET(s16, 2), CMD_GET(void *, 4), CMD_GET(void *, 8), MEMORY_POOL_LEFT);
 
-    *sStackTop++ = (uintptr_t) NEXT_CMD;
-    *sStackTop++ = (uintptr_t) sStackBase;
+    stack_push(CMD_NEXT);
+    stack_push(sStackBase);
     sStackBase = sStackTop;
 
-    sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 12));
+    sCurrentCmd = CMD_GET(void *, 12);
 }
 
 static void level_cmd_exit_and_execute(void) {
@@ -139,13 +189,13 @@ static void level_cmd_exit_and_execute(void) {
             MEMORY_POOL_LEFT);
 
     sStackTop = sStackBase;
-    sCurrentCmd = segmented_to_virtual(targetAddr);
+    sCurrentCmd = targetAddr;
 }
 
 static void level_cmd_exit(void) {
     sStackTop = sStackBase;
-    sStackBase = (uintptr_t *) *(--sStackTop);
-    sCurrentCmd = (struct LevelCommand *) *(--sStackTop);
+    stack_pop(sStackBase);
+    stack_pop(sCurrentCmd);
 }
 
 static void level_cmd_sleep(void) {
@@ -171,25 +221,30 @@ static void level_cmd_sleep2(void) {
 }
 
 static void level_cmd_jump(void) {
-    sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 4));
+    sCurrentCmd = CMD_GET(void *, 4);
 }
 
 static void level_cmd_jump_and_link(void) {
-    *sStackTop++ = (uintptr_t) NEXT_CMD;
-    sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 4));
+    stack_push(CMD_NEXT);
+    sCurrentCmd = CMD_GET(void *, 4);
 }
 
 static void level_cmd_return(void) {
-    sCurrentCmd = (struct LevelCommand *) *(--sStackTop);
+    stack_pop(sCurrentCmd);
 }
 
 static void level_cmd_jump_and_link_push_arg(void) {
-    *sStackTop++ = (uintptr_t) NEXT_CMD;
-    *sStackTop++ = CMD_GET(s16, 2);
+    stack_push(CMD_NEXT);
+    stack_push(CMD_GET(s16, 2));
     sCurrentCmd = CMD_NEXT;
 }
 
 static void level_cmd_jump_repeat(void) {
+    if (sStackTop < sStack + 2) {
+        sCurrentCmd = NULL;
+        return;
+    }
+
     s32 val = *(sStackTop - 1);
 
     if (val == 0) {
@@ -204,12 +259,17 @@ static void level_cmd_jump_repeat(void) {
 }
 
 static void level_cmd_loop_begin(void) {
-    *sStackTop++ = (uintptr_t) NEXT_CMD;
-    *sStackTop++ = 0;
+    stack_push(CMD_NEXT);
+    stack_push(0);
     sCurrentCmd = CMD_NEXT;
 }
 
 static void level_cmd_loop_until(void) {
+    if (sStackTop < sStack + 2) {
+        sCurrentCmd = NULL;
+        return;
+    }
+
     if (eval_script_op(CMD_GET(u8, 2), CMD_GET(s32, 4)) != 0) {
         sCurrentCmd = CMD_NEXT;
         sStackTop -= 2;
@@ -220,7 +280,7 @@ static void level_cmd_loop_until(void) {
 
 static void level_cmd_jump_if(void) {
     if (eval_script_op(CMD_GET(u8, 2), CMD_GET(s32, 4)) != 0) {
-        sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 8));
+        sCurrentCmd = CMD_GET(void *, 8);
     } else {
         sCurrentCmd = CMD_NEXT;
     }
@@ -228,8 +288,8 @@ static void level_cmd_jump_if(void) {
 
 static void level_cmd_jump_and_link_if(void) {
     if (eval_script_op(CMD_GET(u8, 2), CMD_GET(s32, 4)) != 0) {
-        *sStackTop++ = (uintptr_t) NEXT_CMD;
-        sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 8));
+        stack_push(CMD_NEXT);
+        sCurrentCmd = CMD_GET(void *, 8);
     } else {
         sCurrentCmd = CMD_NEXT;
     }
@@ -239,7 +299,7 @@ static void level_cmd_skip_if(void) {
     if (eval_script_op(CMD_GET(u8, 2), CMD_GET(s32, 4)) == 0) {
         do {
             sCurrentCmd = CMD_NEXT;
-        } while (sCurrentCmd->type == 0x0F || sCurrentCmd->type == 0x10);
+        } while (sCurrentCmd != NULL && (sCurrentCmd->type == 0x0F || sCurrentCmd->type == 0x10));
     }
 
     sCurrentCmd = CMD_NEXT;
@@ -248,7 +308,7 @@ static void level_cmd_skip_if(void) {
 static void level_cmd_skip(void) {
     do {
         sCurrentCmd = CMD_NEXT;
-    } while (sCurrentCmd->type == 0x10);
+    } while (sCurrentCmd != NULL && sCurrentCmd->type == 0x10);
 
     sCurrentCmd = CMD_NEXT;
 }
@@ -709,7 +769,7 @@ static void level_cmd_set_terrain_data(void) {
         u32 size;
 
         // The game modifies the terrain data and must be reset upon level reload.
-        data = segmented_to_virtual(CMD_GET(void *, 4));
+        data = CMD_GET(void *, 4);
         size = get_area_terrain_size(data) * sizeof(Collision);
         gAreas[sCurrAreaIndex].terrainData = dynamic_pool_alloc(gLevelPool, size);
         memcpy(gAreas[sCurrAreaIndex].terrainData, data, size);
@@ -719,7 +779,7 @@ static void level_cmd_set_terrain_data(void) {
 
 static void level_cmd_set_rooms(void) {
     if (sCurrAreaIndex != -1) {
-        gAreas[sCurrAreaIndex].surfaceRooms = segmented_to_virtual(CMD_GET(void *, 4));
+        gAreas[sCurrAreaIndex].surfaceRooms = CMD_GET(void *, 4);
     }
     sCurrentCmd = CMD_NEXT;
 }
@@ -728,7 +788,7 @@ static void level_cmd_set_macro_objects(void) {
     if (sCurrAreaIndex != -1) {
         // The game modifies the macro object data (for example marking coins as taken),
         // so it must be reset when the level reloads.
-        MacroObject *data = segmented_to_virtual(CMD_GET(void *, 4));
+        MacroObject *data = CMD_GET(void *, 4);
         s32 len = 0;
         while (data[len++] != MACRO_OBJECT_END()) {
             area_check_red_coin_or_secret(&data[len - 1], true);
@@ -917,38 +977,11 @@ static void level_cmd_cleardemoptr(void)
 // coop
 //
 
-static bool find_lua_param(uintptr_t *param, u32 offset, u32 luaParams, u32 luaParamFlag) {
-    *param = CMD_GET(uintptr_t, offset);
-    if (luaParams & luaParamFlag) {
-        if (gLevelScriptModIndex == -1) {
-            LOG_ERROR("Could not find level script mod index");
-            return false;
-        }
-
-        const char *paramStr = dynos_level_get_token(*param);
-        gSmLuaConvertSuccess = true;
-        *param = smlua_get_integer_mod_variable(gLevelScriptModIndex, paramStr);
-
-        if (!gSmLuaConvertSuccess) {
-            gSmLuaConvertSuccess = true;
-            *param = smlua_get_any_integer_mod_variable(paramStr);
-        }
-
-        if (!gSmLuaConvertSuccess) {
-            LOG_LUA("Failed to execute level command, could not find parameter '%s'", paramStr);
-            return false;
-        }
-    }
-    return true;
-}
-
-#define get_lua_param(name, type, flag) \
-    uintptr_t name##Param; \
-    if (!find_lua_param(&name##Param, flag##_OFFSET(cmdType), luaParams, flag)) { \
+#define level_cmd_get_lua_param(paramName, paramType, luaParamFlag) \
+    smlua_get_lua_param(paramName, paramType, CMD_GET(uintptr_t, luaParamFlag##_OFFSET(cmdType)), luaParams, luaParamFlag, { \
         sCurrentCmd = CMD_NEXT; \
         return; \
-    } \
-    type name = (type) name##Param;
+    })
 
 static void level_cmd_place_object_ext_lua_params(void) {
     struct SpawnInfo *spawnInfo;
@@ -960,7 +993,7 @@ static void level_cmd_place_object_ext_lua_params(void) {
         CMD_GET(u16, 2)
     )));
 
-    get_lua_param(actFlags, u8, OBJECT_EXT_LUA_ACTS);
+    level_cmd_get_lua_param(actFlags, u8, OBJECT_EXT_LUA_ACTS);
     u8 actMatch;
 
     if (gCurrActNum > 0) {
@@ -972,15 +1005,15 @@ static void level_cmd_place_object_ext_lua_params(void) {
     if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
-        get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
-        get_lua_param(posX, s16, OBJECT_EXT_LUA_POS_X);
-        get_lua_param(posY, s16, OBJECT_EXT_LUA_POS_Y);
-        get_lua_param(posZ, s16, OBJECT_EXT_LUA_POS_Z);
-        get_lua_param(angleX, s16, OBJECT_EXT_LUA_ANGLE_X);
-        get_lua_param(angleY, s16, OBJECT_EXT_LUA_ANGLE_Y);
-        get_lua_param(angleZ, s16, OBJECT_EXT_LUA_ANGLE_Z);
-        get_lua_param(behParam, u32, OBJECT_EXT_LUA_BEH_PARAMS);
-        get_lua_param(behavior, uintptr_t, OBJECT_EXT_LUA_BEHAVIOR);
+        level_cmd_get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
+        level_cmd_get_lua_param(posX, s16, OBJECT_EXT_LUA_POS_X);
+        level_cmd_get_lua_param(posY, s16, OBJECT_EXT_LUA_POS_Y);
+        level_cmd_get_lua_param(posZ, s16, OBJECT_EXT_LUA_POS_Z);
+        level_cmd_get_lua_param(angleX, s16, OBJECT_EXT_LUA_ANGLE_X);
+        level_cmd_get_lua_param(angleY, s16, OBJECT_EXT_LUA_ANGLE_Y);
+        level_cmd_get_lua_param(angleZ, s16, OBJECT_EXT_LUA_ANGLE_Z);
+        level_cmd_get_lua_param(behParam, u32, OBJECT_EXT_LUA_BEH_PARAMS);
+        level_cmd_get_lua_param(behavior, uintptr_t, OBJECT_EXT_LUA_BEHAVIOR);
 
         spawnInfo->startPos[0] = posX;
         spawnInfo->startPos[1] = posY;
@@ -1028,7 +1061,7 @@ static void level_cmd_load_model_from_geo_ext(void) {
 
 static void level_cmd_jump_area_ext(void) {
     if (eval_script_area(CMD_GET(s32, 4))) {
-        sCurrentCmd = segmented_to_virtual(CMD_GET(void *, 8));
+        sCurrentCmd = CMD_GET(void *, 8);
     } else {
         sCurrentCmd = CMD_NEXT;
     }
@@ -1038,8 +1071,8 @@ static void level_cmd_show_dialog_ext(void) {
     if (sCurrAreaIndex != -1 && !gDjuiInMainMenu) {
         u8 luaParams = CMD_GET(u8, 2);
 
-        get_lua_param(index, u8, SHOW_DIALOG_EXT_LUA_INDEX);
-        get_lua_param(dialogId, s32, SHOW_DIALOG_EXT_LUA_DIALOG);
+        level_cmd_get_lua_param(index, u8, SHOW_DIALOG_EXT_LUA_INDEX);
+        level_cmd_get_lua_param(dialogId, s32, SHOW_DIALOG_EXT_LUA_DIALOG);
 
         if (index < 2) {
             gAreas[sCurrAreaIndex].dialog[index] = dialogId;
@@ -1132,12 +1165,32 @@ struct LevelCommand *level_script_execute(struct LevelCommand *cmd) {
         sCurrentCmd = dynos_swap_cmd(sCurrentCmd);
         void *dynosCurrCmd = (void *) sCurrentCmd;
 
-        if (sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
+        if (sCurrentCmd != NULL && sCurrentCmd->type < ARRAY_COUNT(LevelScriptJumpTable)) {
             LevelScriptJumpTable[sCurrentCmd->type]();
+        } else {
+            sCurrentCmd = NULL; // Hit sentinel or invalid cmd type
         }
 
         void *dynosNextCmd = dynos_update_cmd(dynosCurrCmd);
-        if (dynosNextCmd) sCurrentCmd = dynosNextCmd;
+        if (dynosNextCmd) { sCurrentCmd = dynosNextCmd; }
+
+        // Failsafe: restart the game
+        if (sCurrentCmd == NULL) {
+            LOG_ERROR("==========================================================");
+            LOG_ERROR(" Level script corruption detected! Restarting the game... ");
+            LOG_ERROR("==========================================================");
+            gLevelScriptModIndex = -1;
+            gLevelScriptActive = NULL;
+            sStackTop = sStack;
+            sStackBase = NULL;
+            sDelayFrames = 0;
+            sDelayFrames2 = 0;
+            sCurrAreaIndex = -1;
+            sScriptStatus = SCRIPT_PAUSED;
+            sRegister = 0;
+            sCurrentCmd = (struct LevelCommand *) level_script_entry;
+            network_shutdown(true, false, false, false);
+        }
     }
     CTX_END(CTX_LEVEL_SCRIPT);
 

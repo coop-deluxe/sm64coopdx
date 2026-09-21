@@ -14,11 +14,11 @@
 typedef bool (*kb_callback_t)(int code);
 
 enum GfxWindowBackend {
+    GFX_WINDOW_BACKEND_DUMMY = -1,
     GFX_WINDOW_BACKEND_OPENGL,
 #if defined(_WIN32)
     GFX_WINDOW_BACKEND_DIRECTX,
 #endif
-    GFX_WINDOW_BACKEND_DUMMY,
     GFX_WINDOW_BACKEND_COUNT,
     GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
 };

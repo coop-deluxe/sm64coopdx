@@ -131,7 +131,7 @@ static bool DynOS_Audio_LoadEntry(AudioOverrideEntry *aOverride, u8 aSequenceId,
 
         buffer = (u8*)malloc(length + 1);
         if (buffer == NULL) {
-            PrintError("Failed to malloc m64 sound file");
+            PrintError("  ERROR! Failed to malloc m64 sound file");
             f_close(fp);
             f_delete(fp);
             return false;
@@ -200,25 +200,25 @@ void DynOS_Audio_DeactivatePackOverride(AudioOverrideEntry *aOverride) {
 
 AudioOverrideEntry *DynOS_Audio_CreateOverride(u8 aSequenceId, u8 aBankId, u8 aDefaultVolume, const char *aFilepath, bool aIsPack) {
     if (aSequenceId >= MAX_AUDIO_OVERRIDE) {
-        PrintError("Invalid sequenceId while creating override: %d", aSequenceId);
+        PrintError("  ERROR! Invalid sequenceId while creating override: %d", aSequenceId);
         return NULL;
     }
 
     if (aBankId >= 64) {
-        PrintError("Invalid bankId while creating override: %d", aBankId);
+        PrintError("  ERROR! Invalid bankId while creating override: %d", aBankId);
         return NULL;
     }
 
     AudioOverrideEntry *override = (AudioOverrideEntry *) malloc(sizeof(AudioOverrideEntry));
     if (override == NULL) {
-        PrintError("Failed to allocate audio override entry");
+        PrintError("  ERROR! Failed to allocate audio override entry");
         return NULL;
     }
 
     Print("Loading audio: %s", aFilepath);
     override->filename = strdup(aFilepath);
     if (override->filename == NULL) {
-        PrintError("Failed to allocate memory for audio filepath");
+        PrintError("  ERROR! Failed to allocate memory for audio filepath");
         free(override);
         return NULL;
     }
@@ -251,6 +251,6 @@ u8 DynOS_Audio_AllocSequence() {
             return seqId;
         }
     }
-    PrintError("Cannot allocate more custom sequences.");
+    PrintError("  ERROR! Cannot allocate more custom sequences.");
     return MAX_AUDIO_OVERRIDE;
 }

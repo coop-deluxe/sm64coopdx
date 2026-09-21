@@ -73,9 +73,13 @@ DataNode<Trajectory>* DynOS_Trajectory_Parse(GfxData* aGfxData, DataNode<Traject
         ParseTrajectorySymbol(aGfxData, aNode, _Head, _TokenIndex, _SwitchNodes);
         if (aDisplayPercent && aGfxData->mErrorCount == 0) { PrintNoNewLine("%3d%%\b\b\b\b", (s32) (_TokenIndex * 100) / aNode->mTokens.Count()); }
     }
-    if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     aNode->mSize = (u32)(_Head - aNode->mData);
     aNode->mLoadIndex = aGfxData->mLoadIndex++;
+
+    // Validate trajectory
+    DynOS_Trajectory_Validate_CheckCommands(aGfxData, aNode);
+
+    if (aDisplayPercent && aGfxData->mErrorCount == 0) { Print("100%%"); }
     return aNode;
 }
 
@@ -109,11 +113,23 @@ DataNode<Trajectory>* DynOS_Trajectory_Load(BinFile *aFile, GfxData *aGfxData) {
     // Name
     _Node->mName.Read(aFile);
 
+    // Size check
+    u32 _DataSize = aFile->Read<u32>();
+    DynOS_Bin_Validate_CheckSize(_DataSize, sizeof(Trajectory), NULL);
+
     // Data
-    _Node->mSize = aFile->Read<u32>();
+    _Node->mSize = _DataSize;
     _Node->mData = New<Trajectory>(_Node->mSize);
     for (u32 i = 0; i != _Node->mSize; ++i) {
+        DynOS_Bin_Validate_CheckEoF(NULL);
+
         _Node->mData[i] = aFile->Read<Trajectory>();
+    }
+
+    // Validate trajectory
+    if (!DynOS_Trajectory_Validate_CheckCommands(aGfxData, _Node)) {
+        DeleteNode(_Node);
+        return NULL;
     }
 
     // Add it

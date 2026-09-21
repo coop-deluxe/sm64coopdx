@@ -49,7 +49,7 @@ extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
-extern enum GfxWindowBackend configGraphicsBackend;
+extern unsigned int configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -83,6 +83,7 @@ extern unsigned int configKeyStickDown[MAX_BINDS];
 extern unsigned int configKeyStickLeft[MAX_BINDS];
 extern unsigned int configKeyStickRight[MAX_BINDS];
 extern unsigned int configKeyChat[MAX_BINDS];
+extern unsigned int configKeyChatCommand[MAX_BINDS];
 extern unsigned int configKeyPlayerList[MAX_BINDS];
 extern unsigned int configKeyDUp[MAX_BINDS];
 extern unsigned int configKeyDDown[MAX_BINDS];
@@ -168,6 +169,7 @@ extern unsigned int configPvpType;
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
 extern char         configPassword[MAX_CONFIG_STRING];
+extern char         configJoinPassword[MAX_CONFIG_STRING];
 extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;

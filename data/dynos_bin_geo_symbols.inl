@@ -1,0 +1,66 @@
+/*
+    Parameters are, in this order:
+      1  : Symbol category (0 for manual definition and 1 for automatic).
+      2  : Symbol name.
+      3  : Number of arguments.
+      4  : Offset of pointer argument (category 1 only).
+      5  : Type of pointer argument (category 1 only).
+      6  : Command modifier (layer, type, op...) range.
+      7+ : Pointer type(s) of the arguments in the order they appear in the command.
+    Pointer types are available in `data/dynos.cpp.h`.
+*/
+
+GEO_SYMBOL(1, GEO_BRANCH_AND_LINK,              1,  1, PTYPE_PNTR_GEO, 1, PTYPE_PNTR_GEO)
+GEO_SYMBOL(1, GEO_END,                          0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_BRANCH,                       2,  1, PTYPE_PNTR_GEO, 2, 0, PTYPE_PNTR_GEO)
+GEO_SYMBOL(1, GEO_RETURN,                       0,  0, 0,              1)
+GEO_SYMBOL(0, GEO_OPEN_NODE,                    0,  0, 0,              1)
+GEO_SYMBOL(0, GEO_CLOSE_NODE,                   0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_ASSIGN_AS_VIEW,               1,  0, 0,              1, 0)
+GEO_SYMBOL(1, GEO_UPDATE_NODE_FLAGS,            2,  0, 0,              3, 0, 0)
+GEO_SYMBOL(1, GEO_NODE_SCREEN_AREA,             5,  0, 0,              1, 0, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_NODE_ORTHO,                   1,  0, 0,              1, 0)
+GEO_SYMBOL(1, GEO_CAMERA_FRUSTUM,               3,  0, 0,              1, 0, 0, 0)
+GEO_SYMBOL(1, GEO_CAMERA_FRUSTUM_WITH_FUNC,     4,  2, PTYPE_FUNC_GEO, 1, 0, 0, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(1, GEO_NODE_START,                   0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_ZBUFFER,                      1,  0, 0,              2, 0)
+GEO_SYMBOL(1, GEO_RENDER_RANGE,                 2,  0, 0,              1, 0, 0)
+GEO_SYMBOL(0, GEO_SWITCH_CASE,                  2,  0, 0,              1, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(1, GEO_CAMERA,                       8,  4, PTYPE_FUNC_GEO, 1, 0, 0, 0, 0, 0, 0, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(1, GEO_TRANSLATE_ROTATE,             7,  0, 0,              8, 0, 0, 0, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_TRANSLATE_ROTATE_WITH_DL,     8,  4, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_TRANSLATE,                    4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_TRANSLATE_WITH_DL,            5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_ROTATE,                       4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_ROTATE_WITH_DL,               5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_ROTATE_Y,                     2,  0, 0,              8, 0, 0)
+GEO_SYMBOL(1, GEO_ROTATE_Y_WITH_DL,             3,  1, PTYPE_PNTR_GFX, 8, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_TRANSLATE_NODE,               4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_TRANSLATE_NODE_WITH_DL,       5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_ROTATION_NODE,                4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_ROTATION_NODE_WITH_DL,        5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_ANIMATED_PART,                5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_BILLBOARD_WITH_PARAMS,        4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_BILLBOARD_WITH_PARAMS_AND_DL, 5,  2, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_BILLBOARD,                    0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_DISPLAY_LIST,                 2,  1, PTYPE_PNTR_GFX, 8, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_SHADOW,                       3,  0, 0,              1, 0, 0, 0)
+GEO_SYMBOL(1, GEO_RENDER_OBJ,                   0,  0, 0,              1)
+GEO_SYMBOL(0, GEO_ASM,                          2,  0, 0,              1, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(0, GEO_BACKGROUND,                   2,  0, 0,              1, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(1, GEO_BACKGROUND_COLOR,             1,  0, 0,              1, 0)
+GEO_SYMBOL(1, GEO_NOP_1A,                       0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_COPY_VIEW,                    1,  0, 0,              1, 0)
+GEO_SYMBOL(1, GEO_HELD_OBJECT,                  5,  2, PTYPE_FUNC_GEO, 1, 0, 0, 0, 0, PTYPE_FUNC_GEO)
+GEO_SYMBOL(1, GEO_SCALE,                        2,  0, 0,              8, 0, 0)
+GEO_SYMBOL(1, GEO_SCALE_WITH_DL,                3,  2, PTYPE_PNTR_GFX, 8, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_SCALE_XYZ,                    4,  0, 0,              8, 0, 0, 0, 0)
+GEO_SYMBOL(1, GEO_SCALE_XYZ_WITH_DL,            5,  4, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_NOP_1E,                       0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_NOP_1F,                       0,  0, 0,              1)
+GEO_SYMBOL(1, GEO_CULLING_RADIUS,               1,  0, 0,              1, 0)
+GEO_SYMBOL(0, GEO_BACKGROUND_EXT,               2,  0, 0,              1, PTYPE_PNTR_TEXLIST, PTYPE_FUNC_GEO)
+GEO_SYMBOL(0, GEO_SWITCH_CASE_EXT,              2,  0, 0,              1, 0, PTYPE_LUAV)
+GEO_SYMBOL(0, GEO_ASM_EXT,                      2,  0, 0,              1, 0, PTYPE_LUAV)
+GEO_SYMBOL(1, GEO_BONE,                         8,  4, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, 0, 0, 0, PTYPE_PNTR_GFX)
+GEO_SYMBOL(1, GEO_BONE_WITH_SCALE,              11, 7, PTYPE_PNTR_GFX, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, PTYPE_PNTR_GFX)

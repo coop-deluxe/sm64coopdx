@@ -47,6 +47,9 @@ def extract_constants(filename):
     # strip multiline continues
     txt = re.sub(r'\\\n', ' ', txt)
 
+    # strip __cplusplus blocks
+    txt = re.sub(r'#ifdef __cplusplus\n.*\n#endif', ' ', txt)
+
     # strip extern C
     txt = re.sub(r'extern "C" {', ' ', txt)
 
