@@ -471,6 +471,10 @@ static void mod_extract_fields(struct Mod* mod) {
         // extract the field
         char* extracted = NULL;
         if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
+            // remove string after newline
+            char *newline = strchr(extracted, '\n');
+            if (newline) { *newline = '\0'; }
+
             if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
                 LOG_INFO("Truncated mod name field '%s'", mod->name);
             }

@@ -18,6 +18,7 @@
 #ifdef COOPNET
 
 #define DJUI_DESC_PANEL_WIDTH (410.0f + (16 * 2.0f))
+#define PRETTY_COOPNET_DESCRIPTION_SIZE (COOPNET_MAX_DESCRIPTION_LEN * 2)
 
 extern ALIGNED8 u8 texture_selectionbox_up_icon[];
 extern ALIGNED8 u8 texture_selectionbox_down_icon[];
@@ -50,7 +51,7 @@ static struct LobbySortType sLobbySorting[] = {
 };
 static const int numSortOptions = sizeof(sLobbySorting) / sizeof(sLobbySorting[0]);
 
-static struct CoopnetLobby** sCoopnetLobbies = NULL;
+static struct CoopnetLobby **sCoopnetLobbies = NULL;
 static unsigned int sCoopnetLobbyCount = 0;
 
 static struct DjuiPaginated* sLobbyPaginated = NULL;
@@ -67,7 +68,7 @@ static char* sPassword = NULL;
 
 static void free_coopnet_lobbies() {
     for (unsigned int i = 0; i < sCoopnetLobbyCount; i++) {
-        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        struct CoopnetLobby *lobby = sCoopnetLobbies[i];
         if (!lobby) { continue; }
         free(lobby->playerText);
         free(lobby->hostName);
@@ -82,8 +83,8 @@ static void free_coopnet_lobbies() {
 }
 
 static int sort_coopnet_lobby_comp(const void* a, const void* b) {
-    const struct CoopnetLobby* lobbyA = *(const struct CoopnetLobby**)a;
-    const struct CoopnetLobby* lobbyB = *(const struct CoopnetLobby**)b;
+    const struct CoopnetLobby *lobbyA = *(const struct CoopnetLobby **)a;
+    const struct CoopnetLobby *lobbyB = *(const struct CoopnetLobby **)b;
 
     int retValue = 0;
     if (configCoopNetSortSelected >= numSortOptions) {
@@ -149,7 +150,7 @@ static void djui_lobby_on_hover(struct DjuiBase* base) {
     struct DjuiLobbyEntry* entry = (struct DjuiLobbyEntry*)base;
     djui_text_set_text(sTooltip, entry->description);
     djui_base_compute_tree(&sDescriptionPanel->base);
-    u16 lines = djui_text_count_lines(sTooltip, 48);
+    u16 lines = djui_text_count_lines(sTooltip, 128);
     f32 textHeight = 32 * 0.8125f * lines + 8;
     sDescriptionPanel->bodySize.value = textHeight;
     djui_base_set_size(&sTooltip->base, 1.0f, textHeight);
@@ -172,7 +173,7 @@ static void djui_panel_join_soft_refresh(UNUSED struct DjuiBase* base) {
     qsort(sCoopnetLobbies, sCoopnetLobbyCount, sizeof(sCoopnetLobbies[0]), sort_coopnet_lobby_comp);
     djui_base_destroy_children(&sLobbyLayout->base);
     for (unsigned int i = 0; i < sCoopnetLobbyCount; i++) {
-        struct CoopnetLobby* lobby = sCoopnetLobbies[i];
+        struct CoopnetLobby *lobby = sCoopnetLobbies[i];
         const char* searchStrings[] = {
             lobby->hostName,
             lobby->mode,
@@ -180,7 +181,7 @@ static void djui_panel_join_soft_refresh(UNUSED struct DjuiBase* base) {
             lobby->description
         };
         if (!djui_searchbox_has_any_strings(sSearchbox, searchStrings, 4)) { return; }
-        struct DjuiLobbyEntry* entry = djui_lobby_entry_create(&sLobbyLayout->base, lobby->hostName, lobby->mode, lobby->playerText, lobby->description, lobby->disabled, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
+        struct DjuiLobbyEntry *entry = djui_lobby_entry_create(&sLobbyLayout->base, lobby->hostName, lobby->mode, lobby->playerText, lobby->description, lobby->disabled, djui_panel_join_lobby, djui_lobby_on_hover, djui_lobby_on_hover_end);
         entry->base.tag = (s64)lobby->lobbyId;
     }
 }
@@ -191,11 +192,12 @@ static void djui_panel_join_invert_sort(UNUSED struct DjuiBase* caller) {
     djui_panel_join_soft_refresh(NULL);
 }
 
-void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription, size_t aModSize, int64_t aTimestamp) {
+void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, UNUSED const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription) {
     if (!sLobbyLayout) { return; }
     if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
-
+    s64 aTimestamp = 0;
+    size_t aModSize = 0;
     char playerText[64] = "";
     snprintf(playerText, 64, "%u/%u", aConnections, aMaxConnections);
 
@@ -221,12 +223,22 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     lobby->playerText = strdup(playerText);
     lobby->hostName = strdup(aHostName);
     lobby->mode = strdup(mode);
-    lobby->description = strdup(aDescription);
+
+    // parse description
+    struct CoopnetDescription coopnetDesc = { 0 };
+    ns_coopnet_parse_coopnet_description(aDescription, &coopnetDesc);
+    // allocate memory for description
+    lobby->description = calloc(1, PRETTY_COOPNET_DESCRIPTION_SIZE * sizeof(char));
+    // write pretty desc to lobby desc
+    ns_coopnet_get_pretty_desc(lobby->description, PRETTY_COOPNET_DESCRIPTION_SIZE, &coopnetDesc);
+    // cleanup
+    ns_coopnet_free_coopnet_description(&coopnetDesc);
+
     lobby->timestamp = aTimestamp;
     lobby->modSize = aModSize;
     lobby->disabled = disabled;
 
-    struct CoopnetLobby** lobbies = realloc(sCoopnetLobbies, (sCoopnetLobbyCount + 1) * sizeof(struct CoopnetLobby*));
+    struct CoopnetLobby **lobbies = realloc(sCoopnetLobbies, (sCoopnetLobbyCount + 1) * sizeof(struct CoopnetLobby*));
     if (!lobbies) {
         LOG_ERROR("Failed to reallocate memory to lobbies!");
         free(lobby);

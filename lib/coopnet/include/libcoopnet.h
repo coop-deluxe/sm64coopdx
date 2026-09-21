@@ -1,5 +1,4 @@
-#ifndef LIBCOOPNET_H
-#define LIBCOOPNET_H
+#pragma once
 
 #if defined(__cplusplus)
 #include <cstdint>
@@ -12,12 +11,10 @@ class Lobby;
 #include <stdbool.h>
 #include <stdint.h>
 
-#define COOPNET_VERSION 1
-
 #define COOPNET_MAX_GAME_LEN 32
 #define COOPNET_MAX_VERSION_LEN 32
-#define COOPNET_MAX_HOST_NAME_LEN 64
-#define COOPNET_MAX_MODE_LEN 64
+#define COOPNET_MAX_HOST_NAME_LEN 128
+#define COOPNET_MAX_MODE_LEN 128
 #define COOPNET_MAX_PASSWORD_LEN 64
 #define COOPNET_MAX_DESCRIPTION_LEN 1024
 
@@ -45,8 +42,9 @@ typedef struct {
     void (*OnLobbyCreated)(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections);
     void (*OnLobbyJoined)(uint64_t aLobbyId, uint64_t aUserId, uint64_t aOwnerId, uint64_t aDestId);
     void (*OnLobbyLeft)(uint64_t aLobbyId, uint64_t aUserId);
-    void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription, size_t aModSize, int64_t aTimestamp);
+    void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription);
     void (*OnLobbyListFinish)(void);
+    void (*OnTimeGot)(uint64_t aTime);
     void (*OnReceive)(uint64_t aFromUserId, const uint8_t* aData, uint64_t aSize);
     void (*OnError)(enum MPacketErrorNumber aErrorNumber, uint64_t tag);
     void (*OnPeerConnected)(uint64_t aPeerId);
@@ -71,16 +69,16 @@ bool coopnet_is_connected(void);
 CoopNetRc coopnet_begin(const char* aHost, uint32_t aPort, const char* aName, uint64_t aDestId);
 CoopNetRc coopnet_shutdown(void);
 CoopNetRc coopnet_update(void);
-CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword, const char* aDescription, size_t aModSize);
-CoopNetRc coopnet_lobby_update(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription, size_t aModSize);
+CoopNetRc coopnet_lobby_create(const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, uint16_t aMaxConnections, const char* aPassword, const char* aDescription);
+CoopNetRc coopnet_lobby_update(uint64_t aLobbyId, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription);
 CoopNetRc coopnet_lobby_join(uint64_t aLobbyId, const char* aPassword);
 CoopNetRc coopnet_lobby_leave(uint64_t aLobbyId);
 CoopNetRc coopnet_lobby_list_get(const char* aGame, const char* aPassword);
+CoopNetRc coopnet_time_get(void);
 CoopNetRc coopnet_send(const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_send_to(uint64_t aPeerId, const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_unpeer(uint64_t aPeerId);
 
 #if defined(__cplusplus)
 }
-#endif
 #endif

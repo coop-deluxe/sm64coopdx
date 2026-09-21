@@ -1,4 +1,6 @@
+#pragma once
+
 struct ModCategory {
-    const char* langKey;
-    const char* category;
+    const char *langKey;
+    const char *category;
 };
