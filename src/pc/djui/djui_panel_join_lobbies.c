@@ -197,7 +197,6 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     if (!sLobbyPaginated) { return; }
     if (aMaxConnections > MAX_PLAYERS) { return; }
 
-    size_t aModSize = 0;
     char playerText[64] = "";
     snprintf(playerText, 64, "%u/%u", aConnections, aMaxConnections);
 
@@ -227,8 +226,9 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     // parse description
     struct CoopnetDescription coopnetDesc = { 0 };
     ns_coopnet_parse_coopnet_description(aDescription, &coopnetDesc);
-    // set timestamp to one found in desc
+    // set timestamp and mod size to one found in desc
     lobby->timestamp = coopnetDesc.timestamp;
+    lobby->modSize = coopnetDesc.modSize;
     // allocate memory for description
     lobby->description = calloc(1, PRETTY_COOPNET_DESCRIPTION_SIZE * sizeof(char));
     // write pretty desc to lobby desc
@@ -236,7 +236,6 @@ void djui_panel_join_query(uint64_t aLobbyId, UNUSED uint64_t aOwnerId, uint16_t
     // cleanup
     ns_coopnet_free_coopnet_description(&coopnetDesc);
 
-    lobby->modSize = aModSize;
     lobby->disabled = disabled;
 
     struct CoopnetLobby **lobbies = realloc(sCoopnetLobbies, (sCoopnetLobbyCount + 1) * sizeof(struct CoopnetLobby*));
