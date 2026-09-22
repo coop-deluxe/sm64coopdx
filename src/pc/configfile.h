@@ -167,6 +167,7 @@ extern unsigned int configPvpType;
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
 extern char         configPassword[MAX_CONFIG_STRING];
+extern char         configJoinPassword[MAX_CONFIG_STRING];
 extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;
