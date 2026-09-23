@@ -128,7 +128,7 @@ static const char *shader_item_to_str(uint32_t item, bool with_alpha, bool only_
             case SHADER_COMBINED:
                 return with_alpha ? "texel" : "texel.rgb";
             case SHADER_COMBINEDA:
-                return hint_single_element ? "texel.a" :
+                return hint_single_element ? with_alpha ? "texel.a" : "1.0" :
                     (with_alpha ? "vec4(texel.a, texel.a, texel.a, texel.a)" : "vec3(texel.a, texel.a, texel.a)");
             case SHADER_NOISE:
                 return with_alpha ? "vec4(noise)" : "vec3(noise)";
