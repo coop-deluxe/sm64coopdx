@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
 #include "pc/commands.h"
@@ -52,7 +53,6 @@ void sent_history_init(ArrayList *arrayList) {
 }
 
 void sent_history_add_message(ArrayList *arrayList, const char *newMessage) {
-    if (!configUseStandardKeyBindingsChat && (!newMessage || newMessage[0] != '/')) { return; }
     if (!newMessage) { return; }
 
     if (arrayList->size > 0 && strncmp(arrayList->messages[arrayList->size - 1], newMessage, MAX_CHAT_MSG_LENGTH) == 0) {
@@ -474,42 +474,39 @@ static void handle_tab_completion(bool reverse) {
     }
 }
 
+static bool djui_chat_box_shift_held(void) {
+    if (gDjuiInputHeldShift) { return true; }
+    const u8 *keys = SDL_GetKeyboardState(NULL);
+    return keys && (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT]);
+}
+
 static bool djui_chat_box_input_on_key_down(UNUSED struct DjuiBase* base, int scancode) {
     sent_history_init(&sentHistory);
 
     if (gDjuiChatBox == NULL) { return false; }
 
     f32 pageAmount = gDjuiChatBox->chatContainer->base.elem.height * 3.0f / 4.0f;
+    f32 scrollAmount = djui_chat_box_shift_held() ? pageAmount : 15;
 
     char previousText[MAX_CHAT_MSG_LENGTH];
     snprintf(previousText, MAX_CHAT_MSG_LENGTH, "%s", gDjuiChatBox->chatInput->buffer);
 
     switch (scancode) {
         case SCANCODE_UP:
-            if (!configUseStandardKeyBindingsChat && (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/')) {
-                gDjuiChatBox->scrollY += 15;
-                break;
-            } else {
-                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
-                sent_history_navigate(&sentHistory, true);
-                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) { reset_tab_completion_all(); }
-                return true;
-            }
+            sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+            sent_history_navigate(&sentHistory, true);
+            if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) { reset_tab_completion_all(); }
+            return true;
         case SCANCODE_DOWN:
-            if (!configUseStandardKeyBindingsChat && (gDjuiChatBox->chatInput && gDjuiChatBox->chatInput->buffer && gDjuiChatBox->chatInput->buffer[0] != '/')) {
-                gDjuiChatBox->scrollY -= 15;
-                break;
-            } else {
-                sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
-                sent_history_navigate(&sentHistory, false);
-                if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) { reset_tab_completion_all(); }
-                return true;
-            }
+            sent_history_update_current_message(&sentHistory, gDjuiChatBox->chatInput->buffer);
+            sent_history_navigate(&sentHistory, false);
+            if (strcmp(previousText, gDjuiChatBox->chatInput->buffer) != 0) { reset_tab_completion_all(); }
+            return true;
         case SCANCODE_PAGE_UP:
-            gDjuiChatBox->scrollY += configUseStandardKeyBindingsChat ? 15 : pageAmount;
+            gDjuiChatBox->scrollY += scrollAmount;
             break;
         case SCANCODE_PAGE_DOWN:
-            gDjuiChatBox->scrollY -= configUseStandardKeyBindingsChat ? 15 : pageAmount;
+            gDjuiChatBox->scrollY -= scrollAmount;
             break;
         case SCANCODE_TAB:
             handle_tab_completion(gDjuiInputHeldShift != 0);

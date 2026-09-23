@@ -100,7 +100,6 @@ extern unsigned int configGamepadNumber;
 extern bool         configBackgroundGamepad;
 extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
-extern bool         configUseStandardKeyBindingsChat;
 extern bool         configSmoothScrolling;
 // free camera settings
 extern bool         configEnableFreeCamera;
