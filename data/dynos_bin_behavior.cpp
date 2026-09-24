@@ -2186,7 +2186,7 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
     }
 
     if (_Symbol == "LOAD_ANIMATIONS") {
-        //u64 topTokenIndex = aTokenIndex;
+        u64 topTokenIndex = aTokenIndex;
 
         bool foundAnimation = true;
 
@@ -2199,11 +2199,10 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
             memcpy(aHead, _Bs, sizeof(_Bs));
             aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
         } else {
-            //u32 animIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
-            //BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
-            //memcpy(aHead, _Bs, sizeof(_Bs));
-            //aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
-            PrintDataError("  ERROR: Custom external animations are currently not supported. Skipping LOAD_ANIMATIONS_EXT.");
+            u32 animIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
+            BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
+            memcpy(aHead, _Bs, sizeof(_Bs));
+            aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
         }
         return;
     }
@@ -2223,6 +2222,21 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         } else {
             u32 colDataIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
             BehaviorScript _Bs[] = { LOAD_COLLISION_DATA_EXT(colDataIndex) };
+            memcpy(aHead, _Bs, sizeof(_Bs));
+            aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
+        }
+        return;
+    }
+
+    if (_Symbol == "ANIMATE") {
+        u64 topTokenIndex = aTokenIndex;
+
+        bool foundAnimateArg = true;
+
+        BehaviorScript animateArg = ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundAnimateArg);
+
+        if (foundAnimateArg) {
+            BehaviorScript _Bs[] = { ANIMATE(animateArg) };
             memcpy(aHead, _Bs, sizeof(_Bs));
             aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
         }
@@ -2313,7 +2327,6 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         return;
     }
 
-    /*
     if (_Symbol == "LOAD_ANIMATIONS_EXT") {
         u64 topTokenIndex = aTokenIndex;
 
@@ -2321,13 +2334,12 @@ static void ParseBehaviorScriptSymbol(GfxData *aGfxData, DataNode<BehaviorScript
         BehaviorScript field = ParseBehaviorScriptSymbolArg(aGfxData, aNode, aTokenIndex);
         ParseBehaviorScriptSymbolArgInternal(aGfxData, aNode, aTokenIndex, &foundAnimation);
 
-        u32 animIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 0]);
+        u32 animIndex = DynOS_Lua_RememberVariable(aGfxData, aHead + 1, aNode->mTokens[topTokenIndex + 1]);
         BehaviorScript _Bs[] = { LOAD_ANIMATIONS_EXT(field, animIndex) };
         memcpy(aHead, _Bs, sizeof(_Bs));
         aHead += (sizeof(_Bs) / sizeof(_Bs[0]));
         return;
     }
-    */
 
     if (_Symbol == "LOAD_COLLISION_DATA_EXT") {
         u64 topTokenIndex = aTokenIndex;

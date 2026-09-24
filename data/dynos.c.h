@@ -35,6 +35,12 @@ bool dynos_pack_get_exists(s32 index);
 void dynos_generate_mod_pack(char* modPath);
 void dynos_generate_packs(const char* directory);
 
+// -- animation -- //
+bool dynos_add_animation(const char *filepath, const char* animationName);
+bool dynos_add_animation_table(const char *filepath, const char* animationTableName);
+struct Animation *dynos_animation_get(const char* animationName);
+struct AnimationTable *dynos_animation_table_get(const char* animationTableName);
+
 // -- audio -- //
 void dynos_audio_reset_mods();
 bool dynos_audio_override(u8 sequenceId, s32* bankId, void** seqData);

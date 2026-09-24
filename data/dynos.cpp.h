@@ -571,14 +571,18 @@ struct TexData : NoCopy {
 
 struct AnimData : NoCopy {
     s16 mFlags = 0;
-    s16 mUnk02 = 0;
-    s16 mUnk04 = 0;
-    s16 mUnk06 = 0;
-    s16 mUnk08 = 0;
-    Pair<String, s16> mUnk0A;
+    s16 mAnimYTransDivisor = 0;
+    s16 mStartFrame = 0;
+    s16 mLoopStart = 0;
+    s16 mLoopEnd = 0;
+    Pair<String, s16> mNumParts;
     Pair<String, Array<u16>> mValues;
     Pair<String, Array<u16>> mIndex;
     u32 mLength = 0;
+};
+
+struct AnimTableData : NoCopy {
+    Array<Pair<String, void *>> mAnimations;
 };
 
 template <typename T>
@@ -666,10 +670,10 @@ struct GfxData : NoCopy {
     DataNodes<void> mRawPointers;
 
     // Animation data
-    Array<AnimBuffer<s16> *> mAnimValues;
-    Array<AnimBuffer<u16> *> mAnimIndices;
+    Array<AnimBuffer<u16> *> mAnimBuffers;
     DataNodes<AnimData> mAnimations;
-    Array<Pair<String, void *>> mAnimationTable;
+    DataNodes<AnimTableData> mAnimationTables;
+    Array<Pair<String, void *>> mAnimationTable; // Actor backwards compatibility
 
     // Skip bin output of children
     Array<DataNode<GeoLayout> *> mChildGeoLayouts;
@@ -941,6 +945,7 @@ const GeoLayout* DynOS_Builtin_LvlGeo_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_LvlGeo_GetFromData(const GeoLayout* aData);
 const Collision* DynOS_Builtin_Col_GetFromName(const char* aDataName);
 const char*      DynOS_Builtin_Col_GetFromData(const Collision* aData);
+const AnimationTable *DynOS_Builtin_Anim_Table_GetFromName(const char *aDataName);
 const Animation *DynOS_Builtin_Anim_GetFromName(const char *aDataName);
 const char *     DynOS_Builtin_Anim_GetFromData(const Animation *aData);
 const Texture*   DynOS_Builtin_Tex_GetFromName(const char* aDataName);
@@ -1004,6 +1009,11 @@ void DynOS_Actor_ModShutdown();
 // Anim Manager
 //
 
+bool DynOS_Anim_Activate(const SysPath &aFilename, const char *aAnimationName);
+bool DynOS_Anim_Table_Activate(const SysPath &aFilename, const char *aAnimationTableName);
+Animation *DynOS_Anim_Get(const char *animationName);
+AnimationTable *DynOS_Anim_Table_Get(const char *animationTableName);
+void DynOS_Anim_ModShutdown();
 void DynOS_Anim_Swap(void *aPtr);
 
 //
@@ -1132,10 +1142,14 @@ String DynOS_GetActorFolder(const Array<Pair<u64, String>> &aActorsFolders, u64 
 s64 DynOS_Misc_ParseInteger(const String& _Arg, bool* found);
 
 void DynOS_Anim_ScanFolder(GfxData *aGfxData, const SysPath &aAnimsFolder);
-void DynOS_Anim_Table_Write(BinFile* aFile, GfxData* aGfxData);
-void DynOS_Anim_Write(BinFile* aFile, GfxData* aGfxData);
-void DynOS_Anim_Load(BinFile *aFile, GfxData *aGfxData);
-void DynOS_Anim_Table_Load(BinFile *aFile, GfxData *aGfxData);
+void DynOS_Anim_Table_WriteAll(BinFile* aFile, GfxData* aGfxData);
+void DynOS_Anim_WriteAll(BinFile* aFile, GfxData* aGfxData);
+DataNode<AnimData> *DynOS_Anim_Load(BinFile *aFile, GfxData *aGfxData);
+DataNode<AnimTableData> *DynOS_Anim_Table_Load(BinFile *aFile, GfxData *aGfxData);
+DataNode<AnimData>* DynOS_Anim_LoadFromBinary(const SysPath &aFilename, const char *aAnimationName);
+DataNode<AnimTableData>* DynOS_Anim_Table_LoadFromBinary(const SysPath &aFilename, const char *aAnimationTableName);
+void DynOS_Anim_Table_LoadSeparate(BinFile *aFile, GfxData *aGfxData);
+void DynOS_Anim_GeneratePack(const SysPath &aPackFolder);
 
 DataNode<Collision>* DynOS_Col_Parse(GfxData* aGfxData, DataNode<Collision>* aNode, bool aDisplayPercent);
 void DynOS_Col_Write(BinFile* aFile, GfxData* aGfxData, DataNode<Collision> *aNode);

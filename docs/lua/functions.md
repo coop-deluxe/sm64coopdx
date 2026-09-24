@@ -20,7 +20,6 @@
    - [texture_override_set](#texture_override_set)
    - [texture_override_reset](#texture_override_reset)
    - [level_parse_script](#level_parse_script)
-   - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [log_to_console](#log_to_console)
    - [add_scroll_target](#add_scroll_target)
    - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
@@ -1601,6 +1600,7 @@
    - [cur_obj_init_animation_with_sound](functions-6.md#cur_obj_init_animation_with_sound)
    - [obj_init_animation_with_accel_and_sound](functions-6.md#obj_init_animation_with_accel_and_sound)
    - [cur_obj_init_animation_with_accel_and_sound](functions-6.md#cur_obj_init_animation_with_accel_and_sound)
+   - [obj_init_animation_with_sound](functions-6.md#obj_init_animation_with_sound)
    - [cur_obj_enable_rendering_and_become_tangible](functions-6.md#cur_obj_enable_rendering_and_become_tangible)
    - [cur_obj_enable_rendering](functions-6.md#cur_obj_enable_rendering)
    - [cur_obj_disable_rendering_and_become_intangible](functions-6.md#cur_obj_disable_rendering_and_become_intangible)
@@ -1843,8 +1843,14 @@
 
 - smlua_anim_utils.h
    - [get_mario_vanilla_animation](functions-6.md#get_mario_vanilla_animation)
+   - [smlua_anim_util_get_animation](functions-6.md#smlua_anim_util_get_animation)
+   - [smlua_anim_util_get_table](functions-6.md#smlua_anim_util_get_table)
+   - [smlua_anim_util_register_animation](functions-6.md#smlua_anim_util_register_animation)
    - [smlua_anim_util_set_animation](functions-6.md#smlua_anim_util_set_animation)
+   - [smlua_anim_util_set_table](functions-6.md#smlua_anim_util_set_table)
    - [smlua_anim_util_get_current_animation_name](functions-6.md#smlua_anim_util_get_current_animation_name)
+   - [smlua_anim_util_get_current_animation_index](functions-6.md#smlua_anim_util_get_current_animation_index)
+   - [smlua_anim_util_get_current_info](functions-6.md#smlua_anim_util_get_current_info)
 
 <br />
 
@@ -2953,35 +2959,6 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 | ----- | ---- |
 | levelNum | [enum LevelNum](./constants.md#enum-LevelNum) \| `integer` |
 | func | `function` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## smlua_anim_util_register_animation
-
-### Description
-Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
-
-### Lua Example
-```lua
-smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| flags | `integer` |
-| animYTransDivisor | `integer` |
-| startFrame | `integer` |
-| loopStart | `integer` |
-| loopEnd | `integer` |
-| values | `table` |
-| index | `table` |
 
 ### Returns
 - None
