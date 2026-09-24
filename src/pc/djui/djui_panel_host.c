@@ -13,8 +13,14 @@
 #include "pc/configfile.h"
 #include "pc/update_checker.h"
 
+#if __linux__
+#define MIN_PORT 1024
+#else
+#define MIN_PORT 0
+#endif
+
 static struct DjuiRect* sRectPort = NULL;
-static struct DjuiInputbox* sInputboxPort = NULL;
+static struct DjuiInputNumber* sInputboxPort = NULL;
 #ifdef COOPNET
 static struct DjuiRect* sRectPassword = NULL;
 static struct DjuiInputbox* sInputboxPassword = NULL;
@@ -22,37 +28,10 @@ static struct DjuiInputbox* sInputboxPassword = NULL;
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
     djui_base_set_visible(&sRectPort->base, (configNetworkSystem == NS_SOCKET));
     djui_base_set_visible(&sRectPassword->base, (configNetworkSystem == NS_COOPNET));
-    djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
+    djui_base_set_enabled(&sInputboxPort->input.base, (configNetworkSystem == NS_SOCKET));
     djui_base_set_enabled(&sInputboxPassword->base, (configNetworkSystem == NS_COOPNET));
 }
 #endif
-
-static bool djui_panel_host_port_valid(void) {
-    char* buffer = sInputboxPort->buffer;
-    int port = 0;
-    while (*buffer != '\0') {
-        if (*buffer < '0' || *buffer > '9') { return false; }
-        port *= 10;
-        port += (*buffer - '0');
-        buffer++;
-    }
-#if __linux__
-    return port >= 1024 && port <= 65535;
-#else
-    return port <= 65535;
-#endif
-}
-
-static void djui_panel_host_port_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* sInputboxPort = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
-    if (djui_panel_host_port_valid()) {
-        djui_inputbox_set_text_color(sInputboxPort, textColor->r, textColor->g, textColor->b, textColor->a);
-    } else {
-        djui_inputbox_set_text_color(sInputboxPort, 255, 0, 0, 255);
-    }
-}
 
 #ifdef COOPNET
 static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller) {
@@ -65,9 +44,9 @@ static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller)
 
 extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
-    if (!djui_panel_host_port_valid()) {
-        djui_interactable_set_input_focus(&sInputboxPort->base);
-        djui_inputbox_select_all(sInputboxPort);
+    if (!sInputboxPort->valid) {
+        djui_interactable_set_input_focus(&sInputboxPort->input.base);
+        djui_inputbox_select_all(&sInputboxPort->input);
         return;
     }
 
@@ -75,8 +54,6 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     if (configAmountOfPlayers < 1 || configAmountOfPlayers > MAX_PLAYERS) {
         return;
     }
-
-    configHostPort = atoi(sInputboxPort->buffer);
 
     if (gNetworkType == NT_SERVER) {
         network_rehost_begin();
@@ -119,19 +96,12 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                     djui_base_set_enabled(&text1->base, false);
                 }
 
-                sInputboxPort = djui_inputbox_create(&sRectPort->base, 32);
-                djui_base_set_size_type(&sInputboxPort->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-                djui_base_set_size(&sInputboxPort->base, 0.45f, 32);
-                djui_base_set_alignment(&sInputboxPort->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-                char portString[32] = { 0 };
-                snprintf(portString, 32, "%d", configHostPort);
-                djui_inputbox_set_text(sInputboxPort, portString);
-                djui_interactable_hook_value_change(&sInputboxPort->base, djui_panel_host_port_text_change);
-                if (gNetworkType == NT_SERVER) {
-                    djui_base_set_enabled(&sInputboxPort->base, false);
-                } else {
-                    djui_base_set_enabled(&sInputboxPort->base, (configNetworkSystem == NS_SOCKET));
-                }
+                sInputboxPort = djui_input_number_create(&sRectPort->base, &configHostPort, MIN_PORT, 65535);
+                struct DjuiBase *ipBase = &sInputboxPort->input.base;
+                djui_base_set_size_type(ipBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+                djui_base_set_size(ipBase, 0.45f, 32);
+                djui_base_set_alignment(ipBase, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+                djui_base_set_enabled(ipBase, gNetworkType == NT_SERVER ? false : (configNetworkSystem == NS_SOCKET));
             }
 #ifdef COOPNET
             sRectPassword = djui_rect_container_create(&rect1->base, 32);

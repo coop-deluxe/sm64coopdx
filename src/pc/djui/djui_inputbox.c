@@ -62,6 +62,10 @@ void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
 }
 
+void djui_inputbox_set_number(struct DjuiInputbox* inputbox, int value) {
+    snprintf(inputbox->buffer, inputbox->bufferSize, "%d", value);
+}
+
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
     inputbox->selection[1] = 0;
     inputbox->selection[0] = djui_unicode_len(inputbox->buffer);
@@ -679,8 +683,7 @@ static void djui_inputbox_destroy(struct DjuiBase* base) {
     free(inputbox);
 }
 
-struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
-    struct DjuiInputbox* inputbox = calloc(1, sizeof(struct DjuiInputbox));
+struct DjuiInputbox* djui_inputbox_init(struct DjuiBase* parent, struct DjuiInputbox* inputbox, u16 bufferSize) {
     struct DjuiBase* base         = &inputbox->base;
     struct DjuiTheme* theme       = gDjuiThemes[configDjuiTheme];
     struct DjuiColor* textColor = &theme->interactables.textColor;
@@ -702,4 +705,8 @@ struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSiz
     djui_inputbox_update_style(base);
 
     return inputbox;
+}
+
+struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize) {
+    return djui_inputbox_init(parent, calloc(1, sizeof(struct DjuiInputbox)), bufferSize);
 }
