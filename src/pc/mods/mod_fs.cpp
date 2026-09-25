@@ -26,12 +26,12 @@ static std::vector<struct ModFs *> sModFsList = {};
 #define MOD_FS_FILE_IS_PUBLIC_DEFAULT   false
 
 static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
-    ".txt", ".json", ".ini", ".sav",    // text
-    ".bin", ".col",                     // actors
-    ".bhv",                             // behaviors
-    ".tex", ".png",                     // textures
-    ".lvl",                             // levels
-    ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    ".txt", ".json", ".ini", ".sav", ".vert", ".frag",    // text
+    ".bin", ".col",                                       // actors
+    ".bhv",                                               // behaviors
+    ".tex", ".png",                                       // textures
+    ".lvl",                                               // levels
+    ".m64", ".aiff", ".mp3", ".ogg",                      // audio
     NULL
 };
 

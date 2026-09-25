@@ -230,6 +230,8 @@ static struct GraphNodeBackground* sBackgroundNode = NULL;
 static struct GraphNodeRoot* sBackgroundNodeRoot = NULL;
 static struct GraphNodeCamera* sCameraNode = NULL;
 
+Mtx gInverseCameraMatrix = { 0 };
+
 static struct GrowingArray* sShadowInterp = NULL;
 struct ShadowInterp* gShadowInterpCurrent = NULL;
 
@@ -393,6 +395,7 @@ void patch_mtx_interpolated(f32 delta) {
         delta_interpolate_vec3f(focusInterp, sCameraNode->prevFocus, sCameraNode->focus, delta);
         mtxf_lookat(camInterp.m, posInterp, focusInterp, sCameraNode->roll);
         mtxf_to_mtx(&camInterp, camInterp.m);
+        mtxf_inverse(gInverseCameraMatrix.m, camInterp.m);
     }
 
     for (u32 i = 0; i < sMtxTbl->count; i++) {
@@ -773,14 +776,6 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     // save the camera matrix
     if (gCamera) {
         mtxf_copy(gCamera->mtx, gMatStack[gMatStackIndex]);
-    }
-
-    // compute inverse matrix for lighting engine and fresnel
-    Mat4 invCameraMatrix;
-    if (mtxf_inverse_non_affine(invCameraMatrix, gCamera->mtx)) {
-        Mtx *invMtx = alloc_display_list(sizeof(Mtx));
-        mtxf_to_mtx(invMtx, invCameraMatrix);
-        gSPMatrix(gDisplayListHead++, invMtx, G_MTX_INVERSE_CAMERA_EXT);
     }
 
     if (node->fnNode.node.children != 0) {
@@ -1453,7 +1448,7 @@ static s32 obj_is_in_view(struct GraphNodeObject *node, Mat4 matrix) {
 
     if (node->node.flags & GRAPH_RENDER_INVISIBLE) {
         return FALSE;
-    } else if (node->skipInViewCheck) {
+    } else if (node->skipInViewCheck || !gCullingEnabled) {
         return TRUE;
     }
 
@@ -1897,7 +1892,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
 
         get_world_mtx_from_transform(
             gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart],
-            gMatStack[gMatStackIndex], 
+            gMatStack[gMatStackIndex],
             *gCurGraphNodeCamera->matrixPtr
         );
     }

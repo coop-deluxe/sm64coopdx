@@ -121,6 +121,50 @@ void gfx_resize(Gfx *gfx, u32 newLength);
 void gfx_delete(Gfx *gfx);
 /* |description|Deletes all display lists created by `gfx_create`|descriptionEnd| */
 void gfx_delete_all();
+/* |description|Sets culling for all triangles. Set to false to disable culling, set to true to use normal preset|descriptionEnd| */
+void gfx_set_culling_enabled(bool enable);
+/* |description|Get if culling is enabled or not|descriptionEnd| */
+bool gfx_is_culling_enabled();
+/* |description|Gets the name of the active render api|descriptionEnd| */
+const char *gfx_get_render_api_name();
+/* |description|Checks if a renderer is legacy. If it is, then that means the NDC Z range is -1 to 1, not 0 to 1|descriptionEnd| */
+bool gfx_is_legacy_renderer();
+/* |description|Reloads all shaders|descriptionEnd| */
+void gfx_reload_shaders();
+/* |description|Gets features from a color combiner|descriptionEnd| */
+struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc);
+/* |description|
+Sets the currently active shader stage. Use SHADER_STAGE_ANY to make both active.
+When setting a uniform buffer, or uniforms in general, what stage that gets applied to
+is decided by this function
+|descriptionEnd| */
+void gfx_shader_set_shader_stage(enum ShaderStage stage);
+/* |description|Sets the currently selected uniform buffer|descriptionEnd| */
+void gfx_shader_set_uniform_buffer(const char *name);
+/* |description|Resets the currently selected uniform buffer|descriptionEnd| */
+void gfx_shader_reset_uniform_buffer(void);
+/* |description|Sets the value of a shader uniform of type bool|descriptionEnd| */
+void gfx_shader_set_bool(const char *name, bool value);
+/* |description|Sets the value of a shader uniform of type int|descriptionEnd| */
+void gfx_shader_set_int(const char *name, int value);
+/* |description|Sets the value of a shader uniform of type float|descriptionEnd| */
+void gfx_shader_set_float(const char *name, f32 value);
+/* |description|Sets the value of a shader uniform of type vec2|descriptionEnd| */
+void gfx_shader_set_vec2(const char *name, f32 x, f32 y);
+/* |description|Sets the value of a shader uniform of type vec3|descriptionEnd| */
+void gfx_shader_set_vec3(const char *name, f32 x, f32 y, f32 z);
+/* |description|Sets the value of a shader uniform of type vec4|descriptionEnd| */
+void gfx_shader_set_vec4(const char *name, f32 x, f32 y, f32 z, f32 w);
+/* |description|Sets the value of a shader uniform of type mat4|descriptionEnd| */
+void gfx_shader_set_mat4(const char *name, const Mat4 mat4);
+/* |description|Creates a frame pass to be used when rendering the game. Allows for multipass shaders. Returns the frame pass index and the frame pass|descriptionEnd| */
+int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass);
+/* |description|Deletes a frame pass using `framePassIndex`|descriptionEnd| */
+void gfx_shader_remove_frame_pass(int framePassIndex);
+/* |description|Gets the current active frame pass index. If there is no active frame pass, it returns -1|descriptionEnd| */
+int gfx_shader_get_current_frame_pass_index();
+/* |description|Gets the current active frame pass. If there is no active frame pass, it returns nil|descriptionEnd| */
+struct FramePass *gfx_shader_get_current_frame_pass();
 
 
 /* |description|

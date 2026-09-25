@@ -173,6 +173,16 @@ VEC_TYPES = {
             "b": "[2]",
         },
     },
+    "ColorRGBA": {
+        "field_c_type": "u8",
+        "field_lua_type": "integer",
+        "fields_mapping": {
+            "r": "[0]",
+            "g": "[1]",
+            "b": "[2]",
+            "a": "[3]",
+        },
+    },
 }
 
 VECP_TYPES = {

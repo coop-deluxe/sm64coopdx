@@ -69,7 +69,6 @@ static struct HudUtilsState sHudUtilsState = {
 static struct DjuiColor sRefColor = { 255, 255, 255, 255 };
 static struct DjuiColor sRefTextColor = { 255, 255, 255, 255 };
 
-f32 gDjuiHudUtilsZ = 0;
 bool gDjuiHudLockMouse = false;
 
 extern ALIGNED8 const u8 texture_hud_char_camera[];
@@ -202,7 +201,6 @@ void patch_djui_hud_before(void) {
 }
 
 void patch_djui_hud(f32 delta) {
-    f32 savedZ = gDjuiHudUtilsZ;
     Gfx* savedHeadPos = gDisplayListHead;
     struct HudUtilsState savedState = sHudUtilsState;
 
@@ -214,7 +212,6 @@ void patch_djui_hud(f32 delta) {
         f32 scaleW = delta_interpolate_f32(interp->scaleX.prev, interp->scaleX.curr, delta);
         f32 scaleH = delta_interpolate_f32(interp->scaleY.prev, interp->scaleY.curr, delta);
         sHudUtilsState = interp->state;
-        gDjuiHudUtilsZ = interp->z;
 
         for (u32 j = 0; j != interp->gfx->count; ++j) {
             const InterpHudGfx *gfx = interp->gfx->buffer[j];
@@ -225,7 +222,7 @@ void patch_djui_hud(f32 delta) {
                     f32 translatedX = x;
                     f32 translatedY = y;
                     djui_hud_position_translate(&translatedX, &translatedY);
-                    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+                    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
                 } break;
 
                 case INTERP_HUD_ROTATION: {
@@ -291,7 +288,6 @@ void patch_djui_hud(f32 delta) {
 
     sHudUtilsState = savedState;
     gDisplayListHead = savedHeadPos;
-    gDjuiHudUtilsZ = savedZ;
 }
 
 static struct InterpHud *djui_hud_create_interp() {
@@ -302,7 +298,7 @@ static struct InterpHud *djui_hud_create_interp() {
     );
 
     if (interp) {
-        interp->z = gDjuiHudUtilsZ;
+        interp->z = 0;
         interp->state = sHudUtilsState;
         if (!interp->gfx) {
             interp->gfx = growing_array_init(NULL, 8, malloc, free);
@@ -441,7 +437,7 @@ void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVA
 
 u32 djui_hud_get_screen_width(void) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
 
     return (sHudUtilsState.resolution == RESOLUTION_N64)
         ? GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT
@@ -450,7 +446,7 @@ u32 djui_hud_get_screen_width(void) {
 
 u32 djui_hud_get_screen_height(void) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
 
     return (sHudUtilsState.resolution == RESOLUTION_N64)
         ? SCREEN_HEIGHT
@@ -641,7 +637,6 @@ static Mtx *allocate_dl_translation_matrix() {
 
 static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 scaleX, f32 scaleY, struct InterpHud *interp) {
     if (message == NULL) { return; }
-    gDjuiHudUtilsZ += 0.001f;
 
     const struct DjuiFont* font = djui_hud_get_text_font();
     f32 fontScaleX = font->defaultFontScale * scaleX;
@@ -657,7 +652,7 @@ static void djui_hud_print_text_internal(const char* message, f32 x, f32 y, f32 
     f32 translatedX = x + (font->xOffset * scaleX);
     f32 translatedY = y + (font->yOffset * scaleY);
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // rotate
     f32 translatedFontSizeX = fontScaleX;
@@ -832,14 +827,12 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.001f;
-
     // translate position
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // rotate
     f32 translatedW = scaleW;
@@ -869,7 +862,6 @@ static void djui_hud_render_texture_raw(const Texture* texture, u32 width, u32 h
 static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, u32 height, u8 fmt, u8 siz, f32 x, f32 y, f32 scaleW, f32 scaleH, u32 tileX, u32 tileY, u32 tileW, u32 tileH, struct InterpHud *interp) {
     if (!texture) { return; }
 
-    gDjuiHudUtilsZ += 0.001f;
     if (width != 0) { scaleW *= (f32) tileW / (f32) width; }
     if (height != 0) { scaleH *= (f32) tileH / (f32) height; }
 
@@ -878,7 +870,7 @@ static void djui_hud_render_texture_tile_raw(const Texture* texture, u32 width, 
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // rotate
     f32 translatedW = scaleW;
@@ -959,14 +951,12 @@ void djui_hud_render_texture_tile_interpolated(struct TextureInfo* texInfo, f32 
 }
 
 static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, struct InterpHud *interp) {
-    gDjuiHudUtilsZ += 0.001f;
-
     // translate position
     djui_hud_create_interp_gfx(interp, INTERP_HUD_TRANSLATION);
     f32 translatedX = x;
     f32 translatedY = y;
     djui_hud_position_translate(&translatedX, &translatedY);
-    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, gDjuiHudUtilsZ);
+    create_dl_translation_matrix(DJUI_MTX_PUSH, translatedX, translatedY, 0);
 
     // rotate
     f32 translatedW = width;
@@ -1057,7 +1047,7 @@ bool djui_hud_world_pos_to_screen_pos(Vec3f pos, VEC_OUT Vec3f out) {
         screenHeight = SCREEN_HEIGHT;
     } else {
         u32 windowWidth, windowHeight;
-        gfx_get_dimensions(&windowWidth, &windowHeight);
+        gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
         screenWidth = (f32) windowWidth / djui_gfx_get_scale();
         screenHeight = (f32) windowHeight / djui_gfx_get_scale();
     }

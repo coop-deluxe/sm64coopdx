@@ -4,6 +4,9 @@
 #include <math.h>
 #include <assert.h>
 
+#include "types.h"
+#include "macros.h"
+
 #define SUPPORT_CHECK(x) assert(x)
 
 // SCALE_M_N: upscale/downscale M-bit integer to N-bit
@@ -27,6 +30,7 @@
 #define MAX_TEXTURES 2
 #define MAX_CACHED_TEXTURES 4096 // for preloading purposes
 #define MAX_GFX_STATES 8
+#define VERTEX_STRIDE MAX_BUFFERED * ((16 + (CC_MAX_INPUTS * 4) + (2 * MAX_TEXTURES)) * 3) // 3 vertices in a triangle and 16 floats per verticies plus the 4 floats per input for verticies plus the 2 per texture
 
 #define HASH_SHIFT 0
 #define HASHMAP_LEN (MAX_CACHED_TEXTURES * 2)
@@ -42,7 +46,9 @@ struct Box {
 
 struct GfxVertex {
     float x, y, z, w;
+    float localX, localY, localZ, localW;
     float u, v;
+    float nx, ny, nz;
     struct RGBA color;
     uint8_t fog_z;
     uint8_t clip_rej;
@@ -95,7 +101,5 @@ struct TextureCache {
 };
 
 extern struct GfxDimensions gfx_current_dimensions;
-#define RATIO_X (gfx_current_dimensions.width / (2.0f * HALF_SCREEN_WIDTH))
-#define RATIO_Y (gfx_current_dimensions.height / (2.0f * HALF_SCREEN_HEIGHT))
 
 #endif // GFX_H

@@ -7,6 +7,16 @@
 
 extern struct GfxRenderingAPI gfx_direct3d11_api;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void d3d11_create_buffer_for_block(struct ShaderUniformBlock *block);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 #endif

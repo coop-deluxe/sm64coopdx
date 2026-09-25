@@ -201,6 +201,15 @@
 --- @field public dialogs BehaviorDialogs
 --- @field public trajectories BehaviorTrajectories
 
+--- @class CCFeatures
+--- @field public used_textures boolean[]
+--- @field public num_inputs integer
+--- @field public do_single boolean[]
+--- @field public do_multiply boolean[]
+--- @field public do_mix boolean[]
+--- @field public color_alpha_same boolean[]
+--- @field public do_noise boolean
+
 --- @class Camera
 --- @field public mode integer
 --- @field public defMode integer
@@ -508,6 +517,22 @@
 --- @field public soundOkeyDokey integer
 --- @field public sounds integer[]
 
+--- @class ColorCombiner
+--- @field public cm CombineMode
+--- @field public shader_input_mapping integer[]
+--- @field public shader_commands integer[]
+--- @field public hash integer
+
+--- @class CombineMode
+--- @field public rgb1 integer
+--- @field public alpha1 integer
+--- @field public rgb2 integer
+--- @field public alpha2 integer
+--- @field public all_values integer[]
+--- @field public flags integer
+--- @field public geometry_mode integer
+--- @field public hash integer
+
 --- @class Controller
 --- @field public port integer
 --- @field public stickX number
@@ -612,6 +637,13 @@
 
 --- @class FnGraphNode
 --- @field public node GraphNode
+
+--- @class FramePass
+--- @field public width integer
+--- @field public height integer
+--- @field public drawWorldGeometry boolean
+--- @field public clearColor ColorRGBA
+--- @field public passFilter PassFilter
 
 --- @class Gfx
 --- @field public w0 integer
@@ -2410,6 +2442,12 @@
 --- @field public r integer
 --- @field public g integer
 --- @field public b integer
+
+--- @class ColorRGBA
+--- @field public r integer
+--- @field public g integer
+--- @field public b integer
+--- @field public a integer
 
 --- @alias Pointer_integer integer
 --- @alias Pointer_Trajectory Trajectory

@@ -1032,6 +1032,466 @@ Deletes all display lists created by `gfx_create`
 
 <br />
 
+## gfx_set_culling_enabled
+
+### Description
+Sets culling for all triangles. Set to false to disable culling, set to true to use normal preset
+
+### Lua Example
+`gfx_set_culling_enabled(enable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| enable | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_culling_enabled(bool enable);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_is_culling_enabled
+
+### Description
+Get if culling is enabled or not
+
+### Lua Example
+`local booleanValue = gfx_is_culling_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool gfx_is_culling_enabled();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_get_render_api_name
+
+### Description
+Gets the name of the active render api
+
+### Lua Example
+`local stringValue = gfx_get_render_api_name()`
+
+### Parameters
+- None
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *gfx_get_render_api_name();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_is_legacy_renderer
+
+### Description
+Checks if a renderer is legacy. If it is, then that means the NDC Z range is -1 to 1, not 0 to 1
+
+### Lua Example
+`local booleanValue = gfx_is_legacy_renderer()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool gfx_is_legacy_renderer();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_reload_shaders
+
+### Description
+Reloads all shaders
+
+### Lua Example
+`gfx_reload_shaders()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_reload_shaders();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_color_combiner_get_features
+
+### Description
+Gets features from a color combiner
+
+### Lua Example
+`local cCFeaturesValue = gfx_color_combiner_get_features(cc)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| cc | [ColorCombiner](structs.md#ColorCombiner) |
+
+### Returns
+- [CCFeatures](structs.md#CCFeatures)
+
+### C Prototype
+`struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_shader_stage
+
+### Description
+Sets the currently active shader stage. Use SHADER_STAGE_ANY to make both active.
+When setting a uniform buffer, or uniforms in general, what stage that gets applied to
+is decided by this function
+
+### Lua Example
+`gfx_shader_set_shader_stage(stage)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| stage | [enum ShaderStage](constants.md#enum-ShaderStage) |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_shader_stage(enum ShaderStage stage);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_uniform_buffer
+
+### Description
+Sets the currently selected uniform buffer
+
+### Lua Example
+`gfx_shader_set_uniform_buffer(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_uniform_buffer(const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_reset_uniform_buffer
+
+### Description
+Resets the currently selected uniform buffer
+
+### Lua Example
+`gfx_shader_reset_uniform_buffer()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_reset_uniform_buffer(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_bool
+
+### Description
+Sets the value of a shader uniform of type bool
+
+### Lua Example
+`gfx_shader_set_bool(name, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_bool(const char *name, bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_int
+
+### Description
+Sets the value of a shader uniform of type int
+
+### Lua Example
+`gfx_shader_set_int(name, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| value | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_int(const char *name, int value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_float
+
+### Description
+Sets the value of a shader uniform of type float
+
+### Lua Example
+`gfx_shader_set_float(name, value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| value | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_float(const char *name, f32 value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec2
+
+### Description
+Sets the value of a shader uniform of type vec2
+
+### Lua Example
+`gfx_shader_set_vec2(name, x, y)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| x | `number` |
+| y | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_vec2(const char *name, f32 x, f32 y);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec3
+
+### Description
+Sets the value of a shader uniform of type vec3
+
+### Lua Example
+`gfx_shader_set_vec3(name, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_vec3(const char *name, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_vec4
+
+### Description
+Sets the value of a shader uniform of type vec4
+
+### Lua Example
+`gfx_shader_set_vec4(name, x, y, z, w)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| w | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_vec4(const char *name, f32 x, f32 y, f32 z, f32 w);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_mat4
+
+### Description
+Sets the value of a shader uniform of type mat4
+
+### Lua Example
+`gfx_shader_set_mat4(name, mat4)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| mat4 | [Mat4](structs.md#Mat4) |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_set_mat4(const char *name, const Mat4 mat4);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_create_frame_pass
+
+### Description
+Creates a frame pass to be used when rendering the game. Allows for multipass shaders. Returns the frame pass index and the frame pass
+
+### Lua Example
+`local integerValue, retFramePass = gfx_shader_create_frame_pass()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+- [FramePass](structs.md#FramePass)
+
+### C Prototype
+`int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_remove_frame_pass
+
+### Description
+Deletes a frame pass using `framePassIndex`
+
+### Lua Example
+`gfx_shader_remove_frame_pass(framePassIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| framePassIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_shader_remove_frame_pass(int framePassIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_get_current_frame_pass_index
+
+### Description
+Gets the current active frame pass index. If there is no active frame pass, it returns -1
+
+### Lua Example
+`local integerValue = gfx_shader_get_current_frame_pass_index()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`int gfx_shader_get_current_frame_pass_index();`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_get_current_frame_pass
+
+### Description
+Gets the current active frame pass. If there is no active frame pass, it returns nil
+
+### Lua Example
+`local framePassValue = gfx_shader_get_current_frame_pass()`
+
+### Parameters
+- None
+
+### Returns
+- [FramePass](structs.md#FramePass)
+
+### C Prototype
+`struct FramePass *gfx_shader_get_current_frame_pass();`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## vtx_get_from_name
 
 ### Description

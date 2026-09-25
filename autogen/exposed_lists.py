@@ -50,7 +50,9 @@ constants_files = [
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
+    "src/pc/gfx/gfx_cc.h",
     "src/pc/gfx/gfx_pc.h",
+    "src/pc/gfx/gfx_shader.h",
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
@@ -64,6 +66,7 @@ constants_whitelist = { "__name__": "constants_whitelist",
     "src/audio/external.h": [ "SEQ_PLAYER", "DS_" ],
     "src/pc/lua/utils/smlua_audio_utils.h": [ "MA_" ],
     "src/pc/mods/mod_storage.h": [ "MAX_KEYS", "MAX_KEY_VALUE_LENGTH" ],
+    "src/pc/gfx/gfx_shader.h": [ "SHADER_STAGE_*" ],
     "include/PR/gbi.h": [
         "^G_NOOP$",
         "^G_SETOTHERMODE_H$",
@@ -98,12 +101,31 @@ constants_whitelist = { "__name__": "constants_whitelist",
         "^G_SETSCISSOR$",
         "^G_TEXRECTFLIP$",
         "^G_TEXRECT$",
+        "^G_ZBUFFER$",
+        "^G_SHADE$",
+        "^G_TEXTURE_ENABLE$",
+        "^G_SHADING_SMOOTH$",
+        "^G_CULL_FRONT$",
+        "^G_CULL_BACK$",
+        "^G_CULL_BOTH$",
+        "^G_FOG$",
+        "^G_LIGHTING$",
+        "^G_TEXTURE_GEN$",
+        "^G_TEXTURE_GEN_LINEAR$",
+        "^G_LOD$",
+        "^G_CLIPPING$"
     ],
     "include/PR/gbi_extension.h": [
         "^G_VTX_EXT$",
         "^G_PPARTTOCOLOR$",
         "^G_SETENVRGB$",
         "^G_STATE_EXT$",
+        "^G_LIGHT_MAP_EXT$",
+        "^G_LIGHTING_ENGINE_EXT$",
+        "^G_PACKED_NORMALS_EXT$",
+        "^G_CULL_INVERT_EXT$",
+        "^G_FRESNEL_COLOR_EXT$",
+        "^G_FRESNEL_ALPHA_EXT$",
     ],
 }
 
@@ -334,6 +356,9 @@ structs_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/game/paintings.h",
     "src/pc/djui/djui_types.h",
+    "src/pc/gfx/gfx_cc.h",
+    "src/pc/gfx/gfx_pc.h",
+    "src/pc/gfx/gfx_shader.h",
     "src/game/level_update.h",
     "src/game/first_person_cam.h",
     "src/game/player_palette.h",
@@ -348,6 +373,8 @@ structs_whitelist = { "__name__": "structs_whitelist",
     "src/game/level_update.h": [ "HudDisplay" ],
     "src/game/player_palette.h": [ "PlayerPalette" ],
     "src/game/ingame_menu.h" : [ "DialogEntry" ],
+    "src/pc/gfx/gfx_pc.h": [ "FramePass" ],
+    "src/pc/gfx/gfx_shader.h": [ "ShaderStage" ],
     "include/PR/gbi.h": [ "Gfx", "^Vtx$" ],
 }
 
@@ -387,6 +414,7 @@ structs_excluded = [
 
 # For each struct, expose only these fields
 structs_fields_whitelist = { "__name__": "structs_fields_whitelist",
+    "FramePass": [ "width", "height", "drawWorldGeometry", "clearColor", "passFilter" ],
 }
 
 # For each struct, do not expose these fields
@@ -412,6 +440,7 @@ structs_fields_blacklist = { "__name__": "structs_fields_blacklist",
     "DialogEntry": [ "str" ],
     "ModFsFile": [ "data", "capacity" ],
     "ModFs": [ "files" ],
+    "ColorCombiner": [ "prg", "shader_commands_as_u64", "shader_input_mapping_as_u64" ],
 }
 
 # For each struct, expose these fields, but hide them from the documentation or VSCode autocomplete

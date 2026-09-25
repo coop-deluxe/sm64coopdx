@@ -9,6 +9,7 @@
 
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
+#include "pc/network/socket/socket.h"
 #include "game/memory.h"
 #include "audio/data.h"
 #include "audio/external.h"
@@ -36,7 +37,6 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #include "pc/network/version.h"
-#include "pc/network/socket/socket.h"
 #include "pc/network/network_player.h"
 #include "pc/update_checker.h"
 #include "pc/djui/djui.h"
@@ -231,9 +231,9 @@ static void select_graphics_backend(void) {
         configGraphicsBackend = GFX_WINDOW_BACKEND_DIRECTX;
     }
 #endif
-    enum GfxWindowBackend backend = configGraphicsBackend;
-#if defined(_WIN32)
-    if (gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
+    int backend = configGraphicsBackend;
+#if defined(_WIN32) || defined(OSX_BUILD)
+    if (gCLIOpts.backend < GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
 #endif
 
     switch (backend) {
@@ -248,6 +248,12 @@ static void select_graphics_backend(void) {
 #if defined(_WIN32)
         case GFX_WINDOW_BACKEND_DIRECTX:
             gRenderApi = &gfx_direct3d11_api;
+            gAudioApi  = &audio_sdl;
+            break;
+#endif
+#ifdef OSX_BUILD
+        case GFX_WINDOW_BACKEND_METAL:
+            gRenderApi = &gfx_metal_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif
@@ -423,11 +429,12 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
     // clear screen
-    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, clearColorR, clearColorG, clearColorB, 0xFF);
-    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    clear_frame_buffer(0);
+
+    // set clear color
+    gDefaultGeoFramePass.clearColor[0] = clearColorR;
+    gDefaultGeoFramePass.clearColor[1] = clearColorG;
+    gDefaultGeoFramePass.clearColor[2] = clearColorB;
 
     // call the callback
     callback();
@@ -436,8 +443,14 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     djui_gfx_displaylist_end();
     end_master_display_list();
     alloc_display_list(0);
-    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
+    gfx_run((Gfx *)gGfxSPTask->task.t.data_ptr);
+    gfx_end_frame_render();
     display_and_vsync();
+
+    // reset clear color
+    gDefaultGeoFramePass.clearColor[0] = 0;
+    gDefaultGeoFramePass.clearColor[1] = 0;
+    gDefaultGeoFramePass.clearColor[2] = 0;
 
     // delay to go easy on the cpu
     f64 frameEnd = clock_elapsed_f64();
@@ -447,7 +460,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
         gfx_wm_delay((u32)(remaining * 1000.0));
     }
 
-    gfx_end_frame();
+    gfx_display_frame();
 }
 
 void audio_shutdown(void) {

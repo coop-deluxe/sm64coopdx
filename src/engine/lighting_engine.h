@@ -6,7 +6,7 @@ extern "C" {
 #endif
 #include "types.h"
 
-#define LE_MAX_LIGHTS 1024
+#define LE_MAX_LIGHTS 512
 
 enum LEMode {
     LE_MODE_AFFECT_ALL_SHADED_AND_COLORED,
@@ -40,7 +40,6 @@ void le_set_max_lights_per_vertex(u8 count);
 /* |description|This will let the user control the lighting engine in real time to disable or enable it. |descriptionEnd|*/
 void le_set_enabled(bool value);
 
-void le_calculate_vertex_lighting(const Vtx_t* v, Vec3f pos, VEC_OUT Color out);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`|descriptionEnd|*/
 void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);
 /* |description|Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`|descriptionEnd|*/

@@ -7,11 +7,15 @@
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
+- [CCFeatures](#CCFeatures)
 - [Camera](#Camera)
 - [CameraFOVStatus](#CameraFOVStatus)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
+- [ColorCombiner](#ColorCombiner)
+- [ColorRGBA](#ColorRGBA)
+- [CombineMode](#CombineMode)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
 - [CustomWarpNode](#CustomWarpNode)
@@ -26,6 +30,7 @@
 - [ExclamationBoxContent](#ExclamationBoxContent)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FnGraphNode](#FnGraphNode)
+- [FramePass](#FramePass)
 - [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalObjectCollisionData](#GlobalObjectCollisionData)
@@ -343,6 +348,22 @@
 | starsNeededForDialog | [StarsNeededForDialog](structs.md#StarsNeededForDialog) | read-only |
 | dialogs | [BehaviorDialogs](structs.md#BehaviorDialogs) | read-only |
 | trajectories | [BehaviorTrajectories](structs.md#BehaviorTrajectories) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## CCFeatures
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| used_textures | `Array` <`boolean`> |  |
+| num_inputs | `integer` |  |
+| do_single | `Array` <`boolean`> |  |
+| do_multiply | `Array` <`boolean`> |  |
+| do_mix | `Array` <`boolean`> |  |
+| color_alpha_same | `Array` <`boolean`> |  |
+| do_noise | `boolean` |  |
 
 [:arrow_up_small:](#)
 
@@ -695,6 +716,49 @@
 
 <br />
 
+## ColorCombiner
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| cm | [CombineMode](structs.md#CombineMode) | read-only |
+| shader_input_mapping | `Array` <`integer`> |  |
+| shader_commands | `Array` <`integer`> |  |
+| hash | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## ColorRGBA
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| r | `integer` |  |
+| g | `integer` |  |
+| b | `integer` |  |
+| a | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## CombineMode
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| rgb1 | `integer` |  |
+| alpha1 | `integer` |  |
+| rgb2 | `integer` |  |
+| alpha2 | `integer` |  |
+| all_values | `Array` <`integer`> |  |
+| flags | `integer` |  |
+| geometry_mode | `integer` |  |
+| hash | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## Controller
 
 | Field | Type | Access |
@@ -893,6 +957,20 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## FramePass
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| width | `integer` |  |
+| height | `integer` |  |
+| drawWorldGeometry | `boolean` |  |
+| clearColor | [ColorRGBA](structs.md#ColorRGBA) | read-only |
+| passFilter | [enum PassFilter](constants.md#enum-PassFilter) |  |
 
 [:arrow_up_small:](#)
 
