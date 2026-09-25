@@ -20,7 +20,7 @@ static bool djui_panel_loading_on_game_init(UNUSED struct DjuiBase *caller) {
     return true;
 }
 
-static bool djui_panel_loading_on_back(struct DjuiBase *caller) {
+static bool djui_panel_loading_on_back(UNUSED struct DjuiBase *caller) {
     sPanelCaller = NULL;
     sCallbackFunc = NULL;
     return false;
