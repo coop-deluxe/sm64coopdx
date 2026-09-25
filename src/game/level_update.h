@@ -3,9 +3,14 @@
 
 #include <PR/ultratypes.h>
 
+#include "level_table.h"
+#include "behavior_table.h"
+
 #include "types.h"
 
 #include "pc/djui/djui.h"
+
+#define MAX_BHVS_TO_REMOVE_IN_MENU_LEVEL 8
 
 enum TimerControl {
     TIMER_CONTROL_SHOW,
@@ -103,8 +108,7 @@ enum WarpType {
 #define PAINTING_WARP_INDEX_FA 0x2A    // THI Huge Painting index left
 #define PAINTING_WARP_INDEX_END 0x2D   // Value less than Surface 0xFD
 
-struct CreditsEntry
-{
+struct CreditsEntry {
     /*0x00*/ u8 levelNum;
     /*0x01*/ u8 areaIndex;
     /*0x02*/ u8 actNum;
@@ -115,6 +119,23 @@ struct CreditsEntry
 
 extern struct CreditsEntry *gCurrCreditsEntry;
 
+struct MenuLevel {
+    const char *key;
+    enum LevelNum level;
+    s16 area;
+    s16 act;
+    Vec3f marioPos;
+    bool updateMarioPos;
+    Vec3f cameraPos;
+    bool updateCameraPos;
+    s16 marioYaw;
+    bool updateMarioYaw;
+    const BehaviorScript *behaviorsToRemove[MAX_BHVS_TO_REMOVE_IN_MENU_LEVEL];
+};
+
+extern struct MenuLevel gMenuLevels[];
+extern u32 gMenuLevelsCount;
+
 extern struct MarioState gMarioStates[];
 extern struct MarioState *gMarioState;
 
@@ -123,7 +144,6 @@ extern s16 sTransitionTimer;
 extern void (*sTransitionUpdate)(s16 *);
 
 extern s16 gChangeLevel;
-extern s16 gChangeActNum;
 extern s16 gDelayedInitSound;
 
 struct WarpDest {
@@ -217,7 +237,7 @@ s32 lvl_exiting_credits(UNUSED s16 arg0, UNUSED s32 arg1);
 void fake_lvl_init_from_save_file(void);
 void lvl_skip_credits(void);
 
-s16 get_menu_level(void);
+struct MenuLevel *get_menu_level(void);
 void update_menu_level(void);
 void stop_demo(UNUSED struct DjuiBase* caller);
 

@@ -61,7 +61,6 @@ u16 gFanfareDebounce = 0;
 
 s16 gChangeLevel = -1;
 s16 gChangeLevelTransition = -1;
-s16 gChangeActNum = -1;
 
 s16 gDelayedInitSound = -1;
 
@@ -181,6 +180,281 @@ struct CreditsEntry sCreditsSequence[] = {
     { LEVEL_CASTLE_GROUNDS, 1, 1, -128, { 0, 906, -1200 }, NULL },
     { LEVEL_NONE, 0, 1, 0, { 0, 0, 0 }, NULL },
 };
+
+struct MenuLevel gMenuLevels[] = {
+    {
+        .key = "CASTLE_GROUNDS",
+        .level = LEVEL_CASTLE_GROUNDS,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -1328, 260, 4664 },
+        .updateMarioPos = false,
+        .cameraPos = { -1328, 390, 6364 },
+        .updateCameraPos = true,
+        .marioYaw = 0,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "BOB_OMB_BATTLEFIELD",
+        .level = LEVEL_BOB,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 7008, 864, 1943 },
+        .updateMarioPos = true,
+        .cameraPos = { 7909, 1064, 2843 },
+        .updateCameraPos = true,
+        .marioYaw = 0x2000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvGoomba,
+            NULL
+        }
+    },
+    {
+        .key = "WHOMPS_FORTRESS",
+        .level = LEVEL_WF,
+        .area = 1,
+        .act = 2,
+        .marioPos = { -2904, 2560, -327 },
+        .updateMarioPos = true,
+        .cameraPos = { -4504, 2760, -777 },
+        .updateCameraPos = true,
+        .marioYaw = -15536,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "WMOTR",
+        .level = LEVEL_WMOTR,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 3548, -2738, 4663 },
+        .updateMarioPos = true,
+        .cameraPos = { 3548, -2438, 6063 },
+        .updateCameraPos = true,
+        .marioYaw = 0,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "JOLLY_ROGER_BAY",
+        .level = LEVEL_JRB,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 3639, 1536, 6202 },
+        .updateMarioPos = true,
+        .cameraPos = { 5039, 1736, 6402 },
+        .updateCameraPos = true,
+        .marioYaw = 0x4000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "SHIFTING_SAND_LAND",
+        .level = LEVEL_SSL,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -2048, 256, 961 },
+        .updateMarioPos = true,
+        .cameraPos = { -2048, 356, 2461 },
+        .updateCameraPos = true,
+        .marioYaw = 0,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvStar,
+            NULL
+        }
+    },
+    {
+        .key = "TALL_TALL_MOUNTAIN",
+        .level = LEVEL_TTM,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 2488, 1460, 2011 },
+        .updateMarioPos = true,
+        .cameraPos = { 3488, 1763, 3411 },
+        .updateCameraPos = true,
+        .marioYaw = 0x1000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvStar,
+            NULL
+        }
+    },
+    {
+        .key = "SNOWMANS_LAND",
+        .level = LEVEL_SL,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 5494, 1024, 443 },
+        .updateMarioPos = true,
+        .cameraPos = { 6994, 1124, 443 },
+        .updateCameraPos = true,
+        .marioYaw = 0x4000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "BIG_BOOS_HAUNT",
+        .level = LEVEL_BBH,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 666, -204, 5303 },
+        .updateMarioPos = true,
+        .cameraPos = { 666, -204, 6803 },
+        .updateCameraPos = true,
+        .marioYaw = 0,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvScuttlebug,
+            NULL
+        }
+    },
+    {
+        .key = "LETHAL_LAVA_LAND",
+        .level = LEVEL_LLL,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -2376, 638, 956 },
+        .updateMarioPos = true,
+        .cameraPos = { -3576, 938, 1576 },
+        .updateCameraPos = true,
+        .marioYaw = -0x2800,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "TINY_HUGE_ISLAND",
+        .level = LEVEL_THI,
+        .area = 2,
+        .act = 1,
+        .marioPos = { -1010, 341, -324 },
+        .updateMarioPos = true,
+        .cameraPos = { -2246, 431, -324 },
+        .updateCameraPos = true,
+        .marioYaw = -0x4000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvGoomba,
+            NULL
+        }
+    },
+    {
+        .key = "HAZY_MAZE_CAVE",
+        .level = LEVEL_HMC,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -3600, -4279, 3616 },
+        .updateMarioPos = true,
+        .cameraPos = { -6000, -2938, 600 },
+        .updateCameraPos = true,
+        .marioYaw = -0x6000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvStar,
+            NULL
+        }
+    },
+    {
+        .key = "COOL_COOL_MOUNTAIN",
+        .level = LEVEL_CCM,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -1127, -3580, 6162 },
+        .updateMarioPos = true,
+        .cameraPos = { -1330, -2830, 9099 },
+        .updateCameraPos = true,
+        .marioYaw = -0x1000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "RAINBOW_RIDE",
+        .level = LEVEL_RR,
+        .area = 1,
+        .act = 1,
+        .marioPos = { 1418, 3167, -2349 },
+        .updateMarioPos = true,
+        .cameraPos = { -1518, 4567, -4549 },
+        .updateCameraPos = true,
+        .marioYaw = -0x6000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvStar,
+            NULL
+        }
+    },
+    {
+        .key = "BITDW",
+        .level = LEVEL_BITDW,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -4507, 1126, -285 },
+        .updateMarioPos = true,
+        .cameraPos = { -2507, 2126, -285 },
+        .updateCameraPos = true,
+        .marioYaw = 0x4000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "PSS",
+        .level = LEVEL_PSS,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -4729, -3057, -3025 },
+        .updateMarioPos = true,
+        .cameraPos = { -2729, -1557, -5025 },
+        .updateCameraPos = true,
+        .marioYaw = 0x5000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "TICK_TOCK_CLOCK",
+        .level = LEVEL_TTC,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -645, 0, -750 },
+        .updateMarioPos = true,
+        .cameraPos = { 2500, 570, -240 },
+        .updateCameraPos = true,
+        .marioYaw = 0x2000,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = {
+            bhvStar,
+            NULL
+        }
+    },
+    {
+        .key = "WET_DRY_WORLD",
+        .level = LEVEL_WDW,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -2684, 3328, 3000 },
+        .updateMarioPos = true,
+        .cameraPos = { -4002, 4000, 4622 },
+        .updateCameraPos = true,
+        .marioYaw = -0x1C34,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    },
+    {
+        .key = "CASTLE",
+        .level = LEVEL_CASTLE,
+        .area = 1,
+        .act = 1,
+        .marioPos = { -1020, -50, 724 },
+        .updateMarioPos = true,
+        .cameraPos = { -1020, 240, 2724 },
+        .updateCameraPos = true,
+        .marioYaw = 0,
+        .updateMarioYaw = true,
+        .behaviorsToRemove = { NULL }
+    }
+};
+u32 gMenuLevelsCount = ARRAY_COUNT(gMenuLevels);
 
 struct MarioState gMarioStates[MAX_PLAYERS] = { 0 };
 struct HudDisplay gHudDisplay;
@@ -511,7 +785,7 @@ void init_mario_after_warp(void) {
     }
 
     if (gCurrDemoInput == NULL && gMarioState) {
-        if (gCurrentArea) {
+        if (gCurrentArea && !gDjuiInMainMenu) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
 
@@ -1532,48 +1806,28 @@ s32 update_current_play_mode() {
     return changeLevel;
 }
 
-s16 get_menu_level(void) {
-    static enum LevelNum sMenuLevels[] = {
-        LEVEL_CASTLE_GROUNDS,
-        LEVEL_BOB,
-        LEVEL_WF,
-        LEVEL_WMOTR,
-        LEVEL_JRB,
-        LEVEL_SSL,
-        LEVEL_TTM,
-        LEVEL_SL,
-        LEVEL_BBH,
-        LEVEL_LLL,
-        LEVEL_THI,
-        LEVEL_HMC,
-        LEVEL_CCM,
-        LEVEL_RR,
-        LEVEL_BITDW,
-        LEVEL_PSS,
-        LEVEL_TTC,
-        LEVEL_WDW,
-    };
-    if (configMenuLevel < ARRAY_COUNT(sMenuLevels)) {
-        return sMenuLevels[configMenuLevel];
+struct MenuLevel *get_menu_level(void) {
+    if (configMenuLevel < gMenuLevelsCount) {
+        return &gMenuLevels[configMenuLevel];
     }
-    return LEVEL_CASTLE_GROUNDS;
+    return &gMenuLevels[0];
 }
 
 void update_menu_level(void) {
-    // figure out level
-    s16 curLevel = get_menu_level();
+    // get current menu level
+    struct MenuLevel *menuLevel = get_menu_level();
 
-    // figure out music
+    // halt any sounds that may be incorrectly playing
     stop_cap_music();
     reset_volume();
-    disable_background_sound();
     if (gMainMenuSounds[configMenuSound].sound == STAGE_MUSIC) {
         // if staff roll is on, set configMenuSound to Title Screen sequence, or 0
         if (configMenuStaffRoll) {
             configMenuSound = 0;
         }
-        if (curLevel == LEVEL_CASTLE_GROUNDS) {
-            set_background_music(0, SEQ_MENU_FILE_SELECT, 0);
+
+        if (menuLevel->level == LEVEL_CASTLE_GROUNDS) {
+            set_background_music(0, SEQ_MENU_FILE_SELECT, 0); // castle grounds music is file select
         } else if (gCurrentArea != NULL) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
@@ -1582,136 +1836,38 @@ void update_menu_level(void) {
     }
 
     if (configMenuStaffRoll) {
-        return;
+        return; // don't continue with warping mario and such since we are in staff roll
     } else {
         gCurrCreditsEntry = NULL;
     }
 
     // warp to level
-    if (gCurrLevelNum != curLevel) {
+    if ((u32)gCurrLevelNum != menuLevel->level) {
         if (gIsDemoActive) {
             stop_demo(NULL);
         }
 
-        gChangeLevel = curLevel;
-        gChangeActNum = 6;
+        gChangeLevel = menuLevel->level;
+        gCurrActNum = menuLevel->act;
         gDemoCountdown = 0;
-    } else if (gCurrAreaIndex != 2 && gCurrLevelNum == LEVEL_THI) {
+    } else if (gCurrAreaIndex != menuLevel->area) {
         sWarpDest.type = WARP_TYPE_CHANGE_AREA;
-        sWarpDest.areaIdx = 2;
+        sWarpDest.areaIdx = menuLevel->area;
         sWarpDest.nodeId = 0x0A;
     }
     if (gIsDemoActive) { return; }
 
-    // remove the stars
-    delete_all_objects_with_behavior(bhvStar);
-    delete_all_objects_with_behavior(bhvSpawnedStar);
-    delete_all_objects_with_behavior(bhvSpawnedStarNoLevelExit);
-    delete_all_objects_with_behavior(bhvStarSpawnCoordinates);
-    delete_all_objects_with_behavior(bhvRedCoinStarMarker);
+    // set mario's parameters depending on the current level
+    if (menuLevel->updateMarioPos) {
+        vec3f_copy(gMarioState->pos, menuLevel->marioPos);
+    }
 
-    // set mario/camera pos
-    switch (gCurrLevelNum) {
-        case LEVEL_CASTLE_GROUNDS:
-            if (gMarioState->action != ACT_INTRO_CUTSCENE && gMarioState->prevAction != ACT_INTRO_CUTSCENE) {
-                vec3f_set(gMarioState->pos, -1328, 260, 4664);
-                vec3f_set(gLakituState.curPos, -1328, 390, 6064);
-                gMarioState->faceAngle[1] = 0;
-                gLakituState.nextYaw = gMarioState->faceAngle[1] + 0x8000;
-            }
-            break;
-        case LEVEL_BOB:
-            vec3f_set(gMarioState->pos, 7008, 864, 1943);
-            vec3f_set(gLakituState.curPos, 7909, 1064, 2843);
-            gMarioState->faceAngle[1] = 0x2000;
+    if (menuLevel->updateCameraPos) {
+        vec3f_copy(gLakituState.curPos, menuLevel->cameraPos);
+    }
 
-            // delete all goombas as they interfere with the main menu
-            delete_all_objects_with_behavior(bhvGoomba);
-            break;
-        case LEVEL_WF:
-            vec3f_set(gMarioState->pos, -2904, 2560, -327);
-            vec3f_set(gLakituState.curPos, -4504, 2760, -777);
-            gMarioState->faceAngle[1] = -15536;
-            break;
-        case LEVEL_WMOTR:
-            vec3f_set(gMarioState->pos, 3548, -2738, 4663);
-            vec3f_set(gLakituState.curPos, 3548, -2438, 6063);
-            gMarioState->faceAngle[1] = 0;
-            break;
-        case LEVEL_JRB:
-            vec3f_set(gMarioState->pos, 3639, 1536, 6202);
-            vec3f_set(gLakituState.curPos, 5039, 1736, 6402);
-            break;
-        case LEVEL_SSL:
-            vec3f_set(gMarioState->pos, -2048, 256, 961);
-            vec3f_set(gLakituState.curPos, -2048, 356, 2461);
-            gMarioState->faceAngle[1] = 0;
-            break;
-        case LEVEL_TTM:
-            vec3f_set(gMarioState->pos, 2488, 1460, 2011);
-            vec3f_set(gLakituState.curPos, 3488, 1763, 3411);
-            gMarioState->faceAngle[1] = 0x1000;
-            break;
-        case LEVEL_SL:
-            vec3f_set(gMarioState->pos, 5494, 1024, 443);
-            vec3f_set(gLakituState.curPos, 6994, 1124, 443);
-            gMarioState->faceAngle[1] = 0x4000;
-            break;
-        case LEVEL_BBH:
-            vec3f_set(gMarioState->pos, 666, -204, 5303);
-            vec3f_set(gLakituState.curPos, 666, -204, 6803);
-            gMarioState->faceAngle[1] = 0;
-
-            // delete all scuttlebugs as they interfere with the main menu
-            delete_all_objects_with_behavior(bhvScuttlebug);
-            break;
-        case LEVEL_LLL:
-            vec3f_set(gMarioState->pos, -2376, 638, 956);
-            vec3f_set(gLakituState.curPos, -3576, 938, 1576);
-            gMarioState->faceAngle[1] = -0x2800;
-            break;
-        case LEVEL_THI:
-            vec3f_set(gMarioState->pos, -1010, 341, -324);
-            vec3f_set(gLakituState.curPos, -2246, 431, -324);
-            gMarioState->faceAngle[1] = -0x4000;
-
-            // delete all goombas as they interfere with the main menu
-            delete_all_objects_with_behavior(bhvGoomba);
-            break;
-        case LEVEL_HMC:
-            vec3f_set(gMarioState->pos, -3600, -4279, 3616);
-            vec3f_set(gLakituState.curPos, -6000, -2938, 600);
-            gMarioState->faceAngle[1] = -0x6000;
-            break;
-        case LEVEL_CCM:
-            vec3f_set(gMarioState->pos, -1127, -3580, 6162);
-            vec3f_set(gLakituState.curPos, -1330, -2830, 9099);
-            gMarioState->faceAngle[1] = -0x1000;
-            break;
-        case LEVEL_RR:
-            vec3f_set(gMarioState->pos, 1418, 3167, -2349);
-            vec3f_set(gLakituState.curPos, -1518, 4567, -4549);
-            gMarioState->faceAngle[1] = -0x6000;
-            break;
-        case LEVEL_BITDW:
-            vec3f_set(gMarioState->pos, -4507, 1126, -285);
-            vec3f_set(gLakituState.curPos, -2507, 2126, -285);
-            break;
-        case LEVEL_PSS:
-            vec3f_set(gMarioState->pos, -4729, -3057, -3025);
-            vec3f_set(gLakituState.curPos, -2729, -1557, -5025);
-            gMarioState->faceAngle[1] = 0x5000;
-            break;
-        case LEVEL_TTC:
-            vec3f_set(gMarioState->pos, -645, 0, -750);
-            vec3f_set(gLakituState.curPos, 2500, 570, -240);
-            gMarioState->faceAngle[1] = 0x2000;
-            break;
-        case LEVEL_WDW:
-            vec3f_set(gMarioState->pos, -2684, 3328, 3000);
-            vec3f_set(gLakituState.curPos, -4002, 4000, 4622);
-            gMarioState->faceAngle[1] = -0x1C34;
-            break;
+    if (menuLevel->updateMarioYaw) {
+        gMarioState->faceAngle[1] = menuLevel->marioYaw;
     }
 
     gMarioState->health = 0x880;
@@ -1863,7 +2019,7 @@ s32 init_level(void) {
             play_transition(WARP_TRANSITION_FADE_FROM_STAR, 0x10, 0xFF, 0xFF, 0xFF);
         }
 
-        if (gCurrDemoInput == NULL && gCurrentArea) {
+        if (gCurrDemoInput == NULL && gCurrentArea && !gDjuiInMainMenu) {
             set_background_music(gCurrentArea->musicParam, gCurrentArea->musicParam2, 0);
         }
     }

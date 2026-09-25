@@ -841,6 +841,13 @@ void play_sound(s32 soundBits, f32 *pos) {
 }
 
 void play_sound_with_freq_scale(s32 soundBits, f32* pos, f32 freqScale) {
+    // if we are the main menu, have environment sounds turned off, and the sound isn't a menu sound
+    // then do not play the sound
+    u32 soundBank = (soundBits & SOUNDARGS_MASK_BANK) >> SOUNDARGS_SHIFT_BANK;
+    if (gDjuiInMainMenu && !configMenuEnvSounds && soundBank != SOUND_BANK_MENU) {
+        return;
+    }
+
     MUTEX_LOCK(gAudioThread);
 
     pos = smlua_get_vec3f_for_play_sound(pos);
