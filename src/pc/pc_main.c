@@ -491,7 +491,11 @@ void game_deinit(void) {
 
 void game_exit(void) {
     LOG_INFO("exiting cleanly");
+
+    MUTEX_LOCK(sLoadingThread);
     sShuttingDown = true;
+    MUTEX_UNLOCK(sLoadingThread);
+
     join_thread(&sLoadingThread);
     game_deinit();
     exit(0);
@@ -529,6 +533,14 @@ void set_loading_percentage(f32 percent) {
 }
 
 void *main_game_init(UNUSED void *dummy) {
+    #define CHECK_SHUTDOWN() \
+        MUTEX_LOCK(sLoadingThread); \
+        if (sShuttingDown) { \
+            MUTEX_UNLOCK(sLoadingThread); \
+            return NULL; \
+        } \
+        MUTEX_UNLOCK(sLoadingThread);
+
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
 
@@ -539,7 +551,7 @@ void *main_game_init(UNUSED void *dummy) {
         MUTEX_UNLOCK(sLoadingThread);
     }
 
-    if (sShuttingDown) { return NULL; }
+    CHECK_SHUTDOWN()
 
     set_loading_message("Loading");
 
@@ -552,12 +564,12 @@ void *main_game_init(UNUSED void *dummy) {
 
     MUTEX_UNLOCK(sLoadingThread);
 
-    if (sShuttingDown) { return NULL; }
+    CHECK_SHUTDOWN()
 
     sync_objects_init_system();
     smlua_text_utils_init();
 
-    if (sShuttingDown) { return NULL; }
+    CHECK_SHUTDOWN()
 
     mods_init();
     enable_queued_mods();
@@ -568,13 +580,13 @@ void *main_game_init(UNUSED void *dummy) {
 
     MUTEX_UNLOCK(sLoadingThread);
 
-    if (sShuttingDown) { return NULL; }
+    CHECK_SHUTDOWN()
 
     mumble_init();
 
     set_loading_message("Finalizing");
 
-    if (sShuttingDown) { return NULL; }
+    CHECK_SHUTDOWN()
 
     MUTEX_LOCK(sLoadingThread);
 
@@ -589,6 +601,8 @@ void *main_game_init(UNUSED void *dummy) {
     sQueueGameInited = true;
 
     MUTEX_UNLOCK(sLoadingThread);
+
+    #undef CHECK_SHUTDOWN
 
     return NULL;
 }
