@@ -775,7 +775,7 @@ int main(int argc, char *argv[]) {
 
             MUTEX_UNLOCK(sLoadingThread);
 
-            if (gGameInited) {
+            if (gGameInited && sLoadingThread.state != INVALID) {
                 destroy_mutex(&sLoadingThread);
             }
         }
