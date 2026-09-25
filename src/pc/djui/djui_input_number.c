@@ -1,4 +1,5 @@
 #include "djui.h"
+#include <errno.h>
 
 static void djui_input_number_render_pre(struct DjuiBase* base, UNUSED bool* unused) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber*)base;
