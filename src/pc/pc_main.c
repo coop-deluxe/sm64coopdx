@@ -103,6 +103,7 @@ f32 gLoadingPercent = 0;
 bool gGameInited = false;
 bool gModsInited = false;
 bool gDynosPacksInited = false;
+static bool sShuttingDown = false;
 
 // for the purposes of safety while threading, use queue variables in the loading thread
 // and update the main variables in the main loop
@@ -490,6 +491,8 @@ void game_deinit(void) {
 
 void game_exit(void) {
     LOG_INFO("exiting cleanly");
+    sShuttingDown = true;
+    join_thread(&sLoadingThread);
     game_deinit();
     exit(0);
 }
@@ -536,6 +539,8 @@ void *main_game_init(UNUSED void *dummy) {
         MUTEX_UNLOCK(sLoadingThread);
     }
 
+    if (sShuttingDown) { return NULL; }
+
     set_loading_message("Loading");
 
     dynos_gfx_init();
@@ -547,9 +552,12 @@ void *main_game_init(UNUSED void *dummy) {
 
     MUTEX_UNLOCK(sLoadingThread);
 
-    sync_objects_init_system();
+    if (sShuttingDown) { return NULL; }
 
+    sync_objects_init_system();
     smlua_text_utils_init();
+
+    if (sShuttingDown) { return NULL; }
 
     mods_init();
     enable_queued_mods();
@@ -560,9 +568,13 @@ void *main_game_init(UNUSED void *dummy) {
 
     MUTEX_UNLOCK(sLoadingThread);
 
+    if (sShuttingDown) { return NULL; }
+
     mumble_init();
 
     set_loading_message("Finalizing");
+
+    if (sShuttingDown) { return NULL; }
 
     MUTEX_LOCK(sLoadingThread);
 
