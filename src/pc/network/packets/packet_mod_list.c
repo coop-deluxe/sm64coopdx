@@ -25,6 +25,7 @@ void network_send_mod_list_request(void) {
 
     network_send_to(PACKET_DESTINATION_SERVER, &p);
     LOG_INFO("sending mod list request");
+    snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "Starting");
     gAllowOrderedPacketClear = 0;
 }
 
@@ -159,6 +160,7 @@ void network_receive_mod_list(struct Packet* p) {
     }
 
     LOG_INFO("received mod list (%u):", gRemoteMods.entryCount);
+    snprintf(gDownloadStatus, DOWNLOAD_STATUS_LENGTH, "Fetching mod information");
 }
 
 void network_receive_mod_list_entry(struct Packet* p) {

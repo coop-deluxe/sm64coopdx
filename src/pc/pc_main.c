@@ -202,7 +202,7 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
     return (s32) MAX(1, numFramesNext - numFramesCurr);
 }
 
-static u32 get_display_refresh_rate(void) {
+u32 get_display_refresh_rate(void) {
     static u32 refreshRate = 0;
     if (!refreshRate) {
         SDL_DisplayMode mode;
