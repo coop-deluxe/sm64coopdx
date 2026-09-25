@@ -1312,6 +1312,10 @@ static const void* sDynosBuiltinAnims[] = {
     define_builtin_ptr(castle_grounds_seg7_anims_flags),
 };
 
+const AnimationTable *DynOS_Builtin_Anim_Table_GetFromName(const char *aDataName) {
+    MGR_FIND_DATA(sDynosBuiltinAnims, (const AnimationTable *));
+}
+
 const Animation *DynOS_Builtin_Anim_GetFromName(const char *aDataName) {
     MGR_FIND_DATA(sDynosBuiltinAnims, (const Animation *));
 }

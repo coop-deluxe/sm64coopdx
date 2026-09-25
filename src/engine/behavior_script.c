@@ -1283,17 +1283,21 @@ static s32 bhv_cmd_spawn_obj_ext(void) {
 // Command 0x40: Loads the animations for the object. <field> is always set to oAnimations.
 // Usage: LOAD_ANIMATIONS_EXT(field, anims)
 static s32 bhv_cmd_load_animations_ext(void) {
-    //u8 field = BHV_CMD_GET_2ND_U8(0);
+    BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
 
-    LOG_ERROR("LOAD_ANIMATIONS_EXT is not yet supported! Skipping behavior command.\n");
+    u8 field = BHV_CMD_GET_2ND_U8(0);
+    const char *animationTableStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
+    
+    struct AnimationTable *animationTable = dynos_animation_table_get(animationTableStr);
+    if (animationTable == NULL) {
+        LOG_ERROR("Failed to load custom animations, could not get animation table from name '%s'", animationTableStr);
+        cmd_next(3);
+        return BHV_PROC_CONTINUE;
+    }
 
-    //BehaviorScript *behavior = (BehaviorScript *)gCurrentObject->behavior;
+    cur_obj_set_vptr(field, animationTable);
 
-    //const char *animStr = dynos_behavior_get_token(behavior, BHV_CMD_GET_U32(1));
-
-    //cur_obj_set_vptr(field, BHV_CMD_GET_VPTR(1));
-
-    cmd_next(2);
+    cmd_next(3);
     return BHV_PROC_CONTINUE;
 }
 
