@@ -25,7 +25,7 @@ extern "C" {
 // Size limits
 #define DYNOS_BIN_FILE_MAX_SIZE (s32) 0x40000000 // 1 GiB
 #define DYNOS_TEX_MIN_WIDTH_HEIGHT 1
-#define DYNOS_TEX_MAX_WIDTH_HEIGHT 4096
+#define DYNOS_TEX_MAX_WIDTH_HEIGHT 16384
 
 // Pointer types
 #define PTYPE_LUAV              (1 <<  0)
@@ -922,6 +922,7 @@ void DynOS_Level_ParseScript(const void *aScript, s32 (*aPreprocessFunction)(u8,
 
 void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone);
 bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId);
 bool DynOS_Warp_ToLevel(s32 aLevel, s32 aArea, s32 aAct);
 bool DynOS_Warp_RestartLevel();
 bool DynOS_Warp_ExitLevel(s32 aDelay);

@@ -113,7 +113,7 @@ void gfx_wm_init(const char *window_title) {
     SDL_StopTextInput();
 
 #if defined(_WIN32)
-    currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : configGraphicsBackend;
+    currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : (s32) configGraphicsBackend;
 #else
     currBackend = configGraphicsBackend;
 #endif
