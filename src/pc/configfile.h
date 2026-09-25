@@ -101,7 +101,7 @@ extern bool         configBackgroundGamepad;
 extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
-extern bool         configSmoothScrolling;
+extern bool         configSmoothScroll;
 // free camera settings
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
