@@ -7,6 +7,7 @@
 #include "djui_panel_host_save.h"
 #include "djui_panel_host_message.h"
 #include "djui_panel_rules.h"
+#include "djui_panel_loading.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
@@ -66,6 +67,11 @@ static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller)
 
 extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
+    if (!gGameInited) {
+        djui_panel_loading_create(caller, djui_panel_host_do_host);
+        return;
+    }
+
     if (!djui_panel_host_port_valid()) {
         djui_interactable_set_input_focus(&sInputboxPort->base);
         djui_inputbox_select_all(sInputboxPort);
@@ -87,11 +93,6 @@ static void djui_panel_host_do_host(struct DjuiBase* caller) {
     } else {
         djui_panel_host_message_create(caller);
     }
-}
-
-static bool djui_panel_host_on_initialize(struct DjuiBase *caller) {
-    djui_base_set_enabled(caller, gGameInited);
-    return false;
 }
 
 void djui_panel_host_create(struct DjuiBase* caller) {
@@ -199,8 +200,6 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            djui_base_set_enabled(&button2->base, gGameInited);
-            djui_base_hook_on_changed(&button2->base, &gGameInited, sizeof(gGameInited), djui_panel_host_on_initialize);
 
             defaultBase = (gNetworkType == NT_SERVER)
                         ? &button1->base

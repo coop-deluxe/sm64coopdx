@@ -3,6 +3,7 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_main.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_loading.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
@@ -60,20 +61,6 @@ void djui_panel_join_message_render_pre(struct DjuiBase* base, UNUSED bool* unus
     }
 }
 
-static bool djui_panel_join_message_on_loading_text_change(struct DjuiBase *caller) {
-    struct DjuiText *text = (struct DjuiText *)caller;
-    djui_text_set_text(text, gLoadingMessage);
-    return false;
-}
-
-static bool djui_panel_join_message_on_game_init(UNUSED struct DjuiBase *caller) {
-    djui_panel_shutdown();
-    gDjuiInMainMenu = true;
-    djui_panel_main_create(NULL);
-    djui_panel_join_message_create(NULL);
-    return true;
-}
-
 void djui_panel_join_message_create(struct DjuiBase* caller) {
     // make sure main panel was created
     if (!gDjuiPanelMainCreated) { djui_panel_main_create(caller); }
@@ -81,40 +68,32 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
 
+    // if we aren't loaded, load the load panel instead
+    if (!gGameInited) {
+        djui_panel_loading_create(caller, djui_panel_join_message_create);
+        return;
+    }
+
     sPanelText = NULL;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
-        if (gGameInited) {
-            snprintf(gDownloadEstimate, 32, " ");
-            struct DjuiText* text1 = djui_text_create(body, "\n...");
-            djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&text1->base, 1.0f, 32 * 4);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
-            djui_text_set_alignment(text1, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-            text1->base.tag = 0;
-            text1->base.on_render_pre = djui_panel_join_message_render_pre;
-            sPanelText = text1;
+        snprintf(gDownloadEstimate, 32, " ");
+        struct DjuiText* text1 = djui_text_create(body, "\n...");
+        djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&text1->base, 1.0f, 32 * 4);
+        djui_base_set_color(&text1->base, 220, 220, 220, 255);
+        djui_text_set_alignment(text1, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
+        text1->base.tag = 0;
+        text1->base.on_render_pre = djui_panel_join_message_render_pre;
+        sPanelText = text1;
 
-            gDownloadProgressInf = 0;
-            djui_progress_bar_create(body, &gDownloadProgressInf, 0.0f, 1.0f, true);
+        gDownloadProgressInf = 0;
+        djui_progress_bar_create(body, &gDownloadProgressInf, 0.0f, 1.0f, true);
 
-            gDownloadProgress = 0;
-            djui_progress_bar_create(body, &gDownloadProgress, 0.0f, 1.0f, false);
-        } else {
-            struct DjuiText *loadingText = djui_text_create(body, gLoadingMessage);
-            djui_base_set_size_type(&loadingText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&loadingText->base, 1.0f, 32 * 4);
-            djui_base_set_color(&loadingText->base, 220, 220, 220, 255);
-            djui_text_set_alignment(loadingText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
-            djui_base_hook_on_changed(&loadingText->base, &gLoadingMessage, sizeof(gLoadingMessage), djui_panel_join_message_on_loading_text_change);
-            djui_base_hook_on_changed(&loadingText->base, &gGameInited, sizeof(gGameInited), djui_panel_join_message_on_game_init);
-
-            struct DjuiProgressBar *loadingProgressBar = djui_progress_bar_create(body, &gLoadingPercent, 0.0f, 1.0f, false);
-            loadingProgressBar->smoothenHigh = 0.75f;
-            loadingProgressBar->smoothenLow = 0.25f;
-        }
+        gDownloadProgress = 0;
+        djui_progress_bar_create(body, &gDownloadProgress, 0.0f, 1.0f, false);
 
         djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_join_message_cancel);
     }
