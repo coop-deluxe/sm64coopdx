@@ -20,10 +20,10 @@ static bool djui_panel_loading_on_game_init(UNUSED struct DjuiBase *caller) {
     return true;
 }
 
-static void djui_panel_loading_cancel(struct DjuiBase *caller) {
+static bool djui_panel_loading_on_back(struct DjuiBase *caller) {
     sPanelCaller = NULL;
     sCallbackFunc = NULL;
-    djui_panel_menu_back(caller);
+    return false;
 }
 
 void djui_panel_loading_create(struct DjuiBase *caller, void (*callback)(struct DjuiBase *)) {
@@ -50,8 +50,9 @@ void djui_panel_loading_create(struct DjuiBase *caller, void (*callback)(struct 
         loadingProgressBar->smoothenHigh = 0.75f;
         loadingProgressBar->smoothenLow = 0.25f;
 
-        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_loading_cancel);
+        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
     }
+    panel->on_back = djui_panel_loading_on_back;
 
     djui_panel_add(caller, panel, NULL);
 }

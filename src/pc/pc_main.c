@@ -492,9 +492,13 @@ void game_deinit(void) {
 void game_exit(void) {
     LOG_INFO("exiting cleanly");
 
-    MUTEX_LOCK(sLoadingThread);
-    sShuttingDown = true;
-    MUTEX_UNLOCK(sLoadingThread);
+    if (!gGameInited) {
+        MUTEX_LOCK(sLoadingThread);
+        sShuttingDown = true;
+        MUTEX_UNLOCK(sLoadingThread);
+    } else {
+        sShuttingDown = true;
+    }
 
     join_thread(&sLoadingThread);
     game_deinit();
