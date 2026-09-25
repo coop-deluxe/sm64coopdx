@@ -1,4 +1,5 @@
 #include <PR/ultratypes.h>
+#include <stdio.h>
 
 #include "debug_utils.h"
 #include "draw_objects.h"
@@ -15,10 +16,14 @@
 #include "renderer.h"
 #include "shape_helper.h"
 #include "skin.h"
+#include "gd_config.h"
 
-#ifndef VERSION_EU
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "data/dynos.c.h"
 #include <prevent_bss_reordering.h>
-#endif
 
 // data
 struct ObjGroup *gMarioFaceGrp = NULL;     // @ 801A82E0; returned by load_dynlist
@@ -28,39 +33,544 @@ struct ObjShape *gShapeRedSpark = NULL;    // @ 801A82EC
 struct ObjShape *gShapeSilverSpark = NULL;    // @ 801A82F0
 struct ObjShape *gShapeRedStar = NULL;     // @ 801A82F4
 struct ObjShape *gShapeSilverStar = NULL;  // @ 801A82F8
+
+// Skin weight entry for GDB2 format
+struct GdSkinWeightEntry {
+    u16 vtx_idx;
+    f32 weight;
+};
+
+// Joint skin weight data for GDB2
+struct GdJointSkinData {
+    u32 joint_id;
+    u32 weight_count;
+    struct GdSkinWeightEntry *weights;
+};
+
+static struct {
+    bool initialized;
+
+    // Original (vanilla) pointers so we can restore if pack is disabled
+    s16 (*orig_face_vtx)[3];
+    u16 (*orig_face_tri)[4];
+    u32 orig_face_vtx_count;
+    u32 orig_face_tri_count;
+    s16 (*orig_eye_r_vtx)[3];
+    u16 (*orig_eye_r_tri)[4];
+    u32 orig_eye_r_vtx_count;
+    u32 orig_eye_r_tri_count;
+    s16 (*orig_eye_l_vtx)[3];
+    u16 (*orig_eye_l_tri)[4];
+    u32 orig_eye_l_vtx_count;
+    u32 orig_eye_l_tri_count;
+    s16 (*orig_brow_r_vtx)[3];
+    u16 (*orig_brow_r_tri)[4];
+    u32 orig_brow_r_vtx_count;
+    u32 orig_brow_r_tri_count;
+    s16 (*orig_brow_l_vtx)[3];
+    u16 (*orig_brow_l_tri)[4];
+    u32 orig_brow_l_vtx_count;
+    u32 orig_brow_l_tri_count;
+    s16 (*orig_stache_vtx)[3];
+    u16 (*orig_stache_tri)[4];
+    u32 orig_stache_vtx_count;
+    u32 orig_stache_tri_count;
+
+    // Allocated override arrays
+    s16 (*ov_face_vtx)[3];
+    u16 (*ov_face_tri)[4];
+    u32 ov_face_vtx_count;
+    u32 ov_face_tri_count;
+    s16 (*ov_eye_r_vtx)[3];
+    u16 (*ov_eye_r_tri)[4];
+    u32 ov_eye_r_vtx_count;
+    u32 ov_eye_r_tri_count;
+    s16 (*ov_eye_l_vtx)[3];
+    u16 (*ov_eye_l_tri)[4];
+    u32 ov_eye_l_vtx_count;
+    u32 ov_eye_l_tri_count;
+    s16 (*ov_brow_r_vtx)[3];
+    u16 (*ov_brow_r_tri)[4];
+    u32 ov_brow_r_vtx_count;
+    u32 ov_brow_r_tri_count;
+    s16 (*ov_brow_l_vtx)[3];
+    u16 (*ov_brow_l_tri)[4];
+    u32 ov_brow_l_vtx_count;
+    u32 ov_brow_l_tri_count;
+    s16 (*ov_stache_vtx)[3];
+    u16 (*ov_stache_tri)[4];
+    u32 ov_stache_vtx_count;
+    u32 ov_stache_tri_count;
+
+    // GDB2: Skin weight data (allows variable poly counts)
+    bool has_skin_weights;
+    u32 joint_skin_count;
+    struct GdJointSkinData *joint_skins;
+
+    const u8* last_data;
+    s32 last_size;
+} sGoddardOverride;
+
+static u16 gd_read_u16_le(const u8* p) {
+    return (u16) (p[0] | (p[1] << 8));
+}
+
+static s16 gd_read_s16_le(const u8* p) {
+    return (s16) gd_read_u16_le(p);
+}
+
+static u32 gd_read_u32_le(const u8* p) {
+    return ((u32)p[0]) | ((u32)p[1] << 8) | ((u32)p[2] << 16) | ((u32)p[3] << 24);
+}
+
+static void gd_goddard_capture_originals(void) {
+    if (sGoddardOverride.initialized) {
+        return;
+    }
+
+    sGoddardOverride.orig_face_vtx = mario_Face_VtxInfo.data;
+    sGoddardOverride.orig_face_tri = mario_Face_FaceInfo.data;
+    sGoddardOverride.orig_face_vtx_count = mario_Face_VtxInfo.count;
+    sGoddardOverride.orig_face_tri_count = mario_Face_FaceInfo.count;
+    sGoddardOverride.orig_eye_r_vtx = vtx_mario_eye_right.data;
+    sGoddardOverride.orig_eye_r_tri = faces_mario_eye_right.data;
+    sGoddardOverride.orig_eye_r_vtx_count = vtx_mario_eye_right.count;
+    sGoddardOverride.orig_eye_r_tri_count = faces_mario_eye_right.count;
+    sGoddardOverride.orig_eye_l_vtx = vtx_mario_eye_left.data;
+    sGoddardOverride.orig_eye_l_tri = faces_mario_eye_left.data;
+    sGoddardOverride.orig_eye_l_vtx_count = vtx_mario_eye_left.count;
+    sGoddardOverride.orig_eye_l_tri_count = faces_mario_eye_left.count;
+    sGoddardOverride.orig_brow_r_vtx = vtx_mario_eyebrow_right.data;
+    sGoddardOverride.orig_brow_r_tri = faces_mario_eyebrow_right.data;
+    sGoddardOverride.orig_brow_r_vtx_count = vtx_mario_eyebrow_right.count;
+    sGoddardOverride.orig_brow_r_tri_count = faces_mario_eyebrow_right.count;
+    sGoddardOverride.orig_brow_l_vtx = vtx_mario_eyebrow_left.data;
+    sGoddardOverride.orig_brow_l_tri = faces_mario_eyebrow_left.data;
+    sGoddardOverride.orig_brow_l_vtx_count = vtx_mario_eyebrow_left.count;
+    sGoddardOverride.orig_brow_l_tri_count = faces_mario_eyebrow_left.count;
+    sGoddardOverride.orig_stache_vtx = vtx_mario_mustache.data;
+    sGoddardOverride.orig_stache_tri = faces_mario_mustache.data;
+    sGoddardOverride.orig_stache_vtx_count = vtx_mario_mustache.count;
+    sGoddardOverride.orig_stache_tri_count = faces_mario_mustache.count;
+
+    sGoddardOverride.initialized = true;
+}
+
+static void gd_goddard_free_skin_weights(void) {
+    if (sGoddardOverride.joint_skins != NULL) {
+        for (u32 i = 0; i < sGoddardOverride.joint_skin_count; i++) {
+            free(sGoddardOverride.joint_skins[i].weights);
+        }
+        free(sGoddardOverride.joint_skins);
+        sGoddardOverride.joint_skins = NULL;
+    }
+    sGoddardOverride.joint_skin_count = 0;
+    sGoddardOverride.has_skin_weights = false;
+}
+
+static void gd_goddard_free_override_arrays(void) {
+    free(sGoddardOverride.ov_face_vtx);   sGoddardOverride.ov_face_vtx = NULL;
+    free(sGoddardOverride.ov_face_tri);   sGoddardOverride.ov_face_tri = NULL;
+    free(sGoddardOverride.ov_eye_r_vtx);  sGoddardOverride.ov_eye_r_vtx = NULL;
+    free(sGoddardOverride.ov_eye_r_tri);  sGoddardOverride.ov_eye_r_tri = NULL;
+    free(sGoddardOverride.ov_eye_l_vtx);  sGoddardOverride.ov_eye_l_vtx = NULL;
+    free(sGoddardOverride.ov_eye_l_tri);  sGoddardOverride.ov_eye_l_tri = NULL;
+    free(sGoddardOverride.ov_brow_r_vtx); sGoddardOverride.ov_brow_r_vtx = NULL;
+    free(sGoddardOverride.ov_brow_r_tri); sGoddardOverride.ov_brow_r_tri = NULL;
+    free(sGoddardOverride.ov_brow_l_vtx); sGoddardOverride.ov_brow_l_vtx = NULL;
+    free(sGoddardOverride.ov_brow_l_tri); sGoddardOverride.ov_brow_l_tri = NULL;
+    free(sGoddardOverride.ov_stache_vtx); sGoddardOverride.ov_stache_vtx = NULL;
+    free(sGoddardOverride.ov_stache_tri); sGoddardOverride.ov_stache_tri = NULL;
+    gd_goddard_free_skin_weights();
+}
+
+static void gd_goddard_restore_vanilla(void) {
+    gd_goddard_capture_originals();
+    mario_Face_VtxInfo.data = sGoddardOverride.orig_face_vtx;
+    mario_Face_FaceInfo.data = sGoddardOverride.orig_face_tri;
+    mario_Face_VtxInfo.count = sGoddardOverride.orig_face_vtx_count;
+    mario_Face_FaceInfo.count = sGoddardOverride.orig_face_tri_count;
+    vtx_mario_eye_right.data = sGoddardOverride.orig_eye_r_vtx;
+    faces_mario_eye_right.data = sGoddardOverride.orig_eye_r_tri;
+    vtx_mario_eye_right.count = sGoddardOverride.orig_eye_r_vtx_count;
+    faces_mario_eye_right.count = sGoddardOverride.orig_eye_r_tri_count;
+    vtx_mario_eye_left.data = sGoddardOverride.orig_eye_l_vtx;
+    faces_mario_eye_left.data = sGoddardOverride.orig_eye_l_tri;
+    vtx_mario_eye_left.count = sGoddardOverride.orig_eye_l_vtx_count;
+    faces_mario_eye_left.count = sGoddardOverride.orig_eye_l_tri_count;
+    vtx_mario_eyebrow_right.data = sGoddardOverride.orig_brow_r_vtx;
+    faces_mario_eyebrow_right.data = sGoddardOverride.orig_brow_r_tri;
+    vtx_mario_eyebrow_right.count = sGoddardOverride.orig_brow_r_vtx_count;
+    faces_mario_eyebrow_right.count = sGoddardOverride.orig_brow_r_tri_count;
+    vtx_mario_eyebrow_left.data = sGoddardOverride.orig_brow_l_vtx;
+    faces_mario_eyebrow_left.data = sGoddardOverride.orig_brow_l_tri;
+    vtx_mario_eyebrow_left.count = sGoddardOverride.orig_brow_l_vtx_count;
+    faces_mario_eyebrow_left.count = sGoddardOverride.orig_brow_l_tri_count;
+    vtx_mario_mustache.data = sGoddardOverride.orig_stache_vtx;
+    faces_mario_mustache.data = sGoddardOverride.orig_stache_tri;
+    vtx_mario_mustache.count = sGoddardOverride.orig_stache_vtx_count;
+    faces_mario_mustache.count = sGoddardOverride.orig_stache_tri_count;
+}
+
+static bool gd_goddard_read_mesh(const u8** io_ptr, const u8* end, s16 (**out_vtx)[3], u32* out_vtx_count, u16 (**out_tri)[4], u32* out_tri_count) {
+    const u8* p = *io_ptr;
+    if (p + 8 > end) {
+        return false;
+    }
+
+    u32 vtx_count = gd_read_u32_le(p + 0);
+    u32 tri_count = gd_read_u32_le(p + 4);
+    p += 8;
+
+    if (vtx_count == 0 || tri_count == 0) {
+        return false;
+    }
+
+    if (vtx_count > 65535 || tri_count > 65535) {
+        return false;
+    }
+
+    /* vtx_count and tri_count are already clamped to 65535 above, so
+     * these SIZE_MAX checks are redundant and trigger false-positive
+     * compiler warnings on some platforms. Remove them. */
+
+    size_t vtx_bytes = (size_t) vtx_count * sizeof(s16) * 3;
+    size_t tri_bytes = (size_t) tri_count * sizeof(u16) * 4;
+    if (p + vtx_bytes + tri_bytes > end) {
+        return false;
+    }
+
+    s16 (*vtx)[3] = (s16 (*)[3]) malloc(vtx_bytes);
+    u16 (*tri)[4] = (u16 (*)[4]) malloc(tri_bytes);
+    if (!vtx || !tri) {
+        free(vtx);
+        free(tri);
+        return false;
+    }
+
+    u32 i = 0;
+    u32 j = 0;
+    for (i = 0; i < vtx_count; i++) {
+        for (j = 0; j < 3; j++) {
+            vtx[i][j] = gd_read_s16_le(p);
+            p += 2;
+        }
+    }
+
+    for (i = 0; i < tri_count; i++) {
+        for (j = 0; j < 4; j++) {
+            tri[i][j] = gd_read_u16_le(p);
+            p += 2;
+        }
+    }
+
+    // Validate triangle vertex indices so we never crash later.
+    for (i = 0; i < tri_count; i++) {
+        if (tri[i][1] >= vtx_count || tri[i][2] >= vtx_count || tri[i][3] >= vtx_count) {
+            free(vtx);
+            free(tri);
+            return false;
+        }
+    }
+
+    *out_vtx = vtx;
+    *out_tri = tri;
+    *out_vtx_count = vtx_count;
+    *out_tri_count = tri_count;
+    *io_ptr = p;
+    return true;
+}
+
+static bool gd_goddard_read_skin_weights(const u8** io_ptr, const u8* end) {
+    const u8* p = *io_ptr;
+    
+    if (p + 4 > end) return false;
+    u32 joint_count = gd_read_u32_le(p);
+    p += 4;
+    
+    if (joint_count == 0 || joint_count > 256) return false;
+    
+    struct GdJointSkinData *joints = (struct GdJointSkinData*) calloc(joint_count, sizeof(struct GdJointSkinData));
+    if (!joints) return false;
+    
+    for (u32 i = 0; i < joint_count; i++) {
+        if (p + 8 > end) {
+            for (u32 j = 0; j < i; j++) free(joints[j].weights);
+            free(joints);
+            return false;
+        }
+        
+        joints[i].joint_id = gd_read_u32_le(p);
+        joints[i].weight_count = gd_read_u32_le(p + 4);
+        p += 8;
+        
+        if (joints[i].weight_count == 0 || joints[i].weight_count > 65535) {
+            for (u32 j = 0; j < i; j++) free(joints[j].weights);
+            free(joints);
+            return false;
+        }
+        
+        size_t weights_size = joints[i].weight_count * sizeof(struct GdSkinWeightEntry);
+        joints[i].weights = (struct GdSkinWeightEntry*) malloc(weights_size);
+        if (!joints[i].weights) {
+            for (u32 j = 0; j < i; j++) free(joints[j].weights);
+            free(joints);
+            return false;
+        }
+        
+        size_t raw_size = (size_t)joints[i].weight_count * 6;
+        if (p + raw_size > end) {
+            for (u32 j = 0; j <= i; j++) free(joints[j].weights);
+            free(joints);
+            return false;
+        }
+        
+        for (u32 w = 0; w < joints[i].weight_count; w++) {
+            joints[i].weights[w].vtx_idx = gd_read_u16_le(p);
+            p += 2;
+            u32 weight_raw = gd_read_u32_le(p);
+            p += 4;
+            memcpy(&joints[i].weights[w].weight, &weight_raw, sizeof(f32));
+        }
+    }
+    
+    sGoddardOverride.joint_skins = joints;
+    sGoddardOverride.joint_skin_count = joint_count;
+    sGoddardOverride.has_skin_weights = true;
+    *io_ptr = p;
+    return true;
+}
+
+static void gd_goddard_apply_override_if_present(void) {
+    gd_goddard_capture_originals();
+
+    const u8* data = dynos_goddard_get_data();
+    s32 size = dynos_goddard_get_size();
+    if (!data || size < 12) {
+        gd_goddard_free_override_arrays();
+        gd_goddard_restore_vanilla();
+        sGoddardOverride.last_data = NULL;
+        sGoddardOverride.last_size = 0;
+        return;
+    }
+
+    if (sGoddardOverride.last_data == data && sGoddardOverride.last_size == size && sGoddardOverride.ov_face_vtx != NULL) {
+        return;
+    }
+
+    gd_goddard_free_override_arrays();
+    gd_goddard_restore_vanilla();
+
+    bool is_gdb1 = (memcmp(data, "GDB1", 4) == 0);
+    bool is_gdb2 = (memcmp(data, "GDB2", 4) == 0);
+    
+    if (!is_gdb1 && !is_gdb2) {
+        return;
+    }
+    
+    u32 version = gd_read_u32_le(data + 4);
+    if (is_gdb1 && version != 1) return;
+    if (is_gdb2 && version != 2) return;
+
+    const u8* p = data + 12;
+    const u8* end = data + size;
+
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_face_vtx, &sGoddardOverride.ov_face_vtx_count, &sGoddardOverride.ov_face_tri, &sGoddardOverride.ov_face_tri_count)) goto failed;
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_eye_r_vtx, &sGoddardOverride.ov_eye_r_vtx_count, &sGoddardOverride.ov_eye_r_tri, &sGoddardOverride.ov_eye_r_tri_count)) goto failed;
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_eye_l_vtx, &sGoddardOverride.ov_eye_l_vtx_count, &sGoddardOverride.ov_eye_l_tri, &sGoddardOverride.ov_eye_l_tri_count)) goto failed;
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_brow_r_vtx, &sGoddardOverride.ov_brow_r_vtx_count, &sGoddardOverride.ov_brow_r_tri, &sGoddardOverride.ov_brow_r_tri_count)) goto failed;
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_brow_l_vtx, &sGoddardOverride.ov_brow_l_vtx_count, &sGoddardOverride.ov_brow_l_tri, &sGoddardOverride.ov_brow_l_tri_count)) goto failed;
+    if (!gd_goddard_read_mesh(&p, end, &sGoddardOverride.ov_stache_vtx, &sGoddardOverride.ov_stache_vtx_count, &sGoddardOverride.ov_stache_tri, &sGoddardOverride.ov_stache_tri_count)) goto failed;
+
+    if (is_gdb2) {
+        if (!gd_goddard_read_skin_weights(&p, end)) goto failed;
+    }
+
+    if (is_gdb1) {
+        if ((u32) sGoddardOverride.orig_face_vtx_count   != sGoddardOverride.ov_face_vtx_count)   goto failed;
+        if ((u32) sGoddardOverride.orig_eye_r_vtx_count  != sGoddardOverride.ov_eye_r_vtx_count)  goto failed;
+        if ((u32) sGoddardOverride.orig_eye_l_vtx_count  != sGoddardOverride.ov_eye_l_vtx_count)  goto failed;
+        if ((u32) sGoddardOverride.orig_brow_r_vtx_count != sGoddardOverride.ov_brow_r_vtx_count) goto failed;
+        if ((u32) sGoddardOverride.orig_brow_l_vtx_count != sGoddardOverride.ov_brow_l_vtx_count) goto failed;
+        if ((u32) sGoddardOverride.orig_stache_vtx_count != sGoddardOverride.ov_stache_vtx_count) goto failed;
+    }
+
+    mario_Face_VtxInfo.data = sGoddardOverride.ov_face_vtx;
+    mario_Face_FaceInfo.data = sGoddardOverride.ov_face_tri;
+    mario_Face_VtxInfo.count = sGoddardOverride.ov_face_vtx_count;
+    mario_Face_FaceInfo.count = sGoddardOverride.ov_face_tri_count;
+    vtx_mario_eye_right.data = sGoddardOverride.ov_eye_r_vtx;
+    faces_mario_eye_right.data = sGoddardOverride.ov_eye_r_tri;
+    vtx_mario_eye_right.count = sGoddardOverride.ov_eye_r_vtx_count;
+    faces_mario_eye_right.count = sGoddardOverride.ov_eye_r_tri_count;
+    vtx_mario_eye_left.data = sGoddardOverride.ov_eye_l_vtx;
+    faces_mario_eye_left.data = sGoddardOverride.ov_eye_l_tri;
+    vtx_mario_eye_left.count = sGoddardOverride.ov_eye_l_vtx_count;
+    faces_mario_eye_left.count = sGoddardOverride.ov_eye_l_tri_count;
+    vtx_mario_eyebrow_right.data = sGoddardOverride.ov_brow_r_vtx;
+    faces_mario_eyebrow_right.data = sGoddardOverride.ov_brow_r_tri;
+    vtx_mario_eyebrow_right.count = sGoddardOverride.ov_brow_r_vtx_count;
+    faces_mario_eyebrow_right.count = sGoddardOverride.ov_brow_r_tri_count;
+    vtx_mario_eyebrow_left.data = sGoddardOverride.ov_brow_l_vtx;
+    faces_mario_eyebrow_left.data = sGoddardOverride.ov_brow_l_tri;
+    vtx_mario_eyebrow_left.count = sGoddardOverride.ov_brow_l_vtx_count;
+    faces_mario_eyebrow_left.count = sGoddardOverride.ov_brow_l_tri_count;
+    vtx_mario_mustache.data = sGoddardOverride.ov_stache_vtx;
+    faces_mario_mustache.data = sGoddardOverride.ov_stache_tri;
+    vtx_mario_mustache.count = sGoddardOverride.ov_stache_vtx_count;
+    faces_mario_mustache.count = sGoddardOverride.ov_stache_tri_count;
+
+    sGoddardOverride.last_data = data;
+    sGoddardOverride.last_size = size;
+    
+    if (is_gdb2 && sGoddardOverride.has_skin_weights) {
+        printf("[DynOS] Goddard: loaded GDB2 with %d joint skin weight groups\n", sGoddardOverride.joint_skin_count);
+    }
+    return;
+
+failed:
+    gd_goddard_free_override_arrays();
+    gd_goddard_restore_vanilla();
+    sGoddardOverride.last_data = NULL;
+    sGoddardOverride.last_size = 0;
+}
+
+/**
+ * Apply GDB2 skin weights to joint objects.
+ * This must be called after the Mario head dynlist is processed.
+ */
+static void gd_apply_gdb2_skin_weights(void) {
+    if (!sGoddardOverride.has_skin_weights) return;
+    
+    u32 skinVtxCount = mario_Face_VtxInfo.count;
+    u32 skippedWeights = 0;
+
+    for (u32 i = 0; i < sGoddardOverride.joint_skin_count; i++) {
+        u32 joint_id = sGoddardOverride.joint_skins[i].joint_id;
+        
+        // Build the joint object name (format: "N<id>l")
+        char joint_name[16];
+        snprintf(joint_name, sizeof(joint_name), "N%ul", joint_id);
+        
+        // Try to find the joint object
+        struct GdObj *obj = d_use_obj(joint_name);
+        if (obj == NULL || obj->type != OBJ_TYPE_JOINTS) {
+            continue;
+        }
+        
+        struct ObjJoint *joint = (struct ObjJoint *)obj;
+        
+        // Clear existing weights on this joint
+        if (joint->weightGrp != NULL) {
+            joint->weightGrp->firstMember = NULL;
+            joint->weightGrp->lastMember = NULL;
+            joint->weightGrp->memberCount = 0;
+        }
+        
+        // Apply GDB2 weights to this joint
+        for (u32 w = 0; w < sGoddardOverride.joint_skins[i].weight_count; w++) {
+            u16 vtx_idx = sGoddardOverride.joint_skins[i].weights[w].vtx_idx;
+            f32 weight = sGoddardOverride.joint_skins[i].weights[w].weight;
+            if (vtx_idx >= skinVtxCount) {
+                skippedWeights++;
+                continue;
+            }
+            set_skin_weight(joint, vtx_idx, NULL, weight / 100.0f);
+        }
+    }
+
+    printf("[DynOS] Applied GDB2 skin weights to %d joints\n", sGoddardOverride.joint_skin_count);
+    if (skippedWeights > 0) {
+        printf("[DynOS] Goddard: skipped %d skin weights with out-of-range vertex IDs (%d vertices)\n", skippedWeights, skinVtxCount);
+    }
+}
+
+// Not sure what this data is, but it looks like stub animation data
+
+static struct GdAnimTransform unusedAnimData1[] = {
+    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
+};
+
+static struct AnimDataInfo unusedAnim1 = { ARRAY_COUNT(unusedAnimData1), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData1 };
+
+static struct GdAnimTransform unusedAnimData2[] = {
+    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
+};
+
+static struct AnimDataInfo unusedAnim2 = { ARRAY_COUNT(unusedAnimData2), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData2 };
+
+static struct GdAnimTransform unusedAnimData3[] = {
+    { {1.0, 1.0, 1.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0} },
+};
+
+static struct AnimDataInfo unusedAnim3 = { ARRAY_COUNT(unusedAnimData3), GD_ANIM_SCALE3F_ROT3F_POS3F_2, unusedAnimData3 };
+
+static s32 sUnref801A838C[6] = { 0 };
 struct ObjShape *sSimpleShape = NULL;
+static s32 sUnref801A83A8[31] = { 0 };
+static struct DynList sSimpleDylist[8] = {  // unused
+    BeginList(),
+    StartGroup("simpleg"),
+    MakeDynObj(D_NET, "simple"),
+    SetType(3),
+    SetShapePtrPtr(&sSimpleShape),
+    EndGroup("simpleg"),
+    UseObj("simpleg"),
+    EndList(),
+};
+static struct DynList sDynlist801A84E4[3] = {
+    BeginList(),
+    SetFlag(0x1800),
+    EndList(),
+};
+static struct DynList sDynlist801A85B3[5] = {
+    BeginList(), CallList(sDynlist801A84E4), SetFlag(0x400), SetFriction(0.04, 0.01, 0.01),
+    EndList(),
+};
+static struct DynList sDynlist801A85A4[4] = {
+    BeginList(),
+    CallList(sDynlist801A84E4),
+    SetFriction(0.04, 0.01, 0.01),
+    EndList(),
+};
+static struct DynList sDynlist801A8604[4] = {
+    BeginList(),
+    CallList(sDynlist801A84E4),
+    SetFriction(0.005, 0.005, 0.005),
+    EndList(),
+};
 static f64 D_801A8668 = 0.0;
 
 // bss
-UNUSED static u8 sUnrefSpaceB00[0x2C];           // @ 801BAB00
+static u8 sUnrefSpaceB00[0x2C];           // @ 801BAB00
 static struct ObjGroup *sCubeShapeGroup;  // @ 801BAB2C
-UNUSED static u8 sUnrefSpaceB30[0xC];            // @ 801BAB30
+static u8 sUnrefSpaceB30[0xC];            // @ 801BAB30
 static struct ObjShape *sCubeShape;       // @ 801BAB3C
-UNUSED static u8 sUnrefSpaceB40[0x8];            // @ 801BAB40
+static u8 sUnrefSpaceB40[0x8];            // @ 801BAB40
 static char sGdLineBuf[0x100];            // @ 801BAB48
 static s32 sGdLineBufCsr;                 // @ 801BAC48
 static struct GdFile *sGdShapeFile;       // @ 801BAC4C
 static struct ObjShape *sGdShapeListHead; // @ 801BAC50
 static u32 sGdShapeCount;                 // @ 801BAC54
-UNUSED static u8 sUnrefSpaceC58[0x8];            // @ 801BAC58
+static u8 sUnrefSpaceC58[0x8];            // @ 801BAC58
 static struct GdVec3f D_801BAC60;
-UNUSED static u32 sUnrefSpaceC6C; // @ 801BAC6C
-UNUSED static u32 sUnrefSpaceC70; // @ 801BAC70
+static u32 sUnrefSpaceC6C; // @ 801BAC6C
+static u32 sUnrefSpaceC70; // @ 801BAC70
 static struct ObjPlane *D_801BAC74;
 static struct ObjPlane *D_801BAC78; // sShapeNetHead?
-UNUSED static u8 sUnrefSpaceC80[0x1C];     // @ 801BAC80
+static u8 sUnrefSpaceC80[0x1C];     // @ 801BAC80
 static struct ObjFace *D_801BAC9C;
 static struct ObjFace *D_801BACA0;
-UNUSED static u8 sUnrefSpaceCA8[0x10]; // @ 801BACA8
+static u8 sUnrefSpaceCA8[0x10]; // @ 801BACA8
 /// factor for scaling vertices in an `ObjShape` when calling `scale_verts_in_shape()`
 static struct GdVec3f sVertexScaleFactor;
 /// factor for translating vertices in an `ObjShape` when calling `translate_verts_in_shape()`
 static struct GdVec3f sVertexTranslateOffset;
-UNUSED static u8 sUnrefSpaceCD8[0x30];     // @ 801BACD8
+static u8 sUnrefSpaceCD8[0x30];     // @ 801BACD8
 static struct ObjGroup *D_801BAD08; // group of planes from make_netfromshape
-UNUSED static u8 sUnrefSpaceD10[0x20];     // @ 801BAD10
+static u8 sUnrefSpaceD10[0x20];     // @ 801BAD10
 static struct GdVec3f sShapeCenter;   // printed with "c="
-UNUSED static u8 sUnrefSpaceD40[0x120];    // @ 801BAD40
+static u8 sUnrefSpaceD40[0x120];    // @ 801BAD40
 
 // Forward Declarations
 struct ObjMaterial *find_or_add_new_mtl(struct ObjGroup *, s32, f32, f32, f32);
@@ -569,8 +1079,8 @@ void get_3DG1_shape(struct ObjShape *shape) {
     shape->mtlGroup = make_group(0);
     imin("get_3DG1_shape");
 
-    vtxPtrArr = gd_malloc_perm(72000 * sizeof(struct ObjVertex *)); // 288,000 = 72,000 * 4
-    facePtrArr = gd_malloc_perm(76000 * sizeof(struct ObjFace *));  // 304,000 = 76,000 * 4
+    vtxPtrArr = gd_malloc_perm(GD_CFG_MAX_SHAPE_VERTICES * sizeof(struct ObjVertex *));
+    facePtrArr = gd_malloc_perm(GD_CFG_MAX_SHAPE_FACES * sizeof(struct ObjFace *));
 
     tempNormal.x = 0.0f;
     tempNormal.y = 0.0f;
@@ -595,7 +1105,7 @@ void get_3DG1_shape(struct ObjShape *shape) {
         func_8019807C(vtxPtrArr[vtxCount]);
         vtxCount++;
 
-        if (vtxCount >= 4000) {
+        if (vtxCount >= GD_CFG_MAX_SHAPE_VERTICES) {
             fatal_printf("Too many vertices in shape data");
         }
 
@@ -621,7 +1131,7 @@ void get_3DG1_shape(struct ObjShape *shape) {
 
         facePtrArr[faceCount] = newFace;
         faceCount++;
-        if (faceCount >= 4000) {
+        if (faceCount >= GD_CFG_MAX_SHAPE_FACES) {
             fatal_printf("Too many faces in shape data");
         }
 
@@ -675,8 +1185,8 @@ void get_OBJ_shape(struct ObjShape *shape) {
     s32 faceVtxIndex;
     struct GdVec3f tempVec;
     struct ObjFace *newFace;
-    struct ObjVertex *vtxArr[4000] = { 0 };
-    struct ObjFace *faceArr[4000] = { 0 };
+    struct ObjVertex **vtxArr = gd_malloc_perm(GD_CFG_MAX_SHAPE_VERTICES * sizeof(struct ObjVertex *));
+    struct ObjFace **faceArr = gd_malloc_perm(GD_CFG_MAX_SHAPE_FACES * sizeof(struct ObjFace *));
     s32 faceCount = 0;
     s32 vtxCount = 0;
 
@@ -697,7 +1207,7 @@ void get_OBJ_shape(struct ObjShape *shape) {
                 func_8019807C(vtxArr[vtxCount]);
                 vtxCount++;
 
-                if (vtxCount >= 4000) {
+                if (vtxCount >= GD_CFG_MAX_SHAPE_VERTICES) {
                     fatal_printf("Too many vertices in shape data");
                 }
 
@@ -709,7 +1219,7 @@ void get_OBJ_shape(struct ObjShape *shape) {
                 faceArr[faceCount] = newFace;
                 faceCount++;
 
-                if (faceCount >= 4000) {
+                if (faceCount >= GD_CFG_MAX_SHAPE_FACES) {
                     fatal_printf("Too many faces in shape data");
                 }
 
@@ -759,6 +1269,9 @@ void get_OBJ_shape(struct ObjShape *shape) {
 
     shape->vtxGroup = make_group_of_type(OBJ_TYPE_VERTICES, (struct GdObj *) vtxArr[0], NULL);
     shape->faceGroup = make_group_of_type(OBJ_TYPE_FACES, (struct GdObj *) faceArr[0], NULL);
+
+    gd_free(vtxArr);
+    gd_free(faceArr);
 }
 
 /* @ 247760 for 0x124; orig name: func_80198F90 */
@@ -1270,6 +1783,8 @@ s32 load_mario_head(void (*aniFn)(struct ObjAnimator *)) {
     animator = (struct ObjAnimator *) d_makeobj(D_ANIMATOR, AsDynName(DYNOBJ_MARIO_MAIN_ANIMATOR));
     animator->controlFunc = aniFn;
     d_use_integer_names(FALSE);
+    // Apply DynOS Goddard geometry override (if enabled)
+    gd_goddard_apply_override_if_present();
     // FIXME: make segment address work once seg4 is disassembled
     gMarioFaceGrp = (struct ObjGroup *) load_dynlist(dynlist_mario_master);
     stop_memtracker("mario face");
@@ -1414,6 +1929,9 @@ s32 load_mario_head(void (*aniFn)(struct ObjAnimator *)) {
     sp54->netType = 3;
     addto_group(gMarioFaceGrp, &sp48->header);
     addto_groupfirst(gMarioFaceGrp, &sp54->header);
+
+    // Apply GDB2 skin weights if available (for high-poly DynOS models)
+    gd_apply_gdb2_skin_weights();
 
     return 0;
 }
