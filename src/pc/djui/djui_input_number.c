@@ -58,7 +58,7 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
     input->bufferSize = *input->buffer == '-' ? 12 : 11;
 
     errno = 0; int value = strtol(number->input.buffer, NULL, 10);
-    number->valid = errno != ERANGE && value >= number->min && value <= number->max;
+    number->valid = *input->buffer != '\0' && errno != ERANGE && value >= number->min && value <= number->max;
 
     if (number->valid) {
         struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;
