@@ -58,9 +58,11 @@ void djui_base_set_location_type(struct DjuiBase* base, enum DjuiScreenValueType
 void djui_base_set_size(struct DjuiBase* base, f32 width, f32 height);
 void djui_base_set_size_type(struct DjuiBase* base, enum DjuiScreenValueType widthType, enum DjuiScreenValueType heightType);
 void djui_base_set_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
+void djui_base_set_color_with_color(struct DjuiBase* base, struct DjuiColor color);
 void djui_base_set_border_width(struct DjuiBase* base, f32 width);
 void djui_base_set_border_width_type(struct DjuiBase* base, enum DjuiScreenValueType widthType);
 void djui_base_set_border_color(struct DjuiBase* base, u8 r, u8 g, u8 b, u8 a);
+void djui_base_set_border_color_with_color(struct DjuiBase* base, struct DjuiColor color);
 void djui_base_set_padding(struct DjuiBase* base, f32 top, f32 right, f32 bottom, f32 left);
 void djui_base_set_padding_type(struct DjuiBase* base, enum DjuiScreenValueType topType, enum DjuiScreenValueType rightType, enum DjuiScreenValueType bottomType, enum DjuiScreenValueType leftType);
 void djui_base_set_alignment(struct DjuiBase* base, enum DjuiHAlign hAlign, enum DjuiVAlign vAlign);

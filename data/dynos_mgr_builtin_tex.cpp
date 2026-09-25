@@ -1169,9 +1169,11 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(texture_font_normal, "textures/custom_font/custom_font_normal.rgba32.png", 256, 128, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_aliased, "textures/custom_font/custom_font_aliased.rgba32.png", 512, 256, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_title, "textures/custom_font/custom_font_title.rgba32.png", 1024, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b),
+    define_builtin_tex(texture_font_title_dark, "textures/custom_font/custom_font_title_dark.rgba32.png", 1024, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_hud, "textures/custom_font/custom_font_hud.rgba32.png", 512, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_hud_recolor, "textures/custom_font/custom_font_hud_recolor.rgba32.png", 512, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_special, "textures/custom_font/custom_font_special.rgba32.png", 512, 512, G_IM_FMT_RGBA, G_IM_SIZ_32b),
+    define_builtin_tex(texture_font_classic, "textures/custom_font/custom_font_classic.rgba32.png", 512, 256, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_jp, "textures/custom_font/custom_font_jp.rgba32.png", 512, 1024, G_IM_FMT_RGBA, G_IM_SIZ_32b),
     define_builtin_tex(texture_font_jp_aliased, "textures/custom_font/custom_font_jp_aliased.rgba32.png", 1024, 2048, G_IM_FMT_RGBA, G_IM_SIZ_32b),
 

@@ -47,6 +47,7 @@ constants_files = [
     "src/game/player_palette.h",
     "src/pc/network/lag_compensation.h",
     "src/pc/djui/djui_panel_menu.h",
+    "src/pc/djui/djui_theme.h",
     "src/engine/lighting_engine.h",
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
@@ -140,6 +141,11 @@ constants_enums_with_include = {
             "GRAPH_NODE_TYPE": [1,2],
         }
     },
+    "src/pc/djui/djui_theme.h": {
+        "DjuiThemeElements": {
+            "DEFINE_THEME_ELEMENT": [1]
+        }
+    }
 }
 
 #############
@@ -217,6 +223,7 @@ functions_files = [
     "src/pc/network/sync_object.h",
     "src/audio/load.h",
     "src/pc/djui/djui_gfx.h",
+    "src/pc/djui/djui_theme.h",
 ]
 
 # For each file, expose only these functions
@@ -240,6 +247,7 @@ functions_whitelist = { "__name__": "functions_whitelist",
     "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object", "sync_object_get_random_seed"],
     "src/audio/load.h":                     [ "set_sound_bank_override" ],
     "src/pc/djui/djui_gfx.h":               [ "djui_gfx_get_scale" ],
+    "src/pc/djui/djui_theme.h":             [ "djui_theme_get_text_color", "djui_theme_get_default_rect_color", "djui_theme_get_cursor_down_rect_color", "djui_theme_get_hovered_rect_color", "djui_theme_get_default_border_color", "djui_theme_get_cursor_down_border_color", "djui_theme_get_hovered_border_color", "djui_theme_get_rect_color", "djui_theme_get_border_color", "djui_theme_get_hud_font_header" ],
 }
 
 # For each file, do not expose these functions
@@ -282,7 +290,7 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/engine/behavior_script.h":             [ "stub_behavior_script_2", "cur_obj_update" ],
     "src/pc/mods/mod_storage.h":                [ "mod_storage_shutdown" ],
     "src/pc/mods/mod_fs.h":                     [ "mod_fs_read_file_from_uri", "mod_fs_shutdown" ],
-    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64", "can_update_game", "update_game", "open_url", "open_folder" ],
+    "src/pc/utils/misc.h":                      [ "str_.*", "file_get_line", "delta_interpolate_(normal|rgba|mtx)", "detect_and_skip_mtx_interpolation", "precise_delay_f64", "can_update_game", "update_game", "open_url", "open_folder", "get_yyjson_doc_from_path" ],
     "src/engine/lighting_engine.h":             [ "le_calculate_vertex_lighting", "le_clear", "le_shutdown" ],
 }
 
@@ -421,6 +429,7 @@ structs_fields_hidden = { "__name__": "structs_fields_hidden",
     "Camera": [ "filler31", "filler3C", "unusedVec1" ],
     "LakituState": [ "filler30", "filler3E", "filler72", "unusedVec1", "unusedVec2" ],
     "SpawnInfo": [ "unk18" ],
+    "DjuiDeprecatedTheme": [ "textColor", "defaultRectColor", "cursorDownRectColor", "hoveredRectColor", "defaultBorderColor", "cursorDownBorderColor", "hoveredBorderColor", "rectColor", "borderColor", "hudFontHeader", "unused" ]
 }
 
 # For each struct field, expose it except for the specified version

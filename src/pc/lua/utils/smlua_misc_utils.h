@@ -83,7 +83,7 @@ bool djui_is_chatbox_open(void);
 /* |description|Gets the DJUI menu font|descriptionEnd| */
 enum DjuiFontType djui_menu_get_font(void);
 /* |description|Gets the DJUI menu theme|descriptionEnd| */
-struct DjuiTheme* djui_menu_get_theme(void);
+struct DjuiTheme *djui_menu_get_theme(void);
 /* |description|Checks if the DJUI playerlist ping icon is visible|descriptionEnd| */
 bool djui_is_playerlist_ping_visible(void);
 
@@ -181,7 +181,7 @@ Retrieves the animated part rotation associated to `animPart` from the MarioStat
 |descriptionEnd| */
 bool get_mario_anim_part_rot(struct MarioState *m, u32 animPart, VEC_OUT Vec3s rot);
 /* |description|
-Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure 
+Retrieves the animated part matrix associated to `animPart` from the MarioState `m` and stores it into `mtx`. Returns `true` on success or `false` on failure
 |descriptionEnd| */
 bool get_mario_anim_part_mtx(struct MarioState *m, u32 animPart, VEC_OUT Mat4 mtx);
 

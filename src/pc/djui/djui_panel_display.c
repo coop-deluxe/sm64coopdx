@@ -26,11 +26,9 @@ static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* cal
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
     struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
     s32 frameLimit = atoi(inputbox1->buffer);
     if (frameLimit >= 30 && frameLimit <= 3000) {
-        djui_inputbox_set_text_color(inputbox1, textColor->r, textColor->g, textColor->b, textColor->a);
+        djui_inputbox_reset_text_color(inputbox1);
         configFrameLimit = frameLimit;
     } else {
         djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
@@ -86,7 +84,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             if (configFrameLimit > 3000) { configFrameLimit = 3000; }
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(DISPLAY, FRAME_LIMIT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_color(&text1->base, 220, 220, 220, 255);
+            djui_base_set_color_with_color(&text1->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT]);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
@@ -139,7 +137,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         };
         djui_selectionbox_create(body, DLANG(DISPLAY, DRAW_DISTANCE), drawDistanceChoices, ARRAY_COUNT(drawDistanceChoices), &configDrawDistance, NULL);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
 
         sRestartText = djui_text_create(body, "");
         djui_text_set_alignment(sRestartText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);

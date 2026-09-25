@@ -28,13 +28,12 @@ static void djui_panel_join_lobby_description_create(void) {
     f32 bodyHeight = 600;
 
     struct DjuiThreePanel* panel = djui_three_panel_create(&gDjuiRoot->base, 64, bodyHeight, 0);
-    struct DjuiThreePanelTheme theme = gDjuiThemes[configDjuiTheme]->threePanels;
 
     djui_base_set_alignment(&panel->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
     djui_base_set_size_type(&panel->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_RELATIVE);
     djui_base_set_size(&panel->base, DJUI_DESC_PANEL_WIDTH, 1.0f);
-    djui_base_set_color(&panel->base, theme.rectColor.r, theme.rectColor.g, theme.rectColor.b, theme.rectColor.a);
-    djui_base_set_border_color(&panel->base, theme.borderColor.r, theme.borderColor.g, theme.borderColor.b, theme.borderColor.a);
+    djui_base_set_color_with_color(&panel->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_THREE_PANEL]);
+    djui_base_set_border_color_with_color(&panel->base, configDjuiTheme.elements[DJUI_THEME_ELEMENT_THREE_PANEL_BORDER]);
     djui_base_set_border_width(&panel->base, 8);
     djui_base_set_padding(&panel->base, 16, 16, 16, 16);
     {
@@ -170,15 +169,15 @@ void djui_panel_join_lobbies_create(struct DjuiBase* caller, const char* passwor
             djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         }
 
-        if (!private) { djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_create); }
+        if (!private) { djui_button_create(body, DLANG(RULES, RULES), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_rules_create); }
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
-            struct DjuiButton* button1 = djui_button_create(&rect2->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            struct DjuiButton* button1 = djui_button_create(&rect2->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
             djui_base_set_size(&button1->base, 0.485f, 64);
             djui_base_set_alignment(&button1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
 
-            sRefreshButton = djui_button_create(&rect2->base, querying ? DLANG(LOBBIES, REFRESHING) : DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_join_lobbies_refresh);
+            sRefreshButton = djui_button_create(&rect2->base, querying ? DLANG(LOBBIES, REFRESHING) : DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_join_lobbies_refresh);
             djui_base_set_size(&sRefreshButton->base, 0.485f, 64);
             djui_base_set_alignment(&sRefreshButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             djui_base_set_enabled(&sRefreshButton->base, false);
