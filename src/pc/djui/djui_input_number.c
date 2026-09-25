@@ -10,32 +10,30 @@ static void djui_input_number_render_pre(struct DjuiBase* base, UNUSED bool* unu
 
 static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber*)base;
-    struct DjuiInputbox *inputbox = &number->input;
+    u16 *sel = number->input.selection;
+    char *msg = number->input.buffer;
+
     if (*text == '-') {
-        if (*inputbox->buffer != '-' && number->min < 0) {
-            u16 sel[2];
-            sel[0] = ++inputbox->selection[0];
-            sel[1] = ++inputbox->selection[1];
-            djui_inputbox_move_cursor_to_position(inputbox, 0);
-            djui_inputbox_on_text_input(base, "-");
-            inputbox->selection[0] = sel[0];
-            inputbox->selection[1] = sel[1];
+        if (*msg != '-' && number->min < 0) {
+            memmove(msg + 1, msg, strlen(msg));
+            *msg = '-'; sel[0]++; sel[1]++;
+            djui_input_number_text_change(base);
         }
 
         text++;
     } else if (*text == '+') {
-        if (*inputbox->buffer == '-') {
-            u16 sel[2];
-            sel[0] = --inputbox->selection[0];
-            sel[1] = --inputbox->selection[1];
-            inputbox->selection[0] = 1;
-            inputbox->selection[1] = 0;
-            djui_inputbox_on_text_input(base, "");
-            inputbox->selection[0] = sel[0];
-            inputbox->selection[1] = sel[1];
+        if (*msg == '-') {
+            memmove(msg, msg + 1, strlen(msg));
+            if (sel[0] > 0) { sel[0]--; }
+            if (sel[1] > 0) { sel[1]--; }
+            djui_input_number_text_change(base);
         }
 
         text++;
+    }
+
+    if (*msg == '-' && sel[0] == 0 && sel[1] == 0) {
+        sel[0] = sel[1] = 1;
     }
 
     char *tinput = text;
@@ -54,11 +52,15 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
 
 void djui_input_number_text_change(struct DjuiBase *caller) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber*)caller;
-    struct DjuiTheme *theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor *textColor = &theme->interactables.textColor;
-    int value = atoi(number->input.buffer);
-    number->valid = value >= number->min && value <= number->max;
+    struct DjuiInputbox *input = &number->input;
+
+    input->bufferSize = *input->buffer == '-' ? 12 : 11;
+
+    errno = 0; int value = strtol(number->input.buffer, NULL, 10);
+    number->valid = errno != ERANGE && value >= number->min && value <= number->max;
+
     if (number->valid) {
+        struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;
         djui_inputbox_set_text_color(&number->input, textColor->r, textColor->g, textColor->b, textColor->a);
         *number->value = number->saved = value;
     } else {
@@ -67,7 +69,8 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
 }
 
 struct DjuiInputNumber *djui_input_number_create(struct DjuiBase *parent, int *value, int min, int max) {
-    struct DjuiInputNumber *number = (struct DjuiInputNumber*)djui_inputbox_init(parent, calloc(1, sizeof(struct DjuiInputNumber)), 20);
+    struct DjuiInputNumber *number = (struct DjuiInputNumber*)djui_inputbox_init(parent, calloc(1, sizeof(struct DjuiInputNumber)), 12);
+    if (*value >= 0) { number->input.bufferSize--; }
     number->value = value;
     number->saved = *value;
     number->min = min;
