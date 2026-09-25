@@ -31,6 +31,7 @@ void bhv_moneybag_init(void) {
     cur_obj_init_animation(0);
     o->oOpacity = 0;
 
+    // standard distance-based sync system
     sync_object_init(o, 4000.0f);
     sync_object_init_field(o, o->oHomeX);
     sync_object_init_field(o, o->oHomeY);
@@ -40,21 +41,18 @@ void bhv_moneybag_init(void) {
 }
 
 void moneybag_check_mario_collision(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     obj_set_hitbox(o, &sMoneybagHitbox);
 
-    if (o->oInteractStatus & INT_STATUS_INTERACTED) /* bit 15 */
-    {
-        if (o->oInteractStatus & INT_STATUS_ATTACKED_MARIO) /* bit 13 */
-        {
+    if (o->oInteractStatus & INT_STATUS_INTERACTED) { /* bit 15 */
+        if (o->oInteractStatus & INT_STATUS_ATTACKED_MARIO) { /* bit 13 */
             o->oMoveAngleYaw = angleToPlayer + 0x8000;
             o->oVelY = 30.0f;
         }
 
-        if (o->oInteractStatus & INT_STATUS_WAS_ATTACKED) /* bit 14 */
-        {
+        if (o->oInteractStatus & INT_STATUS_WAS_ATTACKED) { /* bit 14 */
             o->oAction = MONEYBAG_ACT_DEATH;
         }
 
@@ -84,8 +82,7 @@ void moneybag_jump(s8 collisionFlags) {
         case MONEYBAG_JUMP_JUMP:
             cur_obj_init_animation(2);
 
-            if ((collisionFlags & 1) == 1) /* bit 0 */
-            {
+            if ((collisionFlags & 1) == 1) { /* bit 0 */
                 o->oForwardVel = 0;
                 o->oVelY = 0;
                 o->oMoneybagJumpState = MONEYBAG_JUMP_LANDING;
@@ -95,8 +92,9 @@ void moneybag_jump(s8 collisionFlags) {
         case MONEYBAG_JUMP_JUMP_AND_BOUNCE:
             cur_obj_init_animation(3);
 
-            if (cur_obj_check_if_near_animation_end() == 1)
+            if (cur_obj_check_if_near_animation_end() == 1) {
                 o->oMoneybagJumpState = MONEYBAG_JUMP_LANDING;
+            }
             break;
 
         case MONEYBAG_JUMP_WALK_AROUND:
@@ -118,40 +116,40 @@ void moneybag_jump(s8 collisionFlags) {
 }
 
 void moneybag_act_move_around(void) {
-    s16 collisionFlags;
-
     obj_return_and_displace_home(o, o->oHomeX, o->oHomeY, o->oHomeZ, 200);
 
-    collisionFlags = object_step();
+    s16 collisionFlags = object_step();
 
     if (((collisionFlags & OBJ_COL_FLAGS_LANDED) == OBJ_COL_FLAGS_LANDED)
         && (o->oMoneybagJumpState == MONEYBAG_JUMP_LANDING)) {
         if ((s32)(random_float() * 6.0f) == 1) {
             o->oMoneybagJumpState = MONEYBAG_JUMP_WALK_AROUND;
             o->oTimer = 0;
-        } else
+        } else {
             o->oMoneybagJumpState = MONEYBAG_JUMP_PREPARE;
+        }
     }
 
     moneybag_jump(collisionFlags);
     moneybag_check_mario_collision();
 
     if (!is_point_within_radius_of_mario(o->oHomeX, o->oHomeY, o->oHomeZ, 800)
-        && ((collisionFlags & OBJ_COL_FLAGS_LANDED) == OBJ_COL_FLAGS_LANDED))
+        && ((collisionFlags & OBJ_COL_FLAGS_LANDED) == OBJ_COL_FLAGS_LANDED)) {
         o->oAction = MONEYBAG_ACT_RETURN_HOME;
+    }
 }
 
 void moneybag_act_return_home(void) {
-    s16 collisionFlags;
-    f32 sp28 = o->oHomeX - o->oPosX;
-    f32 sp24 = o->oHomeZ - o->oPosZ;
-    s16 sp22 = atan2s(sp24, sp28);
-    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, sp22, 0x800);
+    f32 dx = o->oHomeX - o->oPosX;
+    f32 dz = o->oHomeZ - o->oPosZ;
+    s16 angleToHome = atan2s(dz, dx);
+    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, angleToHome, 0x800);
 
-    collisionFlags = object_step();
+    s16 collisionFlags = object_step();
     if (((collisionFlags & OBJ_COL_FLAGS_LANDED) == OBJ_COL_FLAGS_LANDED)
-        && (o->oMoneybagJumpState == MONEYBAG_JUMP_LANDING))
+        && (o->oMoneybagJumpState == MONEYBAG_JUMP_LANDING)) {
         o->oMoneybagJumpState = MONEYBAG_JUMP_WALK_HOME;
+    }
 
     moneybag_jump(collisionFlags);
     moneybag_check_mario_collision();
@@ -205,8 +203,9 @@ void bhv_moneybag_loop(void) {
 
         case MONEYBAG_ACT_MOVE_AROUND:
             moneybag_act_move_around();
-            if (o->oTimer >= 31)
+            if (o->oTimer >= 31) {
                 cur_obj_become_tangible();
+            }
             break;
 
         case MONEYBAG_ACT_RETURN_HOME:
@@ -226,6 +225,7 @@ void bhv_moneybag_loop(void) {
 void bhv_moneybag_hidden_loop(void) {
     obj_set_hitbox(o, &sMoneybagHiddenHitbox);
 
+    // uses an event based sync system. Syncs when the fake coin transforms
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);

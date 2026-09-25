@@ -95,8 +95,7 @@ static void triplet_butterfly_act_activate(void) {
             o->oHomeY = o->oPosY;
         } else if (o->oTripletButterflyScale >= sTripletButterflyActivationData[o->oTripletButterflyType].scale) {
             if (o->oTripletButterflyType != TRIPLET_BUTTERFLY_TYPE_EXPLODES) {
-                spawn_object(o, o->oTripletButterflyModel,
-                             sTripletButterflyActivationData[o->oTripletButterflyType].behavior);
+                spawn_object(o, o->oTripletButterflyModel, sTripletButterflyActivationData[o->oTripletButterflyType].behavior);
                 obj_mark_for_deletion(o);
             } else {
                 o->oAction = TRIPLET_BUTTERFLY_ACT_EXPLODE;

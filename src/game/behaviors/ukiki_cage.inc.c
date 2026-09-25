@@ -19,10 +19,9 @@ void bhv_ukiki_cage_star_loop(void) {
         case UKIKI_CAGE_STAR_ACT_IN_CAGE:
             // Initialization to see if the star is collected (blue) or not (yellow).
             if (o->oTimer == 0) {
-                if (bit_shift_left(1)
-                    & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1)) {
-                        cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
-                    }
+                if (bit_shift_left(1) & save_file_get_star_flags(gCurrSaveFileNum - 1, gCurrCourseNum - 1)) {
+                    cur_obj_set_model(smlua_model_util_load(E_MODEL_TRANSPARENT_STAR));
+                }
             }
 
             obj_copy_pos(o, o->parentObj);
@@ -37,7 +36,7 @@ void bhv_ukiki_cage_star_loop(void) {
             obj_mark_for_deletion(o);
             spawn_mist_particles();
             spawn_triangle_break_particles(20, 138, 0.7, 3);
-            f32* starPos = gLevelValues.starPositions.UkikiCageStarPos;
+            f32 *starPos = gLevelValues.starPositions.UkikiCageStarPos;
             spawn_default_star(starPos[0], starPos[1], starPos[2]);
             break;
     }

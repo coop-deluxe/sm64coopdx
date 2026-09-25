@@ -7,6 +7,7 @@
  */
 
 void bhv_purple_switch_loop(void) {
+    // uses event based syncing system. Syncs when the button is pressed
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -22,7 +23,6 @@ void bhv_purple_switch_loop(void) {
         }
     }
 
-    UNUSED s32 unused;
     switch (o->oAction) {
         /**
          * Set the switch's model and scale. If Mario is standing near the

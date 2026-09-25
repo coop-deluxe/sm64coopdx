@@ -5,21 +5,18 @@
  * TODO: Processing order relative to bhvCloud
  */
 
-static u8 lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
+static void bhv_lakitu_on_received_post(UNUSED u8 localIndex) {
+    if (o->globalPlayerIndex == gNetworkPlayerLocal->globalIndex) { return; }
 
-static u8 bhv_camera_lakitu_ignore_if_true(void) {
-    return (lakituTargetLocalIndex == 0);
-}
-
-static void bhv_camera_lakitu_override_ownership(u8* shouldOverride, u8* shouldOwn) {
-    *shouldOverride = TRUE;
-    *shouldOwn = (lakituTargetLocalIndex == 0);
-}
-
-static void bhv_camera_lakitu_on_received_post(u8 localIndex) {
-    if (lakituTargetLocalIndex == UNKNOWN_LOCAL_INDEX) {
-        lakituTargetLocalIndex = localIndex;
+    if (o->oAction == CAMERA_LAKITU_INTRO_ACT_UNK2) {
+        // spawn cloud
+        spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
     }
+}
+
+static void bhv_camera_lakitu_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
+    *shouldOverride = o->oAction != CAMERA_LAKITU_INTRO_ACT_TRIGGER_CUTSCENE;
+    *shouldOwn = (o->globalPlayerIndex == gNetworkPlayerLocal->globalIndex);
 }
 
 /**
@@ -37,14 +34,15 @@ void bhv_camera_lakitu_init(void) {
     } else {
         spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
     }
-    lakituTargetLocalIndex = UNKNOWN_LOCAL_INDEX;
 
+    // syncs uses event-based sync system utilizing globalPlayerIndex to decide who
+    // owns and enters the dialog as well as who lakitu homes in on
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject *so = sync_object_init(o, 4000.0f);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
-            so->ignore_if_true = bhv_camera_lakitu_ignore_if_true;
+            so->on_received_post = bhv_lakitu_on_received_post;
             so->override_ownership = bhv_camera_lakitu_override_ownership;
-            so->on_received_post = bhv_camera_lakitu_on_received_post;
+            sync_object_init_field(o, o->oAction);
             sync_object_init_field(o, o->oAngleVelPitch);
             sync_object_init_field(o, o->oFaceAnglePitch);
             sync_object_init_field(o, o->oCameraLakituBlinkTimer);
@@ -55,6 +53,7 @@ void bhv_camera_lakitu_init(void) {
 #ifndef VERSION_JP
             sync_object_init_field(o, o->oCameraLakituMusicPlayed);
 #endif
+            sync_object_init_field(o, o->globalPlayerIndex);
         }
     }
 }
@@ -66,29 +65,39 @@ u8 camera_lakitu_intro_act_show_dialog_continue_dialog(void) { return o->oCamera
  * the spawn cloud action.
  */
 static void camera_lakitu_intro_act_trigger_cutscene(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
-    struct Object* player = marioState->marioObj;
+    struct Object *player = marioState->marioObj;
 
     //! These bounds are slightly smaller than the actual bridge bounds, allowing
     //  the RTA speedrunning method of lakitu skip
     if (player->oPosX > -544.0f && player->oPosX < 545.0f && player->oPosY > 800.0f
-        && player->oPosZ > -2000.0f && player->oPosZ < -177.0f)
-    {
-        if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 1) {
+        && player->oPosZ > -2000.0f && player->oPosZ < -177.0f) {
+        if (should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(marioState, 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 1) {
+            o->globalPlayerIndex = network_global_index_from_local(marioState->playerIndex);
             o->oAction = CAMERA_LAKITU_INTRO_ACT_SPAWN_CLOUD;
+            network_send_object(o);
         }
     }
 }
 
 /**
- * Warp up into the air and spawn cloud, then enter the TODO action.
+ * Warp up into the air and spawn cloud, then enter the show dialog action.
  */
 static void camera_lakitu_intro_act_spawn_cloud(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState && should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(&gMarioStates[0], 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 2) {
+    if (o->globalPlayerIndex >= MAX_PLAYERS) { o->globalPlayerIndex = 0; }
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+    if (!is_player_active(marioState) || !marioState->visibleToObjects) {
+        // mario who activated lakitu is no longer active, delete lakitu
+        obj_mark_for_deletion(o);
+        return;
+    }
+    if (marioState->playerIndex == 0 && should_start_or_continue_dialog(marioState, o) && set_mario_npc_dialog(marioState, 2, camera_lakitu_intro_act_show_dialog_continue_dialog) == 2) {
         o->oAction = CAMERA_LAKITU_INTRO_ACT_UNK2;
 
+        // note on syncing: This is actually not synced which leads to a funny result, rather
+        // than lakitu teleporting up and going to mario, instead,
+        // lakitu travels to mario from the door
         o->oPosX = 1800.0f;
         o->oPosY = 2400.0f;
         o->oPosZ = -2400.0f;
@@ -98,6 +107,7 @@ static void camera_lakitu_intro_act_spawn_cloud(void) {
         o->oCameraLakituCircleRadius = 1000.0f;
 
         spawn_object_relative_with_scale(CLOUD_BP_LAKITU_CLOUD, 0, 0, 0, 2.0f, o, MODEL_MIST, bhvCloud);
+        network_send_object(o);
     }
 }
 
@@ -105,13 +115,16 @@ static void camera_lakitu_intro_act_spawn_cloud(void) {
  * Circle down to mario, show the dialog, then fly away.
  */
 static void camera_lakitu_intro_act_show_dialog(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (lakituTargetLocalIndex != UNKNOWN_LOCAL_INDEX) {
-        marioState = &gMarioStates[lakituTargetLocalIndex];
+    if (o->globalPlayerIndex >= MAX_PLAYERS) { o->globalPlayerIndex = 0; }
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+    if (!is_player_active(marioState) || !marioState->visibleToObjects) {
+        // cancel sequence early, mario who activated lakitu is no longer active
+        obj_mark_for_deletion(o);
+        return;
     }
-    struct Object* player = marioState ? marioState->marioObj : NULL;
-    s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
+    struct Object *player = marioState->marioObj;
+    s32 distanceToPlayer = dist_between_objects(o, player);
+    s32 angleToPlayer = obj_angle_to_object(o, player);
 
     s16 targetMovePitch = 0;
     s16 targetMoveYaw = 0;
@@ -141,13 +154,6 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                 targetMovePitch = o->oMoveAnglePitch;
                 targetMoveYaw = angleToPlayer;
             } else {
-                if (lakituTargetLocalIndex == UNKNOWN_LOCAL_INDEX) {
-                    if (marioState && marioState->playerIndex == 0) {
-                        lakituTargetLocalIndex = 0;
-                    } else {
-                        goto afterChase;
-                    }
-                }
                 // Stay moving in a circle around mario
                 s16 turnAmount = 0x4000
                                  - atan2s(o->oCameraLakituCircleRadius,
@@ -179,12 +185,12 @@ static void camera_lakitu_intro_act_show_dialog(void) {
                     }
                 }
             }
-        } else if (marioState && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(&gMarioStates[0], 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.LakituIntroDialog, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
+        } else if (marioState->playerIndex == 0 && should_start_or_continue_dialog(marioState, o) && cur_obj_update_dialog_with_cutscene(marioState, 2, DIALOG_UNK2_FLAG_0, CUTSCENE_DIALOG, gBehaviorValues.dialogs.LakituIntroDialog, camera_lakitu_intro_act_show_dialog_continue_dialog) != 0) {
             o->oCameraLakituFinishedDialog = TRUE;
+            network_send_object(o);
         }
     }
 
-afterChase:
     o->oCameraLakituPitchVel = approach_s16_symmetric(o->oCameraLakituPitchVel, 0x7D0, 0x190);
     obj_move_pitch_approach(targetMovePitch, o->oCameraLakituPitchVel);
 

@@ -4,6 +4,7 @@ void bhv_small_bomp_init(void) {
     o->oFaceAngleYaw -= 0x4000;
     o->oSmallBompInitX = o->oPosX;
     o->oTimer = position_based_random_float_position() * 100.0f;
+    // bomps are synced via the area timer
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 168;

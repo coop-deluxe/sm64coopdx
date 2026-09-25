@@ -44,7 +44,7 @@ static void spiny_to_anim_cache(void) {
 }
 
 static void spiny_from_anim_cache(void) {
-    struct AnimationTable* anim = NULL;
+    struct AnimationTable *anim = NULL;
     switch (spinyAnimCache) {
         case 0:
             anim = (struct AnimationTable*)&spiny_egg_seg5_anims_050157E4;
@@ -73,7 +73,7 @@ static void bhv_spiny_on_sent_pre(void) {
  * If the spiny was spawned by lakitu and mario is far away, despawn.
  */
 static s32 spiny_check_active(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvEnemyLakitu)) {
@@ -123,11 +123,9 @@ static void spiny_act_walk(void) {
             }
 
             if (o->oSpinyTurningAwayFromWall) {
-                o->oSpinyTurningAwayFromWall =
-                    obj_resolve_collisions_and_turn(o->oSpinyTargetYaw, 0x80);
+                o->oSpinyTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oSpinyTargetYaw, 0x80);
             } else {
-                if (!(o->oSpinyTurningAwayFromWall =
-                          obj_bounce_off_walls_edges_objects(&o->oSpinyTargetYaw))) {
+                if (!(o->oSpinyTurningAwayFromWall = obj_bounce_off_walls_edges_objects(&o->oSpinyTargetYaw))) {
                     // Walk and occasionally randomly change direction
                     if (o->oSpinyTimeUntilTurn != 0) {
                         o->oSpinyTimeUntilTurn -= 1;
@@ -180,8 +178,7 @@ static void spiny_act_held_by_lakitu(void) {
         o->oMoveAngleYaw = o->parentObj->oFaceAngleYaw;
 
         // Move more quickly if the lakitu is moving forward
-        o->oForwardVel =
-            o->parentObj->oForwardVel * coss(o->oMoveAngleYaw - o->parentObj->oMoveAngleYaw) + 10.0f;
+        o->oForwardVel = o->parentObj->oForwardVel * coss(o->oMoveAngleYaw - o->parentObj->oMoveAngleYaw) + 10.0f;
         o->oVelY = 30.0f;
 
         o->oMoveFlags = 0; // you do you, spiny
@@ -233,6 +230,8 @@ void bhv_spiny_override_ownership(u8* shouldOverride, u8* shouldOwn) {
  */
 void bhv_spiny_update(void) {
     // PARTIAL_UPDATE
+    // uses a standard distance-based syncing system. Spiny's are created by their parent, Lakitu. Ownership
+    // is set to whoever owns Lakitu.
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -253,7 +252,7 @@ void bhv_spiny_update(void) {
         }
 
 
-        struct Object* lakitu = cur_obj_nearest_object_with_behavior(bhvEnemyLakitu);
+        struct Object *lakitu = cur_obj_nearest_object_with_behavior(bhvEnemyLakitu);
         if (lakitu != NULL) {
             o->parentObj = lakitu;
             if ((lakitu->oSubAction == ENEMY_LAKITU_SUB_ACT_HOLD_SPINY) && (o->oAction == SPINY_ACT_HELD_BY_LAKITU)) {

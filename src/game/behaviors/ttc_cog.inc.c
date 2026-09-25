@@ -26,11 +26,11 @@ static s16 sTTCCogNormalSpeeds[] = { 200, 400 };
  * Init function for bhvTTCCog.
  */
 void bhv_ttc_cog_init(void) {
-    o->collisionData = segmented_to_virtual(
-        sTTCCogCollisionModels[(o->oBehParams2ndByte & TTC_COG_BP_SHAPE_MASK) >> 1]);
+    o->collisionData = segmented_to_virtual(sTTCCogCollisionModels[(o->oBehParams2ndByte & TTC_COG_BP_SHAPE_MASK) >> 1]);
     o->oTTCCogDir = sTTCCogDirections[o->oBehParams2ndByte & TTC_COG_BP_DIR_MASK];
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // syncs using a standard distance-based system
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCCogSpeed);
@@ -54,8 +54,9 @@ void bhv_ttc_cog_update(void) {
             if (approach_f32_ptr(&o->oTTCCogSpeed, o->oTTCCogTargetVel, 50.0f)) {
                 o->oTTCCogTargetVel = 200.0f * (random_u16() % 7) * random_sign();
             }
-
+            break;
         case TTC_SPEED_STOPPED:
+            o->oTTCCogSpeed = 0;
             break;
     }
 

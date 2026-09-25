@@ -9,19 +9,20 @@ s8 sToxBoxDirectionTable2[] = { 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 5, 1, 5, 1, 5, 
 s8 *sToxBoxDirectionTables[] = { sToxBoxDirectionTable0, sToxBoxDirectionTable1, sToxBoxDirectionTable2 };
 
 void tox_box_shake_screen(void) {
-    if (o && o->oDistanceToMario < 3000.0f)
+    if (o && o->oDistanceToMario < 3000.0f) {
         cur_obj_shake_screen(SHAKE_POS_SMALL);
+    }
 }
 
-void tox_box_move(f32 forwardVel, f32 a1, s16 deltaPitch, s16 deltaRoll)
-{
+void tox_box_move(f32 forwardVel, f32 leftVel, s16 deltaPitch, s16 deltaRoll) {
     if (!o) { return; }
     o->oPosY = 99.41124 * sins((f32)(o->oTimer + 1) / 8 * 0x8000) + o->oHomeY + 3.0f;
     o->oForwardVel = forwardVel;
-    o->oUnkC0 = a1;
+    o->oUnkC0 = leftVel;
     o->oFaceAnglePitch += deltaPitch;
-    if ((s16) o->oFaceAnglePitch < 0)
+    if ((s16) o->oFaceAnglePitch < 0) {
         deltaRoll = -deltaRoll;
+    }
     o->oFaceAngleRoll += deltaRoll;
     cur_obj_set_pos_via_transform();
     if (o->oTimer == 7) {
@@ -50,23 +51,27 @@ void tox_box_act_7(void) {
 void tox_box_act_1(void) {
     if (!o) { return; }
     o->oForwardVel = 0.0f;
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         tox_box_shake_screen();
+    }
     o->oPosY = o->oHomeY + 3.0f;
-    if (o->oTimer == 20)
+    if (o->oTimer == 20) {
         o->oAction = cur_obj_progress_direction_table();
+    }
 }
 
 void tox_box_act_2(void) {
     if (!o) { return; }
-    if (o->oTimer == 20)
+    if (o->oTimer == 20) {
         o->oAction = cur_obj_progress_direction_table();
+    }
 }
 
 void tox_box_act_3(void) {
     if (!o) { return; }
-    if (o->oTimer == 20)
+    if (o->oTimer == 20) {
         o->oAction = cur_obj_progress_direction_table();
+    }
 }
 
 void tox_box_act_0(void) {
@@ -79,6 +84,7 @@ void (*sToxBoxActions[])(void) = { tox_box_act_0, tox_box_act_1, tox_box_act_2, 
                                    tox_box_act_4, tox_box_act_5, tox_box_act_6, tox_box_act_7 };
 
 void bhv_tox_box_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 3000.0f);
         if (so) {

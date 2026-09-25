@@ -15,7 +15,7 @@ static u8 yoshi_talk_loop_continue_dialog(void) {
     return sYoshiTalkingState == 0 || sYoshiTalkingState == 1;
 }
 
-void bhv_yoshi_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_yoshi_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     *shouldOverride = o->oAction == YOSHI_ACT_TALK;
     *shouldOwn = false;
     if (*shouldOverride) {
@@ -35,7 +35,9 @@ void bhv_yoshi_init(void) {
         o->oAction = YOSHI_ACT_GONE;
     }
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based sync system with a global player index to decide who
+    // Yoshi is talking to and interacting with
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so != NULL) {
         so->override_ownership = bhv_yoshi_override_ownership;
         sync_object_init_field(o, o->oYoshiBlinkTimer);
@@ -44,7 +46,6 @@ void bhv_yoshi_init(void) {
         sync_object_init_field(o, o->oHomeX);
         sync_object_init_field(o, o->oHomeY);
         sync_object_init_field(o, o->oHomeZ);
-        sync_object_init_field(o, o->oAction);
         sync_object_init_field(o, o->globalPlayerIndex);
     }
 }
@@ -52,22 +53,33 @@ void bhv_yoshi_init(void) {
 void yoshi_walk_loop(void) {
     sYoshiTalkingState = 0;
     cur_obj_become_tangible();
+    if (gMarioStates[0].numLives >= 100) {
+        cur_obj_become_intangible();
+        push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
+    }
     s16 animFrame = o->header.gfx.animInfo.animFrame;
-
     o->oForwardVel = 10.0f;
     object_step();
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oYoshiTargetYaw, 0x500);
-    if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200))
+    if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200)) {
         o->oAction = YOSHI_ACT_IDLE;
+    }
 
     cur_obj_init_animation(1);
-    if (animFrame == 0 || animFrame == 15)
+    if (animFrame == 0 || animFrame == 15) {
         cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_YOSHI_WALK);
+    }
 
-    if (o->oInteractStatus == INT_STATUS_INTERACTED) {
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        o->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
+    if (o->oInteractStatus == INT_STATUS_INTERACTED
+        && gMarioStates[0].interactObj == o
+        && gMarioStates[0].numLives < 100) {
+        o->globalPlayerIndex = gNetworkPlayerLocal->globalIndex;
         o->oAction = YOSHI_ACT_TALK;
+        network_send_object(o);
+    } else if (gMarioStates[0].interactObj == o) {
+        // ensure we don't get softlocked
+        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+        o->oInteractStatus = 0;
     }
 
     if (o->oPosY < 2100.0f) {
@@ -79,10 +91,13 @@ void yoshi_walk_loop(void) {
 void yoshi_idle_loop(void) {
     sYoshiTalkingState = 0;
     cur_obj_become_tangible();
-    s16 chosenHome;
+    if (gMarioStates[0].numLives >= 100) {
+        cur_obj_become_intangible();
+        push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
+    }
 
     if (o->oTimer > 90) {
-        chosenHome = random_float() * 3.99;
+        s16 chosenHome = random_float() * 3.99;
 
         if (o->oYoshiChosenHome == chosenHome) {
             return;
@@ -97,10 +112,16 @@ void yoshi_idle_loop(void) {
     }
 
     cur_obj_init_animation(0);
-    if (o->oInteractStatus == INT_STATUS_INTERACTED) {
-        struct MarioState* marioState = nearest_mario_state_to_object(o);
-        o->globalPlayerIndex = gNetworkPlayers[marioState->playerIndex].globalIndex;
+    if (o->oInteractStatus == INT_STATUS_INTERACTED
+        && gMarioStates[0].interactObj == o
+        && gMarioStates[0].numLives < 100) {
+        o->globalPlayerIndex = gNetworkPlayerLocal->globalIndex;
         o->oAction = YOSHI_ACT_TALK;
+        network_send_object(o);
+    } else if (gMarioStates[0].interactObj == o) {
+        // ensure we don't get softlocked
+        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
+        o->oInteractStatus = 0;
     }
 
     // Credits; Yoshi appears at this position overlooking the castle near the end of the credits
@@ -118,14 +139,21 @@ void yoshi_talk_loop(void) {
     cur_obj_become_intangible();
     sYoshiTalkingState = 1;
     push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
-    struct NetworkPlayer* np = network_player_from_global_index(o->globalPlayerIndex);
+    struct NetworkPlayer *np = network_player_from_global_index(o->globalPlayerIndex);
     if (!np) {
         // go back to idle action as the player is no longer active
         o->oAction = YOSHI_ACT_IDLE;
+        o->oInteractStatus = 0;
         return;
     }
-    struct MarioState* marioState = &gMarioStates[np->localIndex];
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = &gMarioStates[np->localIndex];
+    if (!is_player_active(marioState) || !marioState->visibleToObjects) {
+        // go back to idle action as the player is no longer active
+        o->oAction = YOSHI_ACT_IDLE;
+        o->oInteractStatus = 0;
+        return;
+    }
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (np->localIndex != 0) {
@@ -135,13 +163,14 @@ void yoshi_talk_loop(void) {
 
     if ((s16) o->oMoveAngleYaw == angleToPlayer) {
         cur_obj_init_animation(0);
-        if (set_mario_npc_dialog(&gMarioStates[0], 1, yoshi_talk_loop_continue_dialog) == 2) {
+        if (set_mario_npc_dialog(marioState, 1, yoshi_talk_loop_continue_dialog) == 2) {
             if (cutscene_object_with_dialog(CUTSCENE_DIALOG, o, gBehaviorValues.dialogs.YoshiDialog)) {
                 o->oInteractStatus = 0;
                 o->oHomeX = sYoshiHomeLocations[2];
                 o->oHomeZ = sYoshiHomeLocations[3];
                 o->oYoshiTargetYaw = atan2s(o->oHomeZ - o->oPosZ, o->oHomeX - o->oPosX);
                 o->oAction = YOSHI_ACT_GIVE_PRESENT;
+                network_send_object(o);
             }
         }
     } else {
@@ -163,8 +192,9 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     && o->globalPlayerIndex == gNetworkPlayerLocal->globalIndex
     && gMarioStates[0].interactObj == o
     && (gMarioStates[0].action == ACT_READING_NPC_DIALOG
-    ||  gMarioStates[0].action == ACT_WAITING_FOR_DIALOG))
+    ||  gMarioStates[0].action == ACT_WAITING_FOR_DIALOG)) {
         cutscene_object(CUTSCENE_STAR_SPAWN, o);
+    }
 
     o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oYoshiTargetYaw, 0x500);
     if (is_point_close_to_object(o, o->oHomeX, 3174.0f, o->oHomeZ, 200)) {
@@ -197,6 +227,18 @@ void yoshi_finish_jumping_and_despawn_loop(void) {
 void yoshi_give_present_loop(void) {
     cur_obj_become_intangible();
     push_mario_out_of_object(&gMarioStates[0], o, -10.0f);
+    struct NetworkPlayer *np = network_player_from_global_index(o->globalPlayerIndex);
+    if (!np) {
+        // go back to idle action as the player is no longer active
+        o->oAction = YOSHI_ACT_IDLE;
+        return;
+    }
+    struct MarioState *marioState = &gMarioStates[np->localIndex];
+    if (!is_player_active(marioState) || !marioState->visibleToObjects) {
+        // go back to idle action as the player is no longer active
+        o->oAction = YOSHI_ACT_IDLE;
+        return;
+    }
     if (gNetworkPlayerLocal->globalIndex == o->globalPlayerIndex) {
         if (gHudDisplay.lives == 100) {
             play_sound(SOUND_GENERAL_COLLECT_1UP, gGlobalSoundSource);
@@ -207,6 +249,7 @@ void yoshi_give_present_loop(void) {
             } else {
                 o->oAction = YOSHI_ACT_WALK_JUMP_OFF_ROOF;
             }
+            network_send_object(o);
             return;
         }
 
@@ -326,7 +369,7 @@ void bhv_yoshi_loop(void) {
     && o->oAction != YOSHI_ACT_WALK
     && (gMarioStates[0].action == ACT_READING_NPC_DIALOG
     ||  gMarioStates[0].action == ACT_WAITING_FOR_DIALOG)) {
-        set_mario_action(&gMarioStates[0], ACT_IDLE, 0);
+        set_mario_npc_dialog(&gMarioStates[0], 0, NULL);
     }
 
     if (sOverrideYoshiAlive) {

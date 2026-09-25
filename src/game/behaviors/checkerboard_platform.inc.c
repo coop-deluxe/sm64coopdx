@@ -1,52 +1,50 @@
 // checkerboard_platform.c.inc
 
-struct Struct8032F754 D_8032F754[] = { { 145, { 0.7f, 1.5f, 0.7f }, 7.0f },
+struct CheckerboardPlatformStartPos sCheckerboardPlatformStartpos[] = { { 145, { 0.7f, 1.5f, 0.7f }, 7.0f },
                                        { 235, { 1.2f, 2.0f, 1.2f }, 11.6f } };
 
 void bhv_checkerboard_elevator_group_init(void) {
     o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
-    s32 sp3C;
-    s32 sp38;
-    s32 sp34;
-    s32 i;
-    struct Object *sp2C;
-    if (o->oBehParams2ndByte == 0)
+    s32 relativeZ;
+    if (o->oBehParams2ndByte == 0) {
         o->oBehParams2ndByte = 65;
-    sp3C = o->oBehParams2ndByte * 10;
-    sp34 = (o->oBehParams >> 24) & 0XFF;
-    for (i = 0; i < 2; i++) {
-        if (i == 0)
-            sp38 = -D_8032F754[sp34].unk0;
-        else
-            sp38 = D_8032F754[sp34].unk0;
+    }
+    s32 relativeY = o->oBehParams2ndByte * 10;
+    s32 startPosIndex = (o->oBehParams >> 24) & 0XFF;
+    for (s32 i = 0; i < 2; i++) {
+        if (i == 0) {
+            relativeZ = -sCheckerboardPlatformStartpos[startPosIndex].relativePosZ;
+        } else {
+            relativeZ = sCheckerboardPlatformStartpos[startPosIndex].relativePosZ;
+        }
 
-        sp2C = spawn_object_relative(i, 0, i * sp3C, sp38, o, MODEL_CHECKERBOARD_PLATFORM,
-                                     bhvCheckerboardPlatformSub);
-        if (sp2C == NULL) { continue; }
-        sp2C->oCheckerBoardPlatformUnk1AC = D_8032F754[sp34].unk2;
-        sp2C->oTimer = 0;
-        vec3f_copy(sp2C->header.gfx.scale, D_8032F754[sp34].unk1);
+        struct Object *checkerboardPlatform = spawn_object_relative(i, 0, i * relativeY, relativeZ, o, MODEL_CHECKERBOARD_PLATFORM, bhvCheckerboardPlatformSub);
+        if (checkerboardPlatform == NULL) { continue; }
+        checkerboardPlatform->oCheckerBoardPlatformUnk1AC = sCheckerboardPlatformStartpos[startPosIndex].radius;
+        checkerboardPlatform->oTimer = 0;
+        vec3f_copy(checkerboardPlatform->header.gfx.scale, sCheckerboardPlatformStartpos[startPosIndex].scale);
     }
 }
 
 void bhv_checkerboard_elevator_group_loop(void) { }
 
-void checkerboard_plat_act_move_y(UNUSED s32 unused, f32 vel, s32 a2) {
+void checkerboard_plat_act_move_y(UNUSED s32 unused, f32 vel, s32 time) {
     o->oMoveAnglePitch = 0;
     o->oAngleVelPitch = 0;
     o->oForwardVel = 0.0f;
     o->oVelY = vel;
-    if (o->oTimer > a2)
+    if (o->oTimer > time) {
         o->oAction++;
+    }
 }
 
-void checkerboard_plat_act_rotate(s32 a0, s16 a1) {
+void checkerboard_plat_act_rotate(s32 nextAction, s16 pitch) {
     o->oVelY = 0.0f;
-    o->oAngleVelPitch = a1;
-    if (o->oTimer + 1 == 0x8000 / absi(a1)) {
-        o->oAction = a0;
+    o->oAngleVelPitch = pitch;
+    if (o->oTimer + 1 == 0x8000 / absi(pitch)) {
+        o->oAction = nextAction;
     }
-    o->oCheckerBoardPlatformUnkF8 = a0;
+    o->oCheckerBoardPlatformUnkF8 = nextAction;
 }
 
 static void bhv_checkerboard_platform_run_once(void) {
@@ -65,14 +63,15 @@ void bhv_checkerboard_platform_init(void) {
 }
 
 void bhv_checkerboard_platform_loop(void) {
-    f32 sp24 = o->oCheckerBoardPlatformUnk1AC;
+    f32 radius = o->oCheckerBoardPlatformUnk1AC;
     o->oCheckerBoardPlatformUnkF8 = 0;
     switch (o->oAction) {
         case 0:
-            if (o->oBehParams2ndByte == 0)
+            if (o->oBehParams2ndByte == 0) {
                 o->oAction = 1;
-            else
+            } else {
                 o->oAction = 3;
+            }
             break;
         case 1:
             checkerboard_plat_act_move_y(2, 10.0f, o->oCheckerBoardPlatformUnkFC);
@@ -91,8 +90,8 @@ void bhv_checkerboard_platform_loop(void) {
     o->oFaceAnglePitch += absi(o->oAngleVelPitch);
     o->oFaceAngleYaw = o->oMoveAngleYaw;
     if (o->oMoveAnglePitch != 0) {
-        o->oForwardVel = signum_positive(o->oAngleVelPitch) * sins(o->oMoveAnglePitch) * sp24;
-        o->oVelY = signum_positive(o->oAngleVelPitch) * coss(o->oMoveAnglePitch) * sp24;
+        o->oForwardVel = signum_positive(o->oAngleVelPitch) * sins(o->oMoveAnglePitch) * radius;
+        o->oVelY = signum_positive(o->oAngleVelPitch) * coss(o->oMoveAnglePitch) * radius;
     }
     if (o->oCheckerBoardPlatformUnkF8 == 1) {
         o->oAngleVelPitch = 0;

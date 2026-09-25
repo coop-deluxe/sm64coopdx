@@ -23,6 +23,7 @@ void grand_star_zero_velocity(void) {
 void bhv_grand_star_init(void) {
     struct Object *other = cur_obj_nearest_object_with_behavior(bhvGrandStar);
     if (other == NULL) {
+        // uses standard distance-based sync system
         if (!sync_object_is_initialized(o->oSyncID)) {
             struct SyncObject *so = sync_object_init(o, 4000.0f);
             if (so) {

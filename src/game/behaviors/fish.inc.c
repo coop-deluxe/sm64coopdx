@@ -8,14 +8,12 @@
  * These settings are animations, colour, and spawn quantity.
  */
 static void fish_spawner_act_spawn(void) {
-    s32 i = 0;
     s32 schoolQuantity = 0;
     s16 model = MODEL_ERROR_MODEL;
-    const struct AnimationTable* fishAnimation = NULL;
+    const struct AnimationTable *fishAnimation = NULL;
     struct Object *fishObject;
 
     switch (o->oBehParams2ndByte) {
-
         // Cases need to be on one line to match with and without optimizations.
         case FISH_SPAWNER_BP_MANY_BLUE:
             model = MODEL_FISH;      schoolQuantity = 20; fishAnimation = &blue_fish_seg3_anims_0301C2B0;
@@ -37,7 +35,7 @@ static void fish_spawner_act_spawn(void) {
     // Spawn and animate the schoolQuantity of fish if Mario enters render distance
     // or the stage is Secret Aquarium.
     // Fish moves randomly within a range of 700.0f.
-    for (i = 0; i < schoolQuantity; i++) {
+    for (s32 i = 0; i < schoolQuantity; i++) {
         fishObject = spawn_object(o, model, bhvFish);
         if (fishObject == NULL) { continue; }
         fishObject->oBehParams2ndByte = o->oBehParams2ndByte;
@@ -88,11 +86,9 @@ static void fish_vertical_roam(s32 speed) {
             speed = 10;
         }
         o->oPosY = approach_f32_symmetric(o->oPosY, o->oFishGoalY, speed);
-
-     // Allow the fish to roam vertically if within
-     // range of the fish spawner.
-     } else if (parentY - 100.0f - o->oFishDepthDistance < o->oPosY
-               && o->oPosY < parentY + 1000.0f + o->oFishDepthDistance) {
+    } else if (parentY - 100.0f - o->oFishDepthDistance < o->oPosY && o->oPosY < parentY + 1000.0f + o->oFishDepthDistance) {
+        // Allow the fish to roam vertically if within
+        // range of the fish spawner.
         o->oPosY = approach_f32_symmetric(o->oPosY, o->oFishGoalY, speed);
     }
 }

@@ -59,7 +59,7 @@ static struct Object *link_objects_with_behavior(const BehaviorScript *behavior)
  * whose cooldown is zero. Return NULL if no hole is available.
  */
 static struct Object *monty_mole_select_available_hole(f32 minDistToMario) {
-    struct Object* player;
+    struct Object *player;
     s32 distanceToPlayer;
 
     struct Object *hole = sMontyMoleHoleList;
@@ -172,6 +172,7 @@ void bhv_monty_mole_init(void) {
     o->oMontyMoleHoleY = 0;
     o->oMontyMoleHoleZ = 0;
 
+    // uses standard distance-based syncing
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->on_received_post = bhv_monty_mole_on_received_post;
@@ -193,7 +194,7 @@ void bhv_monty_mole_init(void) {
  */
 static void monty_mole_act_select_hole(void) {
     u8 networkOwns = sync_object_is_owned_locally(o->oSyncID);
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
 
     f32 minDistToMario;
 
@@ -221,13 +222,13 @@ static void monty_mole_act_select_hole(void) {
         o->oPosY = o->oFloorHeight = o->oMontyMoleCurrentHole->oPosY;
         o->oPosZ = o->oMontyMoleCurrentHole->oPosZ;
 
-        struct Object* holePlayer = nearest_player_to_object(o->oMontyMoleCurrentHole);
+        struct Object *holePlayer = nearest_player_to_object(o->oMontyMoleCurrentHole);
         s32 angleToHolePlayer = holePlayer ? obj_angle_to_object(o->oMontyMoleCurrentHole, holePlayer) : 0;
 
         o->oFaceAnglePitch = 0;
         o->oMoveAngleYaw = angleToHolePlayer;
 
-        struct Object* player = nearest_player_to_object(o);
+        struct Object *player = nearest_player_to_object(o);
         s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
         if (distanceToPlayer > 500.0f || minDistToMario > 100.0f || random_sign() < 0) {
@@ -270,7 +271,7 @@ static void monty_mole_act_rise_from_hole(void) {
  * Otherwise, enter the begin jump into hole action.
  */
 static void monty_mole_act_spawn_rock(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     struct Object *rock;
@@ -298,7 +299,7 @@ static void monty_mole_act_spawn_rock(void) {
  * into hole action.
  */
 static void monty_mole_act_begin_jump_into_hole(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (cur_obj_init_anim_and_check_if_end(3) || (marioState && obj_is_near_to_and_facing_mario(marioState, 1000.0f, 0x4000))) {
         o->oAction = MONTY_MOLE_ACT_JUMP_INTO_HOLE;
         o->oVelY = 40.0f;

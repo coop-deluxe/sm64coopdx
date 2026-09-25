@@ -14,8 +14,8 @@ static struct ObjectHitbox sMadPianoHitbox = {
 static void mad_piano_act_wait(void) {
     cur_obj_init_animation_with_sound(0);
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (distanceToPlayer < 500.0f) {
@@ -37,8 +37,8 @@ static void mad_piano_act_attack(void) {
     cur_obj_init_animation_with_sound(1);
     cur_obj_play_sound_at_anim_range(0, 0, SOUND_OBJ_MAD_PIANO_CHOMPING);
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -70,6 +70,7 @@ static void mad_piano_act_attack(void) {
 }
 
 void bhv_mad_piano_update(void) {
+    // syncing is done via distance for this object. This works well enough
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
     }

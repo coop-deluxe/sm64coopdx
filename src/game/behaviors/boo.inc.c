@@ -24,6 +24,8 @@ static u8 boo_ignore_update(void) {
 }
 
 struct SyncObject* boo_sync_object_init(void) {
+    // There's lots of different boos, all of the sync objects are initialized via this function
+    // all of them use distance based syncing which works fine enough
     struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so == NULL) { return NULL; }
     so->ignore_if_true = boo_ignore_update;
@@ -41,6 +43,7 @@ struct SyncObject* boo_sync_object_init(void) {
     sync_object_init_field(o, o->oInteractType);
     sync_object_init_field(o, o->oOpacity);
     sync_object_init_field(o, o->oRoom);
+    sync_object_init_field(o, o->globalPlayerIndex);
     return so;
 }
 
@@ -228,8 +231,8 @@ static void boo_move_during_hit(s32 roll, f32 fVel) {
     o->oMoveAngleYaw = o->oBooMoveYawDuringHit;
 
     if (roll != FALSE) {
-        o->oFaceAngleYaw  += D_8032F0CC[o->oTimer];
-        o->oFaceAngleRoll += D_8032F0CC[o->oTimer];
+        o->oFaceAngleYaw  += sBooHitAngleValues[o->oTimer];
+        o->oFaceAngleRoll += sBooHitAngleValues[o->oTimer];
     }
 }
 
@@ -254,7 +257,7 @@ static s32 boo_update_after_bounced_on(f32 a0) {
     }
 
     if (o->oTimer < 32) {
-        boo_move_during_hit(FALSE, D_8032F0CC[o->oTimer]/5000.0f * a0);
+        boo_move_during_hit(FALSE, sBooHitAngleValues[o->oTimer]/5000.0f * a0);
     } else {
         cur_obj_become_tangible();
         boo_reset_after_hit();
@@ -274,7 +277,7 @@ static s32 big_boo_update_during_nonlethal_hit(f32 a0) {
     }
 
     if (o->oTimer < 32) {
-        boo_move_during_hit(TRUE, D_8032F0CC[o->oTimer]/5000.0f * a0);
+        boo_move_during_hit(TRUE, sBooHitAngleValues[o->oTimer]/5000.0f * a0);
     } else if (o->oTimer < 48) {
         big_boo_shake_after_hit();
     } else {
@@ -348,17 +351,12 @@ static s32 boo_get_attack_status(void) {
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         if ((o->oInteractStatus & INT_STATUS_WAS_ATTACKED) && !obj_has_attack_type(ATTACK_FROM_ABOVE)) {
             cur_obj_become_intangible();
-
             o->oInteractStatus = 0;
-
             cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_LAUGH_SHORT);
-
             attackStatus = BOO_ATTACKED;
         } else {
             cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_BOO_BOUNCE_TOP);
-
             o->oInteractStatus = 0;
-
             attackStatus = BOO_BOUNCED_ON;
         }
     }
@@ -467,7 +465,17 @@ static void boo_act_1(void) {
     }
 
     if (attackStatus == BOO_ATTACKED) {
-        o->oAction = 3;
+        if (o->oBehParams2ndByte == 0) {
+            // for go on a ghost hunt, assign global player index to nearest player for dialog
+            struct MarioState *marioState = nearest_mario_state_to_object(o);
+            if (marioState && marioState->playerIndex == 0) { // only let local player assign global player index for himself
+                o->globalPlayerIndex = network_global_index_from_local(marioState->playerIndex);
+            }
+            o->oAction = 3;
+            network_send_object(o); // force send object
+        } else {
+            o->oAction = 3;
+        }
     }
 
     if (attackStatus == BOO_ATTACKED) {
@@ -505,13 +513,22 @@ static void boo_act_4(void) {
         dialogID = gBehaviorValues.dialogs.GhostHuntDialog;
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    if (marioState) {
-        if (marioState->playerIndex != 0 || cur_obj_update_dialog(&gMarioStates[0], 2, 2, dialogID, 0, boo_act_4_continue_dialog)) {
+    if (o->globalPlayerIndex >= MAX_PLAYERS) { o->globalPlayerIndex = 0; }
+    struct MarioState *marioState = &gMarioStates[network_local_index_from_global(o->globalPlayerIndex)];
+    if (!is_player_active(marioState) || !marioState->visibleToObjects) {
+        // use player with the smallest global index instead
+        struct NetworkPlayer *np = get_network_player_smallest_global();
+        marioState = &gMarioStates[np->localIndex];
+        o->globalPlayerIndex = np->globalIndex;
+        network_send_object(o);
+    }
+
+    if (is_player_active(marioState)) {
+        if (marioState->playerIndex != 0 || cur_obj_update_dialog(marioState, 2, 2, dialogID, 0, boo_act_4_continue_dialog)) {
             create_sound_spawner(SOUND_OBJ_DYING_ENEMY1);
             obj_mark_for_deletion(o);
 
-            if (dialogID == (s32) gBehaviorValues.dialogs.GhostHuntAfterDialog) { // If the Big Boo should spawn, play the jingle
+            if (dialogID == (s32)gBehaviorValues.dialogs.GhostHuntAfterDialog) { // If the Big Boo should spawn, play the jingle
                 play_puzzle_jingle();
             }
         }
@@ -528,14 +545,13 @@ static void (*sBooActions[])(void) = {
 };
 
 void bhv_boo_loop(void) {
-    // COOP: only sync when Boo isn't in a death state
+    // only sync when Boo isn't in a death state
     if (o->oAction < 3 || o->oAction == 5) {
         if (!sync_object_is_initialized(o->oSyncID)) {
-            struct SyncObject* so = boo_sync_object_init();
+            struct SyncObject *so = boo_sync_object_init();
             if (so) { so->syncDeathEvent = FALSE; }
         }
-    }
-    else {
+    } else {
         if (sync_object_is_initialized(o->oSyncID)) {
             network_send_object_reliability(o, TRUE);
             sync_object_forget(o->oSyncID);
@@ -637,12 +653,12 @@ static void big_boo_act_2(void) {
 }
 
 static void big_boo_spawn_ghost_hunt_star(void) {
-    f32* starPos = gLevelValues.starPositions.GhostHuntBooStarPos;
+    f32 *starPos = gLevelValues.starPositions.GhostHuntBooStarPos;
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 
 static void big_boo_spawn_balcony_star(void) {
-    f32* starPos = gLevelValues.starPositions.BalconyBooStarPos;
+    f32 *starPos = gLevelValues.starPositions.BalconyBooStarPos;
     spawn_default_star(starPos[0], starPos[1], starPos[2]);
 }
 

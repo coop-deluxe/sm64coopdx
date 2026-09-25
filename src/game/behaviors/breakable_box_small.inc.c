@@ -20,27 +20,44 @@ void bhv_breakable_box_small_init(void) {
     obj_set_hitbox(o, &sBreakableBoxSmallHitbox);
     o->oAnimState = 1;
     o->activeFlags |= ACTIVE_FLAG_UNK9;
-    sync_object_init(o, 1000.0f);
-    sync_object_init_field(o, o->oBreakableBoxSmallReleased);
-    sync_object_init_field(o, o->oBreakableBoxSmallFramesSinceReleased);
-    sync_object_init_field(o, o->oAnimState);
-    sync_object_init_field(o, o->oFlags);
+    // uses standard distance-based sync
+    struct SyncObject *so = sync_object_init(o, 1000.0f);
+    if (so) {
+        so->hasStandardFields = false; // we don't want to sync active flags
+        sync_object_init_field(o, o->oPosX);
+        sync_object_init_field(o, o->oPosY);
+        sync_object_init_field(o, o->oPosZ);
+        sync_object_init_field(o, o->oAction);
+        sync_object_init_field(o, o->oPrevAction);
+        sync_object_init_field(o, o->oSubAction);
+        sync_object_init_field(o, o->oInteractStatus);
+        sync_object_init_field(o, o->oHeldState);
+        sync_object_init_field(o, o->oMoveAngleYaw);
+        sync_object_init_field(o, o->oTimer);
+        sync_object_init_field(o, o->header.gfx.node.flags);
+        sync_object_init_field(o, o->oIntangibleTimer);
+        sync_object_init_field(o, o->oBreakableBoxSmallReleased);
+        sync_object_init_field(o, o->oBreakableBoxSmallFramesSinceReleased);
+        sync_object_init_field(o, o->oAnimState);
+        sync_object_init_field(o, o->oFlags);
+        sync_object_init_field(o, o->oHealth);
+    }
 }
 
 void small_breakable_box_spawn_dust(void) {
-    struct Object *sp24 = spawn_object(o, MODEL_SMOKE, bhvSmoke);
-    if (sp24 == NULL) { return; }
-    sp24->oPosX += (s32)(random_float() * 80.0f) - 40;
-    sp24->oPosZ += (s32)(random_float() * 80.0f) - 40;
+    struct Object *smokeObj = spawn_object(o, MODEL_SMOKE, bhvSmoke);
+    if (smokeObj == NULL) { return; }
+    smokeObj->oPosX += (s32)(random_float() * 80.0f) - 40;
+    smokeObj->oPosZ += (s32)(random_float() * 80.0f) - 40;
 }
 
 void small_breakable_box_act_move(void) {
-    s16 sp1E = object_step();
+    s16 step = object_step();
 
     obj_attack_collided_from_other_object(o);
-    if (sp1E == 1)
+    if (step == 1)
         cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_BOX_LANDING_2);
-    if (sp1E & 1) {
+    if (step & 1) {
         if (o->oForwardVel > 20.0f) {
             cur_obj_play_sound_and_rumble_if_visible(SOUND_ENV_SLIDING);
             small_breakable_box_spawn_dust();
@@ -49,15 +66,17 @@ void small_breakable_box_act_move(void) {
 
     // Set these flags to break the small box without a wall collision
     s32 breakStatus = ATTACK_KICK_OR_TRIP | INT_STATUS_INTERACTED | INT_STATUS_WAS_ATTACKED | INT_STATUS_STOP_RIDING;
-    if ((sp1E & 2) || (o->oInteractStatus & breakStatus) == breakStatus) {
+    if ((step & 2) || (o->oInteractStatus & breakStatus) == breakStatus || o->oHealth == 0) {
         spawn_mist_particles();
         spawn_triangle_break_particles(20, 138, 0.7f, 3);
         obj_spawn_yellow_coins(o, 3);
         create_sound_spawner(SOUND_GENERAL_BREAK_BOX);
+        o->oHealth = 0;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        network_send_object(o);
     }
 
-    obj_check_floor_death(sp1E, sObjFloor);
+    obj_check_floor_death(step, sObjFloor);
 }
 
 void breakable_box_small_released_loop(void) {
@@ -65,10 +84,11 @@ void breakable_box_small_released_loop(void) {
 
     // Begin flashing
     if (o->oBreakableBoxSmallFramesSinceReleased > 810) {
-        if (o->oBreakableBoxSmallFramesSinceReleased & 1)
+        if (o->oBreakableBoxSmallFramesSinceReleased & 1) {
             o->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
-        else
+        } else {
             o->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE;
+        }
     }
 
     // Despawn, and create a corkbox respawner
@@ -94,8 +114,7 @@ void breakable_box_small_idle_loop(void) {
             break;
     }
 
-    if (o->oBreakableBoxSmallReleased == 1)
-        breakable_box_small_released_loop();
+    if (o->oBreakableBoxSmallReleased == 1) breakable_box_small_released_loop();
 }
 
 void breakable_box_small_get_dropped(void) {

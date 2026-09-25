@@ -47,24 +47,26 @@ struct WaterDropletParams gShallowWaterWaveDropletParams = {
 
 
 void bhv_water_splash_spawn_droplets(void) {
-    s32 i;
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         o->oPosY = find_water_level(o->oPosX, o->oPosZ);
+    }
 
-    if (o->oPosY > gLevelValues.floorLowerLimitMisc) // Make sure it is not at the default water level
-        for (i = 0; i < 3; i++)
+    if (o->oPosY > gLevelValues.floorLowerLimitMisc) { // Make sure it is not at the default water level
+        for (s32 i = 0; i < 3; i++) {
             spawn_water_droplet(o, &sWaterSplashDropletParams);
+        }
+    }
 }
 
 void bhv_water_droplet_loop(void) {
-    UNUSED u32 unusedVar;
     f32 waterLevel = find_water_level(o->oPosX, o->oPosZ);
 
     if (o->oTimer == 0) {
-        if (cur_obj_has_model(MODEL_FISH))
+        if (cur_obj_has_model(MODEL_FISH)) {
             o->header.gfx.node.flags &= ~GRAPH_RENDER_BILLBOARD;
-        else
+        } else {
             o->header.gfx.node.flags |= GRAPH_RENDER_BILLBOARD;
+        }
         o->oFaceAngleYaw = random_u16();
     }
     // Apply gravity
@@ -74,7 +76,7 @@ void bhv_water_droplet_loop(void) {
     if (o->oVelY < 0.0f) {
         if (waterLevel > o->oPosY) {
             // Create the smaller splash
-            struct Object* small = try_to_spawn_object(0, 1.0f, o, MODEL_SMALL_WATER_SPLASH, bhvWaterDropletSplash);
+            struct Object *small = try_to_spawn_object(0, 1.0f, o, MODEL_SMALL_WATER_SPLASH, bhvWaterDropletSplash);
 
             if (small != NULL) {
                 // immediately update render position
@@ -85,11 +87,13 @@ void bhv_water_droplet_loop(void) {
             }
 
             obj_mark_for_deletion(o);
-        } else if (o->oTimer > 20)
+        } else if (o->oTimer > 20) {
             obj_mark_for_deletion(o);
+        }
     }
-    if (waterLevel < gLevelValues.floorLowerLimitMisc)
+    if (waterLevel < gLevelValues.floorLowerLimitMisc) {
         obj_mark_for_deletion(o);
+    }
 }
 
 void bhv_idle_water_wave_loop(void) {
@@ -119,8 +123,7 @@ void bhv_bubble_splash_init(void) {
 void bhv_shallow_water_splash_init(void) {
     struct Object *fishObj;
     // Have a 1 in 256 chance to spawn the fish particle easter egg.
-    if ((random_u16() & 0xFF) <= 0) // Strange
-    {
+    if ((random_u16() & 0xFF) <= 0) { // Strange
         fishObj = spawn_water_droplet(o, &sWaterDropletFishParams);
         if (fishObj != NULL) {
             obj_init_animation_with_sound(fishObj, &blue_fish_seg3_anims_0301C2B0, 0);
@@ -131,18 +134,20 @@ void bhv_shallow_water_splash_init(void) {
 void bhv_wave_trail_shrink(void) {
     f32 waterLevel = find_water_level(o->oPosX, o->oPosZ);
     // Destroy every other water wave to space them out (this is a terrible way of doing it)
-    if (o->oTimer == 0)
-        if (gGlobalTimer & 1)
-            obj_mark_for_deletion(o);
+    if (o->oTimer == 0 && gGlobalTimer & 1) {
+        obj_mark_for_deletion(o);
+    }
     o->oPosY = waterLevel + 5.0f;
 
-    if (o->oTimer == 0)
+    if (o->oTimer == 0) {
         o->oWaveTrailSize = o->header.gfx.scale[0];
+    }
 
     if (o->oAnimState > 3) {
         o->oWaveTrailSize = o->oWaveTrailSize - 0.1; // Shrink the wave
-        if (o->oWaveTrailSize < 0.0f)
+        if (o->oWaveTrailSize < 0.0f) {
             o->oWaveTrailSize = 0.0f;
+        }
         o->header.gfx.scale[0] = o->oWaveTrailSize;
         o->header.gfx.scale[2] = o->oWaveTrailSize;
     }

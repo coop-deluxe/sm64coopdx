@@ -31,8 +31,9 @@ void bhv_strong_wind_particle_loop(void) {
     }
 
     cur_obj_move_using_fvel_and_gravity();
-    if (o->oTimer > 15) // Deactivate after 15 frames
+    if (o->oTimer > 15) { // Deactivate after 15 frames
         obj_mark_for_deletion(o);
+    }
 
     // If collided with the SL walking penguin, deactivate.
     penguinObj = o->oStrongWindParticlePenguinObj;
@@ -56,8 +57,9 @@ void cur_obj_spawn_strong_wind_particles(s32 windSpread, f32 scale, f32 relPosX,
         // There was absolutely no reason to make the smaller particles unimportant, though...
         spawn_object_relative_with_scale(windSpread, relPosX, relPosY, relPosZ, 0.5f, o, MODEL_WHITE_PARTICLE_DL, bhvTinyStrongWindParticle);
         spawn_object_relative_with_scale(windSpread, relPosX, relPosY, relPosZ, scale, o, MODEL_NONE, bhvStrongWindParticle);
-    } else
+    } else {
         spawn_object_relative_with_scale(windSpread, relPosX, relPosY, relPosZ, scale, o, MODEL_MIST, bhvStrongWindParticle);
+    }
     // There is also no need to spawn additional invisible wind particles here.
     // If the devs were worried about object overload when making small particles unimportant, why spawn these?
     // It isn't to ensure collision, as even 1 particle every 2 frames is enough to ensure this reliably.

@@ -30,7 +30,7 @@ void bhv_red_coin_init(void) {
         hiddenRedCoinStar = cur_obj_nearest_object_with_behavior(bhvBowserCourseRedCoinStar);
     }
 
-    // If we found a red coin star, It's our parent.
+    // If we found a red coin star, it's our parent.
     if (hiddenRedCoinStar != NULL) {
         o->parentObj = hiddenRedCoinStar;
     } else {

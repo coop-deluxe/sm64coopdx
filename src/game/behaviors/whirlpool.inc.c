@@ -82,8 +82,9 @@ void bhv_jet_stream_loop(void) {
         gEnvFxBubbleConfig[ENVFX_STATE_SRC_X] = o->oPosX;
         gEnvFxBubbleConfig[ENVFX_STATE_SRC_Y] = o->oPosY;
         gEnvFxBubbleConfig[ENVFX_STATE_SRC_Z] = o->oPosZ;
-    } else
+    } else {
         gEnvFxBubbleConfig[ENVFX_STATE_PARTICLECOUNT] = 0;
+    }
 
     cur_obj_play_sound_if_visible(SOUND_ENV_WATER);
 }

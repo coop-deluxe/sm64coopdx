@@ -1,8 +1,8 @@
 // flying_bookend_switch.inc.c
 
-struct Struct80331B30 {
-    s16 unk00;
-    s16 unk02;
+struct BookSwitchPosition {
+    s16 relPosX;
+    s16 relPosY;
 };
 
 struct ObjectHitbox sFlyingBookendHitbox = {
@@ -17,7 +17,7 @@ struct ObjectHitbox sFlyingBookendHitbox = {
     .hurtboxHeight = 30,
 };
 
-struct Struct80331B30 D_80331B30[] = {
+struct BookSwitchPosition sBookSwitchPositions[] = {
     { 52, 150 },
     { 135, 3 },
     { -75, 78 },
@@ -137,10 +137,10 @@ void bhv_flying_bookend_loop(void) {
 void bhv_bookend_spawn_loop(void) {
     if (!sync_object_is_initialized(o->oSyncID)) { sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS); }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (marioState && marioState->playerIndex != 0) { return; }
 
-    struct Object* book;
+    struct Object *book;
 
     if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
         if (o->oTimer > 40 && marioState && obj_is_near_to_and_facing_mario(marioState, 600.0f, 0x2000)) {
@@ -148,7 +148,7 @@ void bhv_bookend_spawn_loop(void) {
             if (book != NULL) {
                 book->oAction = 3;
 
-                struct Object* spawn_objects[] = { book };
+                struct Object *spawn_objects[] = { book };
                 u32 models[] = { MODEL_BOOKEND };
                 network_send_spawn_objects(spawn_objects, models, 1);
 
@@ -161,12 +161,9 @@ void bhv_bookend_spawn_loop(void) {
 
 void bookshelf_manager_act_0(void) {
     // spawn book switches
-
-    s32 val04;
-
     //if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
-        for (val04 = 0; val04 < 3; val04++) {
-            spawn_object_relative(val04, D_80331B30[val04].unk00, D_80331B30[val04].unk02, 0, o, MODEL_BOOKEND, bhvBookSwitch);
+        for (u8 i = 0; i < 3; i++) {
+            spawn_object_relative(i, sBookSwitchPositions[i].relPosX, sBookSwitchPositions[i].relPosY, 0, o, MODEL_BOOKEND, bhvBookSwitch);
         }
 
         o->oAction = 1;
@@ -175,9 +172,8 @@ void bookshelf_manager_act_0(void) {
 
 void bookshelf_manager_act_1(void) {
     // wait until mario is near
-
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (o->oBookSwitchManagerUnkF8 == 0) {
         if (so && so->owned && marioState && obj_is_near_to_and_facing_mario(marioState, 500.0f, 0x3000)) {
             o->oBookSwitchManagerUnkF8 = 1;
@@ -194,7 +190,7 @@ void bookshelf_manager_act_2(void) {
     // detect if we can open, and open bookshelf if we should
 
     //if (!(o->activeFlags & ACTIVE_FLAG_IN_DIFFERENT_ROOM)) {
-        struct SyncObject* so = sync_object_get(o->oSyncID);
+        struct SyncObject *so = sync_object_get(o->oSyncID);
         if (o->oBookSwitchManagerUnkF4 < 0) {
             if (o->oTimer > 30) {
                 if (so && so->owned) {
@@ -209,16 +205,14 @@ void bookshelf_manager_act_2(void) {
             }
         } else {
             if (o->oBookSwitchManagerUnkF4 >= 3) {
-                if (o->oTimer > 100) {
-                    if (so && so->owned) {
-                        o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
-                        o->oAction = 3;
-                        network_send_object(o);
-                        if (o->parentObj != NULL) {
-                            o->parentObj->oAction = 1;
-                            o->oPosX = o->parentObj->oPosX;
-                            network_send_object(o->parentObj);
-                        }
+                if (o->oTimer > 100 && so && so->owned) {
+                    o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
+                    o->oAction = 3;
+                    network_send_object(o);
+                    if (o->parentObj != NULL) {
+                        o->parentObj->oAction = 1;
+                        o->oPosX = o->parentObj->oPosX;
+                        network_send_object(o->parentObj);
                     }
                 } else if (o->oTimer == 30) {
                     play_puzzle_jingle();
@@ -232,12 +226,11 @@ void bookshelf_manager_act_2(void) {
 
 void bookshelf_manager_act_3(void) {
     // opening bookshelf
-
     if (o->parentObj == NULL || o->parentObj->behavior != smlua_override_behavior(bhvHauntedBookshelf)) {
         o->parentObj = cur_obj_nearest_object_with_behavior(bhvHauntedBookshelf);
     }
 
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (o->oTimer > 85) {
         if (so && so->owned) {
             o->oAction = 4;
@@ -251,8 +244,7 @@ void bookshelf_manager_act_3(void) {
 
 void bookshelf_manager_act_4(void) {
     // bookshelf is done opening
-
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (o->oBookSwitchManagerUnkF4 >= 3) {
         obj_mark_for_deletion(o);
     } else if (so && so->owned) {
@@ -261,20 +253,21 @@ void bookshelf_manager_act_4(void) {
     }
 }
 
-void bhv_haunted_bookshelf_manager_override_ownership(u8* shouldOverride, u8* shouldOwn) {
+void bhv_haunted_bookshelf_manager_override_ownership(u8 *shouldOverride, u8 *shouldOwn) {
     *shouldOverride = TRUE;
     *shouldOwn = get_network_player_smallest_global() == gNetworkPlayerLocal;
 }
 
 static u8 bhv_haunted_bookshelf_manager_ignore_if_true(void) {
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
     if (!so) { return true; }
     return so->owned;
 }
 
 void bhv_haunted_bookshelf_manager_loop(void) {
+    // uses event based syncing and has the player with the smallest index as the owner
     if (!sync_object_is_initialized(o->oSyncID)) {
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
             so->syncDeathEvent = FALSE;
             so->override_ownership = bhv_haunted_bookshelf_manager_override_ownership;
@@ -309,6 +302,8 @@ void bhv_haunted_bookshelf_manager_loop(void) {
 }
 
 void bhv_book_switch_loop(void) {
+    // uses event based syncing and has the player with the smallest index as the owner
+    // forces a sync whenever it's state changes or it's parent (the manager) changes
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
@@ -324,15 +319,10 @@ void bhv_book_switch_loop(void) {
         }
     }
 
-    s32 sp3C;
-    struct Object* book;
-    s16 sp36;
-    s16 sp34;
-
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    struct SyncObject* so = sync_object_get(o->oSyncID);
+    struct SyncObject *so = sync_object_get(o->oSyncID);
 
     o->header.gfx.scale[0] = 2.0f;
     o->header.gfx.scale[1] = 0.9f;
@@ -341,7 +331,7 @@ void bhv_book_switch_loop(void) {
     if (o->parentObj->oAction == 4) {
         obj_mark_for_deletion(o);
     } else {
-        sp3C = obj_check_attacks(&sBookSwitchHitbox, o->oAction);
+        s32 attackType = obj_check_attacks(&sBookSwitchHitbox, o->oAction);
         if (o->parentObj->oBookSwitchManagerUnkF8 != 0 || o->oAction == 1) {
             if (distanceToPlayer < 100.0f) {
                 cur_obj_become_tangible();
@@ -359,12 +349,12 @@ void bhv_book_switch_loop(void) {
             }
 
             if (approach_f32_ptr(&o->oBookSwitchUnkF4, 50.0f, 20.0f)) {
-                if (o->parentObj->oBookSwitchManagerUnkF4 >= 0 && o->oTimer > 60) {
-                    if (sp3C == 1 || sp3C == 2 || sp3C == 6) {
-                        if (so && so->owned && o->oAction != 2) {
-                            o->oAction = 2;
-                            network_send_object(o);
-                        }
+                if (o->parentObj->oBookSwitchManagerUnkF4 >= 0 && o->oTimer > 60
+                    && (attackType == ATTACK_PUNCH || attackType == ATTACK_KICK_OR_TRIP
+                    ||  attackType == ATTACK_FROM_BELOW)) {
+                    if (so && so->owned && o->oAction != 2) {
+                        o->oAction = 2;
+                        network_send_object(o);
                     }
                 }
             } else {
@@ -381,21 +371,21 @@ void bhv_book_switch_loop(void) {
                             network_send_object(o->parentObj);
                         }
                     } else {
-                        sp36 = random_u16() & 0x1;
-                        sp34 = (marioState && player) ? player->oPosZ + 1.5f * marioState->vel[2] : 0;
+                        s16 randBool = random_u16() & 0x1;
+                        s16 z = (marioState && player) ? player->oPosZ + 1.5f * marioState->vel[2] : 0;
 
                         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource);
-                        if (sp34 > 0) {
-                            sp34 = 0;
+                        if (z > 0) {
+                            z = 0;
                         }
 
                         if (so && so->owned) {
-                            book = spawn_object_abs_with_rot(o, 0, MODEL_BOOKEND, bhvFlyingBookend,
-                                                             0x1FC * sp36 - 0x8CA, 890, sp34, 0,
-                                                             0x8000 * sp36 + 0x4000, 0);
+                            struct Object *book = spawn_object_abs_with_rot(o, 0, MODEL_BOOKEND, bhvFlyingBookend,
+                                                             0x1FC * randBool - 0x8CA, 890, z, 0,
+                                                             0x8000 * randBool + 0x4000, 0);
                             if (book != NULL) {
                                 book->oAction = 3;
-                                struct Object* spawn_objects[] = { book };
+                                struct Object *spawn_objects[] = { book };
                                 u32 models[] = { MODEL_BOOKEND };
                                 network_send_spawn_objects(spawn_objects, models, 1);
                             }
