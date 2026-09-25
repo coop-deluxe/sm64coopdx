@@ -54,18 +54,21 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
 void djui_input_number_text_change(struct DjuiBase *caller) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber*)caller;
     struct DjuiInputbox *input = &number->input;
+    char *text = input->buffer;
 
-    input->bufferSize = *input->buffer == '-' ? 12 : 11;
+    input->bufferSize = *text == '-' ? 12 : 11;
 
-    errno = 0; int value = strtol(number->input.buffer, NULL, 10);
-    number->valid = *input->buffer != '\0' && errno != ERANGE && value >= number->min && value <= number->max;
+    errno = 0; int value = strtol(text, NULL, 10);
+    number->valid =
+        !(*text == '\0' || (*text == '-' && text[1] == '\0'))
+        && errno != ERANGE && value >= number->min && value <= number->max;
 
     if (number->valid) {
         struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;
-        djui_inputbox_set_text_color(&number->input, textColor->r, textColor->g, textColor->b, textColor->a);
+        djui_inputbox_set_text_color(input, textColor->r, textColor->g, textColor->b, textColor->a);
         *number->value = number->saved = value;
     } else {
-        djui_inputbox_set_text_color(&number->input, 255, 0, 0, 255);
+        djui_inputbox_set_text_color(input, 255, 0, 0, 255);
     }
 }
 
