@@ -13,7 +13,7 @@ extern "C" {
 #include "mods/mods_utils.h" // for path_ends_with
 #include "mods/mod_cache.h"  // for md5 hashing
 #include "mods/mods.h"
-#include "loading.h"
+#include "rom_setup.h"
 #include "fs/fs.h"
 }
 
@@ -103,7 +103,7 @@ void rom_on_drop_file(const char *path) {
     static bool hasDroppedInvalidFile = false;
     if (strlen(path) > 0 && !is_rom_valid(path) && !hasDroppedInvalidFile) {
         hasDroppedInvalidFile = true;
-        strcat(gCurrLoadingSegment.str, "\n\\#ffc000\\The file you last dropped was not a valid, vanilla SM64 rom.");
+        append_to_rom_setup_text("\n\\#ffc000\\The file you last dropped was not a valid, vanilla SM64 rom.");
     }
 }
 }

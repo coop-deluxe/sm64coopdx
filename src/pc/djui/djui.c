@@ -145,12 +145,14 @@ void djui_init_late(void) {
     djui_cursor_create();
 }
 
-void djui_connect_menu_open(void) {
+void djui_connect_menu_open(bool reconnecting) {
+    if (gDjuiPanelJoinMessageVisible) { return; }
     djui_panel_shutdown();
     gDjuiInMainMenu = true;
     djui_panel_main_create(NULL);
     djui_panel_join_create(NULL);
     djui_panel_join_message_create(NULL);
+    gDjuiPanelJoinMessageStartedConnection = reconnecting;
 }
 
 static void djui_update_game(UNUSED struct DjuiBase *caller) {
@@ -158,9 +160,7 @@ static void djui_update_game(UNUSED struct DjuiBase *caller) {
 }
 
 void djui_open_update_panel(void) {
-    djui_panel_shutdown();
-    gDjuiInMainMenu = true;
-    djui_panel_main_create(NULL);
+    if (gDjuiPanelJoinMessageVisible) { return; }
     djui_panel_confirm_create(NULL, DLANG(UPDATE, UPDATE_TITLE), DLANG(UPDATE, UPDATE_AVAILABLE), djui_update_game);
 }
 
@@ -227,6 +227,7 @@ void djui_render(void) {
     djui_lua_profiler_render();
 
     if (gDjuiRoot != NULL) {
+        djui_base_update_hooks(&gDjuiRoot->base);
         djui_base_render(&gDjuiRoot->base);
     }
 

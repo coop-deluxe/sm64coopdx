@@ -136,6 +136,50 @@ void djui_panel_back(void) {
     gDjuiPanelJoinMessageVisible = false;
 }
 
+void djui_panel_back_no_transition(void) {
+    if (sPanelRemoving != NULL) { return; }
+    if (sPanelList == NULL) { return; }
+    if (gDjuiPanelDisableBack) { return; }
+    if (sPanelList->parent == NULL) {
+        if (gDjuiPanelPauseCreated) { djui_panel_shutdown(); }
+        return;
+    }
+
+    // call back hook, return true to cancel back
+    if (sPanelList->on_back) {
+        if (sPanelList->on_back(sPanelList->base)) {
+            return;
+        }
+    }
+
+    // deselect cursor input
+    djui_cursor_input_controlled_center(NULL);
+
+    // remember which panel to remove
+    sPanelRemoving = sPanelList;
+
+    // set the previous active
+    sPanelList = sPanelList->parent;
+    if (sPanelList->temporary) { sPanelList = sPanelList->parent; }
+
+    djui_base_set_visible(sPanelList->base, true);
+    sPanelList->base->y.value = 0;
+    djui_cursor_input_controlled_center(sPanelList->defaultElementBase);
+
+    // destroy panel
+    if (sPanelRemoving->on_panel_destroy) {
+        sPanelRemoving->on_panel_destroy(NULL);
+    }
+    djui_base_destroy(sPanelRemoving->base);
+    free(sPanelRemoving);
+    sPanelRemoving = NULL;
+
+    // play a sound
+    play_sound(SOUND_MENU_CLICK_FILE_SELECT, gGlobalSoundSource);
+
+    gDjuiPanelJoinMessageVisible = false;
+}
+
 void djui_panel_update(void) {
     if (sPanelList == NULL) { return; }
     if (sPanelList->base == NULL) { return; }
