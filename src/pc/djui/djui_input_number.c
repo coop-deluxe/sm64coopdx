@@ -16,7 +16,7 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
 
     if (*text == '-') {
         if (*msg != '-' && number->min < 0) {
-            memmove(msg + 1, msg, strlen(msg));
+            memmove(msg + 1, msg, strlen(msg) + 1);
             *msg = '-'; sel[0]++; sel[1]++;
             djui_input_number_text_change(base);
         }
@@ -24,7 +24,7 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
         text++;
     } else if (*text == '+') {
         if (*msg == '-') {
-            memmove(msg, msg + 1, strlen(msg));
+            memmove(msg, msg + 1, strlen(msg) + 1);
             if (sel[0] > 0) { sel[0]--; }
             if (sel[1] > 0) { sel[1]--; }
             djui_input_number_text_change(base);
