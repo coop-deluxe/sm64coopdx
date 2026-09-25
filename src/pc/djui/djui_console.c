@@ -58,7 +58,7 @@ bool djui_console_render(struct DjuiBase* base) {
     djui_base_set_size(&console->rectContainer->base, gDjuiRoot->base.width.value, gDjuiRoot->base.height.value * 0.5f - 32);
     if (console->scrolling) {
         f32 yMax = console->base.comp.height - console->flow->base.height.value - 32;
-        f32 target = console->flow->base.y.value + (console->scrollY - console->flow->base.y.value) * (configSmoothScroll ? 0.5f : 1.f);
+        f32 target = console->flow->base.y.value + (console->scrollY - console->flow->base.y.value) * (configSmoothScrolling ? 0.5f : 1.f);
 
         console->flow->base.y.value = clamp(target, yMax, 0.0f);
         if (target < yMax || 0.f < target) {
