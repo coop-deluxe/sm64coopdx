@@ -159,6 +159,7 @@ extern unsigned int configMenuSound;
 extern bool         configMenuRandom;
 extern bool         configMenuDemos;
 extern bool         configDisablePopups;
+extern bool         configAllowExternal;
 extern char         configLanguage[MAX_CONFIG_STRING];
 extern bool         configForce4By3;
 extern bool         configDynosLocalPlayerModelOnly;
