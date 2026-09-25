@@ -3,8 +3,7 @@
 #include <stdint.h>
 #include <math.h>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
+#include <SDL3/SDL.h>
 
 #include <map>
 #include <set>
@@ -68,7 +67,7 @@ static void load_dxgi_library(void) {
     *(FARPROC *)&dxgi.CreateDXGIFactory2 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory2");
 }
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN) != 0)
 
 static void gfx_window_dxgi_on_resize(void) {
     if (dxgi.swap_chain.Get() != nullptr) {
@@ -95,31 +94,26 @@ static void gfx_window_dxgi_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    sSdlWindow = SDL_CreateWindow(
-        window_title,
-        xpos, ypos, configWindow.w, configWindow.h,
-        SDL_WINDOW_RESIZABLE
-    );
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, window_title);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, xpos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, ypos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, configWindow.w);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, configWindow.h);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, SDL_WINDOW_RESIZABLE);
+    sSdlWindow = SDL_CreateWindowWithProperties(props);
+    SDL_DestroyProperties(props);
 
     gfx_wm_set_window(sSdlWindow);
 
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
-
-    SDL_GetWindowWMInfo(sSdlWindow, &wmInfo);
-
-    dxgi.h_wnd = wmInfo.info.win.window;
+    dxgi.h_wnd = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(sSdlWindow), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
 
     load_dxgi_library();
 }
 
 static void gfx_window_dxgi_handle_events(SDL_Event event) {
-    if (event.type == SDL_WINDOWEVENT) {
-        if (!IS_FULLSCREEN()) {
-            if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-                gfx_window_dxgi_on_resize();
-            }
-        }
+    if (event.type == SDL_EVENT_WINDOW_RESIZED && !IS_FULLSCREEN()) {
+        gfx_window_dxgi_on_resize();
     }
 }
 

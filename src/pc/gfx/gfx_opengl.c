@@ -19,11 +19,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #ifdef USE_GLES
-#include <SDL2/SDL_opengles2.h>
+#include <SDL3/SDL_opengles2.h>
 #else
-#include <SDL2/SDL_opengl.h>
+#include <SDL3/SDL_opengl.h>
 #endif
 
 #include "../platform.h"

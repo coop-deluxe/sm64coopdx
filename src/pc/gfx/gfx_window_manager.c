@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -43,7 +43,7 @@ static void (*kb_text_editing)(char*, int) = NULL;
 
 static void (*m_scroll)(float, float) = NULL;
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN) != 0)
 
 // Getter for the current window backend API
 static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
@@ -69,10 +69,10 @@ static void gfx_wm_set_fullscreen(void) {
     }
 
     if (configWindow.fullscreen) {
-        SDL_SetWindowFullscreen(sSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(sSdlWindow, true);
     } else {
-        SDL_SetWindowFullscreen(sSdlWindow, 0);
-        SDL_ShowCursor(1);
+        SDL_SetWindowFullscreen(sSdlWindow, false);
+        SDL_ShowCursor();
         configWindow.exiting_fullscreen = true;
     }
     gfx_wm_backend()->set_fullscreen();
@@ -81,7 +81,7 @@ static void gfx_wm_set_fullscreen(void) {
 static void gfx_wm_reset_dimension_and_pos(void) {
     if (configWindow.exiting_fullscreen) {
         configWindow.exiting_fullscreen = false;
-        SDL_ShowCursor(0);
+        SDL_HideCursor();
     }
 
     if (configWindow.reset) {
@@ -110,7 +110,7 @@ void gfx_wm_init(const char *window_title) {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_StopTextInput();
+    SDL_StopTextInput(sSdlWindow);
 
 #if defined(_WIN32)
     currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : (s32) configGraphicsBackend;
@@ -126,7 +126,7 @@ void gfx_wm_init(const char *window_title) {
 
     gfx_wm_set_fullscreen();
     if (configWindow.fullscreen) {
-        SDL_ShowCursor(SDL_DISABLE);
+        SDL_HideCursor();
     }
 
     controller_bind_init();
@@ -149,7 +149,7 @@ void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
 }
 
 static void gfx_wm_onkeydown(int scancode) {
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    const bool *state = SDL_GetKeyboardState(NULL);
 
     if ((state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) {
         configWindow.fullscreen = !configWindow.fullscreen;
@@ -198,41 +198,37 @@ void gfx_wm_handle_events(void) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            case SDL_TEXTINPUT:
-                if (kb_text_input) { kb_text_input(event.text.text); }
+            case SDL_EVENT_TEXT_INPUT:
+                if (kb_text_input) { kb_text_input((char *)event.text.text); }
                 break;
-            case SDL_TEXTEDITING: //IME composition
-                if (kb_text_editing) { kb_text_editing(event.edit.text,event.edit.start); }
+            case SDL_EVENT_TEXT_EDITING: //IME composition
+                if (kb_text_editing) { kb_text_editing((char *)event.edit.text, event.edit.start); }
                 break;
-            case SDL_KEYDOWN:
-                gfx_wm_onkeydown(event.key.keysym.scancode);
+            case SDL_EVENT_KEY_DOWN:
+                gfx_wm_onkeydown(event.key.scancode);
                 break;
-            case SDL_KEYUP:
-                gfx_wm_onkeyup(event.key.keysym.scancode);
+            case SDL_EVENT_KEY_UP:
+                gfx_wm_onkeyup(event.key.scancode);
                 break;
-            case SDL_MOUSEWHEEL:
-                gfx_wm_onscroll(event.wheel.preciseX, event.wheel.preciseY);
+            case SDL_EVENT_MOUSE_WHEEL:
+                gfx_wm_onscroll(event.wheel.x, event.wheel.y);
                 break;
-            case SDL_WINDOWEVENT:
-                if (!IS_FULLSCREEN()) {
-                    switch (event.window.event) {
-                        case SDL_WINDOWEVENT_MOVED:
-                            if (!configWindow.exiting_fullscreen) {
-                                if (event.window.data1 >= 0) { configWindow.x = event.window.data1; }
-                                if (event.window.data2 >= 0) { configWindow.y = event.window.data2; }
-                            }
-                            break;
-                        case SDL_WINDOWEVENT_SIZE_CHANGED:
-                            configWindow.w = event.window.data1;
-                            configWindow.h = event.window.data2;
-                            break;
-                    }
+            case SDL_EVENT_WINDOW_MOVED:
+                if (!configWindow.exiting_fullscreen && !IS_FULLSCREEN()) {
+                    if (event.window.data1 >= 0) { configWindow.x = event.window.data1; }
+                    if (event.window.data2 >= 0) { configWindow.y = event.window.data2; }
                 }
                 break;
-            case SDL_DROPFILE:
-                gfx_wm_ondropfile(event.drop.file);
+            case SDL_EVENT_WINDOW_RESIZED:
+                if (!IS_FULLSCREEN()) {
+                    configWindow.w = event.window.data1;
+                    configWindow.h = event.window.data2;
+                }
                 break;
-            case SDL_QUIT:
+            case SDL_EVENT_DROP_FILE:
+                gfx_wm_ondropfile((char *)event.drop.data);
+                break;
+            case SDL_EVENT_QUIT:
                 game_exit();
                 break;
         }
@@ -299,7 +295,7 @@ void gfx_wm_shutdown(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
     if (SDL_WasInit(0)) {
         SDL_GLContext ctx = SDL_GL_GetCurrentContext();
-        if (ctx) { SDL_GL_DeleteContext(ctx); }
+        if (ctx) { SDL_GL_DestroyContext(ctx); }
         if (sSdlWindow) { SDL_DestroyWindow(sSdlWindow); sSdlWindow = NULL; }
         SDL_Quit();
     }
@@ -312,12 +308,12 @@ bool gfx_wm_has_focus(void) {
 
 void gfx_wm_start_text_input(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_StartTextInput();
+    SDL_StartTextInput(sSdlWindow);
 }
 
 void gfx_wm_stop_text_input(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_StopTextInput();
+    SDL_StopTextInput(sSdlWindow);
 }
 
 char *gfx_wm_get_clipboard_text(void) {
@@ -338,5 +334,9 @@ void gfx_wm_set_clipboard_text(const char *text) {
 
 void gfx_wm_set_cursor_visible(bool visible) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE);
+    if (visible) {
+        SDL_ShowCursor();
+    } else {
+        SDL_HideCursor();
+    }
 }
