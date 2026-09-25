@@ -612,7 +612,7 @@ bool mod_file_exists(const char* filename) {
         struct ModFile* file = &gLuaActiveMod->files[i];
         strcpy(normRelative, file->relativePath);
         normalize_path(normRelative);
-        if (!strcmp(normRelative, normPath)) {
+        if (!pathcmp(normRelative, normPath)) {
             return true;
         }
     }

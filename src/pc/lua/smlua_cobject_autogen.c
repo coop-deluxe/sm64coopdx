@@ -1494,7 +1494,7 @@ static struct LuaObjectField sMarioStateFields[LUA_MARIO_STATE_FIELD_COUNT] = {
     { "waterLevel",                LVT_S16,       offsetof(struct MarioState, waterLevel),                false, LOT_NONE              },
 };
 
-#define LUA_MOD_FIELD_COUNT 16
+#define LUA_MOD_FIELD_COUNT 20
 static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "basePath",             LVT_STRING,   offsetof(struct Mod, basePath),             true, LOT_NONE },
     { "category",             LVT_STRING_P, offsetof(struct Mod, category),             true, LOT_NONE },
@@ -1502,12 +1502,16 @@ static struct LuaObjectField sModFields[LUA_MOD_FIELD_COUNT] = {
     { "enabled",              LVT_BOOL,     offsetof(struct Mod, enabled),              true, LOT_NONE },
     { "fileCapacity",         LVT_U16,      offsetof(struct Mod, fileCapacity),         true, LOT_NONE },
     { "fileCount",            LVT_U16,      offsetof(struct Mod, fileCount),            true, LOT_NONE },
+    { "hasManifest",          LVT_BOOL,     offsetof(struct Mod, hasManifest),          true, LOT_NONE },
+    { "id",                   LVT_STRING,   offsetof(struct Mod, id),                   true, LOT_NONE },
     { "ignoreScriptWarnings", LVT_BOOL,     offsetof(struct Mod, ignoreScriptWarnings), true, LOT_NONE },
     { "incompatible",         LVT_STRING_P, offsetof(struct Mod, incompatible),         true, LOT_NONE },
     { "index",                LVT_S32,      offsetof(struct Mod, index),                true, LOT_NONE },
+    { "isCustomEntryFile",    LVT_BOOL,     offsetof(struct Mod, isCustomEntryFile),    true, LOT_NONE },
     { "isDirectory",          LVT_BOOL,     offsetof(struct Mod, isDirectory),          true, LOT_NONE },
     { "name",                 LVT_STRING,   offsetof(struct Mod, name),                 true, LOT_NONE },
     { "pausable",             LVT_BOOL,     offsetof(struct Mod, pausable),             true, LOT_NONE },
+    { "relativeEntryPath",    LVT_STRING,   offsetof(struct Mod, relativeEntryPath),    true, LOT_NONE },
     { "relativePath",         LVT_STRING,   offsetof(struct Mod, relativePath),         true, LOT_NONE },
     { "renderBehindHud",      LVT_BOOL,     offsetof(struct Mod, renderBehindHud),      true, LOT_NONE },
     { "selectable",           LVT_BOOL,     offsetof(struct Mod, selectable),           true, LOT_NONE },

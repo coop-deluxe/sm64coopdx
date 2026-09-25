@@ -1763,11 +1763,15 @@
 | incompatible | `string` | read-only |
 | category | `string` | read-only |
 | description | `string` | read-only |
+| id | `string` | read-only |
 | relativePath | `string` | read-only |
 | basePath | `string` | read-only |
+| relativeEntryPath | `string` | read-only |
 | index | `integer` | read-only |
 | fileCount | `integer` | read-only |
 | fileCapacity | `integer` | read-only |
+| hasManifest | `boolean` | read-only |
+| isCustomEntryFile | `boolean` | read-only |
 | isDirectory | `boolean` | read-only |
 | enabled | `boolean` | read-only |
 | selectable | `boolean` | read-only |
