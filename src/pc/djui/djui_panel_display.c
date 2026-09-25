@@ -29,11 +29,6 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
-static void djui_panel_window_limit_text_change(struct DjuiBase* caller) {
-    djui_input_number_text_change(caller);
-    configWindow.settings_changed = true;
-}
-
 static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
     if (sMsaaOriginal != configWindow.msaa || sGfxWindowBackendOriginal != configGraphicsBackend) {
         djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
