@@ -20,6 +20,7 @@
 #include "rom_checker.h"
 #include "pc_main.h"
 #include "rom_setup.h"
+#include "splash_screen.h"
 #include "cliopts.h"
 #include "configfile.h"
 #include "thread.h"
@@ -643,6 +644,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // render splash screen
+    render_splash_screen();
+
     // load rom assets
     rom_assets_load();
 
@@ -741,7 +745,9 @@ int main(int argc, char *argv[]) {
 
             MUTEX_UNLOCK(sLoadingThread);
 
-            destroy_mutex(&sLoadingThread);
+            if (gGameInited) {
+                destroy_mutex(&sLoadingThread);
+            }
         }
 
         gfx_wm_main_loop(produce_one_frame);
