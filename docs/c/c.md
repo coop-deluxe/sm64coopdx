@@ -35,4 +35,8 @@ This is the coding format, conventions, and style we use:
 - For `.cpp` files, use a corresponding `.hpp` file, not a `.h` file, and have it next to the `.cpp` file
 - Headers in isolation should use `.inl`
 
+*NOTE: To avoid confusion regarding Camel Case, always use pure camel case. For acronyms, do not treat each letter of an acronym as a separate letter, treat the whole thing as a word.*
+
+*For instance, as a general example, `sHTTPCallError` should not be used, `sHttpCallError` should be used instead. For an example in the current codebase, `sSdlWindow` should be used, not `sSDLWindow`.*
+
 You will see many of these rules not followed in the codebase, simply ignore them and follow these rules for all your changes.
