@@ -11463,13 +11463,13 @@ int smlua_func_command_message_create(lua_State* L) {
 
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "command_message_create"); return 0; }
-    enum ConsoleMessageLevel level = (enum ConsoleMessageLevel) 0;
+    enum LogType logType = (enum LogType) 0;
     if (top >= 2) {
-        level = smlua_to_integer(L, 2);
+        logType = smlua_to_integer(L, 2);
         if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "command_message_create"); return 0; }
     }
 
-    command_message_create(message, level);
+    command_message_create(message, logType);
 
     return 0;
 }

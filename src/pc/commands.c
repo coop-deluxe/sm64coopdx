@@ -157,19 +157,19 @@ static void chat_construct_player_message(struct NetworkPlayer *np, char *msg) {
     char player[128] = { 0 };
     snprintf(player, 128, "%s%s\\#fff982\\", network_get_player_text_color_string(np->localIndex), np->name);
     djui_language_replace(msg, &built[9], 256 - 9, '@', player);
-    command_message_create(built, CONSOLE_MESSAGE_INFO);
+    command_message_create(built, LOG_TYPE_INFO);
 }
 
 static bool command_help(UNUSED const char *message, bool onConsole) {
     char tabCompletionHint[256];
     snprintf(tabCompletionHint, sizeof(tabCompletionHint), "%s (%s):",
         DLANG(CHAT, ALL_COMMANDS), DLANG(CHAT, TAB_COMPLETE_INFO));
-    command_message_create(tabCompletionHint, CONSOLE_MESSAGE_INFO);
+    command_message_create(tabCompletionHint, LOG_TYPE_INFO);
 
     for (unsigned int i = 0; i < sCommandCount; i++) {
         if (!sCommands[i].active) { continue; }
         if (!sCommands[i].isChatCommand && !onConsole) { continue; }
-        command_message_create(djui_language_get("CHAT", sCommands[i].description), CONSOLE_MESSAGE_INFO);
+        command_message_create(djui_language_get("CHAT", sCommands[i].description), LOG_TYPE_INFO);
     }
 #ifdef DEVELOPMENT
     dev_display_chat_commands();
@@ -181,7 +181,7 @@ static bool command_help(UNUSED const char *message, bool onConsole) {
 static bool command_players(UNUSED const char *message) {
     char line[128] = { 0 };
     snprintf(line, 127, "\\#fff982\\%s:\n", DLANG(CHAT, PLAYERS));
-    command_message_create(line, CONSOLE_MESSAGE_INFO);
+    command_message_create(line, LOG_TYPE_INFO);
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer *np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
@@ -190,7 +190,7 @@ static bool command_players(UNUSED const char *message) {
         } else {
             snprintf(line, 127, "\\#82f9ff\\%u\\#fff982\\ - \\#82f9ff\\%s\\#fff982\\ - %s%s\n", np->globalIndex, gNetworkSystem->get_id_str(np->localIndex), network_get_player_text_color_string(np->localIndex), np->name);
         }
-        command_message_create(line, CONSOLE_MESSAGE_INFO);
+        command_message_create(line, LOG_TYPE_INFO);
     }
     return true;
 }
@@ -198,18 +198,18 @@ static bool command_players(UNUSED const char *message) {
 static bool command_kick(const char *message) {
     struct NetworkPlayer *npl = &gNetworkPlayers[0];
     if (gNetworkType != NT_SERVER && !npl->moderator) {
-        command_message_create(DLANG(CHAT, NO_PERMS), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, NO_PERMS), LOG_TYPE_ERROR);
         return true;
     }
 
     struct NetworkPlayer *np = chat_get_network_player(message);
     if (np == NULL) {
-        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), LOG_TYPE_ERROR);
         return true;
     }
 
     if (np->localIndex == 0) {
-        command_message_create(DLANG(CHAT, SELF_KICK), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, SELF_KICK), LOG_TYPE_ERROR);
         return true;
     }
     chat_construct_player_message(np, DLANG(CHAT, KICK_CONFIRM));
@@ -223,18 +223,18 @@ static bool command_kick(const char *message) {
 static bool command_ban(const char *message) {
     struct NetworkPlayer *npl = &gNetworkPlayers[0];
     if (gNetworkType != NT_SERVER && !npl->moderator) {
-        command_message_create(DLANG(CHAT, NO_PERMS), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, NO_PERMS), LOG_TYPE_ERROR);
         return true;
     }
 
     struct NetworkPlayer *np = chat_get_network_player(message);
     if (np == NULL) {
-        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), LOG_TYPE_ERROR);
         return true;
     }
 
     if (np->localIndex == 0) {
-        command_message_create(DLANG(CHAT, SELF_BAN), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, SELF_BAN), LOG_TYPE_ERROR);
         return true;
     }
     chat_construct_player_message(np, DLANG(CHAT, BAN_CONFIRM));
@@ -247,18 +247,18 @@ static bool command_ban(const char *message) {
 
 static bool command_permaban(const char *message) {
     if (gNetworkType != NT_SERVER) {
-        command_message_create(DLANG(CHAT, NO_PERMS), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, NO_PERMS), LOG_TYPE_ERROR);
         return true;
     }
 
     struct NetworkPlayer *np = chat_get_network_player(message);
     if (np == NULL) {
-        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), LOG_TYPE_ERROR);
         return true;
     }
 
     if (np->localIndex == 0) {
-        command_message_create(DLANG(CHAT, SELF_BAN), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, SELF_BAN), LOG_TYPE_ERROR);
         return true;
     }
     chat_construct_player_message(np, DLANG(CHAT, PERM_BAN_CONFIRM));
@@ -271,18 +271,18 @@ static bool command_permaban(const char *message) {
 
 static bool command_mod(const char *message) {
     if (gNetworkType != NT_SERVER) {
-        command_message_create(DLANG(CHAT, SERVER_ONLY), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, SERVER_ONLY), LOG_TYPE_ERROR);
         return true;
     }
 
     struct NetworkPlayer *np = chat_get_network_player(message);
     if (np == NULL) {
-        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, PLAYER_NOT_FOUND), LOG_TYPE_ERROR);
         return true;
     }
 
     if (np->localIndex == 0) {
-        command_message_create(DLANG(CHAT, SELF_MOD), CONSOLE_MESSAGE_ERROR);
+        command_message_create(DLANG(CHAT, SELF_MOD), LOG_TYPE_ERROR);
         return true;
     }
     chat_construct_player_message(np, DLANG(CHAT, MOD_CONFIRM));
@@ -354,7 +354,7 @@ static bool command_nametags(const char *message) {
         gNametagsSettings.showHealth = !gNametagsSettings.showHealth;
         return true;
     }
-    command_message_create(DLANG(CHAT, NAMETAGS_MISSING_PARAMETERS), CONSOLE_MESSAGE_ERROR);
+    command_message_create(DLANG(CHAT, NAMETAGS_MISSING_PARAMETERS), LOG_TYPE_ERROR);
     return true;
 }
 
@@ -400,36 +400,17 @@ struct Command *get_command(const char *name) {
     return NULL;
 }
 
-void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLevel level) {
+void command_message_create(const char *message, OPTIONAL enum LogType logType) {
     if (gDjuiChatBoxFocus) {
         size_t newMsgLength = strlen(message) + 12;
         char *newMsg = malloc(newMsgLength);
         if (!newMsg) { return; }
-        switch (level) {
-            case CONSOLE_MESSAGE_INFO:
-                snprintf(newMsg, newMsgLength, "\\#dcdcdc\\%s", message);
-                break;
-            case CONSOLE_MESSAGE_WARNING:
-                snprintf(newMsg, newMsgLength, "\\#ffffa0\\%s", message);
-                break;
-            case CONSOLE_MESSAGE_ERROR:
-                snprintf(newMsg, newMsgLength, "\\#ffa0a0\\%s", message);
-                break;
-            default:
-                snprintf(newMsg, newMsgLength, "\\#dcdcdc\\%s", message);
-                break;
-        }
+        snprintf(newMsg, newMsgLength, "%s%s", log_type_hex_color_code(logType), message);
         djui_chat_message_create(newMsg);
         free(newMsg);
     } else {
-        djui_console_message_create(message, level);
-        char *colorCode;
-        switch (level) {
-            case CONSOLE_MESSAGE_WARNING: colorCode = "\x1b[33m"; break;
-            case CONSOLE_MESSAGE_ERROR:   colorCode = "\x1b[31m"; break;
-            default:                      colorCode = "\x1b[0m"; break;
-        }
-        log_to_terminal("%s%s\x1b[0m\n", colorCode, message);
+        djui_console_message_create(message, logType);
+        log_to_terminal("%s%s\x1b[0m\n", log_type_ansi_color(logType), message);
     }
 }
 
@@ -479,5 +460,5 @@ void run_command(char *command, bool onConsole) {
     // no command exists, alert the user
     char extendedUnknownCommandMessage[MAX_CONSOLE_INPUT_LENGTH];
     snprintf(extendedUnknownCommandMessage, sizeof(extendedUnknownCommandMessage), "%s (/help)", DLANG(CHAT, UNRECOGNIZED));
-    command_message_create(extendedUnknownCommandMessage, CONSOLE_MESSAGE_INFO);
+    command_message_create(extendedUnknownCommandMessage, LOG_TYPE_INFO);
 }

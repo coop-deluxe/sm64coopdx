@@ -85,7 +85,7 @@ int smlua_func_print(lua_State *L) {
 
     // print to terminal and console
     log_to_terminal("%s\n", completeString);
-    djui_console_message_create(completeString, CONSOLE_MESSAGE_INFO);
+    djui_console_message_create(completeString, LOG_TYPE_INFO);
 
     free(completeString);
     return 0;
@@ -1284,20 +1284,14 @@ int smlua_func_log_to_console(lua_State* L) {
     const char* message = smlua_to_string(L, 1);
     if (!gSmLuaConvertSuccess) { LOG_LUA("log_to_console: Failed to convert parameter 1 for function"); return 0; }
 
-    enum ConsoleMessageLevel level = CONSOLE_MESSAGE_INFO;
+    enum LogType logType = LOG_TYPE_INFO;
     if (paramCount >= 2) {
-        level = smlua_to_integer(L, 2);
+        logType = smlua_to_integer(L, 2);
         if (!gSmLuaConvertSuccess) { LOG_LUA("log_to_console: Failed to convert parameter 2 for function"); return 0; }
     }
 
-    djui_console_message_create(message, level);
-    char* colorCode;
-    switch (level) {
-        case CONSOLE_MESSAGE_WARNING: colorCode = "\x1b[33m"; break;
-        case CONSOLE_MESSAGE_ERROR:   colorCode = "\x1b[31m"; break;
-        default:                      colorCode = "\x1b[0m"; break;
-    }
-    log_to_terminal("%s%s\x1b[0m\n", colorCode, message);
+    djui_console_message_create(message, logType);
+    log_to_terminal("%s%s\x1b[0m\n", log_type_ansi_color(logType), message);
 
     return 1;
 }

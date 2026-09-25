@@ -651,9 +651,7 @@ int main(int argc, char *argv[]) {
 #endif
         CTX_END(CTX_TOTAL);
 
-#ifdef DEVELOPMENT
         djui_ctx_display_update();
-#endif
         djui_lua_profiler_update();
     }
 

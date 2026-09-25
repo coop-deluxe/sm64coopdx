@@ -2822,19 +2822,19 @@ It should be used in any function that is ran from `hook_chat_command` or `hook_
 If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
 
 ### Lua Example
-`command_message_create(message, level)`
+`command_message_create(message, logType)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | message | `string` |
-| level | [enum ConsoleMessageLevel](constants.md#enum-ConsoleMessageLevel) |
+| logType | [enum LogType](constants.md#enum-LogType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLevel level);`
+`void command_message_create(const char *message, OPTIONAL enum LogType logType);`
 
 [:arrow_up_small:](#)
 

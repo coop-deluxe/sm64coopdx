@@ -333,7 +333,7 @@ end
 local function on_set_command(msg)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -361,7 +361,7 @@ local function on_set_command(msg)
             gGlobalSyncTable.time = amount * SECOND
             command_message_create("[Day Night Cycle] Time set to " .. math_floor(gGlobalSyncTable.time / SECOND))
         else
-            command_message_create(string.format("\\#ffa0a0\\[Day Night Cycle] Could not set time to '%s'", msg), CONSOLE_MESSAGE_ERROR)
+            command_message_create(string.format("\\#ffa0a0\\[Day Night Cycle] Could not set time to '%s'", msg), LOG_TYPE_ERROR)
         end
     end
 
@@ -373,7 +373,7 @@ end
 local function on_add_command(msg)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -397,7 +397,7 @@ end
 local function on_scale_command(msg)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -430,7 +430,7 @@ end
 local function on_sync_command()
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -446,13 +446,13 @@ end
 local function on_sync_sun_command()
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
     if dayNightCycleApi.lockSunHours then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] Changing sun hours has been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] Changing sun hours has been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -475,7 +475,7 @@ end
 local function on_music_command()
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -489,7 +489,7 @@ end
 local function on_display_time_command()
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -506,19 +506,19 @@ local function on_time_command(msg)
 
     if args[1] == "set" then
         if not network_is_server() then
-            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time set", CONSOLE_MESSAGE_ERROR)
+            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time set", LOG_TYPE_ERROR)
         else
             on_set_command(args[2] or "")
         end
     elseif args[1] == "add" then
         if not network_is_server() then
-            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time add", CONSOLE_MESSAGE_ERROR)
+            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time add", LOG_TYPE_ERROR)
         else
             on_add_command(args[2] or "")
         end
     elseif args[1] == "scale" then
         if not network_is_server() then
-            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time scale", CONSOLE_MESSAGE_ERROR)
+            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time scale", LOG_TYPE_ERROR)
         else
             on_scale_command(args[2] or "")
         end
@@ -528,7 +528,7 @@ local function on_time_command(msg)
         on_24h_command()
     elseif args[1] == "sync" then
         if not network_is_server() then
-            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time sync", CONSOLE_MESSAGE_ERROR)
+            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to run /time sync", LOG_TYPE_ERROR)
         else
             on_sync_command()
         end
@@ -539,10 +539,10 @@ local function on_time_command(msg)
     elseif args[1] == "display-time" then
         on_display_time_command()
     elseif args[1] ~= nil then
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] Unrecognized command '" .. args[1] .. "'", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] Unrecognized command '" .. args[1] .. "'", LOG_TYPE_ERROR)
     else
         if not network_is_server() then
-            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to enable or disable Day Night Cycle", CONSOLE_MESSAGE_ERROR)
+            command_message_create("\\#ffa0a0\\[Day Night Cycle] You do not have permission to enable or disable Day Night Cycle", LOG_TYPE_ERROR)
         else
             gGlobalSyncTable.dncEnabled = not gGlobalSyncTable.dncEnabled
             command_message_create("[Day Night Cycle] Status: " .. on_or_off(gGlobalSyncTable.dncEnabled))
@@ -586,7 +586,7 @@ end
 local function on_set_dnc_enabled(_, value)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -597,7 +597,7 @@ end
 local function on_set_time_scale(index, value)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -610,7 +610,7 @@ end
 local function on_set_time_modifier(_, value)
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 
@@ -621,7 +621,7 @@ end
 local function on_add_hour()
     if dayNightCycleApi.lockTime then
         play_sound(SOUND_MENU_CAMERA_BUZZ, gGlobalSoundSource)
-        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", CONSOLE_MESSAGE_ERROR)
+        command_message_create("\\#ffa0a0\\[Day Night Cycle] The Day Night Cycle settings have been locked by another mod.", LOG_TYPE_ERROR)
         return
     end
 

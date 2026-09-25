@@ -6,6 +6,8 @@
 #include "data/dynos.c.h"
 #include "pc/utils/misc.h"
 #include "pc/utils/md5.h"
+#include "pc/djui/djui.h"
+#include "pc/network/network.h"
 #include "pc/debuglog.h"
 #include "pc/fs/fmem.h"
 #include "pc/lua/smlua_cobject.h"

@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "print.h"
+#include "game/game_init.h"
 #include "pc/debuglog.h"
 
 // Alignment to a data size
