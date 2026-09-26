@@ -4297,6 +4297,59 @@ Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
 <br />
 
 ---
+# functions from djui_panel_mod_menu.h
+
+<br />
+
+
+## [mod_menu_push_panel](#mod_menu_push_panel)
+
+### Description
+Pushes a new panel to the mod menu using `panelId`. You can change the `headerTitle`
+or adjust `hideBackButton`
+
+### Lua Example
+`mod_menu_push_panel(panelId, headerTitle, hideBackButton)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| panelId | `string` |
+| headerTitle | `string` |
+| hideBackButton | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void mod_menu_push_panel(const char *panelId, OPTIONAL const char *headerTitle, OPTIONAL bool hideBackButton);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [mod_menu_pop_panel](#mod_menu_pop_panel)
+
+### Description
+Pops the last panel
+
+### Lua Example
+`mod_menu_pop_panel()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void mod_menu_pop_panel(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from djui_popup.h
 
 <br />

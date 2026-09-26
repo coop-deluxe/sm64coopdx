@@ -17,10 +17,12 @@ Hooks are a way for the game to trigger Lua code, whereas the functions listed i
 - [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
 - [hook_mod_menu_slider](#hook_mod_menu_slider)
 - [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
+- [hook_mod_menu_selectionbox](#hook_mod_menu_selectionbox)
 - [update_mod_menu_element_name](#update_mod_menu_element_name)
 - [update_mod_menu_element_checkbox](#update_mod_menu_element_checkbox)
 - [update_mod_menu_element_slider](#update_mod_menu_element_slider)
 - [update_mod_menu_element_inputbox](#update_mod_menu_element_inputbox)
+- [update_mod_menu_element_selectionbox](#update_mod_menu_element_selectionbox)
 
 <br />
 
@@ -342,6 +344,7 @@ indexText = hook_mod_menu_text("Rise and shine, Mr. Freeman.")
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | message | `string` | The message for the text to show |
+| panelId | `string` | The panel to show the text in |
 
 ### Returns
 - `integer`
@@ -374,6 +377,7 @@ end
 -- you can always do separate functions too!
 indexButton1 = hook_mod_menu_button("Open Menu 1", on_open_menu)
 indexButton2 = hook_mod_menu_button("Open Menu 2", on_open_menu)
+
 ```
 
 ### Parameters
@@ -381,6 +385,7 @@ indexButton2 = hook_mod_menu_button("Open Menu 2", on_open_menu)
 | ----- | ---- | ----------- |
 | name | `string` | The text to show on the button |
 | func | `function` | The function that is called when the button is pressed |
+| panelId | `string` | The panel to show the button in |
 
 ### Returns
 - `integer`
@@ -420,6 +425,7 @@ indexCheckbox2 = hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode
 | name | `string` | The text to show on the left |
 | defaultValue | `bool` | The default state of the checkbox |
 | func | `function` | The function that is called when the checkbox is changed |
+| panelId | `string` | The panel to show the checkbox in |
 
 ### Returns
 - `integer`
@@ -452,6 +458,7 @@ indexSlider = hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
 | min | `integer` | The lowest the slider can go |
 | max | `integer` | The highest the slider can go |
 | func | `function` | The function that is called when the value of the slider changes |
+| panelId | `string` | The panel to show the slider in |
 
 ### Returns
 - `integer`
@@ -483,6 +490,41 @@ indexInputbox = hook_mod_menu_inputbox("Network Player Description", "", 100, on
 | defaultValue | `string` | The default text in the inputbox |
 | stringLength | `integer` | The max length of the inputbox |
 | func | `function` | The function that is called when the value of the inputbox changes |
+| panelId | `string` | The panel to show the inputbox in |
+
+### Returns
+- `integer`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [hook_mod_menu_selectionbox](#hook_mod_menu_selectionbox)
+
+### Description
+Allows Lua to add selectionboxes to their designated mod menu submenu.
+
+### Lua Example
+```lua
+local spectatorMode = 0
+
+--- @param index integer
+--- @param value integer
+local function on_set_spectator_mode(index, value)
+    spectatorMode = value
+end
+
+indexSelectionbox = hook_mod_menu_selectionbox("Spectator Mode", 0, { "Not Spectating", "Freecam", "Follow" }, on_set_spectator_mode)
+```
+
+### Parameters
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| name | `string` | The text to show on the left |
+| defaultValue | `integer` | The default selected value in the selectionbox |
+| choices | `table` | The list of choices for the selectionbox, which is a table of strings |
+| func | `function` | The function that is called when the value of the selectionbox changes |
+| panelId | `string` | The panel to show the inputbox in |
 
 ### Returns
 - `integer`
@@ -575,6 +617,30 @@ update_mod_menu_element_inputbox(indexInputbox, stringValue)
 | ----- | ---- | ----------- |
 | index | `integer` | The index of the element returned by `hook_mod_menu_inputbox` |
 | value | `string` | The text to change to |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## [update_mod_menu_element_selectionbox](#update_mod_menu_element_selectionbox)
+
+### Description
+Updates a mod menu selectionbox value and optionally choices.
+
+### Lua Example
+```lua
+update_mod_menu_element_selectionbox(indexSelectionbox, newSelection, { "New", "Choices", "Are", "Cool" })
+```
+
+### Parameters
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| index | `integer` | The index of the element returned by `hook_mod_menu_selectionbox` |
+| value | `integer` | The selection value to change to |
+| choices | `table` | A new table of choices |
 
 ### Returns
 - None
