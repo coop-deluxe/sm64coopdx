@@ -60,11 +60,7 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
     input->bufferSize = number->digits + (*text == '-' ? 2 : 1);
 
     s64 value = strtoll(text, &end, 10);
-    number->valid = text != end && (
-        number->type == NUMTYPE_U32
-            ? (u32)number->min <= value && value <= (u32)number->max
-            : (number->min <= value && value <= number->max)
-        );
+    number->valid = text != end && number->min <= value && value <= number->max;
 
     if (number->valid) {
         struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;

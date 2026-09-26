@@ -15,7 +15,7 @@ struct DjuiInputNumber {
     struct DjuiInputbox input;
     enum InputNumberType type;
     u8 digits;
-    s32 min, max;
+    s64 min, max;
     void *value; s64 saved;
     bool valid;
 };
