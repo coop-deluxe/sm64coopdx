@@ -1901,7 +1901,7 @@ int smlua_update_mod_menu_element_name(lua_State* L) {
 
     struct LuaHookedModMenuElement *modMenuElement = gHookedModMenuElements->buffer[index];
     snprintf(modMenuElement->name, sizeof(modMenuElement->name), "%s", name);
-    return 1;
+    return 0;
 }
 
 int smlua_update_mod_menu_element_checkbox(lua_State* L) {
@@ -1928,7 +1928,7 @@ int smlua_update_mod_menu_element_checkbox(lua_State* L) {
     }
 
     modMenuElement->boolValue = boolValue;
-    return 1;
+    return 0;
 }
 
 int smlua_update_mod_menu_element_slider(lua_State* L) {
@@ -1955,7 +1955,7 @@ int smlua_update_mod_menu_element_slider(lua_State* L) {
     }
 
     modMenuElement->uintValue = uintValue;
-    return 1;
+    return 0;
 }
 
 int smlua_update_mod_menu_element_inputbox(lua_State* L) {
@@ -1982,7 +1982,7 @@ int smlua_update_mod_menu_element_inputbox(lua_State* L) {
     }
 
     snprintf(modMenuElement->stringValue, modMenuElement->length, "%s", stringValue);
-    return 1;
+    return 0;
 }
 
 int smlua_update_mod_menu_element_selectionbox(lua_State* L) {
@@ -2049,7 +2049,7 @@ int smlua_update_mod_menu_element_selectionbox(lua_State* L) {
     if (modMenuElement->uintValue >= modMenuElement->choicesCount) {
         modMenuElement->uintValue = 0;
     }
-    return 1;
+    return 0;
 }
 
 void smlua_call_mod_menu_element_hook(struct LuaHookedModMenuElement* hooked, int index) {
