@@ -49,7 +49,7 @@ extern char configSaveNames[4][MAX_SAVE_NAME_STRING];
 // display settings
 extern ConfigWindow configWindow;
 extern ConfigStick configStick;
-extern enum GfxWindowBackend configGraphicsBackend;
+extern unsigned int configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
@@ -101,7 +101,7 @@ extern bool         configBackgroundGamepad;
 extern bool         configExtendedReports;
 extern bool         configDisableGamepads;
 extern bool         configUseStandardKeyBindingsChat;
-extern bool         configSmoothScrolling;
+extern bool         configSmoothScroll;
 // free camera settings
 extern bool         configEnableFreeCamera;
 extern bool         configFreeCameraAnalog;
@@ -167,6 +167,7 @@ extern unsigned int configPvpType;
 extern char         configCoopNetIp[MAX_CONFIG_STRING];
 extern unsigned int configCoopNetPort;
 extern char         configPassword[MAX_CONFIG_STRING];
+extern char         configJoinPassword[MAX_CONFIG_STRING];
 extern char         configDestId[MAX_CONFIG_STRING];
 // DJUI settings
 extern unsigned int configDjuiTheme;

@@ -35,6 +35,10 @@ bool dynos_warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
     return DynOS_Warp_ToWarpNode(aLevel, aArea, aAct, aWarpId);
 }
 
+bool dynos_warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId) {
+    return DynOS_Warp_WithTransition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId);
+}
+
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
     return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
 }

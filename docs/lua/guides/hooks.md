@@ -26,7 +26,7 @@ Hooks are a way for the game to trigger Lua code, whereas the functions listed i
 
 <br />
 
-## [hook_behavior](#hook_behavior)
+## hook_behavior
 
 ### Description
 Allows Lua mods to override existing behaviors or create new ones.
@@ -62,7 +62,7 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 
 <br />
 
-## [hook_chat_command](#hook_chat_command)
+## hook_chat_command
 
 ### Description
 Allows Lua mods to react and respond to chat commands.
@@ -100,7 +100,7 @@ hook_chat_command("test", "[on|off] turn test on or off", on_test_command)
 
 <br />
 
-## [update_chat_command_description](#update_chat_command_description)
+## update_chat_command_description
 
 ### Description
 Updates the description of a chat command.
@@ -123,7 +123,7 @@ update_chat_command_description("command", "description")
 
 <br />
 
-## [hook_console_command](#hook_console_command)
+## hook_console_command
 
 ### Description
 Allows Lua mods to react and respond to console commands. The function the mod passes to the hook should return `true` when the command was valid and `false` otherwise. You should use `command_message_create` to show any messages to the user. Console messages only appear in the console and terminal.
@@ -158,7 +158,7 @@ hook_console_command("test", "[on|off] turn test on or off", on_test_command)
 
 <br />
 
-## [update_console_command_description](#update_console_command_description)
+## update_console_command_description
 
 ### Description
 Updates the description of a console command.
@@ -181,7 +181,7 @@ update_console_command_description("command", "description")
 
 <br />
 
-## [hook_event](#hook_event)
+## hook_event
 
 ### Description
 Assigns a callback function to a game hook [event](hook-events.md#Hook-Event-Types). This function will be automatically called by the game when this kind of event occurs.
@@ -209,7 +209,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 
 <br />
 
-## [hook_mario_action](#hook_mario_action)
+## hook_mario_action
 
 ### Description
 Allows Lua mods to create new actions or override existing ones.
@@ -291,7 +291,7 @@ hook_mario_action(ACT_WALL_SLIDE, { every_frame = act_wall_slide, gravity = act_
 
 <br />
 
-## [hook_on_sync_table_change](#hook_on_sync_table_change)
+## hook_on_sync_table_change
 
 ### Description
 Allows Lua mods to react to sync table changes.
@@ -330,7 +330,7 @@ gGlobalSyncTable.testingField = "hello"
 
 <br />
 
-## [hook_mod_menu_text](#hook_mod_menu_text)
+## hook_mod_menu_text
 
 ### Description
 Allows Lua to add text labels to their designated mod menu submenu.
@@ -353,7 +353,7 @@ indexText = hook_mod_menu_text("Rise and shine, Mr. Freeman.")
 
 <br />
 
-## [hook_mod_menu_button](#hook_mod_menu_button)
+## hook_mod_menu_button
 
 ### Description
 Allows Lua to add buttons to their designated mod menu submenu.
@@ -394,7 +394,7 @@ indexButton2 = hook_mod_menu_button("Open Menu 2", on_open_menu)
 
 <br />
 
-## [hook_mod_menu_checkbox](#hook_mod_menu_checkbox)
+## hook_mod_menu_checkbox
 
 ### Description
 Allows Lua to add checkboxes to their designated mod menu submenu.
@@ -434,7 +434,7 @@ indexCheckbox2 = hook_mod_menu_checkbox("Noclip Mode", false, on_set_player_mode
 
 <br />
 
-## [hook_mod_menu_slider](#hook_mod_menu_slider)
+## hook_mod_menu_slider
 
 ### Description
 Allows Lua to add sliders to their designated mod menu submenu.
@@ -467,7 +467,7 @@ indexSlider = hook_mod_menu_slider("Time Scale", 1, 0, 10, on_set_time_scale)
 
 <br />
 
-## [hook_mod_menu_inputbox](#hook_mod_menu_inputbox)
+## hook_mod_menu_inputbox
 
 ### Description
 Allows Lua to add textboxes to their designated mod menu submenu.
@@ -533,7 +533,7 @@ indexSelectionbox = hook_mod_menu_selectionbox("Spectator Mode", 0, { "Not Spect
 
 <br />
 
-## [update_mod_menu_element_name](#update_mod_menu_element_name)
+## update_mod_menu_element_name
 
 ### Description
 Updates a mod menu element's name.
@@ -556,7 +556,7 @@ update_mod_menu_element_name(index, "new name")
 
 <br />
 
-## [update_mod_menu_element_checkbox](#update_mod_menu_element_checkbox)
+## update_mod_menu_element_checkbox
 
 ### Description
 Updates a mod menu checkbox element's boolean value.
@@ -579,7 +579,7 @@ update_mod_menu_element_checkbox(indexCheckbox, booleanValue)
 
 <br />
 
-## [update_mod_menu_element_slider](#update_mod_menu_element_slider)
+## update_mod_menu_element_slider
 
 ### Description
 Updates a mod menu slider element's numerical value.
@@ -602,7 +602,7 @@ update_mod_menu_element_slider(indexSlider, numberValue)
 
 <br />
 
-## [update_mod_menu_element_inputbox](#update_mod_menu_element_inputbox)
+## update_mod_menu_element_inputbox
 
 ### Description
 Updates a mod menu inputbox element's string value.
