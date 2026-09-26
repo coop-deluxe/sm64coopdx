@@ -24,6 +24,7 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base);
 void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base);
 void djui_inputbox_set_text_color(struct DjuiInputbox* inputbox, u8 r, u8 g, u8 b, u8 a);
 void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text);
+void djui_inputbox_set_number(struct DjuiInputbox* inputbox, s64 value);
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox);
 void djui_inputbox_move_cursor_to_end(struct DjuiInputbox* inputbox);
 void djui_inputbox_move_cursor_to_position(struct DjuiInputbox* inputbox, u16 newCursorPosition);
@@ -34,4 +35,5 @@ void djui_inputbox_on_key_up(struct DjuiBase* base, int scancode);
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text);
 void djui_inputbox_on_text_editing(struct DjuiBase *base, char* text, int cursorPos);
 
+struct DjuiInputbox* djui_inputbox_init(struct DjuiBase* parent, struct DjuiInputbox* inputbox, u16 bufferSize);
 struct DjuiInputbox* djui_inputbox_create(struct DjuiBase* parent, u16 bufferSize);

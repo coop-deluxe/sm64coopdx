@@ -9,7 +9,6 @@
 #include "djui_inputbox.h"
 
 static unsigned int sKnockbackIndex = 0;
-struct DjuiInputbox* sPlayerAmount = NULL;
 static bool sFalse = false;
 
 static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* caller) {
@@ -18,31 +17,6 @@ static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* ca
         case 1:  configPlayerKnockbackStrength = 25; break;
         default: configPlayerKnockbackStrength = 60; break;
     }
-}
-
-static bool djui_panel_host_limit_valid(void) {
-    char* buffer = sPlayerAmount->buffer;
-    int limit = 0;
-    while (*buffer != '\0') {
-        if (*buffer < '0' || *buffer > '9') { return false; }
-        limit *= 10;
-        limit += (*buffer - '0');
-        buffer++;
-    }
-    return limit >= 1 && limit <= MAX_PLAYERS;
-}
-
-static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
-    if (djui_panel_host_limit_valid()) {
-        djui_inputbox_set_text_color(inputbox1, textColor->r, textColor->g, textColor->b, textColor->a);
-    } else {
-        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
-        return;
-    }
-    configAmountOfPlayers = atoi(sPlayerAmount->buffer);
 }
 
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
@@ -84,15 +58,10 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
-            djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.45f, 32);
-            djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            char limitString[32] = { 0 };
-            snprintf(limitString, 32, "%d", configAmountOfPlayers);
-            djui_inputbox_set_text(inputbox1, limitString);
-            djui_interactable_hook_value_change(&inputbox1->base, djui_panel_host_player_text_change);
-            sPlayerAmount = inputbox1;
+            struct DjuiBase *playerCount = &djui_input_number_create(&rect1->base, &configAmountOfPlayers, 1, MAX_PLAYERS)->input.base;
+            djui_base_set_size_type(playerCount, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(playerCount, 0.45f, 32);
+            djui_base_set_alignment(playerCount, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
         }
 
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

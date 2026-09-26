@@ -65,9 +65,7 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
             djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox1->base, 0.45f, 32);
             djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            char limitString[32] = { 0 };
-            snprintf(limitString, 32, "%d", gServerSettings.maxPlayers);
-            djui_inputbox_set_text(inputbox1, limitString);
+            djui_inputbox_set_number(inputbox1, gServerSettings.maxPlayers);
             djui_base_set_enabled(&inputbox1->base, false);
         }
 

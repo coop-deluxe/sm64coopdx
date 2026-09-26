@@ -25,16 +25,7 @@ static void djui_panel_display_framerate_mode_change(UNUSED struct DjuiBase* cal
 }
 
 static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) {
-    struct DjuiInputbox* inputbox1 = (struct DjuiInputbox*)caller;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor* textColor = &theme->interactables.textColor;
-    s32 frameLimit = atoi(inputbox1->buffer);
-    if (frameLimit >= 30 && frameLimit <= 3000) {
-        djui_inputbox_set_text_color(inputbox1, textColor->r, textColor->g, textColor->b, textColor->a);
-        configFrameLimit = frameLimit;
-    } else {
-        djui_inputbox_set_text_color(inputbox1, 255, 0, 0, 255);
-    }
+    djui_input_number_text_change(caller);
     djui_base_set_enabled(&sInterpolationSelectionBox->base, (configFrameLimit > 30 || configFramerateMode != RRM_MANUAL));
 }
 
@@ -80,27 +71,25 @@ void djui_panel_display_create(struct DjuiBase* caller) {
         char* framerateModeChoices[3] = { DLANG(DISPLAY, AUTO), DLANG(DISPLAY, MANUAL), DLANG(DISPLAY, UNCAPPED) };
         djui_selectionbox_create(body, DLANG(DISPLAY, FRAMERATE_MODE), framerateModeChoices, 3, &configFramerateMode, djui_panel_display_framerate_mode_change);
 
-        struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
+        struct DjuiRect* frameLimitRect = djui_rect_container_create(body, 32);
         {
             if (configFrameLimit < 30) { configFrameLimit = 30; }
             if (configFrameLimit > 3000) { configFrameLimit = 3000; }
-            struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(DISPLAY, FRAME_LIMIT));
+            struct DjuiText* text1 = djui_text_create(&frameLimitRect->base, DLANG(DISPLAY, FRAME_LIMIT));
             djui_base_set_size_type(&text1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_color(&text1->base, 220, 220, 220, 255);
             djui_base_set_size(&text1->base, 0.585f, 64);
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputbox* inputbox1 = djui_inputbox_create(&rect1->base, 32);
-            djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&inputbox1->base, 0.45f, 32);
-            djui_base_set_alignment(&inputbox1->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
-            char frameLimitString[32] = { 0 };
-            snprintf(frameLimitString, 32, "%d", configFrameLimit);
-            djui_inputbox_set_text(inputbox1, frameLimitString);
-            djui_interactable_hook_value_change(&inputbox1->base, djui_panel_display_frame_limit_text_change);
-            djui_base_set_enabled(&inputbox1->base, configFramerateMode == RRM_MANUAL);
-            sFrameLimitInput = inputbox1;
+            struct DjuiInputNumber* number = djui_input_number_create(&frameLimitRect->base, &configFrameLimit, 30, 3000);
+            struct DjuiInputbox* inputbox = &number->input;
+            djui_base_set_size_type(&inputbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+            djui_base_set_size(&inputbox->base, 0.45f, 32);
+            djui_base_set_alignment(&inputbox->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            djui_interactable_hook_value_change(&inputbox->base, djui_panel_display_frame_limit_text_change);
+            djui_base_set_enabled(&inputbox->base, configFramerateMode == RRM_MANUAL);
+            sFrameLimitInput = inputbox;
         }
 
         char* interpChoices[2] = { DLANG(DISPLAY, FAST), DLANG(DISPLAY, ACCURATE) };
