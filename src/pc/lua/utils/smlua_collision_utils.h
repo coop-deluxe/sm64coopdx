@@ -114,7 +114,12 @@ struct GlobalObjectCollisionData {
 
 extern struct GlobalObjectCollisionData gGlobalObjectCollisionData;
 
-struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);
+/* |description|Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, bigger `precision` is higher|descriptionEnd| */
+OVERLOAD(collision_find_surface_on_ray) struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);
+
+/* |description|Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with default precision (3.0)|descriptionEnd| */
+OVERLOAD(collision_find_surface_on_ray) struct RayIntersectionInfo* collision_find_surface_on_ray_default_precision(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ);
+
 /* |description|Finds a potential floor at the given `x`, `y`, and `z` values|descriptionEnd| */
 struct Surface* collision_find_floor(f32 x, f32 y, f32 z);
 
