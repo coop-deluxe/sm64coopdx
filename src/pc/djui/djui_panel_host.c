@@ -13,7 +13,7 @@
 #include "pc/configfile.h"
 #include "pc/update_checker.h"
 
-#if __linux__
+#if __linux__ || __APPLE__ || __MACH__
 #define MIN_PORT 1024
 #else
 #define MIN_PORT 0
