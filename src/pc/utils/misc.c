@@ -614,6 +614,19 @@ void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, 
     }
 }
 
+char *get_size_string(size_t size) {
+    static char buffer[32];
+    char *sizeUnits[3] = { "B", "KB", "MB" };
+    f64 convertedSize = (f64)size;
+    u8 sizeType = 0;
+    while (convertedSize >= 1024 && sizeType < 2) {
+        convertedSize /= 1024;
+        sizeType++;
+    }
+    snprintf(buffer, sizeof(buffer), "%.2f %s", convertedSize, sizeUnits[sizeType]);
+    return buffer;
+}
+
 #if defined(__linux__) || defined(__APPLE__)
 static s8 launch(const char* program, const char* arg) {
     pid_t pid = fork();

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "djui.h"
+#include "pc/utils/misc.h"
 
 static void djui_searchbox_destroy(struct DjuiBase* base) {
     struct DjuiSearchbox* searchbox = (struct DjuiSearchbox*)base;
@@ -20,6 +21,28 @@ static void djui_searchbox_on_value_change(struct DjuiBase* base) {
     if (searchbox->on_value_change) {
         searchbox->on_value_change(base);
     }
+}
+
+bool djui_searchbox_has_string(struct DjuiSearchbox* searchbox, const char* string) {
+    if (!searchbox) { return false; }
+    if (!searchbox->inputbox) { return false; }
+    if (!searchbox->inputbox->buffer) { return false; }
+    if (!string) { return false; }
+    return strstr_lowercased(djui_text_get_uncolored_string(NULL, strlen(string) + 1, string), searchbox->inputbox->buffer);
+}
+
+bool djui_searchbox_has_any_strings(struct DjuiSearchbox* searchbox, const char** strings, size_t count) {
+    if (!searchbox) { return false; }
+    if (!searchbox->inputbox) { return false; }
+    if (!searchbox->inputbox->buffer) { return false; }
+    if (!strings) { return false; }
+    for (size_t i = 0; i < count; i++) {
+        if (strings[i] && djui_searchbox_has_string(searchbox, strings[i])) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 struct DjuiSearchbox* djui_searchbox_create(struct DjuiBase* parent, void (*on_value_change)(struct DjuiBase*)) {
