@@ -62,7 +62,7 @@ void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
 }
 
-void djui_inputbox_set_number(struct DjuiInputbox* inputbox, int value) {
+void djui_inputbox_set_number(struct DjuiInputbox* inputbox, s32 value) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%d", value);
 }
 

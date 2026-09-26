@@ -61,8 +61,12 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
     input->bufferSize = number->digits + (*text == '-' ? 2 : 1);
 
     errno = 0;
-    s32 value = strtol(text, &end, 10);
-    number->valid = text != end && errno != ERANGE && value >= number->min && value <= number->max;
+    s64 value = strtol(text, &end, 10);
+    number->valid = text != end && errno != ERANGE && (
+        (number->type & NUMTYPE_SIGNED)
+            ? number->min <= value && value <= number->max
+            : ((u32)number->min <= (u32)value && (u32)value <= (u32)number->max)
+        );
 
     if (number->valid) {
         struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;
@@ -90,19 +94,21 @@ static void djui_input_number_render_pre(struct DjuiBase *base, UNUSED bool *unu
 
 struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s32 min, s32 max) {
     struct DjuiInputNumber *number = calloc(1, sizeof(struct DjuiInputNumber));
-    struct DjuiBase *base = &number->input.base;
-    djui_inputbox_init(parent, &number->input, S32_MAX_SIZE);
+    struct DjuiInputbox *input = &number->input;
+    struct DjuiBase *base = &input->base;
+    djui_inputbox_init(parent, input, S32_MAX_SIZE);
     djui_interactable_hook_text_input(base, djui_input_number_on_text_input);
     djui_interactable_hook_value_change(base, djui_input_number_text_change);
     base->on_render_pre = djui_input_number_render_pre;
     number->min = min; number->max = max;
     number->value = value; number->type = type;
-    number->digits = log10(labs(max)) + 1;
-    if (labs(min) > labs(max)) {
-        number->digits = log10(labs(min)) + 1;
-    }
+    char *text = input->buffer;
+    djui_inputbox_set_number(input, max);
+    number->digits = strlen(text + (*text == '-'));
+    djui_inputbox_set_number(input, min);
+    number->digits = MAX(number->digits, strlen(text + (*text == '-')));
 
-    djui_inputbox_set_number(&number->input, number->saved = djui_input_number_get_value(number));
+    djui_inputbox_set_number(input, number->saved = djui_input_number_get_value(number));
     djui_input_number_text_change(base);
     return number;
 }
