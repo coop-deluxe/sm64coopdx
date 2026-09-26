@@ -15,8 +15,9 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
     u16 *sel = number->input.selection;
     char *msg = number->input.buffer;
 
+    // toggle sign
     if (*text == '-') {
-        if (number->type & NUMTYPE_SIGNED && *msg != '-' && number->min < 0) {
+        if (*msg != '-' && number->min < 0) {
             memmove(msg + 1, msg, strlen(msg) + 1);
             *msg = '-'; sel[0]++; sel[1]++;
             djui_input_number_text_change(base);
@@ -34,10 +35,12 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
         text++;
     }
 
+    // keep cursor ahead of sign
     if (*msg == '-' && sel[0] == 0 && sel[1] == 0) {
         sel[0] = sel[1] = 1;
     }
 
+    // preserve only numerical input
     char *tinput = text;
     while (*tinput != '\0') {
         if (*tinput < '0' || *tinput > '9') {
@@ -77,12 +80,17 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
 
 static void djui_input_number_render_pre(struct DjuiBase *base, UNUSED bool *unused) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber *)base;
+    struct DjuiInputbox *input = &number->input;
     s64 value = djui_input_number_get_value(number);
     if (value != number->saved) {
         number->saved = value;
-        number->input.bufferSize = S32_MAX_SIZE;
-        djui_inputbox_set_number(&number->input, number->saved);
+        input->bufferSize = S32_MAX_SIZE;
+        djui_inputbox_set_number(input, number->saved);
         djui_input_number_text_change(base);
+
+        u8 len = strlen(input->buffer);
+        input->selection[0] = MIN(input->selection[0], len);
+        input->selection[1] = MIN(input->selection[1], len);
     }
 }
 
