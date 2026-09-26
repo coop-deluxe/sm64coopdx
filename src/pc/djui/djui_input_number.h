@@ -16,7 +16,7 @@ struct DjuiInputNumber {
     enum InputNumberType type;
     u8 digits;
     s32 min, max;
-    void *value; s32 saved;
+    void *value; s64 saved;
     bool valid;
 };
 
@@ -29,4 +29,4 @@ void djui_input_number_text_change(struct DjuiBase *caller);
         s32 *: NUMTYPE_S32 \
     ), min, max)
 
-struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s32 min, s32 max);
+struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s64 min, s64 max);

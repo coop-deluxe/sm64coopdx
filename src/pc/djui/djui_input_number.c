@@ -1,10 +1,9 @@
 #include "djui.h"
-#include <errno.h>
 
 #define S32_MAX_SIZE 12 // -2147483647|
 
 // Add types as needed
-static s32 djui_input_number_get_value(struct DjuiInputNumber *number) {
+static s64 djui_input_number_get_value(struct DjuiInputNumber *number) {
     switch (number->type) {
         case NUMTYPE_U32: return *(u32 *)number->value;
         case NUMTYPE_S32: return *(s32 *)number->value;
@@ -60,12 +59,11 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
 
     input->bufferSize = number->digits + (*text == '-' ? 2 : 1);
 
-    errno = 0;
-    s64 value = strtol(text, &end, 10);
-    number->valid = text != end && errno != ERANGE && (
-        (number->type & NUMTYPE_SIGNED)
-            ? number->min <= value && value <= number->max
-            : ((u32)number->min <= (u32)value && (u32)value <= (u32)number->max)
+    s64 value = strtoll(text, &end, 10);
+    number->valid = text != end && (
+        number->type == NUMTYPE_U32
+            ? (u32)number->min <= value && value <= (u32)number->max
+            : (number->min <= value && value <= number->max)
         );
 
     if (number->valid) {
@@ -83,7 +81,7 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
 
 static void djui_input_number_render_pre(struct DjuiBase *base, UNUSED bool *unused) {
     struct DjuiInputNumber *number = (struct DjuiInputNumber *)base;
-    s32 value = djui_input_number_get_value(number);
+    s64 value = djui_input_number_get_value(number);
     if (value != number->saved) {
         number->saved = value;
         number->input.bufferSize = S32_MAX_SIZE;
@@ -92,7 +90,7 @@ static void djui_input_number_render_pre(struct DjuiBase *base, UNUSED bool *unu
     }
 }
 
-struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s32 min, s32 max) {
+struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s64 min, s64 max) {
     struct DjuiInputNumber *number = calloc(1, sizeof(struct DjuiInputNumber));
     struct DjuiInputbox *input = &number->input;
     struct DjuiBase *base = &input->base;
