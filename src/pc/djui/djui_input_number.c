@@ -102,6 +102,7 @@ struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void 
     djui_interactable_hook_text_input(base, djui_input_number_on_text_input);
     djui_interactable_hook_value_change(base, djui_input_number_text_change);
     base->on_render_pre = djui_input_number_render_pre;
+    if (!(type & NUMTYPE_SIGNED) && min < 0) min = 0;
     number->min = min; number->max = max;
     number->value = value; number->type = type;
     char *text = input->buffer;
