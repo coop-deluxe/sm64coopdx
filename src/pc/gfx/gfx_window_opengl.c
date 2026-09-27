@@ -4,7 +4,7 @@
 #define FOR_WINDOWS 0
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -15,14 +15,14 @@
 #include <GL/glew.h>
 
 #define GL_GLEXT_PROTOTYPES 1
-#include <SDL2/SDL_opengl.h>
+#include <SDL3/SDL_opengl.h>
 #else
 #define GL_GLEXT_PROTOTYPES 1
 
 #ifdef OSX_BUILD
-#include <SDL2/SDL_opengl.h>
+#include <SDL3/SDL_opengl.h>
 #else
-#include <SDL2/SDL_opengles2.h>
+#include <SDL3/SDL_opengles2.h>
 #endif
 
 #endif // End of OS-Specific GL defines
@@ -57,7 +57,7 @@ static bool sAppliedVsync = false;
 
 static int gfx_window_opengl_get_max_msaa(void);
 
-static inline int gfx_window_opengl_set_vsync(const bool enabled) {
+static inline bool gfx_window_opengl_set_vsync(const bool enabled) {
     return SDL_GL_SetSwapInterval(enabled);
 }
 
@@ -70,24 +70,13 @@ static void gfx_window_opengl_reset_dimension_and_pos(void) {
 
 static void clamp_window_msaa_before_init() {
     if (!(SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO)) {
-        if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
             return;
         }
     }
 
-#ifdef USE_GLES
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-
     // hidden window
-    SDL_Window *window = SDL_CreateWindow(
-        "",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN
-    );
-
+    SDL_Window *window = SDL_CreateWindow("", 1, 1, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
     if (!window) { return; }
 
     SDL_GLContext ctx = SDL_GL_CreateContext(window);
@@ -102,7 +91,7 @@ static void clamp_window_msaa_before_init() {
     u32 maxMsaa = gfx_window_opengl_get_max_msaa();
     configWindow.msaa = MIN(configWindow.msaa, maxMsaa);
 
-    SDL_GL_DeleteContext(ctx);
+    SDL_GL_DestroyContext(ctx);
     SDL_DestroyWindow(window);
 }
 
@@ -127,33 +116,33 @@ static void gfx_window_opengl_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    sSdlWindow = SDL_CreateWindow(
-        window_title,
-        xpos, ypos, configWindow.w, configWindow.h,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
-    );
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, window_title);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, xpos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, ypos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, configWindow.w);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, configWindow.h);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    sSdlWindow = SDL_CreateWindowWithProperties(props);
+    SDL_DestroyProperties(props);
+
     sGlContext = SDL_GL_CreateContext(sSdlWindow);
 
     gfx_wm_set_window(sSdlWindow);
-    if (gfx_window_opengl_set_vsync(configWindow.vsync) == 0) {
+    if (gfx_window_opengl_set_vsync(configWindow.vsync)) {
         sAppliedVsync = configWindow.vsync;
     }
 }
 
 bool gfx_window_opengl_check_compatibility(void) {
     if (!(SDL_WasInit(SDL_INIT_VIDEO) & SDL_INIT_VIDEO)) {
-        if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
             return false;
         }
     }
 
     // hidden window
-    SDL_Window *window = SDL_CreateWindow(
-        "",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1, 1,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN
-    );
-
+    SDL_Window *window = SDL_CreateWindow("", 1, 1, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN);
     if (!window) {
         return false;
     }
@@ -168,7 +157,7 @@ bool gfx_window_opengl_check_compatibility(void) {
     SDL_GL_MakeCurrent(window, ctx);
     bool validVersion = gfx_opengl_check_compatibility();
 
-    SDL_GL_DeleteContext(ctx);
+    SDL_GL_DestroyContext(ctx);
     SDL_DestroyWindow(window);
 
     return validVersion;
@@ -182,7 +171,7 @@ static void gfx_window_opengl_handle_events(UNUSED SDL_Event event) {
 
 static bool gfx_window_opengl_start_frame(void) {
     if (sAppliedVsync != configWindow.vsync) {
-        if (gfx_window_opengl_set_vsync(configWindow.vsync) == 0) {
+        if (gfx_window_opengl_set_vsync(configWindow.vsync)) {
             sAppliedVsync = configWindow.vsync;
         }
     }
