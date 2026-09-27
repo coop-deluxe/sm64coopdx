@@ -28,6 +28,7 @@
 #include "pc/djui/djui_hud_utils.h"
 
 #define MAX_JOYBINDS 32
+#define MAX_MOUSEBINDS 32
 #define MAX_MOUSEBUTTONS 8 // arbitrary
 #define MAX_JOYBUTTONS 32  // arbitrary; includes virtual keys for triggers
 #define AXIS_THRESHOLD (30 * 256)
@@ -46,7 +47,7 @@ static u32 sSelectedGamepad = 0;
 static u32 sNumJoyBinds = 0;
 static u32 sNumMouseBinds = 0;
 static u32 sJoyBinds[MAX_JOYBINDS][2] = { 0 };
-static u32 sMouseBinds[MAX_JOYBINDS][2] = { 0 };
+static u32 sMouseBinds[MAX_MOUSEBINDS][2] = { 0 };
 
 static bool sJoyButtons[MAX_JOYBUTTONS] = { false };
 static u32 sLastMouse = VK_INVALID;
@@ -61,7 +62,7 @@ static s16 invert_s16(s16 val) {
 static inline void controller_add_binds(const u32 mask, const u32 *btns) {
     for (u32 i = 0; i < MAX_BINDS; ++i) {
         if (btns[i] >= VK_BASE_SDL_GAMEPAD && btns[i] <= VK_BASE_SDL_GAMEPAD + VK_SIZE) {
-            if (btns[i] >= VK_BASE_SDL_MOUSE && sNumMouseBinds < MAX_JOYBINDS) {
+            if (btns[i] >= VK_BASE_SDL_MOUSE && sNumMouseBinds < MAX_MOUSEBINDS) {
                 sMouseBinds[sNumMouseBinds][0] = btns[i] - VK_BASE_SDL_MOUSE;
                 sMouseBinds[sNumMouseBinds][1] = mask;
                 ++sNumMouseBinds;
