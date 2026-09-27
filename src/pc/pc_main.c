@@ -70,7 +70,7 @@
 #include <windows.h>
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 extern Vp gViewportFullscreen;
 
@@ -204,14 +204,22 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
 
 static u32 get_display_refresh_rate(void) {
     static u32 refreshRate = 0;
+
     if (!refreshRate) {
-        SDL_DisplayMode mode;
-        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
-            if (mode.refresh_rate > 0) { refreshRate = (u32) mode.refresh_rate; }
+        SDL_DisplayID display = SDL_GetPrimaryDisplay();
+        const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(display);
+
+        if (mode && mode->refresh_rate > 0.f) {
+            refreshRate = (u32)roundf(mode->refresh_rate);
         } else {
             refreshRate = 60;
         }
     }
+
+    if (refreshRate < 30) {
+        refreshRate = 30;
+    }
+
     return refreshRate;
 }
 
