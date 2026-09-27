@@ -102,8 +102,8 @@ struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void 
     djui_interactable_hook_text_input(base, djui_input_number_on_text_input);
     djui_interactable_hook_value_change(base, djui_input_number_text_change);
     base->on_render_pre = djui_input_number_render_pre;
-    number->min = MAX(min, type & NUMTYPE_SIGNED ? -(1LL << ((type & ~NUMTYPE_SIGNED) - 1)) : 0);
-    number->max = MIN(max, (1LL << ((type & ~NUMTYPE_SIGNED) - ((type & NUMTYPE_SIGNED) != 0))) - 1);
+    number->min = MAX(MIN(min, max), type & NUMTYPE_SIGNED ? -(1LL << ((type & ~NUMTYPE_SIGNED) - 1)) : 0);
+    number->max = MIN(MAX(min, max), (1LL << ((type & ~NUMTYPE_SIGNED) - ((type & NUMTYPE_SIGNED) != 0))) - 1);
     number->value = value; number->type = type;
     char *text = input->buffer;
     djui_inputbox_set_number(input, max);
