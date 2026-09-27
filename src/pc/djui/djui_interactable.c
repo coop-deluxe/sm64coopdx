@@ -182,7 +182,7 @@ void djui_interactable_set_binding(struct DjuiBase* base) {
 }
 
 void djui_interactable_set_input_focus(struct DjuiBase* base) {
-    if (gDjuiConsoleFocus && base != &gDjuiConsole->inputbox->base) {
+    if ((gDjuiConsoleFocus && base != &gDjuiConsole->inputbox->base) || gInteractableFocus == base) {
         return;
     }
 

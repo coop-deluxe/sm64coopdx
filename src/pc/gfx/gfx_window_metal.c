@@ -1,6 +1,6 @@
 #ifdef __APPLE__
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <stdio.h>
 #include <unistd.h>
@@ -34,11 +34,15 @@ static void gfx_window_metal_init(const char *window_title) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    sSdlWindow = SDL_CreateWindow(
-        window_title,
-        xpos, ypos, configWindow.w, configWindow.h,
-        SDL_WINDOW_METAL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
-    );
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, window_title);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, xpos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, ypos);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, configWindow.w);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, configWindow.h);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    sSdlWindow = SDL_CreateWindowWithProperties(props);
+    SDL_DestroyProperties(props);
 
     gfx_wm_set_window(sSdlWindow);
     gfx_window_metal_set_vsync(configWindow.vsync);
@@ -50,7 +54,7 @@ static void gfx_window_metal_handle_events(SDL_Event event) {
         gfx_metal_api.on_resize();
     }
 
-    if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+    if (event.window.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED) {
         gfx_metal_api.on_resize();
     }
 }
