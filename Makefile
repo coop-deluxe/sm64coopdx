@@ -713,11 +713,6 @@ ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
   INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
-  ifeq ($(WINDOWS_BUILD),0)
-    ifeq ($(OSX_BUILD),0)
-      INCLUDE_DIRS += lib/sdl2/include
-    endif
-  endif
 endif
 
 # Configure backend flags
@@ -822,7 +817,7 @@ else ifeq ($(TARGET_RK3588),1)
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(BACKEND_LDFLAGS) -lpthread
 else
-  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread -lbsd
+  LDFLAGS := $(BITS) -march=$(TARGET_ARCH) -lm $(BACKEND_LDFLAGS) -no-pie -lpthread
 endif
 
 # used by crash handler and loading screen on linux
