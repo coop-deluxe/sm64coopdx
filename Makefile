@@ -33,6 +33,9 @@ TARGET_N64 = 0
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
+# Build an ARMv7 SDL/GLES port for webOS
+TARGET_WEBOS ?= 0
+
 # Build and optimize for RK3588 processor
 TARGET_RK3588 ?= 0
 
@@ -129,6 +132,16 @@ ifeq ($(HOST_OS),Linux)
     #Rasberry Pi zero, 2, 3, etc
     TARGET_RPI = 1
   endif
+endif
+
+ifeq ($(TARGET_WEBOS),1)
+  CROSS ?= arm-linux-gnueabihf-
+  TARGET_RPI := 1
+  TARGET_BITS := 0
+  TARGET_ARCH := armv7-a
+  machine := webos-armhf
+  DISCORD_SDK := 0
+  DEFINES += BITS_32=1
 endif
 
 # MXE overrides
@@ -275,7 +288,11 @@ else
 endif
 
 ifeq ($(TARGET_RPI),1)
-  $(info Compiling for Raspberry Pi)
+  ifeq ($(TARGET_WEBOS),1)
+    $(info Compiling for webOS ARMv7)
+  else
+    $(info Compiling for Raspberry Pi)
+  endif
   DISCORD_SDK := 0
 
     # Raspberry Pi B+, Zero, etc
@@ -439,6 +456,9 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 #==============================================================================#
 
 BUILD_DIR_BASE := build
+ifeq ($(TARGET_WEBOS),1)
+  BUILD_DIR_BASE := build/webos
+endif
 # BUILD_DIR is the location where all build artifacts are placed
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
 
@@ -738,7 +758,11 @@ endif
 
 # SDL can be used by different systems, so we consolidate all of that shit into this
 
-SDLCONFIG := $(CROSS)sdl2-config
+ifeq ($(TARGET_WEBOS),1)
+  SDLCONFIG ?= sdl2-config
+else
+  SDLCONFIG := $(CROSS)sdl2-config
+endif
 BACKEND_CFLAGS += -DHAVE_SDL2=1
 
 ifeq ($(OSX_BUILD),1)
