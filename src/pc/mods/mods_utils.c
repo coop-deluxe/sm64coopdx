@@ -192,6 +192,22 @@ bool path_ends_with(const char* path, const char* suffix) {
 #endif
 }
 
+bool path_ends_with_filepath(const char *path, const char *filepath) {
+    if (!path_ends_with(path, filepath)) {
+        return false;
+    }
+
+    // For filepaths, checking only if `path` ends with `filepath` isn't enough.
+    // We need to check if the matching point is the beginning of `path` or next to a separator.
+    // For example: "my_folder/my_file.txt" ends with "file.txt", but "file.txt" doesn't represent a valid file.
+
+    size_t pathLength = strlen(path);
+    size_t filepathLength = strlen(filepath);
+
+    const char *matchPtr = &(path[pathLength - filepathLength]);
+    return matchPtr == path || *(matchPtr - 1) == *PATH_SEPARATOR || *(matchPtr - 1) == *PATH_SEPARATOR_ALT;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 
 char* extract_lua_field(char* fieldName, char* buffer) {
@@ -326,4 +342,37 @@ bool directory_sanity_check(struct dirent* dir, char* dirPath, char* outPath) {
     }
 
     return true;
+}
+
+bool path_has_traversal(const char *path) {
+    if (!path) { return true; }
+
+    // reject empty and absolute paths
+    if (path[0] == '\0' || path[0] == *PATH_SEPARATOR || path[0] == *PATH_SEPARATOR_ALT) {
+        return true;
+    }
+
+    const char *start = path;
+
+    // iterate through path
+    while (start && *start) {
+        const char *end = start;
+        // look for the next path separator to get the end
+        while (end[0] && end[0] != *PATH_SEPARATOR && end[0] != *PATH_SEPARATOR_ALT) {
+            end++;
+        }
+
+        size_t len = (size_t)(end - start);
+
+        // check if we are . or ..
+        if ((len == 1 && start[0] == '.') ||
+            (len == 2 && start[0] == '.' && start[1] == '.')) {
+            return true;
+        }
+
+        // set start to end + 1 (if end is null, set start to null)
+        start = (end[0]) ? end + 1 : NULL;
+    }
+
+    return false;
 }

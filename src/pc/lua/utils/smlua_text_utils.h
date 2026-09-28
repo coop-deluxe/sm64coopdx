@@ -8,6 +8,16 @@
 #define MAX_ACTS 6
 #define MAX_ACTS_AND_100_COINS 7
 
+enum DialogType {
+    DIALOG_TYPE_DEFAULT,
+    DIALOG_TYPE_BOSS_START,
+    DIALOG_TYPE_BOSS_STOP,
+    DIALOG_TYPE_RACE,
+    DIALOG_TYPE_STAR_SOUND,
+
+    DIALOG_TYPE_MAX,
+};
+
 struct NameTable {
     char value[256];
     void **(*get_table)(void);
@@ -42,6 +52,12 @@ void smlua_text_utils_dialog_restore(enum DialogId dialogId);
 bool smlua_text_utils_dialog_is_replaced(enum DialogId dialogId);
 /* |description|Allocates a new dialog entry|descriptionEnd|*/
 s32 smlua_text_utils_allocate_dialog(void);
+/* |description|Gets the type of a `dialogId`|descriptionEnd|*/
+enum DialogType smlua_text_utils_dialog_get_type(enum DialogId dialogId);
+/* |description|Sets the type of a `dialogId`|descriptionEnd|*/
+void smlua_text_utils_dialog_set_type(enum DialogId dialogId, enum DialogType dialogType);
+/* |description|Resets the type of a `dialogId`|descriptionEnd|*/
+void smlua_text_utils_dialog_reset_type(enum DialogId dialogId);
 /* |description|Replaces the act names of `courseNum`|descriptionEnd| */
 void smlua_text_utils_course_acts_replace(s16 courseNum, const char* courseName, const char* act1, const char* act2, const char* act3, const char* act4, const char* act5, const char* act6);
 /* |description|Replaces the secret star course name of `courseNum` with `courseName`|descriptionEnd| */

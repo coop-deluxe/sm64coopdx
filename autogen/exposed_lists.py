@@ -54,9 +54,11 @@ constants_files = [
     "include/PR/gbi_extension.h",
     "src/pc/gfx/gfx_pc.h",
     "src/engine/surface_load.h",
+    "src/pc/lua/utils/smlua_audio_utils.h",
+    "src/pc/lua/utils/smlua_text_utils.h",
     "src/game/hardcoded.h",
-    "lib/sdl2/include/SDL2/SDL_scancode.h",
-    "lib/sdl2/include/SDL2/SDL_gamecontroller.h",
+    "lib/sdl3/include/SDL3/SDL_scancode.h",
+    "lib/sdl3/include/SDL3/SDL_gamepad.h",
 ]
 
 # For each file, expose only these constants
@@ -107,7 +109,7 @@ constants_whitelist = { "__name__": "constants_whitelist",
         "^G_SETENVRGB$",
         "^G_STATE_EXT$",
     ],
-    "lib/sdl2/include/SDL2/SDL_gamecontroller.h": [ "SDL_CONTROLLER_BUTTON" ],
+    "lib/sdl3/include/SDL3/SDL_gamepad.h": [ "SDL_GAMEPAD_BUTTON" ],
 }
 
 # For each file, do not expose these constants
@@ -124,11 +126,26 @@ constants_blacklist = { "__name__": "constants_blacklist",
     "src/pc/mods/mod_fs.h": [ "INT_TYPE_MAX", "FLOAT_TYPE_MAX", "FILE_SEEK_MAX" ],
     "src/engine/surface_load.h": [ "NUM_CELLS" ],
     "src/pc/network/version.h": [ "VERSION_OFFSET" ],
+    "src/pc/lua/utils/smlua_text_utils.h": [ "DIALOG_TYPE_MAX" ],
+    "lib/sdl3/include/SDL3/SDL_gamepad.h": [ "SDL_GAMEPAD_BUTTON_LABEL" ],
 }
 
 # For each file, expose these constants, but hide them from the documentation or VSCode autocomplete
 constants_hidden = { "__name__": "constants_hidden",
     "interaction.h": [ "INTERACT_UNKNOWN_08" ],
+}
+
+# Enums that rely on an included file to define them fully
+# Format is:
+# - filename
+#   - struct name
+#     - macro name: [ constant position in macro, value position in macro (incremental if omitted) ]
+constants_enums_with_include = {
+    "src/engine/graph_node.h": {
+        "GraphNodeType": {
+            "GRAPH_NODE_TYPE": [1,2],
+        }
+    },
 }
 
 #############
@@ -226,8 +243,8 @@ functions_whitelist = { "__name__": "functions_whitelist",
     "src/game/area.h":                      [ "get_mario_spawn_type", "area_get_warp_node", "area_get_any_warp_node", "play_transition" ],
     "src/engine/level_script.h":            [ "area_create_warp_node" ],
     "src/game/ingame_menu.h":               [ "set_min_dialog_width", "set_dialog_override_pos", "reset_dialog_override_pos", "set_dialog_override_color", "reset_dialog_override_color", "set_menu_mode", "create_dialog_box", "create_dialog_box_with_var", "create_dialog_inverted_box", "create_dialog_box_with_response", "reset_dialog_render_state", "set_dialog_box_state", "handle_special_dialog_text" ],
-    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale" ],
-    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object" ],
+    "src/audio/seqplayer.h":                [ "sequence_player_set_tempo", "sequence_player_set_tempo_acc", "sequence_player_set_transposition", "sequence_player_get_tempo", "sequence_player_get_tempo_acc", "sequence_player_get_transposition", "sequence_player_get_volume", "sequence_player_get_fade_volume", "sequence_player_get_mute_volume_scale", "sequence_player_set_fade_volume" ],
+    "src/pc/network/sync_object.h":         [ "sync_object_is_initialized", "sync_object_is_owned_locally", "sync_object_get_object", "sync_object_get_random_seed"],
     "src/audio/load.h":                     [ "set_sound_bank_override" ],
     "src/pc/djui/djui_gfx.h":               [ "djui_gfx_get_scale" ],
 }
@@ -262,11 +279,11 @@ functions_blacklist = { "__name__": "functions_blacklist",
     "src/game/camera.h":                        [ "geo_", "update_camera", "init_camera", "stub_camera", "^reset_camera", "move_point_along_spline", "romhack_camera_init_settings", "romhack_camera_reset_settings" ],
     "src/game/behavior_actions.h":              [ "bhv_dust_smoke_loop", "bhv_init_room", "geo_" ],
     "src/pc/lua/utils/smlua_audio_utils.h":     [ "audio_custom_shutdown", "smlua_audio_custom_deinit", "audio_destroy_pending_copies", "audio_custom_update_volume" ],
-    "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset" ],
-    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified"],
+    "src/pc/lua/utils/smlua_level_utils.h":     [ "smlua_level_util_reset", "level_register_custom_warp_nodes", "level_clear_warp_node_objects", "level_get_warp_spawn_type_from_object" ],
+    "src/pc/lua/utils/smlua_text_utils.h":      [ "smlua_text_utils_init", "smlua_text_utils_shutdown", "smlua_text_utils_dialog_get_unmodified" ],
     "src/pc/lua/utils/smlua_anim_utils.h":      [ "smlua_anim_util_reset", "smlua_anim_util_register_animation" ],
     "src/pc/lua/utils/smlua_gfx_utils.h":       [ "gfx_allocate_internal", "vtx_allocate_internal", "gfx_get_length_no_sentinel" ],
-    "src/pc/lua/utils/smlua_input_utils.h":     [ "clear_gamepad_input_data", "controller_maps_load" ],
+    "src/pc/lua/utils/smlua_input_utils.h":     [ "smlua_input_util_clear", "smlua_input_util_controller_maps_load" ],
     "src/pc/network/lag_compensation.h":        [ "lag_compensation_clear" ],
     "src/game/first_person_cam.h":              [ "first_person_update" ],
     "src/pc/lua/utils/smlua_collision_utils.h": [ "collision_find_surface_on_ray" ],
@@ -351,7 +368,6 @@ structs_blacklist = { "__name__": "structs_blacklist",
 structs_excluded = [
     'AnimationTable',
     'BullyCollisionData',
-    'CameraFOVStatus',
     'CameraStoredInfo',
     'CameraTrigger',
     'Cutscene',
@@ -386,6 +402,7 @@ structs_fields_whitelist = { "__name__": "structs_fields_whitelist",
 structs_fields_blacklist = { "__name__": "structs_fields_blacklist",
     "Mod": [ "files", "showedScriptWarning", "customBehaviorIndex", "customObjectFields" ],
     "Camera": [ "paletteEditorCapState" ],
+    "CameraFOVStatus": [ "unusedIsSleeping" ],
     "NetworkPlayer": [ "gag", "moderator", "discordId", "rxPacketHash", "rxSeqIds" ],
     "GraphNode": [ "_guard1", "_guard2", "padding" ],
     "GraphNodeRoot": ["unk15", "views"],
@@ -467,6 +484,7 @@ structs_fields_immutable = {
     "GraphNodeSwitchCase": [ "fnNode", "unused" ],
     "GraphNodeRoot": ["node", "areaIndex", "numViews"],
     "ObjectWarpNode": [ "next" ],
+    "WarpNode": [ "id" ],
     "Animation": [ "*" ],
     "AnimationTable": [ "*" ],
     "Controller": [ "controllerData", "statusData" ],

@@ -19,11 +19,11 @@
 
 #define GL_GLEXT_PROTOTYPES 1
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #ifdef USE_GLES
-#include <SDL2/SDL_opengles2.h>
+#include <SDL3/SDL_opengles2.h>
 #else
-#include <SDL2/SDL_opengl.h>
+#include <SDL3/SDL_opengl.h>
 #endif
 
 #include "../platform.h"
@@ -724,6 +724,7 @@ static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
 }
 
 static void gfx_opengl_upload_texture(const uint8_t *rgba32_buf, int width, int height) {
+    if (width <= 0 || height <= 0) { sys_fatal("Texture dimensions are invalid!"); }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba32_buf);
     opengl_tex[opengl_curtex]->size[0] = width;
     opengl_tex[opengl_curtex]->size[1] = height;

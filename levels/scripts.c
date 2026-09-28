@@ -46,11 +46,11 @@ static const LevelScript script_exec_level_table[2
 #undef DEFINE_LEVEL
 #undef STUB_LEVEL
 
-static const LevelScript script_L1[4];
-static const LevelScript script_L2[4];
+static const LevelScript goto_splash_screen[4];
+static const LevelScript goto_ending[4];
 static const LevelScript goto_mario_head_regular[4];
 static const LevelScript goto_mario_head_dizzy[4];
-static const LevelScript script_L5[4];
+static const LevelScript goto_debug_level_select[4];
 
 #define STUB_LEVEL(_0, _1, _2, _3, _4, _5, _6, _7, _8)
 #define DEFINE_LEVEL(_0, _1, _2, folder, _4, _5, _6, _7, _8, _9, _10) static const LevelScript script_exec_ ## folder [4 + 1];
@@ -154,18 +154,18 @@ const LevelScript level_main_scripts_entry[] = {
         JUMP_LINK(script_exec_level_table),
         // SLEEP(/*frames*/ 1),
     LOOP_UNTIL(/*op*/ OP_LT, /*arg*/ 0),
-    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -1, script_L2),
+    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -1, goto_ending),
     JUMP_IF(/*op*/ OP_EQ, /*arg*/ -2, goto_mario_head_regular),
     JUMP_IF(/*op*/ OP_EQ, /*arg*/ -3, goto_mario_head_dizzy),
-    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -8, script_L1),
-    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -9, script_L5),
+    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -8, goto_splash_screen),
+    JUMP_IF(/*op*/ OP_EQ, /*arg*/ -9, goto_debug_level_select),
 };
 
-static const LevelScript script_L1[] = {
+static const LevelScript goto_splash_screen[] = {
     EXIT_AND_EXECUTE(/*seg*/ 0x14, _introSegmentRomStart, _introSegmentRomEnd, level_intro_splash_screen),
 };
 
-static const LevelScript script_L2[] = {
+static const LevelScript goto_ending[] = {
     EXIT_AND_EXECUTE(/*seg*/ 0x0E, _endingSegmentRomStart, _endingSegmentRomEnd, level_ending_entry),
 };
 
@@ -177,8 +177,8 @@ static const LevelScript goto_mario_head_dizzy[] = {
     EXIT_AND_EXECUTE(/*seg*/ 0x14, _introSegmentRomStart, _introSegmentRomEnd, level_intro_mario_head_dizzy),
 };
 
-static const LevelScript script_L5[] = {
-    EXIT_AND_EXECUTE(/*seg*/ 0x14, _introSegmentRomStart, _introSegmentRomEnd, level_intro_entry_4),
+static const LevelScript goto_debug_level_select[] = {
+    EXIT_AND_EXECUTE(/*seg*/ 0x14, _introSegmentRomStart, _introSegmentRomEnd, level_intro_debug_level_select),
 };
 
 // Include the level jumptable.

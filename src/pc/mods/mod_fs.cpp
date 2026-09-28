@@ -114,6 +114,21 @@ static bool mod_fs_is_active_mod(struct ModFs *modFs) {
     return gLuaActiveMod != NULL && modFs->mod == gLuaActiveMod;
 }
 
+// Guard against paths with ".." for path safety
+static bool mod_fs_path_is_safe(const char *path) {
+    const char *p = path;
+    while ((p = strstr(p, "..")) != NULL) {
+        char prev = (p == path) ? 0 : p[-1];
+        char next = p[2];
+        if ((prev == 0 || prev == '/' || prev == '\\') &&
+            (next == 0 || next == '/' || next == '\\')) {
+            return false;
+        }
+        p += 2;
+    }
+    return true;
+}
+
 static bool mod_fs_get_modpath(const char *modPath, char *dest) {
     if (modPath) {
         snprintf(dest, SYS_MAX_PATH, "%s", modPath);
@@ -124,6 +139,9 @@ static bool mod_fs_get_modpath(const char *modPath, char *dest) {
     }
     char *ext = strstr(dest, ".lua");
     if (ext) *ext = 0;
+    if (!mod_fs_path_is_safe(dest)) {
+        return false;
+    }
     return true;
 }
 
@@ -446,6 +464,17 @@ static bool mod_fs_read_properties(mz_zip_archive *zip, json &properties, std::s
         return true;
     }
 
+    // check uncompressed size before extracting
+    mz_zip_archive_file_stat fileStat;
+    if (!mz_zip_reader_file_stat(zip, fileIndex, &fileStat)) {
+        error = "Cannot stat file \"" MOD_FS_PROPERTIES "\": " + std::string(mz_zip_get_error_string(mz_zip_get_last_error(zip)));
+        return false;
+    }
+    if (fileStat.m_uncomp_size > MOD_FS_MAX_PROPERTIES_SIZE) {
+        error = "File \"" MOD_FS_PROPERTIES "\" too large: " + std::to_string(fileStat.m_uncomp_size) + " bytes (max is: " + std::to_string(MOD_FS_MAX_PROPERTIES_SIZE) + ")";
+        return false;
+    }
+
     // read file
     size_t fileSize;
     void *fileBuf = mz_zip_reader_extract_to_heap(zip, fileIndex, &fileSize, 0);
@@ -603,7 +632,7 @@ static bool mod_fs_read(const char *modPath, struct ModFs *modFs, bool checkExis
         } else {
             modFs->files = NULL;
         }
-        for (u16 i = 0, j = 0; i != modFs->numFiles; ++i) {
+        for (u16 i = 0; i != modFs->numFiles; ++i) {
             const struct ModFsFile &fileRef = files[i];
 
             // read file
@@ -1124,13 +1153,17 @@ static bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const cha
     }
 
     // copy file
-    u8 *buffer = (u8 *) malloc(srcfile->size);
-    if (!buffer) {
-        mod_fs_raise_error(
-            MOD_FS_ERR_ALLOC_FAILED,
-            "modPath: %s, filepath: %s - Failed to allocate buffer for ModFS file data", modFs->modPath, dstpath
-        );
-        return false;
+    u8 *buffer = NULL;
+    if (srcfile->size > 0) {
+        buffer = (u8 *) malloc(srcfile->size);
+        if (!buffer) {
+            mod_fs_raise_error(
+                MOD_FS_ERR_ALLOC_FAILED,
+                "modPath: %s, filepath: %s - Failed to allocate buffer for ModFS file data", modFs->modPath, dstpath
+            );
+            return false;
+        }
+        memcpy(buffer, srcfile->data.bin, srcfile->size);
     }
     if (dstfile) {
         free(dstfile->data.bin);
@@ -1143,7 +1176,6 @@ static bool mod_fs_copy_file(struct ModFs *modFs, const char *srcpath, const cha
     }
     memcpy(dstfile, srcfile, sizeof(struct ModFsFile));
     snprintf(dstfile->filepath, MOD_FS_MAX_PATH, "%s", dstpath);
-    memcpy(buffer, srcfile->data.bin, srcfile->size);
     dstfile->size = dstfile->capacity = srcfile->size;
     dstfile->data.bin = buffer;
     dstfile->offset = 0;
@@ -1227,7 +1259,7 @@ static bool mod_fs_set_public(struct ModFs *modFs, bool pub, enum ModFsErrorCode
 //
 
 static bool mod_fs_file_read_check_eof(struct ModFsFile *file, u32 size, enum ModFsErrorCode *err) {
-    if (file->offset + size > file->size) {
+    if ((u64) file->offset + size > file->size) {
         file->offset = file->size;
         mod_fs_raise_error(
             MOD_FS_ERR_READ_EOF,
@@ -1254,9 +1286,10 @@ static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 le
     static u32 sModFsFileReadStringBufLength = 0;
 
     // grow buffer if needed
-    if (length > sModFsFileReadStringBufLength) {
+    u32 neededCapacity = length + 1;
+    if (neededCapacity > sModFsFileReadStringBufLength) {
         free(sModFsFileReadStringBuf);
-        sModFsFileReadStringBuf = (char *) malloc(length + 1);
+        sModFsFileReadStringBuf = (char *) malloc(neededCapacity);
         if (!sModFsFileReadStringBuf) {
             sModFsFileReadStringBufLength = 0;
             mod_fs_raise_error(
@@ -1266,7 +1299,7 @@ static const char *mod_fs_file_read_string_buffer(struct ModFsFile *file, u32 le
             );
             return NULL;
         }
-        sModFsFileReadStringBufLength = length;
+        sModFsFileReadStringBufLength = neededCapacity;
     }
 
     memcpy(sModFsFileReadStringBuf, file->data.bin + file->offset, length);
@@ -1379,7 +1412,7 @@ static const char *mod_fs_file_read_string(struct ModFsFile *file, enum ModFsErr
     u32 length = 0;
     const char *start = (const char *) (file->data.bin + file->offset);
     const char *end = (const char *) (file->data.bin + file->size);
-    for (const char *c = start; *c && c < end; c++) {
+    for (const char *c = start; c < end && *c; c++) {
         length++;
     }
     return mod_fs_file_read_string_buffer(file, length, true, err);
@@ -1392,7 +1425,7 @@ static const char *mod_fs_file_read_line(struct ModFsFile *file, enum ModFsError
 
     // text only
     if (!mod_fs_file_check_file_type(file, true, false, "line", err)) {
-        return 0;
+        return NULL;
     }
 
     if (mod_fs_file_read_check_eof(file, 1, err)) {
@@ -1403,7 +1436,7 @@ static const char *mod_fs_file_read_line(struct ModFsFile *file, enum ModFsError
     u32 length = 0;
     const char *start = (const char *) (file->data.text + file->offset);
     const char *end = (const char *) (file->data.text + file->size);
-    for (const char *c = start; *c != '\n' && c < end; c++) {
+    for (const char *c = start; c < end && *c != '\n'; c++) {
         length++;
     }
     return mod_fs_file_read_string_buffer(file, length, true, err);
@@ -1417,19 +1450,19 @@ static bool mod_fs_file_write_resize_buffer(struct ModFsFile *file, u32 size, en
 
     // compute and check new sizes
     file->offset = MIN(file->offset, file->size);
-    u32 newFileSize = MAX(file->offset + size, file->size);
-    u32 newTotalSize = file->modFs->totalSize + (newFileSize - file->size);
+    u64 newFileSize = MAX((u64) file->offset + size, (u64) file->size);
+    u64 newTotalSize = (u64) file->modFs->totalSize + (newFileSize - file->size);
     if (newTotalSize > MOD_FS_MAX_SIZE) {
         mod_fs_raise_error(
             MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
-            "modPath: %s, filepath: %s - Cannot write to file: exceeding total size: %u (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
+            "modPath: %s, filepath: %s - Cannot write to file: exceeding total size: %llu (max is: %u)", file->modFs->modPath, file->filepath, newTotalSize, MOD_FS_MAX_SIZE
         );
         return false;
     }
 
     // resize data buffer
-    if (file->offset + size > file->capacity) {
-        u32 newCapacity = MAX(file->capacity * 2, file->offset + size);
+    if (newFileSize > file->capacity) {
+        u32 newCapacity = MAX(file->capacity * 2, newFileSize);
         u8 *buffer = (u8 *) realloc(file->data.bin, newCapacity);
         if (!buffer) {
             mod_fs_raise_error(
@@ -1568,7 +1601,17 @@ static bool mod_fs_file_write_string(struct ModFsFile *file, const char *str, en
         return false;
     }
 
-    u32 length = strlen(str) + (file->isText ? 0 : 1); // binary writes the NULL char
+    // prevent strlen truncation
+    size_t strLength = strlen(str);
+    if (strLength >= MOD_FS_MAX_SIZE) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+            "modPath: %s, filepath: %s - Cannot write a string of length: %llu (max is: %u)", file->modFs->modPath, file->filepath, (u64) strLength, MOD_FS_MAX_SIZE
+        );
+        return false;
+    }
+
+    u32 length = (u32) strLength + (file->isText ? 0 : 1); // binary writes the NULL char
     if (mod_fs_file_write_resize_buffer(file, length, err)) {
         memcpy(file->data.bin + file->offset, str, length);
         file->offset += length;
@@ -1592,7 +1635,17 @@ static bool mod_fs_file_write_line(struct ModFsFile *file, const char *str, enum
         return false;
     }
 
-    u32 length = strlen(str);
+    // prevent strlen truncation
+    size_t strLength = strlen(str);
+    if (strLength >= MOD_FS_MAX_SIZE) {
+        mod_fs_raise_error(
+            MOD_FS_ERR_TOTAL_SIZE_EXCEEDED,
+            "modPath: %s, filepath: %s - Cannot write a line of length: %llu (max is: %u)", file->modFs->modPath, file->filepath, (u64) strLength, MOD_FS_MAX_SIZE
+        );
+        return false;
+    }
+
+    u32 length = (u32) strLength;
     if (mod_fs_file_write_resize_buffer(file, length + 1, err)) { // '\n'
         memcpy(file->data.text + file->offset, str, length);
         file->offset += length;
@@ -1623,7 +1676,7 @@ static bool mod_fs_file_seek(struct ModFsFile *file, s32 offset, enum ModFsFileS
         case FILE_SEEK_END: start = file->size; break;
         default:            start = 0; break;
     }
-    file->offset = MIN(MAX(start + offset, 0), (s32) file->size);
+    file->offset = MIN(MAX((s64) start + offset, (s64) 0), (s64) file->size);
     return true;
 }
 
@@ -1672,6 +1725,7 @@ static bool mod_fs_file_erase(struct ModFsFile *file, u32 length, enum ModFsErro
         return false;
     }
 
+    file->offset = MIN(file->offset, file->size);
     length = MIN(length, file->size - file->offset);
     memmove(file->data.bin + file->offset, file->data.bin + file->offset + length, file->size - (file->offset + length));
     file->size -= length;

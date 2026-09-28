@@ -62,6 +62,8 @@ void sync_object_init_field_with_size(struct Object *o, void *field, u8 sizeByte
 struct SyncObject* sync_object_get(u32 syncId);
 struct SyncObject* sync_object_get_first(void);
 struct SyncObject* sync_object_get_next(void);
+/* |description|Retrieves the random seed of a sync object from its sync ID|descriptionEnd| */
+u16 sync_object_get_random_seed(u32 syncId);
 /* |description|Retrieves an object from a sync ID|descriptionEnd| */
 struct Object* sync_object_get_object(u32 syncId);
 /* |description|Checks if a sync object is initialized using a `syncId`|descriptionEnd| */

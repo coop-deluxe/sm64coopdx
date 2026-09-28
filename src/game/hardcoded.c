@@ -66,6 +66,7 @@ struct LevelValues gDefaultLevelValues = {
     .pauseExitMode                    = PAUSE_EXIT_BOTH,
     .disableActs                      = FALSE,
     .bubbleOnDeathBarrierInCapStages  = FALSE,
+    .disableShadows                   = FALSE,
     .entryLevel                       = LEVEL_CASTLE_GROUNDS,
     .exitCastleLevel                  = LEVEL_CASTLE,
     .exitCastleArea                   = 1,
@@ -132,6 +133,8 @@ struct LevelValues gDefaultLevelValues = {
     .wallMaxRadius                    = 200.0f,
     .floorNormalMinY                  = 0.01,
     .ceilNormalMaxY                   = -0.01,
+    .skipGoddard                      = FALSE,
+    .skipFileSelect                   = TRUE,
 };
 
 struct LevelValues gLevelValues = { 0 };

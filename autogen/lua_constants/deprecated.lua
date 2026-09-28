@@ -42,9 +42,14 @@ clamp = math.clamp
 clampf = math.clamp
 hypotf = math.hypot
 
--------------------------
--- Old audio functions --
--------------------------
+---------------------------------------
+-- Old audio constants and functions --
+---------------------------------------
+
+MOD_AUDIO_CHANNEL_MUSIC  = 0 --- @type ModAudioChannel
+MOD_AUDIO_CHANNEL_SFX    = 1 --- @type ModAudioChannel
+MOD_AUDIO_CHANNEL_ENV    = 2 --- @type ModAudioChannel
+MOD_AUDIO_CHANNEL_MASTER = 3 --- @type ModAudioChannel
 
 function audio_sample_load(filename) return audio_load(filename, MA_TYPE_SAMPLE) end
 function audio_stream_load(filename) return audio_load(filename, MA_TYPE_STREAM) end
@@ -64,6 +69,8 @@ audio_stream_get_frequency = audio_get_frequency
 audio_stream_set_frequency = audio_set_frequency
 audio_stream_get_volume = audio_get_volume
 audio_stream_set_volume = audio_set_volume
+audio_stream_get_volume_channel = audio_get_volume_channel
+audio_stream_set_volume_channel = audio_set_volume_channel
 
 -- compatibility band-aid
 function return_self(self) return self end

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <PR/ultratypes.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -14,11 +14,11 @@
 typedef bool (*kb_callback_t)(int code);
 
 enum GfxWindowBackend {
+    GFX_WINDOW_BACKEND_DUMMY = -1,
     GFX_WINDOW_BACKEND_OPENGL,
 #if defined(_WIN32)
     GFX_WINDOW_BACKEND_DIRECTX,
 #endif
-    GFX_WINDOW_BACKEND_DUMMY,
     GFX_WINDOW_BACKEND_COUNT,
     GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
 };
@@ -51,7 +51,7 @@ double gfx_wm_get_time(void); // For debug
 void gfx_wm_shutdown(void);
 void gfx_wm_start_text_input(void);
 void gfx_wm_stop_text_input(void);
-bool gfx_wm_is_text_input_active(void);
+bool gfx_wm_text_input_active(void);
 char* gfx_wm_get_clipboard_text(void);
 void gfx_wm_set_clipboard_text(const char*);
 void gfx_wm_set_cursor_visible(bool);

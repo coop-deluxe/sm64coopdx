@@ -70,7 +70,7 @@
 #include <windows.h>
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 extern Vp gViewportFullscreen;
 
@@ -136,6 +136,7 @@ extern void patch_title_screen_before(void);
 extern void patch_dialog_before(void);
 extern void patch_hud_before(void);
 extern void patch_paintings_before(void);
+extern void patch_carpet_before(void);
 extern void patch_bubble_particles_before(void);
 extern void patch_snow_particles_before(void);
 extern void patch_djui_before(void);
@@ -148,6 +149,7 @@ extern void patch_title_screen_interpolated(f32 delta);
 extern void patch_dialog_interpolated(f32 delta);
 extern void patch_hud_interpolated(f32 delta);
 extern void patch_paintings_interpolated(f32 delta);
+extern void patch_carpet_interpolated(f32 delta);
 extern void patch_bubble_particles_interpolated(f32 delta);
 extern void patch_snow_particles_interpolated(f32 delta);
 extern void patch_djui_interpolated(f32 delta);
@@ -161,6 +163,7 @@ static void patch_interpolations_before(void) {
     patch_dialog_before();
     patch_hud_before();
     patch_paintings_before();
+    patch_carpet_before();
     patch_bubble_particles_before();
     patch_snow_particles_before();
     patch_djui_before();
@@ -175,6 +178,7 @@ static inline void patch_interpolations(f32 delta) {
     patch_dialog_interpolated(delta);
     patch_hud_interpolated(delta);
     patch_paintings_interpolated(delta);
+    patch_carpet_interpolated(delta);
     patch_bubble_particles_interpolated(delta);
     patch_snow_particles_interpolated(delta);
     patch_djui_interpolated(delta);
@@ -200,14 +204,22 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
 
 static u32 get_display_refresh_rate(void) {
     static u32 refreshRate = 0;
+
     if (!refreshRate) {
-        SDL_DisplayMode mode;
-        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
-            if (mode.refresh_rate > 0) { refreshRate = (u32) mode.refresh_rate; }
+        SDL_DisplayID display = SDL_GetPrimaryDisplay();
+        const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(display);
+
+        if (mode && mode->refresh_rate > 0.f) {
+            refreshRate = (u32)roundf(mode->refresh_rate);
         } else {
             refreshRate = 60;
         }
     }
+
+    if (refreshRate < 30) {
+        refreshRate = 30;
+    }
+
     return refreshRate;
 }
 
@@ -233,6 +245,10 @@ static void select_graphics_backend(void) {
 #endif
 
     switch (backend) {
+        case GFX_WINDOW_BACKEND_DUMMY:
+            gRenderApi = &gfx_dummy_renderer_api;
+            gAudioApi  = &audio_null;
+            break;
         case GFX_WINDOW_BACKEND_OPENGL:
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
@@ -244,8 +260,8 @@ static void select_graphics_backend(void) {
             break;
 #endif
         default:
-            gRenderApi = &gfx_dummy_renderer_api;
-            gAudioApi  = &audio_null;
+            gRenderApi = &gfx_opengl_api;
+            gAudioApi  = &audio_sdl;
             break;
     }
 
@@ -260,8 +276,9 @@ void produce_interpolation_frames_and_delay(void) {
     gRenderingInterpolated = true;
 
     u32 displayRefreshRate = get_display_refresh_rate();
-    bool shouldDelay = configFramerateMode != RRM_UNLIMITED;
-    if (configWindow.vsync && displayRefreshRate <= refreshRate) {
+    bool isPacedGrid = configFramerateMode != RRM_UNLIMITED;
+    bool shouldDelay = isPacedGrid;
+    if (gRenderApi == &gfx_dummy_renderer_api && configWindow.vsync && displayRefreshRate <= refreshRate) {
         shouldDelay = false;
         refreshRate = displayRefreshRate;
     }
@@ -283,7 +300,7 @@ void produce_interpolation_frames_and_delay(void) {
         ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
-        f64 idealTime = shouldDelay ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
+        f64 idealTime = isPacedGrid ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
         f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
         gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
         gRenderingDelta = delta;
@@ -306,7 +323,7 @@ void produce_interpolation_frames_and_delay(void) {
         }
 
         sDrawnFrames++;
-        if (shouldDelay) { numFramesToDraw--; }
+        if (isPacedGrid) { numFramesToDraw--; }
     } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
@@ -506,7 +523,20 @@ int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     // handle Windows console
+    bool console = false;
     if (gCLIOpts.console || gCLIOpts.headless) {
+        console = true;
+    } else {
+        // detect if the game should keep the console open
+        DWORD pids[2];
+        DWORD pcount = GetConsoleProcessList(pids, 2);
+        console = pcount > 1;
+    }
+    if (console) {
+        HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+        DWORD mode = 0;
+        GetConsoleMode(out, &mode);
+        SetConsoleMode(out, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
         SetConsoleOutputCP(CP_UTF8);
     } else {
         FreeConsole();

@@ -31,14 +31,12 @@
 
 extern struct DynamicPool *gGraphNodePool;
 extern struct GraphNode *gCurRootGraphNode;
-extern UNUSED s32 D_8038BCA8;
 extern struct GraphNode **gGeoViews;
 extern u16 gGeoNumViews;
 extern uintptr_t gGeoLayoutStack[];
 extern struct GraphNode *gCurGraphNodeList[];
 extern s16 gCurGraphNodeIndex;
 extern s16 gGeoLayoutStackIndex;
-extern UNUSED s16 D_8038BD7C;
 extern s16 gGeoLayoutReturnIndex;
 extern u8 *gGeoLayoutCommand;
 extern struct GraphNode gObjParentGraphNode;
@@ -86,6 +84,6 @@ void geo_layout_cmd_node_switch_case_ext(void);
 void geo_layout_cmd_node_generated_ext(void);
 void geo_layout_cmd_bone(void);
 
-struct GraphNode *process_geo_layout(struct DynamicPool *a0, void *segptr);
+struct GraphNode *process_geo_layout(struct DynamicPool *a0, void *geoLayout);
 
 #endif // GEO_LAYOUT_H

@@ -48,7 +48,7 @@ void smlua_audio_utils_replace_sequence(u8 sequenceId, u8 bankId, u8 defaultVolu
         char relPath[SYS_MAX_PATH] = { 0 };
         snprintf(relPath, SYS_MAX_PATH-1, "%s", file->relativePath);
         normalize_path(relPath);
-        if (path_ends_with(relPath, m64path)) {
+        if (path_ends_with_filepath(relPath, m64path)) {
             dynos_audio_create_override(sequenceId, bankId, defaultVolume, file->cachedPath);
             return;
         }
@@ -277,7 +277,7 @@ struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
         u16 fileCount = gLuaActiveMod->fileCount;
         for (u16 i = 0; i < fileCount; i++) {
             struct ModFile *file = &gLuaActiveMod->files[i];
-            if (path_ends_with(file->relativePath, normPath)) {
+            if (path_ends_with_filepath(file->relativePath, normPath)) {
                 foundModFile = true;
                 modFile = file;
                 break;

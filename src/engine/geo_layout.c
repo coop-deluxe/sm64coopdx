@@ -6,10 +6,14 @@
 #include "game/memory.h"
 #include "graph_node.h"
 #include "geo_commands.h"
+#include "pc/debuglog.h"
+
+#define GEO_LAYOUT_STACK_SIZE 16
+#define GRAPH_NODE_LIST_SIZE 32
 
 typedef void (*GeoLayoutCommandProc)(void);
 
-GeoLayoutCommandProc GeoLayoutJumpTable[] = {
+static GeoLayoutCommandProc GeoLayoutJumpTable[] = {
     geo_layout_cmd_branch_and_link,
     geo_layout_cmd_end,
     geo_layout_cmd_branch,
@@ -54,8 +58,6 @@ struct GraphNode gObjParentGraphNode;
 struct DynamicPool *gGraphNodePool = NULL;
 struct GraphNode *gCurRootGraphNode = NULL;
 
-UNUSED s32 D_8038BCA8;
-
 /* The gGeoViews array is a mysterious one. Some background:
  *
  * If there are e.g. multiple Goombas, the multiple Goomba objects share one
@@ -98,33 +100,75 @@ UNUSED s32 D_8038BCA8;
 struct GraphNode **gGeoViews;
 u16 gGeoNumViews; // length of gGeoViews array
 
-uintptr_t gGeoLayoutStack[16];
-struct GraphNode *gCurGraphNodeList[32];
+uintptr_t gGeoLayoutStack[GEO_LAYOUT_STACK_SIZE];
+struct GraphNode *gCurGraphNodeList[GRAPH_NODE_LIST_SIZE];
 s16 gCurGraphNodeIndex;
 s16 gGeoLayoutStackIndex; // similar to SP register in MIPS
-UNUSED s16 D_8038BD7C;
 s16 gGeoLayoutReturnIndex; // similar to RA register in MIPS
 u8 *gGeoLayoutCommand;
+bool sGeoProcessAborted = false;
 
-u32 unused_8038B894[3] = { 0 };
+inline static bool geo_layout_stack_push(uintptr_t value) {
+    if (gGeoLayoutStackIndex < 0 || gGeoLayoutStackIndex >= GEO_LAYOUT_STACK_SIZE) {
+        return false;
+    }
+
+    gGeoLayoutStack[gGeoLayoutStackIndex] = value;
+    gGeoLayoutStackIndex++;
+    return true;
+}
+
+inline static bool geo_layout_stack_pop(uintptr_t *output) {
+    if (gGeoLayoutStackIndex <= 0 || gGeoLayoutStackIndex > GEO_LAYOUT_STACK_SIZE) {
+        return false;
+    }
+
+    gGeoLayoutStackIndex--;
+    *output = gGeoLayoutStack[gGeoLayoutStackIndex];
+    return true;
+}
+
+#define stack_push(value) { \
+    if (!geo_layout_stack_push((uintptr_t) value)) { \
+        gGeoLayoutCommand = NULL; \
+        sGeoProcessAborted = true; \
+        return; \
+    } \
+}
+
+#define stack_pop(value) { \
+    uintptr_t _value_; \
+    if (!geo_layout_stack_pop(&_value_)) { \
+        gGeoLayoutCommand = NULL; \
+        sGeoProcessAborted = true; \
+        return; \
+    } \
+    value = (typeof(value)) _value_; \
+}
 
 /*
   0x00: Branch and store return address
    cmd+0x04: void *branchTarget
 */
 void geo_layout_cmd_branch_and_link(void) {
-    gGeoLayoutStack[gGeoLayoutStackIndex++] = (uintptr_t) (gGeoLayoutCommand + CMD_PROCESS_OFFSET(8));
-    gGeoLayoutStack[gGeoLayoutStackIndex++] = (gCurGraphNodeIndex << 16) + gGeoLayoutReturnIndex;
+    stack_push(gGeoLayoutCommand + CMD_PROCESS_OFFSET(8));
+    stack_push((gCurGraphNodeIndex << 16) + gGeoLayoutReturnIndex);
     gGeoLayoutReturnIndex = gGeoLayoutStackIndex;
-    gGeoLayoutCommand = segmented_to_virtual(cur_geo_cmd_ptr(0x04));
+    gGeoLayoutCommand = cur_geo_cmd_ptr(0x04);
 }
 
 // 0x01: Terminate geo layout
 void geo_layout_cmd_end(void) {
     gGeoLayoutStackIndex = gGeoLayoutReturnIndex;
-    gGeoLayoutReturnIndex = gGeoLayoutStack[--gGeoLayoutStackIndex] & 0xFFFF;
-    gCurGraphNodeIndex = gGeoLayoutStack[gGeoLayoutStackIndex] >> 16;
-    gGeoLayoutCommand = (u8 *) gGeoLayoutStack[--gGeoLayoutStackIndex];
+
+    uintptr_t indices;
+    stack_pop(indices);
+    gGeoLayoutReturnIndex = indices & 0xFFFF;
+    gCurGraphNodeIndex = indices >> 16;
+
+    u8 *command;
+    stack_pop(command);
+    gGeoLayoutCommand = command;
 }
 
 /*
@@ -133,27 +177,50 @@ void geo_layout_cmd_end(void) {
 */
 void geo_layout_cmd_branch(void) {
     if (cur_geo_cmd_u8(0x01) == 1) {
-        gGeoLayoutStack[gGeoLayoutStackIndex++] = (uintptr_t) (gGeoLayoutCommand + CMD_PROCESS_OFFSET(8));
+        stack_push(gGeoLayoutCommand + CMD_PROCESS_OFFSET(8));
     }
 
-    gGeoLayoutCommand = segmented_to_virtual(cur_geo_cmd_ptr(0x04));
+    gGeoLayoutCommand = cur_geo_cmd_ptr(0x04);
 }
 
 // 0x03: Return from branch
 void geo_layout_cmd_return(void) {
-    gGeoLayoutCommand = (u8 *) gGeoLayoutStack[--gGeoLayoutStackIndex];
+    u8 *command;
+    stack_pop(command);
+    gGeoLayoutCommand = command;
 }
 
 // 0x04: Open node
 void geo_layout_cmd_open_node(void) {
-    gCurGraphNodeList[gCurGraphNodeIndex + 1] = gCurGraphNodeList[gCurGraphNodeIndex];
-    gCurGraphNodeIndex++;
+    if (gCurGraphNodeIndex < 0 || gCurGraphNodeIndex >= GRAPH_NODE_LIST_SIZE - 1) {
+        LOG_ERROR("geo_layout_cmd_open_node: Invalid gCurGraphNodeIndex: %d", gCurGraphNodeIndex);
+        gGeoLayoutCommand = NULL;
+        sGeoProcessAborted = true;
+        return;
+    }
+
+    // Parent shouldn't be NULL
+    if (gCurGraphNodeList[gCurGraphNodeIndex] != NULL) {
+        gCurGraphNodeList[gCurGraphNodeIndex + 1] = gCurGraphNodeList[gCurGraphNodeIndex];
+        gCurGraphNodeIndex++;
+    }
     gGeoLayoutCommand += 0x04 << CMD_SIZE_SHIFT;
 }
 
 // 0x05: Close node
 void geo_layout_cmd_close_node(void) {
-    gCurGraphNodeIndex--;
+    if (gCurGraphNodeIndex > GRAPH_NODE_LIST_SIZE) {
+        LOG_ERROR("geo_layout_cmd_close_node: Invalid gCurGraphNodeIndex: %d", gCurGraphNodeIndex);
+        gGeoLayoutCommand = NULL;
+        sGeoProcessAborted = true;
+        return;
+    }
+
+    // It's fine. There can be more CLOSE nodes than OPEN ones.
+    if (gCurGraphNodeIndex > 0) {
+        gCurGraphNodeIndex--;
+    }
+
     gGeoLayoutCommand += 0x04 << CMD_SIZE_SHIFT;
 }
 
@@ -166,7 +233,7 @@ void geo_layout_cmd_close_node(void) {
 void geo_layout_cmd_assign_as_view(void) {
     u16 index = cur_geo_cmd_s16(0x02);
 
-    if (index < gGeoNumViews) {
+    if (index < gGeoNumViews && gCurGraphNodeIndex >= 0 && gCurGraphNodeIndex < GRAPH_NODE_LIST_SIZE) {
         gGeoViews[index] = gCurGraphNodeList[gCurGraphNodeIndex];
     }
 
@@ -182,16 +249,18 @@ void geo_layout_cmd_update_node_flags(void) {
     u16 operation = cur_geo_cmd_u8(0x01);
     u16 flagBits = cur_geo_cmd_s16(0x02);
 
-    switch (operation) {
-        case GEO_CMD_FLAGS_RESET:
-            gCurGraphNodeList[gCurGraphNodeIndex]->flags = flagBits;
-            break;
-        case GEO_CMD_FLAGS_SET:
-            gCurGraphNodeList[gCurGraphNodeIndex]->flags |= flagBits;
-            break;
-        case GEO_CMD_FLAGS_CLEAR:
-            gCurGraphNodeList[gCurGraphNodeIndex]->flags &= ~flagBits;
-            break;
+    if (gCurGraphNodeIndex >= 0 && gCurGraphNodeIndex < GRAPH_NODE_LIST_SIZE) {
+        switch (operation) {
+            case GEO_CMD_FLAGS_RESET:
+                gCurGraphNodeList[gCurGraphNodeIndex]->flags = flagBits;
+                break;
+            case GEO_CMD_FLAGS_SET:
+                gCurGraphNodeList[gCurGraphNodeIndex]->flags |= flagBits;
+                break;
+            case GEO_CMD_FLAGS_CLEAR:
+                gCurGraphNodeList[gCurGraphNodeIndex]->flags &= ~flagBits;
+                break;
+        }
     }
 
     gGeoLayoutCommand += 0x04 << CMD_SIZE_SHIFT;
@@ -888,32 +957,43 @@ void geo_layout_cmd_bone(void) {
     gGeoLayoutCommand = (u8 *) cmdPos;
 }
 
-struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *segptr) {
+struct GraphNode *process_geo_layout(struct DynamicPool *pool, void *geoLayout) {
     // set by register_scene_graph_node when gCurGraphNodeIndex is 0
     // and gCurRootGraphNode is NULL
     gCurRootGraphNode = NULL;
 
     gGeoNumViews = 0; // number of entries in gGeoViews
 
-    gCurGraphNodeList[0] = 0;
+    memset(gCurGraphNodeList, 0, sizeof(gCurGraphNodeList));
     gCurGraphNodeIndex = 0; // incremented by cmd_open_node, decremented by cmd_close_node
 
+    memset(gGeoLayoutStack, 0, sizeof(gGeoLayoutStack));
     gGeoLayoutStackIndex = 2;
-    gGeoLayoutReturnIndex = 2; // stack index is often copied here?
+    gGeoLayoutReturnIndex = 2;
 
-    gGeoLayoutCommand = segmented_to_virtual(segptr);
+    gGeoLayoutCommand = (u8 *) geoLayout;
 
     gGraphNodePool = pool;
 
-    gGeoLayoutStack[0] = 0;
-    gGeoLayoutStack[1] = 0;
+    sGeoProcessAborted = false;
+    while (gGeoLayoutCommand != NULL && !sGeoProcessAborted) {
+        u8 cmd = gGeoLayoutCommand[0x00];
+        if (cmd >= ARRAY_COUNT(GeoLayoutJumpTable)) { // Hit sentinel or invalid command
+            gGeoLayoutCommand = NULL;
+            sGeoProcessAborted = true;
+            break;
+        }
 
-    while (gGeoLayoutCommand != NULL) {
-        GeoLayoutJumpTable[gGeoLayoutCommand[0x00]]();
+        GeoLayoutJumpTable[cmd]();
+    }
+
+    if (sGeoProcessAborted) {
+        LOG_ERROR("Geo layout stack corruption detected! Graph node will not be generated...");
+        return NULL;
     }
 
     if (gCurRootGraphNode) {
-        gCurRootGraphNode->georef = (const void *) segptr;
+        gCurRootGraphNode->georef = (const void *) geoLayout;
     }
     return gCurRootGraphNode;
 }

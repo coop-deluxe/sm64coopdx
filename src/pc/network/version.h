@@ -5,8 +5,8 @@
 
 // internal version
 #define VERSION_TEXT "v"
-#define VERSION_NUMBER 42
-#define MINOR_VERSION_NUMBER 2
+#define VERSION_NUMBER 43
+#define MINOR_VERSION_NUMBER 0
 
 #define VERSION_OFFSET 37 // difference from old versioning system
 

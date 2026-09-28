@@ -1485,6 +1485,7 @@ u8 get_missing_bank(u32 seqId, s32 *nonNullCount, s32 *nullCount) {
 s32 gOverrideBank = -1;
 
 void set_sound_bank_override(s32 bank) {
+    if (bank >= 64) { return; }
     gOverrideBank = bank;
 }
 

@@ -10,170 +10,214 @@ extern "C" {
 /////////////
 
 typedef Pair<String, u32> PointerData;
-static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
+static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData, u32 aPtrType) {
     // Lights
-    for (auto& _Node : aGfxData->mLights) {
-        if (!_Node->mData) { continue; }
-        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { _Node->mName, 1 };
-        }
-        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { _Node->mName, 2 };
+    if (aPtrType & PTYPE_PNTR_LIGHT) {
+        for (auto& _Node : aGfxData->mLights) {
+            if (!_Node->mData) { continue; }
+            if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+                return { _Node->mName, 1 };
+            }
+            if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
+                return { _Node->mName, 2 };
+            }
         }
     }
 
     // Light0s
-    for (auto& _Node : aGfxData->mLight0s) {
-        if (!_Node->mData) { continue; }
-        if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
-            return { _Node->mName, 1 };
-        }
-        if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
-            return { _Node->mName, 2 };
+    if (aPtrType & PTYPE_PNTR_LIGHT0) {
+        for (auto& _Node : aGfxData->mLight0s) {
+            if (!_Node->mData) { continue; }
+            if (&_Node->mData->l[0] == aPtr) { // Light *, not Lights1 *
+                return { _Node->mName, 1 };
+            }
+            if (&_Node->mData->a == aPtr) { // Ambient *, not Lights1 *
+                return { _Node->mName, 2 };
+            }
         }
     }
 
     // Light_ts
-    for (auto& _Node : aGfxData->mLightTs) {
-        if (!_Node->mData) { continue; }
-        if (&_Node->mData->col[0] == aPtr) {
-            return { _Node->mName, 1 };
-        }
-        if (&_Node->mData->colc[0] == aPtr) {
-            return { _Node->mName, 2 };
-        }
-        if (&_Node->mData->dir[0] == aPtr) {
-            return { _Node->mName, 3 };
+    if (aPtrType & PTYPE_PNTR_LIGHTT) {
+        for (auto& _Node : aGfxData->mLightTs) {
+            if (!_Node->mData) { continue; }
+            if (&_Node->mData->col[0] == aPtr) {
+                return { _Node->mName, 1 };
+            }
+            if (&_Node->mData->colc[0] == aPtr) {
+                return { _Node->mName, 2 };
+            }
+            if (&_Node->mData->dir[0] == aPtr) {
+                return { _Node->mName, 3 };
+            }
         }
     }
 
     // Ambient_ts
-    for (auto& _Node : aGfxData->mAmbientTs) {
-        if (!_Node->mData) { continue; }
-        if (&_Node->mData->col[0] == aPtr) {
-            return { _Node->mName, 1 };
-        }
-        if (&_Node->mData->colc[0] == aPtr) {
-            return { _Node->mName, 2 };
+    if (aPtrType & PTYPE_PNTR_AMBIENTT) {
+        for (auto& _Node : aGfxData->mAmbientTs) {
+            if (!_Node->mData) { continue; }
+            if (&_Node->mData->col[0] == aPtr) {
+                return { _Node->mName, 1 };
+            }
+            if (&_Node->mData->colc[0] == aPtr) {
+                return { _Node->mName, 2 };
+            }
         }
     }
 
     // Textures
-    for (auto& _Node : aGfxData->mTextures) {
-        if (_Node == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_TEX) {
+        for (auto& _Node : aGfxData->mTextures) {
+            if (_Node == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Texture Lists
-    for (auto& _Node : aGfxData->mTextureLists) {
-        if (_Node == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_TEXLIST) {
+        for (auto& _Node : aGfxData->mTextureLists) {
+            if (_Node == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Display lists
-    for (auto& _Node : aGfxData->mDisplayLists) {
-        if (_Node == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_GFX) {
+        for (auto& _Node : aGfxData->mDisplayLists) {
+            if (_Node == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Geo layouts
-    for (auto& _Node : aGfxData->mGeoLayouts) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_GEO) {
+        for (auto& _Node : aGfxData->mGeoLayouts) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Collisions
-    for (auto& _Node : aGfxData->mCollisions) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_COL) {
+        for (auto& _Node : aGfxData->mCollisions) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Macro objects
-    for (auto& _Node : aGfxData->mMacroObjects) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_MACRO) {
+        for (auto& _Node : aGfxData->mMacroObjects) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Trajectories
-    for (auto& _Node : aGfxData->mTrajectories) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_TRAJ) {
+        for (auto& _Node : aGfxData->mTrajectories) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Movtexs
-    for (auto& _Node : aGfxData->mMovtexs) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_MOVTEX) {
+        for (auto& _Node : aGfxData->mMovtexs) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // MovtexQCs
-    for (auto& _Node : aGfxData->mMovtexQCs) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_MOVTEXQC) {
+        for (auto& _Node : aGfxData->mMovtexQCs) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Rooms
-    for (auto& _Node : aGfxData->mRooms) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, 0 };
+    if (aPtrType & PTYPE_PNTR_ROOM) {
+        for (auto& _Node : aGfxData->mRooms) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, 0 };
+            }
         }
     }
 
     // Behaviors
-    enum BehaviorId id = get_id_from_vanilla_behavior((const BehaviorScript*) aPtr);
-    if (id >= 0 && id < id_bhv_max_count) {
-        return { get_behavior_name_from_id(id), 0 };
+    if (aPtrType & PTYPE_PNTR_BHV) {
+        enum BehaviorId id = get_id_from_vanilla_behavior((const BehaviorScript*) aPtr);
+        if (id >= 0 && id < id_bhv_max_count) {
+            return { get_behavior_name_from_id(id), 0 };
+        }
     }
 
     // Built-in Actors
-    auto builtinActor = DynOS_Builtin_Actor_GetFromData((const GeoLayout*)aPtr);
-    if (builtinActor != NULL) {
-        return { builtinActor, 0 };
+    if (aPtrType & PTYPE_PNTR_GEO) {
+        auto builtinActor = DynOS_Builtin_Actor_GetFromData((const GeoLayout*)aPtr);
+        if (builtinActor != NULL) {
+            return { builtinActor, 0 };
+        }
     }
 
     // Built-in Level Macros
-    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromData((const MacroObject*)aPtr);
-    if (builtinLvlMacro != NULL) {
-        return { builtinLvlMacro, 0 };
+    if (aPtrType & PTYPE_PNTR_MACRO) {
+        auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromData((const MacroObject*)aPtr);
+        if (builtinLvlMacro != NULL) {
+            return { builtinLvlMacro, 0 };
+        }
     }
 
     // Built-in Lvl Geos
-    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout*)aPtr);
-    if (builtinGeo != NULL) {
-        return { builtinGeo, 0 };
+    if (aPtrType & PTYPE_PNTR_GEO) {
+        auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout*)aPtr);
+        if (builtinGeo != NULL) {
+            return { builtinGeo, 0 };
+        }
     }
 
     // Built-in Cols
-    auto builtinCol = DynOS_Builtin_Col_GetFromData((const Collision*)aPtr);
-    if (builtinCol != NULL) {
-        return { builtinCol, 0 };
+    if (aPtrType & PTYPE_PNTR_COL) {
+        auto builtinCol = DynOS_Builtin_Col_GetFromData((const Collision*)aPtr);
+        if (builtinCol != NULL) {
+            return { builtinCol, 0 };
+        }
     }
 
     // Built-in Animations
-    auto builtinAnim = DynOS_Builtin_Anim_GetFromData((const Animation *)aPtr);
-    if (builtinAnim != NULL) {
-        return { builtinAnim, 0 };
+    if (aPtrType & PTYPE_PNTR_ANIM) {
+        auto builtinAnim = DynOS_Builtin_Anim_GetFromData((const Animation *)aPtr);
+        if (builtinAnim != NULL) {
+            return { builtinAnim, 0 };
+        }
     }
 
     // Built-in Script Pointers
-    auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromData(aPtr);
-    if (builtinScriptPtr != NULL) {
-        return { builtinScriptPtr, 0 };
+    if (aPtrType & PTYPE_PNTR_LVL) {
+        auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromData(aPtr);
+        if (builtinScriptPtr != NULL) {
+            return { builtinScriptPtr, 0 };
+        }
     }
 
     // Built-in Textures
-    auto builtinTex = DynOS_Builtin_Tex_GetFromData((const Texture*)aPtr);
-    if (builtinTex != NULL) {
-        return { builtinTex, 0 };
+    if (aPtrType & PTYPE_PNTR_TEX) {
+        auto builtinTex = DynOS_Builtin_Tex_GetFromData((const Texture*)aPtr);
+        if (builtinTex != NULL) {
+            return { builtinTex, 0 };
+        }
     }
 
     // the ones below use a saved offset
@@ -188,21 +232,24 @@ static PointerData GetDataFromPointer(const void* aPtr, GfxData* aGfxData) {
     }
 
     // Level scripts
-    for (auto& _Node : aGfxData->mLevelScripts) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, _Offset };
+    if (aPtrType & PTYPE_PNTR_LVL) {
+        for (auto& _Node : aGfxData->mLevelScripts) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, _Offset };
+            }
         }
     }
 
     // Vertices
-    String _VtxArrayName = "";
-    for (auto& _Node : aGfxData->mVertices) {
-        if (_Node->mData == aPtr) {
-            return { _Node->mName, _Offset };
+    if (aPtrType & PTYPE_PNTR_VTX) {
+        for (auto& _Node : aGfxData->mVertices) {
+            if (_Node->mData == aPtr) {
+                return { _Node->mName, _Offset };
+            }
         }
     }
 
-    PrintDataError("Unable to find pointer %x!", aPtr);
+    PrintDataError("  ERROR: Unable to find pointer: %x", aPtr);
     return { "", 0 };
 }
 
@@ -212,7 +259,7 @@ void DynOS_Pointer_Lua_Write(BinFile* aFile, u32 index, GfxData* aGfxData) {
     token.Write(aFile);
 }
 
-void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8 aFuncType) {
+void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u32 aPtrType) {
 
     // NULL
     if (!aPtr) {
@@ -221,44 +268,54 @@ void DynOS_Pointer_Write(BinFile* aFile, const void* aPtr, GfxData* aGfxData, u8
     }
 
     // Lua variable
-    for (s32 i = 0; i < aGfxData->mLuaPointerList.Count(); i++) {
-        if (aPtr == aGfxData->mLuaPointerList[i]) {
-            u32 index = *((u32*)aPtr);
-            String& token = aGfxData->mLuaTokenList[index];
-            aFile->Write<u32>(LUA_VAR_CODE);
-            token.Write(aFile);
-            return;
+    if (aPtrType & PTYPE_LUAV) {
+        for (s32 i = 0; i < aGfxData->mLuaPointerList.Count(); i++) {
+            if (aPtr == aGfxData->mLuaPointerList[i]) {
+                u32 index = *((u32*)aPtr);
+                String& token = aGfxData->mLuaTokenList[index];
+                aFile->Write<u32>(LUA_VAR_CODE);
+                token.Write(aFile);
+                return;
+            }
         }
     }
 
     // Built-in functions
-    s32 _FunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr, aFuncType);
-    if (_FunctionIndex != -1) {
-        aFile->Write<u32>(FUNCTION_CODE);
-        aFile->Write<s32>(_FunctionIndex);
-        return;
-    }
-    String error = DynOS_Builtin_Func_CheckMisuse(aPtr, aFuncType);
-    if (!error.Empty()) {
-        PrintDataError("  ERROR: %s", error.begin());
-        return;
+    if (aPtrType & PTYPE_FUNC) {
+        s32 _FunctionIndex = DynOS_Builtin_Func_GetIndexFromData(aPtr, aPtrType);
+        if (_FunctionIndex != -1) {
+            aFile->Write<u32>(FUNCTION_CODE);
+            aFile->Write<s32>(_FunctionIndex);
+            return;
+        }
+        String error = DynOS_Builtin_Func_CheckMisuse(aPtr, aPtrType);
+        if (!error.Empty()) {
+            PrintDataError("  ERROR: %s", error.begin());
+            return;
+        }
     }
 
     // Pointer
-    PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData);
-    aFile->Write<u32>(POINTER_CODE);
-    _PtrData.first.Write(aFile);
-    aFile->Write<u32>(_PtrData.second);
+    if (aPtrType & PTYPE_PNTR) {
+        PointerData _PtrData = GetDataFromPointer(aPtr, aGfxData, aPtrType);
+        aFile->Write<u32>(POINTER_CODE);
+        _PtrData.first.Write(aFile);
+        aFile->Write<u32>(_PtrData.second);
+        return;
+    }
+
+    // No valid pointer
+    PrintDataError("  ERROR: Not a valid pointer: %x", aPtr);
 }
 
   /////////////
  // Reading //
 /////////////
 
-static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 aPtrData, u8* outFlags) {
+static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 aPtrData, u32 aPtrTypes, u8* outFlags) {
 
     // Lights
-    {
+    if (aPtrTypes & PTYPE_PNTR_LIGHT) {
         auto _Node = aGfxData->mLights.Find(aPtrName);
         if (_Node) {
             if (aPtrData == 1) {
@@ -272,7 +329,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Light0s
-    {
+    if (aPtrTypes & PTYPE_PNTR_LIGHT0) {
         auto _Node = aGfxData->mLight0s.Find(aPtrName);
         if (_Node) {
             if (aPtrData == 1) {
@@ -286,7 +343,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Light_ts
-    {
+    if (aPtrTypes & PTYPE_PNTR_LIGHTT) {
         auto _Node = aGfxData->mLightTs.Find(aPtrName);
         if (_Node) {
             if (aPtrData == 1) {
@@ -303,7 +360,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Ambient_ts
-    {
+    if (aPtrTypes & PTYPE_PNTR_AMBIENTT) {
         auto _Node = aGfxData->mAmbientTs.Find(aPtrName);
         if (_Node) {
             if (aPtrData == 1) {
@@ -317,7 +374,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Textures
-    {
+    if (aPtrTypes & PTYPE_PNTR_TEX) {
         auto _Node = aGfxData->mTextures.Find(aPtrName);
         if (_Node) {
             return (void *) _Node;
@@ -325,7 +382,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Texture Lists
-    {
+    if (aPtrTypes & PTYPE_PNTR_TEXLIST) {
         auto _Node = aGfxData->mTextureLists.Find(aPtrName);
         if (_Node) {
             return (void *) _Node;
@@ -333,7 +390,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Display lists
-    {
+    if (aPtrTypes & PTYPE_PNTR_GFX) {
         auto _Node = aGfxData->mDisplayLists.Find(aPtrName);
         if (_Node) {
             *outFlags |= _Node->mFlags;
@@ -342,7 +399,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Geo layouts
-    {
+    if (aPtrTypes & PTYPE_PNTR_GEO) {
         auto _Node = aGfxData->mGeoLayouts.Find(aPtrName);
         if (_Node) {
             *outFlags |= _Node->mFlags;
@@ -351,16 +408,19 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Vertices
-    {
+    if (aPtrTypes & PTYPE_PNTR_VTX) {
         auto _Node = aGfxData->mVertices.Find(aPtrName);
         if (_Node) {
+            if (aPtrData >= _Node->mSize) {
+                sys_fatal("Vertices offset %u larger than buffer size %u", aPtrData, _Node->mSize);
+            }
             *outFlags |= _Node->mFlags;
             return (void *) (_Node->mData + aPtrData);
         }
     }
 
     // Collisions
-    {
+    if (aPtrTypes & PTYPE_PNTR_COL) {
         auto _Node = aGfxData->mCollisions.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -368,15 +428,18 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Level scripts
-    {
+    if (aPtrTypes & PTYPE_PNTR_LVL) {
         auto _Node = aGfxData->mLevelScripts.Find(aPtrName);
         if (_Node) {
+            if (aPtrData >= _Node->mSize) {
+                sys_fatal("Level script offset %u larger than buffer size %u", aPtrData, _Node->mSize);
+            }
             return (void *) (_Node->mData + aPtrData);
         }
     }
 
     // Behavior scripts
-    {
+    if (aPtrTypes & PTYPE_PNTR_BHV) {
         auto _Node = aGfxData->mBehaviorScripts.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -384,7 +447,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Macro objects
-    {
+    if (aPtrTypes & PTYPE_PNTR_MACRO) {
         auto _Node = aGfxData->mMacroObjects.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -392,7 +455,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Trajectories
-    {
+    if (aPtrTypes & PTYPE_PNTR_TRAJ) {
         auto _Node = aGfxData->mTrajectories.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -400,7 +463,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Movtexs
-    {
+    if (aPtrTypes & PTYPE_PNTR_MOVTEX) {
         auto _Node = aGfxData->mMovtexs.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -408,7 +471,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // MovtexQCs
-    {
+    if (aPtrTypes & PTYPE_PNTR_MOVTEXQC) {
         auto _Node = aGfxData->mMovtexQCs.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -416,7 +479,7 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Rooms
-    {
+    if (aPtrTypes & PTYPE_PNTR_ROOM) {
         auto _Node = aGfxData->mRooms.Find(aPtrName);
         if (_Node) {
             return (void *) _Node->mData;
@@ -424,51 +487,67 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     }
 
     // Lua Behaviors
-    enum BehaviorId id = get_id_from_behavior_name(aPtrName.begin());
-    if (id >= 0 && id < id_bhv_max_count) {
-        return (void*)get_behavior_from_id(id);
+    if (aPtrTypes & PTYPE_PNTR_BHV) {
+        enum BehaviorId id = get_id_from_behavior_name(aPtrName.begin());
+        if (id >= 0 && id < id_bhv_max_count) {
+            return (void*)get_behavior_from_id(id);
+        }
     }
 
     // Built-in Actors
-    auto builtinActor = DynOS_Builtin_Actor_GetFromName(aPtrName.begin());
-    if (builtinActor != NULL) {
-        return (void*)builtinActor;
+    if (aPtrTypes & PTYPE_PNTR_GEO) {
+        auto builtinActor = DynOS_Builtin_Actor_GetFromName(aPtrName.begin());
+        if (builtinActor != NULL) {
+            return (void*)builtinActor;
+        }
     }
 
     // Built-in Lvl Macros
-    auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromName(aPtrName.begin());
-    if (builtinLvlMacro != NULL) {
-        return (void*)builtinLvlMacro;
+    if (aPtrTypes & PTYPE_PNTR_MACRO) {
+        auto builtinLvlMacro = DynOS_Builtin_LvlMacro_GetFromName(aPtrName.begin());
+        if (builtinLvlMacro != NULL) {
+            return (void*)builtinLvlMacro;
+        }
     }
 
     // Built-in Lvl Geos
-    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(aPtrName.begin());
-    if (builtinGeo != NULL) {
-        return (void*)builtinGeo;
+    if (aPtrTypes & PTYPE_PNTR_GEO) {
+        auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromName(aPtrName.begin());
+        if (builtinGeo != NULL) {
+            return (void*)builtinGeo;
+        }
     }
 
     // Built-in Cols
-    auto builtinCol = DynOS_Builtin_Col_GetFromName(aPtrName.begin());
-    if (builtinCol != NULL) {
-        return (void*)builtinCol;
+    if (aPtrTypes & PTYPE_PNTR_COL) {
+        auto builtinCol = DynOS_Builtin_Col_GetFromName(aPtrName.begin());
+        if (builtinCol != NULL) {
+            return (void*)builtinCol;
+        }
     }
 
     // Built-in Animations
-    auto builtinAnim = DynOS_Builtin_Anim_GetFromName(aPtrName.begin());
-    if (builtinAnim != NULL) {
-        return (void *)builtinAnim;
+    if (aPtrTypes & PTYPE_PNTR_ANIM) {
+        auto builtinAnim = DynOS_Builtin_Anim_GetFromName(aPtrName.begin());
+        if (builtinAnim != NULL) {
+            return (void *)builtinAnim;
+        }
     }
 
     // Built-in Script Pointers
-    auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromName(aPtrName.begin());
-    if (builtinScriptPtr != NULL) {
-        return (void*)builtinScriptPtr;
+    if (aPtrTypes & PTYPE_PNTR_LVL) {
+        auto builtinScriptPtr = DynOS_Builtin_ScriptPtr_GetFromName(aPtrName.begin());
+        if (builtinScriptPtr != NULL) {
+            return (void*)builtinScriptPtr;
+        }
     }
 
     // Built-in Textures
-    auto builtinTex = DynOS_Builtin_Tex_GetFromName(aPtrName.begin());
-    if (builtinTex != NULL) {
-        return (void*)builtinTex;
+    if (aPtrTypes & PTYPE_PNTR_TEX) {
+        auto builtinTex = DynOS_Builtin_Tex_GetFromName(aPtrName.begin());
+        if (builtinTex != NULL) {
+            return (void*)builtinTex;
+        }
     }
 
     // Error
@@ -476,10 +555,14 @@ static void *GetPointerFromData(GfxData *aGfxData, const String &aPtrName, u32 a
     return NULL;
 }
 
-void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFuncType, u8* outFlags) {
+void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u32 aPtrTypes, u8* outFlags) {
 
     // LUAV
     if (aValue == LUA_VAR_CODE) {
+        if (!(aPtrTypes & PTYPE_LUAV)) {
+            PrintDataError("  ERROR: Invalid use of a LUAV pointer");
+            return NULL;
+        }
         String token; token.Read(aFile);
         if (aGfxData->mModIndex == PACK_MOD_INDEX) {
             PrintDataError("  ERROR: Invalid use of Lua function in DynOS pack: %s", token.begin());
@@ -497,12 +580,16 @@ void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFunc
 
     // FUNC
     if (aValue == FUNCTION_CODE) {
+        if (!(aPtrTypes & PTYPE_FUNC)) {
+            PrintDataError("  ERROR: Invalid use of a FUNC pointer");
+            return NULL;
+        }
         s32 _FunctionIndex = aFile->Read<s32>();
-        void *_FunctionPtr = (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex, aFuncType);
+        void *_FunctionPtr = (void*) DynOS_Builtin_Func_GetFromIndex(_FunctionIndex, aPtrTypes & PTYPE_FUNC);
         if (_FunctionPtr) {
             return _FunctionPtr;
         }
-        String error = DynOS_Builtin_Func_CheckMisuse(_FunctionIndex, aFuncType);
+        String error = DynOS_Builtin_Func_CheckMisuse(_FunctionIndex, aPtrTypes & PTYPE_FUNC);
         if (!error.Empty()) {
             sys_fatal(error.begin());
             return NULL;
@@ -513,9 +600,13 @@ void *DynOS_Pointer_Load(BinFile *aFile, GfxData *aGfxData, u32 aValue, u8 aFunc
 
     // PNTR
     if (aValue == POINTER_CODE) {
+        if (!(aPtrTypes & PTYPE_PNTR)) {
+            PrintDataError("  ERROR: Invalid use of a PNTR pointer");
+            return NULL;
+        }
         String _PtrName; _PtrName.Read(aFile);
         u32 _PtrData = aFile->Read<u32>();
-        return GetPointerFromData(aGfxData, _PtrName, _PtrData, outFlags);
+        return GetPointerFromData(aGfxData, _PtrName, _PtrData, aPtrTypes, outFlags);
     }
 
     // Not a pointer

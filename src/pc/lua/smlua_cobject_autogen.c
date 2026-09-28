@@ -398,6 +398,17 @@ static struct LuaObjectField sCameraFields[LUA_CAMERA_FIELD_COUNT] = {
     { "yaw",        LVT_S16,     offsetof(struct Camera, yaw),        false, LOT_NONE                 },
 };
 
+#define LUA_CAMERA_FOVSTATUS_FIELD_COUNT 7
+static struct LuaObjectField sCameraFOVStatusFields[LUA_CAMERA_FOVSTATUS_FIELD_COUNT] = {
+    { "decay",          LVT_S16, offsetof(struct CameraFOVStatus, decay),          false, LOT_NONE },
+    { "fov",            LVT_F32, offsetof(struct CameraFOVStatus, fov),            false, LOT_NONE },
+    { "fovFunc",        LVT_U8,  offsetof(struct CameraFOVStatus, fovFunc),        false, LOT_NONE },
+    { "fovOffset",      LVT_F32, offsetof(struct CameraFOVStatus, fovOffset),      false, LOT_NONE },
+    { "shakeAmplitude", LVT_F32, offsetof(struct CameraFOVStatus, shakeAmplitude), false, LOT_NONE },
+    { "shakePhase",     LVT_S16, offsetof(struct CameraFOVStatus, shakePhase),     false, LOT_NONE },
+    { "shakeSpeed",     LVT_S16, offsetof(struct CameraFOVStatus, shakeSpeed),     false, LOT_NONE },
+};
+
 #define LUA_CHAIN_SEGMENT_FIELD_COUNT 6
 static struct LuaObjectField sChainSegmentFields[LUA_CHAIN_SEGMENT_FIELD_COUNT] = {
     { "pitch", LVT_S16, offsetof(struct ChainSegment, pitch), false, LOT_NONE },
@@ -719,6 +730,13 @@ static struct LuaObjectField sCustomLevelInfoFields[LUA_CUSTOM_LEVEL_INFO_FIELD_
     { "shortName",       LVT_STRING_P,      offsetof(struct CustomLevelInfo, shortName),       true,  LOT_NONE            },
 };
 
+#define LUA_CUSTOM_WARP_NODE_FIELD_COUNT 3
+static struct LuaObjectField sCustomWarpNodeFields[LUA_CUSTOM_WARP_NODE_FIELD_COUNT] = {
+    { "marioSpawnType", LVT_S32,     offsetof(struct CustomWarpNode, marioSpawnType), false, LOT_NONE           },
+    { "node",           LVT_COBJECT, offsetof(struct CustomWarpNode, node),           true,  LOT_OBJECTWARPNODE },
+    { "spawnInfo",      LVT_COBJECT, offsetof(struct CustomWarpNode, spawnInfo),      true,  LOT_SPAWNINFO      },
+};
+
 #define LUA_DATE_TIME_FIELD_COUNT 6
 static struct LuaObjectField sDateTimeFields[LUA_DATE_TIME_FIELD_COUNT] = {
     { "day",    LVT_S32, offsetof(struct DateTime, day),    false, LOT_NONE },
@@ -826,25 +844,26 @@ static struct LuaObjectField sFnGraphNodeFields[LUA_FN_GRAPH_NODE_FIELD_COUNT] =
 
 #define LUA_GAMEPAD_FIELD_COUNT 19
 static struct LuaObjectField sGamepadFields[LUA_GAMEPAD_FIELD_COUNT] = {
-    { "accelerometer",      LVT_COBJECT,  offsetof(struct Gamepad, accelerometer),      true,  LOT_VEC3F                                                        },
-    { "buttons",            LVT_BOOL,     offsetof(struct Gamepad, buttons),            true,  LOT_NONE,   SDL_CONTROLLER_BUTTON_MAX, sizeof(bool),        true },
-    { "gyro",               LVT_COBJECT,  offsetof(struct Gamepad, gyro),               true,  LOT_VEC3F                                                        },
-    { "index",              LVT_S32,      offsetof(struct Gamepad, index),              true,  LOT_NONE                                                         },
-    { "ledColor",           LVT_COBJECT,  offsetof(struct Gamepad, ledColor),           true,  LOT_COLOR                                                        },
-    { "leftAccelerometer",  LVT_COBJECT,  offsetof(struct Gamepad, leftAccelerometer),  true,  LOT_VEC3F                                                        },
-    { "leftGyro",           LVT_COBJECT,  offsetof(struct Gamepad, leftGyro),           true,  LOT_VEC3F                                                        },
-    { "leftStick",          LVT_COBJECT,  offsetof(struct Gamepad, leftStick),          true,  LOT_VEC2S                                                        },
-    { "leftTrigger",        LVT_S16,      offsetof(struct Gamepad, leftTrigger),        true,  LOT_NONE                                                         },
-    { "name",               LVT_STRING_P, offsetof(struct Gamepad, name),               true,  LOT_NONE                                                         },
-    { "playerIndex",        LVT_U8,       offsetof(struct Gamepad, playerIndex),        false, LOT_NONE                                                         },
-    { "rightAccelerometer", LVT_COBJECT,  offsetof(struct Gamepad, rightAccelerometer), true,  LOT_VEC3F                                                        },
-    { "rightGyro",          LVT_COBJECT,  offsetof(struct Gamepad, rightGyro),          true,  LOT_VEC3F                                                        },
-    { "rightStick",         LVT_COBJECT,  offsetof(struct Gamepad, rightStick),         true,  LOT_VEC2S                                                        },
-    { "rightTrigger",       LVT_S16,      offsetof(struct Gamepad, rightTrigger),       true,  LOT_NONE                                                         },
-    { "rumbleDurationMs",   LVT_U32,      offsetof(struct Gamepad, rumbleDurationMs),   false, LOT_NONE                                                         },
-    { "rumbleHighFreq",     LVT_U16,      offsetof(struct Gamepad, rumbleHighFreq),     false, LOT_NONE                                                         },
-    { "rumbleLowFreq",      LVT_U16,      offsetof(struct Gamepad, rumbleLowFreq),      false, LOT_NONE                                                         },
-    { "touchpad",           LVT_COBJECT,  offsetof(struct Gamepad, touchpad),           true,  LOT_FINGER, MAX_TOUCHPAD_FINGERS,      sizeof(struct Finger)     },
+    { "accelerometer",      LVT_COBJECT,  offsetof(struct Gamepad, accelerometer),      true,  LOT_VEC3F                                                       },
+    { "buttons",            LVT_BOOL,     offsetof(struct Gamepad, buttons),            true,  LOT_NONE,   SDL_GAMEPAD_BUTTON_COUNT, sizeof(bool),        true },
+    { "gyro",               LVT_COBJECT,  offsetof(struct Gamepad, gyro),               true,  LOT_VEC3F                                                       },
+    { "index",              LVT_S32,      offsetof(struct Gamepad, index),              true,  LOT_NONE                                                        },
+    { "ledColor",           LVT_COBJECT,  offsetof(struct Gamepad, ledColor),           true,  LOT_COLOR                                                       },
+    { "leftAccelerometer",  LVT_COBJECT,  offsetof(struct Gamepad, leftAccelerometer),  true,  LOT_VEC3F                                                       },
+    { "leftGyro",           LVT_COBJECT,  offsetof(struct Gamepad, leftGyro),           true,  LOT_VEC3F                                                       },
+    { "leftStick",          LVT_COBJECT,  offsetof(struct Gamepad, leftStick),          true,  LOT_VEC2S                                                       },
+    { "leftTrigger",        LVT_S16,      offsetof(struct Gamepad, leftTrigger),        true,  LOT_NONE                                                        },
+    { "name",               LVT_STRING_P, offsetof(struct Gamepad, name),               true,  LOT_NONE                                                        },
+//  { "pad",                LVT_???,      offsetof(struct Gamepad, pad),                false, LOT_???                                                         }, <--- UNIMPLEMENTED
+    { "playerIndex",        LVT_U8,       offsetof(struct Gamepad, playerIndex),        false, LOT_NONE                                                        },
+    { "rightAccelerometer", LVT_COBJECT,  offsetof(struct Gamepad, rightAccelerometer), true,  LOT_VEC3F                                                       },
+    { "rightGyro",          LVT_COBJECT,  offsetof(struct Gamepad, rightGyro),          true,  LOT_VEC3F                                                       },
+    { "rightStick",         LVT_COBJECT,  offsetof(struct Gamepad, rightStick),         true,  LOT_VEC2S                                                       },
+    { "rightTrigger",       LVT_S16,      offsetof(struct Gamepad, rightTrigger),       true,  LOT_NONE                                                        },
+    { "rumbleDurationMs",   LVT_U32,      offsetof(struct Gamepad, rumbleDurationMs),   false, LOT_NONE                                                        },
+    { "rumbleHighFreq",     LVT_U16,      offsetof(struct Gamepad, rumbleHighFreq),     false, LOT_NONE                                                        },
+    { "rumbleLowFreq",      LVT_U16,      offsetof(struct Gamepad, rumbleLowFreq),      false, LOT_NONE                                                        },
+    { "touchpad",           LVT_COBJECT,  offsetof(struct Gamepad, touchpad),           true,  LOT_FINGER, MAX_TOUCHPAD_FINGERS,     sizeof(struct Finger)     },
 };
 
 #define LUA_GFX_FIELD_COUNT 2
@@ -1178,13 +1197,15 @@ static struct LuaObjectField sGraphNodeOrthoProjectionFields[LUA_GRAPH_NODE_ORTH
     { "scale", LVT_F32,     offsetof(struct GraphNodeOrthoProjection, scale), false, LOT_NONE      },
 };
 
-#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 6
+#define LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT 8
 static struct LuaObjectField sGraphNodePerspectiveFields[LUA_GRAPH_NODE_PERSPECTIVE_FIELD_COUNT] = {
     { "far",           LVT_S16,     offsetof(struct GraphNodePerspective, far),           false, LOT_NONE        },
     { "fnNode",        LVT_COBJECT, offsetof(struct GraphNodePerspective, fnNode),        true,  LOT_FNGRAPHNODE },
     { "fov",           LVT_F32,     offsetof(struct GraphNodePerspective, fov),           false, LOT_NONE        },
     { "near",          LVT_S16,     offsetof(struct GraphNodePerspective, near),          false, LOT_NONE        },
+    { "prevFar",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFar),       false, LOT_NONE        },
     { "prevFov",       LVT_F32,     offsetof(struct GraphNodePerspective, prevFov),       false, LOT_NONE        },
+    { "prevNear",      LVT_F32,     offsetof(struct GraphNodePerspective, prevNear),      false, LOT_NONE        },
     { "prevTimestamp", LVT_F32,     offsetof(struct GraphNodePerspective, prevTimestamp), false, LOT_NONE        },
 };
 
@@ -1322,13 +1343,14 @@ static struct LuaObjectField sLakituStateFields[LUA_LAKITU_STATE_FIELD_COUNT] = 
     { "yaw",                              LVT_S16,     offsetof(struct LakituState, yaw),                              false, LOT_NONE                 },
 };
 
-#define LUA_LEVEL_VALUES_FIELD_COUNT 57
+#define LUA_LEVEL_VALUES_FIELD_COUNT 60
 static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = {
     { "bubbleOnDeathBarrierInCapStages",  LVT_U8,      offsetof(struct LevelValues, bubbleOnDeathBarrierInCapStages),  false, LOT_NONE          },
     { "ceilNormalMaxY",                   LVT_F32,     offsetof(struct LevelValues, ceilNormalMaxY),                   false, LOT_NONE          },
     { "cellHeightLimit",                  LVT_S16,     offsetof(struct LevelValues, cellHeightLimit),                  false, LOT_NONE          },
     { "coinsRequiredForCoinStar",         LVT_S16,     offsetof(struct LevelValues, coinsRequiredForCoinStar),         false, LOT_NONE          },
     { "disableActs",                      LVT_U8,      offsetof(struct LevelValues, disableActs),                      false, LOT_NONE          },
+    { "disableShadows",                   LVT_U8,      offsetof(struct LevelValues, disableShadows),                   false, LOT_NONE          },
     { "entryLevel",                       LVT_S32,     offsetof(struct LevelValues, entryLevel),                       false, LOT_NONE          },
     { "exitCastleArea",                   LVT_S16,     offsetof(struct LevelValues, exitCastleArea),                   false, LOT_NONE          },
     { "exitCastleLevel",                  LVT_S32,     offsetof(struct LevelValues, exitCastleLevel),                  false, LOT_NONE          },
@@ -1367,6 +1389,8 @@ static struct LuaObjectField sLevelValuesFields[LUA_LEVEL_VALUES_FIELD_COUNT] = 
     { "shellSequence",                    LVT_S32,     offsetof(struct LevelValues, shellSequence),                    false, LOT_NONE          },
     { "showStarNumber",                   LVT_U8,      offsetof(struct LevelValues, showStarNumber),                   false, LOT_NONE          },
     { "skipCreditsAt",                    LVT_S32,     offsetof(struct LevelValues, skipCreditsAt),                    false, LOT_NONE          },
+    { "skipFileSelect",                   LVT_U8,      offsetof(struct LevelValues, skipFileSelect),                   false, LOT_NONE          },
+    { "skipGoddard",                      LVT_U8,      offsetof(struct LevelValues, skipGoddard),                      false, LOT_NONE          },
     { "starHeal",                         LVT_U8,      offsetof(struct LevelValues, starHeal),                         false, LOT_NONE          },
     { "starPositions",                    LVT_COBJECT, offsetof(struct LevelValues, starPositions),                    true,  LOT_STARPOSITIONS },
     { "useGlobalStarIds",                 LVT_U8,      offsetof(struct LevelValues, useGlobalStarIds),                 false, LOT_NONE          },
@@ -2708,7 +2732,7 @@ static struct LuaObjectField sWarpNodeFields[LUA_WARP_NODE_FIELD_COUNT] = {
     { "destArea",  LVT_U8, offsetof(struct WarpNode, destArea),  false, LOT_NONE },
     { "destLevel", LVT_U8, offsetof(struct WarpNode, destLevel), false, LOT_NONE },
     { "destNode",  LVT_U8, offsetof(struct WarpNode, destNode),  false, LOT_NONE },
-    { "id",        LVT_U8, offsetof(struct WarpNode, id),        false, LOT_NONE },
+    { "id",        LVT_U8, offsetof(struct WarpNode, id),        true,  LOT_NONE },
 };
 
 #define LUA_WATER_DROPLET_PARAMS_FIELD_COUNT 11
@@ -2746,10 +2770,12 @@ struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] 
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
     { LOT_BEHAVIORVALUES,               sBehaviorValuesFields,               LUA_BEHAVIOR_VALUES_FIELD_COUNT                 },
     { LOT_CAMERA,                       sCameraFields,                       LUA_CAMERA_FIELD_COUNT                          },
+    { LOT_CAMERAFOVSTATUS,              sCameraFOVStatusFields,              LUA_CAMERA_FOVSTATUS_FIELD_COUNT                },
     { LOT_CHAINSEGMENT,                 sChainSegmentFields,                 LUA_CHAIN_SEGMENT_FIELD_COUNT                   },
     { LOT_CHARACTER,                    sCharacterFields,                    LUA_CHARACTER_FIELD_COUNT                       },
     { LOT_CONTROLLER,                   sControllerFields,                   LUA_CONTROLLER_FIELD_COUNT                      },
     { LOT_CUSTOMLEVELINFO,              sCustomLevelInfoFields,              LUA_CUSTOM_LEVEL_INFO_FIELD_COUNT               },
+    { LOT_CUSTOMWARPNODE,               sCustomWarpNodeFields,               LUA_CUSTOM_WARP_NODE_FIELD_COUNT                },
     { LOT_DATETIME,                     sDateTimeFields,                     LUA_DATE_TIME_FIELD_COUNT                       },
     { LOT_DIALOGENTRY,                  sDialogEntryFields,                  LUA_DIALOG_ENTRY_FIELD_COUNT                    },
     { LOT_DISPLAYLISTNODE,              sDisplayListNodeFields,              LUA_DISPLAY_LIST_NODE_FIELD_COUNT               },
@@ -2855,10 +2881,12 @@ const char *sLuaLotNames[] = {
     [LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",
     [LOT_BEHAVIORVALUES] = "BehaviorValues",
     [LOT_CAMERA] = "Camera",
+    [LOT_CAMERAFOVSTATUS] = "CameraFOVStatus",
     [LOT_CHAINSEGMENT] = "ChainSegment",
     [LOT_CHARACTER] = "Character",
     [LOT_CONTROLLER] = "Controller",
     [LOT_CUSTOMLEVELINFO] = "CustomLevelInfo",
+    [LOT_CUSTOMWARPNODE] = "CustomWarpNode",
     [LOT_DATETIME] = "DateTime",
     [LOT_DIALOGENTRY] = "DialogEntry",
     [LOT_DISPLAYLISTNODE] = "DisplayListNode",

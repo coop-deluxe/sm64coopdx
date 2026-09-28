@@ -9,73 +9,51 @@
 bool gModHasInputFocus = false;
 
 struct Gamepad gGamepads[MAX_GAMEPADS];
-struct Key gKeyboard[SDL_NUM_SCANCODES];
+struct Key gKeyboard[SDL_SCANCODE_COUNT];
 
-u32 get_current_gamepad_index(void) {
-    bool isGamepad = SDL_IsGameController(configGamepadNumber);
+u32 smlua_input_util_get_current_gamepad(void) {
+    s32 joystickCount = 0;
+    SDL_JoystickID *joysticks = SDL_GetJoysticks(&joystickCount);
+    if (!joystickCount) {
+        SDL_free(joysticks);
+        return MAX_GAMEPADS;
+    }
+
+    bool isGamepad = SDL_IsGamepad(joysticks[configGamepadNumber]);
     u32 index = MAX_GAMEPADS;
     if (isGamepad) {
-        SDL_GameController *sdlGamepad = SDL_GameControllerOpen(configGamepadNumber);
+        SDL_Gamepad *sdlGamepad = SDL_OpenGamepad(joysticks[configGamepadNumber]);
         for (s32 i = 0; i < MAX_GAMEPADS; i++) {
-            if (sdlGamepad == gGamepads[i].controller) {
+            if (sdlGamepad == gGamepads[i].pad) {
                 index = gGamepads[i].index;
             }
         }
     }
+    SDL_free(joysticks);
     return index;
 }
 
-const char *get_clipboard_text(void) {
-    return gfx_wm_get_clipboard_text();
-}
-
-void set_clipboard_text(const char *text) {
-    gfx_wm_set_clipboard_text(text);
-}
-
-void start_text_input(void) {
+void smlua_input_util_start_text_input(void) {
     gModHasInputFocus = true;
     gfx_wm_start_text_input();
 }
 
-void stop_text_input(void) {
+void smlua_input_util_stop_text_input(void) {
     gModHasInputFocus = false;
 }
 
-bool is_text_input_active(void) {
-    return gfx_wm_is_text_input_active() && gModHasInputFocus;
+bool smlua_input_util_text_input_active(void) {
+    return gfx_wm_text_input_active() && gModHasInputFocus;
 }
 
-void clear_gamepad_input_data(void) {
+void smlua_input_util_clear(void) {
     for (s32 i = 0; i < MAX_GAMEPADS; ++i) {
-        for (s32 j = 0; j < SDL_CONTROLLER_BUTTON_MAX; ++j) {
-            gGamepads[i].buttons[j] = false;
-        }
-        vec2s_set(gGamepads[i].leftStick, 0, 0);
-        vec2s_set(gGamepads[i].rightStick, 0, 0);
-        gGamepads[i].leftTrigger = 0;
-        gGamepads[i].rightTrigger = 0;
-        vec3f_set(gGamepads[i].accelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].gyro, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].leftAccelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].leftGyro, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].rightAccelerometer, 0.0f, 0.0f, 0.0f);
-        vec3f_set(gGamepads[i].rightGyro, 0.0f, 0.0f, 0.0f);
-        gGamepads[i].rumbleLowFreq = 0;
-        gGamepads[i].rumbleHighFreq = 0;
-        gGamepads[i].rumbleDurationMs = 0;
-        for (s32 j = 0; j < MAX_TOUCHPAD_FINGERS; ++j) {
-            vec2f_set(gGamepads[i].touchpad[j].pos, 0.0f, 0.0f);
-            gGamepads[i].touchpad[j].pressure = 0.0f;
-            gGamepads[i].touchpad[j].touched = false;
-        }
-        gGamepads[i].ledColor[0] = 0x0;
-        gGamepads[i].ledColor[1] = 0x0;
-        gGamepads[i].ledColor[2] = 0x0;
+        free((void *)gGamepads[i].name);
     }
+    memset(gGamepads, 0, sizeof(gGamepads));
 }
 
-void controller_maps_load(const char *mapsPath, bool appendMaps) {
+void smlua_input_util_controller_maps_load(const char *mapsPath, bool appendMaps) {
     // construct databases path
     char dbpath[SYS_MAX_PATH] = "";
     if (appendMaps) {
@@ -108,12 +86,12 @@ void controller_maps_load(const char *mapsPath, bool appendMaps) {
         snprintf(fullpath, SYS_MAX_PATH, "%s/%s", dbpath, path);
 
         // load map
-        int loadedMaps = SDL_GameControllerAddMappingsFromFile(fullpath);
+        int loadedMaps = SDL_AddGamepadMappingsFromFile(fullpath);
 
         if (loadedMaps >= 0) {
-            LOG_INFO("Controller Database: Loaded %d controller mapping(s) from '%s'\n", loadedMaps, path);
+            LOG_INFO("smlua_input_util_controller_maps_load: Loaded %d controller mapping(s) from '%s'\n", loadedMaps, path);
         } else {
-            LOG_ERROR("Controller Database: Failed to load controller map from '%s'\n", path);
+            LOG_ERROR("smlua_input_util_controller_maps_load: Failed to load controller map from '%s'\n", path);
         }
     }
 

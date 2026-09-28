@@ -42,14 +42,14 @@ Setting up Visual Studio Code will allow you to have all of the modern benefits 
 Note: For your custom functions you will need to provide type definitions to get autocomplete.
 
 For instance, this will not autocomplete for the mario struct:
-```
+```lua
 function mario_update(m)
     -- code here
 end
 ```
 
 But this will autocomplete for the mario struct:
-```
+```lua
 --- @param m MarioState
 function mario_update(m)
     -- code here

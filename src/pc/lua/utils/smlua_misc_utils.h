@@ -39,7 +39,7 @@ enum ActSelectHudPart {
     ACT_SELECT_HUD_PLAYERS_IN_LEVEL = 1 << 5,
 
     ACT_SELECT_HUD_NONE = 0,
-    ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME |ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
+    ACT_SELECT_HUD_ALL = ACT_SELECT_HUD_SCORE | ACT_SELECT_HUD_LEVEL_NAME | ACT_SELECT_HUD_COURSE_NUM | ACT_SELECT_HUD_ACT_NAME | ACT_SELECT_HUD_STAR_NUM | ACT_SELECT_HUD_PLAYERS_IN_LEVEL
 };
 
 struct DateTime {
@@ -54,6 +54,8 @@ struct DateTime {
 
 /* |description|Gets the current area's networked timer|descriptionEnd| */
 u32 get_network_area_timer(void);
+/* |description|Gets the current area's networked random seed|descriptionEnd| */
+u32 get_network_area_random_seed(void);
 /* |description|Gets the area update counter incremented when objects are updated|descriptionEnd| */
 u16 get_area_update_counter(void);
 

@@ -70,6 +70,7 @@ struct LevelValues {
     u8 showStarNumber;
     u8 extendedPauseDisplay;
     u8 pauseExitAnywhere;
+    u8 disableShadows;
     enum PauseExitMode pauseExitMode;
     u8 disableActs;
     u8 bubbleOnDeathBarrierInCapStages;
@@ -108,6 +109,8 @@ struct LevelValues {
     f32 wallMaxRadius;
     f32 floorNormalMinY;
     f32 ceilNormalMaxY;
+    u8 skipGoddard;
+    u8 skipFileSelect;
 };
 
 extern struct LevelValues gLevelValues;

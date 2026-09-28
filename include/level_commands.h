@@ -210,9 +210,9 @@
     CMD_PTR(geo)
 
 // unk8 is float, but doesn't really matter since CMD23 is unused
-#define CMD23(model, unk4, unk8) \
-    CMD_BBH(0x22, 0x08, model), \
-    CMD_PTR(unk4), \
+#define CMD23(model, geo, unk8) \
+    CMD_BBH(0x23, 0x08, model), \
+    CMD_PTR(geo), \
     CMD_W(unk8)
 
 #define OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, acts) \
@@ -224,8 +224,8 @@
 #define OBJECT(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh) \
     OBJECT_WITH_ACTS(model, posX, posY, posZ, angleX, angleY, angleZ, behParam, beh, 0x1F)
 
-#define MARIO(unk3, behArg, beh) \
-    CMD_BBBB(0x25, 0x0C, 0x00, unk3), \
+#define MARIO(model, behArg, beh) \
+    CMD_BBBB(0x25, 0x0C, 0x00, model), \
     CMD_W(behArg), \
     CMD_PTR(beh)
 

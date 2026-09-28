@@ -161,9 +161,14 @@ static void chat_construct_player_message(struct NetworkPlayer *np, char *msg) {
 }
 
 static bool command_help(UNUSED const char *message, bool onConsole) {
+    char tabCompletionHint[256];
+    snprintf(tabCompletionHint, sizeof(tabCompletionHint), "%s (%s):",
+        DLANG(CHAT, ALL_COMMANDS), DLANG(CHAT, TAB_COMPLETE_INFO));
+    command_message_create(tabCompletionHint, CONSOLE_MESSAGE_INFO);
+
     for (unsigned int i = 0; i < sCommandCount; i++) {
         if (!sCommands[i].active) { continue; }
-        if (!sCommands[i].isChatCommand && onConsole) { continue; }
+        if (!sCommands[i].isChatCommand && !onConsole) { continue; }
         command_message_create(djui_language_get("CHAT", sCommands[i].description), CONSOLE_MESSAGE_INFO);
     }
 #ifdef DEVELOPMENT

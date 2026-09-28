@@ -19,11 +19,11 @@ extern const f32 intro_seg7_table_0700C880[];
 extern const LevelScript level_intro_splash_screen[];
 extern const LevelScript level_intro_mario_head_regular[];
 extern const LevelScript level_intro_mario_head_dizzy[];
-extern const LevelScript level_intro_entry_4[];
-extern const LevelScript script_intro_L1[];
-extern const LevelScript script_intro_L2[];
-extern const LevelScript script_intro_L3[];
-extern const LevelScript script_intro_L4[];
-extern const LevelScript script_intro_L5[];
+extern const LevelScript level_intro_debug_level_select[];
+extern const LevelScript level_intro_goto_file_select[];
+extern const LevelScript level_intro_goto_debug_level_select[];
+extern const LevelScript level_intro_goto_main_scripts_stop_music[];
+extern const LevelScript level_intro_goto_main_scripts[];
+extern const LevelScript level_intro_goto_splash_screen[];
 
 #endif

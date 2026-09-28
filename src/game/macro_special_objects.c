@@ -293,16 +293,9 @@ void spawn_special_objects(s16 areaIndex, s16 **specialObjList) {
         z = **specialObjList;
         (*specialObjList)++;
 
-        offset = 0;
-        while (TRUE) {
-            if (SpecialObjectPresets[offset].preset_id == presetID) {
-                break;
-            }
-
-            if (SpecialObjectPresets[offset].preset_id == 0xFF) {
-            }
-
-            offset++;
+        offset = get_special_object_preset_index(presetID);
+        if (offset == -1) {
+            return;
         }
 
         model = SpecialObjectPresets[offset].model;
@@ -371,13 +364,9 @@ u32 get_special_objects_size(s16 *data) {
     for (i = 0; i < numOfSpecialObjects; i++) {
         presetID = (u8) *data++;
         data += 3;
-        offset = 0;
-
-        while (TRUE) {
-            if (SpecialObjectPresets[offset].preset_id == presetID) {
-                break;
-            }
-            offset++;
+        offset = get_special_object_preset_index(presetID);
+        if (offset == -1) {
+            return data - startPos;
         }
 
         switch (SpecialObjectPresets[offset].type) {
@@ -401,4 +390,14 @@ u32 get_special_objects_size(s16 *data) {
     }
 
     return data - startPos;
+}
+
+s32 get_special_object_preset_index(u8 presetID) {
+    if (presetID == 0xFF) { return -1; }
+    for (s32 index = 0; index < ARRAY_COUNT(SpecialObjectPresets); ++index) {
+        if (SpecialObjectPresets[index].preset_id == presetID) {
+            return index;
+        }
+    }
+    return -1;
 }

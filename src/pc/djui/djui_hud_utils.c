@@ -236,8 +236,7 @@ void patch_djui_hud(f32 delta) {
                         djui_hud_size_translate(&translatedH);
                         s16 rotPrev = degrees_to_sm64(sHudUtilsState.rotation.degrees.prev);
                         s16 rotCurr = degrees_to_sm64(sHudUtilsState.rotation.degrees.curr);
-                        s32 normalizedDiff = (((s32) rotCurr - (s32) rotPrev + 0x8000) & 0xFFFF) - 0x8000; // Fix modular overflow/underflow
-                        s32 rotation = delta_interpolate_s32(rotCurr - normalizedDiff, rotCurr, delta);
+                        s16 rotation = delta_interpolate_angle(rotPrev, rotCurr, delta);
                         f32 pivotX = delta_interpolate_f32(sHudUtilsState.rotation.pivotX.prev, sHudUtilsState.rotation.pivotX.curr, delta);
                         f32 pivotY = delta_interpolate_f32(sHudUtilsState.rotation.pivotY.prev, sHudUtilsState.rotation.pivotY.curr, delta);
                         f32 pivotTranslationX = interp->width * translatedW * pivotX;

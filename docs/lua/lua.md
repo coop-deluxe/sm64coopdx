@@ -15,6 +15,7 @@ Save file locations:
 - When a function requests a time parameter, it is almost if not always in frames.
 - You can use the `print()` command when debugging. Your logs will show up in the console and terminal.
 - You can create a folder within the mods folder containing multiple lua scripts as long as one script is called `main.lua`. Dynos actors can be placed inside this mod folder under `<your mod folder>/actors/`.
+- If you're just starting out, you should take a look at the guide for [creating a mod](guides/creating-mod.md).
 <br />
 
 ## Sections
@@ -25,6 +26,7 @@ Save file locations:
 
 ### Guides
 - [Setting up Visual Studio Code](guides/vs-code-setup.md)
+- [Creating a mod](guides/creating-mod.md)
 - [Hooks](guides/hooks.md)
 - [gMarioStates](guides/mario-state.md)
 - [Behavior Object Lists](guides/object-lists.md)

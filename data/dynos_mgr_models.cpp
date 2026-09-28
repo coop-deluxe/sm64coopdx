@@ -57,26 +57,26 @@ void DynOS_Model_Dump() {
 }
 
 static struct GraphNode *DynOS_Model_CheckMap(int index, u32* aId, void* aAsset, bool aDeDuplicate) {
+    if (!aDeDuplicate) { return NULL; }
+
     auto& map = sAssetMap[index];
-    if (aDeDuplicate) {
-        auto it = map.find(aAsset);
-        if (it != map.end()) {
-            auto& found = it->second;
+    auto it = map.find(aAsset);
+    if (it == map.end()) { return NULL; }
+    auto& found = it->second;
 
-            if (index != MODEL_POOL_PERMANENT) {
-                if (*aId && *aId != found.id) {
-                    sOverwriteMap[*aId] = found.id;
-                }
-                *aId = found.id;
-                return found.graphNode;
-            }
-
-            if (!*aId || *aId == found.id) {
-                if (!*aId) { *aId = found.id; }
-                return found.graphNode;
-            }
+    if (index != MODEL_POOL_PERMANENT) {
+        if (*aId && *aId != found.id) {
+            sOverwriteMap[*aId] = found.id;
         }
+        *aId = found.id;
+        return found.graphNode;
     }
+
+    if (!*aId || *aId == found.id) {
+        if (!*aId) { *aId = found.id; }
+        return found.graphNode;
+    }
+
     return NULL;
 }
 
@@ -218,12 +218,12 @@ u32 DynOS_Model_GetIdFromGraphNode(struct GraphNode* aNode) {
     return MODEL_ERROR_MODEL;
 }
 
-u32 DynOS_Model_GetIdFromAsset(void* asset) {
-    if (!asset) { return MODEL_NONE; }
+u32 DynOS_Model_GetIdFromAsset(void *aAsset) {
+    if (!aAsset) { return MODEL_NONE; }
     u32 lowest = 9999;
     for (int i = 0; i < MODEL_POOL_MAX; i++) {
         auto& map = sAssetMap[i];
-        auto assetIt = map.find(asset);
+        auto assetIt = map.find(aAsset);
         if (assetIt == map.end()) { continue; }
         u32 id = assetIt->second.id;
         if (id < lowest) { lowest = id; }
@@ -246,6 +246,23 @@ enum ModelPool DynOS_Model_GetModelPoolFromGraphNode(struct GraphNode* aNode) {
         }
     }
     return MODEL_POOL_MAX;
+}
+
+const char *DynOS_Model_GetNameFromVanillaAsset(const void *aAsset) {
+
+    // Built-in Actors
+    auto builtinActor = DynOS_Builtin_Actor_GetFromData((const GeoLayout*) aAsset);
+    if (builtinActor != NULL) {
+        return builtinActor;
+    }
+
+    // Built-in Lvl Geos
+    auto builtinGeo = DynOS_Builtin_LvlGeo_GetFromData((const GeoLayout*) aAsset);
+    if (builtinGeo != NULL) {
+        return builtinGeo;
+    }
+
+    return NULL;
 }
 
 void DynOS_Model_OverwriteSlot(u32 srcSlot, u32 dstSlot) {

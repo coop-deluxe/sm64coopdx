@@ -1,6 +1,6 @@
 
-#ifndef SMLUA_INPUT_UTILS_H
-#define SMLUA_INPUT_UTILS_H
+#ifndef smlua_input_util_H
+#define smlua_input_util_H
 
 #define DATABASES_DIRECTORY "databases"
 
@@ -10,7 +10,7 @@
 #include "types.h"
 
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 struct Finger {
     Vec2f pos;
@@ -19,11 +19,11 @@ struct Finger {
 };
 
 struct Gamepad {
-    SDL_GameController *controller; // Shouldn't be exposed, used to check if the controller exists
+    SDL_Gamepad *pad; // Shouldn't be exposed, used to check if the gamepad exists
     const char *name;
     s32 index;
     u8 playerIndex;
-    C_ARRAY bool buttons[SDL_CONTROLLER_BUTTON_MAX];
+    C_ARRAY bool buttons[SDL_GAMEPAD_BUTTON_COUNT];
     s16 leftTrigger;
     s16 rightTrigger;
     Vec2s leftStick;
@@ -50,20 +50,16 @@ struct Key {
 extern bool gModHasInputFocus;
 
 extern struct Gamepad gGamepads[MAX_GAMEPADS];
-extern struct Key gKeyboard[SDL_NUM_SCANCODES];
+extern struct Key gKeyboard[SDL_SCANCODE_COUNT];
 
 /* |description|Returns the current gamepad index in the config file|descriptionEnd| */
-u32 get_current_gamepad_index(void);
-/* |description|Returns the clipboard text|descriptionEnd| */
-const char *get_clipboard_text(void);
-/* |description|Sets the clipboard text|descriptionEnd| */
-void set_clipboard_text(const char *text);
+u32 smlua_input_util_get_current_gamepad(void);
 /* |description|Starts text input and grabs input focus|descriptionEnd| */
-void start_text_input(void);
+void smlua_input_util_start_text_input(void);
 /* |description|Stops text input and loses input focus|descriptionEnd| */
-void stop_text_input(void);
+void smlua_input_util_stop_text_input(void);
 /* |description|Checks if text input is active and if you have input focus|descriptionEnd| */
-bool is_text_input_active(void);
-void clear_gamepad_input_data(void);
-void controller_maps_load(const char *mapsPath, bool appendMaps);
+bool smlua_input_util_text_input_active(void);
+void smlua_input_util_clear(void);
+void smlua_input_util_controller_maps_load(const char *mapsPath, bool appendMaps);
 #endif

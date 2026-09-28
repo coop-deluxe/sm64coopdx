@@ -2452,15 +2452,21 @@ void set_sound_moving_speed(u8 bank, u8 speed) {
  * Called from threads: thread5_game_loop
  */
 void play_dialog_sound(s32 dialogID) {
-    s32 speaker;
+    s32 speaker = DS_NONE;
 
-    if (!IS_VALID_VANILLA_DIALOG(dialogID)) {
-        dialogID = 0;
+    if (IS_VALID_VANILLA_DIALOG(dialogID)) {
+        speaker = sDialogSpeaker[dialogID];
     }
 
-    speaker = sDialogSpeaker[dialogID];
-    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, &speaker);
-    if (speaker < DS_MAX && speaker != 0xff) {
+    smlua_call_event_hooks(HOOK_DIALOG_SOUND, speaker, dialogID, &speaker);
+
+    // Hook returned a sound id
+    if (speaker < 0 || speaker > 0xFF) {
+        play_sound(speaker, gGlobalSoundSource);
+    }
+
+    // Hook returned a speaker id
+    else if (speaker < DS_MAX) {
         play_sound(sDialogSpeakerVoice[speaker], gGlobalSoundSource);
 
         // Play music during bowser message that appears when first entering the

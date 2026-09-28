@@ -30,6 +30,7 @@ static s32 sDynosWarpActNum   = -1;
 static s32 sDynosWarpNodeNum  = -1;
 static s32 sDynosExitLevelNum = -1;
 static s32 sDynosExitAreaNum  = -1;
+static bool sDynosWarpIsDelayed = false;
 
 //
 // Specific Warp Node
@@ -49,6 +50,42 @@ bool DynOS_Warp_ToWarpNode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
     sDynosWarpAreaNum  = aArea;
     sDynosWarpActNum   = aAct;
     sDynosWarpNodeNum  = aWarpId;
+    return true;
+}
+
+bool DynOS_Warp_WithTransition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId) {
+    if (aWarpId != 0) {
+        if (!DynOS_Level_GetWarp(aLevel, aArea, aWarpId)) {
+            return false;
+        }
+    } else {
+        if (!DynOS_Level_GetWarpEntry(aLevel, aArea)) {
+            return false;
+        }
+    }
+
+    // Close the pause menu if it was open
+    level_set_transition(0, NULL);
+    gDialogBoxState = 0;
+    gMenuMode = -1;
+
+    if (aTime <= 0) {
+        if (aWarpId != 0) {
+            return DynOS_Warp_ToWarpNode(aLevel, aArea, aAct, aWarpId);
+        } else {
+            return DynOS_Warp_ToLevel(aLevel, aArea, aAct);
+        }
+    }
+
+    sDynosWarpNodeNum = aWarpId != 0 ? aWarpId : -1;
+    sDynosWarpIsDelayed = true;
+    sDynosWarpLevelNum = aLevel;
+    sDynosWarpAreaNum = aArea;
+    sDynosWarpActNum = aAct;
+
+    play_transition(aTransType, aTime, aColor[0], aColor[1], aColor[2]);
+    fadeout_music((3 * aTime / 2) * 8 - 2);
+
     return true;
 }
 
@@ -188,6 +225,7 @@ static void *DynOS_Warp_UpdateWarp(void *aCmd, bool aIsLevelInitDone) {
         gCurrAreaIndex = sDynosWarpAreaNum;
         gCurrActStarNum = sDynosWarpActNum;
         sDynosWarpTargetArea = gCurrAreaIndex;
+        gCurrCreditsEntry = NULL;
 
         // Set up new level script
         memcpy(&sBackupWarpDest, &sWarpDest, sizeof(WarpDest));
@@ -354,6 +392,7 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
         gDialogCourseActNum = gCurrActNum;
         gCurrAreaIndex = _ExitWarp[8];
         sDynosExitTargetArea = _ExitWarp[8];
+        gCurrCreditsEntry = NULL;
 
         // Set up new level script
         memcpy(&sBackupWarpDest, &sWarpDest, sizeof(WarpDest));
@@ -426,6 +465,16 @@ static void *DynOS_Warp_UpdateExit(void *aCmd, bool aIsLevelInitDone) {
     return NULL;
 }
 
+static void *DynOS_Warp_UpdateDelayed(void *aCmd, bool aIsLevelInitDone) {
+    if (DynOS_IsTransitionActive()) {
+        return NULL;
+    }
+
+    sDynosWarpIsDelayed = false;
+
+    return DynOS_Warp_UpdateWarp(aCmd, aIsLevelInitDone);
+}
+
 void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone) {
 
     // Level Exit
@@ -438,6 +487,11 @@ void *DynOS_Warp_Update(void *aCmd, bool aIsLevelInitDone) {
     if (sDynosWarpLevelNum != -1 &&
         sDynosWarpAreaNum != -1 &&
         sDynosWarpActNum != -1) {
+
+        if (sDynosWarpIsDelayed) {
+            return DynOS_Warp_UpdateDelayed(aCmd, aIsLevelInitDone);
+        }
+
         return DynOS_Warp_UpdateWarp(aCmd, aIsLevelInitDone);
     }
 

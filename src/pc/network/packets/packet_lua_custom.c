@@ -193,6 +193,7 @@ void network_send_lua_custom_bytestring(bool broadcast) {
     // check length
     if (totalLength <= 0 || totalLength > MAX_BYTESTRING_LENGTH) {
         LOG_LUA_LINE("Tried to send a bytestring packet with an invalid length '%llu'. Must be above 0 and below '%u'", (u64)totalLength, MAX_BYTESTRING_LENGTH);
+        return;
     }
 
     // write length

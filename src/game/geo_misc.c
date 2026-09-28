@@ -18,6 +18,8 @@
 #include "segment2.h"
 #include "hardcoded.h"
 
+#include "pc/utils/misc.h"
+
 /**
  * @file geo_misc.c
  * This file contains miscellaneous geo_asm scripts.
@@ -34,6 +36,7 @@ extern const s16 flying_carpet_static_vertex_data[NUM_FLYING_CARPET_VERTICES];
 static s16 sCurAreaTimer = 1;
 static s16 sPrevAreaTimer = 0;
 static s16 sFlyingCarpetRippleTimer = 0;
+static s16 sPrevFlyingCarpetRippleTimer = 0;
 
 s8 gFlyingCarpetState;
 
@@ -124,6 +127,28 @@ Gfx *geo_exec_flying_carpet_timer_update(s32 callContext, UNUSED struct GraphNod
     return NULL;
 }
 
+static Gfx *sCachedCarpetGfx = NULL;
+
+void patch_carpet_before(void) {
+    sCachedCarpetGfx = NULL;
+    sPrevFlyingCarpetRippleTimer = sFlyingCarpetRippleTimer;
+}
+
+void patch_carpet_interpolated(f32 delta) {
+    if (sCachedCarpetGfx && sFlyingCarpetRippleTimer != sPrevFlyingCarpetRippleTimer) {
+        s16 n, row, col, timer;
+        Vtx *verts = (Vtx *)sCachedCarpetGfx[1].words.w1;
+        timer = delta_interpolate_angle(sPrevFlyingCarpetRippleTimer, sFlyingCarpetRippleTimer, delta);
+        
+        for (n = 0; n < NUM_FLYING_CARPET_VERTICES; n++) {
+            row = n / 3;
+            col = n % 3;
+
+            verts[n].v.ob[1] = sins(timer + (row << 12) + (col << 14)) * 20.0;
+        }
+    }
+}
+
 /**
  * Create a display list for a flying carpet with dynamic ripples.
  */
@@ -132,47 +157,53 @@ Gfx *geo_exec_flying_carpet_create(s32 callContext, struct GraphNode *node, UNUS
     Vtx *verts;
     struct GraphNodeGenerated *generatedNode = (struct GraphNodeGenerated *) node;
 
-    s16 *sp64 = segmented_to_virtual(&flying_carpet_static_vertex_data);
+    s16 *vertexData = segmented_to_virtual(&flying_carpet_static_vertex_data);
     Gfx *displayList = NULL;
     Gfx *displayListHead = NULL;
     struct Object *curGraphNodeObject;
 
     if (callContext == GEO_CONTEXT_RENDER) {
-        verts = alloc_display_list(NUM_FLYING_CARPET_VERTICES * sizeof(*verts));
-        displayList = alloc_display_list(7 * sizeof(*displayList));
-        displayListHead = displayList;
+        if (sCachedCarpetGfx == NULL) {
+            verts = alloc_display_list(NUM_FLYING_CARPET_VERTICES * sizeof(*verts));
+            displayList = alloc_display_list(7 * sizeof(*displayList));
+            displayListHead = displayList;
+    
+            if (verts == NULL || displayList == NULL) {
+                return NULL;
+            }
 
-        if (verts == NULL || displayList == NULL) {
-            return NULL;
+            for (n = 0; n < NUM_FLYING_CARPET_VERTICES; n++) {
+                row = n / 3;
+                col = n % 3;
+    
+                x = vertexData[n * 4 + 0];
+                y = sins(sFlyingCarpetRippleTimer + (row << 12) + (col << 14)) * 20.0;
+                z = vertexData[n * 4 + 1];
+                tx = vertexData[n * 4 + 2];
+                ty = vertexData[n * 4 + 3];
+    
+                make_vertex(verts, n, x, y, z, tx, ty, 0, 127, 0, 255);
+            }
+    
+            gSPDisplayList(displayListHead++, dl_flying_carpet_begin);
+    
+            // The forward half.
+            gSPVertex(displayListHead++, verts, 12, 0);
+            gSPDisplayList(displayListHead++, dl_flying_carpet_model_half);
+    
+            // The back half.
+            gSPVertex(displayListHead++, verts + 9, 12, 0);
+            gSPDisplayList(displayListHead++, dl_flying_carpet_model_half);
+    
+            gSPDisplayList(displayListHead++, dl_flying_carpet_end);
+            gSPEndDisplayList(displayListHead);
+    
+            sCachedCarpetGfx = displayList;
+        } else {
+            displayList = sCachedCarpetGfx;
         }
 
         generatedNode->fnNode.node.flags = (generatedNode->fnNode.node.flags & 0xFF) | 0x100;
-
-        for (n = 0; n <= 20; n++) {
-            row = n / 3;
-            col = n % 3;
-
-            x = sp64[n * 4 + 0];
-            y = round_float(sins(sFlyingCarpetRippleTimer + (row << 12) + (col << 14)) * 20.0);
-            z = sp64[n * 4 + 1];
-            tx = sp64[n * 4 + 2];
-            ty = sp64[n * 4 + 3];
-
-            make_vertex(verts, n, x, y, z, tx, ty, 0, 127, 0, 255);
-        }
-
-        gSPDisplayList(displayListHead++, dl_flying_carpet_begin);
-
-        // The forward half.
-        gSPVertex(displayListHead++, verts, 12, 0);
-        gSPDisplayList(displayListHead++, dl_flying_carpet_model_half);
-
-        // The back half.
-        gSPVertex(displayListHead++, verts + 9, 12, 0);
-        gSPDisplayList(displayListHead++, dl_flying_carpet_model_half);
-
-        gSPDisplayList(displayListHead++, dl_flying_carpet_end);
-        gSPEndDisplayList(displayListHead);
 
         curGraphNodeObject = (struct Object *) gCurGraphNodeObject;
         if (gMarioObject->platform == curGraphNodeObject) {

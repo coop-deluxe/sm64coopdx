@@ -780,6 +780,17 @@ static int smlua__set_field(lua_State* L) {
 }
 
 int smlua__iter(lua_State *L) {
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for iter: Expected 2, Received %u", top);
+        return 0;
+    }
+
+    if (!lua_istable(L, 1)) {
+        LOG_LUA_LINE("Improper param type for iter: Expected table, Received %s", luaL_typename(L, 1));
+        return 0;
+    }
+
     lua_rawgeti(L, 1, 1);
     int i = lua_tointeger(L, -1);
     lua_pop(L, 1);
@@ -789,7 +800,7 @@ int smlua__iter(lua_State *L) {
     lua_pop(L, 1);
 
     // Only support autogen objects
-    if (cobj->lot <= LOT_AUTOGEN_MIN || cobj->lot >= LOT_AUTOGEN_MAX) {
+    if (!cobj || cobj->freed || cobj->lot <= LOT_AUTOGEN_MIN || cobj->lot >= LOT_AUTOGEN_MAX) {
         return 0;
     }
 
@@ -973,7 +984,7 @@ void smlua_cobject_init_globals(void) {
 
     EXPOSE_GLOBAL_ARRAY(LOT_GAMEPAD, gGamepads, MAX_GAMEPADS);
 
-    EXPOSE_GLOBAL_ARRAY(LOT_KEY, gKeyboard, SDL_NUM_SCANCODES);
+    EXPOSE_GLOBAL_ARRAY(LOT_KEY, gKeyboard, SDL_SCANCODE_COUNT);
 
     EXPOSE_GLOBAL_ARRAY(LOT_MAT4, gMatStack, MATRIX_STACK_SIZE);
 
@@ -996,6 +1007,8 @@ void smlua_cobject_init_globals(void) {
     EXPOSE_GLOBAL(LOT_FIRSTPERSONCAMERA, gFirstPersonCamera);
 
     EXPOSE_GLOBAL(LOT_LAKITUSTATE, gLakituState);
+
+    EXPOSE_GLOBAL(LOT_CAMERAFOVSTATUS, gFOVState);
 
     EXPOSE_GLOBAL(LOT_SERVERSETTINGS, gServerSettings);
 

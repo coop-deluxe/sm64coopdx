@@ -99,6 +99,11 @@ char *DynOS_Read_Buffer(FILE* aFile, GfxData* aGfxData) {
             char *pElse  = (char *) strstr(_IfDefPtr.mPtr, "#else");
             char *pEndIf = (char *) strstr(_IfDefPtr.mPtr, "#endif");
 
+            if (!pEndIf) {
+                PrintDataError("  ERROR: Missing #endif for #if starting at offset %zu", (pIfDef - _FileBuffer));
+                return NULL;
+            }
+
             if (pElse && pElse < pEndIf) {
                 if (_IfDefPtr.mErase) memset(pIfDef, ' ', pElse + 5 - pIfDef);
                 else                  memset(pElse,  ' ', pEndIf - pElse);
@@ -147,6 +152,11 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
     // Load file into a buffer while removing all comments
     char *_FileBuffer = DynOS_Read_Buffer(_File, aGfxData);
     fclose(_File);
+
+    // Error occurred during read of buffer
+    if (!_FileBuffer) {
+        return;
+    }
 
     // Scanning the loaded data
     u32 _LineNumber = 1;

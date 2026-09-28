@@ -5286,20 +5286,6 @@ function get_star_name(courseNum, starNum)
     -- ...
 end
 
---- @param id integer
---- @param destLevel integer
---- @param destArea integer
---- @param destNode integer
---- @param checkpoint integer
---- @param o Object
---- @return ObjectWarpNode
---- Creates a warp node in the current level and area with id `id` that goes to the warp node `destNode` in level `destLevel` and area `destArea`, and attach it to the object `o`.<br>
---- To work properly, object `o` must be able to trigger a warp (for example, with interact type set to `INTERACT_WARP`.)<br>
---- `checkpoint` should be set only to WARP_NO_CHECKPOINT (0x00) or WARP_CHECKPOINT (0x80.) If `checkpoint` is set to `0x80`, Mario will warp directly to this node if he enters the level again (after a death for example)
-function area_create_warp_node(id, destLevel, destArea, destNode, checkpoint, o)
-    -- ...
-end
-
 --- @return integer
 --- Returns if the level timer is running
 function level_control_timer_running()
@@ -7845,6 +7831,15 @@ function delta_interpolate_s32(a, b, delta)
     -- ...
 end
 
+--- @param a integer
+--- @param b integer
+--- @param delta number
+--- @return integer
+--- Interpolates angle between `a` and `b` with `delta`
+function delta_interpolate_angle(a, b, delta)
+    -- ...
+end
+
 --- @param res Vec3f
 --- @param a Vec3f
 --- @param b Vec3f
@@ -9548,6 +9543,12 @@ function count_objects_with_behavior(behavior)
 end
 
 --- @param behavior Pointer_BehaviorScript
+--- Deletes all objects with the specified behavior
+function delete_all_objects_with_behavior(behavior)
+    -- ...
+end
+
+--- @param behavior Pointer_BehaviorScript
 --- @return Object
 --- Finds any object with the specified behavior
 function find_object_with_behavior(behavior)
@@ -10857,6 +10858,13 @@ function sequence_player_get_fade_volume(player)
 end
 
 --- @param player integer
+--- @param volume number
+--- Sets the fade volume of `player`
+function sequence_player_set_fade_volume(player, volume)
+    -- ...
+end
+
+--- @param player integer
 --- @return number
 --- Gets the mute volume scale of `player`
 function sequence_player_get_mute_volume_scale(player)
@@ -11896,35 +11904,23 @@ end
 
 --- @return integer
 --- Returns the current gamepad index in the config file
-function get_current_gamepad_index()
-    -- ...
-end
-
---- @return string
---- Returns the clipboard text
-function get_clipboard_text()
-    -- ...
-end
-
---- @param text string
---- Sets the clipboard text
-function set_clipboard_text(text)
+function smlua_input_util_get_current_gamepad()
     -- ...
 end
 
 --- Starts text input and grabs input focus
-function start_text_input()
+function smlua_input_util_start_text_input()
     -- ...
 end
 
 --- Stops text input and loses input focus
-function stop_text_input()
+function smlua_input_util_stop_text_input()
     -- ...
 end
 
 --- @return boolean
 --- Checks if text input is active and if you have input focus
-function is_text_input_active()
+function smlua_input_util_text_input_active()
     -- ...
 end
 
@@ -11989,6 +11985,19 @@ end
 --- @param aLevel integer
 --- @param aArea integer
 --- @param aAct integer
+--- @param aTransType integer
+--- @param aTime integer
+--- @param aColor Color
+--- @param aWarpId? integer
+--- @return boolean
+--- Warps to `aArea` of `aLevel` in `aAct` with a transition, optionally using `aWarpId`
+function warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId)
+    -- ...
+end
+
+--- @param aLevel integer
+--- @param aArea integer
+--- @param aAct integer
 --- @return boolean
 --- Warps to `aArea` of `aLevel` in `aAct`
 function warp_to_level(aLevel, aArea, aAct)
@@ -12021,9 +12030,78 @@ function warp_to_castle(aLevel)
     -- ...
 end
 
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @param marioSpawnType MarioSpawnType
+--- @param destLevel integer
+--- @param destArea integer
+--- @param destNode integer
+--- @param checkpoint boolean
+--- @param pos Vec3f
+--- @param angle Vec3s
+--- @param modelId ModelExtendedId
+--- @param behaviorId BehaviorId
+--- @param behParams integer
+--- @return CustomWarpNode
+--- Creates a warp node in level `levelNum` and area `areaIndex` with id `id` to the warp node `destNode` in level `destLevel` and area `destArea`, and associates it an object described by `pos`, `angle`, `modelId`, `behaviorId` and `behParams`. Note that the object must have the `INTERACT_WARP` interaction type for the warp to work properly.<br>
+--- If `checkpoint` is true, Mario will warp directly to this node if he enters the level again (after a death for example).<br>
+--- `marioSpawnType` indicates which kind of action Mario should perform when exiting this node. Its value must be one of the `MARIO_SPAWN_` constants.
+function level_create_warp_node_with_object(levelNum, areaIndex, id, marioSpawnType, destLevel, destArea, destNode, checkpoint, pos, angle, modelId, behaviorId, behParams)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- @return CustomWarpNode
+--- Gets the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be returned by this function.
+function level_get_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- @param areaIndex integer
+--- @param id integer
+--- Deletes the warp node in level `levelNum` and area `areaIndex` with id `id`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_delete_warp_node(levelNum, areaIndex, id)
+    -- ...
+end
+
+--- @param levelNum integer
+--- Deletes all the warp nodes in level `levelNum`.<br>
+--- Only the warp nodes created by `level_create_warp_node` or `level_create_warp_node_with_object` can be deleted by this function.
+function level_clear_warp_nodes(levelNum)
+    -- ...
+end
+
 --- @return integer
 --- Gets the current area's networked timer
 function get_network_area_timer()
+    -- ...
+end
+
+--- @return integer
+--- Gets the current area's networked random seed
+function get_network_area_random_seed()
     -- ...
 end
 
@@ -13114,6 +13192,26 @@ function smlua_text_utils_allocate_dialog()
     -- ...
 end
 
+--- @param dialogId DialogId
+--- @return DialogType
+--- Gets the type of a `dialogId`
+function smlua_text_utils_dialog_get_type(dialogId)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- @param dialogType DialogType
+--- Sets the type of a `dialogId`
+function smlua_text_utils_dialog_set_type(dialogId, dialogType)
+    -- ...
+end
+
+--- @param dialogId DialogId
+--- Resets the type of a `dialogId`
+function smlua_text_utils_dialog_reset_type(dialogId)
+    -- ...
+end
+
 --- @param courseNum integer
 --- @param courseName string
 --- @param act1 string
@@ -13492,6 +13590,13 @@ end
 --- @return boolean
 --- Checks if a surface has force
 function surface_has_force(surfaceType)
+    -- ...
+end
+
+--- @param syncId integer
+--- @return integer
+--- Retrieves the random seed of a sync object from its sync ID
+function sync_object_get_random_seed(syncId)
     -- ...
 end
 
