@@ -342,15 +342,15 @@ bool sync_object_should_own(u32 syncId) {
 
     // check distance
 
-    float selfToObject = player_distance(&gMarioStates[0], so->o);
+    s32 selfToObject = (s32)player_distance(&gMarioStates[0], so->o);
     u8 selfGlobalIndex = network_global_index_from_local(0);
 
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         if (!is_player_in_local_area(&gMarioStates[i])) { continue; }
 
-        float otherToObject = player_distance(&gMarioStates[i], so->o);
+        s32 otherToObject = (s32)player_distance(&gMarioStates[i], so->o);
 
-        if (absf(selfToObject - otherToObject) <= 0.01f) {
+        if (selfToObject == otherToObject) {
             // fallback to lowest global if players are too close
             if (network_global_index_from_local(i) < selfGlobalIndex) { return false; }
         } else if (otherToObject < selfToObject) {
