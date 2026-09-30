@@ -1181,7 +1181,7 @@ void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader) {
     spvc_context_destroy(context);
 }
 
-void gfx_convert_spirv_to_1(char **shaderCode, struct Shader *shader) {
+void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader, u32 shaderModel) {
     spvc_context context = NULL;
     spvc_compiler compiler = NULL;
     spvc_parsed_ir ir = NULL;
@@ -1197,7 +1197,7 @@ void gfx_convert_spirv_to_1(char **shaderCode, struct Shader *shader) {
 
     spvc_compiler_options options;
     spvc_compiler_create_compiler_options(compiler, &options);
-    spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_HLSL_SHADER_MODEL, 50);
+    spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_HLSL_SHADER_MODEL, shaderModel);
     spvc_compiler_install_compiler_options(compiler, options);
 
     spvc_compiler_compile(compiler, &hlsl_code);

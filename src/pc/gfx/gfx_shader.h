@@ -106,7 +106,7 @@ void gfx_init_shaders();
 struct Shader *gfx_create_shader(const char *shaderCode);
 bool gfx_compile_shader_to_spirv(glslang_stage_t stage, const char *shaderCode, struct Shader *shader);
 void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader);
-void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader);
+void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader, u32 shaderModel);
 void gfx_convert_spirv_to_msl(char **shaderCode, struct Shader *shader);
 void gfx_process_spirv(struct Shader *shader);
 bool gfx_generate_vertex_and_fragment_shader_from_cc(struct Shader *vertexShader, struct Shader *fragmentShader, struct ColorCombiner *cc, char **outVertShader, char **outFragShader);
