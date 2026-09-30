@@ -263,6 +263,7 @@ static void select_graphics_backend(void) {
         case GFX_WINDOW_BACKEND_VULKAN:
             gRenderApi = &gfx_sdl_gpu_api;
             gAudioApi  = &audio_sdl;
+            break;
 #endif
 #ifdef OSX_BUILD
         case GFX_WINDOW_BACKEND_METAL:
