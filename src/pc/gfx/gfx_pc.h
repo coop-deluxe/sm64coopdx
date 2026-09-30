@@ -1,15 +1,14 @@
-#ifndef GFX_PC_H
-#define GFX_PC_H
+#pragma once
 
 #include "types.h"
 #include "pc/gfx/gfx.h"
 #include "pc/gfx/gfx_cc.h"
 #include "pc/gfx/gfx_shader.h"
 
-enum PassFilter {
-    PASS_FILTER_LINEAR,
-    PASS_FILTER_NEAREST,
-    PASS_FILTER_COUNT
+enum TextureFilter {
+    TEXTURE_FILTER_LINEAR,
+    TEXTURE_FILTER_NEAREST,
+    TEXTURE_FILTER_COUNT
 };
 
 enum ShaderFlag {
@@ -61,16 +60,9 @@ struct FramePass {
     u32 depthBuffer;
     u64 passTexture;
 
-    // d3d/metal specific stuff
-    void *d3dSrv;
-    union {
-        void *d3dRtv;
-        void *mtlColorTex;
-    };
-    union {
-        void *d3dDsv;
-        void *mtlDepthTex;
-    };
+    // modern renderers
+    void *colorTex;
+    void *depthTex;
 
     // global
     u32 width;
@@ -80,7 +72,7 @@ struct FramePass {
     bool active;
     bool drawWorldGeometry;
     ColorRGBA clearColor;
-    enum PassFilter passFilter;
+    enum TextureFilter passFilter;
 };
 
 extern struct RSP rsp;
@@ -130,6 +122,4 @@ void gfx_pc_precomp_shader(uint32_t rgb1, uint32_t alpha1, uint32_t rgb2, uint32
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

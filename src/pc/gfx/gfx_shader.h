@@ -1,26 +1,5 @@
 #pragma once
 
-#define MAX_SHADER_VARIABLE_NAME 128
-#define MAX_SHADER_TEXTURES 2
-#define MAX_SHADER_INPUTS 512
-#define MAX_SHADER_OUTPUTS 512
-#define MAX_SHADER_UNIFORMS 1024
-#define MAX_SHADER_BINDINGS 64
-
-#ifdef _WIN32
-#define COBJMACROS
-#include <windows.h>
-#include <d3d11.h>
-
-// stupid windows crap
-#ifdef near
-#undef near
-#endif
-#ifdef far
-#undef far
-#endif
-#endif
-
 #include <glslang/Include/glslang_c_interface.h>
 #include <glslang/Public/resource_limits_c.h>
 #include <spirv_cross/spirv_cross_c.h>
@@ -32,7 +11,14 @@
 extern "C" {
 #endif
 
-#define UNIFORM_BINDING_SLOT_OFFSET 1
+#define MAX_SHADER_VARIABLE_NAME 128
+#define MAX_SHADER_TEXTURES 2
+#define MAX_SHADER_INPUTS 512
+#define MAX_SHADER_OUTPUTS 512
+#define MAX_SHADER_UNIFORMS 1024
+#define MAX_SHADER_SAMPLERS 64
+
+#define UNIFORM_BINDING_SLOT_OFFSET 0
 #define MAX_UNIFORM_BLOCKS 8
 
 typedef struct {
@@ -47,7 +33,7 @@ enum ShaderStage {
     SHADER_STAGE_COUNT
 };
 
-typedef enum ShaderUniformType {
+enum ShaderUniformType {
     SHADER_UNIFORM_TYPE_BOOL,
     SHADER_UNIFORM_TYPE_INT,
     SHADER_UNIFORM_TYPE_FLOAT,
@@ -55,9 +41,9 @@ typedef enum ShaderUniformType {
     SHADER_UNIFORM_TYPE_VEC3,
     SHADER_UNIFORM_TYPE_VEC4,
     SHADER_UNIFORM_TYPE_MAT4
-} ShaderUniformType;
+};
 
-struct ShaderBinding {
+struct ShaderSampler {
     char name[MAX_SHADER_VARIABLE_NAME];
     int binding;
 };
@@ -80,9 +66,7 @@ struct ShaderUniformBlock {
     struct ShaderUniform uniforms[MAX_SHADER_UNIFORMS];
     int uniformCount;
     bool isGlobalBlock;
-#ifdef _WIN32
-    ID3D11Buffer *dxConstantBuffer; // dx11 doesn't use buffer, it uses a d3d11buffer
-#endif
+    bool hasChanged;
     unsigned int glBufferId; // opengl uses a buffer id
 };
 
@@ -102,15 +86,16 @@ struct Shader {
     SpirVShader spirVShader;
     struct ShaderInput shaderInputs[MAX_SHADER_INPUTS];
     struct ShaderOutput shaderOutputs[MAX_SHADER_OUTPUTS];
-    struct ShaderBinding shaderBindings[MAX_SHADER_BINDINGS];
+    struct ShaderSampler shaderSamplers[MAX_SHADER_SAMPLERS];
     struct ShaderUniformBlock uniformBlocks[MAX_UNIFORM_BLOCKS];
     int uniformBlockCount;
+    int samplerCount;
 };
 
 extern struct ShaderInput *gShaderInputs;
 extern struct ShaderInput *gPostProcessShaderInputs;
-extern struct ShaderBinding *gShaderBindings;
-extern struct ShaderBinding *gPostProcessShaderBindings;
+extern struct ShaderSampler *gShaderSamplers;
+extern struct ShaderSampler *gPostProcessShaderSamplers;
 
 extern const char *gDefaultPostProcessVertexShader;
 extern const char *gDefaultPostProcessFragmentShader;
@@ -123,6 +108,7 @@ bool gfx_compile_shader_to_spirv(glslang_stage_t stage, const char *shaderCode, 
 void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader);
 void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader);
 void gfx_convert_spirv_to_msl(char **shaderCode, struct Shader *shader);
+void gfx_process_spirv(struct Shader *shader);
 bool gfx_generate_vertex_and_fragment_shader_from_cc(struct Shader *vertexShader, struct Shader *fragmentShader, struct ColorCombiner *cc, char **outVertShader, char **outFragShader);
 bool gfx_generate_post_process_vertex_and_fragment_shader(struct Shader *vertexShader, struct Shader *fragmentShader, char **outVertShader, char **outFragShader);
 void gfx_destroy_shader_contents(struct Shader *shader);

@@ -38,7 +38,7 @@
     - [enum CcShaderInput](#enum-CcShaderInput)
     - [enum CombineModeFlags](#enum-CombineModeFlags)
 - [gfx_pc.h](#gfx_pch)
-    - [enum PassFilter](#enum-PassFilter)
+    - [enum TextureFilter](#enum-TextureFilter)
     - [enum ShaderFlag](#enum-ShaderFlag)
 - [gfx_shader.h](#gfx_shaderh)
     - [enum ShaderStage](#enum-ShaderStage)
@@ -1511,12 +1511,12 @@
 
 ## gfx_pc.h
 
-### enum PassFilter
+### enum TextureFilter
 | Identifier | Value |
 | :--------- | :---- |
-| PASS_FILTER_LINEAR | 0 |
-| PASS_FILTER_NEAREST | 1 |
-| PASS_FILTER_COUNT | 2 |
+| TEXTURE_FILTER_LINEAR | 0 |
+| TEXTURE_FILTER_NEAREST | 1 |
+| TEXTURE_FILTER_COUNT | 2 |
 
 ### enum ShaderFlag
 | Identifier | Value |

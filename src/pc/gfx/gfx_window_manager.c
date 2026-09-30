@@ -9,8 +9,8 @@
 
 #include "gfx_window_manager.h"
 #include "gfx_window_opengl.h"
-#include "gfx_window_metal.h"
 #include "gfx_window_dxgi.h"
+#include "gfx_window_sdl_gpu.h"
 #include "gfx_screen_config.h"
 
 #include "pc/pc_main.h"
@@ -25,11 +25,14 @@
 #include "pc/debuglog.h"
 
 static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
-#if defined(_WIN32)
-    [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
+#if defined(_WIN32) || defined (__linux)
+#ifdef _WIN32
+    [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_sdl_gpu,
+#endif
+    [GFX_WINDOW_BACKEND_VULKAN] = &gfx_window_sdl_gpu,
 #endif
 #if defined(__APPLE__)
-    [GFX_WINDOW_BACKEND_METAL] = &gfx_window_metal,
+    [GFX_WINDOW_BACKEND_METAL] = &gfx_window_sdl_gpu,
 #endif
     [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
 };
@@ -54,6 +57,23 @@ static void (*m_scroll)(float, float) = NULL;
 static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return &gfx_window_dummy; }
     return sBackends[currBackend];
+}
+
+const char *gfx_wm_get_backend_name(enum GfxWindowBackend backend) {
+    switch (backend) {
+        case GFX_WINDOW_BACKEND_DUMMY: return "Dummy";
+        case GFX_WINDOW_BACKEND_OPENGL: return "OpenGL (Legacy)";
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
+        case GFX_WINDOW_BACKEND_DIRECTX: return "DirectX 12";
+#endif
+        case GFX_WINDOW_BACKEND_VULKAN: return "Vulkan";
+#endif
+#ifdef __APPLE__
+        case GFX_WINDOW_BACKEND_METAL: return "Metal";
+#endif
+        default: return "???";
+    }
 }
 
 void gfx_wm_set_window(SDL_Window *window) {

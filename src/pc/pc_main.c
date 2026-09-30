@@ -253,15 +253,20 @@ static void select_graphics_backend(void) {
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
             break;
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
         case GFX_WINDOW_BACKEND_DIRECTX:
-            gRenderApi = &gfx_direct3d11_api;
+            gRenderApi = &gfx_sdl_gpu_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif
+        case GFX_WINDOW_BACKEND_VULKAN:
+            gRenderApi = &gfx_sdl_gpu_api;
+            gAudioApi  = &audio_sdl;
+#endif
 #ifdef OSX_BUILD
         case GFX_WINDOW_BACKEND_METAL:
-            gRenderApi = &gfx_metal_api;
+            gRenderApi = &gfx_sdl_gpu_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif

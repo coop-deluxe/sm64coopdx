@@ -123,19 +123,21 @@ bool parse_cli_opts(int argc, char* argv[]) {
             gCLIOpts.enableMods[gCLIOpts.enabledModsCount - 1] = strdup(argv[++i]);
         } else if (!strcmp(argv[i], "--headless")) {
             gCLIOpts.headless = true;
-#if defined(_WIN32) || defined(OSX_BUILD)
         } else if (!strcmp(argv[i], "--backend") && (i + 1) < argc) {
             if (!strcmp(argv[i + 1], "opengl")) {
                 gCLIOpts.backend = GFX_WINDOW_BACKEND_OPENGL;
-#if defined(_WIN32)
+#if defined(_WIN32) || defined (__linux)
+#ifdef _WIN32
             } else if (!strcmp(argv[i + 1], "directx")) {
                 gCLIOpts.backend = GFX_WINDOW_BACKEND_DIRECTX;
+#endif
+            } else if (!strcmp(argv[i + 1], "vulkan")) {
+                gCLIOpts.backend = GFX_WINDOW_BACKEND_VULKAN;
 #else
             } else if (!strcmp(argv[i + 1], "metal")) {
                 gCLIOpts.backend = GFX_WINDOW_BACKEND_METAL;
 #endif
             }
-#endif
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;

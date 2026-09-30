@@ -1230,10 +1230,10 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         sRenderingState.alpha_blend = cm->use_alpha;
     }
     uint8_t num_inputs;
-    bool used_textures[2];
+    bool used_textures[MAX_TEXTURES];
     gfx_rapi->shader_get_info(prg, &num_inputs, used_textures);
 
-    for (int32_t i = 0; i < 2; i++) {
+    for (int32_t i = 0; i < MAX_TEXTURES; i++) {
         if (used_textures[i]) {
             if (rdp.textures_changed[i]) {
                 gfx_flush();
@@ -1241,7 +1241,7 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
                 rdp.textures_changed[i] = false;
             }
             bool linear_filter = configFiltering && ((rdp.other_mode_h & (3U << G_MDSFT_TEXTFILT)) != G_TF_POINT);
-            struct TextureHashmapNode* tex = sRenderingState.textures[i];
+            struct TextureHashmapNode *tex = sRenderingState.textures[i];
             if (tex) {
                 if (linear_filter != tex->linear_filter || rdp.texture_tile[i].cms != tex->cms || rdp.texture_tile[i].cmt != sRenderingState.textures[i]->cmt) {
                     gfx_flush();
@@ -1805,18 +1805,16 @@ static void gfx_draw_fullscreen_quad() {
          1.0f,  1.0f, 0.0f, 1.0f,   1.0f, 1.0f
     };
 
-#if defined(WIN32) || defined(OSX_BUILD)
 #if defined(WIN32)
-    if (gRenderApi == &gfx_direct3d11_api) {
+    if (gRenderApi == &gfx_sdl_gpu_api) {
 #else
-    if (gRenderApi == &gfx_metal_api) {
+    if (gRenderApi == &gfx_sdl_gpu_api) {
 #endif
         // flip y coordinates
         for (int i = 0; i < 6; i++) {
             quadVertices[i * 6 + 5] = 1.0f - quadVertices[i * 6 + 5];
         }
     }
-#endif
 
     gfx_rapi->create_or_load_post_process_shader();
 
@@ -2327,22 +2325,9 @@ static void gfx_process_lua_passes(Gfx *commands, bool *isLuaPassesActive) {
 
         gfx_sp_reset(); // resets the rsp
 
-        // bind pass textures if they exist
+        // bind last pass texture
         if (i > 0) {
-            int textureSlotOffset = 10;
-            uintptr_t lastValidPassTexture = 0;
-
-            for (int j = 0; j < i; j++) {
-                if (gFramePasses[j].active && gFramePasses[j].passTexture != 0) {
-                    gfx_rapi->bind_texture_raw(textureSlotOffset + j, gFramePasses[j].passTexture);
-                    lastValidPassTexture = gFramePasses[j].passTexture;
-                }
-            }
-
-            // make the last valid pass texture always bind to slot 10
-            if (lastValidPassTexture != 0) {
-                gfx_rapi->bind_texture_raw(textureSlotOffset, lastValidPassTexture);
-            }
+            gfx_rapi->bind_texture_using_name("uPassTex", gFramePasses[i - 1].passTexture);
         }
 
         if (framePass->drawWorldGeometry) {
@@ -2427,19 +2412,11 @@ void gfx_run(Gfx *commands) {
     gfx_rapi->reset_framebuffer();
     gfx_rapi->start_frame(); // resets color and depth
 
-    int textureSlotOffset = 10;
-
     if (gDefaultGeoFramePass.active) {
         if (gDefaultGeoFramePass.passTexture != 0) {
-            gfx_rapi->bind_texture_raw(textureSlotOffset, gDefaultGeoFramePass.passTexture);
+            gfx_rapi->bind_texture_using_name("uPassTex", gDefaultGeoFramePass.passTexture);
         }
     } else {
-        for (int i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
-            if (gFramePasses[i].active && gFramePasses[i].passTexture != 0) {
-                gfx_rapi->bind_texture_raw(textureSlotOffset + i, gFramePasses[i].passTexture);
-            }
-        }
-
         uintptr_t lastValidPassTexture = 0;
         for (int i = MAX_CUSTOM_FRAME_PASSES - 1; i >= 0; i--) {
             if (gFramePasses[i].active && gFramePasses[i].passTexture != 0) {
@@ -2449,7 +2426,7 @@ void gfx_run(Gfx *commands) {
         }
 
         if (lastValidPassTexture != 0) {
-            gfx_rapi->bind_texture_raw(textureSlotOffset, lastValidPassTexture);
+            gfx_rapi->bind_texture_using_name("uPassTex", lastValidPassTexture);
         }
     }
 

@@ -970,7 +970,7 @@
 | height | `integer` |  |
 | drawWorldGeometry | `boolean` |  |
 | clearColor | [ColorRGBA](structs.md#ColorRGBA) | read-only |
-| passFilter | [enum PassFilter](constants.md#enum-PassFilter) |  |
+| passFilter | [enum TextureFilter](constants.md#enum-TextureFilter) |  |
 
 [:arrow_up_small:](#)
 

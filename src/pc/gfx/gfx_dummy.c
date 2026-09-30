@@ -70,10 +70,6 @@ static struct ShaderProgram *gfx_dummy_renderer_lookup_shader(UNUSED struct Colo
     return NULL;
 }
 
-static struct ShaderProgram *gfx_dummy_renderer_lookup_shader_using_index(UNUSED u8 shaderIndex, UNUSED u8 framePassIndex) {
-    return NULL;
-}
-
 static void gfx_dummy_renderer_shader_get_info(UNUSED struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
     *num_inputs = 0;
     used_textures[0] = false;
@@ -99,7 +95,7 @@ static size_t gfx_dummy_renderer_get_uniform_buffer_size(UNUSED enum ShaderStage
 static void gfx_dummy_renderer_set_uniform_buffer(UNUSED enum ShaderStage stage, UNUSED const char *name) {
 }
 
-static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED ShaderUniformType type, UNUSED UNUSED const void *data, UNUSED u32 numElements) {
+static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED enum ShaderUniformType type, UNUSED UNUSED const void *data, UNUSED u32 numElements) {
 }
 
 static uint32_t gfx_dummy_renderer_new_texture(void) {
@@ -109,7 +105,7 @@ static uint32_t gfx_dummy_renderer_new_texture(void) {
 static void gfx_dummy_renderer_select_texture(UNUSED int tile, UNUSED uint32_t texture_id) {
 }
 
-static void gfx_dummy_renderer_bind_texture_raw(UNUSED int tile, UNUSED uint64_t texture_id) {
+static void gfx_dummy_renderer_bind_texture_using_name(UNUSED const char *name, UNUSED u64 textureId) {
 }
 
 static void gfx_dummy_renderer_upload_texture(UNUSED const uint8_t *rgba32_buf, UNUSED int width, UNUSED int height) {
@@ -187,7 +183,6 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_create_and_load_new_shader,
     gfx_dummy_renderer_create_or_load_post_process_shader,
     gfx_dummy_renderer_lookup_shader,
-    gfx_dummy_renderer_lookup_shader_using_index,
     gfx_dummy_renderer_shader_get_info,
     gfx_dummy_renderer_create_framebuffer,
     gfx_dummy_renderer_delete_framebuffer,
@@ -198,7 +193,7 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_set_uniform,
     gfx_dummy_renderer_new_texture,
     gfx_dummy_renderer_select_texture,
-    gfx_dummy_renderer_bind_texture_raw,
+    gfx_dummy_renderer_bind_texture_using_name,
     gfx_dummy_renderer_upload_texture,
     gfx_dummy_renderer_set_sampler_parameters,
     gfx_dummy_renderer_set_depth_test,

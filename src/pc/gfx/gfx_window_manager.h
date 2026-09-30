@@ -19,12 +19,15 @@ typedef bool (*kb_callback_t)(int code);
 
 enum GfxWindowBackend {
     GFX_WINDOW_BACKEND_DUMMY = -1,
-    #ifdef _WIN32
-        GFX_WINDOW_BACKEND_DIRECTX,
-    #endif
-    #ifdef __APPLE__
-        GFX_WINDOW_BACKEND_METAL,
-    #endif
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
+    GFX_WINDOW_BACKEND_DIRECTX,
+#endif
+    GFX_WINDOW_BACKEND_VULKAN,
+#endif
+#ifdef __APPLE__
+    GFX_WINDOW_BACKEND_METAL,
+#endif
     GFX_WINDOW_BACKEND_OPENGL,
     GFX_WINDOW_BACKEND_COUNT,
     GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
@@ -40,6 +43,8 @@ struct GfxWindowBackendAPI {
     double (*get_time)(void); // For debug
     int  (*get_max_msaa)(void);
 };
+
+const char *gfx_wm_get_backend_name(enum GfxWindowBackend backend);
 
 void gfx_wm_set_window(SDL_Window *window);
 SDL_Window *gfx_wm_get_window(void);
