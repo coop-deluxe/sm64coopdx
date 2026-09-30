@@ -11854,6 +11854,18 @@ function gfx_is_culling_enabled()
     -- ...
 end
 
+--- @param gpuCullMode GpuCullMode
+--- Sets gpu culling for all triangles. Has none, front, and back culling
+function gfx_set_gpu_cull_mode(gpuCullMode)
+    -- ...
+end
+
+--- @return GpuCullMode
+--- Gets gpu culling for all triangles
+function gfx_get_gpu_cull_mode()
+    -- ...
+end
+
 --- @return string
 --- Gets the name of the active render api
 function gfx_get_render_api_name()

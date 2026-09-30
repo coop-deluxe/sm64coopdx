@@ -128,12 +128,16 @@ static f32 sDepthZAdd = 0;
 static f32 sDepthZMult = 1;
 static f32 sDepthZSub = 0;
 
+static enum GpuCullMode sCurrentCullMode = GPU_CULL_MODE_NONE;
+static u32 sPrevDlCullMode = 0xFFFFFFFF;
+
 Vec3f gLightingDir = { 0.0f, 0.0f, 0.0f };
 Color gLightingColor[2] = { { 0xFF, 0xFF, 0xFF }, { 0xFF, 0xFF, 0xFF } };
 Color gVertexColor = { 0xFF, 0xFF, 0xFF };
 Color gFogColor = { 0xFF, 0xFF, 0xFF };
 f32 gFogIntensity = 1.0f;
 bool gCullingEnabled = true;
+enum GpuCullMode gGpuCullMode = GPU_CULL_MODE_NONE;
 
 bool gFullbright = false;
 
@@ -193,7 +197,16 @@ void ext_gfx_run_dl(Gfx* cmd);
 }*/
 static void gfx_flush(void) {
     if (buf_vbo_len > 0) {
+        bool usingDlCullMode = false;
+        if (gGpuCullMode == GPU_CULL_MODE_USE_DL) {
+            usingDlCullMode = true;
+            gGpuCullMode = sCurrentCullMode;
+        }
+
         gfx_rapi->draw_triangles(buf_vbo, buf_vbo_len, buf_vbo_num_tris);
+
+        if (usingDlCullMode) { gGpuCullMode = GPU_CULL_MODE_USE_DL; }
+
         buf_vbo_len = 0;
         buf_vbo_num_tris = 0;
     }
@@ -1054,6 +1067,41 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
     struct GfxVertex *v3 = &rsp.loaded_vertices[vtx3_idx];
     struct GfxVertex *v_arr[3] = { v1, v2, v3 };
 
+    if (gGpuCullMode == GPU_CULL_MODE_USE_DL) {
+        u32 currentDlCull = rsp.geometry_mode & G_CULL_BOTH;
+
+        // inverse if needed
+        if (rsp.geometry_mode & G_CULL_INVERT_EXT) {
+            if (currentDlCull == G_CULL_FRONT) {
+                currentDlCull = G_CULL_BACK;
+            } else if (currentDlCull == G_CULL_BACK) {
+                currentDlCull = G_CULL_FRONT;
+            }
+        }
+
+        // see if they are not equivalent
+        if (currentDlCull != sPrevDlCullMode) {
+            // flush the triangles using the current cull mode for the currently queued batch
+            gfx_flush();
+
+            // update the current cull mode for the next batch
+            switch (currentDlCull) {
+                case G_CULL_FRONT:
+                    sCurrentCullMode = GPU_CULL_MODE_FRONT;
+                    break;
+                case G_CULL_BACK:
+                    sCurrentCullMode = GPU_CULL_MODE_BACK;
+                    break;
+                case G_CULL_BOTH:
+                default:
+                    sCurrentCullMode = GPU_CULL_MODE_NONE;
+                    break;
+            }
+
+            sPrevDlCullMode = currentDlCull;
+        }
+    }
+
     if (v1->clip_rej & v2->clip_rej & v3->clip_rej && gCullingEnabled) {
         // The whole triangle lies outside the visible area
         return;
@@ -1826,7 +1874,13 @@ static void gfx_draw_fullscreen_quad() {
     gfx_set_builtin_uniforms();
     smlua_call_event_hooks(HOOK_ON_SET_SHADER_PROGRAM);
 
+    // dont cull post process
+    enum GpuCullMode cachedCullMode = gGpuCullMode;
+    gGpuCullMode = GPU_CULL_MODE_NONE;
+
     gfx_rapi->draw_triangles(quadVertices, sizeof(quadVertices) / sizeof(float), 2);
+
+    gGpuCullMode = cachedCullMode;
 
     sRenderingState.shader_program = NULL; // reset shader program to sync state with render api
 }
@@ -2325,9 +2379,10 @@ static void gfx_process_lua_passes(Gfx *commands, bool *isLuaPassesActive) {
 
         gfx_sp_reset(); // resets the rsp
 
-        // bind last pass texture
+        // bind last pass textures
         if (i > 0) {
-            gfx_rapi->bind_texture_using_name("uPassTex", gFramePasses[i - 1].passTexture);
+            gfx_rapi->bind_texture_using_name("uPassColorTex", gFramePasses[i - 1].passTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gFramePasses[i - 1].depthTex);
         }
 
         if (framePass->drawWorldGeometry) {
@@ -2414,19 +2469,23 @@ void gfx_run(Gfx *commands) {
 
     if (gDefaultGeoFramePass.active) {
         if (gDefaultGeoFramePass.passTexture != 0) {
-            gfx_rapi->bind_texture_using_name("uPassTex", gDefaultGeoFramePass.passTexture);
+            gfx_rapi->bind_texture_using_name("uPassColorTex", gDefaultGeoFramePass.passTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gDefaultGeoFramePass.depthTex);
         }
     } else {
-        uintptr_t lastValidPassTexture = 0;
+        u64 lastValidPassTexture = 0;
+        u64 lastValidDepthTexture = 0;
         for (int i = MAX_CUSTOM_FRAME_PASSES - 1; i >= 0; i--) {
-            if (gFramePasses[i].active && gFramePasses[i].passTexture != 0) {
+            if (gFramePasses[i].active && gFramePasses[i].passTexture != 0 && gFramePasses[i].depthTex != NULL) {
                 lastValidPassTexture = gFramePasses[i].passTexture;
+                lastValidDepthTexture = (u64)gFramePasses[i].depthTex;
                 break;
             }
         }
 
         if (lastValidPassTexture != 0) {
-            gfx_rapi->bind_texture_using_name("uPassTex", lastValidPassTexture);
+            gfx_rapi->bind_texture_using_name("uPassColorTex", lastValidPassTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", lastValidDepthTexture);
         }
     }
 
@@ -2520,10 +2579,11 @@ void gfx_set_builtin_uniforms(void) {
     gfx_rapi->set_uniform(NULL, "uAspectRatio", SHADER_UNIFORM_TYPE_FLOAT, &aspectRatio, 1);
     gfx_rapi->set_uniform(NULL, "uXAdjustRatio", SHADER_UNIFORM_TYPE_FLOAT, &xAdjustRatio, 1);
 
-    float screenWidth = (float)gfx_current_dimensions.width;
-    float screenHeight = (float)gfx_current_dimensions.height;
-    gfx_rapi->set_uniform(NULL, "uScreenWidth", SHADER_UNIFORM_TYPE_FLOAT, &screenWidth, 1);
-    gfx_rapi->set_uniform(NULL, "uScreenHeight", SHADER_UNIFORM_TYPE_FLOAT, &screenHeight, 1);
+    float screenSize[2] = {
+        (float)gfx_current_dimensions.width,
+        (float)gfx_current_dimensions.height
+    };
+    gfx_rapi->set_uniform(NULL, "uScreenSize", SHADER_UNIFORM_TYPE_VEC2, screenSize, 1);
 
     int shaderFlagEnabled = gShaderFlagsEnabled ? 1 : 0;
     gfx_rapi->set_uniform(NULL, "uShaderFlagsEnabled", SHADER_UNIFORM_TYPE_BOOL, &shaderFlagEnabled, 1);

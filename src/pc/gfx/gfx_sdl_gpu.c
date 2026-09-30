@@ -23,7 +23,7 @@
 
 #define MAX_FRAMES_IN_FLIGHT 3
 #define START_VERTEX_BUFFER_SLOT_SIZE (4 * 1024 * 1024)
-#define MAX_VERTEX_BUFFER_SLOT_SIZE (16 * 1024 * 1024)
+#define MAX_VERTEX_BUFFER_SLOT_SIZE (32 * 1024 * 1024)
 
 static SDL_GPUShaderFormat sShaderFormat = SDL_GPU_SHADERFORMAT_SPIRV;
 static SDL_GPUDevice *sGpuDevice = NULL;
@@ -82,7 +82,7 @@ struct TextureData {
 };
 
 struct ShaderProgramSdlGpu {
-    SDL_GPUGraphicsPipeline *pipelines[2][2][2];
+    SDL_GPUGraphicsPipeline *pipelines[2][2][2][GPU_CULL_MODE_COUNT];
     SDL_GPUShader *sdlVertexShader;
     SDL_GPUShader *sdlFragmentShader;
     struct Shader *vertexShader;
@@ -117,6 +117,8 @@ static u32 sCurrentTextureIds[MAX_TEXTURES] = { 0 };
 
 static SDL_GPUSampler *sLinearClampSampler = NULL;
 static SDL_GPUSampler *sNearestClampSampler = NULL;
+static SDL_GPUSampler *sLinearClampDepthSampler = NULL;
+static SDL_GPUSampler *sNearestClampDepthSampler = NULL;
 
 static bool sSwapchainCleared = false;
 static bool sFramePassCleared[MAX_FRAME_PASSES] = { false };
@@ -124,6 +126,12 @@ static bool sFramePassCleared[MAX_FRAME_PASSES] = { false };
 static bool sDepthTest = false;
 static bool sDepthMask = false;
 static bool sZModeDecal = false;
+
+static SDL_GPUCullMode sCullingMap[GPU_CULL_MODE_COUNT] = {
+    [GPU_CULL_MODE_NONE]  = SDL_GPU_CULLMODE_NONE,
+    [GPU_CULL_MODE_BACK]  = SDL_GPU_CULLMODE_BACK,
+    [GPU_CULL_MODE_FRONT] = SDL_GPU_CULLMODE_FRONT
+};
 
 static struct ShaderUniformBlock *sPushedUniformBlocks[2][MAX_UNIFORM_BLOCKS] = { 0 };
 
@@ -552,17 +560,20 @@ static void gfx_sdl_gpu_create_pipeline_variants(struct ShaderProgramSdlGpu *prg
     for (s32 test = 0; test < 2; test++) {
         for (s32 mask = 0; mask < 2; mask++) {
             for (s32 decal = 0; decal < 2; decal++) {
-                pipelineInfo->depth_stencil_state.enable_depth_test = (test != 0);
-                pipelineInfo->depth_stencil_state.enable_depth_write = (mask != 0);
-                pipelineInfo->depth_stencil_state.compare_op = (test != 0) ? SDL_GPU_COMPAREOP_LESS_OR_EQUAL : SDL_GPU_COMPAREOP_ALWAYS;
+                for (s32 cullMode = 0; cullMode < GPU_CULL_MODE_COUNT; cullMode++) {
+                    pipelineInfo->depth_stencil_state.enable_depth_test = (test != 0);
+                    pipelineInfo->depth_stencil_state.enable_depth_write = (mask != 0);
+                    pipelineInfo->depth_stencil_state.compare_op = (test != 0) ? SDL_GPU_COMPAREOP_LESS_OR_EQUAL : SDL_GPU_COMPAREOP_ALWAYS;
 
-                pipelineInfo->rasterizer_state.enable_depth_bias = (decal != 0);
-                pipelineInfo->rasterizer_state.depth_bias_constant_factor = (decal != 0) ? -2.0f : 0.0f;
-                pipelineInfo->rasterizer_state.depth_bias_slope_factor = (decal != 0) ? -2.0f : 0.0f;
+                    pipelineInfo->rasterizer_state.cull_mode = sCullingMap[cullMode];
+                    pipelineInfo->rasterizer_state.enable_depth_bias = (decal != 0);
+                    pipelineInfo->rasterizer_state.depth_bias_constant_factor = (decal != 0) ? -2.0f : 0.0f;
+                    pipelineInfo->rasterizer_state.depth_bias_slope_factor = (decal != 0) ? -2.0f : 0.0f;
 
-                prg->pipelines[test][mask][decal] = SDL_CreateGPUGraphicsPipeline(sGpuDevice, pipelineInfo);
-                if (!prg->pipelines[test][mask][decal]) {
-                    sys_fatal("Failed to create SDL GPU Graphics Pipeline: %s", SDL_GetError());
+                    prg->pipelines[test][mask][decal][cullMode] = SDL_CreateGPUGraphicsPipeline(sGpuDevice, pipelineInfo);
+                    if (!prg->pipelines[test][mask][decal][cullMode]) {
+                        sys_fatal("Failed to create SDL GPU Graphics Pipeline: %s", SDL_GetError());
+                    }
                 }
             }
         }
@@ -591,8 +602,10 @@ static void gfx_sdl_gpu_release_program(struct ShaderProgramSdlGpu *prg) {
     for (s32 test = 0; test < 2; test++) {
         for (s32 mask = 0; mask < 2; mask++) {
             for (s32 decal = 0; decal < 2; decal++) {
-                if (prg->pipelines[test][mask][decal] != NULL) {
-                    SDL_ReleaseGPUGraphicsPipeline(sGpuDevice, prg->pipelines[test][mask][decal]);
+                for (s32 cullMode = 0; cullMode < GPU_CULL_MODE_COUNT; cullMode++) {
+                    if (prg->pipelines[test][mask][decal][cullMode] != NULL) {
+                        SDL_ReleaseGPUGraphicsPipeline(sGpuDevice, prg->pipelines[test][mask][decal][cullMode]);
+                    }
                 }
             }
         }
@@ -776,7 +789,7 @@ static struct ShaderProgram *gfx_sdl_gpu_create_or_load_post_process_shader(void
     struct ShaderProgramSdlGpu *prg = &sPostProcessShaderProgramPool[framePassIndex];
 
     // if the cache entry is valid, use it
-    if (prg->pipelines[0][0][0] != NULL) {
+    if (prg->pipelines[0][0][0][0] != NULL) {
         sShaderProgram = prg;
         return (struct ShaderProgram *)prg;
     }
@@ -843,7 +856,7 @@ static void gfx_sdl_gpu_create_framebuffer(struct FramePass *framePass) {
     SDL_GPUTextureCreateInfo depthDesc = {
         .type = SDL_GPU_TEXTURETYPE_2D,
         .format = SDL_GPU_TEXTUREFORMAT_D32_FLOAT,
-        .usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
+        .usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET | SDL_GPU_TEXTUREUSAGE_SAMPLER,
         .width = viewportWidth,
         .height = viewportHeight,
         .layer_count_or_depth = 1,
@@ -1118,25 +1131,47 @@ static void gfx_sdl_gpu_bind_texture_using_name(const char *name, u64 textureId)
             filter = textureData->linearFilter ? TEXTURE_FILTER_LINEAR : TEXTURE_FILTER_NEAREST;
         }
     } else {
-        // check frame pass textures
+        // check frame pass textures, both depth and color
         struct FramePass *currentFramePass = NULL;
+        bool isDepthTexture = false;
 
         for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
             struct FramePass *framePass = &gFramePasses[i];
             if (!framePass->active) { continue; }
-            if (framePass->passTexture != textureId) { continue; }
-            currentFramePass = framePass;
-            break;
+            if (framePass->colorTex == texture) {
+                isDepthTexture = false;
+                currentFramePass = framePass;
+                break;
+            }
+
+            if (framePass->depthTex == texture) {
+                isDepthTexture = true;
+                currentFramePass = framePass;
+                break;
+            }
         }
 
         if (currentFramePass == NULL) {
-            currentFramePass = &gDefaultGeoFramePass;
+            if (gDefaultGeoFramePass.colorTex == texture) {
+                isDepthTexture = false;
+                currentFramePass = &gDefaultGeoFramePass;
+            }
+
+            if (gDefaultGeoFramePass.depthTex == texture) {
+                isDepthTexture = true;
+                currentFramePass = &gDefaultGeoFramePass;
+            }
+
+            if (currentFramePass == NULL) { return; }
         }
 
-        sampler = (currentFramePass->passFilter == TEXTURE_FILTER_LINEAR) ? sLinearClampSampler : sNearestClampSampler;
+        SDL_GPUSampler *linearSampler = (isDepthTexture ? sLinearClampDepthSampler : sLinearClampSampler);
+        SDL_GPUSampler *nearestSampler = (isDepthTexture ? sNearestClampDepthSampler : sNearestClampSampler);
+
+        sampler = (filter == TEXTURE_FILTER_LINEAR) ? linearSampler : nearestSampler;
         width = currentFramePass->width;
         height = currentFramePass->height;
-        filter = currentFramePass->passFilter;
+        filter = (isDepthTexture ? currentFramePass->passDepthFilter : currentFramePass->passColorFilter);
     }
 
     if (sampler != NULL) {
@@ -1500,7 +1535,7 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
     upload_uniform_buffers_for_shader(sShaderProgram->fragmentShader);
 
     // get current shader pipeline and bind the pipeline
-    SDL_GPUGraphicsPipeline *pipeline = sShaderProgram->pipelines[sDepthTest ? 1 : 0][sDepthMask ? 1 : 0][sZModeDecal ? 1 : 0];
+    SDL_GPUGraphicsPipeline *pipeline = sShaderProgram->pipelines[sDepthTest ? 1 : 0][sDepthMask ? 1 : 0][sZModeDecal ? 1 : 0][gGpuCullMode];
     if (pipeline == NULL) { return; }
 
     if (sLastPipeline != pipeline) {
@@ -1574,6 +1609,14 @@ static void gfx_sdl_gpu_init(void) {
         sys_fatal("Failed to create default linear clamp sampler: %s", SDL_GetError());
     }
 
+    // init default linear depth sampler
+    linearClampInfo.compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
+    linearClampInfo.enable_compare = true;
+    sLinearClampDepthSampler = SDL_CreateGPUSampler(sGpuDevice, &linearClampInfo);
+    if (!sLinearClampDepthSampler) {
+        sys_fatal("Failed to create default linear clamp depth sampler: %s", SDL_GetError());
+    }
+
     // init default nearest sampler
     SDL_GPUSamplerCreateInfo nearestClampInfo = {
         .min_filter = SDL_GPU_FILTER_NEAREST,
@@ -1585,6 +1628,14 @@ static void gfx_sdl_gpu_init(void) {
     sNearestClampSampler = SDL_CreateGPUSampler(sGpuDevice, &nearestClampInfo);
     if (!sNearestClampSampler) {
         sys_fatal("Failed to create default nearest clamp sampler: %s", SDL_GetError());
+    }
+
+    // init default nearest depth sampler
+    nearestClampInfo.compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL;
+    nearestClampInfo.enable_compare = true;
+    sNearestClampDepthSampler = SDL_CreateGPUSampler(sGpuDevice, &nearestClampInfo);
+    if (!sNearestClampDepthSampler) {
+        sys_fatal("Failed to create default linear clamp depth sampler: %s", SDL_GetError());
     }
 
     // queue swapchain format

@@ -125,6 +125,10 @@ void gfx_delete_all();
 void gfx_set_culling_enabled(bool enable);
 /* |description|Get if culling is enabled or not|descriptionEnd| */
 bool gfx_is_culling_enabled();
+/* |description|Sets gpu culling for all triangles. Has none, front, and back culling|descriptionEnd| */
+void gfx_set_gpu_cull_mode(enum GpuCullMode gpuCullMode);
+/* |description|Gets gpu culling for all triangles|descriptionEnd| */
+enum GpuCullMode gfx_get_gpu_cull_mode(void);
 /* |description|Gets the name of the active render api|descriptionEnd| */
 const char *gfx_get_render_api_name();
 /* |description|Checks if a renderer is legacy. If it is, then that means the NDC Z range is -1 to 1, not 0 to 1|descriptionEnd| */

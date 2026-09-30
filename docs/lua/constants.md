@@ -40,6 +40,7 @@
 - [gfx_pc.h](#gfx_pch)
     - [enum TextureFilter](#enum-TextureFilter)
     - [enum ShaderFlag](#enum-ShaderFlag)
+    - [enum GpuCullMode](#enum-GpuCullMode)
 - [gfx_shader.h](#gfx_shaderh)
     - [enum ShaderStage](#enum-ShaderStage)
 - [graph_node.h](#graph_nodeh)
@@ -1530,6 +1531,16 @@
 | SHADER_FLAG_POSTERIZATION | 6 |
 | SHADER_FLAG_SCANLINES | 7 |
 | SHADER_FLAG_MAX | 8 |
+
+### enum GpuCullMode
+| Identifier | Value |
+| :--------- | :---- |
+| GPU_CULL_MODE_NONE | 0 |
+| GPU_CULL_MODE_FRONT | 1 |
+| GPU_CULL_MODE_BACK | 2 |
+| GPU_CULL_MODE_COUNT | 3 |
+| GPU_CULL_MODE_USE_DL | 4 |
+| GPU_CULL_MODE_MAX | 5 |
 - MAX_CUSTOM_FRAME_PASSES
 - MAX_FRAME_PASSES
 

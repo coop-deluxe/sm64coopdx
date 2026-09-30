@@ -109,13 +109,13 @@ All the outputs in the vertex shader can be read in the fragment shader as input
 For our example, inverting the colors, it's quite simple.
 
 ```lua
-fragColor = texture(uPassTex, vTexCoord);
+fragColor = texture(uPassColorTex, vTexCoord);
 ```
 
 Currently, this is what the frag color is set to. Instead of setting `fragColor` directly, we should first take the color outputted by the `texture` function and insert it into it's own variable.
 
 ```lua
-vec4 texColor = texture(uPassTex, vTexCoord);
+vec4 texColor = texture(uPassColorTex, vTexCoord);
 ```
 
 Then, inverting that color becomes trivial. When we set `fragColor`, all we need to do is invert `texColor.rgb` and preserve `texColor.a`. This can be done with the following syntax:
@@ -136,8 +136,8 @@ A shader may contain uniforms. As per the GLSL naming convention, uniform variab
 | ------------ | ---- | ----------- |
 | `uTex0` | `sampler2D` | The primary texture |
 | `uTex1` | `sampler2D` | The secondary texture |
-| `uPassTex` | `sampler2D` | The rendered output texture produced by the previous frame pass |
-| `uPassTexX` | `sampler2D` | The rendered output texture from frame pass X, where X is the pass index. |
+| `uPassColorTex` | `sampler2D` | The rendered output color texture produced by the previous frame pass |
+| `uPassDepthTex` | `sampler2D` | The rendered output depth texture produced by the previous frame pass |
 | `uTex0Size` | `vec2` | The width and height of the primary texture |
 | `uTex1Size` | `vec2` | The width and height of the secondary texture |
 | `uTex0Filter` | `bool` | `true` if the primary texture uses linear filtering |
@@ -147,8 +147,7 @@ A shader may contain uniforms. As per the GLSL naming convention, uniform variab
 | `uLightmapColor` | `vec3` | RGB multiplier applied to the environment/light map |
 | `uAspectRatio` | `float` | The current viewport aspect ratio (`width`/`height`) |
 | `uXAdjustRatio` | `float` | The horizontal clip-space scaling factor used for widescreen rendering |
-| `uScreenWidth` | `float` | The width of the screen in pixels |
-| `uScreenHeight` | `float` | The height of the screen in pixels |
+| `uScreenSize` | `vec2` | The size of the screen in pixels |
 | `uModelViewProjectionMatrix` | `mat4` | Transforms local space directly to clip space |
 | `uModelViewMatrix` | `mat4` | Transforms local space to view space |
 | `uModelMatrix` | `mat4` | Transforms local space to world space |

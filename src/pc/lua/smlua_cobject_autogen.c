@@ -877,12 +877,11 @@ static struct LuaObjectField sFnGraphNodeFields[LUA_FN_GRAPH_NODE_FIELD_COUNT] =
     { "node", LVT_COBJECT, offsetof(struct FnGraphNode, node), true,  LOT_GRAPHNODE },
 };
 
-#define LUA_FRAME_PASS_FIELD_COUNT 5
+#define LUA_FRAME_PASS_FIELD_COUNT 4
 static struct LuaObjectField sFramePassFields[LUA_FRAME_PASS_FIELD_COUNT] = {
     { "clearColor",        LVT_COBJECT, offsetof(struct FramePass, clearColor),        true,  LOT_COLORRGBA },
     { "drawWorldGeometry", LVT_BOOL,    offsetof(struct FramePass, drawWorldGeometry), false, LOT_NONE      },
     { "height",            LVT_U32,     offsetof(struct FramePass, height),            false, LOT_NONE      },
-    { "passFilter",        LVT_S32,     offsetof(struct FramePass, passFilter),        false, LOT_NONE      },
     { "width",             LVT_U32,     offsetof(struct FramePass, width),             false, LOT_NONE      },
 };
 

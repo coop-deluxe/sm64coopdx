@@ -280,11 +280,6 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(struct ColorC
     prg->worldGeometry = world_geometry;
     prg->usedFog = opt_fog;
 
-    GLint passTexLoc = glGetUniformLocation(shader_program, "uPassTex");
-    if (passTexLoc != -1) {
-        glUniform1i(passTexLoc, 10);
-    }
-
     prg->vertexShader = vertexShader;
     prg->fragmentShader = fragmentShader;
 
@@ -393,11 +388,6 @@ static struct ShaderProgram *gfx_opengl_create_or_load_post_process_shader(void)
         glUniform1i(sampler_location, t);
     }
 
-    GLint passTexLoc = glGetUniformLocation(shader_program, "uPassTex");
-    if (passTexLoc != -1) {
-        glUniform1i(passTexLoc, 10);
-    }
-
     free(vsShaderCode);
     free(fsShaderCode);
 
@@ -424,29 +414,48 @@ static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_i
 }
 
 static void gfx_opengl_create_framebuffer(struct FramePass *framePass) {
+    // create and bind new framebuffer
     glGenFramebuffers(1, &framePass->fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, framePass->fbo);
 
+    // grab viewport dimensions
     u32 viewportWidth;
     u32 viewportHeight;
     gfx_get_frame_pass_viewport_dimensions(framePass, &viewportWidth, &viewportHeight);
 
+    // setup color pass texture
     glGenTextures(1, (GLuint *)&framePass->passTexture);
     glBindTexture(GL_TEXTURE_2D, framePass->passTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, viewportWidth, viewportHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
-    GLint filter = framePass->passFilter == TEXTURE_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST;
+    // setup color filter
+    s32 colorFilter = (framePass->passColorFilter == TEXTURE_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, colorFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, colorFilter);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-
+    // create texture
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framePass->passTexture, 0);
 
-    // create depth buffer
-    glGenRenderbuffers(1, &framePass->depthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, framePass->depthBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, viewportWidth, viewportHeight);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, framePass->depthBuffer);
+    // setup depth texture
+    glGenTextures(1, (GLuint *)&framePass->depthBuffer);
+    glBindTexture(GL_TEXTURE_2D, framePass->depthBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, viewportWidth, viewportHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+    // setup depth filter
+    s32 depthFilter = (framePass->passDepthFilter == TEXTURE_FILTER_LINEAR ? GL_LINEAR : GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, depthFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, depthFilter);
+
+    // make all color channels have the depth
+    GLint swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_ONE };
+    glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+
+    // create depth texture
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framePass->depthBuffer, 0);
+
+    // for api, set depthTex to point to the depth buffer
+    framePass->depthTex = (void *)(u64)framePass->depthBuffer;
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         LOG_ERROR("Framebuffer is not complete!");
@@ -460,7 +469,8 @@ static void gfx_opengl_create_framebuffer(struct FramePass *framePass) {
 
 static void gfx_opengl_delete_framebuffer(struct FramePass *framePass) {
     if (framePass->fbo > 0) { glDeleteFramebuffers(1, &framePass->fbo); framePass->fbo = 0; }
-    if (framePass->depthBuffer > 0) { glDeleteRenderbuffers(1, &framePass->depthBuffer); framePass->depthBuffer = 0; }
+    if (framePass->depthBuffer > 0) { glDeleteTextures(1, &framePass->depthBuffer); framePass->depthBuffer = 0; }
+    framePass->depthTex = NULL;
     if (framePass->passTexture > 0) { glDeleteTextures(1, (GLuint *)&framePass->passTexture); framePass->passTexture = 0; }
 
     memset(sInternalTextures, 0, sizeof(sInternalTextures));
@@ -576,8 +586,6 @@ static GLuint gfx_opengl_new_texture(void) {
     glGenTextures(1, &sTextureCache[sTextureCacheCount].tex);
     return sTextureCacheCount++;
 }
-
-static void gfx_opengl_bind_texture_using_name(const char *name, u64 textureId);
 
 static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
     sCurrentTextures[tile] = sTextureCache + texture_id;
@@ -722,6 +730,8 @@ static void upload_opengl_uniform_buffers(struct Shader *shader) {
 
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     //printf("flushing %d tris\n", buf_vbo_num_tris);
+
+    // bind samplers
     for (u32 i = 0; i < sInternalTexturesCount; i++) {
         struct Shader *fragmentShader = sShaderProgram->fragmentShader;
         for (s32 j = 0; j < fragmentShader->samplerCount; j++) {
@@ -731,6 +741,20 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
             }
         }
     }
+
+    // configure culling
+    if (gGpuCullMode == GPU_CULL_MODE_NONE) {
+        glDisable(GL_CULL_FACE);
+    } else {
+        glEnable(GL_CULL_FACE);
+        if (gGpuCullMode == GPU_CULL_MODE_FRONT) {
+            glCullFace(GL_FRONT);
+        } else if (gGpuCullMode == GPU_CULL_MODE_BACK) {
+            glCullFace(GL_BACK);
+        }
+    }
+
+    // update uniforms
     gfx_update_matrices();
     if (sShaderProgram->usedFog) {
         gfx_update_fog_uniforms();
@@ -738,6 +762,8 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     smlua_call_event_hooks(HOOK_ON_DRAW_TRIANGLE);
     upload_opengl_uniform_buffers(sShaderProgram->vertexShader);
     upload_opengl_uniform_buffers(sShaderProgram->fragmentShader);
+
+    // draw triangles
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, buf_vbo, GL_STREAM_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
 }

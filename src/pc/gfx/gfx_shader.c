@@ -41,12 +41,12 @@ const char *gDefaultPostProcessVertexShader = ""
     "}\n";
 
 const char *gDefaultPostProcessFragmentShader = ""
-    "uniform sampler2D uPassTex;\n"
+    "uniform sampler2D uPassColorTex;\n"
     "in vec4 vVtxPos;\n" // exists for convenience of mods
     "in vec2 vTexCoord;\n"
     "out vec4 fragColor;\n"
     "void main() {\n"
-    "    fragColor = texture(uPassTex, vTexCoord);\n"
+    "    fragColor = texture(uPassColorTex, vTexCoord);\n"
     "}\n";
 
 static int sShaderInputCount = 0;
@@ -1146,6 +1146,17 @@ static void reflect_shader_data(struct Shader *shader, spvc_context context, spv
             }
 
             shader->samplerCount++;
+        }
+
+        // sort samplers by their binding location, lowest to highest
+        for (s32 i = 0; i < shader->samplerCount; i++) {
+            for (s32 j = i + 1; j < shader->samplerCount; j++) {
+                if (shader->shaderSamplers[i].binding > shader->shaderSamplers[j].binding) {
+                    struct ShaderSampler temp = shader->shaderSamplers[i];
+                    shader->shaderSamplers[i] = shader->shaderSamplers[j];
+                    shader->shaderSamplers[j] = temp;
+                }
+            }
         }
     }
 }

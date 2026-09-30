@@ -431,12 +431,25 @@ void gfx_delete_all() {
 
 ///
 
+void gfx_set_gpu_culling_mode() {
+
+}
+
 void gfx_set_culling_enabled(bool enable) {
     gCullingEnabled = enable;
 }
 
 bool gfx_is_culling_enabled() {
     return gCullingEnabled;
+}
+
+void gfx_set_gpu_cull_mode(enum GpuCullMode gpuCullMode) {
+    if (gpuCullMode < 0 || gpuCullMode == GPU_CULL_MODE_COUNT || gpuCullMode >= GPU_CULL_MODE_MAX) { return; }
+    gGpuCullMode = gpuCullMode;
+}
+
+enum GpuCullMode gfx_get_gpu_cull_mode(void) {
+    return gGpuCullMode;
 }
 
 const char *gfx_get_render_api_name() {

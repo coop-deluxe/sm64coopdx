@@ -643,7 +643,6 @@
 --- @field public height integer
 --- @field public drawWorldGeometry boolean
 --- @field public clearColor ColorRGBA
---- @field public passFilter TextureFilter
 
 --- @class Gfx
 --- @field public w0 integer

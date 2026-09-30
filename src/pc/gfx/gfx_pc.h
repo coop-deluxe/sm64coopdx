@@ -23,6 +23,15 @@ enum ShaderFlag {
     SHADER_FLAG_MAX
 };
 
+enum GpuCullMode {
+    GPU_CULL_MODE_NONE,
+    GPU_CULL_MODE_FRONT,
+    GPU_CULL_MODE_BACK,
+    GPU_CULL_MODE_COUNT,
+    GPU_CULL_MODE_USE_DL,
+    GPU_CULL_MODE_MAX,
+};
+
 struct GfxRenderingAPI;
 
 #define MAX_CUSTOM_FRAME_PASSES 64
@@ -72,7 +81,8 @@ struct FramePass {
     bool active;
     bool drawWorldGeometry;
     ColorRGBA clearColor;
-    enum TextureFilter passFilter;
+    enum TextureFilter passColorFilter;
+    enum TextureFilter passDepthFilter;
 };
 
 extern struct RSP rsp;
@@ -86,6 +96,7 @@ extern Color gVertexColor;
 extern Color gFogColor;
 extern f32 gFogIntensity;
 extern bool gCullingEnabled;
+extern enum GpuCullMode gGpuCullMode;
 
 extern bool gFullbright;
 

@@ -3257,6 +3257,21 @@ SHADER_FLAG_MAX           = 8 --- @type ShaderFlag
 --- | `SHADER_FLAG_SCANLINES`
 --- | `SHADER_FLAG_MAX`
 
+GPU_CULL_MODE_NONE   = 0 --- @type GpuCullMode
+GPU_CULL_MODE_FRONT  = 1 --- @type GpuCullMode
+GPU_CULL_MODE_BACK   = 2 --- @type GpuCullMode
+GPU_CULL_MODE_COUNT  = 3 --- @type GpuCullMode
+GPU_CULL_MODE_USE_DL = 4 --- @type GpuCullMode
+GPU_CULL_MODE_MAX    = 5 --- @type GpuCullMode
+
+--- @alias GpuCullMode
+--- | `GPU_CULL_MODE_NONE`
+--- | `GPU_CULL_MODE_FRONT`
+--- | `GPU_CULL_MODE_BACK`
+--- | `GPU_CULL_MODE_COUNT`
+--- | `GPU_CULL_MODE_USE_DL`
+--- | `GPU_CULL_MODE_MAX`
+
 --- @type integer
 MAX_CUSTOM_FRAME_PASSES = 64
 

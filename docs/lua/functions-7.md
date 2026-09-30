@@ -1076,6 +1076,50 @@ Get if culling is enabled or not
 
 <br />
 
+## gfx_set_gpu_cull_mode
+
+### Description
+Sets gpu culling for all triangles. Has none, front, and back culling
+
+### Lua Example
+`gfx_set_gpu_cull_mode(gpuCullMode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| gpuCullMode | [enum GpuCullMode](constants.md#enum-GpuCullMode) |
+
+### Returns
+- None
+
+### C Prototype
+`void gfx_set_gpu_cull_mode(enum GpuCullMode gpuCullMode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_get_gpu_cull_mode
+
+### Description
+Gets gpu culling for all triangles
+
+### Lua Example
+`local enumValue = gfx_get_gpu_cull_mode()`
+
+### Parameters
+- None
+
+### Returns
+- [enum GpuCullMode](constants.md#enum-GpuCullMode)
+
+### C Prototype
+`enum GpuCullMode gfx_get_gpu_cull_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## gfx_get_render_api_name
 
 ### Description

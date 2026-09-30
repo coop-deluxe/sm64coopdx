@@ -2010,6 +2010,8 @@
    - [gfx_delete_all](functions-7.md#gfx_delete_all)
    - [gfx_set_culling_enabled](functions-7.md#gfx_set_culling_enabled)
    - [gfx_is_culling_enabled](functions-7.md#gfx_is_culling_enabled)
+   - [gfx_set_gpu_cull_mode](functions-7.md#gfx_set_gpu_cull_mode)
+   - [gfx_get_gpu_cull_mode](functions-7.md#gfx_get_gpu_cull_mode)
    - [gfx_get_render_api_name](functions-7.md#gfx_get_render_api_name)
    - [gfx_is_legacy_renderer](functions-7.md#gfx_is_legacy_renderer)
    - [gfx_reload_shaders](functions-7.md#gfx_reload_shaders)

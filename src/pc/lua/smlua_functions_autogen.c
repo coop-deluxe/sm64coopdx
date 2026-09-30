@@ -32051,6 +32051,37 @@ int smlua_func_gfx_is_culling_enabled(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_set_gpu_cull_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_set_gpu_cull_mode", 1, top);
+        return 0;
+    }
+
+    enum GpuCullMode gpuCullMode = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_set_gpu_cull_mode"); return 0; }
+
+    gfx_set_gpu_cull_mode(gpuCullMode);
+
+    return 0;
+}
+
+int smlua_func_gfx_get_gpu_cull_mode(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_get_gpu_cull_mode", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, gfx_get_gpu_cull_mode());
+
+    return 1;
+}
+
 int smlua_func_gfx_get_render_api_name(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38700,6 +38731,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_delete_all", smlua_func_gfx_delete_all);
     smlua_bind_function(L, "gfx_set_culling_enabled", smlua_func_gfx_set_culling_enabled);
     smlua_bind_function(L, "gfx_is_culling_enabled", smlua_func_gfx_is_culling_enabled);
+    smlua_bind_function(L, "gfx_set_gpu_cull_mode", smlua_func_gfx_set_gpu_cull_mode);
+    smlua_bind_function(L, "gfx_get_gpu_cull_mode", smlua_func_gfx_get_gpu_cull_mode);
     smlua_bind_function(L, "gfx_get_render_api_name", smlua_func_gfx_get_render_api_name);
     smlua_bind_function(L, "gfx_is_legacy_renderer", smlua_func_gfx_is_legacy_renderer);
     smlua_bind_function(L, "gfx_reload_shaders", smlua_func_gfx_reload_shaders);

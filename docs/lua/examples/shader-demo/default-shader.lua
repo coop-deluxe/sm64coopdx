@@ -30,7 +30,7 @@ local function shader_item_to_str(item, with_alpha, only_alpha, hint_single_elem
         elseif item == SHADER_COMBINED then
             return with_alpha and "texel" or "texel.rgb"
         elseif item == SHADER_COMBINEDA then
-            if hint_single_element then return "texel.a" end
+            if hint_single_element then return with_alpha and "texel.a" or "1.0" end
             return with_alpha and
                 "vec4(texel.a, texel.a, texel.a, texel.a)" or
                 "vec3(texel.a, texel.a, texel.a)"
