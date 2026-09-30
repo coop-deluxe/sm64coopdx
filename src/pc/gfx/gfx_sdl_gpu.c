@@ -1438,10 +1438,11 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
 
     // bind samplers
     SDL_GPUTextureSamplerBinding samplerBindings[MAX_SHADER_SAMPLERS];
+    u32 samplerBindingsCount = 0;
 
     for (s32 i = 0; i < fragmentShader->samplerCount; i++) {
-        // make sure the sampler is valid, if not the shader is invalid and bail from the draw call
-        if (fragmentShader->shaderSamplers[i].name[0] == '\0') { return; }
+        // make sure the sampler is valid, if not the shader is invalid and bail from binding this sample
+        if (fragmentShader->shaderSamplers[i].name[0] == '\0') { continue; }
 
         u8 samplerBinding = fragmentShader->shaderSamplers[i].binding;
 
@@ -1464,8 +1465,8 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
             }
         }
 
-        // if no texture exists, don't draw triangle
-        if (internalTexture == NULL) { return; }
+        // if no texture exists, bail from binding this sample
+        if (internalTexture == NULL) { continue; }
 
         if (vanillaSampler) {
             // set tex size and filter uniforms
@@ -1477,13 +1478,14 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
         }
 
         // set the sampler bindings texture and sampler
-        samplerBindings[i].texture = internalTexture->textureSamplerBinding.texture;
-        samplerBindings[i].sampler = internalTexture->textureSamplerBinding.sampler;
+        samplerBindings[samplerBindingsCount].texture = internalTexture->textureSamplerBinding.texture;
+        samplerBindings[samplerBindingsCount].sampler = internalTexture->textureSamplerBinding.sampler;
+        samplerBindingsCount++;
     }
 
     // bind fragment samplers
-    if (fragmentShader->samplerCount > 0) {
-        SDL_BindGPUFragmentSamplers(sRenderPass, 0, samplerBindings, fragmentShader->samplerCount);
+    if (samplerBindingsCount > 0) {
+        SDL_BindGPUFragmentSamplers(sRenderPass, 0, samplerBindings, samplerBindingsCount);
     }
 
     // update matrix and fog uniforms
