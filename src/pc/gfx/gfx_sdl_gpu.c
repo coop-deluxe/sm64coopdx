@@ -124,6 +124,8 @@ static SDL_GPUSampler *sNearestClampSampler = NULL;
 static SDL_GPUSampler *sLinearClampDepthSampler = NULL;
 static SDL_GPUSampler *sNearestClampDepthSampler = NULL;
 
+static SDL_GPUTextureSamplerBinding sFallbackTextureBinding;
+
 static bool sSwapchainCleared = false;
 static bool sFramePassCleared[MAX_FRAME_PASSES] = { false };
 
@@ -1479,8 +1481,10 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
     u32 samplerBindingsCount = 0;
 
     for (s32 i = 0; i < fragmentShader->samplerCount; i++) {
-        // make sure the sampler is valid, if not the shader is invalid and bail from binding this sample
-        if (fragmentShader->shaderSamplers[i].name[0] == '\0') { continue; }
+        // make sure the sampler is valid, if not the shader is invalid and use fallback
+        if (fragmentShader->shaderSamplers[i].name[0] == '\0') {
+            samplerBindings[samplerBindingsCount++] = sFallbackTextureBinding;
+        }
 
         u8 samplerBinding = fragmentShader->shaderSamplers[i].binding;
 
@@ -1503,8 +1507,11 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
             }
         }
 
-        // if no texture exists, bail from binding this sample
-        if (internalTexture == NULL) { continue; }
+        // if no texture exists, use fallback
+        if (internalTexture == NULL) {
+            samplerBindings[samplerBindingsCount++] = sFallbackTextureBinding;
+            continue;
+        }
 
         if (vanillaSampler) {
             // set tex size and filter uniforms
@@ -1640,6 +1647,83 @@ static void gfx_sdl_gpu_init(void) {
     if (!sNearestClampDepthSampler) {
         sys_fatal("Failed to create default linear clamp depth sampler: %s", SDL_GetError());
     }
+
+    // create a fallback texture
+    SDL_GPUTextureCreateInfo fallbackTexInfo = {
+        .type = SDL_GPU_TEXTURETYPE_2D,
+        .format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+        .usage = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+        .width = 2,
+        .height = 2,
+        .layer_count_or_depth = 1,
+        .num_levels = 1
+    };
+    sFallbackTextureBinding.texture = SDL_CreateGPUTexture(sGpuDevice, &fallbackTexInfo);
+    if (!sFallbackTextureBinding.texture) {
+        sys_fatal("Failed to create fallback GPU texture: %s", SDL_GetError());
+    }
+
+    u8 fallbackPixel[16] = {
+        255, 0, 0, 255,  0, 0, 0, 255,
+        0, 0, 0, 255,      255, 0, 0, 255,
+    };
+
+    // define information for an upload
+    SDL_GPUTransferBufferCreateInfo transferInfo = {
+        .usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+        .size = sizeof(fallbackPixel)
+    };
+
+    // create transfer buffer
+    SDL_GPUTransferBuffer *transferBuffer = SDL_CreateGPUTransferBuffer(sGpuDevice, &transferInfo);
+
+    if (transferBuffer == NULL) {
+        sys_fatal("Failed to create transfer buffer for fallback GPU texture: %s", SDL_GetError());
+    }
+
+    // map pixels to buffer
+    void *mapPtr = SDL_MapGPUTransferBuffer(sGpuDevice, transferBuffer, false);
+    if (mapPtr == NULL) {
+        sys_fatal("Failed to create map pointer for fallback GPU texture: %s", SDL_GetError());
+    }
+    memcpy(mapPtr, fallbackPixel, sizeof(fallbackPixel));
+    SDL_UnmapGPUTransferBuffer(sGpuDevice, transferBuffer);
+
+    // grab command buffer
+    SDL_GPUCommandBuffer *cmdBuffer = SDL_AcquireGPUCommandBuffer(sGpuDevice);
+    if (cmdBuffer == NULL) {
+        sys_fatal("Failed to create command buffer for fallback GPU texture: %s", SDL_GetError());
+    }
+
+    // begin copy pass
+    SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(cmdBuffer);
+    if (copyPass == NULL) {
+        sys_fatal("Failed to create copy pass for fallback GPU texture: %s", SDL_GetError());
+    }
+
+    // grab the texture transfer info
+    SDL_GPUTextureTransferInfo srcLocation = {
+        .transfer_buffer = transferBuffer,
+        .offset = 0
+    };
+
+    // grab the fallback texture and configure its dimensions
+    SDL_GPUTextureRegion dstRegion = {
+        .texture = sFallbackTextureBinding.texture,
+        .w = 2,
+        .h = 2,
+        .d = 1
+    };
+
+    // upload fallback texture
+    SDL_UploadToGPUTexture(copyPass, &srcLocation, &dstRegion, false);
+
+    // cleanup
+    SDL_EndGPUCopyPass(copyPass);
+    SDL_SubmitGPUCommandBuffer(cmdBuffer);
+    SDL_ReleaseGPUTransferBuffer(sGpuDevice, transferBuffer);
+
+    sFallbackTextureBinding.sampler = sNearestClampSampler;
 
     // queue swapchain format
     sSwapchainFormat = SDL_GetGPUSwapchainTextureFormat(sGpuDevice, sSdlWindow);
