@@ -25,6 +25,10 @@
 #define START_VERTEX_BUFFER_SLOT_SIZE (4 * 1024 * 1024)
 #define MAX_VERTEX_BUFFER_SLOT_SIZE (16 * 1024 * 1024)
 
+#if SDL_VERSION_ATLEAST(3, 4, 0)
+static SDL_GPUVulkanOptions sVulkanOptions = { .vulkan_api_version = (1u << 22) | (2u << 12) };
+#endif
+
 static SDL_GPUShaderFormat sShaderFormat = SDL_GPU_SHADERFORMAT_SPIRV;
 static SDL_GPUDevice *sGpuDevice = NULL;
 static SDL_Window *sSdlWindow = NULL;
@@ -207,8 +211,7 @@ static SDL_PropertiesID gfx_sdl_gpu_create_device_properties(enum GfxWindowBacke
 
     // if possible, set vulkan version to 1.2
 #if SDL_VERSION_ATLEAST(3, 4, 0)
-    SDL_GPUVulkanOptions vulkanOptions = { .vulkan_api_version = (1u << 22) | (2u << 12) };
-    SDL_SetPointerProperty(props, SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER, &vulkanOptions);
+    SDL_SetPointerProperty(props, SDL_PROP_GPU_DEVICE_CREATE_VULKAN_OPTIONS_POINTER, &sVulkanOptions);
 #endif
 
     return props;
