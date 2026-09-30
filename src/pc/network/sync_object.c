@@ -4,6 +4,7 @@
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
+#include "engine/math_util.h"
 #include "game/area.h"
 #include "game/object_list_processor.h"
 #include "game/obj_behaviors.h"
@@ -309,6 +310,11 @@ bool sync_object_should_own(u32 syncId) {
     struct SyncObject* so = sync_object_get(syncId);
     if (!so) { return false; }
 
+    // don't own objects while area sync is invalid
+    if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
+        return false;
+    }
+
     // always own objects in credit sequence
     if (gCurrActStarNum == 99) { return true; }
 
@@ -335,9 +341,21 @@ bool sync_object_should_own(u32 syncId) {
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex == 0) { return true; }
 
     // check distance
-    for (s32 i = 0; i < MAX_PLAYERS; i++) {
-        if (i != 0 && !is_player_in_local_area(&gMarioStates[i])) { continue; }
-        if (player_distance(&gMarioStates[0], so->o) > player_distance(&gMarioStates[i], so->o)) { return false; }
+
+    float selfToObject = player_distance(&gMarioStates[0], so->o);
+    u8 selfGlobalIndex = network_global_index_from_local(0);
+
+    for (s32 i = 1; i < MAX_PLAYERS; i++) {
+        if (!is_player_in_local_area(&gMarioStates[i])) { continue; }
+
+        float otherToObject = player_distance(&gMarioStates[i], so->o);
+
+        if (absf(selfToObject - otherToObject) <= 0.01f) {
+            // fallback to lowest global if players are too close
+            if (network_global_index_from_local(i) < selfGlobalIndex) { return false; }
+        } else if (otherToObject < selfToObject) {
+            return false;
+        }
     }
 
     if (so->o->oHeldState == HELD_HELD && so->o->heldByPlayerIndex != 0) { return false; }
