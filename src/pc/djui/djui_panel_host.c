@@ -96,7 +96,7 @@ void djui_panel_host_create(struct DjuiBase* caller) {
                     djui_base_set_enabled(&text1->base, false);
                 }
 
-                sInputboxPort = djui_input_number_create(&sRectPort->base, &configHostPort, MIN_PORT, 65535);
+                sInputboxPort = djui_input_u32_create(&sRectPort->base, &configHostPort, MIN_PORT, 65535);
                 struct DjuiBase *ipBase = &sInputboxPort->input.base;
                 djui_base_set_size_type(ipBase, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
                 djui_base_set_size(ipBase, 0.45f, 32);

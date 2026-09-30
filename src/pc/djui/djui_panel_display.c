@@ -82,7 +82,7 @@ void djui_panel_display_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiInputNumber* number = djui_input_number_create(&frameLimitRect->base, &configFrameLimit, 30, 3000);
+            struct DjuiInputNumber* number = djui_input_u32_create(&frameLimitRect->base, &configFrameLimit, 30, 3000);
             struct DjuiInputbox* inputbox = &number->input;
             djui_base_set_size_type(&inputbox->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(&inputbox->base, 0.45f, 32);

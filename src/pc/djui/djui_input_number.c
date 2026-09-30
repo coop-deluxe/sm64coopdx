@@ -5,8 +5,10 @@
 // Add types as needed
 static s64 djui_input_number_get_value(struct DjuiInputNumber *number) {
     switch (number->type) {
-        case NUMTYPE_U32: return *(u32 *)number->value;
-        case NUMTYPE_S32: return *(s32 *)number->value;
+        #define NUMTYPE(type, _1, _2) \
+        case NUMTYPE_##type: return *(type *)number->value;
+        #include "djui_input_types.inl"
+        #undef NUMTYPE
     }
 }
 
@@ -17,7 +19,11 @@ static void djui_input_number_on_text_input(struct DjuiBase *base, char *text) {
 
     // toggle sign
     if (*text == '-') {
-        if (number->type & NUMTYPE_SIGNED && *msg != '-' && number->min < 0) {
+        switch (number->type) {
+            #define NUMTYPE()
+
+        }
+        if (number->type & (TYPE_SIGNED | TYPE_FLOAT) && *msg != '-' && number->min < 0) {
             memmove(msg + 1, msg, strlen(msg) + 1);
             *msg = '-'; sel[0]++; sel[1]++;
             djui_input_number_text_change(base);
@@ -69,9 +75,11 @@ void djui_input_number_text_change(struct DjuiBase *caller) {
         struct DjuiColor *textColor = &gDjuiThemes[configDjuiTheme]->interactables.textColor;
         djui_inputbox_set_text_color(input, textColor->r, textColor->g, textColor->b, textColor->a);
         number->saved = value;
-        switch (number->type) { // Add types as needed
-            case NUMTYPE_U32: *(u32 *)number->value = value; break;
-            case NUMTYPE_S32: *(s32 *)number->value = value; break;
+        switch (number->type) {
+            #define NUMTYPE(type, _1, _2) \
+            case NUMTYPE_##type: *(type *)number->value = value; break;
+            #include "djui_input_types.inl"
+            #undef NUMTYPE
         }
     } else {
         djui_inputbox_set_text_color(input, 255, 0, 0, 255);
@@ -89,12 +97,12 @@ static void djui_input_number_render_pre(struct DjuiBase *base, UNUSED bool *unu
         djui_input_number_text_change(base);
 
         u8 len = strlen(input->buffer);
-        input->selection[0] = MIN(input->selection[0], len);
-        input->selection[1] = MIN(input->selection[1], len);
+        if (input->selection[0] > len) { input->selection[0] = len; }
+        if (input->selection[1] > len) { input->selection[1] = len; }
     }
 }
 
-struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void *value, enum InputNumberType type, s64 min, s64 max) {
+struct DjuiInputNumber *djui_input_number_create(struct DjuiBase *parent, void *value, u8 type, InputNumber min, InputNumber max, u8 decimals) {
     struct DjuiInputNumber *number = calloc(1, sizeof(struct DjuiInputNumber));
     struct DjuiInputbox *input = &number->input;
     struct DjuiBase *base = &input->base;
@@ -102,16 +110,35 @@ struct DjuiInputNumber *_djui_input_number_create(struct DjuiBase *parent, void 
     djui_interactable_hook_text_input(base, djui_input_number_on_text_input);
     djui_interactable_hook_value_change(base, djui_input_number_text_change);
     base->on_render_pre = djui_input_number_render_pre;
-    number->min = MAX(MIN(min, max), type & NUMTYPE_SIGNED ? -(1LL << ((type & ~NUMTYPE_SIGNED) - 1)) : 0);
-    number->max = MIN(MAX(min, max), (1LL << ((type & ~NUMTYPE_SIGNED) - ((type & NUMTYPE_SIGNED) != 0))) - 1);
+    number->min = min; number->max = max;
     number->value = value; number->type = type;
     char *text = input->buffer;
-    djui_inputbox_set_number(input, max);
-    number->digits = strlen(text + (*text == '-'));
-    djui_inputbox_set_number(input, min);
-    number->digits = MAX(number->digits, strlen(text + (*text == '-')));
+    // djui_inputbox_set_number(input, max);
+    // number->digits = strlen(text + (*text == '-'));
+    // djui_inputbox_set_number(input, min);
+    // number->digits = MAX(number->digits, strlen(text + (*text == '-')));
 
-    djui_inputbox_set_number(input, number->saved = djui_input_number_get_value(number));
+    switch (type) {
+        #define NUMTYPE(type, bits, flag) \
+        case NUMTYPE_##type: { \
+            number->saved.as_##type = *(type *)value; \
+            _Generic(number->saved.as_##type, \
+                f32: djui_inputbox_set_number(input, number->saved.as_##type, decimals), \
+                default: djui_inputbox_set_integer(input, number->saved.as_##type), \
+            ) \
+            break; \
+        }
+        #include "djui_input_types.inl"
+        #undef NUMTYPE
+    }
+
     djui_input_number_text_change(base);
     return number;
 }
+
+#define NUMTYPE(type, bits, flag) \
+struct DjuiInputNumber *djui_input_##type##_create(struct DjuiBase *parent, type *value, type min, type max, u8 decimals) { \
+    djui_input_number_create(parent, value, NUMTYPE_##type, (InputNumber)min, (InputNumber)max, decimals); \
+}
+#include "djui_input_types.inl"
+#undef NUMTYPE

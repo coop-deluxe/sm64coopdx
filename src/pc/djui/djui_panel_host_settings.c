@@ -58,7 +58,7 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&text1->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
             djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-            struct DjuiBase *playerCount = &djui_input_number_create(&rect1->base, &configAmountOfPlayers, 1, MAX_PLAYERS)->input.base;
+            struct DjuiBase *playerCount = &djui_input_u32_create(&rect1->base, &configAmountOfPlayers, 1, MAX_PLAYERS)->input.base;
             djui_base_set_size_type(playerCount, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
             djui_base_set_size(playerCount, 0.45f, 32);
             djui_base_set_alignment(playerCount, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);

@@ -62,8 +62,12 @@ void djui_inputbox_set_text(struct DjuiInputbox* inputbox, char* text) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%s", text);
 }
 
-void djui_inputbox_set_number(struct DjuiInputbox* inputbox, s64 value) {
+void djui_inputbox_set_integer(struct DjuiInputbox* inputbox, s64 value) {
     snprintf(inputbox->buffer, inputbox->bufferSize, "%lld", value);
+}
+
+void djui_inputbox_set_number(struct DjuiInputbox* inputbox, f64 value, u8 decimals) {
+    snprintf(inputbox->buffer, inputbox->bufferSize, "%.*f", decimals, value);
 }
 
 void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
