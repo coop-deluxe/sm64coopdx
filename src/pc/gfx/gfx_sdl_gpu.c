@@ -1001,13 +1001,12 @@ static struct Shader *gfx_sdl_gpu_shader_for_stage(enum ShaderStage stage) {
     return NULL;
 }
 
-static size_t gfx_sdl_gpu_get_uniform_buffer_size(enum ShaderStage stage, s32 bufferIndex) {
-    if (bufferIndex < 0 || bufferIndex >= MAX_UNIFORM_BLOCKS) { return 0; }
-
+static struct ShaderUniformBlock *gfx_sdl_gpu_get_active_uniform_buffer(enum ShaderStage stage) {
     struct Shader *shader = gfx_sdl_gpu_shader_for_stage(stage);
-    if (shader == NULL) { return 0; }
+    if (shader == NULL) { return NULL; }
 
-    return shader->uniformBlocks[bufferIndex].size;
+    s32 selectedUniformBuffer = (stage == SHADER_STAGE_VERTEX) ? gSelectedVertexUniformBuffer : gSelectedFragmentUniformBuffer;
+    return &shader->uniformBlocks[selectedUniformBuffer];
 }
 
 static void gfx_sdl_gpu_set_uniform_buffer(enum ShaderStage stage, const char *name) {
@@ -1026,7 +1025,7 @@ static void gfx_sdl_gpu_set_uniform_buffer(enum ShaderStage stage, const char *n
     }
 }
 
-static void gfx_sdl_gpu_set_uniform_for_specific_shader(struct ShaderUniformBlock *uniformBlock, const char *name, UNUSED enum ShaderUniformType type, const void *data, u32 numElements) {
+static void gfx_sdl_gpu_set_uniform_for_specific_shader(struct ShaderUniformBlock *uniformBlock, const char *name, const void *data, u32 numElements) {
     if (uniformBlock == NULL || uniformBlock->buffer == NULL) {
         return;
     }
@@ -1058,7 +1057,7 @@ static void gfx_sdl_gpu_set_uniform_for_specific_shader(struct ShaderUniformBloc
     }
 }
 
-static void gfx_sdl_gpu_set_uniform(struct ShaderProgram *prg, const char *name, enum ShaderUniformType type, const void *data, u32 numElements) {
+static void gfx_sdl_gpu_set_uniform(struct ShaderProgram *prg, const char *name, const void *data, u32 numElements) {
     struct ShaderProgramSdlGpu *sdlPrg = (struct ShaderProgramSdlGpu *)prg;
     if (sdlPrg == NULL) {
         if (sShaderProgram == NULL) { return; }
@@ -1066,11 +1065,11 @@ static void gfx_sdl_gpu_set_uniform(struct ShaderProgram *prg, const char *name,
     }
 
     if (gfx_shader_stage_is(SHADER_STAGE_VERTEX) && sdlPrg->vertexShader != NULL) {
-        gfx_sdl_gpu_set_uniform_for_specific_shader(&sdlPrg->vertexShader->uniformBlocks[gSelectedVertexUniformBuffer], name, type, data, numElements);
+        gfx_sdl_gpu_set_uniform_for_specific_shader(&sdlPrg->vertexShader->uniformBlocks[gSelectedVertexUniformBuffer], name, data, numElements);
     }
 
     if (gfx_shader_stage_is(SHADER_STAGE_FRAGMENT) && sdlPrg->fragmentShader != NULL) {
-        gfx_sdl_gpu_set_uniform_for_specific_shader(&sdlPrg->fragmentShader->uniformBlocks[gSelectedFragmentUniformBuffer], name, type, data, numElements);
+        gfx_sdl_gpu_set_uniform_for_specific_shader(&sdlPrg->fragmentShader->uniformBlocks[gSelectedFragmentUniformBuffer], name, data, numElements);
     }
 }
 
@@ -1516,10 +1515,10 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
         if (vanillaSampler) {
             // set tex size and filter uniforms
             f32 texSize[2] = { (f32)internalTexture->width, (f32)internalTexture->height };
-            gfx_sdl_gpu_set_uniform((struct ShaderProgram *)sShaderProgram, sTexSizeUniformNames[samplerBinding], SHADER_UNIFORM_TYPE_VEC2, texSize, 1);
+            gfx_sdl_gpu_set_uniform((struct ShaderProgram *)sShaderProgram, sTexSizeUniformNames[samplerBinding], texSize, 1);
 
             u32 isLinear = internalTexture->filter == TEXTURE_FILTER_LINEAR ? 1 : 0;
-            gfx_sdl_gpu_set_uniform((struct ShaderProgram *)sShaderProgram, sTexFilterUniformNames[samplerBinding], SHADER_UNIFORM_TYPE_INT, &isLinear, 1);
+            gfx_sdl_gpu_set_uniform((struct ShaderProgram *)sShaderProgram, sTexFilterUniformNames[samplerBinding], &isLinear, 1);
         }
 
         // set the sampler bindings texture and sampler
@@ -1834,7 +1833,7 @@ struct GfxRenderingAPI gfx_sdl_gpu_api = {
     gfx_sdl_gpu_delete_framebuffer,
     gfx_sdl_gpu_set_framebuffer,
     gfx_sdl_gpu_reset_framebuffer,
-    gfx_sdl_gpu_get_uniform_buffer_size,
+    gfx_sdl_gpu_get_active_uniform_buffer,
     gfx_sdl_gpu_set_uniform_buffer,
     gfx_sdl_gpu_set_uniform,
     gfx_sdl_gpu_new_texture,

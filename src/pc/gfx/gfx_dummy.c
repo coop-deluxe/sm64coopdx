@@ -88,14 +88,14 @@ static void gfx_dummy_renderer_set_framebuffer(UNUSED struct FramePass *framePas
 static void gfx_dummy_renderer_reset_framebuffer(void) {
 }
 
-static size_t gfx_dummy_renderer_get_uniform_buffer_size(UNUSED enum ShaderStage stage, UNUSED int bufferIndex) {
-    return 0;
+static struct ShaderUniformBlock *gfx_dummy_renderer_get_active_uniform_buffer(UNUSED enum ShaderStage stage) {
+    return NULL;
 }
 
 static void gfx_dummy_renderer_set_uniform_buffer(UNUSED enum ShaderStage stage, UNUSED const char *name) {
 }
 
-static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED enum ShaderUniformType type, UNUSED UNUSED const void *data, UNUSED u32 numElements) {
+static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED const void *data, UNUSED u32 numElements) {
 }
 
 static uint32_t gfx_dummy_renderer_new_texture(void) {
@@ -188,7 +188,7 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_delete_framebuffer,
     gfx_dummy_renderer_set_framebuffer,
     gfx_dummy_renderer_reset_framebuffer,
-    gfx_dummy_renderer_get_uniform_buffer_size,
+    gfx_dummy_renderer_get_active_uniform_buffer,
     gfx_dummy_renderer_set_uniform_buffer,
     gfx_dummy_renderer_set_uniform,
     gfx_dummy_renderer_new_texture,

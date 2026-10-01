@@ -29,13 +29,7 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
-   - [gfx_shader_set_bool_array](#gfx_shader_set_bool_array)
-   - [gfx_shader_set_int_array](#gfx_shader_set_int_array)
-   - [gfx_shader_set_float_array](#gfx_shader_set_float_array)
-   - [gfx_shader_set_vec2_array](#gfx_shader_set_vec2_array)
-   - [gfx_shader_set_vec3_array](#gfx_shader_set_vec3_array)
-   - [gfx_shader_set_vec4_array](#gfx_shader_set_vec4_array)
-   - [gfx_shader_set_mat4_array](#gfx_shader_set_mat4_array)
+   - [gfx_shader_set_uniform](#gfx_shader_set_uniform)
 
 <br />
 
@@ -2019,13 +2013,6 @@
    - [gfx_shader_set_shader_stage](functions-7.md#gfx_shader_set_shader_stage)
    - [gfx_shader_set_uniform_buffer](functions-7.md#gfx_shader_set_uniform_buffer)
    - [gfx_shader_reset_uniform_buffer](functions-7.md#gfx_shader_reset_uniform_buffer)
-   - [gfx_shader_set_bool](functions-7.md#gfx_shader_set_bool)
-   - [gfx_shader_set_int](functions-7.md#gfx_shader_set_int)
-   - [gfx_shader_set_float](functions-7.md#gfx_shader_set_float)
-   - [gfx_shader_set_vec2](functions-7.md#gfx_shader_set_vec2)
-   - [gfx_shader_set_vec3](functions-7.md#gfx_shader_set_vec3)
-   - [gfx_shader_set_vec4](functions-7.md#gfx_shader_set_vec4)
-   - [gfx_shader_set_mat4](functions-7.md#gfx_shader_set_mat4)
    - [gfx_shader_create_frame_pass](functions-7.md#gfx_shader_create_frame_pass)
    - [gfx_shader_remove_frame_pass](functions-7.md#gfx_shader_remove_frame_pass)
    - [gfx_shader_get_current_frame_pass_index](functions-7.md#gfx_shader_get_current_frame_pass_index)
@@ -3250,170 +3237,44 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 
 <br />
 
-## gfx_shader_set_bool_array
+## gfx_shader_set_uniform
 
 ### Description
-Pass an array of booleans to a custom uniform shader location.
+Set a shaders uniform. It does all the backend stuff, just pass in the value needed
+by your uniform and profit
+
+If your uniform uses a struct, simply define a table with the same format and pass
+it into this function
+
+Array uniforms may also be set with this function just fine
+
+For things like vectors or matrices, you must convert the array to indexed keys rather
+than named keys
 
 ### Lua Example
 ```lua
 local toggles = { true, false, true, true }
-gfx_shader_set_bool_array("uBools", toggles)
+local time = get_global_timer()
+local lightData = {
+    {
+        position = { 50, 20, 100 },
+        color = { 1.0, 0.53, 0.65 }
+    },
+    {
+        position = { 67, 54, 300 },
+        color = { 0.0, 0.0, 1.0 }
+    },
+}
+gfx_shader_set_uniform("uToggles", toggles)
+gfx_shader_set_uniform("uTime", time)
+gfx_shader_set_uniform("uLightData", lightData)
 ```
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
 | name | `string` |
-| values | `table` of `bool` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_int_array
-
-### Description
-Pass an array of integers to a custom uniform shader location.
-
-### Lua Example
-```lua
-local indices = { 0, 4, 8, 12 }
-gfx_shader_set_int_array("uIndices", indices)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `integer` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_float_array
-
-### Description
-Pass an array of floating-point numbers to a custom uniform shader location.
-
-### Lua Example
-```lua
-local weights = { 0.1, 0.5, 1.25, 0.0 }
-gfx_shader_set_float_array("uWeights", weights)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `number` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_vec2_array
-
-### Description
-Pass an array of 2D vectors (vec2) to a custom uniform shader location using a flat number array.
-
-### Lua Example
-```lua
--- Represents two vec2 elements: (1.0, 2.0) and (3.0, 4.0)
-local positions = { 1.0, 2.0, 3.0, 4.0 }
-gfx_shader_set_vec2_array("uPositions", positions)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `number` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_vec3_array
-
-### Description
-Pass an array of 3D vectors (vec3) to a custom uniform shader location using a flat number array.
-
-### Lua Example
-```lua
--- Represents two vec3 colors: RGB(1, 0, 0) and RGB(0, 1, 0)
-local colors = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 }
-gfx_shader_set_vec3_array("uColors", colors)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `number` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_vec4_array
-
-### Description
-Pass an array of 4D vectors (vec4) to a custom uniform shader location using a flat number array.
-
-### Lua Example
-```lua
--- Represents two vec4 points: (x, y, z, w)
-local points = { 0.0, 0.0, 0.0, 1.0, 10.0, 5.0, 2.0, 1.0 }
-gfx_shader_set_vec4_array("uPoints", points)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `number` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## gfx_shader_set_mat4_array
-
-### Description
-Pass an array of 4x4 matrices (mat4) to a custom uniform shader location using a flat array of 16 numbers per matrix.
-
-### Lua Example
-```lua
--- table containing 16 elements for a 4x4 matrix
-local matrix = gMat4Identity()
-gfx_shader_set_mat4_array("uIdentityMatrix", matrix)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| values | `table` of `number` |
+| value | `any` |
 
 ### Returns
 - None

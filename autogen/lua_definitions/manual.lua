@@ -177,7 +177,7 @@ end
 --- Parses a level script and passes level data to a function.<br>
 --- When `func` is called, the parameter `levelData` is filled with level data depending on the level command.<br>
 --- `levelData` is a table of tables and its structure is the following:
---- 
+---
 --- <table>
 ---     <thead>
 ---         <tr>
@@ -522,7 +522,7 @@ end
 ---         </tr>
 ---     </tbody>
 --- </table>
---- 
+---
 --- Not all fields are filled at the same time. Make sure to `nil`-check tables before reading the fields.
 ---
 --- ### Lua Example
@@ -537,17 +537,17 @@ end
 ---         end
 ---     end
 --- end
---- 
+---
 --- local function print_level_data(levelData)
 ---     table.print(levelData)
 --- end
---- 
+---
 --- local function on_level_entry()
 ---     local levelNum = gNetworkPlayers[0].currLevelNum
 ---     print("===== LEVEL " .. tostring(levelNum) .. " DATA =====")
 ---     level_parse_script(levelNum, print_level_data)
 --- end
---- 
+---
 --- hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 --- ```
 function level_parse_script(levelNum, func)
@@ -719,97 +719,37 @@ function gfx_set_command(gfx, command, ...)
     -- ...
 end
 
---- @param name string The name of the uniform shader location
---- @param values boolean[] An array of booleans
---- Pass an array of booleans to a custom uniform shader location.
+--- @param name string The name of the uniform to modify
+--- @param value any The value(s). May be any data type needed by your uniform
+--- Set a shaders uniform. It does all the backend stuff, just pass in the value needed
+--- by your uniform and profit
+---
+--- If your uniform uses a struct, simply define a table with the same format and pass
+--- it into this function
+---
+--- Array uniforms may also be set with this function just fine
+---
+--- For things like vectors or matrices, you must convert the array to indexed keys rather
+--- than named keys
 ---
 --- ### Lua Example
 --- ```lua
 --- local toggles = { true, false, true, true }
---- gfx_shader_set_bool_array("uBools", toggles)
+--- local time = get_global_timer()
+--- local lightData = {
+---     {
+---         position = { 50, 20, 100 },
+---         color = { 1.0, 0.53, 0.65 }
+---     },
+---     {
+---         position = { 67, 54, 300 },
+---         color = { 0.0, 0.0, 1.0 }
+---     },
+--- }
+--- gfx_shader_set_uniform("uToggles", toggles)
+--- gfx_shader_set_uniform("uTime", time)
+--- gfx_shader_set_uniform("uLightData", lightData)
 --- ```
-function gfx_shader_set_bool_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values integer[] An array of integers
---- Pass an array of integers to a custom uniform shader location.
----
---- ### Lua Example
---- ```lua
---- local indices = { 0, 4, 8, 12 }
---- gfx_shader_set_int_array("uIndices", indices)
---- ```
-function gfx_shader_set_int_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values number[] An array of floating-point numbers
---- Pass an array of floating-point numbers to a custom uniform shader location.
----
---- ### Lua Example
---- ```lua
---- local weights = { 0.1, 0.5, 1.25, 0.0 }
---- gfx_shader_set_float_array("uWeights", weights)
---- ```
-function gfx_shader_set_float_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values number[] A flat number array representing 2D vectors
---- Pass an array of 2D vectors (vec2) to a custom uniform shader location using a flat number array.
----
---- ### Lua Example
---- ```lua
---- -- Represents two vec2 elements: (1.0, 2.0) and (3.0, 4.0)
---- local positions = { 1.0, 2.0, 3.0, 4.0 }
---- gfx_shader_set_vec2_array("uPositions", positions)
---- ```
-function gfx_shader_set_vec2_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values number[] A flat number array representing 3D vectors
---- Pass an array of 3D vectors (vec3) to a custom uniform shader location using a flat number array.
----
---- ### Lua Example
---- ```lua
---- -- Represents two vec3 colors: RGB(1, 0, 0) and RGB(0, 1, 0)
---- local colors = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 }
---- gfx_shader_set_vec3_array("uColors", colors)
---- ```
-function gfx_shader_set_vec3_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values number[] A flat number array representing 4D vectors
---- Pass an array of 4D vectors (vec4) to a custom uniform shader location using a flat number array.
----
---- ### Lua Example
---- ```lua
---- -- Represents two vec4 points: (x, y, z, w)
---- local points = { 0.0, 0.0, 0.0, 1.0, 10.0, 5.0, 2.0, 1.0 }
---- gfx_shader_set_vec4_array("uPoints", points)
---- ```
-function gfx_shader_set_vec4_array(name, values)
-    -- ...
-end
-
---- @param name string The name of the uniform shader location
---- @param values number[] A flat array of 16 numbers per 4x4 matrix
---- Pass an array of 4x4 matrices (mat4) to a custom uniform shader location using a flat array of 16 numbers per matrix.
----
---- ### Lua Example
---- ```lua
---- -- table containing 16 elements for a 4x4 matrix
---- local matrix = gMat4Identity()
---- gfx_shader_set_mat4_array("uIdentityMatrix", matrix)
---- ```
-function gfx_shader_set_mat4_array(name, values)
+function gfx_shader_set_uniform(name, value)
     -- ...
 end

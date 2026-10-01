@@ -509,38 +509,6 @@ void gfx_shader_reset_uniform_buffer(void) {
     }
 }
 
-void gfx_shader_set_bool(const char *name, bool value) {
-    int valAsInt = value ? 1 : 0;
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_BOOL, &valAsInt, 1);
-}
-
-void gfx_shader_set_int(const char *name, int value) {
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_INT, &value, 1);
-}
-
-void gfx_shader_set_float(const char *name, f32 value) {
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_FLOAT, &value, 1);
-}
-
-void gfx_shader_set_vec2(const char *name, f32 x, f32 y) {
-    f32 vec[2] = { x, y };
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC2, vec, 1);
-}
-
-void gfx_shader_set_vec3(const char *name, f32 x, f32 y, f32 z) {
-    f32 vec[3] = { x, y, z };
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC3, vec, 1);
-}
-
-void gfx_shader_set_vec4(const char *name, f32 x, f32 y, f32 z, f32 w) {
-    f32 vec[4] = { x, y, z, w };
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_VEC4, vec, 1);
-}
-
-void gfx_shader_set_mat4(const char *name, const Mat4 mat4) {
-    gfx_get_current_rendering_api()->set_uniform(NULL, name, SHADER_UNIFORM_TYPE_MAT4, mat4, 1);
-}
-
 int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass) {
     // iterates through frame passes until it finds one that's inactive
     for (int i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {

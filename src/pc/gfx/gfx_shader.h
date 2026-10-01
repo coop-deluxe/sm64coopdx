@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-#define MAX_SHADER_VARIABLE_NAME 128
+#define MAX_SHADER_VARIABLE_NAME 512
 #define MAX_SHADER_TEXTURES 2
 #define MAX_SHADER_INPUTS 512
 #define MAX_SHADER_OUTPUTS 512
@@ -21,10 +21,10 @@ extern "C" {
 #define UNIFORM_BINDING_SLOT_OFFSET 0
 #define MAX_UNIFORM_BLOCKS 8
 
-typedef struct {
+struct SpirVShader {
     u32 *words; // SPIR-V words
     int size; // number of words in SPIR-V shader
-} SpirVShader;
+};
 
 enum ShaderStage {
     SHADER_STAGE_VERTEX,
@@ -33,23 +33,14 @@ enum ShaderStage {
     SHADER_STAGE_COUNT
 };
 
-enum ShaderUniformType {
-    SHADER_UNIFORM_TYPE_BOOL,
-    SHADER_UNIFORM_TYPE_INT,
-    SHADER_UNIFORM_TYPE_FLOAT,
-    SHADER_UNIFORM_TYPE_VEC2,
-    SHADER_UNIFORM_TYPE_VEC3,
-    SHADER_UNIFORM_TYPE_VEC4,
-    SHADER_UNIFORM_TYPE_MAT4
-};
-
 struct ShaderSampler {
-    char name[MAX_SHADER_VARIABLE_NAME];
+    char *name;
     int binding;
 };
 
 struct ShaderUniform {
-    char name[MAX_SHADER_VARIABLE_NAME];
+    char *name;
+    spvc_basetype baseType;
     int location;
     int size;
     int arrayStride;
@@ -59,7 +50,7 @@ struct ShaderUniform {
 };
 
 struct ShaderUniformBlock {
-    char name[MAX_SHADER_VARIABLE_NAME];
+    char *name;
     u32 size;
     u32 location;
     u8 *buffer;
@@ -71,19 +62,19 @@ struct ShaderUniformBlock {
 };
 
 struct ShaderInput {
-    char name[MAX_SHADER_VARIABLE_NAME];
+    char *name;
     int location;
     int size;
 };
 
 struct ShaderOutput {
-    char name[MAX_SHADER_VARIABLE_NAME];
+    char *name;
     int location;
 };
 
 struct Shader {
     enum ShaderStage stage;
-    SpirVShader spirVShader;
+    struct SpirVShader spirVShader;
     struct ShaderInput shaderInputs[MAX_SHADER_INPUTS];
     struct ShaderOutput shaderOutputs[MAX_SHADER_OUTPUTS];
     struct ShaderSampler shaderSamplers[MAX_SHADER_SAMPLERS];
@@ -92,10 +83,8 @@ struct Shader {
     int samplerCount;
 };
 
-extern struct ShaderInput *gShaderInputs;
-extern struct ShaderInput *gPostProcessShaderInputs;
-extern struct ShaderSampler *gShaderSamplers;
-extern struct ShaderSampler *gPostProcessShaderSamplers;
+extern struct ShaderInput gShaderInputs[MAX_SHADER_INPUTS];
+extern struct ShaderInput gPostProcessShaderInputs[MAX_SHADER_INPUTS];
 
 extern const char *gDefaultPostProcessVertexShader;
 extern const char *gDefaultPostProcessFragmentShader;

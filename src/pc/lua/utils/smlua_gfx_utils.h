@@ -147,20 +147,6 @@ void gfx_shader_set_shader_stage(enum ShaderStage stage);
 void gfx_shader_set_uniform_buffer(const char *name);
 /* |description|Resets the currently selected uniform buffer|descriptionEnd| */
 void gfx_shader_reset_uniform_buffer(void);
-/* |description|Sets the value of a shader uniform of type bool|descriptionEnd| */
-void gfx_shader_set_bool(const char *name, bool value);
-/* |description|Sets the value of a shader uniform of type int|descriptionEnd| */
-void gfx_shader_set_int(const char *name, int value);
-/* |description|Sets the value of a shader uniform of type float|descriptionEnd| */
-void gfx_shader_set_float(const char *name, f32 value);
-/* |description|Sets the value of a shader uniform of type vec2|descriptionEnd| */
-void gfx_shader_set_vec2(const char *name, f32 x, f32 y);
-/* |description|Sets the value of a shader uniform of type vec3|descriptionEnd| */
-void gfx_shader_set_vec3(const char *name, f32 x, f32 y, f32 z);
-/* |description|Sets the value of a shader uniform of type vec4|descriptionEnd| */
-void gfx_shader_set_vec4(const char *name, f32 x, f32 y, f32 z, f32 w);
-/* |description|Sets the value of a shader uniform of type mat4|descriptionEnd| */
-void gfx_shader_set_mat4(const char *name, const Mat4 mat4);
 /* |description|Creates a frame pass to be used when rendering the game. Allows for multipass shaders. Returns the frame pass index and the frame pass|descriptionEnd| */
 int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass);
 /* |description|Deletes a frame pass using `framePassIndex`|descriptionEnd| */

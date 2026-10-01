@@ -2524,38 +2524,38 @@ void gfx_update_fog_uniforms(void) {
     gSelectedVertexUniformBuffer = 0;
     gSelectedFragmentUniformBuffer = 0;
     float fog_mul = (float)sRenderingState.fog_mul;
-    gfx_rapi->set_uniform(NULL, "uFogMul", SHADER_UNIFORM_TYPE_FLOAT, &fog_mul, 1);
+    gfx_rapi->set_uniform(NULL, "uFogMul", &fog_mul, 1);
 
-    gfx_rapi->set_uniform(NULL, "uFogIntensity", SHADER_UNIFORM_TYPE_FLOAT, &sRenderingState.fog_intensity, 1);
+    gfx_rapi->set_uniform(NULL, "uFogIntensity", &sRenderingState.fog_intensity, 1);
 
     float fog_offset = (float)sRenderingState.fog_offset;
-    gfx_rapi->set_uniform(NULL, "uFogOffset", SHADER_UNIFORM_TYPE_FLOAT, &fog_offset, 1);
+    gfx_rapi->set_uniform(NULL, "uFogOffset", &fog_offset, 1);
 
     float fogColor[3] = {
         (sRenderingState.rdp_fog_color_r / 255.0f) * (sRenderingState.fog_color_r / 255.0f),
         (sRenderingState.rdp_fog_color_g / 255.0f) * (sRenderingState.fog_color_g / 255.0f),
         (sRenderingState.rdp_fog_color_b / 255.0f) * (sRenderingState.fog_color_b / 255.0f),
     };
-    gfx_rapi->set_uniform(NULL, "uFogColor", SHADER_UNIFORM_TYPE_VEC3, &fogColor, 1);
+    gfx_rapi->set_uniform(NULL, "uFogColor", &fogColor, 1);
 
-    gfx_rapi->set_uniform(NULL, "uDepthZSub", SHADER_UNIFORM_TYPE_FLOAT, &sRenderingState.depth_z_sub, 1);
-    gfx_rapi->set_uniform(NULL, "uDepthZMult", SHADER_UNIFORM_TYPE_FLOAT, &sRenderingState.depth_z_mult, 1);
-    gfx_rapi->set_uniform(NULL, "uDepthZAdd", SHADER_UNIFORM_TYPE_FLOAT, &sRenderingState.depth_z_add, 1);
+    gfx_rapi->set_uniform(NULL, "uDepthZSub", &sRenderingState.depth_z_sub, 1);
+    gfx_rapi->set_uniform(NULL, "uDepthZMult", &sRenderingState.depth_z_mult, 1);
+    gfx_rapi->set_uniform(NULL, "uDepthZAdd", &sRenderingState.depth_z_add, 1);
 
-    gfx_rapi->set_uniform(NULL, "uFogEnabled", SHADER_UNIFORM_TYPE_BOOL, &sRenderingState.fog_enabled, 1);
+    gfx_rapi->set_uniform(NULL, "uFogEnabled", &sRenderingState.fog_enabled, 1);
 }
 
 void gfx_update_matrices(void) {
     gSelectedShaderStage = SHADER_STAGE_ANY;
     gSelectedVertexUniformBuffer = 0;
     gSelectedFragmentUniformBuffer = 0;
-    gfx_rapi->set_uniform(NULL, "uModelViewProjectionMatrix", SHADER_UNIFORM_TYPE_MAT4, rsp.MVP_matrix, 1);
+    gfx_rapi->set_uniform(NULL, "uModelViewProjectionMatrix", rsp.MVP_matrix, 1);
     if (rsp.modelview_matrix_stack_size > 0) {
-        gfx_rapi->set_uniform(NULL, "uModelViewMatrix", SHADER_UNIFORM_TYPE_MAT4, rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], 1);
+        gfx_rapi->set_uniform(NULL, "uModelViewMatrix", rsp.modelview_matrix_stack[rsp.modelview_matrix_stack_size - 1], 1);
     }
-    gfx_rapi->set_uniform(NULL, "uModelMatrix", SHADER_UNIFORM_TYPE_MAT4, rsp.M_matrix, 1);
-    gfx_rapi->set_uniform(NULL, "uViewMatrix", SHADER_UNIFORM_TYPE_MAT4, rsp.V_matrix, 1);
-    gfx_rapi->set_uniform(NULL, "uProjectionMatrix", SHADER_UNIFORM_TYPE_MAT4, rsp.P_matrix, 1);
+    gfx_rapi->set_uniform(NULL, "uModelMatrix", rsp.M_matrix, 1);
+    gfx_rapi->set_uniform(NULL, "uViewMatrix", rsp.V_matrix, 1);
+    gfx_rapi->set_uniform(NULL, "uProjectionMatrix", rsp.P_matrix, 1);
 }
 
 void gfx_set_builtin_uniforms(void) {
@@ -2563,32 +2563,32 @@ void gfx_set_builtin_uniforms(void) {
     gSelectedVertexUniformBuffer = 0;
     gSelectedFragmentUniformBuffer = 0;
 
-    gfx_rapi->set_uniform(NULL, "uFrameCount", SHADER_UNIFORM_TYPE_INT, &sFrameCount, 1);
+    gfx_rapi->set_uniform(NULL, "uFrameCount", &sFrameCount, 1);
 
     float lightmapColor[3] = {
         gVertexColor[0] / 255.0f,
         gVertexColor[1] / 255.0f,
         gVertexColor[2] / 255.0f
     };
-    gfx_rapi->set_uniform(NULL, "uLightmapColor", SHADER_UNIFORM_TYPE_VEC3, lightmapColor, 1);
+    gfx_rapi->set_uniform(NULL, "uLightmapColor", lightmapColor, 1);
 
-    gfx_rapi->set_uniform(NULL, "uFilter", SHADER_UNIFORM_TYPE_INT, &configFiltering, 1);
+    gfx_rapi->set_uniform(NULL, "uFilter", &configFiltering, 1);
 
     float aspectRatio = (float)gfx_current_dimensions.aspect_ratio;
     float xAdjustRatio = (float)gfx_current_dimensions.x_adjust_ratio;
-    gfx_rapi->set_uniform(NULL, "uAspectRatio", SHADER_UNIFORM_TYPE_FLOAT, &aspectRatio, 1);
-    gfx_rapi->set_uniform(NULL, "uXAdjustRatio", SHADER_UNIFORM_TYPE_FLOAT, &xAdjustRatio, 1);
+    gfx_rapi->set_uniform(NULL, "uAspectRatio", &aspectRatio, 1);
+    gfx_rapi->set_uniform(NULL, "uXAdjustRatio", &xAdjustRatio, 1);
 
     float screenSize[2] = {
         (float)gfx_current_dimensions.width,
         (float)gfx_current_dimensions.height
     };
-    gfx_rapi->set_uniform(NULL, "uScreenSize", SHADER_UNIFORM_TYPE_VEC2, screenSize, 1);
+    gfx_rapi->set_uniform(NULL, "uScreenSize", screenSize, 1);
 
     int shaderFlagEnabled = gShaderFlagsEnabled ? 1 : 0;
-    gfx_rapi->set_uniform(NULL, "uShaderFlagsEnabled", SHADER_UNIFORM_TYPE_BOOL, &shaderFlagEnabled, 1);
-    gfx_rapi->set_uniform(NULL, "uShaderFlags", SHADER_UNIFORM_TYPE_INT, gShaderFlags, SHADER_FLAG_MAX);
-    gfx_rapi->set_uniform(NULL, "uShaderFlagValues", SHADER_UNIFORM_TYPE_FLOAT, gShaderFlagValues, SHADER_FLAG_MAX);
+    gfx_rapi->set_uniform(NULL, "uShaderFlagsEnabled", &shaderFlagEnabled, 1);
+    gfx_rapi->set_uniform(NULL, "uShaderFlags", gShaderFlags, SHADER_FLAG_MAX);
+    gfx_rapi->set_uniform(NULL, "uShaderFlagValues", gShaderFlagValues, SHADER_FLAG_MAX);
     gfx_update_matrices();
     gfx_update_fog_uniforms();
 }

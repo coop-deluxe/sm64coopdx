@@ -26,8 +26,8 @@
 
 #define MAX_UNIFORM_CODE 65536
 
-struct ShaderInput *gShaderInputs = NULL;
-struct ShaderInput *gPostProcessShaderInputs = NULL;
+struct ShaderInput gShaderInputs[MAX_SHADER_INPUTS] = { 0 };
+struct ShaderInput gPostProcessShaderInputs[MAX_SHADER_INPUTS] = { 0 };
 
 const char *gDefaultPostProcessVertexShader = ""
     "in vec4 aVtxPos;\n"
@@ -539,55 +539,49 @@ char *gfx_get_default_fragment_shader_from_cc(struct ColorCombiner *cc) {
 }
 
 static void gfx_init_shader_inputs() {
-    gShaderInputs = calloc(MAX_SHADER_INPUTS, sizeof(struct ShaderInput));
-    if (!gShaderInputs) {
-        sys_fatal("Failed to allocate shader inputs, ran out of memory!");
-    }
-
-    gPostProcessShaderInputs = calloc(MAX_SHADER_INPUTS, sizeof(struct ShaderInput));
-    if (!gPostProcessShaderInputs) {
-        free(gShaderInputs);
-        gShaderInputs = NULL;
-        sys_fatal("Failed to allocate post process shader inputs, ran out of memory!");
-    }
-
     int cnt = 0;
 
-    snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aVtxPos");
+    gShaderInputs[cnt].name = "aVtxPos";
     gShaderInputs[cnt].location = cnt;
     gShaderInputs[cnt].size = 4;
     cnt++;
 
-    snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aLocalPos");
+    gShaderInputs[cnt].name = "aLocalPos";
     gShaderInputs[cnt].location = cnt;
     gShaderInputs[cnt].size = 4;
     cnt++;
 
     for (int t = 0; t < 2; t++) {
-        snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aTexCoord%d", t);
+        char texCoordName[MAX_SHADER_VARIABLE_NAME];
+        snprintf(texCoordName, MAX_SHADER_VARIABLE_NAME, "aTexCoord%d", t);
+
+        gShaderInputs[cnt].name = strdup(texCoordName);
         gShaderInputs[cnt].location = cnt;
         gShaderInputs[cnt].size = 2;
         ++cnt;
     }
 
-    snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aLightMap");
+    gShaderInputs[cnt].name = "aLightMap";
     gShaderInputs[cnt].location = cnt;
     gShaderInputs[cnt].size = 2;
     ++cnt;
 
     for (int i = 0; i < CC_MAX_INPUTS; i++) {
-        snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aInput%d", i + 1);
+        char inputName[MAX_SHADER_VARIABLE_NAME];
+        snprintf(inputName, MAX_SHADER_VARIABLE_NAME, "aInput%d", i + 1);
+
+        gShaderInputs[cnt].name = strdup(inputName);
         gShaderInputs[cnt].location = cnt;
         gShaderInputs[cnt].size = 4;
         ++cnt;
     }
 
-    snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aNormal");
+    gShaderInputs[cnt].name = "aNormal";
     gShaderInputs[cnt].location = cnt;
     gShaderInputs[cnt].size = 3;
     ++cnt;
 
-    snprintf(gShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aBarycentric");
+    gShaderInputs[cnt].name = "aBarycentric";
     gShaderInputs[cnt].location = cnt;
     gShaderInputs[cnt].size = 3;
     ++cnt;
@@ -595,12 +589,12 @@ static void gfx_init_shader_inputs() {
     // post process shader inputs
     cnt = 0;
 
-    snprintf(gPostProcessShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aVtxPos");
+    gPostProcessShaderInputs[cnt].name = "aVtxPos";
     gPostProcessShaderInputs[cnt].location = cnt;
     gPostProcessShaderInputs[cnt].size = 4;
     ++cnt;
 
-    snprintf(gPostProcessShaderInputs[cnt].name, MAX_SHADER_VARIABLE_NAME, "aTexCoord");
+    gPostProcessShaderInputs[cnt].name = "aTexCoord";
     gPostProcessShaderInputs[cnt].location = cnt;
     gPostProcessShaderInputs[cnt].size = 2;
     ++cnt;
@@ -655,7 +649,7 @@ static bool process_shader_line(struct Shader *shader, struct ShaderInput *refer
                 snprintf(layoutLine, sizeof(layoutLine), "layout(location=%d) %s in %s %s", referenceInputs[i].location, qualifier, type, name);
                 append_and_realloc_str(output, outputSize, layoutLine);
                 if (shader) {
-                    snprintf(shader->shaderInputs[sShaderInputCount].name, MAX_SHADER_VARIABLE_NAME, "%s", referenceInputs[i].name);
+                    shader->shaderInputs[sShaderInputCount].name = strdup(referenceInputs[i].name);
                     shader->shaderInputs[sShaderInputCount].location = referenceInputs[i].location;
                     shader->shaderInputs[sShaderInputCount].size = referenceInputs[i].size;
 
@@ -674,7 +668,7 @@ static bool process_shader_line(struct Shader *shader, struct ShaderInput *refer
                 snprintf(layoutLine, sizeof(layoutLine), "layout(location=%d) in %s %s", referenceInputs[i].location, type, name);
                 append_and_realloc_str(output, outputSize, layoutLine);
                 if (shader) {
-                    snprintf(shader->shaderInputs[sShaderInputCount].name, MAX_SHADER_VARIABLE_NAME, "%s", referenceInputs[i].name);
+                    shader->shaderInputs[sShaderInputCount].name = strdup(referenceInputs[i].name);
                     shader->shaderInputs[sShaderInputCount].location = referenceInputs[i].location;
                     shader->shaderInputs[sShaderInputCount].size = referenceInputs[i].size;
 
@@ -690,7 +684,7 @@ static bool process_shader_line(struct Shader *shader, struct ShaderInput *refer
         strip_array_from_name(name);
         // add name to our shader outputs
         if (shader) {
-            snprintf(shader->shaderOutputs[sShaderOutputCount].name, MAX_SHADER_VARIABLE_NAME, "%s", name);
+            shader->shaderOutputs[sShaderOutputCount].name = strdup(name);
             shader->shaderOutputs[sShaderOutputCount].location = sShaderOutputCount;
         }
         char layoutLine[sizeof(type) + MAX_SHADER_VARIABLE_NAME + 64];
@@ -704,7 +698,7 @@ static bool process_shader_line(struct Shader *shader, struct ShaderInput *refer
         strip_array_from_name(name);
         // add name to our shader outputs
         if (shader) {
-            snprintf(shader->shaderOutputs[sShaderOutputCount].name, MAX_SHADER_VARIABLE_NAME, "%s", name);
+            shader->shaderOutputs[sShaderOutputCount].name = strdup(name);
             shader->shaderOutputs[sShaderOutputCount].location = sShaderOutputCount;
         }
         char layoutLine[sizeof(type) + MAX_SHADER_VARIABLE_NAME + 64];
@@ -855,7 +849,13 @@ static bool gfx_sanitize_vertex_shader(struct Shader *shader, struct ShaderInput
     // double check we are not missing any inputs, if we are, error out since it can cause
     // issues in certain render apis
     for (int i = 0; i < MAX_SHADER_INPUTS; i++) {
-        if (strncmp(referenceInputs[i].name, shader->shaderInputs[i].name, MAX_SHADER_VARIABLE_NAME) != 0 || referenceInputs[i].location != shader->shaderInputs[i].location) {
+        if ((shader->shaderInputs[i].name == NULL) != (referenceInputs[i].name == NULL)) {
+            LOG_ERROR("Failed to sanitize vertex shader! Mismatch between expected inputs and inputs in the vertex shader! Index is %d, but either the expected output or vertex output is NULL", i);
+            return false;
+        } else if (shader->shaderInputs[i].name == NULL || referenceInputs[i].name == NULL) {
+            continue;
+        }
+        if (strcmp(referenceInputs[i].name, shader->shaderInputs[i].name) != 0 || referenceInputs[i].location != shader->shaderInputs[i].location) {
             // mismatched! tell the shader code this is not a valid shader
             LOG_ERROR("Failed to sanitize vertex shader! Mismatch between expected inputs and inputs in the vertex shader! Index is %d, expected output is %s, vertex output is %s", i, referenceInputs[i].name, shader->shaderInputs[i].name);
             return false;
@@ -868,14 +868,20 @@ static bool gfx_sanitize_fragment_shader(struct Shader *shader, struct ShaderOut
     // convert outputs to inputs for fragment shader
     struct ShaderInput inputs[MAX_SHADER_INPUTS] = { 0 };
     for (int i = 0; i < MAX_SHADER_INPUTS; i++) {
-        strncpy(inputs[i].name, outputsFromVertexShader[i].name, MAX_SHADER_VARIABLE_NAME - 1);
+        inputs[i].name = outputsFromVertexShader[i].name;
         inputs[i].location = outputsFromVertexShader[i].location;
     }
     gfx_sanitize_shader(shader, inputs, shaderCode);
     // double check we are not missing any inputs, if we are, error out since it can cause
     // issues in certain render apis
     for (int i = 0; i < MAX_SHADER_INPUTS; i++) {
-        if (strncmp(inputs[i].name, shader->shaderInputs[i].name, MAX_SHADER_VARIABLE_NAME) != 0 || inputs[i].location != shader->shaderInputs[i].location) {
+        if ((shader->shaderInputs[i].name == NULL) != (inputs[i].name == NULL)) {
+            LOG_ERROR("Failed to sanitize vertex shader! Mismatch between expected inputs and inputs in the vertex shader! Index is %d, but either the vertex output or fragment input is NULL", i);
+            return false;
+        } else if (shader->shaderInputs[i].name == NULL || inputs[i].name == NULL) {
+            continue;
+        }
+        if (strcmp(inputs[i].name, shader->shaderInputs[i].name) != 0 || inputs[i].location != shader->shaderInputs[i].location) {
             // mismatched! tell the shader code this is not a valid shader
             LOG_ERROR("Failed to sanitize fragment shader! Mismatch between vertex outputs and fragment inputs! Index is %d, vertex output is %s, fragment input is %s", i, inputs[i].name, shader->shaderInputs[i].name);
             return false;
@@ -912,7 +918,7 @@ bool gfx_compile_shader_to_spirv(glslang_stage_t stage, const char *shaderCode, 
 
     glslang_shader_t *slangShader = glslang_shader_create(&input);
 
-    SpirVShader spirvShader = {
+    struct SpirVShader spirvShader = {
         .words = NULL,
         .size = 0,
     };
@@ -982,6 +988,129 @@ bool gfx_compile_shader_to_spirv(glslang_stage_t stage, const char *shaderCode, 
         } \
     } while(0)
 
+static void reflect_uniform_recursive(spvc_compiler compiler, spvc_type type, spvc_type_id baseTypeId, const char *parentPrefix, u32 baseOffset, int blockIndex, struct ShaderUniformBlock *uniformBlock) {
+    u32 memberCount = spvc_type_get_num_member_types(type);
+
+    // iterate through members
+    for (u32 m = 0; m < memberCount; m++) {
+        if (uniformBlock->uniformCount >= MAX_SHADER_UNIFORMS) {
+            LOG_ERROR("Ran out of uniform space inside block %s!\n", uniformBlock->name);
+            return;
+        }
+
+        // grab member name and member type
+        const char *memberName = spvc_compiler_get_member_name(compiler, baseTypeId, m);
+        spvc_type memberType = spvc_compiler_get_type_handle(compiler, spvc_type_get_member_type(type, m));
+
+        // get offset to uniform
+        u32 memberOffset = 0;
+        spvc_compiler_type_struct_member_offset(compiler, type, m, &memberOffset);
+        u32 currentOffset = baseOffset + memberOffset;
+
+        // put together the path to the uniform element
+        char path[MAX_SHADER_VARIABLE_NAME];
+        if (parentPrefix && strlen(parentPrefix) > 0) {
+            snprintf(path, sizeof(path), "%s.%s", parentPrefix, memberName);
+        } else {
+            snprintf(path, sizeof(path), "%s", memberName);
+        }
+
+        // check if we are an array
+        u32 arrayLength = 1;
+        u32 arrayStride = 0;
+        bool isArray = (spvc_type_get_num_array_dimensions(memberType) > 0);
+
+        if (isArray) {
+            // fetch array length and array stride
+            arrayLength = spvc_type_get_array_dimension(memberType, 0);
+            spvc_compiler_type_struct_member_array_stride(compiler, type, m, &arrayStride);
+        }
+
+        spvc_basetype baseType = spvc_type_get_basetype(memberType);
+
+        if (baseType == SPVC_BASETYPE_STRUCT) {
+            // get the inner base type
+            spvc_type_id subBaseTypeId = spvc_type_get_base_type_id(memberType);
+
+            if (isArray) {
+                // iterate through array
+                for (u32 i = 0; i < arrayLength; i++) {
+                    // configure path for array index
+                    char fullPath[MAX_SHADER_VARIABLE_NAME];
+                    snprintf(fullPath, sizeof(fullPath), "%s[%u]", path, i);
+
+                    // get element offset using the current offset + stride of the
+                    // array for our specific index
+                    u32 elementOffset = currentOffset + (i * arrayStride);
+
+                    // scan uniform types in this struct
+                    reflect_uniform_recursive(
+                        compiler, memberType, subBaseTypeId,
+                        fullPath, elementOffset, blockIndex, uniformBlock
+                    );
+                }
+            } else {
+                // scan uniform types in this struct
+                reflect_uniform_recursive(
+                    compiler, memberType, subBaseTypeId,
+                    path, currentOffset, blockIndex, uniformBlock
+                );
+            }
+        } else {
+            // grab sizeof uniform
+            size_t memberSize = 0;
+            spvc_compiler_get_declared_struct_member_size(compiler, type, m, &memberSize);
+
+            // calculate element size using the width (converted to bytes),
+            // the amount of columns, and the vector size
+            u32 width = spvc_type_get_bit_width(memberType) / 8;
+            u32 columns = spvc_type_get_columns(memberType);
+            u32 vectorSize = spvc_type_get_vector_size(memberType);
+            u32 elementSize = width * columns * vectorSize;
+
+            if (isArray) {
+                // iterate through length of array
+                for (u32 i = 0; i < arrayLength; i++) {
+                    if (uniformBlock->uniformCount >= MAX_SHADER_UNIFORMS) {
+                        LOG_ERROR("Ran out of uniform space inside block %s!\n", uniformBlock->name);
+                        return;
+                    }
+
+                    struct ShaderUniform *uniform = &uniformBlock->uniforms[uniformBlock->uniformCount];
+
+                    // configure uniform
+                    char fullPath[MAX_SHADER_VARIABLE_NAME];
+                    snprintf(fullPath, MAX_SHADER_VARIABLE_NAME, "%s[%u]", path, i);
+                    uniform->name = strdup(fullPath);
+                    uniform->baseType = baseType;
+                    uniform->location = currentOffset + (i * arrayStride);
+                    uniform->size = elementSize;
+                    uniform->arrayStride = arrayStride;
+                    uniform->elementSize = elementSize;
+                    uniform->arrayLength = 1;
+                    uniform->blockIndex = blockIndex;
+
+                    uniformBlock->uniformCount++;
+                }
+            } else {
+                // configure uniform
+                struct ShaderUniform *uniform = &uniformBlock->uniforms[uniformBlock->uniformCount];
+
+                uniform->name = strdup(path);
+                uniform->baseType = baseType;
+                uniform->location = currentOffset;
+                uniform->size = memberSize;
+                uniform->arrayStride = 0;
+                uniform->elementSize = elementSize;
+                uniform->arrayLength = 1;
+                uniform->blockIndex = blockIndex;
+
+                uniformBlock->uniformCount++;
+            }
+        }
+    }
+}
+
 static void reflect_shader_data(struct Shader *shader, spvc_context context, spvc_compiler compiler) {
     spvc_resources resources;
     spvc_compiler_create_shader_resources(compiler, &resources);
@@ -1028,7 +1157,7 @@ static void reflect_shader_data(struct Shader *shader, spvc_context context, spv
         } else {
             snprintf(uniqueName, sizeof(uniqueName), "_FS_%s", blockName);
         }
-        strncpy(block->name, uniqueName, sizeof(block->name) - 1);
+        block->name = strdup(uniqueName);
 
         spvc_compiler_set_name(compiler, list[i].base_type_id, uniqueName);
 
@@ -1061,47 +1190,7 @@ static void reflect_shader_data(struct Shader *shader, spvc_context context, spv
         shader->uniformBlockCount++;
 
         // get uniforms inside block
-        u32 memberCount = spvc_type_get_num_member_types(type);
-        for (u32 m = 0; m < memberCount; m++) {
-            if (block->uniformCount >= MAX_SHADER_UNIFORMS) {
-                printf("Warning: Ran out of uniform space inside block %s!\n", block->name);
-                break;
-            }
-
-            struct ShaderUniform *uniform = &block->uniforms[block->uniformCount];
-
-            const char *memberName = spvc_compiler_get_member_name(compiler, list[i].base_type_id, m);
-
-            size_t memberSize = 0;
-            spvc_compiler_get_declared_struct_member_size(compiler, type, m, &memberSize);
-
-            u32 memberOffset = 0;
-            spvc_compiler_type_struct_member_offset(compiler, type, m, &memberOffset);
-
-            spvc_type memberType = spvc_compiler_get_type_handle(compiler, spvc_type_get_member_type(type, m));
-
-            u32 arrayLength = 1;
-            u32 arrayStride = 0;
-
-            if (spvc_type_get_num_array_dimensions(memberType) > 0) {
-                arrayLength = spvc_type_get_array_dimension(memberType, 0);
-                SPVC_CHECK(spvc_compiler_type_struct_member_array_stride(compiler, type, m, &arrayStride));
-            }
-
-            u32 width = spvc_type_get_bit_width(memberType) / 8;
-            u32 columns = spvc_type_get_columns(memberType);
-            u32 vectorSize = spvc_type_get_vector_size(memberType);
-            u32 elementSize = width * columns * vectorSize;
-
-            strncpy(uniform->name, memberName, MAX_SHADER_VARIABLE_NAME - 1);
-            uniform->location = memberOffset;
-            uniform->size = memberSize;
-            uniform->arrayStride = arrayStride;
-            uniform->elementSize = elementSize;
-            uniform->arrayLength = arrayLength;
-
-            block->uniformCount++;
-        }
+        reflect_uniform_recursive(compiler, type, list[i].base_type_id, "", 0, currentBlockIndex, block);
     }
 
     // reorder uniform blocks so the global block is at the bottom for ease of access
@@ -1136,7 +1225,7 @@ static void reflect_shader_data(struct Shader *shader, spvc_context context, spv
                 name = spvc_compiler_get_name(compiler, samplerList[i].base_type_id);
             }
 
-            snprintf(sampler->name, MAX_SHADER_VARIABLE_NAME, "%s", name);
+            sampler->name = strdup(name);
 
             // get binding loc
             if (spvc_compiler_has_decoration(compiler, samplerList[i].id, SpvDecorationBinding)) {
@@ -1167,7 +1256,7 @@ void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader) {
     spvc_parsed_ir ir = NULL;
     const char *glsl_code = NULL;
 
-    SpirVShader *spirvShader = &shader->spirVShader;
+    struct SpirVShader *spirvShader = &shader->spirVShader;
 
     SPVC_CHECK(spvc_context_create(&context));
     SPVC_CHECK(spvc_context_parse_spirv(context, spirvShader->words, spirvShader->size, &ir));
@@ -1190,6 +1279,9 @@ void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader) {
     *shaderCode = strdup(glsl_code);
 
     spvc_context_destroy(context);
+
+    free(shader->spirVShader.words);
+    memset(&shader->spirVShader, 0, sizeof(struct SpirVShader));
 }
 
 void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader, u32 shaderModel) {
@@ -1198,7 +1290,7 @@ void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader, u32 sha
     spvc_parsed_ir ir = NULL;
     const char *hlsl_code = NULL;
 
-    SpirVShader *spirvShader = &shader->spirVShader;
+    struct SpirVShader *spirvShader = &shader->spirVShader;
 
     SPVC_CHECK(spvc_context_create(&context));
     SPVC_CHECK(spvc_context_parse_spirv(context, spirvShader->words, spirvShader->size, &ir));
@@ -1216,6 +1308,9 @@ void gfx_convert_spirv_to_hlsl(char **shaderCode, struct Shader *shader, u32 sha
     *shaderCode = strdup(hlsl_code);
 
     spvc_context_destroy(context);
+
+    free(shader->spirVShader.words);
+    memset(&shader->spirVShader, 0, sizeof(struct SpirVShader));
 }
 
 void gfx_convert_spirv_to_msl(char **shaderCode, struct Shader *shader) {
@@ -1224,7 +1319,7 @@ void gfx_convert_spirv_to_msl(char **shaderCode, struct Shader *shader) {
     spvc_parsed_ir ir = NULL;
     const char *msl_code = NULL;
 
-    SpirVShader *spirvShader = &shader->spirVShader;
+    struct SpirVShader *spirvShader = &shader->spirVShader;
 
     SPVC_CHECK(spvc_context_create(&context));
     SPVC_CHECK(spvc_context_parse_spirv(context, spirvShader->words, spirvShader->size, &ir));
@@ -1249,7 +1344,9 @@ void gfx_convert_spirv_to_msl(char **shaderCode, struct Shader *shader) {
     *shaderCode = strdup(msl_code);
 
     spvc_context_destroy(context);
-    return;
+
+    free(shader->spirVShader.words);
+    memset(&shader->spirVShader, 0, sizeof(struct SpirVShader));
 }
 
 void gfx_process_spirv(struct Shader *shader) {
@@ -1257,7 +1354,7 @@ void gfx_process_spirv(struct Shader *shader) {
     spvc_compiler compiler = NULL;
     spvc_parsed_ir ir = NULL;
 
-    SpirVShader *spirvShader = &shader->spirVShader;
+    struct SpirVShader *spirvShader = &shader->spirVShader;
 
     SPVC_CHECK(spvc_context_create(&context));
     SPVC_CHECK(spvc_context_parse_spirv(context, spirvShader->words, spirvShader->size, &ir));
@@ -1266,6 +1363,9 @@ void gfx_process_spirv(struct Shader *shader) {
     reflect_shader_data(shader, context, compiler);
 
     spvc_context_destroy(context);
+
+    free(shader->spirVShader.words);
+    memset(&shader->spirVShader, 0, sizeof(struct SpirVShader));
 }
 
 #undef SPVC_CHECK
@@ -1435,19 +1535,40 @@ bool gfx_generate_post_process_vertex_and_fragment_shader(struct Shader *vertexS
 void gfx_destroy_shader_contents(struct Shader *shader) {
     if (!shader) { return; }
 
+    // cleanup inputs
+    for (int i = 0; i < MAX_SHADER_INPUTS; i++) {
+        struct ShaderInput *input = &shader->shaderInputs[i];
+        free(input->name);
+    }
+
+    // cleanup outputs
+    for (int i = 0; i < MAX_SHADER_OUTPUTS; i++) {
+        struct ShaderOutput *output = &shader->shaderOutputs[i];
+        free(output->name);
+    }
+
     // cleanup uniform blocks
     for (int i = 0; i < shader->uniformBlockCount; i++) {
         struct ShaderUniformBlock *block = &shader->uniformBlocks[i];
+        for (int j = 0; j < block->uniformCount; j++) {
+            struct ShaderUniform *uniform = &block->uniforms[j];
+            free(uniform->name);
+        }
+        free(block->name);
         free(block->buffer);
-        block->buffer = NULL;
 
         if (gRenderApi == &gfx_opengl_api) {
             glDeleteBuffers(1, &block->glBufferId);
         }
     }
 
+    // cleanup samplers
+    for (int i = 0; i < shader->samplerCount; i++) {
+        struct ShaderSampler *sampler = &shader->shaderSamplers[i];
+        free(sampler->name);
+    }
+
     free(shader->spirVShader.words);
-    shader->spirVShader.words = NULL;
 
     memset(shader, 0, sizeof(struct Shader));
 }

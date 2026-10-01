@@ -499,19 +499,18 @@ static void gfx_opengl_reset_framebuffer(void) {
     sInternalTexturesCount = 0;
 }
 
-size_t gfx_opengl_get_uniform_buffer_size(enum ShaderStage stage, int bufferIndex) {
-    if (bufferIndex < 0 || bufferIndex >= MAX_UNIFORM_BLOCKS) { return 0; }
-
+struct ShaderUniformBlock *gfx_opengl_get_active_uniform_buffer(enum ShaderStage stage) {
     struct Shader *shader = NULL;
     if (stage == SHADER_STAGE_VERTEX) {
         shader = sShaderProgram->vertexShader;
     } else if (stage == SHADER_STAGE_FRAGMENT) {
         shader = sShaderProgram->fragmentShader;
     } else {
-        return 0;
+        return NULL;
     }
 
-    return shader->uniformBlocks[bufferIndex].size;
+    s32 selectedUniformBuffer = (stage == SHADER_STAGE_VERTEX) ? gSelectedVertexUniformBuffer : gSelectedFragmentUniformBuffer;
+    return &shader->uniformBlocks[selectedUniformBuffer];
 }
 
 void gfx_opengl_set_uniform_buffer(enum ShaderStage stage, const char *name) {
@@ -560,7 +559,7 @@ static void gfx_opengl_set_uniform_for_specific_shader(struct ShaderUniformBlock
     }
 }
 
-void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, UNUSED enum ShaderUniformType type, const void *data, uint32_t numElements) {
+void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, const void *data, uint32_t numElements) {
     if (prg == NULL) {
         if (sShaderProgram == NULL) { return; }
         prg = sShaderProgram;
@@ -912,7 +911,7 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_delete_framebuffer,
     gfx_opengl_set_framebuffer,
     gfx_opengl_reset_framebuffer,
-    gfx_opengl_get_uniform_buffer_size,
+    gfx_opengl_get_active_uniform_buffer,
     gfx_opengl_set_uniform_buffer,
     gfx_opengl_set_uniform,
     gfx_opengl_new_texture,

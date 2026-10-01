@@ -164,7 +164,7 @@ A shader may contain uniforms. As per the GLSL naming convention, uniform variab
 | `uDepthZAdd` | `float` | Value from CPU for calculating fog check |
 | `uFogEnabled` | `float` | Whether or not fog is currently enabled |
 
-For defining a custom uniform in lua, use the `HOOK_ON_SET_SHADER_PROGRAM`, hook and use the appropriate `gfx_shader_set_*` function. If you need to set a uniform every triangle draw, do note there is a lot of performance overhead, but if it is necessary, use `HOOK_ON_DRAW_TRIANGLE`.
+For defining a custom uniform in lua, use the `HOOK_ON_SET_SHADER_PROGRAM`, hook and use the `gfx_shader_set_uniform` function. If you need to set a uniform every triangle draw, do note there is a lot of performance overhead, but if it is necessary, use `HOOK_ON_DRAW_TRIANGLE`.
 
 You can also define uniform buffers with no explicit locations, such as:
 
@@ -181,9 +181,9 @@ These allow you to pass more data. To utilize this, set the current uniform bloc
 ```lua
 function on_set_shader_program() {
     gfx_shader_set_uniform_buffer("LightData")
-    gfx_shader_set_vec3_array("uLightPositions", lightPositions)
-    gfx_shader_set_vec3_array("uLightColor", lightColors)
-    gfx_shader_set_int("uLightCount", #lightPositions)
+    gfx_shader_set_uniform("uLightPositions", lightPositions)
+    gfx_shader_set_uniform("uLightColor", lightColors)
+    gfx_shader_set_uniform("uLightCount", #lightPositions)
 }
 ```
 
