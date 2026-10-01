@@ -4,7 +4,6 @@
 #include "behavior_table.h"
 #include "object_constants.h"
 #include "object_fields.h"
-#include "engine/math_util.h"
 #include "game/area.h"
 #include "game/object_list_processor.h"
 #include "game/obj_behaviors.h"
