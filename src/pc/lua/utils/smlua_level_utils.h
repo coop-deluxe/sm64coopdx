@@ -27,6 +27,8 @@ struct CustomWarpNode {
     enum MarioSpawnType marioSpawnType;
 };
 
+extern LevelScript script_exec_level_custom[];
+
 #define CUSTOM_LEVEL_NUM_START 50
 
 void smlua_level_util_reset(void);
