@@ -1363,9 +1363,6 @@ void gfx_process_spirv(struct Shader *shader) {
     reflect_shader_data(shader, context, compiler);
 
     spvc_context_destroy(context);
-
-    free(shader->spirVShader.words);
-    memset(&shader->spirVShader, 0, sizeof(struct SpirVShader));
 }
 
 #undef SPVC_CHECK
