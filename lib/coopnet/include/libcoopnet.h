@@ -1,5 +1,4 @@
-#ifndef LIBCOOPNET_H
-#define LIBCOOPNET_H
+#pragma once
 
 #if defined(__cplusplus)
 #include <cstdint>
@@ -8,8 +7,16 @@ class Connection;
 class Lobby;
 #endif
 
+#include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
+
+#define COOPNET_MAX_GAME_LEN 32
+#define COOPNET_MAX_VERSION_LEN 32
+#define COOPNET_MAX_HOST_NAME_LEN 128
+#define COOPNET_MAX_MODE_LEN 128
+#define COOPNET_MAX_PASSWORD_LEN 64
+#define COOPNET_MAX_DESCRIPTION_LEN 1024
 
 typedef enum {
     COOPNET_OK,
@@ -19,6 +26,7 @@ typedef enum {
 
 enum MPacketErrorNumber {
     MERR_NONE,
+    MERR_LOBBY_CREATION_FAILED,
     MERR_LOBBY_NOT_FOUND,
     MERR_LOBBY_JOIN_FULL,
     MERR_LOBBY_JOIN_FAILED,
@@ -36,6 +44,7 @@ typedef struct {
     void (*OnLobbyLeft)(uint64_t aLobbyId, uint64_t aUserId);
     void (*OnLobbyListGot)(uint64_t aLobbyId, uint64_t aOwnerId, uint16_t aConnections, uint16_t aMaxConnections, const char* aGame, const char* aVersion, const char* aHostName, const char* aMode, const char* aDescription);
     void (*OnLobbyListFinish)(void);
+    void (*OnTimeGot)(uint64_t aTime);
     void (*OnReceive)(uint64_t aFromUserId, const uint8_t* aData, uint64_t aSize);
     void (*OnError)(enum MPacketErrorNumber aErrorNumber, uint64_t tag);
     void (*OnPeerConnected)(uint64_t aPeerId);
@@ -65,11 +74,11 @@ CoopNetRc coopnet_lobby_update(uint64_t aLobbyId, const char* aGame, const char*
 CoopNetRc coopnet_lobby_join(uint64_t aLobbyId, const char* aPassword);
 CoopNetRc coopnet_lobby_leave(uint64_t aLobbyId);
 CoopNetRc coopnet_lobby_list_get(const char* aGame, const char* aPassword);
+CoopNetRc coopnet_time_get(void);
 CoopNetRc coopnet_send(const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_send_to(uint64_t aPeerId, const uint8_t* aData, uint64_t aDataLength);
 CoopNetRc coopnet_unpeer(uint64_t aPeerId);
 
 #if defined(__cplusplus)
 }
-#endif
 #endif

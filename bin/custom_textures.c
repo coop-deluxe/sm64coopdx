@@ -31,6 +31,14 @@ ALIGNED8 const Texture texture_selectionbox_forward_icon[] = {
 #include "textures/segment2/custom_selectionbox_forward_icon.rgba16.inc.c"
 };
 
+ALIGNED8 const Texture texture_selectionbox_up_icon[] = {
+#include "textures/segment2/custom_selectionbox_up_icon.rgba16.inc.c"
+};
+
+ALIGNED8 const Texture texture_selectionbox_down_icon[] = {
+#include "textures/segment2/custom_selectionbox_down_icon.rgba16.inc.c"
+};
+
 ALIGNED8 const Texture texture_coopdx_logo[] = {
 #include "textures/segment2/custom_coopdx_logo.rgba32.inc.c"
 };
