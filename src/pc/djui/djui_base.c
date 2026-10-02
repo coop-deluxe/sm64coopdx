@@ -1,6 +1,7 @@
 #include <string.h>
 #include "djui.h"
 #include "djui_interactable.h"
+#include "pc/debuglog.h"
 
   ////////////////
  // properties //
@@ -283,9 +284,84 @@ static void djui_base_render_border(struct DjuiBase* base) {
     clip->width -= addClip;
 }
 
+  ///////////
+ // hooks //
+///////////
+
+static bool djui_base_hook_check_slices(struct DjuiBase *base) {
+    // iterate through hooked slices
+    for (u32 i = 0; i < MAX_DJUI_HOOKED_SLICES; i++) {
+        if (base->hookSlices[i].ptr == NULL) { continue; }
+
+        // check if the value changed, and if so...
+        if (memcmp(base->hookSlices[i].ptr, base->prevHookSlices[i].ptr, base->hookSlices[i].size) != 0) {
+            // free previous prev hook slice allocation
+            free(base->prevHookSlices[i].ptr);
+
+            // allocate new memory
+            base->prevHookSlices[i].ptr = malloc(base->prevHookSlices[i].size);
+
+            // copy memory over
+            memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, base->hookSlices[i].size);
+
+            // call update func
+            if (base->hookSlices[i].on_changed(base)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void djui_base_hook_on_changed(struct DjuiBase *base, void *ptr, size_t size, bool (*on_slice_changed)(struct DjuiBase *)) {
+    // sanity checks
+    if (ptr == NULL) { return; }
+    if (size == 0) { return; }
+    if (on_slice_changed == NULL) { return; }
+
+    // look for empty slot
+    for (u32 i = 0; i < MAX_DJUI_HOOKED_SLICES; i++) {
+        if (base->hookSlices[i].ptr != NULL) { continue; }
+
+        // set data
+        base->hookSlices[i].ptr = ptr;
+        base->hookSlices[i].size = size;
+        base->hookSlices[i].on_changed = on_slice_changed;
+
+        // set prev hook slice
+        base->prevHookSlices[i].size = size;
+        free(base->prevHookSlices[i].ptr);
+        base->prevHookSlices[i].ptr = malloc(base->prevHookSlices[i].size);
+        memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, base->hookSlices[i].size);
+
+        return;
+    }
+
+    LOG_ERROR("Ran out of slots for hooked slices!");
+}
+
   ////////////
  // events //
 ////////////
+
+bool djui_base_update_hooks(struct DjuiBase *base) {
+    if (base == NULL) { return false; }
+
+    // update hooks
+    if (djui_base_hook_check_slices(base)) {
+        return true;
+    }
+
+    // check children
+    struct DjuiBaseChild *child = base->child;
+    while (child != NULL) {
+        if (djui_base_update_hooks(child->base)) { return true; }
+        child = child->next;
+    }
+
+    return false;
+}
 
 bool djui_base_render(struct DjuiBase* base) {
     if (!base->visible) { return false; }
@@ -394,6 +470,12 @@ void djui_base_destroy(struct DjuiBase* base) {
     if (base->interactable != NULL) {
         free(base->interactable);
         base->interactable = NULL;
+    }
+
+    // deallocate previous hooked slices
+    for (u32 i = 0; i < MAX_DJUI_HOOKED_SLICES; i++) {
+        free(base->prevHookSlices[i].ptr);
+        base->prevHookSlices[i].ptr = NULL;
     }
 
     // remove from interactable variable
