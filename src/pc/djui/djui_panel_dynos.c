@@ -96,15 +96,15 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         if (gNetworkType == NT_NONE) {
             struct DjuiRect* rect1 = djui_rect_container_create(body, 45);
             {
-                struct DjuiButton* button1 = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
-                struct DjuiButton* button2 = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_refresh);
-                struct DjuiButton* button3 = djui_button_create(body, DLANG(DYNOS, OPEN_DYNOS_FOLDER), DJUI_BUTTON_STYLE_NORMAL, djui_panel_dynos_open_folder);
+                struct DjuiButton* button1 = djui_button_left_create(&rect1->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
+                struct DjuiButton* button2 = djui_button_right_create(&rect1->base, DLANG(LOBBIES, REFRESH), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_dynos_refresh);
+                struct DjuiButton* button3 = djui_button_create(body, DLANG(DYNOS, OPEN_DYNOS_FOLDER), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_dynos_open_folder);
                 djui_base_set_size(&button1->base, 0.485f, 45);
                 djui_base_set_size(&button2->base, 0.485f, 45);
                 djui_base_set_size(&button3->base, 1.0f, 45);
             }
         } else {
-            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
         }
     }
 
