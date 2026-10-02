@@ -33,7 +33,7 @@ static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
 // this is currently used to initialize which backend is used
 static enum GfxWindowBackend currBackend = GFX_WINDOW_BACKEND_DUMMY;
 
-static SDL_Window *sSdlWindow;
+static SDL_Window *sSDLWindow;
 
 static kb_callback_t kb_key_down = NULL;
 static kb_callback_t kb_key_up = NULL;
@@ -43,7 +43,7 @@ static void (*kb_text_editing)(char*, int) = NULL;
 
 static void (*m_scroll)(float, float) = NULL;
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN) != 0)
+#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSDLWindow) & SDL_WINDOW_FULLSCREEN) != 0)
 
 // Getter for the current window backend API
 static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
@@ -52,11 +52,11 @@ static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
 }
 
 void gfx_wm_set_window(SDL_Window *window) {
-    sSdlWindow = window;
+    sSDLWindow = window;
 }
 
 SDL_Window *gfx_wm_get_window(void) {
-    return sSdlWindow;
+    return sSDLWindow;
 }
 
 static void gfx_wm_set_fullscreen(void) {
@@ -69,9 +69,9 @@ static void gfx_wm_set_fullscreen(void) {
     }
 
     if (configWindow.fullscreen) {
-        SDL_SetWindowFullscreen(sSdlWindow, true);
+        SDL_SetWindowFullscreen(sSDLWindow, true);
     } else {
-        SDL_SetWindowFullscreen(sSdlWindow, false);
+        SDL_SetWindowFullscreen(sSDLWindow, false);
         SDL_ShowCursor();
         configWindow.exiting_fullscreen = true;
     }
@@ -97,8 +97,8 @@ static void gfx_wm_reset_dimension_and_pos(void) {
     int xpos = (configWindow.x == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.x;
     int ypos = (configWindow.y == WAPI_WIN_CENTERPOS) ? SDL_WINDOWPOS_CENTERED : configWindow.y;
 
-    SDL_SetWindowSize(sSdlWindow, configWindow.w, configWindow.h);
-    SDL_SetWindowPosition(sSdlWindow, xpos, ypos);
+    SDL_SetWindowSize(sSDLWindow, configWindow.w, configWindow.h);
+    SDL_SetWindowPosition(sSDLWindow, xpos, ypos);
 }
 
 void gfx_wm_init(const char *window_title) {
@@ -110,7 +110,7 @@ void gfx_wm_init(const char *window_title) {
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_StopTextInput(sSdlWindow);
+    SDL_StopTextInput(sSDLWindow);
 
 #if defined(_WIN32)
     currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : (s32) configGraphicsBackend;
@@ -143,7 +143,7 @@ void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
         return;
     }
     int w, h;
-    SDL_GetWindowSize(sSdlWindow, &w, &h);
+    SDL_GetWindowSize(sSDLWindow, &w, &h);
     if (width) { *width = w; }
     if (height) { *height = h; }
 }
@@ -159,12 +159,14 @@ static void gfx_wm_onkeydown(int scancode) {
 
     if (kb_key_down) {
         kb_key_down(translate_sdl_scancode(scancode));
+        kb_keys_curr_down[scancode] = true;
     }
 }
 
 static void gfx_wm_onkeyup(int scancode) {
     if (kb_key_up) {
         kb_key_up(translate_sdl_scancode(scancode));
+        kb_keys_curr_down[scancode] = false;
     }
 }
 
@@ -283,12 +285,12 @@ int gfx_wm_get_max_msaa(void) {
 
 void gfx_wm_set_window_title(const char *title) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_SetWindowTitle(sSdlWindow, title);
+    SDL_SetWindowTitle(sSDLWindow, title);
 }
 
 void gfx_wm_reset_window_title(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_SetWindowTitle(sSdlWindow, TITLE);
+    SDL_SetWindowTitle(sSDLWindow, TITLE);
 }
 
 void gfx_wm_shutdown(void) {
@@ -296,24 +298,29 @@ void gfx_wm_shutdown(void) {
     if (SDL_WasInit(0)) {
         SDL_GLContext ctx = SDL_GL_GetCurrentContext();
         if (ctx) { SDL_GL_DestroyContext(ctx); }
-        if (sSdlWindow) { SDL_DestroyWindow(sSdlWindow); sSdlWindow = NULL; }
+        if (sSDLWindow) { SDL_DestroyWindow(sSDLWindow); sSDLWindow = NULL; }
         SDL_Quit();
     }
 }
 
 bool gfx_wm_has_focus(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return true; }
-    return (SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_INPUT_FOCUS);
+    return (SDL_GetWindowFlags(sSDLWindow) & SDL_WINDOW_INPUT_FOCUS);
 }
 
 void gfx_wm_start_text_input(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_StartTextInput(sSdlWindow);
+    SDL_StartTextInput(sSDLWindow);
 }
 
 void gfx_wm_stop_text_input(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_StopTextInput(sSdlWindow);
+    SDL_StopTextInput(sSDLWindow);
+}
+
+bool gfx_wm_text_input_active(void) {
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return false; }
+    return SDL_TextInputActive(sSDLWindow);
 }
 
 char *gfx_wm_get_clipboard_text(void) {

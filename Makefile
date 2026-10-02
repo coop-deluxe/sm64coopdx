@@ -590,6 +590,11 @@ PALETTES_DIR := palettes
 # Remove old palettes dir
 _ := $(shell rm -rf ./$(BUILD_DIR)/$(PALETTES_DIR))
 
+DATABASES_DIR := databases
+
+# Remove old databases dir
+_ := $(shell rm -rf ./$(BUILD_DIR)/$(DATABASES_DIR))
+
 # Automatic dependency files
 DEP_FILES := $(O_FILES:.o=.d) $(ULTRA_O_FILES:.o=.d) $(GODDARD_O_FILES:.o=.d) $(BUILD_DIR)/$(LD_SCRIPT).d
 
@@ -1172,6 +1177,9 @@ $(BUILD_DIR)/$(MOD_DIR):
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
 
+$(BUILD_DIR)/$(DATABASES_DIR):
+	@$(CP) -f -r $(DATABASES_DIR) $(BUILD_DIR)
+
 # Extra object file dependencies
 
 ifeq ($(TARGET_N64),1)
@@ -1511,7 +1519,7 @@ ifeq ($(TARGET_N64),1)
   $(BUILD_DIR)/$(TARGET).objdump: $(ELF)
 	$(OBJDUMP) -D $< > $@
 else
-  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(UPDATER_EXEC) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR)
+  $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS) $(BUILD_DIR)/$(DISCORD_SDK_LIBS) $(BUILD_DIR)/$(COOPNET_LIBS) $(BUILD_DIR)/$(UPDATER_EXEC) $(BUILD_DIR)/$(LANG_DIR) $(BUILD_DIR)/$(MOD_DIR) $(BUILD_DIR)/$(PALETTES_DIR) $(BUILD_DIR)/$(DATABASES_DIR)
 	@$(PRINT) "$(GREEN)Linking executable: $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
@@ -1548,6 +1556,7 @@ all:
     cp -r build/us_pc/lang $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/dynos $(APP_RESOURCES_DIR); \
     cp -r build/us_pc/palettes $(APP_RESOURCES_DIR); \
+    cp -r build/us_pc/databases $(APP_RESOURCES_DIR); \
 		cp build/us_pc/discord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libdiscord_game_sdk.dylib $(APP_MACOS_DIR); \
     cp build/us_pc/libcoopnet.dylib $(APP_MACOS_DIR); \
