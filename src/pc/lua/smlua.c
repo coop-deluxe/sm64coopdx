@@ -5,6 +5,8 @@
 #include "pc/mods/mods.h"
 #include "pc/mods/mods_utils.h"
 #include "pc/mods/mod_storage.h"
+#include "pc/mods/mod_presets.h"
+#include "pc/mods/mod_options.h"
 #include "pc/mods/mod_fs.h"
 #include "pc/crash_handler.h"
 #include "pc/lua/utils/smlua_text_utils.h"
@@ -398,6 +400,15 @@ void smlua_init(void) {
     dynos_behavior_hook_all_custom_behaviors();
 
     smlua_call_event_hooks(HOOK_ON_MODS_LOADED);
+
+    // restore the mod configuration held by the active mod preset
+    mod_presets_apply_active_settings();
+
+    // hand over any value chosen from the mods panel while the mod was not running
+    mod_options_apply_pending();
+
+    // remember what each mod offers, so the mods panel can show and edit it while nothing runs
+    mod_options_record_live();
 }
 
 void smlua_update(void) {

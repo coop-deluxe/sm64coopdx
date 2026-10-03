@@ -42,6 +42,8 @@ struct Mod {
     u16 fileCapacity;
     bool isDirectory;
     bool enabled;
+    bool favorited;
+    bool hasModMenu;
     bool selectable;
     bool renderBehindHud;
     bool pausable;

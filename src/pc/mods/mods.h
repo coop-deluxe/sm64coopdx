@@ -31,6 +31,8 @@ void mods_clear(struct Mods* mods);
 void mods_delete_folder(char* path);
 void mods_refresh_local(void);
 void mods_enable(char* relativePath);
+void mods_disable_all(void);
+void mods_set_favorited(const char* relativePath, bool favorited);
 void mods_init(void);
 void mods_shutdown(void);
 
