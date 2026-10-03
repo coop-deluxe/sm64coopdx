@@ -155,7 +155,13 @@ void gfx_shader_remove_frame_pass(int framePassIndex);
 int gfx_shader_get_current_frame_pass_index();
 /* |description|Gets the current active frame pass. If there is no active frame pass, it returns nil|descriptionEnd| */
 struct FramePass *gfx_shader_get_current_frame_pass();
+/* |description|Bind a sampler using a texture id. A texture id may be obtained from a `FramePass` or the `gfx_get_render_texture_from_texture` function|descriptionEnd| */
+void gfx_shader_bind_sampler(const char *name, s64 luaTextureId);
 
+/* |description| Gets render texture from texture address. A render texture may be used with `gfx_shader_bind_sampler` |descriptionEnd| */
+OVERLOAD(gfx_get_render_texture_from_texture) s64 gfx_get_render_texture_from_texture(const Texture *addr);
+/* |description| Gets render texture from texture info. A render texture may be used with `gfx_shader_bind_sampler` |descriptionEnd| */
+OVERLOAD(gfx_get_render_texture_from_texture) s64 gfx_get_render_texture_from_texture_info(struct TextureInfo *texInfo);
 
 /* |description|
 Gets a vertex buffer of the current mod from its name.

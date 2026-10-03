@@ -66,8 +66,8 @@ struct RSP {
 struct FramePass {
     // opengl
     u32 fbo;
-    u32 depthBuffer;
-    u64 passTexture;
+    u64 colorTexture;
+    u64 depthTexture;
 
     // modern renderers
     void *colorTex;

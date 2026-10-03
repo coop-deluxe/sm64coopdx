@@ -162,16 +162,6 @@ enum ShaderStage gSelectedShaderStage = SHADER_STAGE_ANY;
 
 static u32 sFrameCount = 0;
 
-// 4x4 pink-black checkerboard texture to indicate missing textures
-#define MISSING_W 4
-#define MISSING_H 4
-UNUSED static const uint8_t missing_texture[MISSING_W * MISSING_H * 4] = {
-    0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,
-    0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,
-    0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
-    0x00, 0x00, 0x00, 0xFF,  0x00, 0x00, 0x00, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,  0xFF, 0x00, 0xFF, 0xFF,
-};
-
 static bool sOnlyTextureChangeOnAddrChange = false;
 static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, const uint8_t* addr) {
     if (tile_number >= MAX_TILES) { return; }
@@ -344,10 +334,6 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
     return sPrevCombinerForLookup = comb;
 }
 
-void gfx_texture_cache_clear(void) {
-    memset(&gfx_texture_cache, 0, sizeof(gfx_texture_cache));
-}
-
 static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, const uint8_t *orig_addr, uint32_t fmt, uint32_t siz) {
     size_t hash = (uintptr_t)orig_addr;
 #define CMPADDR(x, y) x == y
@@ -372,7 +358,7 @@ static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, co
     if (!node) { return false; }
     *node = &gfx_texture_cache.pool[gfx_texture_cache.pool_pos++];
     if ((*node)->texture_addr == NULL) {
-        (*node)->texture_id = gfx_rapi->new_texture();
+        (*node)->texture_id = gfx_rapi->get_texture_id(orig_addr);
     }
     gfx_rapi->select_texture(tile, (*node)->texture_id);
     gfx_rapi->set_sampler_parameters(tile, false, 0, 0);
@@ -2381,8 +2367,8 @@ static void gfx_process_lua_passes(Gfx *commands, bool *isLuaPassesActive) {
 
         // bind last pass textures
         if (i > 0) {
-            gfx_rapi->bind_texture_using_name("uPassColorTex", gFramePasses[i - 1].passTexture);
-            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gFramePasses[i - 1].depthTex);
+            gfx_rapi->bind_texture_using_name("uPassColorTex", gFramePasses[i - 1].colorTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", gFramePasses[i - 1].depthTexture);
         }
 
         if (framePass->drawWorldGeometry) {
@@ -2468,17 +2454,17 @@ void gfx_run(Gfx *commands) {
     gfx_rapi->start_frame(); // resets color and depth
 
     if (gDefaultGeoFramePass.active) {
-        if (gDefaultGeoFramePass.passTexture != 0) {
-            gfx_rapi->bind_texture_using_name("uPassColorTex", gDefaultGeoFramePass.passTexture);
-            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gDefaultGeoFramePass.depthTex);
+        if (gDefaultGeoFramePass.colorTexture != 0) {
+            gfx_rapi->bind_texture_using_name("uPassColorTex", gDefaultGeoFramePass.colorTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gDefaultGeoFramePass.depthTexture);
         }
     } else {
         u64 lastValidPassTexture = 0;
         u64 lastValidDepthTexture = 0;
         for (int i = MAX_CUSTOM_FRAME_PASSES - 1; i >= 0; i--) {
-            if (gFramePasses[i].active && gFramePasses[i].passTexture != 0 && gFramePasses[i].depthTex != NULL) {
-                lastValidPassTexture = gFramePasses[i].passTexture;
-                lastValidDepthTexture = (u64)gFramePasses[i].depthTex;
+            if (gFramePasses[i].active && gFramePasses[i].colorTexture != 0 && gFramePasses[i].depthTexture != 0) {
+                lastValidPassTexture = gFramePasses[i].colorTexture;
+                lastValidDepthTexture = gFramePasses[i].depthTexture;
                 break;
             }
         }
@@ -2490,6 +2476,7 @@ void gfx_run(Gfx *commands) {
     }
 
     gfx_draw_fullscreen_quad();
+    gfx_end_frame_render();
 }
 
 void gfx_end_frame_render(void) {

@@ -44,8 +44,11 @@
 
 struct GLTexture {
     GLuint tex;
-    GLfloat size[2];
+    const Texture *addr;
+    u32 width;
+    u32 height;
     bool filter;
+    bool uploaded;
 };
 
 struct InternalTexture {
@@ -55,17 +58,17 @@ struct InternalTexture {
 };
 
 static struct ShaderProgram sShaderProgramPool[MAX_FRAME_PASSES][CC_MAX_SHADERS];
-static uint8_t sShaderProgramPoolSize[MAX_FRAME_PASSES] = { 0 };
-static uint8_t sShaderProgramPoolIndex[MAX_FRAME_PASSES] = { 0 };
+static u8 sShaderProgramPoolSize[MAX_FRAME_PASSES] = { 0 };
+static u8 sShaderProgramPoolIndex[MAX_FRAME_PASSES] = { 0 };
 
 static struct ShaderProgram sPostProcessShaderProgramPool[MAX_FRAME_PASSES];
 
 static GLuint sOpenglVbo;
 static GLuint sOpenglVao;
 
-static int sTextureCacheSize = 0;
-static int sTextureCacheCount = 0;
 static struct GLTexture *sTextureCache = NULL;
+static u32 sTextureCacheSize = 0;
+static u32 sTextureCacheCount = 0;
 
 static struct InternalTexture sInternalTextures[MAX_SHADER_SAMPLERS] = { 0 };
 static u32 sInternalTexturesCount = 0;
@@ -77,7 +80,38 @@ static int sCurrentTextureIndex = 0;
 
 static GLint sMaxTextureUnits = 0;
 
+static GLuint sFallbackTexture = 0;
+
 static const char *sVanillaTexUniformNames[MAX_TEXTURES] = { "uTex0", "uTex1" };
+
+static void gfx_opengl_cleanup_internal_textures(void) {
+    // preserve vanilla internal textures
+    struct InternalTexture vanillaInternalTextures[MAX_TEXTURES];
+    u32 vanillaTextureCount = 0;
+
+    for (u32 i = 0; i < sInternalTexturesCount; i++) {
+        // check if it's a vanilla texture
+        for (u32 j = 0; j < MAX_TEXTURES; j++) {
+            if (strcmp(sInternalTextures[i].name, sVanillaTexUniformNames[j]) == 0) {
+                // copy it to readd later
+                vanillaInternalTextures[vanillaTextureCount++] = sInternalTextures[i];
+
+                if (vanillaTextureCount == MAX_TEXTURES) { break; }
+            }
+        }
+
+        if (vanillaTextureCount == MAX_TEXTURES) { break; }
+    }
+
+    // clear internal textures
+    memset(sInternalTextures, 0, sizeof(sInternalTextures));
+    sInternalTexturesCount = vanillaTextureCount;
+
+    // restore vanilla internal textures into cache
+    for (u32 i = 0; i < vanillaTextureCount; i++) {
+        sInternalTextures[i] = vanillaInternalTextures[i];
+    }
+}
 
 static bool gfx_opengl_is_legacy(void);
 
@@ -112,7 +146,9 @@ static inline void gfx_opengl_set_texture_uniforms(struct ShaderProgram *prg, co
 
     // current texture uniform
     if (sCurrentTextures[tile]) {
-        glUniform2f(prg->uniformLocations[tile * 2 + 0], sCurrentTextures[tile]->size[0], sCurrentTextures[tile]->size[1]);
+        f32 width = (f32)sCurrentTextures[tile]->width;
+        f32 height = (f32)sCurrentTextures[tile]->height;
+        glUniform2f(prg->uniformLocations[tile * 2 + 0], width, height);
         glUniform1i(prg->uniformLocations[tile * 2 + 1], sCurrentTextures[tile]->filter);
     }
 }
@@ -407,7 +443,7 @@ static struct ShaderProgram *gfx_opengl_lookup_shader(struct ColorCombiner *cc) 
     return NULL;
 }
 
-static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, uint8_t *num_inputs, bool used_textures[2]) {
+static void gfx_opengl_shader_get_info(struct ShaderProgram *prg, u8 *num_inputs, bool used_textures[2]) {
     *num_inputs = prg->numInputs;
     used_textures[0] = prg->usedTextures[0];
     used_textures[1] = prg->usedTextures[1];
@@ -424,8 +460,8 @@ static void gfx_opengl_create_framebuffer(struct FramePass *framePass) {
     gfx_get_frame_pass_viewport_dimensions(framePass, &viewportWidth, &viewportHeight);
 
     // setup color pass texture
-    glGenTextures(1, (GLuint *)&framePass->passTexture);
-    glBindTexture(GL_TEXTURE_2D, framePass->passTexture);
+    glGenTextures(1, (GLuint *)&framePass->colorTexture);
+    glBindTexture(GL_TEXTURE_2D, framePass->colorTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, viewportWidth, viewportHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
     // setup color filter
@@ -434,11 +470,11 @@ static void gfx_opengl_create_framebuffer(struct FramePass *framePass) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, colorFilter);
 
     // create texture
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framePass->passTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framePass->colorTexture, 0);
 
     // setup depth texture
-    glGenTextures(1, (GLuint *)&framePass->depthBuffer);
-    glBindTexture(GL_TEXTURE_2D, framePass->depthBuffer);
+    glGenTextures(1, (GLuint *)&framePass->depthTexture);
+    glBindTexture(GL_TEXTURE_2D, framePass->depthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, viewportWidth, viewportHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 
     // setup depth filter
@@ -452,29 +488,21 @@ static void gfx_opengl_create_framebuffer(struct FramePass *framePass) {
     glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
 
     // create depth texture
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framePass->depthBuffer, 0);
-
-    // for api, set depthTex to point to the depth buffer
-    framePass->depthTex = (void *)(u64)framePass->depthBuffer;
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, framePass->depthTexture, 0);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
         LOG_ERROR("Framebuffer is not complete!");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
 }
 
 static void gfx_opengl_delete_framebuffer(struct FramePass *framePass) {
     if (framePass->fbo > 0) { glDeleteFramebuffers(1, &framePass->fbo); framePass->fbo = 0; }
-    if (framePass->depthBuffer > 0) { glDeleteTextures(1, &framePass->depthBuffer); framePass->depthBuffer = 0; }
-    framePass->depthTex = NULL;
-    if (framePass->passTexture > 0) { glDeleteTextures(1, (GLuint *)&framePass->passTexture); framePass->passTexture = 0; }
+    if (framePass->depthTexture > 0) { glDeleteTextures(1, (GLuint *)&framePass->depthTexture); framePass->depthTexture = 0; }
+    if (framePass->colorTexture > 0) { glDeleteTextures(1, (GLuint *)&framePass->colorTexture); framePass->colorTexture = 0; }
 
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    gfx_opengl_cleanup_internal_textures();
 }
 
 static void gfx_opengl_set_framebuffer(struct FramePass *framePass) {
@@ -483,9 +511,6 @@ static void gfx_opengl_set_framebuffer(struct FramePass *framePass) {
     glBindFramebuffer(GL_FRAMEBUFFER, framePass->fbo);
     glViewport(0, 0, viewportWidth, viewportHeight);
     glScissor(0, 0, viewportWidth, viewportHeight);
-
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
 }
 
 static void gfx_opengl_reset_framebuffer(void) {
@@ -495,8 +520,7 @@ static void gfx_opengl_reset_framebuffer(void) {
     glViewport(0, 0, windowWidth, windowHeight);
     glScissor(0, 0, windowWidth, windowHeight);
 
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    gfx_opengl_cleanup_internal_textures();
 }
 
 struct ShaderUniformBlock *gfx_opengl_get_active_uniform_buffer(enum ShaderStage stage) {
@@ -536,7 +560,7 @@ void gfx_opengl_set_uniform_buffer(enum ShaderStage stage, const char *name) {
     }
 }
 
-static void gfx_opengl_set_uniform_for_specific_shader(struct ShaderUniformBlock *uniformBlock, const char *name, const void *data, uint32_t numElements) {
+static void gfx_opengl_set_uniform_for_specific_shader(struct ShaderUniformBlock *uniformBlock, const char *name, const void *data, u32 numElements) {
     for (int i = 0; i < MAX_SHADER_UNIFORMS; i++) {
         struct ShaderUniform *uniform = &uniformBlock->uniforms[i];
         if (uniform->size == 0) { break; }
@@ -559,7 +583,7 @@ static void gfx_opengl_set_uniform_for_specific_shader(struct ShaderUniformBlock
     }
 }
 
-void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, const void *data, uint32_t numElements) {
+void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, const void *data, u32 numElements) {
     if (prg == NULL) {
         if (sShaderProgram == NULL) { return; }
         prg = sShaderProgram;
@@ -573,21 +597,35 @@ void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, const v
     }
 }
 
-static GLuint gfx_opengl_new_texture(void) {
+static u32 gfx_opengl_get_texture_id(const Texture *addr) {
+    // allocate to the texture cache a new texture slot
     if (sTextureCacheCount >= sTextureCacheSize) {
         sTextureCacheSize += TEX_CACHE_STEP;
         sTextureCache = realloc(sTextureCache, sizeof(struct GLTexture) * sTextureCacheSize);
-        if (!sTextureCache) sys_fatal("out of memory allocating texture cache");
+        if (!sTextureCache) { sys_fatal("Out of memory allocating to the texture cache!"); }
+
         // invalidate these because they might be pointing to garbage now
         sCurrentTextures[0] = NULL;
         sCurrentTextures[1] = NULL;
     }
+    sTextureCache[sTextureCacheCount].addr = addr;
+
     glGenTextures(1, &sTextureCache[sTextureCacheCount].tex);
     return sTextureCacheCount++;
 }
 
+static u64 gfx_opengl_get_render_texture(const Texture *addr) {
+    // iterate through cache and find render texture via the texture info
+    for (u32 i = 0; i < sTextureCacheCount; i++) {
+        if (sTextureCache[i].addr == addr) {
+            return (u64)sTextureCache[i].tex;
+        }
+    }
+    return 0;
+}
+
 static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
-    sCurrentTextures[tile] = sTextureCache + texture_id;
+    sCurrentTextures[tile] = &sTextureCache[texture_id];
     sCurrentTextureIndex = tile;
     glActiveTexture(GL_TEXTURE0 + tile);
     glBindTexture(GL_TEXTURE_2D, sCurrentTextures[tile]->tex);
@@ -608,13 +646,49 @@ static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
     sInternalTexturesCount++;
 }
 
-static void gfx_opengl_bind_texture_using_name(const char *name, u64 textureId) {
+static bool gfx_opengl_render_texture_valid(u64 renderTexture) {
+    u32 texture = (u32)renderTexture;
+    if (texture == 0) { return false; }
+
+    // check the texture cache
+    for (u32 i = 0; i < sTextureCacheCount; i++) {
+        if (sTextureCache[i].tex == texture) {
+            return true;
+        }
+    }
+
+    // check frame passes
+    for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
+        struct FramePass *framePass = &gFramePasses[i];
+        if (!framePass->active) { continue; }
+        if (framePass->colorTexture == texture) {
+            return true;
+        }
+
+        if (framePass->depthTexture == texture) {
+            return true;
+        }
+    }
+
+    if (gDefaultGeoFramePass.colorTexture == texture) {
+        return true;
+    }
+
+    if (gDefaultGeoFramePass.depthTexture == texture) {
+        return true;
+    }
+
+    // the texture id must be invalid
+    return false;
+}
+
+static void gfx_opengl_bind_texture_using_name(const char *name, u64 renderTexture) {
     if (name == NULL) { return; }
 
     // check for an existing entry with the same name
     for (u32 i = 0; i < sInternalTexturesCount; i++) {
         if (sInternalTextures[i].name != NULL && strcmp(sInternalTextures[i].name, name) == 0) {
-            sInternalTextures[i].tex = (u32)textureId;
+            sInternalTextures[i].tex = (u32)renderTexture;
             return;
         }
     }
@@ -622,25 +696,26 @@ static void gfx_opengl_bind_texture_using_name(const char *name, u64 textureId) 
     if (sInternalTexturesCount >= MAX_SHADER_SAMPLERS) { return; }
 
     sInternalTextures[sInternalTexturesCount].name = name;
-    sInternalTextures[sInternalTexturesCount].tex = (u32)textureId;
+    sInternalTextures[sInternalTexturesCount].tex = (u32)renderTexture;
     sInternalTexturesCount++;
 }
 
-static void gfx_opengl_upload_texture(const uint8_t *rgba32_buf, int width, int height) {
+static void gfx_opengl_upload_texture(const u8 *rgba32_buf, int width, int height) {
     if (width <= 0 || height <= 0) { sys_fatal("Texture dimensions are invalid!"); }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba32_buf);
-    sCurrentTextures[sCurrentTextureIndex]->size[0] = width;
-    sCurrentTextures[sCurrentTextureIndex]->size[1] = height;
+    sCurrentTextures[sCurrentTextureIndex]->width = width;
+    sCurrentTextures[sCurrentTextureIndex]->height = height;
+    gfx_opengl_cleanup_internal_textures();
 }
 
-static uint32_t gfx_cm_to_opengl(uint32_t val) {
+static u32 gfx_cm_to_opengl(u32 val) {
     if (val & G_TX_CLAMP) {
         return GL_CLAMP_TO_EDGE;
     }
     return (val & G_TX_MIRROR) ? GL_MIRRORED_REPEAT : GL_REPEAT;
 }
 
-static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint32_t cms, uint32_t cmt) {
+static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, u32 cms, u32 cmt) {
     const GLenum filter = linear_filter ? GL_LINEAR : GL_NEAREST;
     glActiveTexture(GL_TEXTURE0 + tile);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
@@ -652,8 +727,7 @@ static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, uint
         sCurrentTextures[tile]->filter = linear_filter;
         gfx_opengl_set_texture_uniforms(sShaderProgram, tile);
     }
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    gfx_opengl_cleanup_internal_textures();
 }
 
 static void gfx_opengl_set_depth_test(bool depth_test) {
@@ -729,16 +803,23 @@ static void upload_opengl_uniform_buffers(struct Shader *shader) {
 
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     //printf("flushing %d tris\n", buf_vbo_num_tris);
+    smlua_call_event_hooks(HOOK_ON_DRAW_TRIANGLE);
 
-    // bind samplers
-    for (u32 i = 0; i < sInternalTexturesCount; i++) {
-        struct Shader *fragmentShader = sShaderProgram->fragmentShader;
-        for (s32 j = 0; j < fragmentShader->samplerCount; j++) {
+    struct Shader *fragmentShader = sShaderProgram->fragmentShader;
+    for (s32 j = 0; j < fragmentShader->samplerCount; j++) {
+        GLuint texToBind = sFallbackTexture;
+
+        for (u32 i = 0; i < sInternalTexturesCount; i++) {
             if (strcmp(fragmentShader->shaderSamplers[j].name, sInternalTextures[i].name) == 0) {
-                glActiveTexture(GL_TEXTURE0 + fragmentShader->shaderSamplers[j].binding);
-                glBindTexture(GL_TEXTURE_2D, sInternalTextures[i].tex);
+                if (sInternalTextures[i].tex != 0) {
+                    texToBind = sInternalTextures[i].tex;
+                }
+                break;
             }
         }
+
+        glActiveTexture(GL_TEXTURE0 + fragmentShader->shaderSamplers[j].binding);
+        glBindTexture(GL_TEXTURE_2D, texToBind);
     }
 
     // configure culling
@@ -747,9 +828,9 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     } else {
         glEnable(GL_CULL_FACE);
         if (gGpuCullMode == GPU_CULL_MODE_FRONT) {
-            glCullFace(GL_FRONT);
+            glCullFace(gfx_opengl_is_legacy() ? GL_BACK : GL_FRONT);
         } else if (gGpuCullMode == GPU_CULL_MODE_BACK) {
-            glCullFace(GL_BACK);
+            glCullFace(gfx_opengl_is_legacy() ? GL_FRONT : GL_BACK);
         }
     }
 
@@ -758,7 +839,7 @@ static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_
     if (sShaderProgram->usedFog) {
         gfx_update_fog_uniforms();
     }
-    smlua_call_event_hooks(HOOK_ON_DRAW_TRIANGLE);
+
     upload_opengl_uniform_buffers(sShaderProgram->vertexShader);
     upload_opengl_uniform_buffers(sShaderProgram->fragmentShader);
 
@@ -828,6 +909,21 @@ static void gfx_opengl_init(void) {
 
     // query max texture units
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &sMaxTextureUnits);
+
+    // create fallback texture
+    u8 fallbackPixels[32] = {
+        255, 0, 0, 255,  0, 0, 0, 255,
+        0, 0, 0, 255,      255, 0, 0, 255,
+    };
+
+    glGenTextures(1, &sFallbackTexture);
+    glBindTexture(GL_TEXTURE_2D, sFallbackTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, fallbackPixels);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 bool gfx_opengl_check_compatibility(void) {
@@ -870,8 +966,7 @@ static void gfx_opengl_start_frame(void) {
 }
 
 static void gfx_opengl_end_frame(void) {
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    gfx_opengl_cleanup_internal_textures();
 }
 
 static void gfx_opengl_finish_render(void) {
@@ -914,8 +1009,10 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_get_active_uniform_buffer,
     gfx_opengl_set_uniform_buffer,
     gfx_opengl_set_uniform,
-    gfx_opengl_new_texture,
+    gfx_opengl_get_texture_id,
+    gfx_opengl_get_render_texture,
     gfx_opengl_select_texture,
+    gfx_opengl_render_texture_valid,
     gfx_opengl_bind_texture_using_name,
     gfx_opengl_upload_texture,
     gfx_opengl_set_sampler_parameters,

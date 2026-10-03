@@ -966,6 +966,8 @@
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
+| colorTexture | `integer` | read-only |
+| depthTexture | `integer` | read-only |
 | width | `integer` |  |
 | height | `integer` |  |
 | drawWorldGeometry | `boolean` |  |

@@ -414,7 +414,7 @@ structs_excluded = [
 
 # For each struct, expose only these fields
 structs_fields_whitelist = { "__name__": "structs_fields_whitelist",
-    "FramePass": [ "width", "height", "drawWorldGeometry", "clearColor", "passFilter" ],
+    "FramePass": [ "width", "height", "drawWorldGeometry", "clearColor", "passFilter", "colorTexture", "depthTexture" ],
 }
 
 # For each struct, do not expose these fields
@@ -510,6 +510,7 @@ structs_fields_immutable = {
     "FirstPersonCamera": [ "enabled" ],
     "ModAudio": [ "flags" ],
     "Gfx": [ "w0", "w1" ], # to protect from invalid type conversions
+    "FramePass": [ "colorTexture", "depthTexture" ],
     "DialogEntry": [ "unused", "linesPerBox", "leftOffset", "width", "str", "text", "replaced"],
     "ModFsFile": [ "*" ],
     "ModFs": [ "*" ],

@@ -79,5 +79,6 @@
 | HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE | Called when a post process fragment shader is created. Return a `string` to override the shader | |
 | HOOK_BEFORE_DRAW_GEOMETRY | Called before the entire world is drawn | |
 | HOOK_ON_DRAW_GEOMETRY | Called after the entire world is drawn | |
-| HOOK_ON_DRAW_TRIANGLE | Called for every single triangle, rendered, only use this hook in very specific cases | |
+| HOOK_BEFORE_DRAW_TRIANGLE | Called before a triangle is rendered, only use this hook in very specific cases as it may use a lot of performance | |
+| HOOK_ON_DRAW_TRIANGLE | Called for every single triangle rendered, only use this hook in very specific cases | |
 | HOOK_ON_SET_SHADER_PROGRAM | Called when the shader program is being set during either triangle drawing or post processing quad drawing | |

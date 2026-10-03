@@ -11935,6 +11935,27 @@ function gfx_shader_get_current_frame_pass()
 end
 
 --- @param name string
+--- @param luaTextureId integer
+--- Bind a sampler using a texture id. A texture id may be obtained from a `FramePass` or the `gfx_get_texture_id_from_texture_info` function
+function gfx_shader_bind_sampler(name, luaTextureId)
+    -- ...
+end
+
+--- @param addr Pointer_Texture
+--- @return integer
+--- Gets render texture from texture address. A render texture may be used with `gfx_shader_bind_sampler`
+function gfx_get_render_texture_from_texture(addr)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @return integer
+--- Gets render texture from texture info. A render texture may be used with `gfx_shader_bind_sampler`
+function gfx_get_render_texture_from_texture(texInfo)
+    -- ...
+end
+
+--- @param name string
 --- @return Pointer_Vtx
 --- @return integer count
 --- Gets a vertex buffer of the current mod from its name.<br>

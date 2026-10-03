@@ -1272,6 +1272,10 @@ void gfx_convert_spirv_to_glsl_410(char **shaderCode, struct Shader *shader) {
     spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_GLSL_VERSION, 410);
     spvc_compiler_options_set_bool(options, SPVC_COMPILER_OPTION_GLSL_ES, false);
     spvc_compiler_options_set_bool(options, SPVC_COMPILER_OPTION_GLSL_ENABLE_420PACK_EXTENSION, false);
+    if (gfx_opengl_api.is_legacy()) {
+        spvc_compiler_options_set_bool(options, SPVC_COMPILER_OPTION_FIXUP_DEPTH_CONVENTION, true);
+        spvc_compiler_options_set_bool(options, SPVC_COMPILER_OPTION_FLIP_VERTEX_Y, true);
+    }
     spvc_compiler_install_compiler_options(compiler, options);
 
     spvc_compiler_compile(compiler, &glsl_code);

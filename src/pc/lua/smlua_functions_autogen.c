@@ -32252,6 +32252,51 @@ int smlua_func_gfx_shader_get_current_frame_pass(lua_State* L) {
     return 1;
 }
 
+int smlua_func_gfx_shader_bind_sampler(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "gfx_shader_bind_sampler", 2, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_shader_bind_sampler"); return 0; }
+    s64 luaTextureId = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "gfx_shader_bind_sampler"); return 0; }
+
+    gfx_shader_bind_sampler(name, luaTextureId);
+
+    return 0;
+}
+
+int smlua_func_gfx_get_render_texture_from_texture(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for 'gfx_get_render_texture_from_texture': Expected 1, Received %u", top);
+        return 0;
+    }
+
+    if (smlua_is_cpointer(L, 1, LVT_TEXTURE_P)) {
+        Texture * addr = (Texture *)smlua_to_cpointer(L, 1, LVT_TEXTURE_P);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_render_texture_from_texture"); return 0; }
+    
+        lua_pushinteger(L, gfx_get_render_texture_from_texture(addr));
+    
+        return 1;
+    } else {
+        struct TextureInfo *texInfo = smlua_to_texture_info(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "gfx_get_render_texture_from_texture"); return 0; }
+    
+        lua_pushinteger(L, gfx_get_render_texture_from_texture_info(texInfo));
+    
+        return 1;
+    }
+}
+
 int smlua_func_vtx_get_from_name(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38599,6 +38644,8 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "gfx_shader_remove_frame_pass", smlua_func_gfx_shader_remove_frame_pass);
     smlua_bind_function(L, "gfx_shader_get_current_frame_pass_index", smlua_func_gfx_shader_get_current_frame_pass_index);
     smlua_bind_function(L, "gfx_shader_get_current_frame_pass", smlua_func_gfx_shader_get_current_frame_pass);
+    smlua_bind_function(L, "gfx_shader_bind_sampler", smlua_func_gfx_shader_bind_sampler);
+    smlua_bind_function(L, "gfx_get_render_texture_from_texture", smlua_func_gfx_get_render_texture_from_texture);
     smlua_bind_function(L, "vtx_get_from_name", smlua_func_vtx_get_from_name);
     smlua_bind_function(L, "vtx_get_name", smlua_func_vtx_get_name);
     smlua_bind_function(L, "vtx_get_count", smlua_func_vtx_get_count);

@@ -98,17 +98,25 @@ static void gfx_dummy_renderer_set_uniform_buffer(UNUSED enum ShaderStage stage,
 static void gfx_dummy_renderer_set_uniform(UNUSED struct ShaderProgram *prg, UNUSED const char *name, UNUSED const void *data, UNUSED u32 numElements) {
 }
 
-static uint32_t gfx_dummy_renderer_new_texture(void) {
+static u32 gfx_dummy_renderer_get_texture_id(UNUSED const Texture *addr) {
+    return 0;
+}
+
+static u64 gfx_dummy_renderer_get_render_texture(UNUSED const Texture *addr) {
     return 0;
 }
 
 static void gfx_dummy_renderer_select_texture(UNUSED int tile, UNUSED uint32_t texture_id) {
 }
 
-static void gfx_dummy_renderer_bind_texture_using_name(UNUSED const char *name, UNUSED u64 textureId) {
+static bool gfx_dummy_renderer_render_texture_valid(UNUSED u64 renderTexture) {
+    return false;
 }
 
-static void gfx_dummy_renderer_upload_texture(UNUSED const uint8_t *rgba32_buf, UNUSED int width, UNUSED int height) {
+static void gfx_dummy_renderer_bind_texture_using_name(UNUSED const char *name, UNUSED u64 renderTexture) {
+}
+
+static void gfx_dummy_renderer_upload_texture(UNUSED const Texture *addr, UNUSED int width, UNUSED int height) {
 }
 
 static void gfx_dummy_renderer_set_sampler_parameters(UNUSED int tile, UNUSED bool linear_filter, UNUSED uint32_t cms, UNUSED uint32_t cmt) {
@@ -191,8 +199,10 @@ struct GfxRenderingAPI gfx_dummy_renderer_api = {
     gfx_dummy_renderer_get_active_uniform_buffer,
     gfx_dummy_renderer_set_uniform_buffer,
     gfx_dummy_renderer_set_uniform,
-    gfx_dummy_renderer_new_texture,
+    gfx_dummy_renderer_get_texture_id,
+    gfx_dummy_renderer_get_render_texture,
     gfx_dummy_renderer_select_texture,
+    gfx_dummy_renderer_render_texture_valid,
     gfx_dummy_renderer_bind_texture_using_name,
     gfx_dummy_renderer_upload_texture,
     gfx_dummy_renderer_set_sampler_parameters,

@@ -320,7 +320,6 @@ void produce_interpolation_frames_and_delay(void) {
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         send_display_list(gGfxSPTask);
-        gfx_end_frame_render();
         gfx_display_frame();
 
         // delay if our framerate is capped
@@ -458,7 +457,6 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     end_master_display_list();
     alloc_display_list(0);
     gfx_run((Gfx *)gGfxSPTask->task.t.data_ptr);
-    gfx_end_frame_render();
     display_and_vsync();
 
     // reset clear color

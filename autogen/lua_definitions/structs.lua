@@ -639,6 +639,8 @@
 --- @field public node GraphNode
 
 --- @class FramePass
+--- @field public colorTexture integer
+--- @field public depthTexture integer
 --- @field public width integer
 --- @field public height integer
 --- @field public drawWorldGeometry boolean

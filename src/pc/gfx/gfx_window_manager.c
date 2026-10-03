@@ -62,7 +62,7 @@ static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
 const char *gfx_wm_get_backend_name(enum GfxWindowBackend backend) {
     switch (backend) {
         case GFX_WINDOW_BACKEND_DUMMY: return "Dummy";
-        case GFX_WINDOW_BACKEND_OPENGL: return "OpenGL (Legacy)";
+        case GFX_WINDOW_BACKEND_OPENGL: return gfx_opengl_api.is_legacy() ? "OpenGL (Legacy)" : "OpenGL";
 #if defined(_WIN32) || defined(__linux)
 #ifdef _WIN32
         case GFX_WINDOW_BACKEND_DIRECTX: return "DirectX 12";
