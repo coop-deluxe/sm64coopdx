@@ -2,6 +2,7 @@
 
 #include "pc/lua/smlua.h"
 #include "smlua_anim_utils.h"
+#include "object_fields.h"
 #include "pc/debuglog.h"
 
 // models
@@ -108,118 +109,309 @@ struct Animation *get_mario_vanilla_animation(u16 index) {
  // custom animations //
 ///////////////////////
 
-struct CustomAnimation {
-    const char *name;
-    struct Animation *anim;
-    struct CustomAnimation *next;
-};
+static struct DynamicPool *sAnimationPool = NULL;
+static s32 sAnimationIndex = 0;
 
-struct CustomAnimation* sCustomAnimationHead = NULL;
-
-static struct CustomAnimation *get_custom_animation_node(const char *name) {
-    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
-        if (node->name && strcmp(node->name, name) == 0) {
-            return node;
-        }
+static struct AnimationInfo *find_animation_info_from_name(const char *name) {
+    if (!sAnimationPool) { return NULL; }
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        if (animInfo->name && !strcmp(name, animInfo->name)) { return animInfo; }
+        node = prev;
     }
     return NULL;
 }
 
-void smlua_anim_util_reset(void) {
-    for (struct CustomAnimation *node = sCustomAnimationHead; node;) {
-        struct CustomAnimation *next = node->next;
-        if (node->name) {
-            free((void *) node->name);
-        }
-        if (node->anim) {
-            if (node->anim->index) {
-                free((void *) node->anim->index);
-            }
-            if (node->anim->values) {
-                free((void *) node->anim->values);
-            }
-        }
-        free(node->anim);
-        free(node);
-        node = next;
+static struct AnimationInfo *find_animation_info(s32 index) {
+    if (!sAnimationPool) { return NULL; }
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        if (index == animInfo->index) { return animInfo; }
+        node = prev;
     }
-    sCustomAnimationHead = NULL;
+    return NULL;
 }
 
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength) {
+static void smlua_anim_util_free_info(struct AnimationInfo *animInfo) {
+    if (animInfo->name) {
+        free((void *)animInfo->name);
+    }
+    if (animInfo->anim) {
+        if (animInfo->anim->index) {
+            free((void *)animInfo->anim->index);
+        }
+        if (animInfo->anim->values) {
+            free((void *)animInfo->anim->values);
+        }
+        free(animInfo->anim);
+    }
+}
 
-    // NULL-checks
+void smlua_anim_util_reset(void) {
+    if (!sAnimationPool) { return; }
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        smlua_anim_util_free_info(animInfo);
+        node = prev;
+    }
+    dynamic_pool_free_pool(sAnimationPool);
+    sAnimationIndex = 0;
+    sAnimationPool = NULL;
+}
+
+struct Animation *smlua_anim_util_get_animation(const char *name) {
+    struct Animation *anim = dynos_animation_get(name);
+    if (anim) {
+        return anim;
+    }
+
+    struct AnimationInfo *animInfo = find_animation_info_from_name(name);
+    if (animInfo) {
+        return animInfo->anim;
+    }
+
+    LOG_LUA_LINE("smlua_anim_util_get: Failed to find animation with name '%s'", name);
+    return NULL;
+}
+
+struct AnimationTable *smlua_anim_util_get_table(const char *name) {
+    struct AnimationTable *animTable = dynos_animation_table_get(name);
+    if (!animTable) {
+        LOG_LUA_LINE("smlua_anim_util_get_table: Failed to find animation table with name '%s'", name);
+    }
+    return animTable;
+}
+
+static u16 *smlua_anim_util_to_u16_list(lua_State* L, int index, u32* length) {
+
+    // Get number of values
+    *length = lua_rawlen(L, index);
+    if (!*length) { LOG_LUA("smlua_to_u16_list: Table must not be empty"); return NULL; }
+    u16 *values = calloc(*length, sizeof(u16));
+
+    // Retrieve values
+    lua_pushnil(L);
+    s32 top = lua_gettop(L);
+    while (lua_next(L, index) != 0) {
+        int indexKey = lua_gettop(L) - 1;
+        int indexValue = lua_gettop(L) - 0;
+
+        lua_Integer key = smlua_to_integer(L, indexKey);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_to_u16_list: Failed to convert table key");
+            free(values);
+            return 0;
+        }
+
+        if (key < 1 || key > *length) {
+            LOG_LUA("smlua_to_u16_list: Table key out of bounds: " LUA_INTEGER_FMT, key);
+            free(values);
+            return 0;
+        }
+
+        u16 value = smlua_to_integer(L, indexValue);
+        if (!gSmLuaConvertSuccess) {
+            LOG_LUA("smlua_to_u16_list: Failed to convert table value");
+            free(values);
+            return 0;
+        }
+
+        values[key - 1] = value;
+        lua_settop(L, top);
+    }
+    lua_settop(L, top);
+    return values;
+}
+
+static s32 smlua_anim_util_register_animation_internal(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index) {
+    // Initialize animation pool
+    if (!sAnimationPool) {
+        sAnimationPool = dynamic_pool_init();
+    }
+    
+    lua_State *L = gLuaState;
+    
+    lua_rawgeti(L, LUA_REGISTRYINDEX, values);
+    s32 valuesIdx = lua_gettop(L);
+    lua_rawgeti(L, LUA_REGISTRYINDEX, index);
+    s32 indexIdx = lua_gettop(L);
+
+    u32 valuesLength;
+    u16 *valuesList = smlua_anim_util_to_u16_list(L, valuesIdx, &valuesLength);
+    if (!valuesList) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Failed to allocate values buffer");
+        lua_pop(L, 2);
+        luaL_unref(L, LUA_REGISTRYINDEX, values);
+        luaL_unref(L, LUA_REGISTRYINDEX, index);
+        return -1;
+    }
+    u32 indexLength;
+    u16 *indexList = smlua_anim_util_to_u16_list(L, indexIdx, &indexLength);
+    if (!indexList) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Failed to allocate index buffer");
+        free(valuesList);
+        lua_pop(L, 2);
+        luaL_unref(L, LUA_REGISTRYINDEX, values);
+        luaL_unref(L, LUA_REGISTRYINDEX, index);
+        return -1;
+    }
+
+    lua_pop(L, 2);
+    luaL_unref(L, LUA_REGISTRYINDEX, values);
+    luaL_unref(L, LUA_REGISTRYINDEX, index);
+
+    // Allocate an animation in the pool
+    struct AnimationInfo *animInfo = dynamic_pool_alloc(sAnimationPool, sizeof(struct AnimationInfo));
+    if (!animInfo) {
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Failed to allocate an animation in the animation pool");
+        free(valuesList);
+        free(indexList);
+        return -1;
+    }
+
+    if (name) {
+        animInfo->name = strdup(name);
+    }
+
+    animInfo->index                   = sAnimationIndex++;
+    animInfo->anim                    = calloc(1, sizeof(struct Animation));
+    animInfo->anim->flags             = flags;
+    animInfo->anim->animYTransDivisor = animYTransDivisor;
+    animInfo->anim->startFrame        = startFrame;
+    animInfo->anim->loopStart         = loopStart;
+    animInfo->anim->loopEnd           = loopEnd;
+    animInfo->anim->unusedBoneCount   = 0; //ANIMINDEX_NUMPARTS(indexList);
+    animInfo->anim->values            = valuesList;
+    animInfo->anim->index             = indexList;
+    animInfo->anim->valuesLength      = valuesLength;
+    animInfo->anim->indexLength       = indexLength;
+    animInfo->anim->length            = 0;
+
+    return animInfo->index;
+}
+
+s32 smlua_anim_util_register_animation_with_name(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index) {
+    // Ensure name is not empty
     if (!name) {
-        LOG_LUA_LINE("smlua_anim_util_register_animation: Parameter 'name' is NULL");
-        free(values);
-        free(index);
-        return;
+        LOG_LUA_LINE("smlua_anim_util_register_animation: Parameter 'name' is invalid");
+        luaL_unref(gLuaState, LUA_REGISTRYINDEX, values);
+        luaL_unref(gLuaState, LUA_REGISTRYINDEX, index);
+        return -1;
     }
 
     // Check if the name is not already taken
-    if (get_custom_animation_node(name)) {
+    if (find_animation_info_from_name(name)) {
         LOG_LUA_LINE("smlua_anim_util_register_animation: An animation named '%s' already exists", name);
-        free(values);
-        free(index);
-        return;
+        luaL_unref(gLuaState, LUA_REGISTRYINDEX, values);
+        luaL_unref(gLuaState, LUA_REGISTRYINDEX, index);
+        return -1;
     }
 
-    // Create a new node
-    struct CustomAnimation *node = calloc(1, sizeof(struct CustomAnimation));
-    node->name = strdup(name);
-    node->anim = calloc(1, sizeof(struct Animation));
-    node->anim->flags = flags;
-    node->anim->animYTransDivisor = animYTransDivisor;
-    node->anim->startFrame = startFrame;
-    node->anim->loopStart = loopStart;
-    node->anim->loopEnd = loopEnd;
-    node->anim->unusedBoneCount = 0;
-    node->anim->values = values;
-    node->anim->index = index;
-    node->anim->valuesLength = valuesLength;
-    node->anim->indexLength = indexLength;
-    node->anim->length = 0;
-    node->next = sCustomAnimationHead;
-    sCustomAnimationHead = node;
-    LOG_INFO("Registered custom animation: %s", name);
+    s32 animIndex = smlua_anim_util_register_animation_internal(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index);
+
+    if (animIndex != -1) {
+        LOG_INFO("smlua_anim_util_register_animation: Registered custom animation with name '%s', index %d", name, animIndex);
+    }
+    return animIndex;
 }
 
-void smlua_anim_util_set_animation(struct Object *obj, const char *name) {
+s32 smlua_anim_util_register_animation(s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index) {
+    s32 animIndex = smlua_anim_util_register_animation_internal(NULL, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index);
 
-    // NULL-checks
-    if (!obj) {
-        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'obj' is NULL");
-        return;
+    if (animIndex != -1) {
+        LOG_INFO("smlua_anim_util_register_animation: Registered custom animation with index %d", animIndex);
     }
+    return animIndex;
+}
+
+void smlua_anim_util_set_animation_with_name(struct Object *obj, const char *name) {
     if (!name) {
-        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'name' is NULL");
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'name' is invalid");
         return;
     }
 
     // Check if the animation exists
-    struct CustomAnimation *node = get_custom_animation_node(name);
-    if (!node) {
+    struct AnimationInfo *animInfo = find_animation_info_from_name(name);
+    if (!animInfo) {
         LOG_LUA_LINE("smlua_anim_util_set_animation: Animation '%s' doesn't exist", name);
         return;
     }
 
     // Set animation
-    obj->header.gfx.animInfo.curAnim = node->anim;
+    obj->header.gfx.animInfo.curAnim = animInfo->anim;
+}
+
+void smlua_anim_util_set_animation_with_index(struct Object *obj, s32 index) {
+    // Check if the animation exists
+    struct AnimationInfo *animInfo = find_animation_info(index);
+    if (!animInfo) {
+        LOG_LUA_LINE("smlua_anim_util_set_animation: Animation with index %d doesn't exist", index);
+        return;
+    }
+
+    // Set animation
+    obj->header.gfx.animInfo.curAnim = animInfo->anim;
+}
+
+void smlua_anim_util_set_animation(struct Object *obj, struct Animation *anim) {
+    // Set animation
+    obj->header.gfx.animInfo.curAnim = anim;
+}
+
+void smlua_anim_util_set_table(struct Object *obj, struct AnimationTable *animTable) {
+    // Set animation
+    obj->oAnimations = animTable;
 }
 
 const char *smlua_anim_util_get_current_animation_name(struct Object *obj) {
-
-    // NULL-checks
-    if (!obj) {
-        LOG_LUA_LINE("smlua_anim_util_set_animation: Parameter 'obj' is NULL");
-        return NULL;
-    }
+    if (!sAnimationPool) { return NULL; }
 
     // Check the animations
-    for (struct CustomAnimation *node = sCustomAnimationHead; node; node = node->next) {
-        if (node->anim == obj->header.gfx.animInfo.curAnim) {
-            return node->name;
-        }
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        if (animInfo->anim == obj->header.gfx.animInfo.curAnim) { return animInfo->name; }
+        node = prev;
     }
+
+    return NULL;
+}
+
+s32 smlua_anim_util_get_current_animation_index(struct Object *obj) {
+    // Check the animations
+    if (!sAnimationPool) { return -1; }
+
+    // Check the animations
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        if (animInfo->anim == obj->header.gfx.animInfo.curAnim) { return animInfo->index; }
+        node = prev;
+    }
+
+    return -1;
+}
+
+struct AnimationInfo *smlua_anim_util_get_current_info(struct Object *obj) {
+    // Check the animations
+    if (!sAnimationPool) { return NULL; }
+
+    // Check the animations
+    struct DynamicPoolNode *node = sAnimationPool->tail;
+    while (node) {
+        struct DynamicPoolNode *prev = node->prev;
+        struct AnimationInfo *animInfo = (struct AnimationInfo *)node->ptr;
+        if (animInfo->anim == obj->header.gfx.animInfo.curAnim) { return animInfo; }
+        node = prev;
+    }
+
     return NULL;
 }

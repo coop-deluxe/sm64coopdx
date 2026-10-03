@@ -554,24 +554,6 @@ function level_parse_script(levelNum, func)
     -- ...
 end
 
---- @param name string The name of the animation
---- @param flags integer The flags of the animation (`ANIM_FLAG_*`)
---- @param animYTransDivisor integer The vertical animation translation divisor
---- @param startFrame integer What frame the animation starts on
---- @param loopStart integer When the loop starts
---- @param loopEnd integer When the loop ends
---- @param values table The table containing animation values
---- @param index table The table containing animation indices
---- Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
---- 
---- ### Lua Example
---- ```lua
---- smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
---- ```
-function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
-    -- ...
-end
-
 --- @param message string The message to log
 --- @param level? ConsoleMessageLevel Optional; Determines whether the message should appear as info, a warning or an error.
 --- Logs a message to the in-game console.

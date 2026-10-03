@@ -9421,6 +9421,14 @@ function cur_obj_init_animation_with_accel_and_sound(animIndex, accel)
 end
 
 --- @param obj Object
+--- @param animations AnimationTable
+--- @param animIndex integer
+--- Initializes an animation with sound state for an object
+function obj_init_animation_with_sound(obj, animations, animIndex)
+    -- ...
+end
+
+--- @param obj Object
 --- Enables rendering and tangibility for an object
 function cur_obj_enable_rendering_and_become_tangible(obj)
     -- ...
@@ -10878,17 +10886,93 @@ function get_mario_vanilla_animation(index)
     -- ...
 end
 
+--- @param name string
+--- @return Animation
+--- Gets the animation with `name` and returns an `Animation`
+function smlua_anim_util_get_animation(name)
+    -- ...
+end
+
+--- @param name string
+--- @return AnimationTable
+--- Gets the animation table with `name` and returns an `AnimationTable`
+function smlua_anim_util_get_table(name)
+    -- ...
+end
+
+--- @param name string
+--- @param flags integer
+--- @param animYTransDivisor integer
+--- @param startFrame integer
+--- @param loopStart integer
+--- @param loopEnd integer
+--- @param values table
+--- @param index table
+--- @return integer
+--- Registers an animation with `name` and returns the index, returns -1 on failure
+function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
+    -- ...
+end
+
+--- @param flags integer
+--- @param animYTransDivisor integer
+--- @param startFrame integer
+--- @param loopStart integer
+--- @param loopEnd integer
+--- @param values table
+--- @param index table
+--- @return integer
+--- Registers an animation and returns the index, returns -1 on failure
+function smlua_anim_util_register_animation(flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
+    -- ...
+end
+
 --- @param obj Object
 --- @param name string
---- Sets the animation of `obj` to the animation `name` corresponds to
+--- Sets the animation of `obj` to the animation with `name`
 function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
 
 --- @param obj Object
+--- @param index integer
+--- Sets the animation of `obj` to the animation with `index`
+function smlua_anim_util_set_animation(obj, index)
+    -- ...
+end
+
+--- @param obj Object
+--- @param anim Animation
+--- Sets the animation of `obj` to `anim`
+function smlua_anim_util_set_animation(obj, anim)
+    -- ...
+end
+
+--- @param obj Object
+--- @param animTable AnimationTable
+--- Sets the animation table of `obj` to `animTable`
+function smlua_anim_util_set_table(obj, animTable)
+    -- ...
+end
+
+--- @param obj Object
 --- @return string
---- Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
+--- Gets the name of the current animation of `obj`, returns `nil` if there's no name
 function smlua_anim_util_get_current_animation_name(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @return integer
+--- Gets the index of the current animation of `obj`, returns -1 if there's no index
+function smlua_anim_util_get_current_animation_index(obj)
+    -- ...
+end
+
+--- @param obj Object
+--- @return AnimationInfo
+--- Gets the info of the current animation of `obj`, returns `nil` if there's no info
+function smlua_anim_util_get_current_info(obj)
     -- ...
 end
 
