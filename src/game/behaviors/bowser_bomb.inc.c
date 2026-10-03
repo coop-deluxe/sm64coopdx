@@ -4,6 +4,7 @@ static u32 networkBowserBombHit = 0;
 
 static void bhv_bowser_bomb_hit_player(void) {
     if (networkBowserBombHit == 0) {
+        // alert everyone else to explode the mine on their screen
         networkBowserBombHit = o->oSyncID;
         network_send_object(o);
     }
@@ -16,6 +17,7 @@ static void bhv_bowser_bomb_hit_player(void) {
 
 static void bhv_bowser_bomb_interacted(void) {
     if (networkBowserBombHit == 0) {
+        // alert everyone else bowser has hit the mine
         networkBowserBombHit = -o->oSyncID;
         network_send_object(o);
     }
@@ -28,17 +30,22 @@ static void bhv_bowser_bomb_interacted(void) {
 }
 
 void bhv_bowser_bomb_loop(void) {
+    // syncing works here by using a event system. networkBowserBombHit is set
+    // when either the local player touches the mine (to tell all the other
+    // clients to nuke the bomb) or bowser hit the mine
     if (!sync_object_is_initialized(o->oSyncID)) {
         networkBowserBombHit = 0;
-        struct SyncObject* so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
+        struct SyncObject *so = sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         if (so) {
+            // don't sync when the object gets deleted, only sync networkBowserBombHit,
+            // which handles that for us
             so->syncDeathEvent = FALSE;
             sync_object_init_field(o, networkBowserBombHit);
         }
     }
 
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
 
     if (networkBowserBombHit == o->oSyncID || (marioState && marioState->playerIndex == 0 && player && obj_check_if_collided_with_object(o, player) == 1)) {
         bhv_bowser_bomb_hit_player();
@@ -64,23 +71,29 @@ void bhv_bowser_bomb_explosion_loop(void) {
         }
     }
 
-    if (o->oTimer % 2 == 0)
+    if (o->oTimer % 2 == 0) {
         o->oAnimState++;
-    if (o->oTimer == 28)
+    }
+
+    if (o->oTimer == 28) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 }
 
 void bhv_bowser_bomb_smoke_loop(void) {
     cur_obj_scale((f32) o->oTimer / 14.0f * 9.0 + 1.0);
-    if (o->oTimer % 2 == 0)
+    if (o->oTimer % 2 == 0) {
         o->oAnimState++;
+    }
 
     o->oOpacity -= 10;
-    if (o->oOpacity < 10)
+    if (o->oOpacity < 10) {
         o->oOpacity = 0;
+    }
 
     o->oPosY += o->oVelY;
 
-    if (o->oTimer == 28)
+    if (o->oTimer == 28) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 }

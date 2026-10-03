@@ -10,14 +10,10 @@ void bhv_butterfly_init(void) {
     o->oHomeZ = o->oPosZ;
 }
 
-// sp28 = speed
-
 void butterfly_step(s32 speed) {
-    struct FloorGeometry *sp24;
     s16 yaw = o->oMoveAngleYaw;
     s16 pitch = o->oMoveAnglePitch;
     s16 yPhase = o->oButterflyYPhase;
-    f32 floorY;
 
     o->oVelX = sins(yaw) * (f32) speed;
     o->oVelY = sins(pitch) * (f32) speed;
@@ -31,14 +27,16 @@ void butterfly_step(s32 speed) {
     else
         o->oPosY -= o->oVelY;
 
-    floorY = find_floor_height_and_data(o->oPosX, o->oPosY, o->oPosZ, &sp24);
+    f32 floorY = find_floor_height(o->oPosX, o->oPosY, o->oPosZ);
 
-    if (o->oPosY < floorY + 2.0f)
+    if (o->oPosY < floorY + 2.0f) {
         o->oPosY = floorY + 2.0f;
+    }
 
     o->oButterflyYPhase++;
-    if (o->oButterflyYPhase >= 101)
+    if (o->oButterflyYPhase >= 101) {
         o->oButterflyYPhase = 0;
+    }
 }
 
 void butterfly_calculate_angle(void) {
@@ -72,8 +70,9 @@ void butterfly_act_follow_mario(void) {
 
     butterfly_step(7);
 
-    if (!is_point_within_radius_of_mario(o->oHomeX, o->oHomeY, o->oHomeZ, 1200))
+    if (!is_point_within_radius_of_mario(o->oHomeX, o->oHomeY, o->oHomeZ, 1200)) {
         o->oAction = BUTTERFLY_ACT_RETURN_HOME;
+    }
 }
 
 void butterfly_act_return_home(void) {

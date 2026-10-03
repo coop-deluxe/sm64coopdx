@@ -2057,7 +2057,7 @@ void cur_obj_start_cam_event(UNUSED struct Object *obj, s32 cameraEvent) {
 void set_mario_interact_hoot_if_in_range(UNUSED s32 unused1, UNUSED s32 unused2, f32 maxDistanceToMario) {
     if (!o || !gMarioObject) { return; }
     if (o->oDistanceToMario < maxDistanceToMario) {
-        gMarioObject->oInteractStatus = INT_STATUS_HOOT_GRABBED_BY_MARIO;
+        gMarioObject->oInteractStatus = INT_STATUS_MARIO_STUNNED;
     }
 }
 

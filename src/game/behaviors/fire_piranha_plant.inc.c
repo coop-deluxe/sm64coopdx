@@ -22,11 +22,22 @@ struct ObjectHitbox sPiranhaPlantFireHitbox = {
     .hurtboxHeight = 20,
 };
 
-s32 sNumActiveFirePiranhaPlants;
-s32 sNumKilledFirePiranhaPlants;
-
 inline static u8 is_giant_fire_piranha_plant() {
     return (o->oBehParams & 0x00FF0000) != 0;
+}
+
+static u8 active_fire_piranha_plant_count() {
+    u8 activeCount = 0;
+    struct Object *obj = obj_get_first_with_behavior_id(id_bhvFirePiranhaPlant);
+
+    while (obj != NULL) {
+        if (obj->oFirePiranhaPlantActive) {
+            activeCount++;
+        }
+
+        obj = obj_get_next_with_same_behavior_id(obj);
+    }
+    return activeCount;
 }
 
 void bhv_fire_piranha_plant_init(void) {
@@ -43,15 +54,13 @@ void bhv_fire_piranha_plant_init(void) {
             o->oNumLootCoins = 2;
         }
     }
-    sNumActiveFirePiranhaPlants = sNumKilledFirePiranhaPlants = 0;
 
-    sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
-    sync_object_init_field(o, sNumActiveFirePiranhaPlants);
-    sync_object_init_field(o, sNumKilledFirePiranhaPlants);
+    // use standard distance based syncing
+    sync_object_init(o, 4000.0f);
 }
 
 static void fire_piranha_plant_act_hide(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -64,16 +73,14 @@ static void fire_piranha_plant_act_hide(void) {
                 cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_ENEMY_DEFEAT_SHRINK);
             }
         }
-    } else if (approach_f32_ptr(&o->oFirePiranhaPlantScale, 0.0f,
-                                0.04f * o->oFirePiranhaPlantNeutralScale)) {
+    } else if (approach_f32_ptr(&o->oFirePiranhaPlantScale, 0.0f, 0.04f * o->oFirePiranhaPlantNeutralScale)) {
         cur_obj_become_intangible();
         if (o->oFirePiranhaPlantActive) {
-            sNumActiveFirePiranhaPlants -= 1;
             o->oFirePiranhaPlantActive = FALSE;
 
             if (is_giant_fire_piranha_plant() && o->oHealth == 0) {
-                if (++sNumKilledFirePiranhaPlants == 5) {
-                    f32* starPos = gLevelValues.starPositions.BigPiranhasStarPos;
+                if (count_objects_with_behavior(o->behavior) <= 1) {
+                    f32 *starPos = gLevelValues.starPositions.BigPiranhasStarPos;
                     spawn_default_star(starPos[0], starPos[1], starPos[2]);
                     network_send_object(o);
                 }
@@ -81,12 +88,10 @@ static void fire_piranha_plant_act_hide(void) {
                 obj_die_if_health_non_positive();
                 set_object_respawn_info_bits(o, 1);
             }
-        } else if (sNumActiveFirePiranhaPlants < 2 && o->oTimer > 100 && distanceToPlayer > 100.0f
-                   && distanceToPlayer < 800.0f) {
+        } else if (active_fire_piranha_plant_count() < 2 && o->oTimer > 100 && distanceToPlayer > 100.0f && distanceToPlayer < 800.0f) {
             cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_PIRANHA_PLANT_APPEAR);
 
             o->oFirePiranhaPlantActive = TRUE;
-            sNumActiveFirePiranhaPlants += 1;
 
             cur_obj_unhide();
             o->oAction = FIRE_PIRANHA_PLANT_ACT_GROW;
@@ -100,28 +105,25 @@ static void fire_piranha_plant_act_hide(void) {
 }
 
 static void fire_piranha_plant_act_grow(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     cur_obj_init_anim_extend(4);
 
-    if (approach_f32_ptr(&o->oFirePiranhaPlantScale, o->oFirePiranhaPlantNeutralScale,
-                         0.04f * o->oFirePiranhaPlantNeutralScale)) {
+    if (approach_f32_ptr(&o->oFirePiranhaPlantScale, o->oFirePiranhaPlantNeutralScale, 0.04f * o->oFirePiranhaPlantNeutralScale)) {
         if (o->oTimer > 80) {
             cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_PIRANHA_PLANT_SHRINK);
             o->oAction = FIRE_PIRANHA_PLANT_ACT_HIDE;
             cur_obj_init_animation_with_sound(0);
         } else if (o->oTimer < 50) {
             cur_obj_rotate_yaw_toward(angleToPlayer, 0x400);
-        } else { // TODO: Check if we can put these conditionals on same line
-            if (obj_is_rendering_enabled()) {
-                if (cur_obj_check_anim_frame(56)) {
-                    cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_FLAME_BLOWN);
-                    obj_spit_fire(0, (s32)(30.0f * o->oFirePiranhaPlantNeutralScale),
-                                  (s32)(140.0f * o->oFirePiranhaPlantNeutralScale),
-                                  2.5f * o->oFirePiranhaPlantNeutralScale, MODEL_RED_FLAME_SHADOW,
-                                  20.0f, 15.0f, 0x1000);
-                }
+        } else {
+            if (obj_is_rendering_enabled() && cur_obj_check_anim_frame(56)) {
+                cur_obj_play_sound_and_rumble_if_visible(SOUND_OBJ_FLAME_BLOWN);
+                obj_spit_fire(0, (s32)(30.0f * o->oFirePiranhaPlantNeutralScale),
+                                (s32)(140.0f * o->oFirePiranhaPlantNeutralScale),
+                                2.5f * o->oFirePiranhaPlantNeutralScale, MODEL_RED_FLAME_SHADOW,
+                                20.0f, 15.0f, 0x1000);
             }
         }
     } else if (o->oFirePiranhaPlantScale > o->oFirePiranhaPlantNeutralScale / 2) {
@@ -142,11 +144,7 @@ void bhv_fire_piranha_plant_update(void) {
     }
 
     if (obj_check_attacks(&sFirePiranhaPlantHitbox, o->oAction)) {
-        if (--o->oHealth < 0) {
-            if (o->oFirePiranhaPlantActive) {
-                sNumActiveFirePiranhaPlants -= 1;
-            }
-        } else {
+        if (--o->oHealth >= 0) {
             cur_obj_init_animation_with_sound(2);
         }
 

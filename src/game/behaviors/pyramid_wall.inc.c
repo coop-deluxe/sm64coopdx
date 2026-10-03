@@ -11,6 +11,7 @@
  * positions.
  */
 void bhv_ssl_moving_pyramid_wall_init(void) {
+    // synced via area timer
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 200;

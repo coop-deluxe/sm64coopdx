@@ -28,7 +28,7 @@ static s16 sFlyGuyJitterAmounts[] = { 0x1000, -0x2000, 0x2000 };
  * turn toward mario/home and enter the approach mario action.
  */
 static void fly_guy_act_idle(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -62,8 +62,8 @@ static void fly_guy_act_idle(void) {
  * fire. If mario is far away, stop and return to the idle action.
  */
 static void fly_guy_act_approach_mario(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -107,7 +107,7 @@ static void fly_guy_act_approach_mario(void) {
  * afterward.
  */
 static void fly_guy_act_lunge(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
 
     if (o->oVelY < 0.0f) {
         // Lunge downward
@@ -148,8 +148,8 @@ static void fly_guy_act_lunge(void) {
  * Turn toward mario, then shoot fire. Then enter the idle action.
  */
 static void fly_guy_act_shoot_fire(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     treat_far_home_as_mario(2000.0f, NULL, &angleToPlayer);
@@ -176,7 +176,7 @@ static void fly_guy_act_shoot_fire(void) {
                 clamp_s16(&fireMovePitch, 0x800, 0x3000);
 
                 if (sync_object_is_owned_locally(o->oSyncID)) {
-                    struct Object* fire = obj_spit_fire(
+                    struct Object *fire = obj_spit_fire(
                         /*relativePos*/ 0, 38, 20,
                         /*scale      */ 2.5f,
                         /*model      */ MODEL_RED_FLAME_SHADOW,
@@ -184,7 +184,7 @@ static void fly_guy_act_shoot_fire(void) {
                         /*endSpeed   */ 20.0f,
                         /*movePitch  */ fireMovePitch);
 
-                    struct Object* spawn_objects[] = { fire };
+                    struct Object *spawn_objects[] = { fire };
                     u32 models[] = { MODEL_RED_FLAME_SHADOW };
                     network_send_spawn_objects(spawn_objects, models, 1);
                 }

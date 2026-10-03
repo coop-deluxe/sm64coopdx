@@ -19,9 +19,9 @@ static Vec3f sKleptoTargetPositions[] = {
 static u8 sKleptoAttackHandlers[] = { 2, 2, 5, 5, 2, 2 };
 
 static void klepto_target_mario(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
     if (!marioState) { return; }
-    struct Object* player = marioState->marioObj;
+    struct Object *player = marioState->marioObj;
     s32 angleToPlayer = obj_angle_to_object(o, player);
     o->oKleptoDistanceToTarget = lateral_dist_between_objects(player, o);
     o->oKleptoUnk1B0 = obj_turn_pitch_toward_mario(marioState, 250.0f, 0);
@@ -104,6 +104,7 @@ void bhv_klepto_init(void) {
         }
     }
 
+    // uses standard distance-based syncing
     struct SyncObject* so = sync_object_init(o, 4000.0f);
     if (so) {
         so->on_received_pre = bhv_klepto_on_received_pre;
@@ -130,7 +131,7 @@ void bhv_klepto_init(void) {
 static void klepto_change_target(void) {
     s32 newTarget = 0;
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (distanceToPlayer > 2000.0f) {
@@ -161,7 +162,7 @@ static void klepto_change_target(void) {
 }
 
 static void klepto_circle_target(f32 radius, f32 targetSpeed) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     if (o->oAnimState != KLEPTO_ANIM_STATE_HOLDING_NOTHING
@@ -226,7 +227,7 @@ static void klepto_act_wait_for_mario(void) {
 static void klepto_act_turn_toward_mario(void) {
     klepto_target_mario();
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     if (klepto_set_and_check_if_anim_at_end() && cur_obj_check_if_at_animation_end() && o->oKleptoDistanceToTarget > 800.0f
@@ -244,8 +245,8 @@ static void klepto_act_turn_toward_mario(void) {
 }
 
 static void klepto_act_dive_at_mario(void) {
-    struct MarioState* marioState = nearest_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -413,25 +414,25 @@ void bhv_klepto_update(void) {
             u8 kleptoHoldingCap = (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_CAP);
 
             if (sync_object_is_owned_locally(o->oSyncID) && kleptoHoldingCap) {
-                struct NetworkPlayer* np = network_player_from_global_index(o->globalPlayerIndex);
+                struct NetworkPlayer *np = network_player_from_global_index(o->globalPlayerIndex);
                 if (np == NULL) { np = gNetworkPlayerLocal; }
                 u8 modelIndex = (np->overrideModelIndex < CT_MAX) ? np->overrideModelIndex : 0;
                 u32 capModel = gCharacters[modelIndex].capModelId;
 
                 gMarioStates[0].cap &= ~SAVE_FLAG_CAP_ON_KLEPTO;
 
-                struct Object* cap = spawn_object(o, capModel, bhvNormalCap);
+                struct Object *cap = spawn_object(o, capModel, bhvNormalCap);
                 if (cap != NULL) {
                     cap->globalPlayerIndex = o->globalPlayerIndex;
 
-                    struct Object* spawn_objects[] = { cap };
+                    struct Object *spawn_objects[] = { cap };
                     u32 models[] = { capModel };
                     network_send_spawn_objects(spawn_objects, models, 1);
                 }
 
             } else if (o->oAnimState == KLEPTO_ANIM_STATE_HOLDING_STAR) {
                 f32* starPos = gLevelValues.starPositions.KleptoStarPos;
-                struct Object* star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
+                struct Object *star = spawn_default_star(starPos[0], starPos[1], starPos[2]);
 
                 // If we're not the closet to Klepto,
                 // Don't play the cutscene!

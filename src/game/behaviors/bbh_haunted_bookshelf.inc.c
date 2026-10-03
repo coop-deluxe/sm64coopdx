@@ -8,6 +8,7 @@
  * Update function for bhvHauntedBookshelf.
  */
 void bhv_haunted_bookshelf_loop(void) {
+    // this sync object is quite simple, you can just sync it's current state
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);
@@ -25,10 +26,6 @@ void bhv_haunted_bookshelf_loop(void) {
 
     switch (o->oAction) {
         case HAUNTED_BOOKSHELF_ACT_IDLE:
-            // ???
-            if (o->oTimer == 0) {
-            }
-
             // This code never runs, since the action is set to 1 directly
             // by bhvHauntedBookshelfManager. Maybe this was
             // intended to be used to set the action instead?
