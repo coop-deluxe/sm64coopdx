@@ -308,15 +308,7 @@ void produce_interpolation_frames_and_delay(void) {
         for (s32 i = 1; i <= numFramesTotal; i++) {
             f64 deadline = sFrameTimeStart + interpFrameTime * (f64) i;
             curTime = clock_elapsed_f64();
-            if (curTime <= deadline) {
-                if (shouldDelay) {
-                    f64 delay = deadline - curTime;
-                    if (delay > 0.0) {
-                        precise_delay_f64(delay);
-                    }
-                }
-                curTime = clock_elapsed_f64();
-            } else if (i < numFramesTotal) {
+            if (curTime > deadline && i < numFramesTotal) {
                 continue;
             }
             f64 idealTime = MIN(deadline, targetTime);
@@ -331,6 +323,15 @@ void produce_interpolation_frames_and_delay(void) {
             gfx_display_frame();
 
             sDrawnFrames++;
+
+            if (shouldDelay && i < numFramesTotal) {
+                f64 nextDeadline = sFrameTimeStart + interpFrameTime * (f64) (i + 1);
+                curTime = clock_elapsed_f64();
+                f64 delay = nextDeadline - curTime;
+                if (delay > 0.0) {
+                    precise_delay_f64(delay);
+                }
+            }
         }
         curTime = clock_elapsed_f64();
     }
