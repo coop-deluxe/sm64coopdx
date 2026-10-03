@@ -305,6 +305,7 @@ void produce_interpolation_frames_and_delay(void) {
             sDrawnFrames++;
         } while ((curTime = clock_elapsed_f64()) < targetTime && safetyBudget-- > 0);
     } else {
+        // test
         for (s32 i = 1; i <= numFramesTotal; i++) {
             f64 deadline = sFrameTimeStart + interpFrameTime * (f64) i;
             curTime = clock_elapsed_f64();
