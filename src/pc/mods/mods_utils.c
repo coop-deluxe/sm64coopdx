@@ -174,6 +174,17 @@ bool str_ends_with(const char *string, const char *suffix) {
     return stringLength >= suffixLength && strncmp(string + stringLength - suffixLength, suffix, suffixLength) == 0;
 }
 
+int pathcmp(const char *path, const char *path2) {
+#if defined(_WIN32) || defined(OSX_BUILD)
+    // Paths on Windows and macOS are case-insensitive and might have
+    // upper-case or mixed-case endings.
+    return sys_strcasecmp(path, path2);
+#else
+    // Always expecting lower-case file paths and extensions
+    return strcmp(path, path2);
+#endif
+}
+
 bool path_ends_with(const char* path, const char* suffix) {
     if (path == NULL || suffix == NULL) { return false; }
 
@@ -182,10 +193,10 @@ bool path_ends_with(const char* path, const char* suffix) {
 
     if (suffixLength > pathLength) { return false; }
 
-#ifdef _WIN32
-    // Paths on Windows are case-insensitive and might have
+#if defined(_WIN32) || defined(OSX_BUILD)
+    // Paths on Windows and macOS are case-insensitive and might have
     // upper-case or mixed-case endings.
-    return (0 == _stricmp(&(path[pathLength - suffixLength]), suffix));
+    return (0 == sys_strcasecmp(&(path[pathLength - suffixLength]), suffix));
 #else
     // Always expecting lower-case file paths and extensions
     return (0 == strcmp(&(path[pathLength - suffixLength]), suffix));
