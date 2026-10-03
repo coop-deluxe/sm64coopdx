@@ -1664,7 +1664,6 @@ static void gfx_sdl_gpu_init(void) {
     // macOS uses metal's msl
     sShaderFormat = gfx_sdl_gpu_shader_format_for_backend(configGraphicsBackend);
 
-    // TODO: Why use DXBC? Can't dx12 take in SPIR-V directly?
 #if defined(_WIN32)
     if (sShaderFormat == SDL_GPU_SHADERFORMAT_DXBC && !gfx_sdl_gpu_load_d3d_compiler()) {
         sys_fatal("Couldn't load the HLSL compiler needed by the DirectX 12 renderer.");
