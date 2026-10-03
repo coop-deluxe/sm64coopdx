@@ -98,9 +98,6 @@ struct ShaderProgramSdlGpu {
     bool usedFog;
 };
 
-static u32 sRenderWidth = 0;
-static u32 sRenderHeight = 0;
-
 static struct ShaderProgramSdlGpu sShaderProgramPool[MAX_FRAME_PASSES][CC_MAX_SHADERS];
 static u8 sShaderProgramPoolSize[MAX_FRAME_PASSES] = { 0 };
 static u8 sShaderProgramPoolIndex[MAX_FRAME_PASSES] = { 0 };
@@ -109,9 +106,15 @@ static struct ShaderProgramSdlGpu sPostProcessShaderProgramPool[MAX_FRAME_PASSES
 
 static struct ShaderProgramSdlGpu *sShaderProgram = NULL;
 
+static u32 sRenderWidth = 0;
+static u32 sRenderHeight = 0;
+
 static struct TextureData *sTextureCache = NULL;
 static u32 sTextureCacheCapacity = 0;
 static u32 sTextureCacheCount = 0;
+
+static SDL_GPUTextureSamplerBinding sLastSamplerBindings[MAX_SHADER_SAMPLERS];
+static u32 sLastSamplerBindingsCount = 0;
 
 static const char *sVanillaTexUniformNames[MAX_TEXTURES] = { "uTex0", "uTex1" };
 static const char *sTexSizeUniformNames[MAX_TEXTURES] = { "uTex0Size", "uTex1Size" };
@@ -461,7 +464,11 @@ static bool gfx_sdl_gpu_allocate_to_ring_buffer(struct GpuRingBuffer *ringBuffer
 static void gfx_sdl_gpu_reset_state(void) {
     sLastPipeline = NULL;
     sLastCachedProgram = NULL;
+
     memset(sPushedUniformBlocks, 0, sizeof(sPushedUniformBlocks));
+
+    sLastSamplerBindingsCount = 0;
+    memset(sLastSamplerBindings, 0, sizeof(sLastSamplerBindings));
 }
 
 static void gfx_sdl_gpu_cleanup_internal_textures(void) {
@@ -1592,7 +1599,26 @@ static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t
 
     // bind fragment samplers
     if (samplerBindingsCount > 0) {
-        SDL_BindGPUFragmentSamplers(sRenderPass, 0, samplerBindings, samplerBindingsCount);
+        // do a basic count check to see if samplers changed first
+        bool samplersChanged = (samplerBindingsCount != sLastSamplerBindingsCount);
+
+        // if the counts line up, iterate and compare to see if a sampler changes
+        if (!samplersChanged) {
+            for (u32 i = 0; i < samplerBindingsCount; i++) {
+                if (sLastSamplerBindings[i].texture != samplerBindings[i].texture || sLastSamplerBindings[i].sampler != samplerBindings[i].sampler) {
+                    samplersChanged = true;
+                    break;
+                }
+            }
+        }
+
+        // if the sampler changed, bind the sampler and update the cache
+        if (samplersChanged) {
+            SDL_BindGPUFragmentSamplers(sRenderPass, 0, samplerBindings, samplerBindingsCount);
+
+            sLastSamplerBindingsCount = samplerBindingsCount;
+            memcpy(sLastSamplerBindings, samplerBindings, sizeof(SDL_GPUTextureSamplerBinding) * samplerBindingsCount);
+        }
     }
 
     // update matrix and fog uniforms
