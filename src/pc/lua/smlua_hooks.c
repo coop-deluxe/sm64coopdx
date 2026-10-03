@@ -19,6 +19,7 @@
 #include "pc/pc_main.h"
 #include "pc/djui/djui_lua_profiler.h"
 #include "pc/djui/djui_panel.h"
+#include "pc/djui/djui_text.h"
 #include "pc/configfile.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/utils/smlua_model_utils.h"
@@ -1305,6 +1306,24 @@ s32 sort_alphabetically(const void *a, const void *b) {
     return cmpResult;
 }
 
+static s32 sort_player_names_alphabetically(const void *a, const void *b) {
+    const char *playerNameA = *(const char **)a;
+    const char *playerNameB = *(const char **)b;
+    char *uncoloredNameA = djui_text_get_uncolored_string(NULL, strlen(playerNameA) + 1, playerNameA);
+    char *uncoloredNameB = djui_text_get_uncolored_string(NULL, strlen(playerNameB) + 1, playerNameB);
+
+    if (uncoloredNameA == NULL || uncoloredNameB == NULL) {
+        free(uncoloredNameA);
+        free(uncoloredNameB);
+        return sort_alphabetically(a, b);
+    }
+
+    s32 compareResult = strcasecmp(uncoloredNameA, uncoloredNameB);
+    free(uncoloredNameA);
+    free(uncoloredNameB);
+    return (compareResult != 0) ? compareResult : sort_alphabetically(a, b);
+}
+
 char** smlua_get_chat_player_list(void) {
     char* playerNames[MAX_PLAYERS] = { NULL };
     s32 playerCount = 0;
@@ -1326,7 +1345,7 @@ char** smlua_get_chat_player_list(void) {
         }
     }
 
-    qsort(playerNames, playerCount, sizeof(char*), sort_alphabetically);
+    qsort(playerNames, playerCount, sizeof(char*), sort_player_names_alphabetically);
 
     char** sortedPlayers = (char**) malloc((playerCount + 1) * sizeof(char*));
     for (s32 i = 0; i < playerCount; i++) {
@@ -1375,7 +1394,7 @@ char** smlua_get_chat_maincommands_list(void) {
 }
 
 char** smlua_get_chat_subcommands_list(const char* maincommand) {
-    if (gServerSettings.nametags && strcmp(maincommand, "nametags") == 0) {
+    if (gServerSettings.nametags && strcasecmp(maincommand, "nametags") == 0) {
         s32 count = 2;
         char** subcommands = (char**) malloc((count + 1) * sizeof(char*));
         subcommands[0] = strdup("show-tag");
@@ -1386,7 +1405,7 @@ char** smlua_get_chat_subcommands_list(const char* maincommand) {
 
     for (s32 i = 0; i < sHookedChatCommandsCount; i++) {
         struct LuaHookedCommand* hook = &sHookedChatCommands[i];
-        if (strcmp(hook->command, maincommand) == 0) {
+        if (strcasecmp(hook->command, maincommand) == 0) {
             char* noColorsDesc = djui_text_get_uncolored_string(NULL, strlen(hook->description) + 1, hook->description);
             char* startSubcommands = strstr(noColorsDesc, "[");
             char* endSubcommands = strstr(noColorsDesc, "]");
@@ -1427,7 +1446,7 @@ bool smlua_maincommand_exists(const char* maincommand) {
 
     s32 i = 0;
     while (commands[i] != NULL) {
-        if (strcmp(commands[i], maincommand) == 0) {
+        if (strcasecmp(commands[i], maincommand) == 0) {
             result = true;
             break;
         }
@@ -1452,7 +1471,7 @@ bool smlua_subcommand_exists(const char* maincommand, const char* subcommand) {
     bool result = false;
     s32 i = 0;
     while (subcommands[i] != NULL) {
-        if (strcmp(subcommands[i], subcommand) == 0) {
+        if (strcasecmp(subcommands[i], subcommand) == 0) {
             result = true;
             break;
         }
