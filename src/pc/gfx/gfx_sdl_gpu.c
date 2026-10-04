@@ -1466,8 +1466,6 @@ static void upload_uniform_buffers_for_shader(struct Shader *shader) {
 static void gfx_sdl_gpu_draw_triangles(f32 buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     if (sShaderProgram == NULL || sRenderPass == NULL) { return; }
 
-    smlua_call_event_hooks(HOOK_ON_DRAW_TRIANGLE);
-
     u32 offset = 0;
     u32 vboByteSize = (u32)(buf_vbo_len * sizeof(f32));
 

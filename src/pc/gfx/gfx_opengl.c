@@ -727,8 +727,6 @@ static void upload_opengl_uniform_buffers(struct Shader *shader) {
 
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
     //printf("flushing %d tris\n", buf_vbo_num_tris);
-    smlua_call_event_hooks(HOOK_ON_DRAW_TRIANGLE);
-
     struct Shader *fragmentShader = sShaderProgram->fragmentShader;
     for (s32 j = 0; j < fragmentShader->samplerCount; j++) {
         GLuint texToBind = sFallbackTexture;

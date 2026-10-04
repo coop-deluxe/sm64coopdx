@@ -465,7 +465,6 @@ bool gfx_is_legacy_renderer() {
 void gfx_reload_shaders() {
     gfx_remove_all_color_combiners();
     gfx_get_current_rendering_api()->remove_shaders();
-    smlua_call_event_hooks(HOOK_ON_REFRESH_SHADERS);
 }
 
 struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc) {

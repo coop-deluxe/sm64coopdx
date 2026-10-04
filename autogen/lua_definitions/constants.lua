@@ -8537,16 +8537,11 @@ HOOK_ON_FIND_SURFACE_ON_RAY                 = 65 --- @type LuaHookedEventType
 HOOK_ON_DYNOS_PACK_TOGGLED                  = 66 --- @type LuaHookedEventType
 HOOK_BEFORE_PLAY_MODE_UPDATE                = 67 --- @type LuaHookedEventType
 HOOK_ON_PLAY_MODE_UPDATE                    = 68 --- @type LuaHookedEventType
-HOOK_ON_REFRESH_SHADERS                     = 69 --- @type LuaHookedEventType
-HOOK_ON_VERTEX_SHADER_CREATE                = 70 --- @type LuaHookedEventType
-HOOK_ON_FRAGMENT_SHADER_CREATE              = 71 --- @type LuaHookedEventType
-HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE   = 72 --- @type LuaHookedEventType
-HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE = 73 --- @type LuaHookedEventType
-HOOK_BEFORE_DRAW_GEOMETRY                   = 74 --- @type LuaHookedEventType
-HOOK_ON_DRAW_GEOMETRY                       = 75 --- @type LuaHookedEventType
-HOOK_ON_DRAW_TRIANGLE                       = 76 --- @type LuaHookedEventType
-HOOK_ON_SET_SHADER_PROGRAM                  = 77 --- @type LuaHookedEventType
-HOOK_MAX                                    = 78 --- @type LuaHookedEventType
+HOOK_ON_VERTEX_SHADER_CREATE                = 69 --- @type LuaHookedEventType
+HOOK_ON_FRAGMENT_SHADER_CREATE              = 70 --- @type LuaHookedEventType
+HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE   = 71 --- @type LuaHookedEventType
+HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE = 72 --- @type LuaHookedEventType
+HOOK_MAX                                    = 73 --- @type LuaHookedEventType
 
 --- @alias LuaHookedEventType
 --- | `HOOK_UPDATE`
@@ -8618,15 +8613,10 @@ HOOK_MAX                                    = 78 --- @type LuaHookedEventType
 --- | `HOOK_ON_DYNOS_PACK_TOGGLED`
 --- | `HOOK_BEFORE_PLAY_MODE_UPDATE`
 --- | `HOOK_ON_PLAY_MODE_UPDATE`
---- | `HOOK_ON_REFRESH_SHADERS`
 --- | `HOOK_ON_VERTEX_SHADER_CREATE`
 --- | `HOOK_ON_FRAGMENT_SHADER_CREATE`
 --- | `HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE`
 --- | `HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE`
---- | `HOOK_BEFORE_DRAW_GEOMETRY`
---- | `HOOK_ON_DRAW_GEOMETRY`
---- | `HOOK_ON_DRAW_TRIANGLE`
---- | `HOOK_ON_SET_SHADER_PROGRAM`
 --- | `HOOK_MAX`
 
 HUD_DISPLAY_LIVES         = 0 --- @type HudDisplayValue

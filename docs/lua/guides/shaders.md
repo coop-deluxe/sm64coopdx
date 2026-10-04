@@ -253,7 +253,7 @@ Frame passes can be configured by modifying the `FramePass` provided by `gfx_sha
 
 In your shader hooks, you can access which frame pass you are currently on with the `gfx_shader_get_current_frame_pass` and `gfx_shader_get_current_frame_pass_index`. For unique identification, which is the main reason you would get the current frame pass, you should use `gfx_shader_get_current_frame_pass_index`. This is needed if you need to change your shader depending on the current frame pass.
 
-Sometimes you may need to configure things before you redraw the world. For instance, on some shaders you may want to disable culling before you redraw the world. You can use `HOOK_BEFORE_DRAW_GEOMETRY` to achieve this. Check your current frame pass index using `gfx_shader_get_current_frame_pass`, and run code accordingly in this hook. This hook isn't unique to frame passes, it's called anytime the world geometry is about to be drawn.
+Sometimes you may need to configure things before you redraw the world. For instance, on some shaders you may want to disable culling before you redraw the world. You can use `HOOK_BEFORE_FRAME_PASS_RENDER` to achieve this. Check your current frame pass index using `gfx_shader_get_current_frame_pass`, and run code accordingly in this hook.
 
 ## Coordinate Spaces
 

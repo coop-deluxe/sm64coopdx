@@ -1256,7 +1256,6 @@ static void OPTIMIZE_O3 gfx_sp_tri1(uint8_t vtx1_idx, uint8_t vtx2_idx, uint8_t 
         gfx_rapi->load_shader(prg);
         sRenderingState.shader_program = prg;
         gfx_set_builtin_uniforms();
-        smlua_call_event_hooks(HOOK_ON_SET_SHADER_PROGRAM);
     }
     if (cm->use_alpha != sRenderingState.alpha_blend) {
         gfx_flush();
@@ -1858,7 +1857,6 @@ static void gfx_draw_fullscreen_quad() {
     sRenderingState.depth_test = false;
 
     gfx_set_builtin_uniforms();
-    smlua_call_event_hooks(HOOK_ON_SET_SHADER_PROGRAM);
 
     // dont cull post process
     enum GpuCullMode cachedCullMode = gGpuCullMode;
@@ -2377,11 +2375,9 @@ static void gfx_process_lua_passes(Gfx *commands, bool *isLuaPassesActive) {
                 color_combiner_pool[j].prg = NULL;
             }
 
-            // render world
-            smlua_call_event_hooks(HOOK_BEFORE_DRAW_GEOMETRY);
+            // render scene
             gfx_run_dl(commands);
             gfx_end_frame_render();
-            smlua_call_event_hooks(HOOK_ON_DRAW_GEOMETRY);
         } else {
             // render quad
             gfx_draw_fullscreen_quad();
@@ -2441,11 +2437,9 @@ void gfx_run(Gfx *commands) {
 
         gfx_rapi->start_frame(); // resets color and depth
 
-        // draw world into frame buffer
-        smlua_call_event_hooks(HOOK_BEFORE_DRAW_GEOMETRY);
+        // draw scene into frame buffer
         gfx_run_dl(commands);
         gfx_end_frame_render();
-        smlua_call_event_hooks(HOOK_ON_DRAW_GEOMETRY);
     }
 
     gfx_sp_reset(); // resets the rsp
