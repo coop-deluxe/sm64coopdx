@@ -2277,7 +2277,6 @@ void gfx_start_frame(void) {
         rdp.loaded_texture[1].addr = NULL;
         rdp.loaded_texture[1].size_bytes = 0;
     }
-    gfx_wm_handle_events();
     gfx_wm_get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
     if (gfx_current_dimensions.width == 0) {
         // Avoid division by zero

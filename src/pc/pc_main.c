@@ -17,6 +17,7 @@
 #include "network/network.h"
 #include "lua/smlua.h"
 
+#include "render.h"
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
@@ -282,7 +283,7 @@ static void select_graphics_backend(void) {
     }
 }
 
-void produce_interpolation_frames_and_delay(void) {
+void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay) {
     u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
@@ -295,10 +296,10 @@ void produce_interpolation_frames_and_delay(void) {
         refreshRate = displayRefreshRate;
     }
 
-    f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
-
     f64 curTime = clock_elapsed_f64();
+    f64 targetTime = tickDelay ? (sFrameTimeStart + sFrameTime) : (curTime + (1.0 / (f64)refreshRate));
+    s32 numFramesToDraw = tickDelay ? get_num_frames_to_draw(sFrameTimeStart, refreshRate) : 1;
+
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
     u16 framesDrawn = 0;
@@ -319,7 +320,9 @@ void produce_interpolation_frames_and_delay(void) {
 
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
-        send_display_list(gGfxSPTask);
+        if (gGameInited) {
+            gfx_run(dlCommands);
+        }
         gfx_display_frame();
 
         // delay if our framerate is capped
@@ -335,7 +338,7 @@ void produce_interpolation_frames_and_delay(void) {
 
         sDrawnFrames++;
         if (isPacedGrid) { numFramesToDraw--; }
-    } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
+    } while (tickDelay && (curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
     if ((curTime = clock_elapsed_f64()) >= sFpsTimeLast + 1.0) {
@@ -408,6 +411,8 @@ void *audio_thread(UNUSED void *arg) {
 }
 
 void produce_one_frame(void) {
+    f64 frameStartTime = clock_elapsed_f64();
+
     CTX_EXTENT(CTX_NETWORK, network_update);
 
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
@@ -421,7 +426,20 @@ void produce_one_frame(void) {
         CTX_EXTENT(CTX_AUDIO, buffer_audio);
     }
 
-    CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
+    CTX_EXTENT(CTX_EVENTS, gfx_wm_handle_events);
+
+    if (gRenderThread.state == INVALID) {
+        CTX_BEGIN(CTX_RENDER);
+        produce_interpolation_frames_and_delay((Gfx *)gGfxSPTask->task.t.data_ptr, true);
+        CTX_END(CTX_RENDER);
+    } else {
+        set_dl_for_render_thread((Gfx *)gGfxSPTask->task.t.data_ptr);
+        f64 elapsedTime = clock_elapsed_f64() - frameStartTime;
+        f64 remainingDelay = sFrameTime - elapsedTime;
+        if (remainingDelay > 0.0) {
+            precise_delay_f64(remainingDelay);
+        }
+    }
 }
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
@@ -659,6 +677,9 @@ int main(int argc, char *argv[]) {
 
     // initialize terminal
     terminal_init();
+
+    // startup render thread
+    init_thread_handle(&gRenderThread, render_thread_init, NULL, NULL, 0);
 
     // main loop
     while (true) {

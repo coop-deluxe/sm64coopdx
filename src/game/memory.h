@@ -114,6 +114,7 @@ void growing_array_debug_print(struct GrowingArray *array, const char *name, s32
         _head_ != NULL && _head_ != _tail_ && (item = *_head_, TRUE); \
         _head_++)
 
+void display_list_set_process_pool(u32 index);
 void alloc_display_list_reset(void);
 void *alloc_display_list(u32 size);
 

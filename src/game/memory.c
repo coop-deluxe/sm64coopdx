@@ -3,6 +3,7 @@
 
 #include "memory.h"
 #include "print.h"
+#include "buffers/buffers.h"
 #include "pc/debuglog.h"
 
 // Alignment to a data size
@@ -370,14 +371,20 @@ void growing_array_debug_print(struct GrowingArray *array, const char *name, s32
  // display lists //
 ///////////////////
 
-static struct GrowingPool* sDisplayListPool = NULL;
+static struct GrowingPool *sDisplayListPool[GFX_NUM_POOLS] = { 0 };
+static u32 sSelectedDisplayListPool = 0;
+
+void display_list_set_process_pool(u32 index) {
+    if (index >= GFX_NUM_POOLS) { return; }
+    sSelectedDisplayListPool = index;
+}
 
 void alloc_display_list_reset(void) {
-    sDisplayListPool = growing_pool_init(sDisplayListPool, 100000);
+    sDisplayListPool[sSelectedDisplayListPool] = growing_pool_init(sDisplayListPool[sSelectedDisplayListPool], 100000);
 }
 
 void *alloc_display_list(u32 size) {
-    return growing_pool_alloc(sDisplayListPool, size);
+    return growing_pool_alloc(sDisplayListPool[sSelectedDisplayListPool], size);
 }
 
   //////////////

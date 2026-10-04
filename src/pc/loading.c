@@ -177,6 +177,7 @@ void render_loading_screen(void) {
 
     // loading screen loop
     while (!gGameInited) {
+        gfx_wm_handle_events();
         gfx_wm_main_loop(loading_screen_produce_one_frame);
     }
 
@@ -190,6 +191,7 @@ void render_rom_setup_screen(void) {
     loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
 
     while (!gRomIsValid) {
+        gfx_wm_handle_events();
         gfx_wm_main_loop(loading_screen_produce_one_frame);
     }
 }

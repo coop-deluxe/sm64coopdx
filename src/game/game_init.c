@@ -28,6 +28,8 @@
 #include "hud.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/configfile.h"
+#include "pc/render.h"
+#include "pc/debuglog.h"
 #include "src/engine/math_util.h"
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
@@ -285,7 +287,14 @@ void rendering_init(void) {
 }
 
 void config_gfx_pool(void) {
-    gGfxPool = &gGfxPools[gGlobalTimer % GFX_NUM_POOLS];
+    static u32 sGfxPoolIndex = 0;
+    u32 pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
+    gGfxPool = &gGfxPools[pool];
+    if (render_thread_processing_dl(gGfxPool->buffer)) {
+        pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
+        gGfxPool = &gGfxPools[pool];
+    }
+    display_list_set_process_pool(pool);
     set_segment_base_addr(1, gGfxPool->buffer);
     gGfxSPTask = &gGfxPool->spTask;
     gDisplayListHead = gGfxPool->buffer;
@@ -490,7 +499,7 @@ void read_controller_inputs(void) {
             sInputBuffer[sInputBufferHead].extStickX  = controller->controllerData->ext_stick_x;
             sInputBuffer[sInputBufferHead].extStickY  = controller->controllerData->ext_stick_y;
             sInputBuffer[sInputBufferHead].buttonDown = controller->controllerData->button;
-            
+
             s32 delay = clamp((s32)configInputDelay, 0, INPUT_BUFFER_MAX_DELAY);
             s32 tail = (sInputBufferHead - delay + INPUT_BUFFER_SIZE) % INPUT_BUFFER_SIZE;
             u16 delayedButton = sInputBuffer[tail].buttonDown;

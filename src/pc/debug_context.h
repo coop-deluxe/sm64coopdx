@@ -17,6 +17,7 @@ enum DebugContext {
     CTX_GAME_LOOP,
     CTX_SMLUA,
     CTX_AUDIO,
+    CTX_EVENTS,
     CTX_RENDER,
     CTX_LEVEL_SCRIPT,
     CTX_HOOK,
