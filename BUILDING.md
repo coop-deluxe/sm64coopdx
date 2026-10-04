@@ -33,7 +33,7 @@ Enter `pacman -Syuu` in the prompt and hit Enter. Press `Y` when it asks if you 
 #### Install Dependencies
 
 ```sh
-pacman -S unzip make git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-glew mingw-w64-ucrt-x86_64-sdl3 mingw-w64-ucrt-x86_64-python
+pacman -S unzip make git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-glew mingw-w64-ucrt-x86_64-sdl3 mingw-w64-ucrt-x86_64-glslang mingw-w64-ucrt-x86_64-spirv-cross mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-pkg-config
 ```
 
 ### Linux
@@ -41,25 +41,25 @@ pacman -S unzip make git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-glew mi
 #### Debian/Ubuntu
 
 ```sh
-sudo apt install build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev
+sudo apt install build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev libspirv-cross-c-shared-dev
 ```
 
 #### Fedora
 
 ```sh
-sudo dnf install make gcc gcc-c++ python3 glew-devel zlib-devel libcurl-devel
+sudo dnf install make gcc gcc-c++ python3 glew-devel zlib-devel libcurl-devel SPIRV-Cross-devel
 ```
 
 #### Arch Linux/Steam OS
 
 ```sh
-sudo pacman -S base-devel glibc linux-api-headers python glew zlib libglvnd curl libcurl-compat
+sudo pacman -S base-devel glibc linux-api-headers python glew zlib libglvnd curl libcurl-compat spirv-cross
 ```
 
 ### macOS
 
 ```sh
-brew install make gcc pkg-config sdl3 glew coreutils
+brew install make gcc pkg-config sdl3 glew coreutils glslang spirv-cross spirv-tools
 ```
 
 ## Compilation

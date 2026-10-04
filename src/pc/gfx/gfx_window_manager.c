@@ -10,6 +10,7 @@
 #include "gfx_window_manager.h"
 #include "gfx_window_opengl.h"
 #include "gfx_window_dxgi.h"
+#include "gfx_window_sdl_gpu.h"
 #include "gfx_screen_config.h"
 
 #include "pc/pc_main.h"
@@ -21,12 +22,19 @@
 #include "pc/utils/misc.h"
 #include "pc/mods/mod_import.h"
 #include "pc/rom_checker.h"
+#include "pc/debuglog.h"
 
 static struct GfxWindowBackendAPI *sBackends[GFX_WINDOW_BACKEND_COUNT] = {
-    [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
-#if defined(_WIN32)
-    [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_dxgi,
+#if defined(_WIN32) || defined (__linux)
+#ifdef _WIN32
+    [GFX_WINDOW_BACKEND_DIRECTX] = &gfx_window_sdl_gpu,
 #endif
+    [GFX_WINDOW_BACKEND_VULKAN] = &gfx_window_sdl_gpu,
+#endif
+#if defined(__APPLE__)
+    [GFX_WINDOW_BACKEND_METAL] = &gfx_window_sdl_gpu,
+#endif
+    [GFX_WINDOW_BACKEND_OPENGL] = &gfx_window_opengl,
 };
 
 // TODO: figure out how to switch the backend without restarting
@@ -49,6 +57,23 @@ static void (*m_scroll)(float, float) = NULL;
 static struct GfxWindowBackendAPI *gfx_wm_backend(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return &gfx_window_dummy; }
     return sBackends[currBackend];
+}
+
+const char *gfx_wm_get_backend_name(enum GfxWindowBackend backend) {
+    switch (backend) {
+        case GFX_WINDOW_BACKEND_DUMMY: return "Dummy";
+        case GFX_WINDOW_BACKEND_OPENGL: return gfx_opengl_api.is_legacy() ? "OpenGL (Legacy)" : "OpenGL";
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
+        case GFX_WINDOW_BACKEND_DIRECTX: return "DirectX 12";
+#endif
+        case GFX_WINDOW_BACKEND_VULKAN: return "Vulkan";
+#endif
+#ifdef __APPLE__
+        case GFX_WINDOW_BACKEND_METAL: return "Metal";
+#endif
+        default: return "???";
+    }
 }
 
 void gfx_wm_set_window(SDL_Window *window) {
@@ -112,8 +137,8 @@ void gfx_wm_init(const char *window_title) {
 
     SDL_StopTextInput(sSdlWindow);
 
-#if defined(_WIN32)
-    currBackend = gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : (s32) configGraphicsBackend;
+#if defined(_WIN32) || defined(__APPLE__)
+    currBackend = gCLIOpts.backend < GFX_WINDOW_BACKEND_COUNT ? gCLIOpts.backend : (s32)configGraphicsBackend;
 #else
     currBackend = configGraphicsBackend;
 #endif
@@ -195,7 +220,7 @@ static void gfx_wm_ondropfile(char* path) {
 
 void gfx_wm_handle_events(void) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) { return; }
-    SDL_Event event;
+    SDL_Event event = { 0 };
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_EVENT_TEXT_INPUT:

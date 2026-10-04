@@ -65,6 +65,7 @@ typedef uintptr_t BehaviorScript;
 typedef u8 Texture;
 
 typedef u8 Color[3];
+typedef u8 ColorRGBA[4];
 
 enum SpTaskState {
     SPTASK_STATE_NOT_STARTED,

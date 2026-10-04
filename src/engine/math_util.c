@@ -864,6 +864,36 @@ OPTIMIZE_O3 bool mtxf_inverse_non_affine(VEC_OUT Mat4 dest, Mat4 src) {
 }
 
 /**
+ * Gets the orthographic matrix based on the orthographic bounds and near and far values provided.
+ * This is mainly used for mods and not the actual C source, but it can be used for building out
+ * separate cameras using an ortho view rather than a projection view, to help with things like
+ * shadows, minimaps, and more. The base of this code, and a general reference, was taken from
+ * https://www.scratchapixel.com/lessons/3d-basic-rendering/perspective-and-orthographic-projection-matrix/orthographic-projection-matrix.html
+ *
+ * Scratchapixel has a detailed explanation on orthographic projections, as well as many other
+ * things regarding matrices and other opengl niches, along with other resources.
+ *
+ * This function assumes an NDC Z depth (z) range of 0 to 1, and takes in the dimensions of
+ * the orthographic bounds.
+ */
+OPTIMIZE_O3 void mtxf_ortho(VEC_OUT Mat4 dest, f32 boundBottom, f32 boundTop, f32 boundLeft, f32 boundRight, f32 near, f32 far) {
+    mtxf_zero(dest); // zero out matrix first
+
+    // prevent division by zero
+    if (boundRight == boundLeft || boundTop == boundBottom || far == near) { return; }
+
+    // setup the dimensions of the viewport
+    dest[0][0] = 2.0f / (boundRight - boundLeft);
+    dest[1][1] = 2.0f / (boundTop - boundBottom);
+    dest[2][2] = -1.0f / (far - near); // setup depth
+
+    dest[3][0] = -(boundRight + boundLeft) / (boundRight - boundLeft);
+    dest[3][1] = -(boundTop + boundBottom) / (boundTop - boundBottom);
+    dest[3][2] = -near / (far - near);
+    dest[3][3] = 1.0f;
+}
+
+/**
  * Extract a position given an object's transformation matrix and a camera matrix.
  * This is used for determining the world position of the held object: since objMtx
  * inherits the transformation from both the camera and Mario, it calculates this
@@ -884,10 +914,10 @@ OPTIMIZE_O3 Vec3fp get_pos_from_transform_mtx(VEC_OUT Vec3f dest, Mat4 objMtx, M
 }
 
 /**
- * Extract world-space transformations given an object's model-view matrix and a 
- * camera matrix. A model-view matrix generated during rendering is a combination 
- * of world-space and camera transforms to position and orient objects in a scene 
- * relative to the camera view. By multiplying this matrix with the inverse of the 
+ * Extract world-space transformations given an object's model-view matrix and a
+ * camera matrix. A model-view matrix generated during rendering is a combination
+ * of world-space and camera transforms to position and orient objects in a scene
+ * relative to the camera view. By multiplying this matrix with the inverse of the
  * camera matrix, the camera transforms can be removed to get the position and
  * orientation of an object relative to world-space.
  */

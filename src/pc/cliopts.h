@@ -38,9 +38,7 @@ struct CLIOptions {
     int enabledModsCount;
     char** enableMods;
     bool headless;
-#if defined(_WIN32)
     enum GfxWindowBackend backend;
-#endif
 };
 
 extern struct CLIOptions gCLIOpts;

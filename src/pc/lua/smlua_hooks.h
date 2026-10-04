@@ -8,6 +8,7 @@
 #include "smlua.h"
 #include "pc/mods/mod.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/gfx/gfx_cc.h"
 
 // forward declare
 struct Camera;
@@ -86,6 +87,10 @@ enum LuaHookedEventType {
     HOOK_ON_DYNOS_PACK_TOGGLED,
     HOOK_BEFORE_PLAY_MODE_UPDATE,
     HOOK_ON_PLAY_MODE_UPDATE,
+    HOOK_ON_VERTEX_SHADER_CREATE,
+    HOOK_ON_FRAGMENT_SHADER_CREATE,
+    HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE,
+    HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE,
     HOOK_MAX,
 };
 

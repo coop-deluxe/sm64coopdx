@@ -20,6 +20,9 @@ extern struct GraphNodePerspective *gCurGraphNodeCamFrustum;
 extern struct GraphNodeCamera *gCurGraphNodeCamera;
 extern struct GraphNodeObject *gCurGraphNodeObject;
 extern struct GraphNodeHeldObject *gCurGraphNodeHeldObject;
+
+extern Mtx gInverseCameraMatrix;
+
 extern u16 gAreaUpdateCounter;
 extern struct Object* gCurGraphNodeProcessingObject;
 
