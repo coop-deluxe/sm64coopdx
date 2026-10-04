@@ -620,6 +620,11 @@
             "envelope": "env_common",
             "sound": "41_pan_flute"
         },
+        "inst_pan_flute_2": {
+            "release_rate": 43,
+            "envelope": "env_flute",
+            "sound": "41_pan_flute"
+        },
         "inst_harmonica": {
             "release_rate": 19,
             "envelope": "env_common",
@@ -836,7 +841,7 @@
         "inst_pan_flute",
         "inst_strings_2",
         null,
-        "inst_pan_flute",
+        "inst_pan_flute_2",
         "inst_ooh",
         "inst_harmonica",
         "inst_slap_bass",
