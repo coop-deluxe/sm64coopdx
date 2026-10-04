@@ -1365,7 +1365,7 @@ Gets the current active frame pass. If there is no active frame pass, it returns
 ## gfx_shader_bind_sampler
 
 ### Description
-Bind a sampler using a texture id. A texture id may be obtained from a `FramePass` or the `gfx_get_render_texture_from_texture_info` function
+Bind a sampler using a texture id. A texture id may be obtained from a `FramePass` or the `gfx_get_render_texture_from_texture` function
 
 ### Lua Example
 `gfx_shader_bind_sampler(name, luaTextureId)`
