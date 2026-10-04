@@ -2017,8 +2017,6 @@
    - [gfx_shader_remove_frame_pass](functions-7.md#gfx_shader_remove_frame_pass)
    - [gfx_shader_get_current_frame_pass_index](functions-7.md#gfx_shader_get_current_frame_pass_index)
    - [gfx_shader_get_current_frame_pass](functions-7.md#gfx_shader_get_current_frame_pass)
-   - [gfx_shader_bind_sampler](functions-7.md#gfx_shader_bind_sampler)
-   - [gfx_get_render_texture_from_texture](functions-7.md#gfx_get_render_texture_from_texture)
    - [vtx_get_from_name](functions-7.md#vtx_get_from_name)
    - [vtx_get_name](functions-7.md#vtx_get_name)
    - [vtx_get_count](functions-7.md#vtx_get_count)

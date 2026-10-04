@@ -24,10 +24,8 @@ struct GfxRenderingAPI {
     struct ShaderUniformBlock *(*get_active_uniform_buffer)(enum ShaderStage stage);
     void (*set_uniform_buffer)(enum ShaderStage stage, const char *name);
     void (*set_uniform)(struct ShaderProgram *prg, const char *name, const void *data, u32 numElements);
-    u32 (*get_texture_id)(const Texture *addr);
-    u64 (*get_render_texture)(const Texture *addr);
+    u32 (*new_texture)(void);
     void (*select_texture)(int tile, u32 texture_id);
-    bool (*render_texture_valid)(u64 renderTexture);
     void (*bind_texture_using_name)(const char *name, u64 renderTexture);
     void (*upload_texture)(const u8 *rgba32_buf, int width, int height);
     void (*set_sampler_parameters)(int sampler, bool linear_filter, u32 cms, u32 cmt);

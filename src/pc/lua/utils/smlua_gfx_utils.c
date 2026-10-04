@@ -551,29 +551,6 @@ struct FramePass *gfx_shader_get_current_frame_pass() {
     return &gFramePasses[gCurrentFramePassIndex];
 }
 
-void gfx_shader_bind_sampler(const char *name, s64 luaRenderTexture) { // lua ints are s64
-    u64 renderTexture = (u64)luaRenderTexture; // get real render texture
-
-    // make sure render texture is valid
-    if (!gfx_get_current_rendering_api()->render_texture_valid(renderTexture)) {
-        LOG_LUA("gfx_shader_bind_sampler: Texture id does not exist!");
-        return;
-    }
-
-    // bind sampler using render texture
-    gfx_get_current_rendering_api()->bind_texture_using_name(name, renderTexture);
-}
-
-///
-
-OVERLOAD(gfx_get_render_texture_from_texture) s64 gfx_get_render_texture_from_texture(const Texture *addr) {
-    return (s64)gfx_get_current_rendering_api()->get_render_texture(addr);
-}
-
-OVERLOAD(gfx_get_render_texture_from_texture) s64 gfx_get_render_texture_from_texture_info(struct TextureInfo *texInfo) {
-    return gfx_get_render_texture_from_texture(texInfo->texture);
-}
-
 ///
 
 Vtx *vtx_get_from_name(const char *name, RET u32 *count) {

@@ -358,7 +358,7 @@ static bool gfx_texture_cache_lookup(int tile, struct TextureHashmapNode **n, co
     if (!node) { return false; }
     *node = &gfx_texture_cache.pool[gfx_texture_cache.pool_pos++];
     if ((*node)->texture_addr == NULL) {
-        (*node)->texture_id = gfx_rapi->get_texture_id(orig_addr);
+        (*node)->texture_id = gfx_rapi->new_texture();
     }
     gfx_rapi->select_texture(tile, (*node)->texture_id);
     gfx_rapi->set_sampler_parameters(tile, false, 0, 0);
@@ -2456,7 +2456,7 @@ void gfx_run(Gfx *commands) {
     if (gDefaultGeoFramePass.active) {
         if (gDefaultGeoFramePass.colorTexture != 0) {
             gfx_rapi->bind_texture_using_name("uPassColorTex", gDefaultGeoFramePass.colorTexture);
-            gfx_rapi->bind_texture_using_name("uPassDepthTex", (u64)gDefaultGeoFramePass.depthTexture);
+            gfx_rapi->bind_texture_using_name("uPassDepthTex", gDefaultGeoFramePass.depthTexture);
         }
     } else {
         u64 lastValidPassTexture = 0;

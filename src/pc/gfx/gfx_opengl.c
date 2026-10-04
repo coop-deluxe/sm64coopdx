@@ -44,7 +44,6 @@
 
 struct GLTexture {
     GLuint tex;
-    const Texture *addr;
     u32 width;
     u32 height;
     bool filter;
@@ -85,32 +84,9 @@ static GLuint sFallbackTexture = 0;
 static const char *sVanillaTexUniformNames[MAX_TEXTURES] = { "uTex0", "uTex1" };
 
 static void gfx_opengl_cleanup_internal_textures(void) {
-    // preserve vanilla internal textures
-    struct InternalTexture vanillaInternalTextures[MAX_TEXTURES];
-    u32 vanillaTextureCount = 0;
-
-    for (u32 i = 0; i < sInternalTexturesCount; i++) {
-        // check if it's a vanilla texture
-        for (u32 j = 0; j < MAX_TEXTURES; j++) {
-            if (strcmp(sInternalTextures[i].name, sVanillaTexUniformNames[j]) == 0) {
-                // copy it to readd later
-                vanillaInternalTextures[vanillaTextureCount++] = sInternalTextures[i];
-
-                if (vanillaTextureCount == MAX_TEXTURES) { break; }
-            }
-        }
-
-        if (vanillaTextureCount == MAX_TEXTURES) { break; }
-    }
-
     // clear internal textures
     memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = vanillaTextureCount;
-
-    // restore vanilla internal textures into cache
-    for (u32 i = 0; i < vanillaTextureCount; i++) {
-        sInternalTextures[i] = vanillaInternalTextures[i];
-    }
+    sInternalTexturesCount = 0;
 }
 
 static bool gfx_opengl_is_legacy(void);
@@ -519,8 +495,6 @@ static void gfx_opengl_reset_framebuffer(void) {
     gfx_get_dimensions(&windowWidth, &windowHeight);
     glViewport(0, 0, windowWidth, windowHeight);
     glScissor(0, 0, windowWidth, windowHeight);
-
-    gfx_opengl_cleanup_internal_textures();
 }
 
 struct ShaderUniformBlock *gfx_opengl_get_active_uniform_buffer(enum ShaderStage stage) {
@@ -597,7 +571,7 @@ void gfx_opengl_set_uniform(struct ShaderProgram *prg, const char *name, const v
     }
 }
 
-static u32 gfx_opengl_get_texture_id(const Texture *addr) {
+static u32 gfx_opengl_new_texture() {
     // allocate to the texture cache a new texture slot
     if (sTextureCacheCount >= sTextureCacheSize) {
         sTextureCacheSize += TEX_CACHE_STEP;
@@ -608,20 +582,8 @@ static u32 gfx_opengl_get_texture_id(const Texture *addr) {
         sCurrentTextures[0] = NULL;
         sCurrentTextures[1] = NULL;
     }
-    sTextureCache[sTextureCacheCount].addr = addr;
-
     glGenTextures(1, &sTextureCache[sTextureCacheCount].tex);
     return sTextureCacheCount++;
-}
-
-static u64 gfx_opengl_get_render_texture(const Texture *addr) {
-    // iterate through cache and find render texture via the texture info
-    for (u32 i = 0; i < sTextureCacheCount; i++) {
-        if (sTextureCache[i].addr == addr) {
-            return (u64)sTextureCache[i].tex;
-        }
-    }
-    return 0;
 }
 
 static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
@@ -644,42 +606,6 @@ static void gfx_opengl_select_texture(int tile, GLuint texture_id) {
     sInternalTextures[sInternalTexturesCount].name = sVanillaTexUniformNames[tile];
     sInternalTextures[sInternalTexturesCount].tex = sCurrentTextures[tile]->tex;
     sInternalTexturesCount++;
-}
-
-static bool gfx_opengl_render_texture_valid(u64 renderTexture) {
-    u32 texture = (u32)renderTexture;
-    if (texture == 0) { return false; }
-
-    // check the texture cache
-    for (u32 i = 0; i < sTextureCacheCount; i++) {
-        if (sTextureCache[i].tex == texture) {
-            return true;
-        }
-    }
-
-    // check frame passes
-    for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
-        struct FramePass *framePass = &gFramePasses[i];
-        if (!framePass->active) { continue; }
-        if (framePass->colorTexture == texture) {
-            return true;
-        }
-
-        if (framePass->depthTexture == texture) {
-            return true;
-        }
-    }
-
-    if (gDefaultGeoFramePass.colorTexture == texture) {
-        return true;
-    }
-
-    if (gDefaultGeoFramePass.depthTexture == texture) {
-        return true;
-    }
-
-    // the texture id must be invalid
-    return false;
 }
 
 static void gfx_opengl_bind_texture_using_name(const char *name, u64 renderTexture) {
@@ -705,7 +631,6 @@ static void gfx_opengl_upload_texture(const u8 *rgba32_buf, int width, int heigh
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba32_buf);
     sCurrentTextures[sCurrentTextureIndex]->width = width;
     sCurrentTextures[sCurrentTextureIndex]->height = height;
-    gfx_opengl_cleanup_internal_textures();
 }
 
 static u32 gfx_cm_to_opengl(u32 val) {
@@ -727,7 +652,6 @@ static void gfx_opengl_set_sampler_parameters(int tile, bool linear_filter, u32 
         sCurrentTextures[tile]->filter = linear_filter;
         gfx_opengl_set_texture_uniforms(sShaderProgram, tile);
     }
-    gfx_opengl_cleanup_internal_textures();
 }
 
 static void gfx_opengl_set_depth_test(bool depth_test) {
@@ -966,10 +890,10 @@ static void gfx_opengl_start_frame(void) {
 }
 
 static void gfx_opengl_end_frame(void) {
-    gfx_opengl_cleanup_internal_textures();
 }
 
 static void gfx_opengl_finish_render(void) {
+    gfx_opengl_cleanup_internal_textures();
 }
 
 static const char *gfx_opengl_get_name(void) {
@@ -1009,10 +933,8 @@ struct GfxRenderingAPI gfx_opengl_api = {
     gfx_opengl_get_active_uniform_buffer,
     gfx_opengl_set_uniform_buffer,
     gfx_opengl_set_uniform,
-    gfx_opengl_get_texture_id,
-    gfx_opengl_get_render_texture,
+    gfx_opengl_new_texture,
     gfx_opengl_select_texture,
-    gfx_opengl_render_texture_valid,
     gfx_opengl_bind_texture_using_name,
     gfx_opengl_upload_texture,
     gfx_opengl_set_sampler_parameters,

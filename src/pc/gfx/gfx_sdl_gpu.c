@@ -78,7 +78,6 @@ static struct GpuRingBuffer sVertexRingBuffer = { 0 };
 struct TextureData {
     SDL_GPUTexture *texture;
     SDL_GPUSampler *sampler;
-    const Texture *addr;
     u32 width;
     u32 height;
     bool linearFilter;
@@ -472,32 +471,9 @@ static void gfx_sdl_gpu_reset_state(void) {
 }
 
 static void gfx_sdl_gpu_cleanup_internal_textures(void) {
-    // preserve vanilla internal textures
-    struct InternalTexture vanillaInternalTextures[MAX_TEXTURES];
-    u32 vanillaTextureCount = 0;
-
-    for (u32 i = 0; i < sInternalTexturesCount; i++) {
-        // check if it's a vanilla texture
-        for (u32 j = 0; j < MAX_TEXTURES; j++) {
-            if (strcmp(sInternalTextures[i].name, sVanillaTexUniformNames[j]) == 0) {
-                // copy it to readd later
-                vanillaInternalTextures[vanillaTextureCount++] = sInternalTextures[i];
-
-                if (vanillaTextureCount == MAX_TEXTURES) { break; }
-            }
-        }
-
-        if (vanillaTextureCount == MAX_TEXTURES) { break; }
-    }
-
     // clear internal textures
     memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = vanillaTextureCount;
-
-    // restore vanilla internal textures into cache
-    for (u32 i = 0; i < vanillaTextureCount; i++) {
-        sInternalTextures[i] = vanillaInternalTextures[i];
-    }
+    sInternalTexturesCount = 0;
 }
 
 static void gfx_sdl_gpu_create_depth_texture(void) {
@@ -1107,7 +1083,7 @@ static void gfx_sdl_gpu_set_uniform(struct ShaderProgram *prg, const char *name,
     }
 }
 
-static u32 gfx_sdl_gpu_get_texture_id(const Texture *addr) {
+static u32 gfx_sdl_gpu_new_texture(void) {
     // allocate a new slot to the texture cache
     if (sTextureCacheCount >= sTextureCacheCapacity) {
         sTextureCacheCapacity = (sTextureCacheCapacity == 0) ? 16 : sTextureCacheCapacity * 2;
@@ -1118,18 +1094,7 @@ static u32 gfx_sdl_gpu_get_texture_id(const Texture *addr) {
     }
 
     memset(&sTextureCache[sTextureCacheCount], 0, sizeof(struct TextureData));
-    sTextureCache[sTextureCacheCount].addr = addr;
     return sTextureCacheCount++;
-}
-
-static u64 gfx_sdl_gpu_get_render_texture(const Texture *addr) {
-    // grab render texture from texture cache
-    for (u32 i = 0; i < sTextureCacheCount; i++) {
-        if (sTextureCache[i].addr == addr) {
-            return (u64)sTextureCache[i].texture;
-        }
-    }
-    return 0;
 }
 
 static void gfx_sdl_gpu_bind_texture_using_name(const char *name, u64 renderTexture);
@@ -1151,42 +1116,6 @@ static struct TextureData *gfx_sdl_gpu_texture_for_tile(s32 tile) {
     return &sTextureCache[textureId];
 }
 
-static bool gfx_sdl_gpu_render_texture_valid(u64 renderTexture) {
-    SDL_GPUTexture *texture = (SDL_GPUTexture *)renderTexture;
-    if (texture == NULL) { return false; }
-
-    // check the texture cache
-    for (u32 i = 0; i < sTextureCacheCount; i++) {
-        if (sTextureCache[i].texture == texture) {
-            return true;
-        }
-    }
-
-    // check frame passes
-    for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
-        struct FramePass *framePass = &gFramePasses[i];
-        if (!framePass->active) { continue; }
-        if (framePass->colorTex == texture) {
-            return true;
-        }
-
-        if (framePass->depthTex == texture) {
-            return true;
-        }
-    }
-
-    if (gDefaultGeoFramePass.colorTex == texture) {
-        return true;
-    }
-
-    if (gDefaultGeoFramePass.depthTex == texture) {
-        return true;
-    }
-
-    // the texture id must be invalid
-    return false;
-}
-
 static void gfx_sdl_gpu_bind_texture_using_name(const char *name, u64 renderTexture) {
     SDL_GPUTexture *texture = (SDL_GPUTexture *)renderTexture;
     if (name == NULL || texture == NULL) { return; }
@@ -1196,17 +1125,25 @@ static void gfx_sdl_gpu_bind_texture_using_name(const char *name, u64 renderText
     u32 height = 0;
     enum TextureFilter filter = TEXTURE_FILTER_LINEAR;
 
-    // try looking in texture cache
-    for (u32 i = 0; i < sTextureCacheCount; i++) {
-        if (sTextureCache[i].texture == texture) {
-            sampler = sTextureCache[i].sampler;
-            width = sTextureCache[i].width;
-            height = sTextureCache[i].height;
-            filter = sTextureCache[i].linearFilter ? TEXTURE_FILTER_LINEAR : TEXTURE_FILTER_NEAREST;
+    bool vanillaSampler = false;
+    int tile = 0;
+    for (u32 i = 0; i < MAX_TEXTURES; i++) {
+        if (strcmp(name, sVanillaTexUniformNames[i]) == 0) {
+            tile = i;
+            vanillaSampler = true;
+            break;
         }
     }
 
-    if (sampler == NULL) {
+    if (vanillaSampler) {
+        struct TextureData *textureData = gfx_sdl_gpu_texture_for_tile(tile);
+        if (textureData) {
+            sampler = textureData->sampler;
+            width = textureData->width;
+            height = textureData->height;
+            filter = textureData->linearFilter ? TEXTURE_FILTER_LINEAR : TEXTURE_FILTER_NEAREST;
+        }
+    } else {
         // check frame pass textures, both depth and color
         struct FramePass *currentFramePass = NULL;
         bool isDepthTexture = false;
@@ -1363,6 +1300,7 @@ static void gfx_sdl_gpu_upload_texture(const u8 *rgba32_buf, s32 width, s32 heig
     }
     textureData->texture = texture;
     gfx_sdl_gpu_cleanup_internal_textures();
+    gfx_sdl_gpu_bind_texture_using_name(sVanillaTexUniformNames[sCurrentTile], (u64)textureData->texture);
 }
 
 static void gfx_sdl_gpu_set_sampler_parameters(s32 tile, bool linear_filter, u32 cms, u32 cmt) {
@@ -1396,6 +1334,7 @@ static void gfx_sdl_gpu_set_sampler_parameters(s32 tile, bool linear_filter, u32
     textureData->cms = cms;
     textureData->cmt = cmt;
     gfx_sdl_gpu_cleanup_internal_textures();
+    gfx_sdl_gpu_bind_texture_using_name(sVanillaTexUniformNames[sCurrentTile], (u64)textureData->texture);
 }
 
 static void gfx_sdl_gpu_set_depth_test(bool depthTest) {
@@ -1921,10 +1860,8 @@ struct GfxRenderingAPI gfx_sdl_gpu_api = {
     gfx_sdl_gpu_get_active_uniform_buffer,
     gfx_sdl_gpu_set_uniform_buffer,
     gfx_sdl_gpu_set_uniform,
-    gfx_sdl_gpu_get_texture_id,
-    gfx_sdl_gpu_get_render_texture,
+    gfx_sdl_gpu_new_texture,
     gfx_sdl_gpu_select_texture,
-    gfx_sdl_gpu_render_texture_valid,
     gfx_sdl_gpu_bind_texture_using_name,
     gfx_sdl_gpu_upload_texture,
     gfx_sdl_gpu_set_sampler_parameters,
