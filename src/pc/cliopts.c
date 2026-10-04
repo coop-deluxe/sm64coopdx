@@ -141,7 +141,7 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.backend = GFX_WINDOW_BACKEND_METAL;
 #endif
             }
-        } else if (!strcmp(argv[i], "no-threaded-rendering")) {
+        } else if (!strcmp(argv[i], "--no-threaded-rendering")) {
             gCLIOpts.disableThreadedRendering = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
