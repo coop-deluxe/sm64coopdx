@@ -164,7 +164,7 @@ A shader may contain uniforms. As per the GLSL naming convention, uniform variab
 | `uDepthZAdd` | `float` | Value from CPU for calculating fog check |
 | `uFogEnabled` | `float` | Whether or not fog is currently enabled |
 
-For defining a custom uniform in lua, use the `HOOK_ON_SET_SHADER_PROGRAM`, hook and use the `gfx_shader_set_uniform` function. If you need to set a uniform every triangle draw, do note there is a lot of performance overhead, but if it is necessary, use `HOOK_ON_DRAW_TRIANGLE`.
+For defining a custom uniform in lua, use the `gfx_shader_set_uniform` function.
 
 You can also define uniform buffers with no explicit locations, such as:
 
@@ -179,7 +179,7 @@ uniform LightData {
 These allow you to pass more data. To utilize this, set the current uniform block to your custom one, and set the data accordingly:
 
 ```lua
-function on_set_shader_program() {
+function update() {
     gfx_shader_set_uniform_buffer("LightData")
     gfx_shader_set_uniform("uLightPositions", lightPositions)
     gfx_shader_set_uniform("uLightColor", lightColors)
@@ -192,15 +192,11 @@ If your light data in the vertex shader does not match the light shader in the f
 ```lua
 local sceneBrightness = 0.5
 
-local function on_set_shader_uniforms()
-    -- if necessary, check frame pass index using this code
-    -- local framePass = gfx_shader_get_current_frame_pass_index()
-    -- if framePass ~= FRAME_PASS_REQ then return end
-
+local function update()
     gfx_shader_set_float("uSceneBrightness", sceneBrightness)
 end
 
-hook_event(HOOK_ON_SET_SHADER_PROGRAM, on_set_shader_uniforms)
+hook_event(HOOK_UPDATE, update)
 ```
 
 That allows you to define your own uniforms and set your uniforms in Lua!
