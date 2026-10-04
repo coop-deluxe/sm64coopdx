@@ -290,7 +290,7 @@ void config_gfx_pool(void) {
     static u32 sGfxPoolIndex = 0;
     u32 pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
     gGfxPool = &gGfxPools[pool];
-    if (render_thread_processing_dl(gGfxPool->buffer)) {
+    while (render_thread_processing_dl(gGfxPool->buffer)) {
         pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
         gGfxPool = &gGfxPools[pool];
     }
