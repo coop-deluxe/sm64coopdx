@@ -39,6 +39,7 @@ struct CLIOptions {
     char** enableMods;
     bool headless;
     enum GfxWindowBackend backend;
+    bool disableThreadedRendering;
 };
 
 extern struct CLIOptions gCLIOpts;

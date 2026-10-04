@@ -679,7 +679,9 @@ int main(int argc, char *argv[]) {
     terminal_init();
 
     // startup render thread
-    init_thread_handle(&gRenderThread, render_thread_init, NULL, NULL, 0);
+    if (!gCLIOpts.disableThreadedRendering) {
+        init_thread_handle(&gRenderThread, render_thread_init, NULL, NULL, 0);
+    }
 
     // main loop
     while (true) {

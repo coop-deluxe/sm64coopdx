@@ -37,10 +37,13 @@ static void print_help(void) {
     log_to_terminal("--enable-mod MODNAME      Enables a mod.\n");
     log_to_terminal("--headless                Enable Headless mode.\n");
 #if defined(_WIN32)
-    log_to_terminal("--backend                 Sets the backend to either 'opengl' or 'directx'.");
+    log_to_terminal("--backend                 Sets the backend to either 'opengl' or 'directx' or 'vulkan'.\n");
 #elif defined(OSX_BUILD)
-    log_to_terminal("--backend                 Sets the backend to either 'opengl' or 'metal'.");
+    log_to_terminal("--backend                 Sets the backend to either 'opengl' or 'metal'.\n");
+#elif defined(__linux)
+    log_to_terminal("--backend                 Sets the backend to either 'opengl' or 'vulkan'.\n");
 #endif
+    log_to_terminal("--no-threaded-rendering   Disables threaded rendering, moving rendering onto the main thread.\n");
 }
 
 static inline int arg_string(const char *name, const char *value, char *target, int maxLength) {
@@ -138,6 +141,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
                 gCLIOpts.backend = GFX_WINDOW_BACKEND_METAL;
 #endif
             }
+        } else if (!strcmp(argv[i], "no-threaded-rendering")) {
+            gCLIOpts.disableThreadedRendering = true;
         } else if (!strcmp(argv[i], "--help")) {
             print_help();
             return false;
