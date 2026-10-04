@@ -108,7 +108,6 @@ void network_send_area(struct NetworkPlayer* toNp) {
             } else {
                 struct Object* spawn_objects[] = { so->o };
 
-                // TODO: move find model to a utility file/function
                 // find model
                 u32 model = dynos_model_get_id_from_graph_node(so->o->header.gfx.sharedChild);
 
