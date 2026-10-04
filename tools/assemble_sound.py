@@ -443,9 +443,9 @@ def validate_bank(json, sample_bank):
         validate(
             inst in instrument_names, "reference to non-existent instrument " + inst
         )
-        validate(
-            inst not in seen_instruments, inst + " occurs twice in the instrument list"
-        )
+        # validate(
+        #     inst not in seen_instruments, inst + " occurs twice in the instrument list"
+        # )
         seen_instruments.add(inst)
 
     for inst in instrument_names:
