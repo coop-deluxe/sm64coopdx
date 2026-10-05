@@ -31,6 +31,7 @@ void aDMEMMoveImpl(uint16_t in_addr, uint16_t out_addr, int nbytes);
 void aSetLoopImpl(ADPCM_STATE *adpcm_loop_state);
 void aADPCMdecImpl(uint8_t flags, ADPCM_STATE state);
 void aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state);
+void aResampleImplHermite(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state);
 void aEnvMixerImpl(uint8_t flags, ENVMIX_STATE state);
 void aMixImpl(int16_t gain, uint16_t in_addr, uint16_t out_addr);
 
@@ -46,7 +47,7 @@ void aMixImpl(int16_t gain, uint16_t in_addr, uint16_t out_addr);
 #define aDMEMMove(pkt, i, o, c) aDMEMMoveImpl(i, o, c)
 #define aSetLoop(pkt, a) aSetLoopImpl(a)
 #define aADPCMdec(pkt, f, s) aADPCMdecImpl(f, s)
-#define aResample(pkt, f, p, s) aResampleImpl(f, p, s)
+#define aResample(pkt, f, p, s) (configHermiteResample ? aResampleImplHermite(f, p, s) : aResampleImpl(f, p, s))
 #define aEnvMixer(pkt, f, s) aEnvMixerImpl(f, s)
 #define aMix(pkt, f, g, i, o) aMixImpl(g, i, o)
 
