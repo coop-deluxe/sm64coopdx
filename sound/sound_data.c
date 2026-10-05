@@ -5,19 +5,19 @@
 #define SEQUENCES_SIZE 0x1ca00
 
 unsigned char gSoundDataADSR[] = {
-#include "sound/sound_data.ctl.inc.c"
+#embed "sound/sound_data.ctl"
 };
 
 unsigned char gSoundDataRaw[SAMPLES_SIZE] = {
-#include "sound/sound_data.tbl.inc.c"
+#embed "sound/sound_data.tbl"
 };
 
 unsigned char gMusicData[SEQUENCES_SIZE] = {
-#include "sound/sequences.bin.inc.c"
+#embed "sound/sequences.bin"
 };
 
 #ifndef VERSION_SH
 unsigned char gBankSetsData[] = {
-#include "sound/bank_sets.inc.c"
+#embed "sound/bank_sets"
 };
 #endif
