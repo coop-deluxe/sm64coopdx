@@ -23,17 +23,19 @@ jobs:
               - name: Linux
                 os: ubuntu-22.04
                 deps: |
+                  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
                   sudo apt update
-                  sudo apt install -y build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
+                  sudo apt install -y build-essential gcc-15 git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
                 make: make -j$(nproc)
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: SteamOS
                 os: ubuntu-22.04
                 deps: |
+                  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
                   sudo apt update
-                  sudo apt install -y build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
-                make: make -j$(nproc)
+                  sudo apt install -y build-essential gcc-15 git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
+                make: make -j$(nproc) HANDHELD=1
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: macOS_ARM
@@ -84,7 +86,7 @@ jobs:
               run: ${{ matrix.platform.deps }}
 
             - name: Build the game
-              run: ${{ matrix.platform.make }} ${{ case(matrix.platform.name == 'SteamOS', 'HANDHELD=1', '') }}
+              run: ${{ matrix.platform.make }}
 
             - name: Codesign Ad-Hoc (macOS)
               if: ${{ contains(matrix.platform.name, 'macOS') }}
