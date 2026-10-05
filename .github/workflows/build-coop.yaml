@@ -26,7 +26,7 @@ jobs:
                   sudo add-apt-repository ppa:ubuntu-toolchain-r/test
                   sudo apt update
                   sudo apt install -y build-essential gcc-15 git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
-                make: make -j$(nproc)
+                make: make -j$(nproc) CC=gcc-15 CXX=g++-15
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: SteamOS
@@ -35,7 +35,7 @@ jobs:
                   sudo add-apt-repository ppa:ubuntu-toolchain-r/test
                   sudo apt update
                   sudo apt install -y build-essential gcc-15 git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
-                make: make -j$(nproc) HANDHELD=1
+                make: make -j$(nproc) CC=gcc-15 CXX=g++-15 HANDHELD=1
                 zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: macOS_ARM
