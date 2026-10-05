@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <ultra64.h>
+#include "configfile.h"
 
 #undef aSegment
 #undef aClearBuffer
