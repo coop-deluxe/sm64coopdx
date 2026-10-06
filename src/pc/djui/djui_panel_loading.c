@@ -13,8 +13,10 @@ static bool djui_panel_loading_on_loading_text_change(struct DjuiBase *caller) {
 }
 
 static bool djui_panel_loading_on_game_init(UNUSED struct DjuiBase *caller) {
+    void (*callback)(struct DjuiBase *) = sCallbackFunc;
+    struct DjuiBase *panelCaller = sPanelCaller;
     djui_panel_back_no_transition();
-    if (sCallbackFunc) { sCallbackFunc(sPanelCaller); }
+    if (callback) { callback(panelCaller); }
     sPanelCaller = NULL;
     sCallbackFunc = NULL;
     return true;
