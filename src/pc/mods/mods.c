@@ -2,6 +2,8 @@
 #include "mods.h"
 #include "mods_utils.h"
 #include "mod_cache.h"
+#include "mod_presets.h"
+#include "mod_options.h"
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
 #include "pc/loading.h"
@@ -21,12 +23,14 @@ struct Mods gActiveMods = { 0 };
 
 char gRemoteModsBasePath[SYS_MAX_PATH] = { 0 };
 
-struct LocalEnabledPath {
+struct LocalModState {
     char* relativePath;
-    struct LocalEnabledPath* next;
+    bool enabled;
+    bool favorited;
+    struct LocalModState* next;
 };
 
-struct LocalEnabledPath* sLocalEnabledPaths = NULL;
+struct LocalModState* sLocalModStates = NULL;
 
 void mods_get_main_mod_name(char* destination, u32 maxSize) {
     struct Mod* picked = NULL;
@@ -69,18 +73,21 @@ bool mods_get_all_pausable(void) {
     return pausable;
 }
 
-static void mods_local_store_enabled(void) {
-    assert(sLocalEnabledPaths == NULL);
-    struct LocalEnabledPath* prev = NULL;
+static void mods_local_store_state(void) {
+    assert(sLocalModStates == NULL);
+    struct LocalModState* prev = NULL;
     struct Mods* mods = &gLocalMods;
 
     for (u16 i = 0; i < mods->entryCount; i ++) {
-        if (!mods->entries[i]->enabled) { continue; }
+        struct Mod* mod = mods->entries[i];
+        if (!mod->enabled && !mod->favorited) { continue; }
 
-        struct LocalEnabledPath* n = calloc(1, sizeof(struct LocalEnabledPath));
-        n->relativePath = sys_strdup(mods->entries[i]->relativePath);
+        struct LocalModState* n = calloc(1, sizeof(struct LocalModState));
+        n->relativePath = sys_strdup(mod->relativePath);
+        n->enabled = mod->enabled;
+        n->favorited = mod->favorited;
         if (!prev) {
-            sLocalEnabledPaths = n;
+            sLocalModStates = n;
         } else {
             prev->next = n;
         }
@@ -88,16 +95,17 @@ static void mods_local_store_enabled(void) {
     }
 }
 
-static void mods_local_restore_enabled(void) {
-    struct LocalEnabledPath* n = sLocalEnabledPaths;
+static void mods_local_restore_state(void) {
+    struct LocalModState* n = sLocalModStates;
     while (n) {
-        struct LocalEnabledPath* next = n->next;
-        mods_enable(n->relativePath);
+        struct LocalModState* next = n->next;
+        if (n->enabled) { mods_enable(n->relativePath); }
+        if (n->favorited) { mods_set_favorited(n->relativePath, true); }
         free(n->relativePath);
         free(n);
         n = next;
     }
-    sLocalEnabledPaths = NULL;
+    sLocalModStates = NULL;
 }
 
 bool mods_generate_remote_base_path(void) {
@@ -257,7 +265,7 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
 
 void mods_refresh_local(void) {
     LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Refreshing Mod Cache"));
-    if (gGameInited) { mods_local_store_enabled(); }
+    if (gGameInited) { mods_local_store_state(); }
 
     // figure out user path
     bool hasUserPath = true;
@@ -289,7 +297,7 @@ void mods_refresh_local(void) {
         gLocalMods.size += mod->size;
     }
 
-    if (gGameInited) { mods_local_restore_enabled(); }
+    if (gGameInited) { mods_local_restore_state(); }
 }
 
 void mods_enable(char* relativePath) {
@@ -299,6 +307,24 @@ void mods_enable(char* relativePath) {
         struct Mod* mod = gLocalMods.entries[i];
         if (!strcmp(relativePath, mod->relativePath)) {
             mod->enabled = true;
+            break;
+        }
+    }
+}
+
+void mods_disable_all(void) {
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        gLocalMods.entries[i]->enabled = false;
+    }
+}
+
+void mods_set_favorited(const char* relativePath, bool favorited) {
+    if (!relativePath) { return; }
+
+    for (unsigned int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (!strcmp(relativePath, mod->relativePath)) {
+            mod->favorited = favorited;
             break;
         }
     }
@@ -347,6 +373,8 @@ void mods_clear(struct Mods* mods) {
 }
 
 void mods_shutdown(void) {
+    mod_options_shutdown();
+    mod_presets_shutdown();
     mod_cache_save();
     mod_cache_shutdown();
     mods_clear(&gActiveMods);
