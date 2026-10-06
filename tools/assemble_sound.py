@@ -752,14 +752,14 @@ def serialize_seqfile(
             f.write(ser.finish())
 
         if out_filename.endswith('sound_data.tbl'):
-            out_offsets_filename = out_filename.replace('sound_data.tbl', 'samples_offsets.inc.c')
+            out_offsets_filename = 'sound/samples_offsets.h'
             with open(out_offsets_filename, "w") as f:
                 for fname in asset_offsets:
                     macro_name = 'SAMPLE_' + fname.split('/samples/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
                     f.write(f'#define {macro_name} {hex(asset_offsets[fname] + data_start)} // {fname}\n')
 
         if out_filename.endswith('sequences.bin'):
-            out_offsets_filename = out_filename.replace('sequences.bin', 'sequences_offsets.inc.c')
+            out_offsets_filename = 'sound/sequences_offsets.h'
             with open(out_offsets_filename, "w") as f:
                 for fname in asset_offsets:
                     macro_name = 'SEQUENCE_' + fname.split('/sequences/')[-1].replace('/', '_').replace('.', '_').replace('-', '_')
