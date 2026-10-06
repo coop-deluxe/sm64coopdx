@@ -94,7 +94,6 @@ f32 gFramePercentage = 0.f;
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
 static f64 sFpsTimeLast = 0;
-static f64 sFrameTimeStart = 0;
 static u32 sDrawnFrames = 0;
 
 bool gGameInited = false;
@@ -283,7 +282,7 @@ static void select_graphics_backend(void) {
     }
 }
 
-void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay) {
+void produce_interpolation_frames_and_delay(struct RenderData *renderData) {
     u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
@@ -297,8 +296,8 @@ void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay) {
     }
 
     f64 curTime = clock_elapsed_f64();
-    f64 targetTime = tickDelay ? (sFrameTimeStart + sFrameTime) : (curTime + (1.0 / (f64)refreshRate));
-    s32 numFramesToDraw = tickDelay ? get_num_frames_to_draw(sFrameTimeStart, refreshRate) : 1;
+    f64 targetTime = (renderData->frameStartTime + sFrameTime);
+    s32 numFramesToDraw = get_num_frames_to_draw(renderData->frameStartTime, refreshRate);
 
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
@@ -313,17 +312,23 @@ void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay) {
         ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
-        f64 idealTime = isPacedGrid ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
-        f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
-        gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+        f64 idealTime = isPacedGrid ? (renderData->frameStartTime + interpFrameTime * framesDrawn) : curTime;
+        f32 delta = clamp((idealTime - renderData->frameStartTime) / sFrameTime, 0.f, 1.f);
+        gFramePercentage = clamp((curTime - renderData->frameStartTime) / sFrameTime, 0.f, 1.f);
         gRenderingDelta = delta;
 
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
         if (gGameInited) {
-            gfx_run(dlCommands);
+            gfx_run(renderData->dlCommands);
         }
         gfx_display_frame();
+
+        MUTEX_LOCK(gRenderThread);
+        bool readyForNextRenderData = gNextRenderData.ready;
+        MUTEX_UNLOCK(gRenderThread);
+
+        if (readyForNextRenderData) { break; }
 
         // delay if our framerate is capped
         if (shouldDelay) {
@@ -338,18 +343,11 @@ void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay) {
 
         sDrawnFrames++;
         if (isPacedGrid) { numFramesToDraw--; }
-    } while (tickDelay && (curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
+    } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
 
     // compute and update the frame rate every second
     if ((curTime = clock_elapsed_f64()) >= sFpsTimeLast + 1.0) {
         compute_fps(curTime);
-    }
-
-    // advance frame start time
-    if (curTime > sFrameTimeStart + 2 * sFrameTime) {
-        sFrameTimeStart = curTime;
-    } else {
-        sFrameTimeStart += sFrameTime;
     }
 
     gRenderingInterpolated = false;
@@ -415,7 +413,11 @@ void produce_one_frame(void) {
 
     CTX_EXTENT(CTX_NETWORK, network_update);
 
+    CTX_EXTENT(CTX_CONFIG_GFX_POOL, config_gfx_pool);
+
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+
+    CTX_EXTENT(CTX_EVENTS, gfx_wm_handle_events);
 
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
@@ -430,10 +432,14 @@ void produce_one_frame(void) {
 
     if (gRenderThread.state == INVALID) {
         CTX_BEGIN(CTX_RENDER);
-        produce_interpolation_frames_and_delay((Gfx *)gGfxSPTask->task.t.data_ptr, true);
+        gRenderData.dlCommands = (Gfx *)gGfxSPTask->task.t.data_ptr;
+        gRenderData.gfxPoolIndex = gGfxPoolIndex;
+        gRenderData.frameStartTime = frameStartTime;
+        gRenderData.ready = true;
+        produce_interpolation_frames_and_delay(&gRenderData);
         CTX_END(CTX_RENDER);
     } else {
-        set_dl_for_render_thread((Gfx *)gGfxSPTask->task.t.data_ptr);
+        set_dl_for_render_thread((Gfx *)gGfxSPTask->task.t.data_ptr, frameStartTime);
         f64 elapsedTime = clock_elapsed_f64() - frameStartTime;
         f64 remainingDelay = sFrameTime - elapsedTime;
         if (remainingDelay > 0.0) {

@@ -13,6 +13,7 @@ enum DebugContext {
     CTX_NONE,
     CTX_TOTAL,
     CTX_NETWORK,
+    CTX_CONFIG_GFX_POOL,
     CTX_INTERP,
     CTX_GAME_LOOP,
     CTX_SMLUA,

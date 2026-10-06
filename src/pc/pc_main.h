@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include "render.h"
+
 #include "gfx/gfx_pc.h"
 
 #include "gfx/gfx_opengl.h"
@@ -41,7 +43,7 @@ extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
-void produce_interpolation_frames_and_delay(Gfx *dlCommands, bool tickDelay);
+void produce_interpolation_frames_and_delay(struct RenderData *renderData);
 void game_deinit(void);
 void game_exit(void);
 

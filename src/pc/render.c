@@ -1,21 +1,22 @@
 #include "types.h"
 
 #include "pc_main.h"
+#include "debuglog.h"
+#include "render.h"
 #include "thread.h"
+#include "buffers/buffers.h"
 
-#include "pc/debuglog.h"
+struct RenderData gRenderData = { 0 };
+struct RenderData gNextRenderData = { 0 };
 
 struct ThreadHandle gRenderThread = { 0 };
-
-static Gfx *sCurrentDlCommands = NULL;
-static Gfx *sNextDlCommands = NULL;
 
 bool render_thread_processing_dl(Gfx *dlCommands) {
     if (gRenderThread.state == INVALID) { return false; }
 
     MUTEX_LOCK(gRenderThread);
 
-    if (sCurrentDlCommands == dlCommands) {
+    if (gRenderData.dlCommands == dlCommands) {
         MUTEX_UNLOCK(gRenderThread);
         return true;
     }
@@ -24,25 +25,28 @@ bool render_thread_processing_dl(Gfx *dlCommands) {
     return false;
 }
 
-void set_dl_for_render_thread(Gfx *dlCommands) {
+void set_dl_for_render_thread(Gfx *dlCommands, f64 frameStartTime) {
     if (gRenderThread.state == INVALID) { return; }
     if (!dlCommands) { return; }
     MUTEX_LOCK(gRenderThread);
-    sNextDlCommands = dlCommands;
+    gNextRenderData.dlCommands = dlCommands;
+    gNextRenderData.gfxPoolIndex = gGfxPoolIndex;
+    gNextRenderData.frameStartTime = frameStartTime;
+    gNextRenderData.ready = true;
     MUTEX_UNLOCK(gRenderThread);
 }
 
 void *render_thread_init(UNUSED void *dummy) {
     while (1) {
         MUTEX_LOCK(gRenderThread);
-        if (sNextDlCommands != NULL) {
-            sCurrentDlCommands = sNextDlCommands;
-            sNextDlCommands = NULL;
+        if (gNextRenderData.ready) {
+            gRenderData = gNextRenderData;
+            gNextRenderData.ready = false;
         }
         MUTEX_UNLOCK(gRenderThread);
 
-        if (sCurrentDlCommands != NULL) {
-            produce_interpolation_frames_and_delay(sCurrentDlCommands, false);
+        if (gRenderData.dlCommands != NULL) {
+            produce_interpolation_frames_and_delay(&gRenderData);
         } else {
             gfx_wm_delay(1); // don't use 100% cpu usage
         }

@@ -40,6 +40,7 @@ struct SPTask *gGfxSPTask = NULL;
 Gfx *gDisplayListHead = NULL;
 u8 *gGfxPoolEnd = NULL;
 struct GfxPool *gGfxPool = NULL;
+u32 gGfxPoolIndex = 0;
 OSContStatus gControllerStatuses[4] = { 0 };
 OSContPad gControllerPads[4] = { 0 };
 u8 gControllerBits = 0;
@@ -287,14 +288,13 @@ void rendering_init(void) {
 }
 
 void config_gfx_pool(void) {
-    static u32 sGfxPoolIndex = 0;
-    u32 pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
-    gGfxPool = &gGfxPools[pool];
+    gGfxPoolIndex = (gGfxPoolIndex + 1) % GFX_NUM_POOLS;
+    gGfxPool = &gGfxPools[gGfxPoolIndex];
     while (render_thread_processing_dl(gGfxPool->buffer)) {
-        pool = sGfxPoolIndex++ % GFX_NUM_POOLS;
-        gGfxPool = &gGfxPools[pool];
+        gGfxPoolIndex = (gGfxPoolIndex + 1) % GFX_NUM_POOLS;
+        gGfxPool = &gGfxPools[gGfxPoolIndex];
     }
-    display_list_set_process_pool(pool);
+    display_list_set_process_pool(gGfxPoolIndex);
     set_segment_base_addr(1, gGfxPool->buffer);
     gGfxSPTask = &gGfxPool->spTask;
     gDisplayListHead = gGfxPool->buffer;
@@ -641,7 +641,6 @@ void game_loop_one_iteration(void) {
 
     thread6_rumble_loop(NULL);
     audio_game_loop_tick();
-    config_gfx_pool();
     read_controller_inputs();
     levelCommandAddr = level_script_execute(levelCommandAddr);
     display_and_vsync();
