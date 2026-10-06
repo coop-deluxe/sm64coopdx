@@ -1801,19 +1801,19 @@ void func_802f41e4(s32 audioResetStatus) {
 
 #if defined(VERSION_SH)
 u8 gShindouSoundBanksHeader[] = {
-#include "sound/ctl_header.inc.c"
+    #embed "sound/ctl_header"
 };
 
 u8 gBankSetsData[] = {
-#include "sound/bank_sets.inc.c"
+    #embed "sound/bank_sets"
 };
 
 u8 gShindouSampleBanksHeader[] = {
-#include "sound/tbl_header.inc.c"
+    #embed "sound/tbl_header"
 };
 
 u8 gShindouSequencesHeader[] = {
-#include "sound/sequences_header.inc.c"
+    #embed "sound/sequences_header"
 };
 #endif
 
