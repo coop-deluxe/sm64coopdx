@@ -45,19 +45,19 @@ def remove_file(fname):
 
 
 def clean_assets(local_asset_file):
+    # If extended folder exists, delete it
+    if os.path.exists("sound/samples/extended/"):
+        shutil.rmtree("sound/samples/extended/")
+        print("deleting extended sample bank")
+
     if local_asset_file is None:
         return
-
-    # If extended folder exists, delete it
-    if os.path.exists('sound/samples/extended/'):
-        shutil.rmtree("sound/samples/extended/")
-        print('deleting extended sample bank')
 
     assets = set(read_asset_map().keys())
     assets.update(read_local_asset_list(local_asset_file))
     local_asset_file.close()
     for fname in list(assets) + [".assets-local.txt"]:
-        if fname.startswith("@"):
+        if fname.startswith('@'):
             continue
         try:
             remove_file(fname)
