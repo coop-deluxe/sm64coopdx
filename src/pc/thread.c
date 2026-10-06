@@ -5,9 +5,17 @@
 
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
     int err1 = init_mutex(handle);
-    int err2 = init_thread(handle, entry, arg, sp, sp_size);
+    if (err1 != 0) {
+        return err1;
+    }
 
-    return (err1 != 0 || err2 != 0);
+    int err2 = init_thread(handle, entry, arg, sp, sp_size);
+    if (err2 != 0) {
+        destroy_mutex(handle);
+        return err2;
+    }
+
+    return 0;
 }
 
 void free_thread_handle(struct ThreadHandle *handle) {
