@@ -427,6 +427,14 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
 endif
 
+ifneq ($(filter sound,$(MAKECMDGOALS)),)
+  DUMMY != $(PYTHON) extract_assets.py $(VERSION) >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to extract assets)
+  endif
+endif
+
+
 #==============================================================================#
 # Target Executable and Sources                                                #
 #==============================================================================#
@@ -1331,13 +1339,6 @@ $(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
 $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
 	$(call print,Converting to M64:,$<,$@)
 	$(V)$(OBJCOPY) -j .rodata $< -O binary $@
-
-ifneq ($(filter sound,$(MAKECMDGOALS)),)
-  DUMMY != $(PYTHON) extract_assets.py $(VERSION) >&2 || echo FAIL
-  ifeq ($(DUMMY),FAIL)
-    $(error Failed to extract assets)
-  endif
-endif
 
 sound: sound/sequences.json sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
 	@$(PRINT) "$(GREEN)Generating sound data$(NO_COL)"
