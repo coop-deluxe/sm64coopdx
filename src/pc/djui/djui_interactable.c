@@ -24,6 +24,8 @@ static u16 sKeyboardButtons = 0;
 static bool sIgnoreInteractableUntilCursorReleased = false;
 static bool sIgnoreAllInputsWhenBinding = false;
 static int sPendingConsoleToggleScancode = -1;
+static int sPendingChatToggleScancode = -1;
+static int sPendingChatCommandToggleScancode = -1;
 
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
@@ -241,11 +243,19 @@ bool djui_interactable_on_key_down(int scancode) {
         }
 
         if (pressChat && !gDjuiConsoleFocus) {
+            if (sPendingChatToggleScancode == scancode) {
+                return true;
+            }
+            sPendingChatToggleScancode = scancode;
             djui_chat_box_toggle();
             return true;
         }
 
         if (pressChatCommand && !gDjuiConsoleFocus) {
+            if (sPendingChatCommandToggleScancode == scancode) {
+                return true;
+            }
+            sPendingChatCommandToggleScancode = scancode;
             djui_chat_box_open_with_text("/");
             return true;
         }
@@ -305,6 +315,14 @@ void djui_interactable_on_key_up(int scancode) {
             djui_console_toggle();
         }
         sPendingConsoleToggleScancode = -1;
+    }
+
+    if (sPendingChatToggleScancode != -1 && scancode == sPendingChatToggleScancode) {
+        sPendingChatToggleScancode = -1;
+    }
+
+    if (sPendingChatCommandToggleScancode != -1 && scancode == sPendingChatCommandToggleScancode) {
+        sPendingChatCommandToggleScancode = -1;
     }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {
