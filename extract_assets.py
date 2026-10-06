@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-import os
+import os, shutil
 import json
 
 
@@ -45,12 +45,17 @@ def remove_file(fname):
 
 
 def clean_assets(local_asset_file):
+    if local_asset_file is None:
+        return
+
     # If extended folder exists, delete it
     if os.path.exists('sound/samples/extended/'):
-        os.system('rm -rf sound/samples/extended/')
-        print('Deleted extended soundbank folder')
+        shutil.rmtree("sound/samples/extended/")
+        print('deleting extended sample bank')
+
     assets = set(read_asset_map().keys())
     assets.update(read_local_asset_list(local_asset_file))
+    local_asset_file.close()
     for fname in list(assets) + [".assets-local.txt"]:
         if fname.startswith("@"):
             continue
@@ -286,5 +291,9 @@ def main():
     with open(".assets-local.txt", "w") as f:
         f.write(output)
 
+
+main()
+
+from tools.copy_extended_sounds import main
 
 main()

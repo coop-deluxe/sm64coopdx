@@ -428,13 +428,6 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 endif
 
 #==============================================================================#
-# Extra Source Files                                                           #
-#==============================================================================#
-
-# Copy missing instrument samples from the music sound banks
-_ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
-
-#==============================================================================#
 # Target Executable and Sources                                                #
 #==============================================================================#
 
@@ -1168,7 +1161,7 @@ $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
+	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
