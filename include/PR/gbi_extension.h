@@ -8,7 +8,7 @@
 // For RDP commands, use decrementing numbers starting from ff.
 // Please update the following table when implementing a new command.
 //
-// RSP ->                  08 09 0a 0b 0c 0d 0e 0f
+// RSP ->                        0a 0b 0c 0d 0e 0f
 //             14 15 16 17 18 19 1a 1b 1c 1d 1e 1f
 // 20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f
 // 30 31 32 33 34 35 36 37 38 39 3a 3b 3c 3d 3e 3f
@@ -220,6 +220,59 @@
 #define gsSPFresnel(scale, offset) \
     gsMoveWd(G_MW_FX, G_MWO_FRESNEL, \
         (_SHIFTL((scale), 16, 16) | _SHIFTL((offset), 0, 16)))
+
+  //////////////////
+ // G_INTERP_EXT //
+//////////////////
+
+#define G_INTERP_EXT 0x08
+
+#define G_INTERP_INTERPOLATE 0
+#define G_INTERP_TYPE_MTX 1
+// #define G_INTERP_TYPE_SHADOW 2
+
+#define gSPCreateInterp(pkt, type, value) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(type,16,8); \
+    _g->words.w1 = (uintptr_t)(value); \
+}
+
+#define gsSPCreateInterp(type, value) \
+{ \
+    (_SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(type,16,8)), \
+    (uintptr_t)(value) \
+}
+
+#define gSPInterpolate(pkt) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(G_INTERP_INTERPOLATE,16,8); \
+}
+
+#define gsSPInterpolate(pkt) \
+{ \
+    (_SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(G_INTERP_INTERPOLATE,16,8)) \
+}
+
+  /////////////////////////////
+ // G_SET_CAMERA_INTERP_EXT //
+/////////////////////////////
+
+#define G_SET_CAMERA_INTERP_EXT 0x09
+
+#define gSPSetCameraInterp(pkt, cameraInterp) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_SET_CAMERA_INTERP_EXT,24,8); \
+    _g->words.w1 = (uintptr_t)cameraInterp; \
+}
+
+#define gsSPSetCameraInterp(cameraInterp) \
+{ \
+    (_SHIFTL(G_SET_CAMERA_INTERP_EXT,24,8)), \
+    (uintptr_t)cameraInterp \
+}
 
 /////////////////
 // G_STATE_EXT //

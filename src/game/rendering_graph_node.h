@@ -57,6 +57,25 @@ struct GraphNodeInterpData {
 struct GraphNodeInterpData *geo_get_interp_data(void *node, struct GraphNodeObject *obj);
 void geo_clear_interp_data();
 
+struct CameraInterp {
+    Mat4 *matrixPtr;
+    Mat4 *matrixPtrPrev;
+    Vec3f pos;
+    Vec3f prevPos;
+    Vec3f focus;
+    Vec3f prevFocus;
+    s16 roll;
+};
+
+struct MtxInterp {
+    Gfx *pos;
+    Mtx *mtx;
+    Mtx *mtxPrev;
+    void *displayList;
+    Mtx interp;
+    u8 usingCamSpace;
+};
+
 struct ShadowInterp {
     Gfx*  gfx;
     Vec3f shadowPos;

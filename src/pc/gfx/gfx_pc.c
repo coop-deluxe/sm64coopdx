@@ -31,6 +31,8 @@
 #include "pc/pc_main.h"
 #include "pc/platform.h"
 
+#include "pc/utils/misc.h"
+
 #include "pc/fs/fs.h"
 
 #include "pc/gfx/gfx_cc.h"
@@ -76,6 +78,15 @@ struct RDP {
     void *color_image_address;
 };
 static struct RDP rdp;
+
+struct InterpState {
+    u32 type;
+    void *value;
+};
+
+static struct InterpState sLastInterpState = { 0 };
+
+static struct CameraInterp *sCurrentCameraInterp = NULL;
 
 struct GfxState {
     struct RSP rsp;
@@ -161,6 +172,8 @@ int gSelectedFragmentUniformBuffer = 0;
 enum ShaderStage gSelectedShaderStage = SHADER_STAGE_ANY;
 
 static u32 sFrameCount = 0;
+
+extern f32 gRenderingDelta;
 
 static bool sOnlyTextureChangeOnAddrChange = false;
 static void gfx_update_loaded_texture(uint8_t tile_number, uint32_t size_bytes, const uint8_t* addr) {
@@ -2228,6 +2241,8 @@ static void gfx_sp_reset(void) {
     rsp.modelview_matrix_stack_size = 1;
     rsp.current_num_lights = 2;
     rsp.lights_changed = true;
+    memset(&sLastInterpState, 0, sizeof(struct InterpState));
+    sCurrentCameraInterp = NULL;
     num_gfx_states = 0;
     sRenderingState.x_adjust_4by3 = 0;
     rdp.viewport_or_scissor_changed = true;
@@ -2738,6 +2753,66 @@ static void OPTIMIZE_O3 djui_gfx_sp_simple_tri1(uint8_t vtx1_idx, uint8_t vtx2_i
     return;
 }
 
+static void gfx_sp_interpolate(u32 type, void *value) {
+    if (type == G_INTERP_INTERPOLATE) {
+        switch (sLastInterpState.type) {
+            case G_INTERP_TYPE_MTX: {
+                // get matrix interp from value
+                struct MtxInterp *mtxInterp = sLastInterpState.value;
+                if (mtxInterp == NULL) { return; }
+
+                Mtx camTranfInv, prevCamTranfInv;
+                Mtx camInterp;
+                bool translateCamSpace = sCurrentCameraInterp && sCurrentCameraInterp->matrixPtr != NULL && sCurrentCameraInterp->matrixPtrPrev != NULL;
+                if (translateCamSpace) {
+                    // compute inverse camera matrix to transform out of camera space later
+                    mtxf_inverse(camTranfInv.m, *sCurrentCameraInterp->matrixPtr);
+                    mtxf_inverse(prevCamTranfInv.m, *sCurrentCameraInterp->matrixPtrPrev);
+
+                    // use camera node's stored information to calculate interpolated camera transform
+                    Vec3f posInterp, focusInterp;
+                    delta_interpolate_vec3f(posInterp, sCurrentCameraInterp->prevPos, sCurrentCameraInterp->pos, gRenderingDelta);
+                    delta_interpolate_vec3f(focusInterp, sCurrentCameraInterp->prevFocus, sCurrentCameraInterp->focus, gRenderingDelta);
+                    mtxf_lookat(camInterp.m, posInterp, focusInterp, sCurrentCameraInterp->roll);
+                    mtxf_to_mtx(&camInterp, camInterp.m);
+                    mtxf_inverse(gInverseCameraMatrix.m, camInterp.m);
+                }
+
+                Mtx *srcMtx = mtxInterp->mtx;
+                Mtx *srcMtxPrev = mtxInterp->mtxPrev;
+
+                if (mtxInterp->usingCamSpace && translateCamSpace) {
+                    // transform out of camera space so the matrix can interp in world space
+                    Mtx bufMtx, bufMtxPrev;
+                    mtxf_copy(bufMtx.m, srcMtx->m);
+                    mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
+                    mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
+                    mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+                    srcMtx = &bufMtx;
+                    srcMtxPrev = &bufMtxPrev;
+                }
+                delta_interpolate_mtx(&mtxInterp->interp, srcMtxPrev, srcMtx, gRenderingDelta);
+                if (mtxInterp->usingCamSpace) {
+                    // transform back to camera space, respecting camera interpolation
+                    mtxf_mul(mtxInterp->interp.m, mtxInterp->interp.m, camInterp.m);
+                }
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    } else {
+        sLastInterpState.type = type;
+        sLastInterpState.value = value;
+    }
+}
+
+static void gfx_sp_set_camera_interp(struct CameraInterp *cameraInterp) {
+    sCurrentCameraInterp = cameraInterp;
+}
+
 static void gfx_sp_load_or_save_state(uint8_t cmd, uint32_t state) {
 
     // Load state
@@ -2922,6 +2997,11 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
         case G_PPARTTOCOLOR:
             gfx_sp_copy_playerpart_to_color(C0(16, 8), cmd->words.w1);
             break;
+        case G_INTERP_EXT:
+            gfx_sp_interpolate(C0(16, 8), (void *)cmd->words.w1);
+            break;
+        case G_SET_CAMERA_INTERP_EXT:
+            gfx_sp_set_camera_interp((struct CameraInterp *)cmd->words.w1);
         case G_STATE_EXT:
             gfx_sp_load_or_save_state(C0(16, 8), cmd->words.w1);
             break;
