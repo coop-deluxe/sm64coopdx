@@ -227,14 +227,18 @@
 
 #define G_INTERP_EXT 0x08
 
-// actions
 #define G_INTERP_INTERPOLATE 0
-#define G_INTERP_SET_CAM_INTERP 1
-#define G_INTERP_SET_SKIP_PERSPECTIVE_INTERP 1
 
-// types
-#define G_INTERP_TYPE_MTX 3
-#define G_INTERP_TYPE_PERSPECTIVE 4
+// matrix
+#define G_INTERP_TYPE_MTX 1
+#define G_INTERP_SET_CAM_INTERP 2
+
+// perspective
+#define G_INTERP_TYPE_PERSPECTIVE 3
+#define G_INTERP_SET_SKIP_PERSPECTIVE_INTERP 4
+
+// viewport
+#define G_INTERP_TYPE_VIEWPORT 5
 
 #define gSPSetInterp(pkt, type, value) \
 { \

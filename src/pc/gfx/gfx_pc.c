@@ -2825,6 +2825,16 @@ static void gfx_sp_interpolate(u32 type, void *value) {
                 sSkipPerspectiveInterp = false;
                 break;
             }
+            case G_INTERP_TYPE_VIEWPORT: {
+                struct ViewportInterp *viewportInterp = sLastInterpState.value;
+                if (viewportInterp == NULL) { return; }
+
+                delta_interpolate_vec3s(viewportInterp->interpViewport.vp.vtrans, viewportInterp->prevViewport.vp.vtrans, viewportInterp->currViewport.vp.vtrans, gRenderingDelta);
+                delta_interpolate_vec3s(viewportInterp->interpViewport.vp.vscale, viewportInterp->prevViewport.vp.vscale, viewportInterp->currViewport.vp.vscale, gRenderingDelta);
+
+                make_viewport_clip_rect(&viewportInterp->interpViewport);
+                break;
+            }
         }
     } else if (type == G_INTERP_SET_CAM_INTERP) {
         sCurrentCameraInterp = value;

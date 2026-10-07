@@ -210,11 +210,7 @@ u16 gAreaUpdateCounter = 0;
 LookAt lookAt;
 #endif
 
-static Vp*  sViewport        = NULL;
-static Gfx* sViewportPos     = NULL;
-static Gfx* sViewportClipPos = NULL;
-static Vp   sViewportPrev    = { 0 };
-static Vp   sViewportInterp  = { 0 };
+static Vp sPrevViewport = { 0 };
 
 Gfx* gBackgroundSkyboxGfx = NULL;
 Mtx* gBackgroundSkyboxMtx = NULL;
@@ -254,13 +250,6 @@ static void reset_mtx(void) {
 void patch_mtx_before(void) {
     init_mtx();
 
-    if (sViewport != NULL) {
-        sViewportPrev    = *sViewport;
-        sViewport        = NULL;
-        sViewportPos     = NULL;
-        sViewportClipPos = NULL;
-    }
-
     if (sBackgroundNode != NULL) {
         vec3f_copy(sBackgroundNode->prevCameraPos, gLakituState.pos);
         vec3f_copy(sBackgroundNode->prevCameraFocus, gLakituState.focus);
@@ -271,19 +260,6 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
-    if (sViewportClipPos != NULL) {
-        delta_interpolate_vec3s(sViewportInterp.vp.vtrans, sViewportPrev.vp.vtrans, sViewport->vp.vtrans, delta);
-        delta_interpolate_vec3s(sViewportInterp.vp.vscale, sViewportPrev.vp.vscale, sViewport->vp.vscale, delta);
-
-        Gfx *saved = gDisplayListHead;
-
-        gDisplayListHead = sViewportClipPos;
-        make_viewport_clip_rect(&sViewportInterp);
-        gSPViewport(gDisplayListHead, VIRTUAL_TO_PHYSICAL(&sViewportInterp));
-
-        gDisplayListHead = saved;
-    }
-
     if (sBackgroundNode != NULL) {
         Vec3f posCopy;
         Vec3f focusCopy;
@@ -1979,10 +1955,6 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
 }
 
 static void geo_clear_interp_variables(void) {
-    sViewport        = NULL;
-    sViewportPos     = NULL;
-    sViewportClipPos = NULL;
-
     sBackgroundNode = NULL;
     gBackgroundSkyboxGfx = NULL;
     gBackgroundSkyboxMtx = NULL;
@@ -2007,24 +1979,22 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
     if (node->node.flags & GRAPH_RENDER_ACTIVE) {
         gDisplayListHeap = growing_pool_init(gDisplayListHeap, DISPLAY_LIST_HEAP_SIZE);
 
-        Vp *viewport = alloc_display_list(sizeof(*viewport));
-        if (viewport == NULL) { return; }
+        struct ViewportInterp *viewportInterp = alloc_display_list(sizeof(struct ViewportInterp));
+        if (viewportInterp == NULL) { return; }
 
         Mtx *initialMatrix = alloc_display_list(sizeof(*initialMatrix));
         if (initialMatrix == NULL) { return; }
 
         gMatStackIndex = 0;
         gCurAnimType = 0;
-        vec3s_set(viewport->vp.vtrans, node->x * 4, node->y * 4, 511);
-        vec3s_set(viewport->vp.vscale, node->width * 4, node->height * 4, 511);
+        vec3s_set(viewportInterp->currViewport.vp.vtrans, node->x * 4, node->y * 4, 511);
+        vec3s_set(viewportInterp->currViewport.vp.vscale, node->width * 4, node->height * 4, 511);
+        viewportInterp->prevViewport = sPrevViewport;
 
         if (b != NULL) {
             clear_frame_buffer(clearColor);
-
-            sViewportClipPos = gDisplayListHead;
-            make_viewport_clip_rect(&sViewportPrev);
-
-            *viewport = *b;
+            make_viewport_clip_rect(&viewportInterp->prevViewport);
+            viewportInterp->currViewport = *b;
         } else if (c != NULL) {
             clear_frame_buffer(clearColor);
             make_viewport_clip_rect(c);
@@ -2034,16 +2004,16 @@ void geo_process_root(struct GraphNodeRoot *node, Vp *b, Vp *c, s32 clearColor) 
         mtxf_to_mtx(initialMatrix, gMatStack[gMatStackIndex]);
         gMatStackFixed[gMatStackIndex] = initialMatrix;
 
-        sViewport = viewport;
-        sViewportPos = gDisplayListHead;
-
-        // vvv 60 FPS PATCH vvv
         mtxf_identity(gMatStackPrev[gMatStackIndex]);
         gMatStackPrevFixed[gMatStackIndex] = initialMatrix;
-        // ^^^              ^^^
 
-        gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&sViewportPrev));
+        gSPSetInterp(gDisplayListHead++, G_INTERP_TYPE_VIEWPORT, viewportInterp);
+        gSPInterpolate(gDisplayListHead++);
+
+        gSPViewport(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&viewportInterp->interpViewport));
         gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(gMatStackFixed[gMatStackIndex]), G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
+
+        sPrevViewport = viewportInterp->currViewport;
 
         gCurGraphNodeRoot = node;
         if (node->node.children != NULL) {

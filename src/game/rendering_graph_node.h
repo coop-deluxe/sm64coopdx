@@ -89,6 +89,12 @@ struct PerspectiveInterp {
     f32 prevFar;
 };
 
+struct ViewportInterp {
+    Vp prevViewport;
+    Vp currViewport;
+    Vp interpViewport;
+};
+
 struct ShadowInterp {
     Gfx*  gfx;
     Vec3f shadowPos;
