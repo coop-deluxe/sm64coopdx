@@ -85,8 +85,8 @@ struct InterpState {
 };
 
 static struct InterpState sLastInterpState = { 0 };
-
 static struct CameraInterp *sCurrentCameraInterp = NULL;
+static bool sSkipPerspectiveInterp = false;
 
 struct GfxState {
     struct RSP rsp;
@@ -2799,18 +2799,41 @@ static void gfx_sp_interpolate(u32 type, void *value) {
 
                 break;
             }
-            default: {
+            case G_INTERP_TYPE_PERSPECTIVE: {
+                struct PerspectiveInterp *perspectiveInterp = sLastInterpState.value;
+                if (perspectiveInterp == NULL) { return; }
+
+                f32 fov = 0;
+                f32 near = 0;
+                f32 far = 0;
+
+                if (sSkipPerspectiveInterp) {
+                    perspectiveInterp->prevFov = perspectiveInterp->fov;
+                    perspectiveInterp->prevNear = perspectiveInterp->near;
+                    perspectiveInterp->prevFar = perspectiveInterp->far;
+                } else {
+                    fov = delta_interpolate_f32(perspectiveInterp->prevFov, perspectiveInterp->fov, gRenderingDelta);
+                    near = delta_interpolate_f32(perspectiveInterp->prevNear, perspectiveInterp->near, gRenderingDelta);
+                    far = delta_interpolate_f32(perspectiveInterp->prevFar, perspectiveInterp->far, gRenderingDelta);
+                }
+
+                // "infinite" draw distance
+                if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
+
+                guPerspective(perspectiveInterp->mtx, NULL, fov, perspectiveInterp->aspect, near, far, 1.0f);
+
+                sSkipPerspectiveInterp = false;
                 break;
             }
         }
+    } else if (type == G_INTERP_SET_CAM_INTERP) {
+        sCurrentCameraInterp = value;
+    } else if (type == G_INTERP_SET_SKIP_PERSPECTIVE_INTERP) {
+        sSkipPerspectiveInterp = *(bool *)value;
     } else {
         sLastInterpState.type = type;
         sLastInterpState.value = value;
     }
-}
-
-static void gfx_sp_set_camera_interp(struct CameraInterp *cameraInterp) {
-    sCurrentCameraInterp = cameraInterp;
 }
 
 static void gfx_sp_load_or_save_state(uint8_t cmd, uint32_t state) {
@@ -3000,8 +3023,6 @@ void OPTIMIZE_O3 ext_gfx_run_dl(Gfx* cmd) {
         case G_INTERP_EXT:
             gfx_sp_interpolate(C0(16, 8), (void *)cmd->words.w1);
             break;
-        case G_SET_CAMERA_INTERP_EXT:
-            gfx_sp_set_camera_interp((struct CameraInterp *)cmd->words.w1);
         case G_STATE_EXT:
             gfx_sp_load_or_save_state(C0(16, 8), cmd->words.w1);
             break;

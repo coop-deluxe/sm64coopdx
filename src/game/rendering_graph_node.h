@@ -5,7 +5,9 @@
 
 #include "engine/graph_node.h"
 
+#define MAX_FAR_PLANE_DIST 1000000.f
 #define MATRIX_STACK_SIZE 64
+
 extern Mat4 gMatStack[MATRIX_STACK_SIZE];
 extern Mat4 gMatStackPrev[MATRIX_STACK_SIZE];
 
@@ -74,6 +76,17 @@ struct MtxInterp {
     void *displayList;
     Mtx interp;
     u8 usingCamSpace;
+};
+
+struct PerspectiveInterp {
+    Mtx *mtx;
+    f32 aspect;
+    f32 fov;
+    s16 near;
+    s16 far;
+    f32 prevFov;
+    f32 prevNear;
+    f32 prevFar;
 };
 
 struct ShadowInterp {

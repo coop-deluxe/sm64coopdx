@@ -50,8 +50,6 @@
 
 #define DISPLAY_LIST_HEAP_SIZE 32000
 
-#define MAX_FAR_PLANE_DIST 1000000.f
-
 f32 gProjectionMaxNearValue = 5;
 s16 gProjectionVanillaNearValue = 100;
 s16 gProjectionVanillaFarValue = 1000;
@@ -212,11 +210,6 @@ u16 gAreaUpdateCounter = 0;
 LookAt lookAt;
 #endif
 
-static struct GraphNodePerspective *sPerspectiveNode = NULL;
-static Gfx* sPerspectivePos   = NULL;
-static Mtx* sPerspectiveMtx   = NULL;
-static f32 sPerspectiveAspect = 0;
-
 static Vp*  sViewport        = NULL;
 static Gfx* sViewportPos     = NULL;
 static Gfx* sViewportClipPos = NULL;
@@ -261,13 +254,6 @@ static void reset_mtx(void) {
 void patch_mtx_before(void) {
     init_mtx();
 
-    if (sPerspectiveNode != NULL) {
-        sPerspectiveNode->prevFov = sPerspectiveNode->fov;
-        sPerspectiveNode->prevNear = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
-        sPerspectiveNode->prevFar = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
-        sPerspectiveNode = NULL;
-    }
-
     if (sViewport != NULL) {
         sViewportPrev    = *sViewport;
         sViewport        = NULL;
@@ -285,29 +271,6 @@ void patch_mtx_before(void) {
 }
 
 void patch_mtx_interpolated(f32 delta) {
-    if (sPerspectiveNode != NULL) {
-        u16 perspNorm;
-        f32 fov = sPerspectiveNode->fov;
-        f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
-        f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
-
-        if (gCamSkipInterp) {
-            sPerspectiveNode->prevFov = fov;
-            sPerspectiveNode->prevNear = near;
-            sPerspectiveNode->prevFar = far;
-        } else {
-            fov = delta_interpolate_f32(sPerspectiveNode->prevFov, fov, delta);
-            near = delta_interpolate_f32(sPerspectiveNode->prevNear, near, delta);
-            far = delta_interpolate_f32(sPerspectiveNode->prevFar, far, delta);
-        }
-
-        // "infinite" draw distance
-        if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
-
-        guPerspective(sPerspectiveMtx, &perspNorm, fov, sPerspectiveAspect, near, far, 1.0f);
-        gSPMatrix(sPerspectivePos, VIRTUAL_TO_PHYSICAL(sPerspectiveNode), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
-    }
-
     if (sViewportClipPos != NULL) {
         delta_interpolate_vec3s(sViewportInterp.vp.vtrans, sViewportPrev.vp.vtrans, sViewport->vp.vtrans, delta);
         delta_interpolate_vec3s(sViewportInterp.vp.vscale, sViewportPrev.vp.vscale, sViewport->vp.vscale, delta);
@@ -489,7 +452,7 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
                 interp->displayList = currList->displayList;
                 interp->usingCamSpace = currList->usingCamSpace;
 
-                gSPCreateInterp(gDisplayListHead++, G_INTERP_TYPE_MTX, interp);
+                gSPSetInterp(gDisplayListHead++, G_INTERP_TYPE_MTX, interp);
                 gSPInterpolate(gDisplayListHead++);
 
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(&interp->interp),
@@ -608,15 +571,33 @@ static void geo_process_perspective(struct GraphNodePerspective *node) {
     // "infinite" draw distance
     if (gOverrideFar == 0 && configDrawDistance == 6) { far = max(far, MAX_FAR_PLANE_DIST); }
 
-    guPerspective(mtx, &perspNorm, node->prevFov, aspect, near, far, 1.0f);
+    struct PerspectiveInterp *perspectiveInterp = alloc_display_list(sizeof(struct PerspectiveInterp));
 
-    sPerspectiveNode = node;
-    sPerspectiveMtx = mtx;
-    sPerspectivePos = gDisplayListHead;
-    sPerspectiveAspect = aspect;
+    guPerspective(mtx, &perspNorm, node->fov, aspect, near, far, 1.0f);
 
     gSPPerspNormalize(gDisplayListHead++, perspNorm);
-    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(mtx), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
+
+    bool *skipPerspInterp = alloc_display_list(sizeof(bool));
+    *skipPerspInterp = (gCamSkipInterp ? true : false);
+    gSPSetInterp(gDisplayListHead++, G_INTERP_SET_SKIP_PERSPECTIVE_INTERP, skipPerspInterp);
+
+    perspectiveInterp->mtx = mtx;
+    perspectiveInterp->prevNear = node->prevNear;
+    perspectiveInterp->near = near;
+    perspectiveInterp->prevFar = node->prevFar;
+    perspectiveInterp->far = far;
+    perspectiveInterp->prevFov = node->prevFov;
+    perspectiveInterp->fov = node->fov;
+    perspectiveInterp->aspect = aspect;
+
+    gSPSetInterp(gDisplayListHead++, G_INTERP_TYPE_PERSPECTIVE, perspectiveInterp);
+    gSPInterpolate(gDisplayListHead++);
+
+    gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(perspectiveInterp->mtx), G_MTX_PROJECTION | G_MTX_LOAD | G_MTX_NOPUSH);
+
+    node->prevFov = node->fov;
+    node->prevNear = near;
+    node->prevFar = far;
 
     gCurGraphNodeCamFrustum = node;
     geo_process_node_and_siblings(node->fnNode.node.children);
@@ -714,7 +695,7 @@ static void geo_process_camera(struct GraphNodeCamera *node) {
     memcpy(cameraInterp->prevFocus, node->prevFocus, sizeof(Vec3f));
     cameraInterp->roll = node->roll;
 
-    gSPSetCameraInterp(gDisplayListHead++, cameraInterp);
+    gSPSetInterp(gDisplayListHead++, G_INTERP_SET_CAM_INTERP, cameraInterp);
 
     // Increment the matrix stack, If we fail to do so. Just return.
     if (!increment_mat_stack()) { return; }
@@ -1998,11 +1979,6 @@ void geo_process_node_and_siblings(struct GraphNode *firstNode) {
 }
 
 static void geo_clear_interp_variables(void) {
-    sPerspectiveNode = NULL;
-    sPerspectivePos   = NULL;
-    sPerspectiveMtx   = NULL;
-    sPerspectiveAspect = 0;
-
     sViewport        = NULL;
     sViewportPos     = NULL;
     sViewportClipPos = NULL;
