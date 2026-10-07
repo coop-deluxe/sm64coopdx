@@ -29,6 +29,7 @@
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
+   - [gfx_shader_set_uniform](#gfx_shader_set_uniform)
 
 <br />
 
@@ -1266,6 +1267,7 @@
    - [mtxf_rotate_xy](functions-4.md#mtxf_rotate_xy)
    - [mtxf_inverse](functions-4.md#mtxf_inverse)
    - [mtxf_inverse_non_affine](functions-4.md#mtxf_inverse_non_affine)
+   - [mtxf_ortho](functions-4.md#mtxf_ortho)
    - [get_pos_from_transform_mtx](functions-4.md#get_pos_from_transform_mtx)
    - [get_world_mtx_from_transform](functions-4.md#get_world_mtx_from_transform)
 
@@ -2000,6 +2002,21 @@
    - [gfx_resize](functions-7.md#gfx_resize)
    - [gfx_delete](functions-7.md#gfx_delete)
    - [gfx_delete_all](functions-7.md#gfx_delete_all)
+   - [gfx_set_culling_enabled](functions-7.md#gfx_set_culling_enabled)
+   - [gfx_is_culling_enabled](functions-7.md#gfx_is_culling_enabled)
+   - [gfx_set_gpu_cull_mode](functions-7.md#gfx_set_gpu_cull_mode)
+   - [gfx_get_gpu_cull_mode](functions-7.md#gfx_get_gpu_cull_mode)
+   - [gfx_get_render_api_name](functions-7.md#gfx_get_render_api_name)
+   - [gfx_is_legacy_renderer](functions-7.md#gfx_is_legacy_renderer)
+   - [gfx_reload_shaders](functions-7.md#gfx_reload_shaders)
+   - [gfx_color_combiner_get_features](functions-7.md#gfx_color_combiner_get_features)
+   - [gfx_shader_set_shader_stage](functions-7.md#gfx_shader_set_shader_stage)
+   - [gfx_shader_set_uniform_buffer](functions-7.md#gfx_shader_set_uniform_buffer)
+   - [gfx_shader_reset_uniform_buffer](functions-7.md#gfx_shader_reset_uniform_buffer)
+   - [gfx_shader_create_frame_pass](functions-7.md#gfx_shader_create_frame_pass)
+   - [gfx_shader_remove_frame_pass](functions-7.md#gfx_shader_remove_frame_pass)
+   - [gfx_shader_get_current_frame_pass_index](functions-7.md#gfx_shader_get_current_frame_pass_index)
+   - [gfx_shader_get_current_frame_pass](functions-7.md#gfx_shader_get_current_frame_pass)
    - [vtx_get_from_name](functions-7.md#vtx_get_from_name)
    - [vtx_get_name](functions-7.md#vtx_get_name)
    - [vtx_get_count](functions-7.md#vtx_get_count)
@@ -3212,6 +3229,52 @@ gfx_set_command(gfx, "gsDPSetEnvColor(%i, %i, %i, %i)", r, g, b, a)
 | gfx | [Gfx](./structs.md#Gfx) |
 | command | `string` |
 | parameters... | `integer` \| `string` \| [Gfx](./structs.md#Gfx) \| [Texture](./structs.md#Texture) \| [Vtx](./structs.md#Vtx) |
+
+### Returns
+- None
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_shader_set_uniform
+
+### Description
+Set a shaders uniform. It does all the backend stuff, just pass in the value needed
+by your uniform and profit
+
+If your uniform uses a struct, simply define a table with the same format and pass
+it into this function
+
+Array uniforms may also be set with this function just fine
+
+For things like vectors or matrices, you must convert the array to indexed keys rather
+than named keys
+
+### Lua Example
+```lua
+local toggles = { true, false, true, true }
+local time = get_global_timer()
+local lightData = {
+    {
+        position = { 50, 20, 100 },
+        color = { 1.0, 0.53, 0.65 }
+    },
+    {
+        position = { 67, 54, 300 },
+        color = { 0.0, 0.0, 1.0 }
+    },
+}
+gfx_shader_set_uniform("uToggles", toggles)
+gfx_shader_set_uniform("uTime", time)
+gfx_shader_set_uniform("uLightData", lightData)
+```
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| value | `any` |
 
 ### Returns
 - None

@@ -9,6 +9,7 @@
 
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_text_utils.h"
+#include "pc/network/socket/socket.h"
 #include "game/memory.h"
 #include "audio/data.h"
 #include "audio/external.h"
@@ -16,6 +17,7 @@
 #include "network/network.h"
 #include "lua/smlua.h"
 
+#include "render.h"
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
@@ -36,7 +38,6 @@
 #include "pc/lua/utils/smlua_audio_utils.h"
 
 #include "pc/network/version.h"
-#include "pc/network/socket/socket.h"
 #include "pc/network/network_player.h"
 #include "pc/update_checker.h"
 #include "pc/djui/djui.h"
@@ -93,7 +94,6 @@ f32 gFramePercentage = 0.f;
 #define FRAMERATE 30
 static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
 static f64 sFpsTimeLast = 0;
-static f64 sFrameTimeStart = 0;
 static u32 sDrawnFrames = 0;
 
 bool gGameInited = false;
@@ -239,9 +239,9 @@ static void select_graphics_backend(void) {
         configGraphicsBackend = GFX_WINDOW_BACKEND_DIRECTX;
     }
 #endif
-    enum GfxWindowBackend backend = configGraphicsBackend;
-#if defined(_WIN32)
-    if (gCLIOpts.backend != GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
+    int backend = configGraphicsBackend;
+#if defined(_WIN32) || defined(OSX_BUILD)
+    if (gCLIOpts.backend < GFX_WINDOW_BACKEND_COUNT) { backend = gCLIOpts.backend; }
 #endif
 
     switch (backend) {
@@ -253,9 +253,21 @@ static void select_graphics_backend(void) {
             gRenderApi = &gfx_opengl_api;
             gAudioApi  = &audio_sdl;
             break;
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
         case GFX_WINDOW_BACKEND_DIRECTX:
-            gRenderApi = &gfx_direct3d11_api;
+            gRenderApi = &gfx_sdl_gpu_api;
+            gAudioApi  = &audio_sdl;
+            break;
+#endif
+        case GFX_WINDOW_BACKEND_VULKAN:
+            gRenderApi = &gfx_sdl_gpu_api;
+            gAudioApi  = &audio_sdl;
+            break;
+#endif
+#ifdef OSX_BUILD
+        case GFX_WINDOW_BACKEND_METAL:
+            gRenderApi = &gfx_sdl_gpu_api;
             gAudioApi  = &audio_sdl;
             break;
 #endif
@@ -270,7 +282,7 @@ static void select_graphics_backend(void) {
     }
 }
 
-void produce_interpolation_frames_and_delay(void) {
+void produce_interpolation_frames_and_delay(struct RenderData *renderData) {
     u32 refreshRate = get_target_refresh_rate();
 
     gRenderingInterpolated = true;
@@ -283,10 +295,10 @@ void produce_interpolation_frames_and_delay(void) {
         refreshRate = displayRefreshRate;
     }
 
-    f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
-
     f64 curTime = clock_elapsed_f64();
+    f64 targetTime = (renderData->frameStartTime + sFrameTime);
+    s32 numFramesToDraw = get_num_frames_to_draw(renderData->frameStartTime, refreshRate);
+
     f64 loopStartTime = curTime;
     f64 expectedTime = 0;
     u16 framesDrawn = 0;
@@ -300,16 +312,23 @@ void produce_interpolation_frames_and_delay(void) {
         ++framesDrawn;
 
         // when we know how many frames to draw, use a precise delta
-        f64 idealTime = isPacedGrid ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
-        f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
-        gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+        f64 idealTime = isPacedGrid ? (renderData->frameStartTime + interpFrameTime * framesDrawn) : curTime;
+        f32 delta = clamp((idealTime - renderData->frameStartTime) / sFrameTime, 0.f, 1.f);
+        gFramePercentage = clamp((curTime - renderData->frameStartTime) / sFrameTime, 0.f, 1.f);
         gRenderingDelta = delta;
 
         gfx_start_frame();
         if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
-        send_display_list(gGfxSPTask);
-        gfx_end_frame_render();
+        if (gGameInited) {
+            gfx_run(renderData->dlCommands);
+        }
         gfx_display_frame();
+
+        MUTEX_LOCK(gRenderThread);
+        bool readyForNextRenderData = gNextRenderData.ready;
+        MUTEX_UNLOCK(gRenderThread);
+
+        if (readyForNextRenderData) { break; }
 
         // delay if our framerate is capped
         if (shouldDelay) {
@@ -329,13 +348,6 @@ void produce_interpolation_frames_and_delay(void) {
     // compute and update the frame rate every second
     if ((curTime = clock_elapsed_f64()) >= sFpsTimeLast + 1.0) {
         compute_fps(curTime);
-    }
-
-    // advance frame start time
-    if (curTime > sFrameTimeStart + 2 * sFrameTime) {
-        sFrameTimeStart = curTime;
-    } else {
-        sFrameTimeStart += sFrameTime;
     }
 
     gRenderingInterpolated = false;
@@ -397,9 +409,15 @@ void *audio_thread(UNUSED void *arg) {
 }
 
 void produce_one_frame(void) {
+    f64 frameStartTime = clock_elapsed_f64();
+
     CTX_EXTENT(CTX_NETWORK, network_update);
 
+    CTX_EXTENT(CTX_CONFIG_GFX_POOL, config_gfx_pool);
+
     CTX_EXTENT(CTX_INTERP, patch_interpolations_before);
+
+    CTX_EXTENT(CTX_EVENTS, gfx_wm_handle_events);
 
     CTX_EXTENT(CTX_GAME_LOOP, game_loop_one_iteration);
 
@@ -410,7 +428,24 @@ void produce_one_frame(void) {
         CTX_EXTENT(CTX_AUDIO, buffer_audio);
     }
 
-    CTX_EXTENT(CTX_RENDER, produce_interpolation_frames_and_delay);
+    CTX_EXTENT(CTX_EVENTS, gfx_wm_handle_events);
+
+    if (gRenderThread.state == INVALID) {
+        CTX_BEGIN(CTX_RENDER);
+        gRenderData.dlCommands = (Gfx *)gGfxSPTask->task.t.data_ptr;
+        gRenderData.gfxPoolIndex = gGfxPoolIndex;
+        gRenderData.frameStartTime = frameStartTime;
+        gRenderData.ready = true;
+        produce_interpolation_frames_and_delay(&gRenderData);
+        CTX_END(CTX_RENDER);
+    } else {
+        set_dl_for_render_thread((Gfx *)gGfxSPTask->task.t.data_ptr, frameStartTime);
+        f64 elapsedTime = clock_elapsed_f64() - frameStartTime;
+        f64 remainingDelay = sFrameTime - elapsedTime;
+        if (remainingDelay > 0.0) {
+            precise_delay_f64(remainingDelay);
+        }
+    }
 }
 
 // used for rendering 2D scenes fullscreen like the loading or crash screens
@@ -431,11 +466,12 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     gDPSetScissor(gDisplayListHead++, G_SC_NON_INTERLACE, 0, BORDER_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - BORDER_HEIGHT);
 
     // clear screen
-    create_dl_translation_matrix(MENU_MTX_PUSH, GFX_DIMENSIONS_FROM_LEFT_EDGE(0), 240.f, 0.f);
-    create_dl_scale_matrix(MENU_MTX_NOPUSH, (GFX_DIMENSIONS_ASPECT_RATIO * SCREEN_HEIGHT) / 130.f, 3.f, 1.f);
-    gDPSetEnvColor(gDisplayListHead++, clearColorR, clearColorG, clearColorB, 0xFF);
-    gSPDisplayList(gDisplayListHead++, dl_draw_text_bg_box);
-    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+    clear_frame_buffer(0);
+
+    // set clear color
+    gDefaultGeoFramePass.clearColor[0] = clearColorR;
+    gDefaultGeoFramePass.clearColor[1] = clearColorG;
+    gDefaultGeoFramePass.clearColor[2] = clearColorB;
 
     // call the callback
     callback();
@@ -444,8 +480,13 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
     djui_gfx_displaylist_end();
     end_master_display_list();
     alloc_display_list(0);
-    gfx_run((Gfx*) gGfxSPTask->task.t.data_ptr); // send_display_list
+    gfx_run((Gfx *)gGfxSPTask->task.t.data_ptr);
     display_and_vsync();
+
+    // reset clear color
+    gDefaultGeoFramePass.clearColor[0] = 0;
+    gDefaultGeoFramePass.clearColor[1] = 0;
+    gDefaultGeoFramePass.clearColor[2] = 0;
 
     // delay to go easy on the cpu
     f64 frameEnd = clock_elapsed_f64();
@@ -455,7 +496,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
         gfx_wm_delay((u32)(remaining * 1000.0));
     }
 
-    gfx_end_frame();
+    gfx_display_frame();
 }
 
 void audio_shutdown(void) {
@@ -642,6 +683,11 @@ int main(int argc, char *argv[]) {
 
     // initialize terminal
     terminal_init();
+
+    // startup render thread
+    if (!gCLIOpts.disableThreadedRendering) {
+        init_thread_handle(&gRenderThread, render_thread_init, NULL, NULL, 0);
+    }
 
     // main loop
     while (true) {

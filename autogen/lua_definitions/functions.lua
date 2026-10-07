@@ -7142,6 +7142,18 @@ function mtxf_inverse_non_affine(dest, src)
     -- ...
 end
 
+--- @param dest Mat4
+--- @param boundBottom number
+--- @param boundTop number
+--- @param boundLeft number
+--- @param boundRight number
+--- @param near number
+--- @param far number
+--- Creates a orthographic matrix based on the bounds provided. This can be used to get an orthographic projection matrix.
+function mtxf_ortho(dest, boundBottom, boundTop, boundLeft, boundRight, near, far)
+    -- ...
+end
+
 --- @param dest Vec3f
 --- @param objMtx Mat4
 --- @param camMtx Mat4
@@ -11830,6 +11842,98 @@ function gfx_delete_all()
     -- ...
 end
 
+--- @param enable boolean
+--- Sets culling for all triangles. Set to false to disable culling, set to true to use normal preset
+function gfx_set_culling_enabled(enable)
+    -- ...
+end
+
+--- @return boolean
+--- Get if culling is enabled or not
+function gfx_is_culling_enabled()
+    -- ...
+end
+
+--- @param gpuCullMode GpuCullMode
+--- Sets gpu culling for all triangles. Has none, front, and back culling
+function gfx_set_gpu_cull_mode(gpuCullMode)
+    -- ...
+end
+
+--- @return GpuCullMode
+--- Gets gpu culling for all triangles
+function gfx_get_gpu_cull_mode()
+    -- ...
+end
+
+--- @return string
+--- Gets the name of the active render api
+function gfx_get_render_api_name()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if a renderer is legacy. If it is, then that means the NDC Z range is -1 to 1, not 0 to 1
+function gfx_is_legacy_renderer()
+    -- ...
+end
+
+--- Reloads all shaders
+function gfx_reload_shaders()
+    -- ...
+end
+
+--- @param cc ColorCombiner
+--- @return CCFeatures
+--- Gets features from a color combiner
+function gfx_color_combiner_get_features(cc)
+    -- ...
+end
+
+--- @param stage ShaderStage
+--- Sets the currently active shader stage. Use SHADER_STAGE_ANY to make both active.<br>
+--- When setting a uniform buffer, or uniforms in general, what stage that gets applied to<br>
+--- is decided by this function
+function gfx_shader_set_shader_stage(stage)
+    -- ...
+end
+
+--- @param name string
+--- Sets the currently selected uniform buffer
+function gfx_shader_set_uniform_buffer(name)
+    -- ...
+end
+
+--- Resets the currently selected uniform buffer
+function gfx_shader_reset_uniform_buffer()
+    -- ...
+end
+
+--- @return integer
+--- @return FramePass retFramePass
+--- Creates a frame pass to be used when rendering the game. Allows for multipass shaders. Returns the frame pass index and the frame pass
+function gfx_shader_create_frame_pass()
+    -- ...
+end
+
+--- @param framePassIndex integer
+--- Deletes a frame pass using `framePassIndex`
+function gfx_shader_remove_frame_pass(framePassIndex)
+    -- ...
+end
+
+--- @return integer
+--- Gets the current active frame pass index. If there is no active frame pass, it returns -1
+function gfx_shader_get_current_frame_pass_index()
+    -- ...
+end
+
+--- @return FramePass
+--- Gets the current active frame pass. If there is no active frame pass, it returns nil
+function gfx_shader_get_current_frame_pass()
+    -- ...
+end
+
 --- @param name string
 --- @return Pointer_Vtx
 --- @return integer count
@@ -13618,3 +13722,4 @@ end
 --- @alias Vec4sp Vec4s
 --- @alias Mat4p Mat4
 --- @alias Colorp Color
+--- @alias ColorRGBAp ColorRGBA

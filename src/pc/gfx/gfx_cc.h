@@ -1,30 +1,31 @@
 #ifndef GFX_CC_H
 #define GFX_CC_H
 
+#include <PR/ultratypes.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-enum {
-    CC_0,
-    CC_TEXEL0,
-    CC_TEXEL1,
-    CC_PRIM,
-    CC_SHADE,
-    CC_ENV,
-    CC_TEXEL0A,
-    CC_LOD,
-    CC_1,
-    CC_TEXEL1A,
-    CC_COMBINED,
-    CC_COMBINEDA,
-    CC_PRIMA,
-    CC_SHADEA,
-    CC_ENVA,
-    CC_NOISE,
-    CC_ENUM_MAX,
+enum ColorCombinerSource {
+    CCS_0,
+    CCS_TEXEL0,
+    CCS_TEXEL1,
+    CCS_PRIM,
+    CCS_SHADE,
+    CCS_ENV,
+    CCS_TEXEL0A,
+    CCS_LOD,
+    CCS_1,
+    CCS_TEXEL1A,
+    CCS_COMBINED,
+    CCS_COMBINEDA,
+    CCS_PRIMA,
+    CCS_SHADEA,
+    CCS_ENVA,
+    CCS_NOISE,
+    CCS_COUNT,
 };
 
-enum {
+enum CcShaderInput {
     SHADER_0,
     SHADER_INPUT_1,
     SHADER_INPUT_2,
@@ -59,48 +60,62 @@ struct CCFeatures {
     bool do_noise;
 };
 
+enum CombineModeFlags {
+    CM_FLAG_USE_ALPHA      = 1 << 0,
+    CM_FLAG_USE_FOG        = 1 << 1,
+    CM_FLAG_TEXTURE_EDGE   = 1 << 2,
+    CM_FLAG_USE_DITHER     = 1 << 3,
+    CM_FLAG_USE_2CYCLE     = 1 << 4,
+    CM_FLAG_LIGHT_MAP      = 1 << 5,
+    CM_FLAG_TEX_PERSP      = 1 << 6,
+    CM_FLAG_WORLD_GEOMETRY = 1 << 7
+};
+
 #pragma pack(1)
 struct CombineMode {
     union {
         struct {
-            uint32_t rgb1;
-            uint32_t alpha1;
-            uint32_t rgb2;
-            uint32_t alpha2;
+            u32 rgb1;
+            u32 alpha1;
+            u32 rgb2;
+            u32 alpha2;
         };
-        uint8_t all_values[16];
+        u8 all_values[16];
     };
     union {
         struct {
-            uint8_t use_alpha      : 1;
-            uint8_t use_fog        : 1;
-            uint8_t texture_edge   : 1;
-            uint8_t use_dither     : 1;
-            uint8_t use_2cycle     : 1;
-            uint8_t light_map      : 1;
-            uint8_t world_geometry : 1;
+            u8 use_alpha      : 1;
+            u8 use_fog        : 1;
+            u8 texture_edge   : 1;
+            u8 use_dither     : 1;
+            u8 use_2cycle     : 1;
+            u8 light_map      : 1;
+            u8 tex_persp      : 1;
+            u8 world_geometry : 1;
         };
-        uint32_t flags;
+        u32 flags;
     };
-    uint64_t hash;
+    u32 geometry_mode;
+    s64 hash;
 };
 #pragma pack()
 
 #define SHADER_CMD_LENGTH 16
 #define CC_MAX_SHADERS 64
+#define CC_MAX_INPUTS 8
 
 struct ColorCombiner {
     struct CombineMode cm;
     struct ShaderProgram *prg;
     union {
-        uint8_t shader_input_mapping[16];
-        uint64_t shader_input_mapping_as_u64[8];
+        u8 shader_input_mapping[16];
+        u64 shader_input_mapping_as_u64[8];
     };
     union {
-        uint8_t shader_commands[16];
-        uint64_t shader_commands_as_u64[8];
+        u8 shader_commands[16];
+        u64 shader_commands_as_u64[8];
     };
-    uint64_t hash;
+    u64 hash;
 };
 
 #ifdef __cplusplus

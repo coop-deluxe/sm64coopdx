@@ -28,6 +28,8 @@
 #include "hud.h"
 #include "pc/controller/controller_mouse.h"
 #include "pc/configfile.h"
+#include "pc/render.h"
+#include "pc/debuglog.h"
 #include "src/engine/math_util.h"
 
 // FIXME: I'm not sure all of these variables belong in this file, but I don't
@@ -38,6 +40,7 @@ struct SPTask *gGfxSPTask = NULL;
 Gfx *gDisplayListHead = NULL;
 u8 *gGfxPoolEnd = NULL;
 struct GfxPool *gGfxPool = NULL;
+u32 gGfxPoolIndex = 0;
 OSContStatus gControllerStatuses[4] = { 0 };
 OSContPad gControllerPads[4] = { 0 };
 u8 gControllerBits = 0;
@@ -285,7 +288,13 @@ void rendering_init(void) {
 }
 
 void config_gfx_pool(void) {
-    gGfxPool = &gGfxPools[gGlobalTimer % GFX_NUM_POOLS];
+    gGfxPoolIndex = (gGfxPoolIndex + 1) % GFX_NUM_POOLS;
+    gGfxPool = &gGfxPools[gGfxPoolIndex];
+    while (render_thread_processing_dl(gGfxPool->buffer)) {
+        gGfxPoolIndex = (gGfxPoolIndex + 1) % GFX_NUM_POOLS;
+        gGfxPool = &gGfxPools[gGfxPoolIndex];
+    }
+    display_list_set_process_pool(gGfxPoolIndex);
     set_segment_base_addr(1, gGfxPool->buffer);
     gGfxSPTask = &gGfxPool->spTask;
     gDisplayListHead = gGfxPool->buffer;
@@ -490,7 +499,7 @@ void read_controller_inputs(void) {
             sInputBuffer[sInputBufferHead].extStickX  = controller->controllerData->ext_stick_x;
             sInputBuffer[sInputBufferHead].extStickY  = controller->controllerData->ext_stick_y;
             sInputBuffer[sInputBufferHead].buttonDown = controller->controllerData->button;
-            
+
             s32 delay = clamp((s32)configInputDelay, 0, INPUT_BUFFER_MAX_DELAY);
             s32 tail = (sInputBufferHead - delay + INPUT_BUFFER_SIZE) % INPUT_BUFFER_SIZE;
             u16 delayedButton = sInputBuffer[tail].buttonDown;
@@ -632,7 +641,6 @@ void game_loop_one_iteration(void) {
 
     thread6_rumble_loop(NULL);
     audio_game_loop_tick();
-    config_gfx_pool();
     read_controller_inputs();
     levelCommandAddr = level_script_execute(levelCommandAddr);
     display_and_vsync();

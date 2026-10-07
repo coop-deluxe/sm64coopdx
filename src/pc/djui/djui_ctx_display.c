@@ -10,6 +10,7 @@ static char* sDebugContextNames[] = {
     "NONE",
     "TOTAL",
     "NET",
+    "GFX_POOL",
     "INTERP",
     "GAME",
     "SMLUA",

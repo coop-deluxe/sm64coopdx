@@ -121,7 +121,40 @@ void gfx_resize(Gfx *gfx, u32 newLength);
 void gfx_delete(Gfx *gfx);
 /* |description|Deletes all display lists created by `gfx_create`|descriptionEnd| */
 void gfx_delete_all();
-
+/* |description|Sets culling for all triangles. Set to false to disable culling, set to true to use normal preset|descriptionEnd| */
+void gfx_set_culling_enabled(bool enable);
+/* |description|Get if culling is enabled or not|descriptionEnd| */
+bool gfx_is_culling_enabled();
+/* |description|Sets gpu culling for all triangles. Has none, front, and back culling|descriptionEnd| */
+void gfx_set_gpu_cull_mode(enum GpuCullMode gpuCullMode);
+/* |description|Gets gpu culling for all triangles|descriptionEnd| */
+enum GpuCullMode gfx_get_gpu_cull_mode(void);
+/* |description|Gets the name of the active render api|descriptionEnd| */
+const char *gfx_get_render_api_name();
+/* |description|Checks if a renderer is legacy. If it is, then that means the NDC Z range is -1 to 1, not 0 to 1|descriptionEnd| */
+bool gfx_is_legacy_renderer();
+/* |description|Reloads all shaders|descriptionEnd| */
+void gfx_reload_shaders();
+/* |description|Gets features from a color combiner|descriptionEnd| */
+struct CCFeatures *gfx_color_combiner_get_features(struct ColorCombiner *cc);
+/* |description|
+Sets the currently active shader stage. Use SHADER_STAGE_ANY to make both active.
+When setting a uniform buffer, or uniforms in general, what stage that gets applied to
+is decided by this function
+|descriptionEnd| */
+void gfx_shader_set_shader_stage(enum ShaderStage stage);
+/* |description|Sets the currently selected uniform buffer|descriptionEnd| */
+void gfx_shader_set_uniform_buffer(const char *name);
+/* |description|Resets the currently selected uniform buffer|descriptionEnd| */
+void gfx_shader_reset_uniform_buffer(void);
+/* |description|Creates a frame pass to be used when rendering the game. Allows for multipass shaders. Returns the frame pass index and the frame pass|descriptionEnd| */
+int gfx_shader_create_frame_pass(RET struct FramePass **retFramePass);
+/* |description|Deletes a frame pass using `framePassIndex`|descriptionEnd| */
+void gfx_shader_remove_frame_pass(int framePassIndex);
+/* |description|Gets the current active frame pass index. If there is no active frame pass, it returns -1|descriptionEnd| */
+int gfx_shader_get_current_frame_pass_index();
+/* |description|Gets the current active frame pass. If there is no active frame pass, it returns nil|descriptionEnd| */
+struct FramePass *gfx_shader_get_current_frame_pass();
 
 /* |description|
 Gets a vertex buffer of the current mod from its name.

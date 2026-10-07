@@ -16,6 +16,9 @@
 #include "engine/surface_load.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/utils/misc.h"
+#include "pc/gfx/gfx_rendering_api.h"
+#include "pc/gfx/gfx_pc.h"
+#include "pc/gfx/gfx_shader.h"
 #include "include/level_misc_macros.h"
 #include "include/macro_presets.h"
 #include "utils/smlua_anim_utils.h"
@@ -1427,9 +1430,9 @@ int smlua_func_get_uncolored_string(lua_State* L) {
     return 1;
 }
 
-  //////////////////
- // display list //
-//////////////////
+  /////////
+ // gfx //
+/////////
 
 static int get_gfx_command_specifiers_count(const char *command) {
     int count = 0;
@@ -1475,6 +1478,278 @@ int smlua_func_gfx_set_command(lua_State* L) {
     return 1;
 }
 
+  //////////////
+ // uniforms //
+//////////////
+
+static int convert_vector_or_matrix_key_to_index(const char *key) {
+    // check x, y, z, w, and r, g, b, a
+    if (strcmp(key, "x") == 0 || strcmp(key, "r") == 0) { return 0; }
+    if (strcmp(key, "y") == 0 || strcmp(key, "g") == 0) { return 1; }
+    if (strcmp(key, "z") == 0 || strcmp(key, "b") == 0) { return 2; }
+    if (strcmp(key, "w") == 0 || strcmp(key, "a") == 0) { return 3; }
+
+    // check for matrix keys
+    if (strcmp(key, "m00") == 0) { return 0;  }
+    if (strcmp(key, "m01") == 0) { return 1;  }
+    if (strcmp(key, "m02") == 0) { return 2;  }
+    if (strcmp(key, "m03") == 0) { return 3;  }
+
+    if (strcmp(key, "m10") == 0) { return 4;  }
+    if (strcmp(key, "m11") == 0) { return 5;  }
+    if (strcmp(key, "m12") == 0) { return 6;  }
+    if (strcmp(key, "m13") == 0) { return 7;  }
+
+    if (strcmp(key, "m20") == 0) { return 8;  }
+    if (strcmp(key, "m21") == 0) { return 9;  }
+    if (strcmp(key, "m22") == 0) { return 10; }
+    if (strcmp(key, "m23") == 0) { return 11; }
+
+    if (strcmp(key, "m30") == 0) { return 12; }
+    if (strcmp(key, "m31") == 0) { return 13; }
+    if (strcmp(key, "m32") == 0) { return 14; }
+    if (strcmp(key, "m33") == 0) { return 15; }
+
+    return -1;
+}
+
+static void write_lua_value_to_uniform(lua_State *L, int index, struct ShaderUniformBlock *block, struct ShaderUniform *uniform) {
+    index = lua_absindex(L, index);
+
+    // get destination
+    u8 *dest = block->buffer + uniform->location;
+
+    // check if lua passed a table
+    if (lua_type(L, index) == LUA_TTABLE) {
+        size_t len = lua_rawlen(L, index); // get length of table
+
+        // if the length is 0, that means we are not writing a flattened table.
+        // because that is the case, try to map certain keys like, x, y, z, r, g,
+        // b, etc. and see if it is successful
+        if (len == 0) {
+            if (uniform->baseType == SPVC_BASETYPE_FP32) {
+                float *out = (float *)dest;
+
+                lua_pushnil(L); // initial key
+
+                // iterate through table
+                while (lua_next(L, index) != 0) {
+                    if (lua_type(L, -2) == LUA_TSTRING) {
+                        // grab key
+                        const char *key = lua_tostring(L, -2);
+
+                        // get index from key
+                        int mappedIndex = convert_vector_or_matrix_key_to_index(key);
+
+                        // if we successfully mapped...
+                        if (mappedIndex >= 0) {
+                            // .. set out at index to our number and pop
+                            out[mappedIndex] = (float)lua_tonumber(L, -1);
+                        }
+                    }
+                    lua_pop(L, 1);
+                }
+            } else if (uniform->baseType == SPVC_BASETYPE_INT32 || uniform->baseType == SPVC_BASETYPE_UINT32) {
+                int *out = (int *)dest;
+
+                lua_pushnil(L); // initial key
+
+                // iterate through table
+                while (lua_next(L, index) != 0) {
+                    if (lua_type(L, -2) == LUA_TSTRING) {
+                        // grab key
+                        const char *key = lua_tostring(L, -2);
+
+                        // get index from key
+                        int mappedIndex = convert_vector_or_matrix_key_to_index(key);
+
+                        // if we successfully mapped...
+                        if (mappedIndex >= 0) {
+                            // .. set out at index to our number and pop
+                            out[mappedIndex] = (int)lua_tonumber(L, -1);
+                        }
+                    }
+                    lua_pop(L, 1);
+                }
+            } else if (uniform->baseType == SPVC_BASETYPE_BOOLEAN) {
+                int *out = (int *)dest;
+
+                lua_pushnil(L); // initial key
+
+                // iterate through table
+                while (lua_next(L, index) != 0) {
+                    if (lua_type(L, -2) == LUA_TSTRING) {
+                        // grab key
+                        const char *key = lua_tostring(L, -2);
+
+                        // get index from key
+                        int mappedIndex = convert_vector_or_matrix_key_to_index(key);
+
+                        // if we successfully mapped...
+                        if (mappedIndex >= 0) {
+                            // .. set out at index to our number and pop
+                            out[mappedIndex] = lua_toboolean(L, -1) ? 1 : 0;
+                        }
+                    }
+                    lua_pop(L, 1);
+                }
+            }
+            block->hasChanged = true;
+            return;
+        }
+
+        if (uniform->baseType == SPVC_BASETYPE_FP32) {
+            // write float to dest and pop the table
+            float *out = (float *)dest;
+            for (size_t i = 1; i <= len; i++) {
+                lua_rawgeti(L, index, i);
+                out[i - 1] = (float)lua_tonumber(L, -1);
+                lua_pop(L, 1);
+            }
+        } else if (uniform->baseType == SPVC_BASETYPE_INT32 || uniform->baseType == SPVC_BASETYPE_UINT32) {
+            // write int to dest and pop the table
+            int *out = (int *)dest;
+            for (size_t i = 1; i <= len; i++) {
+                lua_rawgeti(L, index, i);
+                out[i - 1] = (int)lua_tointeger(L, -1);
+                lua_pop(L, 1);
+            }
+        } else if (uniform->baseType == SPVC_BASETYPE_BOOLEAN) {
+            // write bool to dest and pop the table
+            int *out = (int *)dest;
+            for (size_t i = 1; i <= len; i++) {
+                lua_rawgeti(L, index, i);
+                out[i - 1] = lua_toboolean(L, -1) ? 1 : 0;
+                lua_pop(L, 1);
+            }
+        }
+    } else {
+        if (uniform->baseType == SPVC_BASETYPE_FP32) {
+            // write float
+            float val = (float)lua_tonumber(L, index);
+            memcpy(dest, &val, sizeof(float));
+        } else if (uniform->baseType == SPVC_BASETYPE_INT32 || uniform->baseType == SPVC_BASETYPE_UINT32) {
+            // write int
+            int val = (int)lua_tointeger(L, index);
+            memcpy(dest, &val, sizeof(int));
+        } else if (uniform->baseType == SPVC_BASETYPE_BOOLEAN) {
+            // write bool
+            int val = lua_toboolean(L, index) ? 1 : 0;
+            memcpy(dest, &val, sizeof(int));
+        }
+    }
+
+    block->hasChanged = true;
+}
+
+static void smlua_set_uniform_recursive(lua_State *L, int index, struct ShaderUniformBlock *block, const char *prefix) {
+    index = lua_absindex(L, index);
+
+    // look for uniform
+    for (int i = 0; i < block->uniformCount; i++) {
+        if (strcmp(block->uniforms[i].name, prefix) == 0) {
+            // found it! Write data
+            write_lua_value_to_uniform(L, index, block, &block->uniforms[i]);
+            return;
+        }
+    }
+
+    // if none were found and we are a table, go through each key recursively
+    if (lua_type(L, index) == LUA_TTABLE) {
+        // see if we are an array or a struct
+        bool isStruct = false;
+        lua_pushnil(L); // initial key
+
+        // iterate through table
+        while (lua_next(L, index) != 0) {
+            // if there is a key that is a string, we are a struct!
+            if (lua_type(L, -2) == LUA_TSTRING) {
+                isStruct = true;
+            }
+            lua_pop(L, 1);
+        }
+
+        if (isStruct) {
+            lua_pushnil(L); // initial key
+
+            // iterate through table
+            while (lua_next(L, index) != 0) {
+                if (lua_type(L, -2) == LUA_TSTRING) {
+                    const char *key = lua_tostring(L, -2); // grab key
+
+                    // add to path
+                    char path[MAX_SHADER_VARIABLE_NAME];
+                    snprintf(path, sizeof(path), "%s.%s", prefix, key);
+
+                    // check to see if the key exists
+                    bool keyExists = false;
+                    for (int i = 0; i < block->uniformCount; i++) {
+                        if (strcmp(block->uniforms[i].name, path) == 0) {
+                            // see if we find anything
+                            smlua_set_uniform_recursive(L, -1, block, path);
+                            keyExists = true;
+                        }
+                    }
+
+                    if (!keyExists) {
+                        // if a key is something like from a vector, try mapping it to
+                        // an index
+                        int mappedIndex = convert_vector_or_matrix_key_to_index(key);
+
+                        // if we successfully mapped the key, use that instead!
+                        if (mappedIndex >= 0) {
+                            // add to path
+                            snprintf(path, sizeof(path), "%s[%d]", prefix, mappedIndex);
+
+                            // see if we find anything
+                            smlua_set_uniform_recursive(L, -1, block, path);
+                        }
+                    }
+                }
+                lua_pop(L, 1);
+            }
+        } else {
+            // we are an array, get length of table
+            size_t len = lua_rawlen(L, index);
+
+            // iterate through table
+            for (size_t i = 1; i <= len; i++) {
+                lua_rawgeti(L, index, i);
+
+                // construct path
+                char path[MAX_SHADER_VARIABLE_NAME];
+                snprintf(path, sizeof(path), "%s[%zu]", prefix, i - 1);
+
+                // see if we find anything
+                smlua_set_uniform_recursive(L, -1, block, path);
+                lua_pop(L, 1);
+            }
+        }
+    }
+}
+
+static int smlua_func_gfx_shader_set_uniform(lua_State *L) {
+    if (!smlua_functions_valid_param_count(L, 2)) { return 0; }
+
+    const char *name = smlua_to_string(L, 1);
+    if (!name) { return 0; }
+
+    if (gfx_shader_stage_is(SHADER_STAGE_VERTEX)) {
+        struct ShaderUniformBlock *block = gfx_get_current_rendering_api()->get_active_uniform_buffer(SHADER_STAGE_VERTEX);
+        if (block) {
+            smlua_set_uniform_recursive(L, 2, block, name);
+        }
+    }
+    if (gfx_shader_stage_is(SHADER_STAGE_FRAGMENT)) {
+        struct ShaderUniformBlock *block = gfx_get_current_rendering_api()->get_active_uniform_buffer(SHADER_STAGE_FRAGMENT);
+        if (block) {
+            smlua_set_uniform_recursive(L, 2, block, name);
+        }
+    }
+
+    return 0;
+}
+
   //////////
  // bind //
 //////////
@@ -1508,4 +1783,5 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "cast_graph_node", smlua_func_cast_graph_node);
     smlua_bind_function(L, "get_uncolored_string", smlua_func_get_uncolored_string);
     smlua_bind_function(L, "gfx_set_command", smlua_func_gfx_set_command);
+    smlua_bind_function(L, "gfx_shader_set_uniform", smlua_func_gfx_shader_set_uniform);
 }

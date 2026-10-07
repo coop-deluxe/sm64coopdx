@@ -29,7 +29,7 @@ The ModFS files are located in the `sav` directory at the usual save file locati
   - Can contain only valid ASCII characters, no `*` or `\`
   - Cannot be called `properties.json` (this name is reserved for ModFS internal properties)
   - Only the following extensions (and extension-less files) are allowed:
-    - text: `.txt`, `.json`, `.ini`, `.sav`
+    - text: `.txt`, `.json`, `.ini`, `.sav`, `.vert`, `.frag`
     - actors: `.bin`, `.col`
     - behaviors: `.bhv`
     - textures: `.tex`, `.png`

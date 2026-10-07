@@ -5,7 +5,9 @@
 
 #include "engine/graph_node.h"
 
+#define MAX_FAR_PLANE_DIST 1000000.f
 #define MATRIX_STACK_SIZE 64
+
 extern Mat4 gMatStack[MATRIX_STACK_SIZE];
 extern Mat4 gMatStackPrev[MATRIX_STACK_SIZE];
 
@@ -20,6 +22,9 @@ extern struct GraphNodePerspective *gCurGraphNodeCamFrustum;
 extern struct GraphNodeCamera *gCurGraphNodeCamera;
 extern struct GraphNodeObject *gCurGraphNodeObject;
 extern struct GraphNodeHeldObject *gCurGraphNodeHeldObject;
+
+extern Mtx gInverseCameraMatrix;
+
 extern u16 gAreaUpdateCounter;
 extern struct Object* gCurGraphNodeProcessingObject;
 
@@ -53,6 +58,42 @@ struct GraphNodeInterpData {
 
 struct GraphNodeInterpData *geo_get_interp_data(void *node, struct GraphNodeObject *obj);
 void geo_clear_interp_data();
+
+struct CameraInterp {
+    Mat4 *matrixPtr;
+    Mat4 *matrixPtrPrev;
+    Vec3f pos;
+    Vec3f prevPos;
+    Vec3f focus;
+    Vec3f prevFocus;
+    s16 roll;
+};
+
+struct MtxInterp {
+    Gfx *pos;
+    Mtx *mtx;
+    Mtx *mtxPrev;
+    void *displayList;
+    Mtx interp;
+    u8 usingCamSpace;
+};
+
+struct PerspectiveInterp {
+    Mtx *mtx;
+    f32 aspect;
+    f32 fov;
+    s16 near;
+    s16 far;
+    f32 prevFov;
+    f32 prevNear;
+    f32 prevFar;
+};
+
+struct ViewportInterp {
+    Vp prevViewport;
+    Vp currViewport;
+    Vp interpViewport;
+};
 
 struct ShadowInterp {
     Gfx*  gfx;

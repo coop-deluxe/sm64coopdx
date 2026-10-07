@@ -46,7 +46,7 @@ static bool loading_screen_on_render(struct DjuiBase* base) {
     MUTEX_LOCK(gLoadingThread);
 
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
     f32 scale = djui_gfx_get_scale();
     windowWidth /= scale;
     windowHeight /= scale;
@@ -177,6 +177,7 @@ void render_loading_screen(void) {
 
     // loading screen loop
     while (!gGameInited) {
+        gfx_wm_handle_events();
         gfx_wm_main_loop(loading_screen_produce_one_frame);
     }
 
@@ -190,6 +191,7 @@ void render_rom_setup_screen(void) {
     loading_screen_set_segment_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
 
     while (!gRomIsValid) {
+        gfx_wm_handle_events();
         gfx_wm_main_loop(loading_screen_produce_one_frame);
     }
 }

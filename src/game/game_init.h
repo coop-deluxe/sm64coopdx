@@ -40,6 +40,7 @@ extern struct SPTask *gGfxSPTask;
 extern Gfx *gDisplayListHead;
 extern u8 *gGfxPoolEnd;
 extern struct GfxPool *gGfxPool;
+extern u32 gGfxPoolIndex;
 extern u8 gControllerBits;
 extern s8 gEepromProbe;
 

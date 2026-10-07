@@ -1993,3 +1993,137 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_UPDATE(s16 playmode, s32 *changeLe
     }
     return hookResult;
 }
+
+bool smlua_call_event_hooks_HOOK_ON_VERTEX_SHADER_CREATE(struct ColorCombiner *cc, const char **vertexShader) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_VERTEX_SHADER_CREATE];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push cc
+        smlua_push_object(L, LOT_COLORCOMBINER, cc, NULL);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_VERTEX_SHADER_CREATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            continue;
+        }
+        bool outputSet = false;
+
+        // return vertexShader
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *vertexShader = smlua_to_string(L, -1);
+            outputSet = true;
+        }
+
+        lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_FRAGMENT_SHADER_CREATE(struct ColorCombiner *cc, const char **fragmentShader) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_FRAGMENT_SHADER_CREATE];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push cc
+        smlua_push_object(L, LOT_COLORCOMBINER, cc, NULL);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_FRAGMENT_SHADER_CREATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            continue;
+        }
+        bool outputSet = false;
+
+        // return fragmentShader
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *fragmentShader = smlua_to_string(L, -1);
+            outputSet = true;
+        }
+
+        lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE(const char **vertexShader) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            continue;
+        }
+        bool outputSet = false;
+
+        // return vertexShader
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *vertexShader = smlua_to_string(L, -1);
+            outputSet = true;
+        }
+
+        lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool smlua_call_event_hooks_HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE(const char **fragmentShader) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 0, 1, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            continue;
+        }
+        bool outputSet = false;
+
+        // return fragmentShader
+        if (lua_type(L, -1) == LUA_TSTRING) {
+            *fragmentShader = smlua_to_string(L, -1);
+            outputSet = true;
+        }
+
+        lua_settop(L, prevTop);
+        if (outputSet) {
+            return true;
+        }
+    }
+    return false;
+}

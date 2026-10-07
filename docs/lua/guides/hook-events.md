@@ -72,3 +72,12 @@
 | HOOK_ON_DYNOS_PACK_TOGGLED | Called after a DynOS pack is toggled | `string` dynosPackName, `boolean` enabled |
 | HOOK_BEFORE_PLAY_MODE_UPDATE | Called before the play mode is ran. Return a number to override the play mode to be ran. | `number` playMode |
 | HOOK_ON_PLAY_MODE_UPDATE | Called after the play mode is ran. Return a number to override the change level. | `number` playMode |
+| HOOK_ON_VERTEX_SHADER_CREATE | Called when a vertex shader is created. Return a string to override the shader | [ColorCombiner](../structs.md#ColorCombiner) cc, `integer` shaderIndex |
+| HOOK_ON_FRAGMENT_SHADER_CREATE | Called when a fragment shader is created. Return a string to override the shader | [ColorCombiner](../structs.md#ColorCombiner) cc, `integer` shaderIndex |
+| HOOK_ON_POST_PROCESS_VERTEX_SHADER_CREATE | Called when a post process vertex shader is created. Return a `string` to override the shader | |
+| HOOK_ON_POST_PROCESS_FRAGMENT_SHADER_CREATE | Called when a post process fragment shader is created. Return a `string` to override the shader | |
+
+### TODO: Implement these hooks
+
+| HOOK_BEFORE_FRAME_PASS_RENDER | Called before a frame pass is rendered | |
+| HOOK_ON_FRAME_PASS_RENDER | Called when a frame pass is rendered | |

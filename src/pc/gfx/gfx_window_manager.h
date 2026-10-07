@@ -6,6 +6,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // special value for window position that signifies centered position
 #define WAPI_WIN_CENTERPOS 0xFFFFFFFF
 
@@ -15,10 +19,16 @@ typedef bool (*kb_callback_t)(int code);
 
 enum GfxWindowBackend {
     GFX_WINDOW_BACKEND_DUMMY = -1,
-    GFX_WINDOW_BACKEND_OPENGL,
-#if defined(_WIN32)
+#if defined(_WIN32) || defined(__linux)
+#ifdef _WIN32
     GFX_WINDOW_BACKEND_DIRECTX,
 #endif
+    GFX_WINDOW_BACKEND_VULKAN,
+#endif
+#ifdef __APPLE__
+    GFX_WINDOW_BACKEND_METAL,
+#endif
+    GFX_WINDOW_BACKEND_OPENGL,
     GFX_WINDOW_BACKEND_COUNT,
     GFX_WINDOW_BACKEND_MAX = GFX_WINDOW_BACKEND_COUNT - 1,
 };
@@ -33,6 +43,8 @@ struct GfxWindowBackendAPI {
     double (*get_time)(void); // For debug
     int  (*get_max_msaa)(void);
 };
+
+const char *gfx_wm_get_backend_name(enum GfxWindowBackend backend);
 
 void gfx_wm_set_window(SDL_Window *window);
 SDL_Window *gfx_wm_get_window(void);
@@ -59,3 +71,7 @@ int gfx_wm_get_max_msaa(void);
 void gfx_wm_set_window_title(const char* title);
 void gfx_wm_reset_window_title(void);
 bool gfx_wm_has_focus(void);
+
+#ifdef __cplusplus
+}
+#endif

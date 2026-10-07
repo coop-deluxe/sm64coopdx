@@ -205,10 +205,11 @@ Vtx *make_skybox_rect(s32 tileRow, s32 tileCol, s32 row, s32 col) {
     f32 y = SKYBOX_HEIGHT - tileRow / SKYBOX_COLS * SKYBOX_TILE_HEIGHT;
 
     if (verts != NULL) {
-        make_vertex(verts, 0, x, y, -1, 0, 0, 255, 255, 255, 255);
-        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -1, 0, 31 << 5, 255, 255, 255, 255);
-        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -1, 31 << 5, 31 << 5, 255, 255, 255, 255);
-        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -1, 31 << 5, 0, 255, 255, 255, 255);
+        // dk why the heck -2 works here for Z to allow shader code to detect it
+        make_vertex(verts, 0, x, y, -2, 0, 0, 255, 255, 255, 255);
+        make_vertex(verts, 1, x, y - SKYBOX_TILE_HEIGHT, -2, 0, 31 << 5, 255, 255, 255, 255);
+        make_vertex(verts, 2, x + SKYBOX_TILE_WIDTH, y - SKYBOX_TILE_HEIGHT, -2, 31 << 5, 31 << 5, 255, 255, 255, 255);
+        make_vertex(verts, 3, x + SKYBOX_TILE_WIDTH, y, -2, 31 << 5, 0, 255, 255, 255, 255);
     }
     return verts;
 }

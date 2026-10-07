@@ -20,7 +20,7 @@
 // 90 91 92 93 94 95 96 97 98 99 9a 9b 9c 9d 9e 9f
 // a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 aa ab ac ad ae af
 // b0 b1 b2 b3 b4 b5 b6 b7 b8 b9 ba bb bc bd be bf
-// c0 c1 c2 c3 c4 c5 c6 c7                        
+// c0 c1 c2 c3 c4 c5 c6 c7
 // d0                                       <- RDP
 //
 //
@@ -64,8 +64,6 @@
 #define G_TRI2_EXT         0x12
 #define G_TEXADDR_DJUI     0x13
 #define G_EXECUTE_DJUI     0xdd
-
-#define G_MTX_INVERSE_CAMERA_EXT   0x08
 
 #define	gsSPTextureAddrDjui(c) \
 {{ \
@@ -191,17 +189,17 @@
  * value. This is useful for making surfaces fade between transparent when
  * viewed straight-on and opaque when viewed at a large angle, or for applying a
  * fake "outline" around the border of meshes.
- * 
+ *
  * If using Fresnel, you need to set the camera world position whenever you set
  * the VP matrix, viewport, etc. See SPCameraWorld.
- * 
+ *
  * The RSP does:
  * s16 dotProduct = dot(vertex normal, camera pos - vertex pos);
  * dotProduct = abs(dotProduct); // 0 = points to side, 7FFF = points at or away
  * s32 factor = ((scale * dotProduct) >> 15) + offset;
  * s16 result = clamp(factor << 8, 0, 7FFF);
  * color_or_alpha = result >> 7;
- * 
+ *
  * At dotMax, color_or_alpha = FF, result = 7F80, factor = 7F
  * At dotMin, color_or_alpha = 00, result = 0, factor = 0
  * 7F = ((scale * dotMax) >> 15) + offset
@@ -211,7 +209,7 @@
  *           scale = 3F8000 / (dotMax - dotMin)                <--
  * offset = -(((3F8000 / (dotMax - dotMin)) * dotMin) >> 15)
  * offset = -((7F * dotMin) / (dotMax - dotMin))               <--
- * 
+ *
  * To convert in the opposite direction:
  * ((7F - offset) << 15) / scale = dotMax
  * ((00 - offset) << 15) / scale = dotMin
@@ -222,6 +220,49 @@
 #define gsSPFresnel(scale, offset) \
     gsMoveWd(G_MW_FX, G_MWO_FRESNEL, \
         (_SHIFTL((scale), 16, 16) | _SHIFTL((offset), 0, 16)))
+
+  //////////////////
+ // G_INTERP_EXT //
+//////////////////
+
+#define G_INTERP_EXT 0x08
+
+#define G_INTERP_INTERPOLATE 0
+
+// matrix
+#define G_INTERP_TYPE_MTX 1
+#define G_INTERP_SET_CAM_INTERP 2
+
+// perspective
+#define G_INTERP_TYPE_PERSPECTIVE 3
+#define G_INTERP_SET_SKIP_PERSPECTIVE_INTERP 4
+
+// viewport
+#define G_INTERP_TYPE_VIEWPORT 5
+
+#define gSPSetInterp(pkt, type, value) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(type,16,8); \
+    _g->words.w1 = (uintptr_t)(value); \
+}
+
+#define gsSPSetInterp(type, value) \
+{ \
+    (_SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(type,16,8)), \
+    (uintptr_t)(value) \
+}
+
+#define gSPInterpolate(pkt) \
+{ \
+    Gfx *_g = (Gfx *)(pkt); \
+    _g->words.w0 = _SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(G_INTERP_INTERPOLATE,16,8); \
+}
+
+#define gsSPInterpolate(pkt) \
+{ \
+    (_SHIFTL(G_INTERP_EXT,24,8)|_SHIFTL(G_INTERP_INTERPOLATE,16,8)) \
+}
 
 /////////////////
 // G_STATE_EXT //
