@@ -677,8 +677,6 @@ int main(int argc, char *argv[]) {
         gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
 
-    //render_rom_setup_screen();
-
     // render the rom setup screen
     if (!main_rom_handler()) {
         if (!gCLIOpts.hideSplashScreen) {
