@@ -11,7 +11,7 @@
 <br />
 
 
-## [random_u16](#random_u16)
+## random_u16
 
 ### Description
 Generates a pseudo random integer between 0 and 65535
@@ -32,7 +32,7 @@ Generates a pseudo random integer between 0 and 65535
 
 <br />
 
-## [random_float](#random_float)
+## random_float
 
 ### Description
 Generates a pseudo random float between 0.0 and 1.0
@@ -53,7 +53,7 @@ Generates a pseudo random float between 0.0 and 1.0
 
 <br />
 
-## [random_sign](#random_sign)
+## random_sign
 
 ### Description
 Returns either 1 or -1 with a pseudo 50:50 chance
@@ -74,7 +74,7 @@ Returns either 1 or -1 with a pseudo 50:50 chance
 
 <br />
 
-## [obj_update_gfx_pos_and_angle](#obj_update_gfx_pos_and_angle)
+## obj_update_gfx_pos_and_angle
 
 ### Description
 Updates an object's graphical position and angle
@@ -97,7 +97,7 @@ Updates an object's graphical position and angle
 
 <br />
 
-## [position_based_random_u16](#position_based_random_u16)
+## position_based_random_u16
 
 ### Description
 Sets the current object's position to random integers between 0 and 65536
@@ -118,7 +118,7 @@ Sets the current object's position to random integers between 0 and 65536
 
 <br />
 
-## [position_based_random_float_position](#position_based_random_float_position)
+## position_based_random_float_position
 
 ### Description
 Sets the current object's position to random floats between 0.0 and 1.0
@@ -139,7 +139,7 @@ Sets the current object's position to random floats between 0.0 and 1.0
 
 <br />
 
-## [draw_distance_scalar_is_infinite](#draw_distance_scalar_is_infinite)
+## draw_distance_scalar_is_infinite
 
 ### Description
 Checks if the draw distance scalar is infinite
@@ -160,7 +160,7 @@ Checks if the draw distance scalar is infinite
 
 <br />
 
-## [draw_distance_scalar](#draw_distance_scalar)
+## draw_distance_scalar
 
 ### Description
 Gets the draw distance scalar
@@ -187,7 +187,7 @@ Gets the draw distance scalar
 <br />
 
 
-## [get_id_from_behavior](#get_id_from_behavior)
+## get_id_from_behavior
 
 ### Description
 Gets the behavior ID of the provided `behavior`
@@ -210,7 +210,7 @@ Gets the behavior ID of the provided `behavior`
 
 <br />
 
-## [get_id_from_vanilla_behavior](#get_id_from_vanilla_behavior)
+## get_id_from_vanilla_behavior
 
 ### Description
 Gets the behavior ID of the provided `behavior` if it's a vanilla behavior, `id_bhv_max_count` otherwise
@@ -233,7 +233,7 @@ Gets the behavior ID of the provided `behavior` if it's a vanilla behavior, `id_
 
 <br />
 
-## [get_behavior_from_id](#get_behavior_from_id)
+## get_behavior_from_id
 
 ### Description
 Gets the behavior script corresponding to the provided `id`
@@ -256,7 +256,7 @@ Gets the behavior script corresponding to the provided `id`
 
 <br />
 
-## [get_vanilla_behavior_from_id](#get_vanilla_behavior_from_id)
+## get_vanilla_behavior_from_id
 
 ### Description
 Gets the behavior script corresponding to the provided `id` if it's a vanilla behavior, `nil` otherwise
@@ -279,7 +279,7 @@ Gets the behavior script corresponding to the provided `id` if it's a vanilla be
 
 <br />
 
-## [get_behavior_name_from_id](#get_behavior_name_from_id)
+## get_behavior_name_from_id
 
 ### Description
 Gets the behavior name from the provided `id` (bhvMyGreatMODCustom004)
@@ -302,7 +302,7 @@ Gets the behavior name from the provided `id` (bhvMyGreatMODCustom004)
 
 <br />
 
-## [get_id_from_behavior_name](#get_id_from_behavior_name)
+## get_id_from_behavior_name
 
 ### Description
 Gets the behavior ID corresponding to the provided `name`
@@ -331,7 +331,7 @@ Gets the behavior ID corresponding to the provided `name`
 <br />
 
 
-## [skip_camera_interpolation](#skip_camera_interpolation)
+## skip_camera_interpolation
 
 ### Description
 Skips camera interpolation for a frame, locking the camera instantly to the target position.
@@ -353,7 +353,7 @@ Useful for immediate changes in camera state or position without smooth transiti
 
 <br />
 
-## [set_camera_shake_from_hit](#set_camera_shake_from_hit)
+## set_camera_shake_from_hit
 
 ### Description
 Applies a shake effect to the camera based on a hit type.
@@ -377,7 +377,7 @@ Different shake types simulate various impacts, such as attacks, falls, or shock
 
 <br />
 
-## [set_environmental_camera_shake](#set_environmental_camera_shake)
+## set_environmental_camera_shake
 
 ### Description
 Applies an environmental shake effect to the camera.
@@ -401,7 +401,7 @@ Handles predefined shake types triggered by environmental events like explosions
 
 <br />
 
-## [set_camera_shake_from_point](#set_camera_shake_from_point)
+## set_camera_shake_from_point
 
 ### Description
 Applies a shake effect to the camera, scaled by its proximity to a specified point.
@@ -428,7 +428,7 @@ The intensity decreases with distance from the point
 
 <br />
 
-## [move_mario_head_c_up](#move_mario_head_c_up)
+## move_mario_head_c_up
 
 ### Description
 Moves Mario's head slightly upward when the C-Up button is pressed.
@@ -452,7 +452,7 @@ This function aligns the camera to match the head movement for consistency
 
 <br />
 
-## [transition_next_state](#transition_next_state)
+## transition_next_state
 
 ### Description
 Transitions the camera to the next state over a specified number of frames.
@@ -477,7 +477,7 @@ This is typically used for cutscenes or scripted sequences
 
 <br />
 
-## [set_camera_mode](#set_camera_mode)
+## set_camera_mode
 
 ### Description
 Changes the camera to a new mode, optionally interpolating over a specified number of frames.
@@ -503,7 +503,7 @@ Useful for transitioning between different camera behaviors dynamically
 
 <br />
 
-## [soft_reset_camera](#soft_reset_camera)
+## soft_reset_camera
 
 ### Description
 Resets the camera's state while retaining some settings, such as position or mode.
@@ -527,7 +527,7 @@ This is often used when soft-resetting gameplay without reinitialization
 
 <br />
 
-## [reset_camera](#reset_camera)
+## reset_camera
 
 ### Description
 Fully resets the camera to its default state and reinitializes all settings.
@@ -551,7 +551,7 @@ This is typically used when restarting gameplay or loading a new area
 
 <br />
 
-## [select_mario_cam_mode](#select_mario_cam_mode)
+## select_mario_cam_mode
 
 ### Description
 Selects the appropriate camera mode for Mario based on the current gameplay context.
@@ -573,7 +573,7 @@ Adapts camera behavior dynamically to match Mario's environment or state
 
 <br />
 
-## [object_pos_to_vec3f](#object_pos_to_vec3f)
+## object_pos_to_vec3f
 
 ### Description
 Converts an object's position to a `Vec3f` format.
@@ -598,7 +598,7 @@ Useful for aligning object behaviors or interactions with the camera system
 
 <br />
 
-## [vec3f_to_object_pos](#vec3f_to_object_pos)
+## vec3f_to_object_pos
 
 ### Description
 Converts a `Vec3f` position to an object's internal format.
@@ -623,7 +623,7 @@ Useful for syncing 3D positions between objects and the game world
 
 <br />
 
-## [object_face_angle_to_vec3s](#object_face_angle_to_vec3s)
+## object_face_angle_to_vec3s
 
 ### Description
 Converts an object's face angle to a `Vec3s` format
@@ -647,7 +647,7 @@ Converts an object's face angle to a `Vec3s` format
 
 <br />
 
-## [vec3s_to_object_face_angle](#vec3s_to_object_face_angle)
+## vec3s_to_object_face_angle
 
 ### Description
 Converts a `Vec3s` angle to an object's face angle internal format
@@ -671,7 +671,7 @@ Converts a `Vec3s` angle to an object's face angle internal format
 
 <br />
 
-## [object_move_angle_to_vec3s](#object_move_angle_to_vec3s)
+## object_move_angle_to_vec3s
 
 ### Description
 Converts an object's move angle to a `Vec3s` format
@@ -695,7 +695,7 @@ Converts an object's move angle to a `Vec3s` format
 
 <br />
 
-## [vec3s_to_object_move_angle](#vec3s_to_object_move_angle)
+## vec3s_to_object_move_angle
 
 ### Description
 Converts a `Vec3s` angle to an object's move angle internal format
@@ -719,7 +719,7 @@ Converts a `Vec3s` angle to an object's move angle internal format
 
 <br />
 
-## [cam_select_alt_mode](#cam_select_alt_mode)
+## cam_select_alt_mode
 
 ### Description
 Selects an alternate camera mode based on the given angle.
@@ -743,7 +743,7 @@ Used to toggle between predefined camera modes dynamically
 
 <br />
 
-## [set_cam_angle](#set_cam_angle)
+## set_cam_angle
 
 ### Description
 Sets the camera's angle based on the specified mode.
@@ -767,7 +767,7 @@ Handles rotation and focus adjustments for predefined camera behaviors
 
 <br />
 
-## [set_handheld_shake](#set_handheld_shake)
+## set_handheld_shake
 
 ### Description
 Applies a handheld camera shake effect with configurable parameters.
@@ -791,7 +791,7 @@ Can be used to simulate dynamic, realistic camera movement
 
 <br />
 
-## [shake_camera_handheld](#shake_camera_handheld)
+## shake_camera_handheld
 
 ### Description
 Activates a handheld camera shake effect.
@@ -816,7 +816,7 @@ Calculates positional and focus adjustments to simulate manual movement
 
 <br />
 
-## [find_c_buttons_pressed](#find_c_buttons_pressed)
+## find_c_buttons_pressed
 
 ### Description
 Determines which C-buttons are currently pressed by the player.
@@ -842,7 +842,7 @@ Returns a bitmask indicating the active buttons for camera control
 
 <br />
 
-## [collide_with_walls](#collide_with_walls)
+## collide_with_walls
 
 ### Description
 Checks for collisions between the camera and level geometry.
@@ -868,7 +868,7 @@ Adjusts the camera's position to avoid clipping into walls or obstacles
 
 <br />
 
-## [clamp_pitch](#clamp_pitch)
+## clamp_pitch
 
 ### Description
 Clamps the camera's pitch angle between a maximum and minimum value.
@@ -895,7 +895,7 @@ Prevents over-rotation and maintains a consistent viewing angle
 
 <br />
 
-## [is_within_100_units_of_mario](#is_within_100_units_of_mario)
+## is_within_100_units_of_mario
 
 ### Description
 Checks if a position is within 100 units of Mario's current position.
@@ -921,7 +921,7 @@ Returns true if the position is within the specified radius and false otherwise
 
 <br />
 
-## [set_or_approach_f32_asymptotic](#set_or_approach_f32_asymptotic)
+## set_or_approach_f32_asymptotic
 
 ### Description
 Smoothly transitions or directly sets a floating-point value (`dst`) to approach a target (`goal`).
@@ -949,7 +949,7 @@ Returns FALSE if `dst` reaches `goal`
 
 <br />
 
-## [approach_f32_asymptotic_bool](#approach_f32_asymptotic_bool)
+## approach_f32_asymptotic_bool
 
 ### Description
 Gradually adjusts a floating-point value (`current`) towards a target (`target`) using asymptotic smoothing.
@@ -976,7 +976,7 @@ Returns FALSE if `current` reaches the `target`
 
 <br />
 
-## [approach_f32_asymptotic](#approach_f32_asymptotic)
+## approach_f32_asymptotic
 
 ### Description
 Gradually approaches a floating-point value (`target`) using asymptotic smoothing.
@@ -1003,7 +1003,7 @@ Useful for smoothly adjusting camera parameters like field-of-view or position
 
 <br />
 
-## [approach_s16_asymptotic_bool](#approach_s16_asymptotic_bool)
+## approach_s16_asymptotic_bool
 
 ### Description
 Gradually adjusts a signed 16-bit integer (`current`) towards a target (`target`) using asymptotic smoothing.
@@ -1030,7 +1030,7 @@ Returns FALSE if `current` reaches `target`
 
 <br />
 
-## [approach_s16_asymptotic](#approach_s16_asymptotic)
+## approach_s16_asymptotic
 
 ### Description
 Gradually approaches a signed 16-bit integer (`target`) using asymptotic smoothing.
@@ -1057,7 +1057,7 @@ Useful for adjusting angles or positions smoothly
 
 <br />
 
-## [approach_vec3f_asymptotic](#approach_vec3f_asymptotic)
+## approach_vec3f_asymptotic
 
 ### Description
 Smoothly transitions a 3D vector (`current`) towards a target vector (`target`) using asymptotic scaling.
@@ -1085,7 +1085,7 @@ Scaling values (the `Mul` variables) for x, y, and z axes determine the speed of
 
 <br />
 
-## [set_or_approach_vec3f_asymptotic](#set_or_approach_vec3f_asymptotic)
+## set_or_approach_vec3f_asymptotic
 
 ### Description
 Smoothly transitions a 3D vector (`current`) toward a target vector (`goal`) using asymptotic scaling.
@@ -1113,7 +1113,7 @@ Allows gradual or instantaneous alignment of 3D positions. Scaling values (the `
 
 <br />
 
-## [camera_approach_s16_symmetric_bool](#camera_approach_s16_symmetric_bool)
+## camera_approach_s16_symmetric_bool
 
 ### Description
 Adjusts a signed 16-bit integer (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
@@ -1140,7 +1140,7 @@ Returns FALSE if `current` reaches the `target`
 
 <br />
 
-## [set_or_approach_s16_symmetric](#set_or_approach_s16_symmetric)
+## set_or_approach_s16_symmetric
 
 ### Description
 Smoothly transitions or directly sets a signed 16-bit value (`current`) to approach a target (`target`).
@@ -1168,7 +1168,7 @@ Returns FALSE if `current` reaches the `target`
 
 <br />
 
-## [camera_approach_f32_symmetric_bool](#camera_approach_f32_symmetric_bool)
+## camera_approach_f32_symmetric_bool
 
 ### Description
 Adjusts a floating-point value (`current`) towards a target (`target`) symmetrically with a fixed increment (`increment`).
@@ -1195,7 +1195,7 @@ Returns FALSE if `current` reaches the `target`
 
 <br />
 
-## [camera_approach_f32_symmetric](#camera_approach_f32_symmetric)
+## camera_approach_f32_symmetric
 
 ### Description
 Symmetrically approaches a floating-point value (`target`) with a fixed increment (`increment`) per frame.
@@ -1221,7 +1221,7 @@ Limits the rate of change to ensure gradual transitions
 
 <br />
 
-## [random_vec3s](#random_vec3s)
+## random_vec3s
 
 ### Description
 Generates a random 3D vector with short integer components.
@@ -1248,7 +1248,7 @@ Useful for randomized offsets or environmental effects
 
 <br />
 
-## [clamp_positions_and_find_yaw](#clamp_positions_and_find_yaw)
+## clamp_positions_and_find_yaw
 
 ### Description
 Clamps a position within specified X and Z bounds and calculates the yaw angle from the origin.
@@ -1277,7 +1277,7 @@ Prevents the camera from moving outside of the designated area
 
 <br />
 
-## [is_range_behind_surface](#is_range_behind_surface)
+## is_range_behind_surface
 
 ### Description
 Determines if a range is obstructed by a surface relative to the camera.
@@ -1305,7 +1305,7 @@ Returns true if the range is behind the specified surface
 
 <br />
 
-## [scale_along_line](#scale_along_line)
+## scale_along_line
 
 ### Description
 Scales a point along a line between two 3D points (`from` and `to`).
@@ -1333,7 +1333,7 @@ The result is stored in the destination vector (`dest`)
 
 <br />
 
-## [calculate_pitch](#calculate_pitch)
+## calculate_pitch
 
 ### Description
 Calculates the pitch angle (rotation around the X-axis) from one 3D point (`from`) to another (`to`).
@@ -1358,7 +1358,7 @@ Returns the pitch as a signed 16-bit integer
 
 <br />
 
-## [calculate_yaw](#calculate_yaw)
+## calculate_yaw
 
 ### Description
 Determines the yaw angle (rotation around the Y-axis) from one 3D position (`from`) to another (`to`).
@@ -1383,7 +1383,7 @@ Returns the yaw as a signed 16-bit integer
 
 <br />
 
-## [calculate_angles](#calculate_angles)
+## calculate_angles
 
 ### Description
 Calculates and returns the pitch and yaw angles from one 3D position (`from`) to another (`to`)
@@ -1408,7 +1408,7 @@ Calculates and returns the pitch and yaw angles from one 3D position (`from`) to
 
 <br />
 
-## [calc_abs_dist](#calc_abs_dist)
+## calc_abs_dist
 
 ### Description
 Calculates the absolute distance between two 3D points (`a` and `b`).
@@ -1434,7 +1434,7 @@ Useful for determining proximity between objects in 3D space
 
 <br />
 
-## [calc_hor_dist](#calc_hor_dist)
+## calc_hor_dist
 
 ### Description
 Calculates the horizontal (XZ-plane) distance between two 3D points (`a` and `b`).
@@ -1460,7 +1460,7 @@ Useful for terrain navigation or collision detection
 
 <br />
 
-## [rotate_in_xz](#rotate_in_xz)
+## rotate_in_xz
 
 ### Description
 Rotates a vector around the XZ-plane by a specified yaw angle.
@@ -1487,7 +1487,7 @@ Useful for rotating camera positions or object coordinates horizontally
 
 <br />
 
-## [rotate_in_yz](#rotate_in_yz)
+## rotate_in_yz
 
 ### Description
 Rotates a vector around the YZ-plane by a specified pitch angle.
@@ -1514,7 +1514,7 @@ Useful for vertical camera rotations or object transformations
 
 <br />
 
-## [set_camera_pitch_shake](#set_camera_pitch_shake)
+## set_camera_pitch_shake
 
 ### Description
 Applies a pitch-based shake effect to the camera.
@@ -1541,7 +1541,7 @@ Simulates vertical disturbances like impacts or explosions
 
 <br />
 
-## [set_camera_yaw_shake](#set_camera_yaw_shake)
+## set_camera_yaw_shake
 
 ### Description
 Applies a yaw-based shake effect to the camera.
@@ -1567,7 +1567,7 @@ Simulates horizontal vibrations or rotational impacts
 
 <br />
 
-## [set_camera_roll_shake](#set_camera_roll_shake)
+## set_camera_roll_shake
 
 ### Description
 Applies a roll-based shake effect to the camera.
@@ -1593,7 +1593,7 @@ Simulates rotational disturbances for dynamic camera effects
 
 <br />
 
-## [set_pitch_shake_from_point](#set_pitch_shake_from_point)
+## set_pitch_shake_from_point
 
 ### Description
 Applies a pitch shake effect to the camera, scaled by proximity to a specified point.
@@ -1623,7 +1623,7 @@ Simulates vibrations with intensity decreasing further from the point
 
 <br />
 
-## [shake_camera_pitch](#shake_camera_pitch)
+## shake_camera_pitch
 
 ### Description
 Activates a pitch-based shake effect.
@@ -1648,7 +1648,7 @@ Adds vertical vibrational movement to the camera's behavior
 
 <br />
 
-## [shake_camera_yaw](#shake_camera_yaw)
+## shake_camera_yaw
 
 ### Description
 Activates a yaw-based shake effect.
@@ -1673,7 +1673,7 @@ Adds horizontal vibrational movement to the camera's behavior
 
 <br />
 
-## [shake_camera_roll](#shake_camera_roll)
+## shake_camera_roll
 
 ### Description
 Applies a roll-based shake effect to the camera.
@@ -1697,7 +1697,7 @@ Simulates rotational disturbances caused by impacts or other events
 
 <br />
 
-## [offset_yaw_outward_radial](#offset_yaw_outward_radial)
+## offset_yaw_outward_radial
 
 ### Description
 Calculates an outward radial offset based on the camera's yaw angle.
@@ -1722,7 +1722,7 @@ Returns the offset yaw, used for positioning or alignment
 
 <br />
 
-## [play_camera_buzz_if_cdown](#play_camera_buzz_if_cdown)
+## play_camera_buzz_if_cdown
 
 ### Description
 Plays a buzzing sound effect when the camera attempts to move downward but is restricted.
@@ -1744,7 +1744,7 @@ Provides feedback for invalid C-Down input actions
 
 <br />
 
-## [play_camera_buzz_if_cbutton](#play_camera_buzz_if_cbutton)
+## play_camera_buzz_if_cbutton
 
 ### Description
 Plays a buzzing sound effect when a blocked C-button action is attempted.
@@ -1766,7 +1766,7 @@ Used to signal invalid input or restricted camera movement
 
 <br />
 
-## [play_camera_buzz_if_c_sideways](#play_camera_buzz_if_c_sideways)
+## play_camera_buzz_if_c_sideways
 
 ### Description
 Plays a buzzing sound effect when the camera's position is misaligned with the player's perspective.
@@ -1788,7 +1788,7 @@ Used as audio feedback for incorrect camera behavior
 
 <br />
 
-## [play_sound_cbutton_up](#play_sound_cbutton_up)
+## play_sound_cbutton_up
 
 ### Description
 Plays a sound effect when the C-Up button is pressed for camera movement.
@@ -1810,7 +1810,7 @@ Provides feedback for vertical camera adjustments
 
 <br />
 
-## [play_sound_cbutton_down](#play_sound_cbutton_down)
+## play_sound_cbutton_down
 
 ### Description
 Plays a sound effect when the C-Down button is pressed for camera movement.
@@ -1832,7 +1832,7 @@ Provides auditory feedback for valid camera input
 
 <br />
 
-## [play_sound_cbutton_side](#play_sound_cbutton_side)
+## play_sound_cbutton_side
 
 ### Description
 Plays a sound effect when the C-Side button (left or right) is pressed for camera movement.
@@ -1854,7 +1854,7 @@ Used as audio feedback for horizontal adjustments to the camera
 
 <br />
 
-## [play_sound_button_change_blocked](#play_sound_button_change_blocked)
+## play_sound_button_change_blocked
 
 ### Description
 Plays a sound effect when a blocked action changes the camera mode.
@@ -1876,7 +1876,7 @@ This provides feedback for invalid attempts to switch the camera state
 
 <br />
 
-## [play_sound_rbutton_changed](#play_sound_rbutton_changed)
+## play_sound_rbutton_changed
 
 ### Description
 Plays a sound effect when the R-Button camera mode is changed.
@@ -1898,7 +1898,7 @@ Provides feedback for toggling camera behaviors
 
 <br />
 
-## [play_sound_if_cam_switched_to_lakitu_or_mario](#play_sound_if_cam_switched_to_lakitu_or_mario)
+## play_sound_if_cam_switched_to_lakitu_or_mario
 
 ### Description
 Plays a sound effect when the camera switches between Lakitu and Mario perspectives.
@@ -1920,7 +1920,7 @@ Signals a successful change in camera mode
 
 <br />
 
-## [radial_camera_input](#radial_camera_input)
+## radial_camera_input
 
 ### Description
 Handles radial camera movement based on player input.
@@ -1945,7 +1945,7 @@ Updates the camera's position or orientation accordingly
 
 <br />
 
-## [trigger_cutscene_dialog](#trigger_cutscene_dialog)
+## trigger_cutscene_dialog
 
 ### Description
 Triggers a dialog sequence during a cutscene.
@@ -1969,7 +1969,7 @@ The dialog is synchronized with the camera's position and movement
 
 <br />
 
-## [handle_c_button_movement](#handle_c_button_movement)
+## handle_c_button_movement
 
 ### Description
 Handles camera movement based on input from the C-buttons.
@@ -1993,7 +1993,7 @@ Updates the camera's position or angle to match directional player input
 
 <br />
 
-## [start_cutscene](#start_cutscene)
+## start_cutscene
 
 ### Description
 Starts a cutscene based on the provided ID.
@@ -2018,7 +2018,7 @@ The camera transitions to predefined behaviors for the duration of the cutscene
 
 <br />
 
-## [get_cutscene_from_mario_status](#get_cutscene_from_mario_status)
+## get_cutscene_from_mario_status
 
 ### Description
 Gets the appropriate cutscene to play based on Mario's current gameplay state.
@@ -2042,7 +2042,7 @@ This function helps determine transitions for cinematic or scripted sequences
 
 <br />
 
-## [warp_camera](#warp_camera)
+## warp_camera
 
 ### Description
 Moves the camera to a specified warp destination.
@@ -2068,7 +2068,7 @@ This function handles transitions between levels or areas seamlessly
 
 <br />
 
-## [approach_camera_height](#approach_camera_height)
+## approach_camera_height
 
 ### Description
 Adjusts the camera's height toward a target value (`goalHeight`) while respecting terrain and obstructions.
@@ -2094,7 +2094,7 @@ This is really wonky and probably shouldn't be used, prefer `gLakituStates`
 
 <br />
 
-## [offset_rotated](#offset_rotated)
+## offset_rotated
 
 ### Description
 Offsets a vector by rotating it in 3D space relative to a reference position.
@@ -2121,7 +2121,7 @@ This is useful for creating radial effects or dynamic transformations
 
 <br />
 
-## [next_lakitu_state](#next_lakitu_state)
+## next_lakitu_state
 
 ### Description
 Transitions the camera to the next Lakitu state, updating position and focus.
@@ -2151,7 +2151,7 @@ This function handles smooth transitions between different gameplay scenarios
 
 <br />
 
-## [set_fixed_cam_axis_sa_lobby](#set_fixed_cam_axis_sa_lobby)
+## set_fixed_cam_axis_sa_lobby
 
 ### Description
 Set the fixed camera base pos depending on the current level area
@@ -2174,7 +2174,7 @@ Set the fixed camera base pos depending on the current level area
 
 <br />
 
-## [camera_course_processing](#camera_course_processing)
+## camera_course_processing
 
 ### Description
 Processes course-specific camera settings, such as predefined positions or modes.
@@ -2198,7 +2198,7 @@ Adjusts the camera to match the design and gameplay requirements of the current 
 
 <br />
 
-## [resolve_geometry_collisions](#resolve_geometry_collisions)
+## resolve_geometry_collisions
 
 ### Description
 Resolves collisions between the camera and level geometry.
@@ -2223,7 +2223,7 @@ Adjusts the camera's position to prevent clipping or intersecting with objects
 
 <br />
 
-## [rotate_camera_around_walls](#rotate_camera_around_walls)
+## rotate_camera_around_walls
 
 ### Description
 Rotates the camera to avoid walls or other obstructions.
@@ -2251,7 +2251,7 @@ Ensures clear visibility of the player or target objects
 
 <br />
 
-## [start_object_cutscene_without_focus](#start_object_cutscene_without_focus)
+## start_object_cutscene_without_focus
 
 ### Description
 Starts a cutscene focused on an object without requiring focus to remain locked.
@@ -2275,7 +2275,7 @@ This is useful for dynamic events where the camera adjusts freely
 
 <br />
 
-## [cutscene_object_with_dialog](#cutscene_object_with_dialog)
+## cutscene_object_with_dialog
 
 ### Description
 Starts a cutscene involving an object and displays dialog during the sequence.
@@ -2301,7 +2301,7 @@ The camera focuses on the object while synchronizing dialog with the scene
 
 <br />
 
-## [cutscene_object_without_dialog](#cutscene_object_without_dialog)
+## cutscene_object_without_dialog
 
 ### Description
 Starts a cutscene involving an object without dialog.
@@ -2326,7 +2326,7 @@ The camera transitions smoothly to focus on the object
 
 <br />
 
-## [cutscene_object](#cutscene_object)
+## cutscene_object
 
 ### Description
 Initiates a cutscene focusing on a specific object in the game world.
@@ -2351,7 +2351,7 @@ The camera transitions smoothly to the object, adapting its position as needed
 
 <br />
 
-## [play_cutscene](#play_cutscene)
+## play_cutscene
 
 ### Description
 Starts the execution of a predefined cutscene.
@@ -2375,7 +2375,7 @@ The camera transitions dynamically to follow the scripted sequence
 
 <br />
 
-## [cutscene_spawn_obj](#cutscene_spawn_obj)
+## cutscene_spawn_obj
 
 ### Description
 Spawns an object as part of a cutscene, such as props or interactive elements.
@@ -2400,7 +2400,7 @@ Returns the spawned object's reference for further manipulation
 
 <br />
 
-## [set_fov_shake](#set_fov_shake)
+## set_fov_shake
 
 ### Description
 Applies a field-of-view shake effect to simulate zoom or focus disruptions.
@@ -2426,7 +2426,7 @@ Shake parameters, such as amplitude and decay, control the intensity
 
 <br />
 
-## [set_fov_function](#set_fov_function)
+## set_fov_function
 
 ### Description
 Assigns a custom function for dynamic field-of-view adjustments.
@@ -2450,7 +2450,7 @@ This allows precise control over the camera's zoom behavior during gameplay
 
 <br />
 
-## [cutscene_set_fov_shake_preset](#cutscene_set_fov_shake_preset)
+## cutscene_set_fov_shake_preset
 
 ### Description
 Applies a preset field-of-view shake effect during a cutscene.
@@ -2474,7 +2474,7 @@ This creates dynamic visual effects, such as zoom or focus disruptions
 
 <br />
 
-## [set_fov_shake_from_point_preset](#set_fov_shake_from_point_preset)
+## set_fov_shake_from_point_preset
 
 ### Description
 Applies a preset field-of-view shake effect relative to a specific point.
@@ -2501,7 +2501,7 @@ The intensity diminishes as the distance from the point increases
 
 <br />
 
-## [obj_rotate_towards_point](#obj_rotate_towards_point)
+## obj_rotate_towards_point
 
 ### Description
 Rotates an object toward a specific point in 3D space.
@@ -2530,7 +2530,7 @@ Gradually updates the object's pitch and yaw angles to face the target
 
 <br />
 
-## [set_camera_mode_fixed](#set_camera_mode_fixed)
+## set_camera_mode_fixed
 
 ### Description
 Activates a fixed camera mode and aligns the camera to specific X, Y, Z coordinates.
@@ -2557,7 +2557,7 @@ This is useful for predefined static views in specific areas
 
 <br />
 
-## [snap_to_45_degrees](#snap_to_45_degrees)
+## snap_to_45_degrees
 
 ### Description
 Takes in an SM64 angle unit and returns the nearest 45 degree angle, also in SM64 angle units.
@@ -2581,7 +2581,7 @@ Useful when needing to align angles (camera, yaw, etc.)
 
 <br />
 
-## [camera_set_use_course_specific_settings](#camera_set_use_course_specific_settings)
+## camera_set_use_course_specific_settings
 
 ### Description
 Toggles whether the camera uses course-specific settings.
@@ -2605,7 +2605,7 @@ This is useful for enabling or disabling custom behaviors in specific courses or
 
 <br />
 
-## [center_rom_hack_camera](#center_rom_hack_camera)
+## center_rom_hack_camera
 
 ### Description
 Centers the ROM hack camera.
@@ -2633,7 +2633,7 @@ This function is designed for non-standard level layouts and modded game environ
 <br />
 
 
-## [get_character](#get_character)
+## get_character
 
 ### Description
 Gets a Character struct from `m`
@@ -2656,7 +2656,7 @@ Gets a Character struct from `m`
 
 <br />
 
-## [play_character_sound](#play_character_sound)
+## play_character_sound
 
 ### Description
 Plays a character-specific sound based on the given `characterSound` value. The sound is tied to Mario's current state (`m`).
@@ -2681,7 +2681,7 @@ Useful for triggering sound effects for actions like jumping or interacting with
 
 <br />
 
-## [play_character_sound_offset](#play_character_sound_offset)
+## play_character_sound_offset
 
 ### Description
 Plays a character-specific sound with an additional `offset`, allowing variations or delays in the sound effect. Uses Mario's current state (`m`).
@@ -2707,7 +2707,7 @@ Useful for adding dynamic sound effects or syncing sounds to specific animations
 
 <br />
 
-## [play_character_sound_if_no_flag](#play_character_sound_if_no_flag)
+## play_character_sound_if_no_flag
 
 ### Description
 Plays a character-specific sound only if certain flags are not set. This ensures that sounds are not repeated unnecessarily. The sound is based on `characterSound`, and the flags are checked using `flags`.
@@ -2733,7 +2733,7 @@ Useful for avoiding duplicate sound effects in rapid succession or conditional a
 
 <br />
 
-## [get_character_anim_offset](#get_character_anim_offset)
+## get_character_anim_offset
 
 ### Description
 Calculates the animation offset for Mario's current animation. The offset is determined by the type of animation being played (e.g., hand, feet, or torso movement).
@@ -2757,7 +2757,7 @@ Useful for smoothly syncing Mario's model height or positional adjustments durin
 
 <br />
 
-## [get_character_anim](#get_character_anim)
+## get_character_anim
 
 ### Description
 Gets the animation ID to use for a specific character and animation combination. The ID is based on `characterAnim` and the character currently controlled by Mario (`m`).
@@ -2782,7 +2782,7 @@ Useful for determining which animation to play for actions like walking, jumping
 
 <br />
 
-## [update_character_anim_offset](#update_character_anim_offset)
+## update_character_anim_offset
 
 ### Description
 Updates Mario's current animation offset. This adjusts Mario's position based on the calculated offset to ensure animations appear smooth and natural.
@@ -2812,7 +2812,7 @@ Useful for keeping Mario's animations visually aligned, particularly when transi
 <br />
 
 
-## [command_message_create](#command_message_create)
+## command_message_create
 
 ### Description
 Creates a message that goes into either the chat, console, or terminal.
@@ -2846,7 +2846,7 @@ If ran independently of any hook, it decides on where to output by checking if t
 <br />
 
 
-## [djui_chat_message_create](#djui_chat_message_create)
+## djui_chat_message_create
 
 ### Description
 Creates a `message` in the game's chat box
@@ -2875,7 +2875,7 @@ Creates a `message` in the game's chat box
 <br />
 
 
-## [djui_console_toggle](#djui_console_toggle)
+## djui_console_toggle
 
 ### Description
 Toggles the visibility of the DJUI console
@@ -2896,7 +2896,7 @@ Toggles the visibility of the DJUI console
 
 <br />
 
-## [djui_console_is_open](#djui_console_is_open)
+## djui_console_is_open
 
 ### Description
 Returns whether the DJUI console is currently open or not
@@ -2923,7 +2923,7 @@ Returns whether the DJUI console is currently open or not
 <br />
 
 
-## [djui_gfx_get_scale](#djui_gfx_get_scale)
+## djui_gfx_get_scale
 
 ### Description
 Gets the current visual scaling factor of DJUI
@@ -2950,7 +2950,7 @@ Gets the current visual scaling factor of DJUI
 <br />
 
 
-## [djui_hud_get_resolution](#djui_hud_get_resolution)
+## djui_hud_get_resolution
 
 ### Description
 Gets the current DJUI HUD resolution
@@ -2971,7 +2971,7 @@ Gets the current DJUI HUD resolution
 
 <br />
 
-## [djui_hud_set_resolution](#djui_hud_set_resolution)
+## djui_hud_set_resolution
 
 ### Description
 Sets the current DJUI HUD resolution
@@ -2994,7 +2994,7 @@ Sets the current DJUI HUD resolution
 
 <br />
 
-## [djui_hud_get_filter](#djui_hud_get_filter)
+## djui_hud_get_filter
 
 ### Description
 Gets the current DJUI HUD texture filter
@@ -3015,7 +3015,7 @@ Gets the current DJUI HUD texture filter
 
 <br />
 
-## [djui_hud_set_filter](#djui_hud_set_filter)
+## djui_hud_set_filter
 
 ### Description
 Sets the current DJUI HUD texture filter
@@ -3038,7 +3038,7 @@ Sets the current DJUI HUD texture filter
 
 <br />
 
-## [djui_hud_get_font](#djui_hud_get_font)
+## djui_hud_get_font
 
 ### Description
 Gets the current DJUI HUD font
@@ -3059,7 +3059,7 @@ Gets the current DJUI HUD font
 
 <br />
 
-## [djui_hud_set_font](#djui_hud_set_font)
+## djui_hud_set_font
 
 ### Description
 Sets the current DJUI HUD font
@@ -3082,7 +3082,7 @@ Sets the current DJUI HUD font
 
 <br />
 
-## [djui_hud_get_color](#djui_hud_get_color)
+## djui_hud_get_color
 
 ### Description
 Gets the current DJUI HUD global color
@@ -3103,7 +3103,7 @@ Gets the current DJUI HUD global color
 
 <br />
 
-## [djui_hud_set_color](#djui_hud_set_color)
+## djui_hud_set_color
 
 ### Description
 Sets the current DJUI HUD global color
@@ -3129,7 +3129,7 @@ Sets the current DJUI HUD global color
 
 <br />
 
-## [djui_hud_reset_color](#djui_hud_reset_color)
+## djui_hud_reset_color
 
 ### Description
 Resets the current DJUI HUD global color
@@ -3150,7 +3150,7 @@ Resets the current DJUI HUD global color
 
 <br />
 
-## [djui_hud_get_text_color](#djui_hud_get_text_color)
+## djui_hud_get_text_color
 
 ### Description
 Gets the current DJUI HUD text default color. This color is overridden by color codes
@@ -3171,7 +3171,7 @@ Gets the current DJUI HUD text default color. This color is overridden by color 
 
 <br />
 
-## [djui_hud_set_text_color](#djui_hud_set_text_color)
+## djui_hud_set_text_color
 
 ### Description
 Sets the current DJUI HUD text default color. This color is overridden by color codes
@@ -3197,7 +3197,7 @@ Sets the current DJUI HUD text default color. This color is overridden by color 
 
 <br />
 
-## [djui_hud_reset_text_color](#djui_hud_reset_text_color)
+## djui_hud_reset_text_color
 
 ### Description
 Resets the current DJUI HUD text default color. This color is overridden by color codes
@@ -3218,7 +3218,7 @@ Resets the current DJUI HUD text default color. This color is overridden by colo
 
 <br />
 
-## [djui_hud_get_rotation](#djui_hud_get_rotation)
+## djui_hud_get_rotation
 
 ### Description
 Gets the current DJUI HUD rotation
@@ -3241,7 +3241,7 @@ Gets the current DJUI HUD rotation
 
 <br />
 
-## [djui_hud_set_rotation](#djui_hud_set_rotation)
+## djui_hud_set_rotation
 
 ### Description
 Sets the current DJUI HUD rotation
@@ -3266,7 +3266,7 @@ Sets the current DJUI HUD rotation
 
 <br />
 
-## [djui_hud_set_rotation_interpolated](#djui_hud_set_rotation_interpolated)
+## djui_hud_set_rotation_interpolated
 
 ### Description
 Sets the current DJUI HUD rotation interpolated
@@ -3294,7 +3294,7 @@ Sets the current DJUI HUD rotation interpolated
 
 <br />
 
-## [djui_hud_get_text_alignment](#djui_hud_get_text_alignment)
+## djui_hud_get_text_alignment
 
 ### Description
 Gets the current DJUI HUD text alignment
@@ -3316,7 +3316,7 @@ Gets the current DJUI HUD text alignment
 
 <br />
 
-## [djui_hud_set_text_alignment](#djui_hud_set_text_alignment)
+## djui_hud_set_text_alignment
 
 ### Description
 Sets the current DJUI HUD text alignment
@@ -3340,7 +3340,7 @@ Sets the current DJUI HUD text alignment
 
 <br />
 
-## [djui_hud_set_text_alignment_interpolated](#djui_hud_set_text_alignment_interpolated)
+## djui_hud_set_text_alignment_interpolated
 
 ### Description
 Sets the current DJUI HUD text alignment interpolated
@@ -3366,7 +3366,7 @@ Sets the current DJUI HUD text alignment interpolated
 
 <br />
 
-## [djui_hud_get_screen_width](#djui_hud_get_screen_width)
+## djui_hud_get_screen_width
 
 ### Description
 Gets the screen width in the current DJUI HUD resolution
@@ -3387,7 +3387,7 @@ Gets the screen width in the current DJUI HUD resolution
 
 <br />
 
-## [djui_hud_get_screen_height](#djui_hud_get_screen_height)
+## djui_hud_get_screen_height
 
 ### Description
 Gets the screen height in the current DJUI HUD resolution
@@ -3408,7 +3408,7 @@ Gets the screen height in the current DJUI HUD resolution
 
 <br />
 
-## [djui_hud_get_mouse_x](#djui_hud_get_mouse_x)
+## djui_hud_get_mouse_x
 
 ### Description
 Returns the x coordinate of the mouse relative to the window
@@ -3429,7 +3429,7 @@ Returns the x coordinate of the mouse relative to the window
 
 <br />
 
-## [djui_hud_get_mouse_y](#djui_hud_get_mouse_y)
+## djui_hud_get_mouse_y
 
 ### Description
 Returns the y coordinate of the mouse relative to the window
@@ -3450,7 +3450,7 @@ Returns the y coordinate of the mouse relative to the window
 
 <br />
 
-## [djui_hud_get_raw_mouse_x](#djui_hud_get_raw_mouse_x)
+## djui_hud_get_raw_mouse_x
 
 ### Description
 Returns the x coordinate of the mouse relative to the screen
@@ -3471,7 +3471,7 @@ Returns the x coordinate of the mouse relative to the screen
 
 <br />
 
-## [djui_hud_get_raw_mouse_y](#djui_hud_get_raw_mouse_y)
+## djui_hud_get_raw_mouse_y
 
 ### Description
 Returns the y coordinate of the mouse relative to the screen
@@ -3492,7 +3492,7 @@ Returns the y coordinate of the mouse relative to the screen
 
 <br />
 
-## [djui_hud_is_mouse_locked](#djui_hud_is_mouse_locked)
+## djui_hud_is_mouse_locked
 
 ### Description
 Checks if the cursor is locked to the window
@@ -3513,7 +3513,7 @@ Checks if the cursor is locked to the window
 
 <br />
 
-## [djui_hud_set_mouse_locked](#djui_hud_set_mouse_locked)
+## djui_hud_set_mouse_locked
 
 ### Description
 Locks (or unlocks) the cursor to the window
@@ -3536,7 +3536,7 @@ Locks (or unlocks) the cursor to the window
 
 <br />
 
-## [djui_hud_get_mouse_buttons_down](#djui_hud_get_mouse_buttons_down)
+## djui_hud_get_mouse_buttons_down
 
 ### Description
 Returns the flags of the mouse buttons held down
@@ -3557,7 +3557,7 @@ Returns the flags of the mouse buttons held down
 
 <br />
 
-## [djui_hud_get_mouse_buttons_pressed](#djui_hud_get_mouse_buttons_pressed)
+## djui_hud_get_mouse_buttons_pressed
 
 ### Description
 Returns the flags of the mouse buttons clicked
@@ -3578,7 +3578,7 @@ Returns the flags of the mouse buttons clicked
 
 <br />
 
-## [djui_hud_get_mouse_buttons_released](#djui_hud_get_mouse_buttons_released)
+## djui_hud_get_mouse_buttons_released
 
 ### Description
 Returns the flags of the mouse buttons released
@@ -3599,7 +3599,7 @@ Returns the flags of the mouse buttons released
 
 <br />
 
-## [djui_hud_get_mouse_scroll_x](#djui_hud_get_mouse_scroll_x)
+## djui_hud_get_mouse_scroll_x
 
 ### Description
 Returns the amount scrolled horizontally (-left/right+)
@@ -3620,7 +3620,7 @@ Returns the amount scrolled horizontally (-left/right+)
 
 <br />
 
-## [djui_hud_get_mouse_scroll_y](#djui_hud_get_mouse_scroll_y)
+## djui_hud_get_mouse_scroll_y
 
 ### Description
 Returns the amount scrolled vertically (-down/up+)
@@ -3641,7 +3641,7 @@ Returns the amount scrolled vertically (-down/up+)
 
 <br />
 
-## [djui_hud_set_viewport](#djui_hud_set_viewport)
+## djui_hud_set_viewport
 
 ### Description
 Sets the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
@@ -3667,7 +3667,7 @@ Sets the viewport to the specified corners (upper left, lower right), this will 
 
 <br />
 
-## [djui_hud_set_viewport_interpolated](#djui_hud_set_viewport_interpolated)
+## djui_hud_set_viewport_interpolated
 
 ### Description
 Interpolates the viewport to the specified corners (upper left, lower right), this will resize any subsequent DJUI graphics
@@ -3697,7 +3697,7 @@ Interpolates the viewport to the specified corners (upper left, lower right), th
 
 <br />
 
-## [djui_hud_reset_viewport](#djui_hud_reset_viewport)
+## djui_hud_reset_viewport
 
 ### Description
 Resets the viewport to a fullscreen state
@@ -3718,7 +3718,7 @@ Resets the viewport to a fullscreen state
 
 <br />
 
-## [djui_hud_set_scissor](#djui_hud_set_scissor)
+## djui_hud_set_scissor
 
 ### Description
 Sets the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
@@ -3744,7 +3744,7 @@ Sets the scissor rectangle to the specified corners (upper left, lower right), t
 
 <br />
 
-## [djui_hud_set_scissor_interpolated](#djui_hud_set_scissor_interpolated)
+## djui_hud_set_scissor_interpolated
 
 ### Description
 Interpolates the scissor rectangle to the specified corners (upper left, lower right), this will cut off any subsequent DJUI graphics not within the rectangle
@@ -3774,7 +3774,7 @@ Interpolates the scissor rectangle to the specified corners (upper left, lower r
 
 <br />
 
-## [djui_hud_reset_scissor](#djui_hud_reset_scissor)
+## djui_hud_reset_scissor
 
 ### Description
 Resets the scissor rectangle to a fullscreen state
@@ -3795,7 +3795,7 @@ Resets the scissor rectangle to a fullscreen state
 
 <br />
 
-## [djui_hud_measure_text](#djui_hud_measure_text)
+## djui_hud_measure_text
 
 ### Description
 Measures the width and height of `message` in the current font
@@ -3819,7 +3819,7 @@ Measures the width and height of `message` in the current font
 
 <br />
 
-## [djui_hud_print_text](#djui_hud_print_text)
+## djui_hud_print_text
 
 ### Description
 Prints DJUI HUD text onto the screen
@@ -3867,7 +3867,7 @@ Prints DJUI HUD text onto the screen
 
 <br />
 
-## [djui_hud_print_text_interpolated](#djui_hud_print_text_interpolated)
+## djui_hud_print_text_interpolated
 
 ### Description
 Prints interpolated DJUI HUD text onto the screen
@@ -3922,7 +3922,7 @@ Prints interpolated DJUI HUD text onto the screen
 
 <br />
 
-## [djui_hud_render_texture](#djui_hud_render_texture)
+## djui_hud_render_texture
 
 ### Description
 Renders a DJUI HUD texture onto the screen
@@ -3949,7 +3949,7 @@ Renders a DJUI HUD texture onto the screen
 
 <br />
 
-## [djui_hud_render_texture_tile](#djui_hud_render_texture_tile)
+## djui_hud_render_texture_tile
 
 ### Description
 Renders a DJUI HUD texture tile onto the screen
@@ -3980,7 +3980,7 @@ Renders a DJUI HUD texture tile onto the screen
 
 <br />
 
-## [djui_hud_render_texture_interpolated](#djui_hud_render_texture_interpolated)
+## djui_hud_render_texture_interpolated
 
 ### Description
 Renders an interpolated DJUI HUD texture onto the screen
@@ -4011,7 +4011,7 @@ Renders an interpolated DJUI HUD texture onto the screen
 
 <br />
 
-## [djui_hud_render_texture_tile_interpolated](#djui_hud_render_texture_tile_interpolated)
+## djui_hud_render_texture_tile_interpolated
 
 ### Description
 Renders an interpolated DJUI HUD texture tile onto the screen
@@ -4046,7 +4046,7 @@ Renders an interpolated DJUI HUD texture tile onto the screen
 
 <br />
 
-## [djui_hud_render_rect](#djui_hud_render_rect)
+## djui_hud_render_rect
 
 ### Description
 Renders a DJUI HUD rect onto the screen
@@ -4072,7 +4072,7 @@ Renders a DJUI HUD rect onto the screen
 
 <br />
 
-## [djui_hud_render_rect_interpolated](#djui_hud_render_rect_interpolated)
+## djui_hud_render_rect_interpolated
 
 ### Description
 Renders an interpolated DJUI HUD rect onto the screen
@@ -4102,7 +4102,7 @@ Renders an interpolated DJUI HUD rect onto the screen
 
 <br />
 
-## [djui_hud_render_line](#djui_hud_render_line)
+## djui_hud_render_line
 
 ### Description
 Renders an DJUI HUD line onto the screen
@@ -4129,7 +4129,7 @@ Renders an DJUI HUD line onto the screen
 
 <br />
 
-## [get_current_fov](#get_current_fov)
+## get_current_fov
 
 ### Description
 Gets the current camera FOV
@@ -4150,7 +4150,7 @@ Gets the current camera FOV
 
 <br />
 
-## [djui_hud_get_fov_coeff](#djui_hud_get_fov_coeff)
+## djui_hud_get_fov_coeff
 
 ### Description
 Gets the camera FOV coefficient
@@ -4171,7 +4171,7 @@ Gets the camera FOV coefficient
 
 <br />
 
-## [djui_hud_world_pos_to_screen_pos](#djui_hud_world_pos_to_screen_pos)
+## djui_hud_world_pos_to_screen_pos
 
 ### Description
 Converts a world position to screen position
@@ -4195,7 +4195,7 @@ Converts a world position to screen position
 
 <br />
 
-## [djui_hud_is_pause_menu_created](#djui_hud_is_pause_menu_created)
+## djui_hud_is_pause_menu_created
 
 ### Description
 Checks if the DJUI pause menu is created
@@ -4216,7 +4216,7 @@ Checks if the DJUI pause menu is created
 
 <br />
 
-## [djui_open_pause_menu](#djui_open_pause_menu)
+## djui_open_pause_menu
 
 ### Description
 Opens the DJUI pause menu
@@ -4243,7 +4243,7 @@ Opens the DJUI pause menu
 <br />
 
 
-## [djui_language_get](#djui_language_get)
+## djui_language_get
 
 ### Description
 Gets a language `key` from a `section`
@@ -4273,7 +4273,7 @@ Gets a language `key` from a `section`
 <br />
 
 
-## [djui_menu_get_rainbow_string_color](#djui_menu_get_rainbow_string_color)
+## djui_menu_get_rainbow_string_color
 
 ### Description
 Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
@@ -4302,7 +4302,7 @@ Gets the header hex color code from a `DJUI_RAINBOW_COLOR_*` constant
 <br />
 
 
-## [djui_popup_create](#djui_popup_create)
+## djui_popup_create
 
 ### Description
 Creates a popup that says `message` and has `lines`
@@ -4332,7 +4332,7 @@ Creates a popup that says `message` and has `lines`
 <br />
 
 
-## [play_sound](#play_sound)
+## play_sound
 
 ### Description
 Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
@@ -4356,7 +4356,7 @@ Plays a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.
 
 <br />
 
-## [play_sound_with_freq_scale](#play_sound_with_freq_scale)
+## play_sound_with_freq_scale
 
 ### Description
 Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
@@ -4381,7 +4381,7 @@ Plays a sound (`soundBits`) with `freqScale` at `pos` (usually `gGlobalSoundSour
 
 <br />
 
-## [seq_player_fade_out](#seq_player_fade_out)
+## seq_player_fade_out
 
 ### Description
 Fades out `player` with `fadeDuration`
@@ -4405,7 +4405,7 @@ Fades out `player` with `fadeDuration`
 
 <br />
 
-## [fade_volume_scale](#fade_volume_scale)
+## fade_volume_scale
 
 ### Description
 Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
@@ -4430,7 +4430,7 @@ Fades the volume of `player` to `targetScale` (0-127) over `fadeDuration`
 
 <br />
 
-## [seq_player_lower_volume](#seq_player_lower_volume)
+## seq_player_lower_volume
 
 ### Description
 Fades the volume of `player` to `percentage` over `fadeDuration`
@@ -4455,7 +4455,7 @@ Fades the volume of `player` to `percentage` over `fadeDuration`
 
 <br />
 
-## [seq_player_unlower_volume](#seq_player_unlower_volume)
+## seq_player_unlower_volume
 
 ### Description
 Unfades the volume of `player` over `fadeDuration`
@@ -4479,7 +4479,7 @@ Unfades the volume of `player` over `fadeDuration`
 
 <br />
 
-## [set_audio_muted](#set_audio_muted)
+## set_audio_muted
 
 ### Description
 Sets the muted status of all sequence players
@@ -4502,7 +4502,7 @@ Sets the muted status of all sequence players
 
 <br />
 
-## [stop_sound](#stop_sound)
+## stop_sound
 
 ### Description
 Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
@@ -4526,7 +4526,7 @@ Stops a sound (`soundBits`) at `pos` (usually `gGlobalSoundSource` or `m.header.
 
 <br />
 
-## [stop_sounds_from_source](#stop_sounds_from_source)
+## stop_sounds_from_source
 
 ### Description
 Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToObject`)
@@ -4549,7 +4549,7 @@ Stops sounds from `pos` (usually `gGlobalSoundSource` or `m.header.gfx.cameraToO
 
 <br />
 
-## [stop_sounds_in_continuous_banks](#stop_sounds_in_continuous_banks)
+## stop_sounds_in_continuous_banks
 
 ### Description
 Stops sounds in sound banks moving, env, and air
@@ -4570,7 +4570,7 @@ Stops sounds in sound banks moving, env, and air
 
 <br />
 
-## [sound_banks_disable](#sound_banks_disable)
+## sound_banks_disable
 
 ### Description
 Enables `bankMask` soundbanks in `player`
@@ -4594,7 +4594,7 @@ Enables `bankMask` soundbanks in `player`
 
 <br />
 
-## [sound_banks_enable](#sound_banks_enable)
+## sound_banks_enable
 
 ### Description
 Disables `bankMask` soundbanks in `player`
@@ -4618,7 +4618,7 @@ Disables `bankMask` soundbanks in `player`
 
 <br />
 
-## [set_sound_moving_speed](#set_sound_moving_speed)
+## set_sound_moving_speed
 
 ### Description
 Sets the `speed` of moving `bank`
@@ -4642,7 +4642,7 @@ Sets the `speed` of moving `bank`
 
 <br />
 
-## [play_dialog_sound](#play_dialog_sound)
+## play_dialog_sound
 
 ### Description
 Plays a dialog sound corresponding to `dialogID`
@@ -4665,7 +4665,7 @@ Plays a dialog sound corresponding to `dialogID`
 
 <br />
 
-## [play_music](#play_music)
+## play_music
 
 ### Description
 Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
@@ -4690,7 +4690,7 @@ Plays fading in music (`seqArgs`) on `player` over `fadeTimer`
 
 <br />
 
-## [stop_background_music](#stop_background_music)
+## stop_background_music
 
 ### Description
 Stops background music `seqId`
@@ -4713,7 +4713,7 @@ Stops background music `seqId`
 
 <br />
 
-## [fadeout_background_music](#fadeout_background_music)
+## fadeout_background_music
 
 ### Description
 Fades out background music `seqId` over `fadeOut`
@@ -4737,7 +4737,7 @@ Fades out background music `seqId` over `fadeOut`
 
 <br />
 
-## [drop_queued_background_music](#drop_queued_background_music)
+## drop_queued_background_music
 
 ### Description
 Drops any queued background music
@@ -4758,7 +4758,7 @@ Drops any queued background music
 
 <br />
 
-## [get_current_background_music](#get_current_background_music)
+## get_current_background_music
 
 ### Description
 Gets the current background music
@@ -4779,7 +4779,7 @@ Gets the current background music
 
 <br />
 
-## [get_current_background_music_default_volume](#get_current_background_music_default_volume)
+## get_current_background_music_default_volume
 
 ### Description
 Gets the current background music's default volume
@@ -4800,7 +4800,7 @@ Gets the current background music's default volume
 
 <br />
 
-## [get_current_background_music_target_volume](#get_current_background_music_target_volume)
+## get_current_background_music_target_volume
 
 ### Description
 Gets the current target volume
@@ -4821,7 +4821,7 @@ Gets the current target volume
 
 <br />
 
-## [get_current_background_music_max_target_volume](#get_current_background_music_max_target_volume)
+## get_current_background_music_max_target_volume
 
 ### Description
 Gets the current max target volume
@@ -4842,7 +4842,7 @@ Gets the current max target volume
 
 <br />
 
-## [is_current_background_music_volume_lowered](#is_current_background_music_volume_lowered)
+## is_current_background_music_volume_lowered
 
 ### Description
 Checks if the current background music is lowered
@@ -4863,7 +4863,7 @@ Checks if the current background music is lowered
 
 <br />
 
-## [play_secondary_music](#play_secondary_music)
+## play_secondary_music
 
 ### Description
 Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets the current background music's volume to `bgMusicVolume`
@@ -4889,7 +4889,7 @@ Plays fading in secondary music `seqId` at `volume` over `fadeTimer` and sets th
 
 <br />
 
-## [stop_secondary_music](#stop_secondary_music)
+## stop_secondary_music
 
 ### Description
 Fades out secondary music over `fadeTimer`
@@ -4912,7 +4912,7 @@ Fades out secondary music over `fadeTimer`
 
 <br />
 
-## [set_audio_fadeout](#set_audio_fadeout)
+## set_audio_fadeout
 
 ### Description
 Sets the `fadeOutTime` of audio
@@ -4935,7 +4935,7 @@ Sets the `fadeOutTime` of audio
 
 <br />
 
-## [play_course_clear](#play_course_clear)
+## play_course_clear
 
 ### Description
 Plays the star collect fanfare (this function's name was mixed up with the other)
@@ -4956,7 +4956,7 @@ Plays the star collect fanfare (this function's name was mixed up with the other
 
 <br />
 
-## [play_peachs_jingle](#play_peachs_jingle)
+## play_peachs_jingle
 
 ### Description
 Plays Peach's letter jingle
@@ -4977,7 +4977,7 @@ Plays Peach's letter jingle
 
 <br />
 
-## [play_puzzle_jingle](#play_puzzle_jingle)
+## play_puzzle_jingle
 
 ### Description
 Plays the puzzle jingle
@@ -4998,7 +4998,7 @@ Plays the puzzle jingle
 
 <br />
 
-## [play_star_fanfare](#play_star_fanfare)
+## play_star_fanfare
 
 ### Description
 Plays the course clear fanfare (this function's name was mixed up with the other)
@@ -5019,7 +5019,7 @@ Plays the course clear fanfare (this function's name was mixed up with the other
 
 <br />
 
-## [play_power_star_jingle](#play_power_star_jingle)
+## play_power_star_jingle
 
 ### Description
 Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background music
@@ -5042,7 +5042,7 @@ Plays the power star jingle, set `keepBackgroundMusic` to 0 to mute background m
 
 <br />
 
-## [play_race_fanfare](#play_race_fanfare)
+## play_race_fanfare
 
 ### Description
 Plays the race fanfare when a race is started
@@ -5063,7 +5063,7 @@ Plays the race fanfare when a race is started
 
 <br />
 
-## [play_toads_jingle](#play_toads_jingle)
+## play_toads_jingle
 
 ### Description
 Plays Toad's jingle
@@ -5084,7 +5084,7 @@ Plays Toad's jingle
 
 <br />
 
-## [sound_reset_background_music_default_volume](#sound_reset_background_music_default_volume)
+## sound_reset_background_music_default_volume
 
 ### Description
 Resets a sequence's (`seqId`) volume back to the default volume
@@ -5107,7 +5107,7 @@ Resets a sequence's (`seqId`) volume back to the default volume
 
 <br />
 
-## [sound_set_background_music_default_volume](#sound_set_background_music_default_volume)
+## sound_set_background_music_default_volume
 
 ### Description
 Sets a sequence's (`seqId`) volume to `volume`
@@ -5131,7 +5131,7 @@ Sets a sequence's (`seqId`) volume to `volume`
 
 <br />
 
-## [get_sound_pan](#get_sound_pan)
+## get_sound_pan
 
 ### Description
 Gets a sound left/right pan using `x` and `z`
@@ -5155,7 +5155,7 @@ Gets a sound left/right pan using `x` and `z`
 
 <br />
 
-## [sound_get_level_intensity](#sound_get_level_intensity)
+## sound_get_level_intensity
 
 ### Description
 Gets a sound level intensity based on `distance`
@@ -5184,7 +5184,7 @@ Gets a sound level intensity based on `distance`
 <br />
 
 
-## [first_person_check_cancels](#first_person_check_cancels)
+## first_person_check_cancels
 
 ### Description
 Checks common cancels for first person
@@ -5207,7 +5207,7 @@ Checks common cancels for first person
 
 <br />
 
-## [get_first_person_enabled](#get_first_person_enabled)
+## get_first_person_enabled
 
 ### Description
 Checks if first person is enabled
@@ -5228,7 +5228,7 @@ Checks if first person is enabled
 
 <br />
 
-## [set_first_person_enabled](#set_first_person_enabled)
+## set_first_person_enabled
 
 ### Description
 Sets if first person is enabled
@@ -5251,7 +5251,7 @@ Sets if first person is enabled
 
 <br />
 
-## [first_person_reset](#first_person_reset)
+## first_person_reset
 
 ### Description
 Resets first person
@@ -5278,7 +5278,7 @@ Resets first person
 <br />
 
 
-## [create_dialog_box](#create_dialog_box)
+## create_dialog_box
 
 ### Description
 Creates a dialog box with a dialog ID that rotates into view
@@ -5301,7 +5301,7 @@ Creates a dialog box with a dialog ID that rotates into view
 
 <br />
 
-## [create_dialog_box_with_var](#create_dialog_box_with_var)
+## create_dialog_box_with_var
 
 ### Description
 Creates a dialog box with a dialog variable
@@ -5325,7 +5325,7 @@ Creates a dialog box with a dialog variable
 
 <br />
 
-## [create_dialog_inverted_box](#create_dialog_inverted_box)
+## create_dialog_inverted_box
 
 ### Description
 Creates a dialog box with a dialog ID that zooms into view
@@ -5348,7 +5348,7 @@ Creates a dialog box with a dialog ID that zooms into view
 
 <br />
 
-## [create_dialog_box_with_response](#create_dialog_box_with_response)
+## create_dialog_box_with_response
 
 ### Description
 Creates a dialog box with a response
@@ -5371,7 +5371,7 @@ Creates a dialog box with a response
 
 <br />
 
-## [reset_dialog_render_state](#reset_dialog_render_state)
+## reset_dialog_render_state
 
 ### Description
 Resets the dialog box's state including dialog ID and open state
@@ -5392,7 +5392,7 @@ Resets the dialog box's state including dialog ID and open state
 
 <br />
 
-## [set_menu_mode](#set_menu_mode)
+## set_menu_mode
 
 ### Description
 Sets the in-game menu state. 0-1 is the courses box with the castle secret stars and 2-3 is the course completion screen.
@@ -5415,7 +5415,7 @@ Sets the in-game menu state. 0-1 is the courses box with the castle secret stars
 
 <br />
 
-## [handle_special_dialog_text](#handle_special_dialog_text)
+## handle_special_dialog_text
 
 ### Description
 The internal function used by SM64 which plays a tune whenever boss, KtQ, etc dialog is read.
@@ -5438,7 +5438,7 @@ The internal function used by SM64 which plays a tune whenever boss, KtQ, etc di
 
 <br />
 
-## [set_min_dialog_width](#set_min_dialog_width)
+## set_min_dialog_width
 
 ### Description
 Dialog box customization: Sets the minimum width for a dialog box
@@ -5461,7 +5461,7 @@ Dialog box customization: Sets the minimum width for a dialog box
 
 <br />
 
-## [set_dialog_override_pos](#set_dialog_override_pos)
+## set_dialog_override_pos
 
 ### Description
 Dialog box customization: Sets the override position for a dialog box
@@ -5485,7 +5485,7 @@ Dialog box customization: Sets the override position for a dialog box
 
 <br />
 
-## [reset_dialog_override_pos](#reset_dialog_override_pos)
+## reset_dialog_override_pos
 
 ### Description
 Dialog box customization: Resets the override position for a dialog box
@@ -5506,7 +5506,7 @@ Dialog box customization: Resets the override position for a dialog box
 
 <br />
 
-## [set_dialog_override_color](#set_dialog_override_color)
+## set_dialog_override_color
 
 ### Description
 Dialog box customization: Sets the override color for a dialog box
@@ -5536,7 +5536,7 @@ Dialog box customization: Sets the override color for a dialog box
 
 <br />
 
-## [reset_dialog_override_color](#reset_dialog_override_color)
+## reset_dialog_override_color
 
 ### Description
 Dialog box customization: Resets the override color for a dialog box
@@ -5557,7 +5557,7 @@ Dialog box customization: Resets the override color for a dialog box
 
 <br />
 
-## [set_dialog_box_state](#set_dialog_box_state)
+## set_dialog_box_state
 
 ### Description
 Sets the state for a dialog box (`DIALOG_STATE_*`)
@@ -5586,7 +5586,7 @@ Sets the state for a dialog box (`DIALOG_STATE_*`)
 <br />
 
 
-## [interact_coin](#interact_coin)
+## interact_coin
 
 ### Description
 Handles Mario's interaction with coins. Collecting a coin increases Mario's coin count and heals him slightly.
@@ -5612,7 +5612,7 @@ Useful for score, and coin management
 
 <br />
 
-## [interact_water_ring](#interact_water_ring)
+## interact_water_ring
 
 ### Description
 Handles interactions with water rings that heal Mario. Passing through water rings increases his health counter.
@@ -5638,7 +5638,7 @@ Useful for underwater stages
 
 <br />
 
-## [interact_star_or_key](#interact_star_or_key)
+## interact_star_or_key
 
 ### Description
 Handles interaction with Stars or Keys. If Mario collects a star or key, it triggers a specific star grab cutscene and progression is updated. Also handles no-exit variants (like the wing cap stage star).
@@ -5664,7 +5664,7 @@ Useful for the main progression system of collecting Stars and unlocking new are
 
 <br />
 
-## [interact_bbh_entrance](#interact_bbh_entrance)
+## interact_bbh_entrance
 
 ### Description
 Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When Mario tries to enter the BBH area, this function determines the resulting action (e.g., a jump or spin entrance)
@@ -5689,7 +5689,7 @@ Handles Mario's interaction with the Boo's Big Haunt (BBH) entrance object. When
 
 <br />
 
-## [interact_warp](#interact_warp)
+## interact_warp
 
 ### Description
 Handles interaction with warps, including warp pipes and hole warps. If Mario steps onto a warp, he either transitions into another area or level.
@@ -5715,7 +5715,7 @@ Useful for connecting different parts of the game world and controlling transiti
 
 <br />
 
-## [interact_warp_door](#interact_warp_door)
+## interact_warp_door
 
 ### Description
 Handles interaction with warp doors that lead to other areas or require keys. If Mario can open the door (has enough stars or a key), he proceeds. Otherwise, it may show a dialog.
@@ -5741,7 +5741,7 @@ Useful for restricting access to certain areas based on progression
 
 <br />
 
-## [interact_door](#interact_door)
+## interact_door
 
 ### Description
 Handles interaction when Mario touches a door. If Mario meets the star requirement or has the key, he can unlock/open the door. Otherwise, it may display dialog indicating the requirement.
@@ -5767,7 +5767,7 @@ Useful for controlling access to locked areas and providing progression gating i
 
 <br />
 
-## [interact_cannon_base](#interact_cannon_base)
+## interact_cannon_base
 
 ### Description
 Handles interaction when Mario touches a cannon base. If the cannon is ready, Mario enters the cannon, triggering a special action and camera behavior.
@@ -5793,7 +5793,7 @@ Useful for transitioning to cannon-aiming mode and enabling cannon travel within
 
 <br />
 
-## [interact_player](#interact_player)
+## interact_player
 
 ### Description
 Handles interaction with another player (in multiplayer scenarios).
@@ -5820,7 +5820,7 @@ Useful for multiplayer interactions, such as PvP or cooperative gameplay mechani
 
 <br />
 
-## [interact_igloo_barrier](#interact_igloo_barrier)
+## interact_igloo_barrier
 
 ### Description
 Handles interaction with the igloo barrier found in Snowman's Land. If Mario runs into the barrier, this function pushes him away and prevents passage without the vanish cap.
@@ -5846,7 +5846,7 @@ Useful for enforcing require-caps to access certain areas
 
 <br />
 
-## [interact_tornado](#interact_tornado)
+## interact_tornado
 
 ### Description
 Handles interaction with tornados. If Mario touches a tornado, he enters a spinning twirl action, losing control temporarily.
@@ -5872,7 +5872,7 @@ Useful for desert levels or areas where environmental hazards lift Mario into th
 
 <br />
 
-## [interact_whirlpool](#interact_whirlpool)
+## interact_whirlpool
 
 ### Description
 Handles interaction with whirlpools. If Mario gets caught in a whirlpool, he's pulled toward it, resulting in a unique "caught" action.
@@ -5898,7 +5898,7 @@ Useful for hazards that trap Mario like whirlpools
 
 <br />
 
-## [interact_strong_wind](#interact_strong_wind)
+## interact_strong_wind
 
 ### Description
 Handles interaction with strong wind gusts. These gusts push Mario back, often knocking him off platforms or sending him flying backwards.
@@ -5924,7 +5924,7 @@ Useful for environmental wind hazards
 
 <br />
 
-## [interact_flame](#interact_flame)
+## interact_flame
 
 ### Description
 Handles interaction with flame objects. If Mario touches a flame and is not invulnerable or protected by certain caps, he takes damage and may be set on fire, causing a burning jump.
@@ -5950,7 +5950,7 @@ Useful for simulating fire damage and hazards in levels
 
 <br />
 
-## [interact_snufit_bullet](#interact_snufit_bullet)
+## interact_snufit_bullet
 
 ### Description
 Handles interaction with Snufit bullets (projectiles fired by certain enemies). If Mario is not protected, he takes damage. Otherwise, the bullet can be destroyed
@@ -5975,7 +5975,7 @@ Handles interaction with Snufit bullets (projectiles fired by certain enemies). 
 
 <br />
 
-## [interact_clam_or_bubba](#interact_clam_or_bubba)
+## interact_clam_or_bubba
 
 ### Description
 Handles interactions with objects like Clams or Bubbas, which can damage Mario or, in Bubba's case, eat Mario.
@@ -6001,7 +6001,7 @@ If Bubba eats Mario, it triggers a unique "caught" action. Otherwise, it deals d
 
 <br />
 
-## [interact_bully](#interact_bully)
+## interact_bully
 
 ### Description
 Handles interaction with Bully enemies. Determines if Mario attacks the Bully or gets knocked back. Updates Mario's velocity and state accordingly, and can defeat the Bully if attacked successfully.
@@ -6027,7 +6027,7 @@ Useful for enemy encounters that involve pushing and shoving mechanics rather th
 
 <br />
 
-## [interact_shock](#interact_shock)
+## interact_shock
 
 ### Description
 Handles interaction with shocking objects. If Mario touches an electrified enemy or hazard, he takes damage and may be stunned or shocked.
@@ -6053,7 +6053,7 @@ Useful for electric-themed enemies and obstacles
 
 <br />
 
-## [interact_mr_blizzard](#interact_mr_blizzard)
+## interact_mr_blizzard
 
 ### Description
 Handles interaction with Mr. Blizzard (the snowman enemy) or similar objects.
@@ -6079,7 +6079,7 @@ If Mario is attacked or collides with Mr. Blizzard, it applies damage and knockb
 
 <br />
 
-## [interact_hit_from_below](#interact_hit_from_below)
+## interact_hit_from_below
 
 ### Description
 Handles interactions where Mario hits an object from below (e.g., hitting a block from underneath). Determines if Mario damages/destroys the object, or if it damages Mario.
@@ -6105,7 +6105,7 @@ Useful for handling upward attacks, hitting coin blocks, or interacting with cer
 
 <br />
 
-## [interact_bounce_top](#interact_bounce_top)
+## interact_bounce_top
 
 ### Description
 Handles interactions where Mario bounces off the top of an object (e.g., Goombas, Koopas).
@@ -6132,7 +6132,7 @@ Useful for enemy defeat mechanics and platform bouncing
 
 <br />
 
-## [interact_spiny_walking](#interact_spiny_walking)
+## interact_spiny_walking
 
 ### Description
 Handles interaction with Spiny-walking enemies. If Mario attacks it (e.g., by punching), the enemy is hurt. If he fails to attack properly (say bouncing on top), Mario takes damage and knockback.
@@ -6158,7 +6158,7 @@ Useful for enemies that cannot be stomped from above and require direct attacks
 
 <br />
 
-## [interact_damage](#interact_damage)
+## interact_damage
 
 ### Description
 Handles damaging interactions from various objects (e.g., enemies, hazards). If Mario takes damage, it applies knockback and reduces health.
@@ -6184,7 +6184,7 @@ Useful for enemy attacks, environmental hazards, and managing damage related beh
 
 <br />
 
-## [interact_breakable](#interact_breakable)
+## interact_breakable
 
 ### Description
 Handles interactions with breakable objects (e.g., breakable boxes or bob-ombs). If Mario hits the object with a valid attack (like a punch or kick), the object is destroyed or changes state.
@@ -6210,7 +6210,7 @@ Useful for managing collectible items hidden in breakable objects and level prog
 
 <br />
 
-## [interact_koopa_shell](#interact_koopa_shell)
+## interact_koopa_shell
 
 ### Description
 Handles interaction when Mario touches a Koopa Shell. If conditions are met, Mario can hop onto the shell and start riding it, changing his movement mechanics.
@@ -6236,7 +6236,7 @@ Useful for implementing Koopa Shell behavior
 
 <br />
 
-## [interact_pole](#interact_pole)
+## interact_pole
 
 ### Description
 Handles interaction with poles (e.g., climbing poles). If Mario runs into a vertical pole, he can grab it and start climbing.
@@ -6262,7 +6262,7 @@ Useful for platforming mechanics
 
 <br />
 
-## [interact_hoot](#interact_hoot)
+## interact_hoot
 
 ### Description
 Handles interaction with Hoot, the owl. If Mario can grab onto Hoot, this sets Mario onto a riding action, allowing him to fly around the level.
@@ -6288,7 +6288,7 @@ Useful for special traversal mechanics and shortcuts within a course
 
 <br />
 
-## [interact_cap](#interact_cap)
+## interact_cap
 
 ### Description
 Handles interaction when Mario picks up a cap object. This includes normal caps, wing caps, vanish caps, and metal caps.
@@ -6315,7 +6315,7 @@ Useful for managing cap statuses
 
 <br />
 
-## [interact_grabbable](#interact_grabbable)
+## interact_grabbable
 
 ### Description
 Handles interaction with grabbable objects (e.g., crates, small enemies, or Bowser). Checks if Mario can pick up the object and initiates the grab action if possible.
@@ -6341,7 +6341,7 @@ Useful for course mechanics, throwing items, and Bowser
 
 <br />
 
-## [interact_text](#interact_text)
+## interact_text
 
 ### Description
 Handles interaction with signs, NPCs, and other text-bearing objects. If Mario presses the interact button facing them, he enters a dialog reading state.
@@ -6367,7 +6367,7 @@ Useful for managing hints, story elements, or gameplay instructions through in-g
 
 <br />
 
-## [mario_obj_angle_to_object](#mario_obj_angle_to_object)
+## mario_obj_angle_to_object
 
 ### Description
 Calculates the angle between Mario and a specified object. Used for determining Mario's orientation relative to the object.
@@ -6392,7 +6392,7 @@ Useful for deciding directions between Mario and NPCs
 
 <br />
 
-## [mario_stop_riding_object](#mario_stop_riding_object)
+## mario_stop_riding_object
 
 ### Description
 Stops Mario from riding any currently ridden object (e.g., a Koopa shell or Hoot), updating the object's interaction status and Mario's state.
@@ -6416,7 +6416,7 @@ Useful for cleanly dismounting ridden objects
 
 <br />
 
-## [mario_grab_used_object](#mario_grab_used_object)
+## mario_grab_used_object
 
 ### Description
 Grabs the object currently referenced by Mario's `usedObj` if it's not already being held.
@@ -6441,7 +6441,7 @@ Useful for handling the moment Mario successfully picks up an object
 
 <br />
 
-## [mario_drop_held_object](#mario_drop_held_object)
+## mario_drop_held_object
 
 ### Description
 Causes Mario to drop the object he is currently holding. Sets the held object's state accordingly and places it in front of Mario.
@@ -6465,7 +6465,7 @@ Useful for releasing carried objects, such as throwing Bob-ombs or setting down 
 
 <br />
 
-## [mario_throw_held_object](#mario_throw_held_object)
+## mario_throw_held_object
 
 ### Description
 Throws the object Mario is currently holding. The object is placed in front of Mario and given a forward velocity.
@@ -6489,7 +6489,7 @@ Useful for attacking enemies with thrown objects, solving puzzles by throwing cr
 
 <br />
 
-## [mario_stop_riding_and_holding](#mario_stop_riding_and_holding)
+## mario_stop_riding_and_holding
 
 ### Description
 Causes Mario to stop riding any object (like a shell or Hoot) and also drop any held object.
@@ -6514,7 +6514,7 @@ Useful when changing Mario's state after certain actions, transitions, or to pre
 
 <br />
 
-## [does_mario_have_normal_cap_on_head](#does_mario_have_normal_cap_on_head)
+## does_mario_have_normal_cap_on_head
 
 ### Description
 Checks if Mario is currently wearing his normal cap on his head.
@@ -6539,7 +6539,7 @@ Useful for determining Mario's cap status
 
 <br />
 
-## [does_mario_have_blown_cap](#does_mario_have_blown_cap)
+## does_mario_have_blown_cap
 
 ### Description
 Checks if Mario has already had a cap blown off of his head in the current level,
@@ -6564,7 +6564,7 @@ Useful to check if a blown cap exists in the level currently.
 
 <br />
 
-## [mario_blow_off_cap](#mario_blow_off_cap)
+## mario_blow_off_cap
 
 ### Description
 Makes Mario blow off his normal cap at a given speed.
@@ -6590,7 +6590,7 @@ Useful for simulating events where Mario loses his cap due to enemy attacks or e
 
 <br />
 
-## [mario_lose_cap_to_enemy](#mario_lose_cap_to_enemy)
+## mario_lose_cap_to_enemy
 
 ### Description
 Makes Mario lose his normal cap to an enemy, such as Klepto or Ukiki. Updates flags so that the cap is no longer on Mario's head.
@@ -6616,7 +6616,7 @@ Useful for scenarios where enemies steal Mario's cap
 
 <br />
 
-## [mario_retrieve_cap](#mario_retrieve_cap)
+## mario_retrieve_cap
 
 ### Description
 Retrieves Mario's normal cap if it was previously lost.
@@ -6641,7 +6641,7 @@ Useful when Mario recovers his normal cap from enemies, finds it in a level, or 
 
 <br />
 
-## [mario_get_collided_object](#mario_get_collided_object)
+## mario_get_collided_object
 
 ### Description
 Returns a collided object that matches a given interaction type from Mario's current collision data.
@@ -6666,7 +6666,7 @@ Useful for determining which object Mario has come into contact with
 
 <br />
 
-## [mario_check_object_grab](#mario_check_object_grab)
+## mario_check_object_grab
 
 ### Description
 Checks if Mario can grab the currently encountered object (usually triggered when Mario punches or dives). If conditions are met, initiates the grabbing process.
@@ -6690,7 +6690,7 @@ Useful for picking up objects, throwing enemies, or grabbing special items
 
 <br />
 
-## [get_door_save_file_flag](#get_door_save_file_flag)
+## get_door_save_file_flag
 
 ### Description
 Retrieves the save file flag associated with a door, based on the number of stars required to open it.
@@ -6714,7 +6714,7 @@ Used to check if the player has unlocked certain star doors or progressed far en
 
 <br />
 
-## [passes_pvp_interaction_checks](#passes_pvp_interaction_checks)
+## passes_pvp_interaction_checks
 
 ### Description
 Checks if the necessary conditions are met for one player to successfully attack another player in a PvP scenario.
@@ -6740,7 +6740,7 @@ Useful for multiplayer where players can harm each other
 
 <br />
 
-## [should_push_or_pull_door](#should_push_or_pull_door)
+## should_push_or_pull_door
 
 ### Description
 Determines whether Mario should push or pull a door when he interacts with it, based on his orientation and position.
@@ -6765,7 +6765,7 @@ Useful for animating door interactions realistically, depending on which side Ma
 
 <br />
 
-## [take_damage_and_knock_back](#take_damage_and_knock_back)
+## take_damage_and_knock_back
 
 ### Description
 Handles the logic of Mario taking damage and being knocked back by a damaging object.
@@ -6791,7 +6791,7 @@ Useful for implementing enemy attacks, hazards, and ensuring Mario receives prop
 
 <br />
 
-## [get_mario_cap_flag](#get_mario_cap_flag)
+## get_mario_cap_flag
 
 ### Description
 Determines the type of cap an object represents. Depending on the object's behavior, it returns a cap type (normal, metal, wing, vanish).
@@ -6815,7 +6815,7 @@ Useful for handling the logic of picking up, wearing, or losing different kinds 
 
 <br />
 
-## [determine_interaction](#determine_interaction)
+## determine_interaction
 
 ### Description
 Determines how Mario interacts with a given object based on his current action, position, and other state variables.
@@ -6847,7 +6847,7 @@ Useful for handling different types of player-object collisions, attacks, and ob
 <br />
 
 
-## [lag_compensation_store](#lag_compensation_store)
+## lag_compensation_store
 
 ### Description
 Stores the local Mario's current state in lag compensation history
@@ -6868,7 +6868,7 @@ Stores the local Mario's current state in lag compensation history
 
 <br />
 
-## [lag_compensation_get_local_state](#lag_compensation_get_local_state)
+## lag_compensation_get_local_state
 
 ### Description
 Gets the local Mario's state stored in lag compensation history
@@ -6891,7 +6891,7 @@ Gets the local Mario's state stored in lag compensation history
 
 <br />
 
-## [lag_compensation_get_local_state_ready](#lag_compensation_get_local_state_ready)
+## lag_compensation_get_local_state_ready
 
 ### Description
 Checks if lag compensation history is ready
@@ -6912,7 +6912,7 @@ Checks if lag compensation history is ready
 
 <br />
 
-## [lag_compensation_get_local_state_index](#lag_compensation_get_local_state_index)
+## lag_compensation_get_local_state_index
 
 ### Description
 Gets the local Mario's state index
@@ -6939,7 +6939,7 @@ Gets the local Mario's state index
 <br />
 
 
-## [get_level_name_ascii](#get_level_name_ascii)
+## get_level_name_ascii
 
 ### Description
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an ASCII (human readable) string.
@@ -6966,7 +6966,7 @@ Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 <br />
 
-## [get_level_name_sm64](#get_level_name_sm64)
+## get_level_name_sm64
 
 ### Description
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as an SM64 encoded string.
@@ -6994,7 +6994,7 @@ Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 <br />
 
-## [get_level_name](#get_level_name)
+## get_level_name
 
 ### Description
 Returns the name of the level corresponding to `courseNum`, `levelNum` and `areaIndex` as a decapitalized ASCII (human readable) string
@@ -7019,7 +7019,7 @@ Returns the name of the level corresponding to `courseNum`, `levelNum` and `area
 
 <br />
 
-## [get_star_name_ascii](#get_star_name_ascii)
+## get_star_name_ascii
 
 ### Description
 Returns the name of the star corresponding to `courseNum` and `starNum` as an ASCII (human readable) string.
@@ -7045,7 +7045,7 @@ Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 <br />
 
-## [get_star_name_sm64](#get_star_name_sm64)
+## get_star_name_sm64
 
 ### Description
 Returns the name of the star corresponding to `courseNum` and `starNum` as an SM64 encoded string.
@@ -7072,7 +7072,7 @@ Set `charCase` to 1 to capitalize or -1 to decapitalize the returned string
 
 <br />
 
-## [get_star_name](#get_star_name)
+## get_star_name
 
 ### Description
 Returns the name of the star corresponding to `courseNum` and `starNum` as a decapitalized ASCII (human readable) string
@@ -7097,18 +7097,12 @@ Returns the name of the star corresponding to `courseNum` and `starNum` as a dec
 <br />
 
 ---
-# functions from level_script.h
-
-<br />
-
-
----
 # functions from level_update.h
 
 <br />
 
 
-## [level_control_timer_running](#level_control_timer_running)
+## level_control_timer_running
 
 ### Description
 Returns if the level timer is running
@@ -7129,7 +7123,7 @@ Returns if the level timer is running
 
 <br />
 
-## [pressed_pause](#pressed_pause)
+## pressed_pause
 
 ### Description
 Checks if the start button has been pressed as well as some other conditions for opening the pause menu depending on if pause anywhere is enabled
@@ -7150,7 +7144,7 @@ Checks if the start button has been pressed as well as some other conditions for
 
 <br />
 
-## [fade_into_special_warp](#fade_into_special_warp)
+## fade_into_special_warp
 
 ### Description
 Fades into a special warp with `arg` and using `color`
@@ -7174,7 +7168,7 @@ Fades into a special warp with `arg` and using `color`
 
 <br />
 
-## [get_instant_warp](#get_instant_warp)
+## get_instant_warp
 
 ### Description
 Gets an instant warp from the current area's instant warp array (0-3)
@@ -7197,7 +7191,7 @@ Gets an instant warp from the current area's instant warp array (0-3)
 
 <br />
 
-## [get_painting_warp_node](#get_painting_warp_node)
+## get_painting_warp_node
 
 ### Description
 Gets a painting warp node from the local mario's floor type
@@ -7218,7 +7212,7 @@ Gets a painting warp node from the local mario's floor type
 
 <br />
 
-## [initiate_painting_warp](#initiate_painting_warp)
+## initiate_painting_warp
 
 ### Description
 Initiates a painting warp of `paintingIndex`
@@ -7241,7 +7235,7 @@ Initiates a painting warp of `paintingIndex`
 
 <br />
 
-## [level_trigger_warp](#level_trigger_warp)
+## level_trigger_warp
 
 ### Description
 Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
@@ -7265,7 +7259,7 @@ Triggers a warp (WARP_OP_*) for the level. Pass in `gMarioStates[0]` for `m`
 
 <br />
 
-## [warp_special](#warp_special)
+## warp_special
 
 ### Description
 Special warps to arg (`WARP_SPECIAL_*`)
@@ -7288,7 +7282,7 @@ Special warps to arg (`WARP_SPECIAL_*`)
 
 <br />
 
-## [initiate_warp](#initiate_warp)
+## initiate_warp
 
 ### Description
 Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`. This function is unstable and it's generally recommended to use `warp_to_level` instead
@@ -7314,7 +7308,7 @@ Initiates a warp to `destLevel` in `destArea` at `destWarpNode` with `warpFlags`
 
 <br />
 
-## [lvl_set_current_level](#lvl_set_current_level)
+## lvl_set_current_level
 
 ### Description
 Sets the level number and handles the act select screen. `param` is used for overriding the level ID in level scripts, set to 0 in Lua
@@ -7333,6 +7327,607 @@ Sets the level number and handles the act select screen. `param` is used for ove
 
 ### C Prototype
 `s32 lvl_set_current_level(s16 param, s16 levelNum);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from lighting_engine.h
+
+<br />
+
+
+## le_is_enabled
+
+### Description
+Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+
+### Lua Example
+`local booleanValue = le_is_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_is_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_mode
+
+### Description
+Sets the lighting engine mode to `mode`
+
+### Lua Example
+`le_set_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | [enum LEMode](constants.md#enum-LEMode) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_mode(enum LEMode mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_mode
+
+### Description
+Gets the lighting engine mode
+
+### Lua Example
+`local enumValue = le_get_mode()`
+
+### Parameters
+- None
+
+### Returns
+- [enum LEMode](constants.md#enum-LEMode)
+
+### C Prototype
+`enum LEMode le_get_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_tone_mapping
+
+### Description
+Sets the lighting engine's tone mapping mode to `toneMapping`
+
+### Lua Example
+`le_set_tone_mapping(toneMapping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_ambient_color
+
+### Description
+Outputs the lighting engine's ambient color to `out`
+
+### Lua Example
+`le_get_ambient_color(out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_ambient_color(VEC_OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_ambient_color
+
+### Description
+Sets the lighting engine ambient color
+
+### Lua Example
+`le_set_ambient_color(r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_ambient_color(u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_max_lights_per_vertex
+
+### Description
+Sets the max amount of lights that can affect a vertex
+
+### Lua Example
+`le_set_max_lights_per_vertex(count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| count | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_max_lights_per_vertex(u8 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_enabled
+
+### Description
+This will let the user control the lighting engine in real time to disable or enable it.
+
+### Lua Example
+`le_set_enabled(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_enabled(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_color
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_color_with_normal
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| normal | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, VEC_OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_dir
+
+### Description
+Calculates the lighting direction from a position and outputs the result in `out`
+
+### Lua Example
+`le_calculate_lighting_dir(pos, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_dir(Vec3f pos, VEC_OUT Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_add_light
+
+### Description
+Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
+
+### Lua Example
+`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| radius | `number` |
+| intensity | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_remove_light
+
+### Description
+Removes a lighting engine point light corresponding to `id`
+
+### Lua Example
+`le_remove_light(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_remove_light(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_count
+
+### Description
+Gets the total number of lights currently loaded in the lighting engine
+
+### Lua Example
+`local integerValue = le_get_light_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 le_get_light_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_light_exists
+
+### Description
+Checks if a lighting engine point light corresponding to `id` exists
+
+### Lua Example
+`local booleanValue = le_light_exists(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_light_exists(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_pos
+
+### Description
+Outputs a lighting engine point light's position to `out`
+
+### Lua Example
+`le_get_light_pos(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_light_pos(s16 id, VEC_OUT Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_pos
+
+### Description
+Sets a lighting engine point light's position to `x`, `y`, `z`
+
+### Lua Example
+`le_set_light_pos(id, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_color
+
+### Description
+Outputs a lighting engine point light's color to `out`
+
+### Lua Example
+`le_get_light_color(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_light_color(s16 id, VEC_OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_color
+
+### Description
+Sets a lighting engine point light's color to `r`, `g`, `b`
+
+### Lua Example
+`le_set_light_color(id, r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_radius
+
+### Description
+Gets a lighting engine point light's `radius`
+
+### Lua Example
+`local numberValue = le_get_light_radius(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_radius(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_radius
+
+### Description
+Sets a lighting engine point light's `radius`
+
+### Lua Example
+`le_set_light_radius(id, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| radius | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_radius(s16 id, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_intensity
+
+### Description
+Gets a lighting engine point light's `intensity`
+
+### Lua Example
+`local numberValue = le_get_light_intensity(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_intensity(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_intensity
+
+### Description
+Sets a lighting engine point light's `intensity`
+
+### Lua Example
+`le_set_light_intensity(id, intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| intensity | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_intensity(s16 id, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_use_surface_normals
+
+### Description
+Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`local booleanValue = le_get_light_use_surface_normals(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_get_light_use_surface_normals(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_use_surface_normals
+
+### Description
+Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`le_set_light_use_surface_normals(id, useSurfaceNormals)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| useSurfaceNormals | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 

@@ -841,7 +841,7 @@ def get_manual_function_type(ptype: str, classes, docs_dir):
 
 def doc_manual_function(function, classes, docs_dir, include_param_desc):
     fid = function['identifier']
-    s = '\n## [%s](#%s)\n' % (fid, fid)
+    s = '\n## %s\n' % (fid)
 
     s += '\n### Description\n'
     for line in function['description']:
@@ -902,6 +902,9 @@ def doc_function_index(processed_files, manual_functions):
         s += '\n<br />\n\n'
 
     for processed_file in processed_files:
+        if not processed_file['functions'] or processed_file.get('no_doc'):
+            continue
+
         page_num = processed_file['page_num']
         s += '- %s\n' % processed_file['filename']
         for function in processed_file['functions']:
@@ -971,7 +974,7 @@ def doc_function(fname, function):
         return ''
 
     fid = function['identifier']
-    s = '\n## [%s](#%s)\n' % (fid, fid)
+    s = '\n## %s\n' % (fid)
 
     description = function.get('description', [""])
 
@@ -1063,9 +1066,17 @@ def doc_files(processed_files):
             s += doc_manual_function(function, classes, ".", False)
 
     for processed_file in processed_files:
+        if not processed_file['functions']:
+            continue
+
+        functions = doc_functions(processed_file['filename'], processed_file['functions'])
+        if not functions:
+            processed_file['no_doc'] = True
+            continue
+
         s_file  = '\n---'
         s_file += '\n# functions from %s\n\n<br />\n\n' % processed_file['filename']
-        s_file += doc_functions(processed_file['filename'], processed_file['functions'])
+        s_file += functions
 
         if len(s) + len(s_file) + extra_space > page_len_limit:
             s += '---\n\n$[FUNCTION_NAV_HERE]\n\n'

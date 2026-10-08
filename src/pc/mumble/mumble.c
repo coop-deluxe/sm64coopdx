@@ -9,6 +9,7 @@
 #include "game/area.h"
 
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 #include "pc/djui/djui.h"
 
 #include <stdbool.h>
@@ -29,6 +30,7 @@ s16 sPrevCheckLevel;
 s16 sPrevCheckArea;
 
 void mumble_init(void) {
+	set_loading_message("Initializing Mumble");
 
 #ifdef _WIN32
 	HANDLE hMapObject = OpenFileMappingW(FILE_MAP_ALL_ACCESS, FALSE, L"MumbleLink");
@@ -121,7 +123,7 @@ void mumble_update(void) {
     lm->fCameraFront[2] = -normal[2];
 
     // players with the same context can hear eachother, and is a concat of:
-    // level, area, and room. 
+    // level, area, and room.
 	if (should_update_context()) {
 		char context[20];
 		snprintf(context, 20, "%d-%d-%d", gCurrLevelNum, gCurrAreaIndex, gMarioState->currentRoom);
@@ -153,8 +155,8 @@ void mumble_update_menu() {
 bool should_update_context() {
 
 	// room 0 is an object like an elevator on hmc, but ALSO the only room
-	// for levels without rooms. So we only want to ignore room zero if we 
-	// haven't changed maps at the same time 
+	// for levels without rooms. So we only want to ignore room zero if we
+	// haven't changed maps at the same time
 
 	if (gMarioState->currentRoom == 0 && gCurrLevelNum == sPrevCheckLevel && gCurrAreaIndex == sPrevCheckArea) {
 		return false;
@@ -162,7 +164,7 @@ bool should_update_context() {
 
 	sPrevCheckLevel = gCurrLevelNum;
 	sPrevCheckArea = gCurrAreaIndex;
-	
+
     // some rooms are just small areas around doors which is a bit annoying as
     // audio will cut out for players standing close to them or walking between.
     // There only seem to be a few, so I've mapped them below
@@ -188,7 +190,7 @@ bool should_update_context() {
 	if (gCurrLevelNum == LEVEL_BBH) {
 		return gMarioState->currentRoom < 14;
 	}
-	
+
 	// hazy maze cave
 	if (gCurrLevelNum == LEVEL_HMC) {
 		return gMarioState->currentRoom < 9;

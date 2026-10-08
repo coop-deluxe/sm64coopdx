@@ -1115,6 +1115,21 @@ static void ParseGfxSymbol(GfxData* aGfxData, DataNode<Gfx>* aNode, Gfx*& aHead,
         }
         return;
     }
+    if (_Symbol == "gsSPSetOtherMode") {
+        s64 _Arg0 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_INT);
+        s64 _Arg1 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_INT);
+        s64 _Arg2 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_INT);
+        s64 _Arg3 = ParseGfxSymbolArg(aGfxData, aNode, &aTokenIndex, "", GFX_PARAM_INT);
+
+        // This command should only accept G_SETOTHERMODE_H or G_SETOTHERMODE_L as its first argument
+        if (_Arg0 != G_SETOTHERMODE_H && _Arg0 != G_SETOTHERMODE_L) {
+            PrintDataErrorGfx("  ERROR: gsSPSetOtherMode can only accept G_SETOTHERMODE_H or G_SETOTHERMODE_L as its first argument (received %lld)", _Arg0);
+            return;
+        }
+
+        gSPSetOtherMode(aHead++, _Arg0, _Arg1, _Arg2, _Arg3);
+        return;
+    }
 
     // Unknown
     PrintDataErrorGfx("  ERROR: Unknown gfx symbol: %s", _Symbol.begin());

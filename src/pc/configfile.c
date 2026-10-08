@@ -82,7 +82,7 @@ ConfigWindow configWindow = {
 ConfigStick configStick = { 0 };
 
 // display settings
-enum GfxWindowBackend configGraphicsBackend       = GFX_WINDOW_BACKEND_OPENGL;
+unsigned int configGraphicsBackend                = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
@@ -115,8 +115,9 @@ static const unsigned int defaultConfigKeyStickUp[MAX_BINDS]    = { 0x0011,     
 static const unsigned int defaultConfigKeyStickDown[MAX_BINDS]  = { 0x001F,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickLeft[MAX_BINDS]  = { 0x001E,     VK_INVALID, VK_INVALID };
 static const unsigned int defaultConfigKeyStickRight[MAX_BINDS] = { 0x0020,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyChat[MAX_BINDS]       = { 0x001C,     VK_INVALID, VK_INVALID };
-static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS] = { 0x000F,     0x1004,     VK_INVALID };
+static const unsigned int defaultConfigKeyChat[MAX_BINDS]        = { 0x001C,     VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyChatCommand[MAX_BINDS] = { VK_INVALID, VK_INVALID, VK_INVALID };
+static const unsigned int defaultConfigKeyPlayerList[MAX_BINDS]  = { 0x000F,     0x1004,     VK_INVALID };
 static const unsigned int defaultConfigKeyDUp[MAX_BINDS]        = { 0x0147,     0x100b,     VK_INVALID };
 static const unsigned int defaultConfigKeyDDown[MAX_BINDS]      = { 0x014f,     0x100c,     VK_INVALID };
 static const unsigned int defaultConfigKeyDLeft[MAX_BINDS]      = { 0x0153,     0x100d,     VK_INVALID };
@@ -143,6 +144,7 @@ unsigned int configKeyStickDown[MAX_BINDS]        = { 0x001F,     VK_INVALID, VK
 unsigned int configKeyStickLeft[MAX_BINDS]        = { 0x001E,     VK_INVALID, VK_INVALID };
 unsigned int configKeyStickRight[MAX_BINDS]       = { 0x0020,     VK_INVALID, VK_INVALID };
 unsigned int configKeyChat[MAX_BINDS]             = { 0x001C,     VK_INVALID, VK_INVALID };
+unsigned int configKeyChatCommand[MAX_BINDS]      = { VK_INVALID, VK_INVALID, VK_INVALID };
 unsigned int configKeyPlayerList[MAX_BINDS]       = { 0x000F,     0x1004,     VK_INVALID };
 unsigned int configKeyDUp[MAX_BINDS]              = { 0x0147,     0x100b,     VK_INVALID };
 unsigned int configKeyDDown[MAX_BINDS]            = { 0x014f,     0x100c,     VK_INVALID };
@@ -160,7 +162,7 @@ bool         configBackgroundGamepad              = true;
 bool         configExtendedReports                = false;
 bool         configDisableGamepads                = false;
 bool         configUseStandardKeyBindingsChat     = false;
-bool         configSmoothScrolling                = false;
+bool         configSmoothScroll                   = true;
 // free camera settings
 bool         configEnableFreeCamera               = false;
 bool         configFreeCameraAnalog               = false;
@@ -227,6 +229,7 @@ unsigned int configPvpType                        = PLAYER_PVP_CLASSIC;
 char         configCoopNetIp[MAX_CONFIG_STRING]   = DEFAULT_COOPNET_IP;
 unsigned int configCoopNetPort                    = DEFAULT_COOPNET_PORT;
 char         configPassword[MAX_CONFIG_STRING]    = "";
+char         configJoinPassword[MAX_CONFIG_STRING]= "";
 char         configDestId[MAX_CONFIG_STRING]      = "0";
 // DJUI settings
 unsigned int configDjuiTheme                      = DJUI_THEME_DARK;
@@ -291,6 +294,7 @@ static const struct ConfigOption options[] = {
     {.name = "key_stickleft",                  .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickLeft},
     {.name = "key_stickright",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyStickRight},
     {.name = "key_chat",                       .type = CONFIG_TYPE_BIND, .uintValue = configKeyChat},
+    {.name = "key_chat_command",               .type = CONFIG_TYPE_BIND, .uintValue = configKeyChatCommand},
     {.name = "key_playerlist",                 .type = CONFIG_TYPE_BIND, .uintValue = configKeyPlayerList},
     {.name = "key_dup",                        .type = CONFIG_TYPE_BIND, .uintValue = configKeyDUp},
     {.name = "key_ddown",                      .type = CONFIG_TYPE_BIND, .uintValue = configKeyDDown},
@@ -310,7 +314,7 @@ static const struct ConfigOption options[] = {
     {.name = "disable_gamepads",               .type = CONFIG_TYPE_BOOL, .boolValue = &configDisableGamepads},
 #endif
     {.name = "use_standard_key_bindings_chat", .type = CONFIG_TYPE_BOOL, .boolValue = &configUseStandardKeyBindingsChat},
-    {.name = "smooth_scrolling",               .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScrolling},
+    {.name = "smooth_scroll",                  .type = CONFIG_TYPE_BOOL, .boolValue = &configSmoothScroll},
     {.name = "stick_rotate_left",              .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.rotateLeft},
     {.name = "stick_invert_left_x",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftX},
     {.name = "stick_invert_left_y",            .type = CONFIG_TYPE_BOOL, .boolValue = &configStick.invertLeftY},
@@ -391,6 +395,7 @@ static const struct ConfigOption options[] = {
     {.name = "coopnet_ip",                     .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configCoopNetIp, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_port",                   .type = CONFIG_TYPE_UINT,   .uintValue   = &configCoopNetPort},
     {.name = "coopnet_password",               .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configPassword, .maxStringLength = MAX_CONFIG_STRING},
+    {.name = "coopnet_join_password",          .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configJoinPassword, .maxStringLength = MAX_CONFIG_STRING},
     {.name = "coopnet_dest",                   .type = CONFIG_TYPE_STRING, .stringValue = (char*)&configDestId, .maxStringLength = MAX_CONFIG_STRING},
     // DJUI settings
     {.name = "djui_theme",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiTheme},
@@ -815,7 +820,7 @@ NEXT_OPTION:
 
     fs_close(file);
 
-    if (configGraphicsBackend < GFX_WINDOW_BACKEND_OPENGL || configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
+    if (configGraphicsBackend > GFX_WINDOW_BACKEND_MAX) { configGraphicsBackend = GFX_WINDOW_BACKEND_OPENGL; }
 
     if (configFramerateMode < 0 || configFramerateMode > RRM_MAX) { configFramerateMode = 0; }
     if (configFrameLimit < 30)   { configFrameLimit = 30; }
@@ -878,6 +883,7 @@ void configfile_reset_keybinds(bool extra) {
         memcpy(configKeyX, defaultConfigKeyX, sizeof(configKeyX));
         memcpy(configKeyY, defaultConfigKeyY, sizeof(configKeyY));
         memcpy(configKeyChat, defaultConfigKeyChat, sizeof(configKeyChat));
+        memcpy(configKeyChatCommand, defaultConfigKeyChatCommand, sizeof(configKeyChatCommand));
         memcpy(configKeyPlayerList, defaultConfigKeyPlayerList, sizeof(configKeyPlayerList));
         memcpy(configKeyDUp, defaultConfigKeyDUp, sizeof(configKeyDUp));
         memcpy(configKeyDDown, defaultConfigKeyDDown, sizeof(configKeyDDown));
