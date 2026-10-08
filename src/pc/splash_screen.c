@@ -75,5 +75,6 @@ static void init_splash_screen(void) {
 void render_splash_screen(void) {
     if (!sSplashScreen) { init_splash_screen(); }
 
-    gfx_wm_main_loop(splash_screen_produce_one_frame);
+    while (1) {
+    gfx_wm_main_loop(splash_screen_produce_one_frame);}
 }

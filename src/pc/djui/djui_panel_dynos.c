@@ -94,7 +94,7 @@ void djui_panel_dynos_create(struct DjuiBase* caller) {
         if (gDynosPacksInited) {
             djui_panel_dynos_add_packs(layoutBase);
         } else {
-            struct DjuiText *loadingText = djui_text_create(layoutBase, "Loading...");
+            struct DjuiText *loadingText = djui_text_create(layoutBase, DLANG(LOADING, LOADING));
             djui_base_set_size_type(&loadingText->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
             djui_base_set_size(&loadingText->base, 1, 1);
             djui_text_set_alignment(loadingText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);

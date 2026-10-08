@@ -333,7 +333,7 @@ void djui_base_hook_on_changed(struct DjuiBase *base, void *ptr, size_t size, bo
         base->prevHookSlices[i].size = size;
         free(base->prevHookSlices[i].ptr);
         base->prevHookSlices[i].ptr = malloc(base->prevHookSlices[i].size);
-        memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, base->hookSlices[i].size);
+        memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, size);
 
         return;
     }

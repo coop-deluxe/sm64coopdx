@@ -677,6 +677,8 @@ int main(int argc, char *argv[]) {
         gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
 
+    //render_rom_setup_screen();
+
     // render the rom setup screen
     if (!main_rom_handler()) {
         if (!gCLIOpts.hideSplashScreen) {
@@ -758,6 +760,7 @@ int main(int argc, char *argv[]) {
 
             gDynosPacksInited = sQueueDynosPacksInited;
             gModsInited = sQueueModsInited;
+            gGameInited = sQueueGameInited;
 
             if (sQueueNetworkInitType == NT_CLIENT) {
                 network_set_system(NS_SOCKET);
@@ -787,8 +790,6 @@ int main(int argc, char *argv[]) {
                 network_init(NT_NONE, false);
                 sQueueNetworkInitType = -1;
             }
-
-            gGameInited = sQueueGameInited;
 
             MUTEX_UNLOCK(sLoadingThread);
 

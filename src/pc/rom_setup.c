@@ -22,18 +22,21 @@ struct RomSetupScreen {
     char message[MAX_ROM_SETUP_MESSAGE_LEN];
 };
 
-static struct RomSetupScreen *sRomhackSetupScreen = NULL;
+static struct RomSetupScreen *sRomSetupScreen = NULL;
 
 void append_to_rom_setup_text(const char *message) {
-    strncat(sRomhackSetupScreen->message, message, MAX_ROM_SETUP_MESSAGE_LEN - strlen(message) - 1);
+    if (sRomSetupScreen == NULL || message == NULL) { return; }
+    size_t romSetupMessageLen = strlen(sRomSetupScreen->message);
+    if (romSetupMessageLen >= MAX_ROM_SETUP_MESSAGE_LEN - 1) { return; }
+    strncat(sRomSetupScreen->message, message, MAX_ROM_SETUP_MESSAGE_LEN - romSetupMessageLen - 1);
 }
 
-static void romhack_setup_screen_produce_frame_callback(void) {
-    if (sRomhackSetupScreen) { djui_base_render(&sRomhackSetupScreen->base); }
+static void rom_setup_screen_produce_frame_callback(void) {
+    if (sRomSetupScreen) { djui_base_render(&sRomSetupScreen->base); }
 }
 
-static void romhack_setup_screen_produce_one_frame(void) {
-    produce_one_dummy_frame(romhack_setup_screen_produce_frame_callback, 0x00, 0x00, 0x00);
+static void rom_setup_screen_produce_one_frame(void) {
+    produce_one_dummy_frame(rom_setup_screen_produce_frame_callback, 0x00, 0x00, 0x00);
 }
 
 static bool rom_setup_screen_on_render(struct DjuiBase *base) {
@@ -43,22 +46,22 @@ static bool rom_setup_screen_on_render(struct DjuiBase *base) {
     windowWidth /= scale;
     windowHeight /= scale;
 
-    f32 setupTextY = windowHeight * 0.5f - sRomhackSetupScreen->setupText->base.height.value * 0.5f;
+    f32 setupTextY = windowHeight * 0.5f - sRomSetupScreen->setupText->base.height.value * 0.5f;
 
     // fill the screen
     djui_base_set_size(base, windowWidth, windowHeight);
 
     // splash logo
     if (configExCoopTheme) {
-        djui_base_set_location(&sRomhackSetupScreen->splashText->base, 0, setupTextY - sRomhackSetupScreen->splashText->base.height.value);
+        djui_base_set_location(&sRomSetupScreen->splashText->base, 0, setupTextY - sRomSetupScreen->splashText->base.height.value);
     } else {
-        djui_base_set_location(&sRomhackSetupScreen->splashImage->base, 0, setupTextY - sRomhackSetupScreen->splashImage->base.height.value);
+        djui_base_set_location(&sRomSetupScreen->splashImage->base, 0, setupTextY - sRomSetupScreen->splashImage->base.height.value);
     }
 
     {
-        // romhack setup text description
-        djui_text_set_text(sRomhackSetupScreen->setupText, sRomhackSetupScreen->message);
-        djui_base_set_location(&sRomhackSetupScreen->setupText->base, 0, setupTextY);
+        // rom setup text description
+        djui_text_set_text(sRomSetupScreen->setupText, sRomSetupScreen->message);
+        djui_base_set_location(&sRomSetupScreen->setupText->base, 0, setupTextY);
     }
 
     djui_base_compute(base);
@@ -69,7 +72,7 @@ static bool rom_setup_screen_on_render(struct DjuiBase *base) {
 static void rom_setup_screen_destroy(struct DjuiBase *base) {
     struct RomSetupScreen *romSetupScreen = (struct RomSetupScreen *)base;
     free(romSetupScreen);
-    sRomhackSetupScreen = NULL;
+    sRomSetupScreen = NULL;
 }
 
 static void init_rom_setup_screen(void) {
@@ -118,15 +121,15 @@ static void init_rom_setup_screen(void) {
         romSetupScreen->setupText = text;
     }
 
-    sRomhackSetupScreen = romSetupScreen;
+    sRomSetupScreen = romSetupScreen;
 }
 
 void render_rom_setup_screen(void) {
-    if (!sRomhackSetupScreen) { init_rom_setup_screen(); }
+    if (!sRomSetupScreen) { init_rom_setup_screen(); }
 
-    snprintf(sRomhackSetupScreen->message, MAX_ROM_SETUP_MESSAGE_LEN, "No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
+    snprintf(sRomSetupScreen->message, MAX_ROM_SETUP_MESSAGE_LEN, "No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
 
-    while (!gRomIsValid) {
-        gfx_wm_main_loop(romhack_setup_screen_produce_one_frame);
+    while (true) {
+        gfx_wm_main_loop(rom_setup_screen_produce_one_frame);
     }
 }

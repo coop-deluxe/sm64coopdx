@@ -1,7 +1,7 @@
 #include "dynos.cpp.h"
 extern "C" {
-    #include "pc/pc_main.h"
-    #include "pc/mods/mods_utils.h"
+#include "pc/pc_main.h"
+#include "pc/mods/mods_utils.h"
 }
 
 #define MOD_PATH_LEN 1024

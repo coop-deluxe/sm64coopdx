@@ -37,7 +37,7 @@ void djui_panel_loading_create(struct DjuiBase *caller, void (*callback)(struct 
     sPanelCaller = caller;
     sCallbackFunc = callback;
 
-    struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(LOADING, LOADING), true);
+    struct DjuiThreePanel *panel = djui_panel_menu_create(DLANG(LOADING, LOADING_TITLE), true);
     struct DjuiBase *body = djui_three_panel_get_body(panel);
     {
         struct DjuiText *loadingText = djui_text_create(body, gLoadingMessage);
