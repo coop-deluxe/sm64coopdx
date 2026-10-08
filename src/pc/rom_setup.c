@@ -129,5 +129,7 @@ void render_rom_setup_screen(void) {
 
     snprintf(sRomSetupScreen->message, MAX_ROM_SETUP_MESSAGE_LEN, "No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
 
-    gfx_wm_main_loop(rom_setup_screen_produce_one_frame);
+    while (true) {
+        gfx_wm_main_loop(rom_setup_screen_produce_one_frame);
+    }
 }
