@@ -421,10 +421,10 @@ void djui_hud_set_combiner_cycles(u8 cycles) {
 }
 
 void djui_hud_set_combiner(u8 cycle, bool alpha,
-    enum CombinerSource a, enum CombinerSource b, enum CombinerSource c, enum CombinerSource d) {
+    enum DjuiCombinerSource a, enum DjuiCombinerSource b, enum DjuiCombinerSource c, enum DjuiCombinerSource d) {
     if (--cycle > 1) { return; }
 
-    enum CombinerSource *part = gCombinerState.cycle[cycle][alpha];
+    enum DjuiCombinerSource *part = gCombinerState.cycle[cycle][alpha];
     part[0] = a; part[1] = b; part[2] = c; part[3] = d;
 
     gCombinerUpdated = true;

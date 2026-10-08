@@ -2775,19 +2775,19 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
-CS_0              =  0 --- @type CombinerSource
-CS_1              =  1 --- @type CombinerSource
-CS_TEXTURE        =  2 --- @type CombinerSource
-CS_COLOR          =  3 --- @type CombinerSource
-CS_TEXT           =  4 --- @type CombinerSource
-CS_COMBINED       =  5 --- @type CombinerSource
-CS_NOISE          =  6 --- @type CombinerSource
-CS_TEXTURE_ALPHA  =  7 --- @type CombinerSource
-CS_COLOR_ALPHA    =  8 --- @type CombinerSource
-CS_TEXT_ALPHA     =  9 --- @type CombinerSource
-CS_COMBINED_ALPHA = 10 --- @type CombinerSource
+CS_0              =  0 --- @type DjuiCombinerSource
+CS_1              =  1 --- @type DjuiCombinerSource
+CS_TEXTURE        =  2 --- @type DjuiCombinerSource
+CS_COLOR          =  3 --- @type DjuiCombinerSource
+CS_TEXT           =  4 --- @type DjuiCombinerSource
+CS_COMBINED       =  5 --- @type DjuiCombinerSource
+CS_NOISE          =  6 --- @type DjuiCombinerSource
+CS_TEXTURE_ALPHA  =  7 --- @type DjuiCombinerSource
+CS_COLOR_ALPHA    =  8 --- @type DjuiCombinerSource
+CS_TEXT_ALPHA     =  9 --- @type DjuiCombinerSource
+CS_COMBINED_ALPHA = 10 --- @type DjuiCombinerSource
 
---- @alias CombinerSource
+--- @alias DjuiCombinerSource
 --- | `CS_0`
 --- | `CS_1`
 --- | `CS_TEXTURE`

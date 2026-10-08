@@ -20,7 +20,7 @@
 - [djui_console.h](#djui_consoleh)
     - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
 - [djui_gfx.h](#djui_gfxh)
-    - [enum CombinerSource](#enum-CombinerSource)
+    - [enum DjuiCombinerSource](#enum-DjuiCombinerSource)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
@@ -1234,7 +1234,7 @@
 
 ## djui_gfx.h
 
-### enum CombinerSource
+### enum DjuiCombinerSource
 | Identifier | Value |
 | :--------- | :---- |
 | CS_0 | 0 |

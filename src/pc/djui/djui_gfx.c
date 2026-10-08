@@ -47,7 +47,7 @@ bool gCombinerOverride = false;
 u32 gCombinerCycleType = G_CYC_FILL;
 static Gfx sDjuiCombineMode = { 0 };
 
-static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum CombinerSource source) {
+static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum DjuiCombinerSource source) {
     if (alpha) {
         switch (source) {
             default:                return G_ACMUX_0;
@@ -78,7 +78,7 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum Combiner
     }
 }
 
-void djui_gfx_update_combine_mode(enum CombinerSource mode) {
+void djui_gfx_update_combine_mode(enum DjuiCombinerSource mode) {
     u32 cycleType = G_CYC_1CYCLE;
 
     if (gCombinerOverride) {

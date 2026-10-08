@@ -13,7 +13,7 @@ extern const Gfx dl_djui_img_end[];
 void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
 
-enum CombinerSource {
+enum DjuiCombinerSource {
     CS_0,
     CS_1,
     CS_TEXTURE,        // TEXEL0
@@ -27,7 +27,7 @@ enum CombinerSource {
     CS_COMBINED_ALPHA, // COMBINED_ALPHA
 };
 
-typedef enum CombinerSource CombinerCycle[2][4];
+typedef enum DjuiCombinerSource CombinerCycle[2][4];
 
 struct CombinerState {
     CombinerCycle cycle[2];
@@ -38,7 +38,7 @@ extern struct CombinerState gCombinerState;
 extern bool gCombinerUpdated;
 extern bool gCombinerOverride;
 extern u32 gCombinerCycleType;
-void djui_gfx_update_combine_mode(enum CombinerSource mode);
+void djui_gfx_update_combine_mode(enum DjuiCombinerSource mode);
 
 /* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
 f32 djui_gfx_get_scale(void);

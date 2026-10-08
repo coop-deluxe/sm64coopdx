@@ -11805,13 +11805,13 @@ int smlua_func_djui_hud_set_combiner(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_hud_set_combiner"); return 0; }
     bool alpha = smlua_to_boolean(L, 2);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "djui_hud_set_combiner"); return 0; }
-    enum CombinerSource a = smlua_to_integer(L, 3);
+    enum DjuiCombinerSource a = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "djui_hud_set_combiner"); return 0; }
-    enum CombinerSource b = smlua_to_integer(L, 4);
+    enum DjuiCombinerSource b = smlua_to_integer(L, 4);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "djui_hud_set_combiner"); return 0; }
-    enum CombinerSource c = smlua_to_integer(L, 5);
+    enum DjuiCombinerSource c = smlua_to_integer(L, 5);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "djui_hud_set_combiner"); return 0; }
-    enum CombinerSource d = smlua_to_integer(L, 6);
+    enum DjuiCombinerSource d = smlua_to_integer(L, 6);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "djui_hud_set_combiner"); return 0; }
 
     djui_hud_set_combiner(cycle, alpha, a, b, c, d);
