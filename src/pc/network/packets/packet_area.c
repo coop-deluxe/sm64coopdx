@@ -94,20 +94,27 @@ void network_send_area(struct NetworkPlayer* toNp) {
         // send area packet
         network_send_to(toNp->localIndex, &p);
 
-        // send non-static objects
+        // send objects
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->oSyncID != so->id) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
-            if (so->id < SYNC_ID_BLOCK_SIZE) { continue; }
-            struct Object* spawn_objects[] = { so->o };
 
-            // TODO: move find model to a utility file/function
-            // find model
-            u32 model = dynos_model_get_id_from_graph_node(so->o->header.gfx.sharedChild);
+            // static objects have deterministic sync ids based on spawn order,
+            // so we send an update packet rather than a spawn packet
+            if (so->id < SYNC_ID_BLOCK_SIZE) {
+                network_send_object_reliability_to(toNp->localIndex, so->o, true);
 
-            u32 models[] = { model };
-            network_send_spawn_objects_to(toNp->localIndex, spawn_objects, models, 1);
-            LOG_INFO("tx non-static");
+                LOG_INFO("tx static");
+            } else {
+                struct Object* spawn_objects[] = { so->o };
+
+                // find model
+                u32 model = dynos_model_get_id_from_graph_node(so->o->header.gfx.sharedChild);
+
+                u32 models[] = { model };
+                network_send_spawn_objects_to(toNp->localIndex, spawn_objects, models, 1);
+                LOG_INFO("tx non-static");
+            }
         }
 
         // send last reliable ent packet
