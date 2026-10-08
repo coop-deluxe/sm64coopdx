@@ -1193,85 +1193,6 @@ int smlua_func_level_script_parse(lua_State* L) {
     return res;
 }
 
-  ///////////////////////
- // custom animations //
-///////////////////////
-
-static u16 *smlua_to_u16_list(lua_State* L, int index, u32* length) {
-
-    // Get number of values
-    *length = lua_rawlen(L, index);
-    if (!*length) { LOG_LUA("smlua_to_u16_list: Table must not be empty"); return NULL; }
-    u16 *values = calloc(*length, sizeof(u16));
-
-    // Retrieve values
-    lua_pushnil(L);
-    s32 top = lua_gettop(L);
-    while (lua_next(L, index) != 0) {
-        int indexKey = lua_gettop(L) - 1;
-        int indexValue = lua_gettop(L) - 0;
-
-        lua_Integer key = smlua_to_integer(L, indexKey);
-        if (!gSmLuaConvertSuccess) {
-            LOG_LUA("smlua_to_u16_list: Failed to convert table key");
-            free(values);
-            return 0;
-        }
-
-        if (key < 1 || key > *length) {
-            LOG_LUA("smlua_to_u16_list: Table key out of bounds: " LUA_INTEGER_FMT, key);
-            free(values);
-            return 0;
-        }
-
-        u16 value = smlua_to_integer(L, indexValue);
-        if (!gSmLuaConvertSuccess) {
-            LOG_LUA("smlua_to_u16_list: Failed to convert table value");
-            free(values);
-            return 0;
-        }
-
-        values[key - 1] = value;
-        lua_settop(L, top);
-    }
-    lua_settop(L, top);
-    return values;
-}
-
-int smlua_func_smlua_anim_util_register_animation(lua_State* L) {
-    if (!smlua_functions_valid_param_count(L, 8)) { return 0; }
-
-    const char *name = smlua_to_string(L, 1);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'name'"); return 0; }
-
-    s16 flags = smlua_to_integer(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'flags'"); return 0; }
-
-    s16 animYTransDivisor = smlua_to_integer(L, 3);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'animYTransDivisor'"); return 0; }
-
-    s16 startFrame = smlua_to_integer(L, 4);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'startFrame'"); return 0; }
-
-    s16 loopStart = smlua_to_integer(L, 5);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'loopStart'"); return 0; }
-
-    s16 loopEnd = smlua_to_integer(L, 6);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'loopEnd'"); return 0; }
-
-    u32 valuesLength = 0;
-    u16 *values = (u16 *) smlua_to_u16_list(L, 7, &valuesLength);
-    if (!values) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'values'"); return 0; }
-
-    u32 indexLength = 0;
-    u16 *index = (u16 *) smlua_to_u16_list(L, 8, &indexLength);
-    if (!index) { LOG_LUA("smlua_anim_util_register_animation: Failed to convert parameter 'index'"); free(values); return 0; }
-
-    smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, valuesLength, index, indexLength);
-
-    return 1;
-}
-
   /////////////
  // console //
 /////////////
@@ -1501,7 +1422,6 @@ void smlua_bind_functions(void) {
     smlua_bind_function(L, "texture_override_reset", smlua_func_texture_override_reset);
     smlua_bind_function(L, "level_script_parse", smlua_func_level_script_parse); // deprecated
     smlua_bind_function(L, "level_parse_script", smlua_func_level_parse_script);
-    smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "log_to_console", smlua_func_log_to_console);
     smlua_bind_function(L, "add_scroll_target", smlua_func_add_scroll_target);
     smlua_bind_function(L, "collision_find_surface_on_ray", smlua_func_collision_find_surface_on_ray);

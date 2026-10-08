@@ -113,6 +113,24 @@ void dynos_generate_packs(const char* directory) {
     DynOS_Gfx_GeneratePacks(directory);
 }
 
+// -- animation -- //
+
+bool dynos_add_animation(const char *filepath, const char* animationName) {
+    return DynOS_Anim_Activate(filepath, animationName);
+}
+
+struct Animation *dynos_animation_get(const char* animationName) {
+    return DynOS_Anim_Get(animationName);
+}
+
+bool dynos_add_animation_table(const char *filepath, const char* animationTableName) {
+    return DynOS_Anim_Table_Activate(filepath, animationTableName);
+}
+
+struct AnimationTable *dynos_animation_table_get(const char* animationTableName) {
+    return DynOS_Anim_Table_Get(animationTableName);
+}
+
 // -- audio -- //
 
 void dynos_audio_reset_mods() {

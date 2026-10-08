@@ -981,7 +981,7 @@ GfxData *DynOS_Lvl_LoadFromBinary(const SysPath &aFilename, const char *aLevelNa
                 case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load        (_File, _GfxData); break;
                 case DATA_TYPE_GEO_LAYOUT:      DynOS_Geo_Load        (_File, _GfxData); break;
                 case DATA_TYPE_ANIMATION:       DynOS_Anim_Load       (_File, _GfxData); break;
-                case DATA_TYPE_ANIMATION_TABLE: DynOS_Anim_Table_Load (_File, _GfxData); break;
+                case DATA_TYPE_ANIMATION_TABLE: DynOS_Anim_Table_LoadSeparate(_File, _GfxData); break;
                 case DATA_TYPE_GFXDYNCMD:       DynOS_GfxDynCmd_Load  (_File, _GfxData); break;
                 case DATA_TYPE_COLLISION:       DynOS_Col_Load        (_File, _GfxData); break;
                 case DATA_TYPE_LEVEL_SCRIPT:    DynOS_Lvl_Load        (_File, _GfxData); break;

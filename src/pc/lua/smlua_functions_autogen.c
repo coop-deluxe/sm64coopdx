@@ -25426,7 +25426,6 @@ int smlua_func_cur_obj_init_animation_with_accel_and_sound(lua_State* L) {
     return 0;
 }
 
-/*
 int smlua_func_obj_init_animation_with_sound(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -25438,7 +25437,7 @@ int smlua_func_obj_init_animation_with_sound(lua_State* L) {
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "obj_init_animation_with_sound"); return 0; }
-//  struct AnimationTable* animations = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_???); <--- UNIMPLEMENTED
+    struct AnimationTable* animations = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_ANIMATIONTABLE);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "obj_init_animation_with_sound"); return 0; }
     s32 animIndex = smlua_to_integer(L, 3);
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "obj_init_animation_with_sound"); return 0; }
@@ -25448,7 +25447,6 @@ int smlua_func_obj_init_animation_with_sound(lua_State* L) {
 
     return 0;
 }
-*/
 
 int smlua_func_cur_obj_enable_rendering_and_become_tangible(lua_State* L) {
     if (L == NULL) { return 0; }
@@ -29409,21 +29407,146 @@ int smlua_func_get_mario_vanilla_animation(lua_State* L) {
     return 1;
 }
 
+int smlua_func_smlua_anim_util_get_animation(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_get_animation", 1, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_animation"); return 0; }
+
+    smlua_push_object(L, LOT_ANIMATION, smlua_anim_util_get_animation(name), NULL);
+
+    return 1;
+}
+
+int smlua_func_smlua_anim_util_get_table(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_get_table", 1, top);
+        return 0;
+    }
+
+    const char* name = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_table"); return 0; }
+
+    smlua_push_object(L, LOT_ANIMATIONTABLE, smlua_anim_util_get_table(name), NULL);
+
+    return 1;
+}
+
+int smlua_func_smlua_anim_util_register_animation(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 8 && top != 7) {
+        LOG_LUA_LINE("Improper param count for 'smlua_anim_util_register_animation': Expected 8 or 7, Received %u", top);
+        return 0;
+    }
+
+    if (lua_isstring(L, 1)) {
+        const char* name = smlua_to_string(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_register_animation"); return 0; }
+        s16 flags = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_register_animation"); return 0; }
+        s16 animYTransDivisor = smlua_to_integer(L, 3);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "smlua_anim_util_register_animation"); return 0; }
+        s16 startFrame = smlua_to_integer(L, 4);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "smlua_anim_util_register_animation"); return 0; }
+        s16 loopStart = smlua_to_integer(L, 5);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "smlua_anim_util_register_animation"); return 0; }
+        s16 loopEnd = smlua_to_integer(L, 6);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "smlua_anim_util_register_animation"); return 0; }
+        LuaTable values = smlua_to_lua_table(L, 7);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "smlua_anim_util_register_animation"); return 0; }
+        LuaTable index = smlua_to_lua_table(L, 8);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 8, "smlua_anim_util_register_animation"); return 0; }
+    
+        lua_pushinteger(L, smlua_anim_util_register_animation_with_name(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index));
+    
+        return 1;
+    } else {
+        s16 flags = smlua_to_integer(L, 1);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_register_animation"); return 0; }
+        s16 animYTransDivisor = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_register_animation"); return 0; }
+        s16 startFrame = smlua_to_integer(L, 3);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "smlua_anim_util_register_animation"); return 0; }
+        s16 loopStart = smlua_to_integer(L, 4);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "smlua_anim_util_register_animation"); return 0; }
+        s16 loopEnd = smlua_to_integer(L, 5);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "smlua_anim_util_register_animation"); return 0; }
+        LuaTable values = smlua_to_lua_table(L, 6);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "smlua_anim_util_register_animation"); return 0; }
+        LuaTable index = smlua_to_lua_table(L, 7);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "smlua_anim_util_register_animation"); return 0; }
+    
+        lua_pushinteger(L, smlua_anim_util_register_animation(flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index));
+    
+        return 1;
+    }
+}
+
 int smlua_func_smlua_anim_util_set_animation(lua_State* L) {
     if (L == NULL) { return 0; }
 
     int top = lua_gettop(L);
     if (top != 2) {
-        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_set_animation", 2, top);
+        LOG_LUA_LINE("Improper param count for 'smlua_anim_util_set_animation': Expected 2, Received %u", top);
+        return 0;
+    }
+
+    if (lua_isstring(L, 2)) {
+        struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_animation"); return 0; }
+        const char* name = smlua_to_string(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_animation"); return 0; }
+    
+        smlua_anim_util_set_animation_with_name(obj, name);
+    
+        return 0;
+    } else if (lua_isinteger(L, 2)) {
+        struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_animation"); return 0; }
+        s32 index = smlua_to_integer(L, 2);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_animation"); return 0; }
+    
+        smlua_anim_util_set_animation_with_index(obj, index);
+    
+        return 0;
+    } else {
+        struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_animation"); return 0; }
+        struct Animation* anim = (struct Animation*)smlua_to_cobject(L, 2, LOT_ANIMATION);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_animation"); return 0; }
+    
+        smlua_anim_util_set_animation(obj, anim);
+    
+        return 0;
+    }
+}
+
+int smlua_func_smlua_anim_util_set_table(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 2) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_set_table", 2, top);
         return 0;
     }
 
     struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_animation"); return 0; }
-    const char* name = smlua_to_string(L, 2);
-    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_animation"); return 0; }
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_set_table"); return 0; }
+    struct AnimationTable* animTable = (struct AnimationTable*)smlua_to_cobject(L, 2, LOT_ANIMATIONTABLE);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "smlua_anim_util_set_table"); return 0; }
 
-    smlua_anim_util_set_animation(obj, name);
+    smlua_anim_util_set_table(obj, animTable);
 
     return 0;
 }
@@ -29441,6 +29564,40 @@ int smlua_func_smlua_anim_util_get_current_animation_name(lua_State* L) {
     if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_current_animation_name"); return 0; }
 
     lua_pushstring(L, smlua_anim_util_get_current_animation_name(obj));
+
+    return 1;
+}
+
+int smlua_func_smlua_anim_util_get_current_animation_index(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_get_current_animation_index", 1, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_current_animation_index"); return 0; }
+
+    lua_pushinteger(L, smlua_anim_util_get_current_animation_index(obj));
+
+    return 1;
+}
+
+int smlua_func_smlua_anim_util_get_current_info(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_anim_util_get_current_info", 1, top);
+        return 0;
+    }
+
+    struct Object* obj = (struct Object*)smlua_to_cobject(L, 1, LOT_OBJECT);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "smlua_anim_util_get_current_info"); return 0; }
+
+    smlua_push_object(L, LOT_ANIMATIONINFO, smlua_anim_util_get_current_info(obj), NULL);
 
     return 1;
 }
@@ -37898,7 +38055,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "cur_obj_init_animation_with_sound", smlua_func_cur_obj_init_animation_with_sound);
     smlua_bind_function(L, "obj_init_animation_with_accel_and_sound", smlua_func_obj_init_animation_with_accel_and_sound);
     smlua_bind_function(L, "cur_obj_init_animation_with_accel_and_sound", smlua_func_cur_obj_init_animation_with_accel_and_sound);
-    //smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound); <--- UNIMPLEMENTED
+    smlua_bind_function(L, "obj_init_animation_with_sound", smlua_func_obj_init_animation_with_sound);
     smlua_bind_function(L, "cur_obj_enable_rendering_and_become_tangible", smlua_func_cur_obj_enable_rendering_and_become_tangible);
     smlua_bind_function(L, "cur_obj_enable_rendering", smlua_func_cur_obj_enable_rendering);
     smlua_bind_function(L, "cur_obj_disable_rendering_and_become_intangible", smlua_func_cur_obj_disable_rendering_and_become_intangible);
@@ -38132,8 +38289,14 @@ void smlua_bind_functions_autogen(void) {
 
     // smlua_anim_utils.h
     smlua_bind_function(L, "get_mario_vanilla_animation", smlua_func_get_mario_vanilla_animation);
+    smlua_bind_function(L, "smlua_anim_util_get_animation", smlua_func_smlua_anim_util_get_animation);
+    smlua_bind_function(L, "smlua_anim_util_get_table", smlua_func_smlua_anim_util_get_table);
+    smlua_bind_function(L, "smlua_anim_util_register_animation", smlua_func_smlua_anim_util_register_animation);
     smlua_bind_function(L, "smlua_anim_util_set_animation", smlua_func_smlua_anim_util_set_animation);
+    smlua_bind_function(L, "smlua_anim_util_set_table", smlua_func_smlua_anim_util_set_table);
     smlua_bind_function(L, "smlua_anim_util_get_current_animation_name", smlua_func_smlua_anim_util_get_current_animation_name);
+    smlua_bind_function(L, "smlua_anim_util_get_current_animation_index", smlua_func_smlua_anim_util_get_current_animation_index);
+    smlua_bind_function(L, "smlua_anim_util_get_current_info", smlua_func_smlua_anim_util_get_current_info);
 
     // smlua_audio_utils.h
     smlua_bind_function(L, "smlua_audio_utils_reset_all", smlua_func_smlua_audio_utils_reset_all);
