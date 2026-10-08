@@ -29,7 +29,7 @@ void djui_panel_sound_create(struct DjuiBase* caller) {
         djui_checkbox_create(body, DLANG(SOUND, FADEOUT), &configFadeoutDistantSounds, NULL);
         djui_checkbox_create(body, DLANG(SOUND, MUTE_FOCUS_LOSS), &configMuteFocusLoss, NULL);
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
 
     djui_panel_add(caller, panel, NULL);

@@ -52,7 +52,7 @@ void djui_panel_loading_create(struct DjuiBase *caller, void (*callback)(struct 
         loadingProgressBar->smoothenHigh = 0.75f;
         loadingProgressBar->smoothenLow = 0.25f;
 
-        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, CANCEL), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
     panel->on_back = djui_panel_loading_on_back;
 

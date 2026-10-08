@@ -25,8 +25,7 @@ static void djui_searchbox_on_value_change(struct DjuiBase* base) {
 struct DjuiSearchbox* djui_searchbox_create(struct DjuiBase* parent, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiSearchbox* searchbox = calloc(1, sizeof(struct DjuiSearchbox));
     struct DjuiBase* base = &searchbox->base;
-    struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
-    struct DjuiColor disabledTextColor = theme->interactables.disabledTextColor;
+    struct DjuiColor disabledTextColor = configDjuiTheme.elements[DJUI_THEME_ELEMENT_TEXT_DISABLED];
 
     djui_base_init(parent, base, NULL, djui_searchbox_destroy);
 
