@@ -10,6 +10,7 @@
 #include "pc/lua/utils/smlua_text_utils.h"
 #include "pc/lua/utils/smlua_audio_utils.h"
 #include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_texture_utils.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
 #include "pc/djui/djui.h"
@@ -431,6 +432,7 @@ void smlua_shutdown(void) {
     smlua_audio_custom_deinit();
     smlua_clear_hooks();
     smlua_model_util_clear();
+    smlua_texture_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
     smlua_clear_custom_fields();

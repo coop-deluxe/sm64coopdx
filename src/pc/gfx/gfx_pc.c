@@ -320,6 +320,26 @@ static struct ColorCombiner *gfx_lookup_or_create_color_combiner(struct CombineM
     return prev_combiner = comb;
 }
 
+void gfx_texture_cache_delete(const uint8_t *orig_addr) {
+    if (!orig_addr) return;
+
+    size_t hash = (uintptr_t)orig_addr;
+    hash = (hash >> HASH_SHIFT) & HASH_MASK;
+
+    struct TextureHashmapNode **node = &gfx_texture_cache.hashmap[hash];
+    while (node != NULL && *node != NULL) {
+        if ((*node)->texture_addr == orig_addr) {
+            struct TextureHashmapNode *to_remove = *node;
+            *node = to_remove->next;
+
+            to_remove->texture_addr = NULL;
+            to_remove->next = NULL;
+            return;
+        }
+        node = &(*node)->next;
+    }
+}
+
 void gfx_texture_cache_clear(void) {
     memset(&gfx_texture_cache, 0, sizeof(gfx_texture_cache));
 }

@@ -729,49 +729,108 @@ void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj)
 
 ///
 
-LuaTable texture_to_lua_table(const Texture *tex) {
+void add_scroll_target(u32 index, const char *name, OPTIONAL u32 offset, OPTIONAL u32 size) {
+    dynos_add_scroll_target(index, name, offset, size);
+}
+
+///
+
+void set_exclamation_box_contents(LuaTable contents) {
     lua_State *L = gLuaState;
-    if (!L) { return 0; }
+    lua_rawgeti(L, LUA_REGISTRYINDEX, contents);
+    contents = lua_gettop(L);
 
-    if (!tex) {
-        lua_pushnil(L);
-        return 0;
+    struct ExclamationBoxContent exclamationBoxNewContents[EXCLAMATION_BOX_MAX_SIZE];
+    u8 exclamationBoxIndex = 0;
+
+    lua_len(L, contents);
+    size_t arrayLen = smlua_to_integer(L, -1);
+    lua_pop(L, 1);
+
+    if (arrayLen >= EXCLAMATION_BOX_MAX_SIZE) {
+        LOG_LUA_WARNING_ONCE("set_exclamation_box_contents: Too many entries for box content, expected max of %d, got %zu", EXCLAMATION_BOX_MAX_SIZE, arrayLen);
     }
 
-    struct TextureInfo texInfo;
-    if (!dynos_texture_get_from_data(tex, &texInfo)) {
-        lua_pushnil(L);
-        return 0;
+    for (size_t i = 0; i < (arrayLen < EXCLAMATION_BOX_MAX_SIZE ? arrayLen : EXCLAMATION_BOX_MAX_SIZE); i++) {
+        lua_geti(L, contents, i + 1);
+
+        if (lua_istable(L, -1)) {
+            s32 subtable_idx = lua_gettop(L);
+
+            lua_getfield(L, subtable_idx, "id");
+            exclamationBoxNewContents[exclamationBoxIndex].id = smlua_to_integer(L, -1);
+            lua_pop(L, 1);
+
+            lua_getfield(L, subtable_idx, "unused");
+            if (lua_isnumber(L, -1)) {
+                exclamationBoxNewContents[exclamationBoxIndex].unused = smlua_to_integer(L, -1);
+            } else {
+                exclamationBoxNewContents[exclamationBoxIndex].unused = 0;
+            }
+            lua_pop(L, 1);
+
+            lua_getfield(L, subtable_idx, "firstByte");
+            if (lua_isnumber(L, -1)) {
+                exclamationBoxNewContents[exclamationBoxIndex].firstByte = smlua_to_integer(L, -1);
+            } else {
+                exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0;
+            }
+            lua_pop(L, 1);
+
+            lua_getfield(L, subtable_idx, "model");
+            exclamationBoxNewContents[exclamationBoxIndex].model = smlua_to_integer(L, -1);
+            lua_pop(L, 1);
+
+            lua_getfield(L, subtable_idx, "behavior");
+            exclamationBoxNewContents[exclamationBoxIndex].behavior = smlua_to_integer(L, -1);
+            lua_pop(L, 1);
+        } else {
+            exclamationBoxNewContents[exclamationBoxIndex].id = 0;
+            exclamationBoxNewContents[exclamationBoxIndex].unused = 0;
+            exclamationBoxNewContents[exclamationBoxIndex].firstByte = 0;
+            exclamationBoxNewContents[exclamationBoxIndex].model = 0;
+            exclamationBoxNewContents[exclamationBoxIndex].behavior = 0;
+            LOG_LUA_WARNING("set_exclamation_box_contents: Invalid type for entry index %zu, expected table, got %s", i, lua_typename(L, lua_type(L, -1)));
+        }
+        exclamationBoxIndex++;
+        lua_pop(L, 1);
     }
 
-    u8 *rgba = dynos_texture_convert_to_rgba32(texInfo.texture, texInfo.width, texInfo.height, texInfo.format, texInfo.size);
-    if (!rgba) {
-        lua_pushnil(L);
-        return 0;
-    }
+    lua_pop(L, 1);
+
+    memcpy(gExclamationBoxContents, exclamationBoxNewContents, sizeof(struct ExclamationBoxContent) * exclamationBoxIndex);
+    gExclamationBoxSize = exclamationBoxIndex;
+}
+
+LuaTable get_exclamation_box_contents(void) {
+    lua_State *L = gLuaState;
 
     LUA_STACK_CHECK_BEGIN_NUM(L, 1);
 
     lua_newtable(L);
-    const u8 *pixel = rgba;
-    for (u32 i = 0; i < texInfo.width * texInfo.height; ++i, pixel += 4) {
+    int tableIndex = lua_gettop(L);
+
+    for (u8 i = 0; i < gExclamationBoxSize; i++) {
         lua_newtable(L);
-        smlua_push_integer_field(-2, "r", pixel[0]);
-        smlua_push_integer_field(-2, "g", pixel[1]);
-        smlua_push_integer_field(-2, "b", pixel[2]);
-        smlua_push_integer_field(-2, "a", pixel[3]);
-        lua_rawseti(L, -2, i + 1);
+
+        lua_pushinteger(L, gExclamationBoxContents[i].id);
+        lua_setfield(L, -2, "id");
+
+        lua_pushinteger(L, gExclamationBoxContents[i].unused);
+        lua_setfield(L, -2, "unused");
+
+        lua_pushinteger(L, gExclamationBoxContents[i].firstByte);
+        lua_setfield(L, -2, "firstByte");
+
+        lua_pushinteger(L, gExclamationBoxContents[i].model);
+        lua_setfield(L, -2, "model");
+
+        lua_pushinteger(L, gExclamationBoxContents[i].behavior);
+        lua_setfield(L, -2, "behavior");
+
+        lua_seti(L, tableIndex, i + 1);
     }
-    free(rgba);
 
     LUA_STACK_CHECK_END(L);
     return smlua_to_lua_table(L, -1);
-}
-
-const char *get_texture_name(const Texture *tex) {
-    struct TextureInfo texInfo;
-    if (dynos_texture_get_from_data(tex, &texInfo)) {
-        return texInfo.name;
-    }
-    return NULL;
 }

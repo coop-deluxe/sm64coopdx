@@ -3852,47 +3852,71 @@ Skips graph node interpolation for a frame
 
 <br />
 
-## texture_to_lua_table
+## add_scroll_target
 
 ### Description
-Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
+Registers a vertex buffer to be used for a scrolling texture with optional `offset` and `size`, use with `RM_Scroll_Texture` or `editor_Scroll_Texture`
 
 ### Lua Example
-`local tableValue = texture_to_lua_table(tex)`
+`add_scroll_target(index, name, offset, size)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| tex | `Pointer` <`Texture`> |
+| index | `integer` |
+| name | `string` |
+| offset | `integer` |
+| size | `integer` |
 
 ### Returns
-- `table`
+- None
 
 ### C Prototype
-`LuaTable texture_to_lua_table(const Texture *tex);`
+`void add_scroll_target(u32 index, const char *name, OPTIONAL u32 offset, OPTIONAL u32 size);`
 
 [:arrow_up_small:](#)
 
 <br />
 
-## get_texture_name
+## set_exclamation_box_contents
 
 ### Description
-Gets the name of the provided texture pointer `tex`
+Sets the contents that an exclamation box can spawn, takes an array of `ExclamationBoxContent`
 
 ### Lua Example
-`local stringValue = get_texture_name(tex)`
+`set_exclamation_box_contents(contents)`
 
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| tex | `Pointer` <`Texture`> |
+| contents | `table` |
 
 ### Returns
-- `string`
+- None
 
 ### C Prototype
-`const char *get_texture_name(const Texture *tex);`
+`void set_exclamation_box_contents(LuaTable contents);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## get_exclamation_box_contents
+
+### Description
+Gets the contents that an exclamation box can spawn, gives an array of `ExclamationBoxContent`
+
+### Lua Example
+`local tableValue = get_exclamation_box_contents()`
+
+### Parameters
+- None
+
+### Returns
+- `table`
+
+### C Prototype
+`LuaTable get_exclamation_box_contents(void);`
 
 [:arrow_up_small:](#)
 
@@ -5862,6 +5886,256 @@ Gets the current language
 
 ### C Prototype
 `const char* smlua_text_utils_get_language(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
+# functions from smlua_texture_utils.h
+
+<br />
+
+
+## smlua_texture_util_get_info
+
+### Description
+Gets the `TextureInfo` of a texture by name. Works with vanilla textures
+
+### Lua Example
+`local textureInfoValue = smlua_texture_util_get_info(textureName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
+
+### C Prototype
+`struct TextureInfo *smlua_texture_util_get_info(const char *textureName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_create_info
+
+### Description
+Creates a new custom TextureInfo from the provided data and RGBA texture table
+
+### Lua Example
+`local textureInfoValue = smlua_texture_util_create_info(pixelTable, name, width, height, format, size)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pixelTable | `table` |
+| name | `string` |
+| width | `integer` |
+| height | `integer` |
+| format | `integer` |
+| size | `integer` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
+
+### C Prototype
+`struct TextureInfo *smlua_texture_util_create_info(LuaTable pixelTable, const char *name, u32 width, u32 height, u8 format, u8 size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_modify_info
+
+### Description
+Modifies a custom TextureInfo using the provided data and RGBA texture table
+
+### Lua Example
+`smlua_texture_util_modify_info(texInfo, pixelTable, name, width, height, format, size)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+| pixelTable | `table` |
+| name | `string` |
+| width | `integer` |
+| height | `integer` |
+| format | `Pointer` <`integer`> |
+| size | `Pointer` <`integer`> |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_texture_util_modify_info(struct TextureInfo *texInfo, OPTIONAL LuaTable pixelTable, OPTIONAL const char *name, OPTIONAL u32 width, OPTIONAL u32 height, OPTIONAL u8 *format, OPTIONAL u8 *size);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_delete_info
+
+### Description
+Deletes a custom TextureInfo
+
+### Lua Example
+`smlua_texture_util_delete_info(texInfo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texInfo | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_texture_util_delete_info(struct TextureInfo *texInfo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_copy_info
+
+### Description
+Copies the data from a TextureInfo from `src` to `dst`, `dst` must be a custom texture
+
+### Lua Example
+`smlua_texture_util_copy_info(dst, src)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| dst | [TextureInfo](structs.md#TextureInfo) |
+| src | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_texture_util_copy_info(struct TextureInfo *dst, const struct TextureInfo *src);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_duplicate_info
+
+### Description
+Duplicates a TextureInfo with an optional different `name`
+
+### Lua Example
+`local textureInfoValue = smlua_texture_util_duplicate_info(src, name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| src | [TextureInfo](structs.md#TextureInfo) |
+| name | `string` |
+
+### Returns
+- [TextureInfo](structs.md#TextureInfo)
+
+### C Prototype
+`struct TextureInfo *smlua_texture_util_duplicate_info(const struct TextureInfo *src, OPTIONAL const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_override_set
+
+### Description
+Overrides a vanilla texture with a custom `TextureInfo`
+
+### Lua Example
+`smlua_texture_util_override_set(textureName, overrideTexInfo)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+| overrideTexInfo | [TextureInfo](structs.md#TextureInfo) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_texture_util_override_set(const char *textureName, struct TextureInfo *overrideTexInfo);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_override_reset
+
+### Description
+Resets an overridden texture
+
+### Lua Example
+`smlua_texture_util_override_reset(textureName)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| textureName | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_texture_util_override_reset(const char *textureName);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_to_table
+
+### Description
+Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
+
+### Lua Example
+`local tableValue = smlua_texture_util_to_table(texture)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texture | `Pointer` <`Texture`> |
+
+### Returns
+- `table`
+
+### C Prototype
+`LuaTable smlua_texture_util_to_table(const Texture *texture);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_texture_util_get_name
+
+### Description
+Gets the name of the provided texture pointer `texture`
+
+### Lua Example
+`local stringValue = smlua_texture_util_get_name(texture)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| texture | `Pointer` <`Texture`> |
+
+### Returns
+- `string`
+
+### C Prototype
+`const char *smlua_texture_util_get_name(const Texture *texture);`
 
 [:arrow_up_small:](#)
 

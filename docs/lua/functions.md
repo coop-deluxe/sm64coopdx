@@ -16,16 +16,8 @@
    - [network_send_to](#network_send_to)
    - [network_send_bytestring](#network_send_bytestring)
    - [network_send_bytestring_to](#network_send_bytestring_to)
-   - [get_texture_info](#get_texture_info)
-   - [texture_override_set](#texture_override_set)
-   - [texture_override_reset](#texture_override_reset)
    - [level_parse_script](#level_parse_script)
-   - [smlua_anim_util_register_animation](#smlua_anim_util_register_animation)
    - [log_to_console](#log_to_console)
-   - [add_scroll_target](#add_scroll_target)
-   - [collision_find_surface_on_ray](#collision_find_surface_on_ray)
-   - [set_exclamation_box_contents](#set_exclamation_box_contents)
-   - [get_exclamation_box_contents](#get_exclamation_box_contents)
    - [cast_graph_node](#cast_graph_node)
    - [get_uncolored_string](#get_uncolored_string)
    - [gfx_set_command](#gfx_set_command)
@@ -1843,6 +1835,7 @@
 
 - smlua_anim_utils.h
    - [get_mario_vanilla_animation](functions-6.md#get_mario_vanilla_animation)
+   - [smlua_anim_util_register_animation](functions-6.md#smlua_anim_util_register_animation)
    - [smlua_anim_util_set_animation](functions-6.md#smlua_anim_util_set_animation)
    - [smlua_anim_util_get_current_animation_name](functions-6.md#smlua_anim_util_get_current_animation_name)
 
@@ -1937,6 +1930,7 @@
 <br />
 
 - smlua_collision_utils.h
+   - [collision_find_surface_on_ray](functions-6.md#collision_find_surface_on_ray)
    - [collision_find_floor](functions-6.md#collision_find_floor)
    - [collision_find_ceil](functions-6.md#collision_find_ceil)
    - [get_water_surface_pseudo_floor](functions-6.md#get_water_surface_pseudo_floor)
@@ -2131,8 +2125,9 @@
    - [geo_get_current_camera](functions-7.md#geo_get_current_camera)
    - [geo_get_current_held_object](functions-7.md#geo_get_current_held_object)
    - [geo_skip_interpolation](functions-7.md#geo_skip_interpolation)
-   - [texture_to_lua_table](functions-7.md#texture_to_lua_table)
-   - [get_texture_name](functions-7.md#get_texture_name)
+   - [add_scroll_target](functions-7.md#add_scroll_target)
+   - [set_exclamation_box_contents](functions-7.md#set_exclamation_box_contents)
+   - [get_exclamation_box_contents](functions-7.md#get_exclamation_box_contents)
 
 <br />
 
@@ -2227,6 +2222,20 @@
    - [smlua_text_utils_extra_text_mod_index](functions-7.md#smlua_text_utils_extra_text_mod_index)
    - [smlua_text_utils_extra_text_reset](functions-7.md#smlua_text_utils_extra_text_reset)
    - [smlua_text_utils_get_language](functions-7.md#smlua_text_utils_get_language)
+
+<br />
+
+- smlua_texture_utils.h
+   - [smlua_texture_util_get_info](functions-7.md#smlua_texture_util_get_info)
+   - [smlua_texture_util_create_info](functions-7.md#smlua_texture_util_create_info)
+   - [smlua_texture_util_modify_info](functions-7.md#smlua_texture_util_modify_info)
+   - [smlua_texture_util_delete_info](functions-7.md#smlua_texture_util_delete_info)
+   - [smlua_texture_util_copy_info](functions-7.md#smlua_texture_util_copy_info)
+   - [smlua_texture_util_duplicate_info](functions-7.md#smlua_texture_util_duplicate_info)
+   - [smlua_texture_util_override_set](functions-7.md#smlua_texture_util_override_set)
+   - [smlua_texture_util_override_reset](functions-7.md#smlua_texture_util_override_reset)
+   - [smlua_texture_util_to_table](functions-7.md#smlua_texture_util_to_table)
+   - [smlua_texture_util_get_name](functions-7.md#smlua_texture_util_get_name)
 
 <br />
 
@@ -2491,76 +2500,6 @@ network_send_bytestring_to(localPlayerIndex, reliable, bytestring)
 | toLocalIndex | `integer` |
 | reliable | `bool` |
 | bytestring | `string` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## get_texture_info
-
-### Description
-Gets the `TextureInfo` of a texture by name.
-- Note: This also works with vanilla textures.
-
-### Lua Example
-```lua
-local texinfo = get_texture_info(textureName)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-
-### Returns
-- [TextureInfo](./structs.md#TextureInfo)
-
-[:arrow_up_small:](#)
-
-<br />
-
-## texture_override_set
-
-### Description
-Overrides a texture with a custom `TextureInfo`.
-- `textureName` must be the codename of a vanilla texture, you can find these in `data/dynos_mgr_builtin_tex.cpp`
-- `overrideTexInfo` can be any `TextureInfo`
-
-### Lua Example
-```lua
-texture_override_set("outside_09004000", overrideTexInfo)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
-| overrideTexInfo | [TextureInfo](./structs.md#TextureInfo) |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## texture_override_reset
-
-### Description
-Resets an overridden texture.
-
-### Lua Example
-```lua
-texture_override_reset("outside_09004000")
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| textureName | `string` |
 
 ### Returns
 - None
@@ -2962,35 +2901,6 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_entry)
 
 <br />
 
-## smlua_anim_util_register_animation
-
-### Description
-Registers an animation that can be used in objects if `smlua_anim_util_set_animation` is called.
-
-### Lua Example
-```lua
-smlua_anim_util_register_animation("apparition_idle", 0, 189, 0, 0, 0x5A, values, index)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| name | `string` |
-| flags | `integer` |
-| animYTransDivisor | `integer` |
-| startFrame | `integer` |
-| loopStart | `integer` |
-| loopEnd | `integer` |
-| values | `table` |
-| index | `table` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## log_to_console
 
 ### Description
@@ -3009,122 +2919,6 @@ log_to_console("sm64coopdx FTW", CONSOLE_MESSAGE_INFO)
 
 ### Returns
 - None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## add_scroll_target
-
-### Description
-Registers a vertex buffer to be used for a scrolling texture. Should be used with `RM_Scroll_Texture` or `editor_Scroll_Texture`.
-
-### Lua Example
-```lua
-add_scroll_target(0, "arena_rainbow_dl_StarRoad_mesh_layer_5_vtx_0")
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| index | `integer` |
-| name | `string` |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## collision_find_surface_on_ray
-
-### Description
-Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`.
-
-### Lua Example
-```lua
-local hit = collision_find_surface_on_ray(0, 0, 0, 50, 100, 50, 3.0)
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| startX | `number` |
-| startY | `number` |
-| startZ | `number` |
-| dirX | `number` |
-| dirY | `number` |
-| dirZ | `number` |
-| precision | `number` |
-
-### Returns
-- [RayIntersectionInfo](./structs.md#RayIntersectionInfo)
-
-[:arrow_up_small:](#)
-
-<br />
-
-## set_exclamation_box_contents
-
-### Description
-Sets the contents that the exclamation box spawns.
-A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
-- `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-- `unused`: Optional; unused by vanilla.
-- `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-- `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-- `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
-
-### Lua Example
-```lua
-set_exclamation_box_contents({
-   {id = 0, unused = 0, firstByte = 0, model = E_MODEL_GOOMBA, behavior = id_bhvGoomba}, -- Uses both optional fields
-   {id = 1, unused = 0, model = E_MODEL_KOOPA_WITH_SHELL, behavior = id_bhvKoopa}, -- Only uses `unused` optional field
-   {id = 2, firstByte = 0, model = E_MODEL_BLACK_BOBOMB, behavior = id_bhvBobomb}, -- Only uses `firstByte` optional field
-   {id = 3, model = E_MODEL_BOO, behavior = id_bhvBoo}, -- Uses no optional fields
-})
-```
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| contents | `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent) |
-
-### Returns
-- None
-
-[:arrow_up_small:](#)
-
-<br />
-
-## get_exclamation_box_contents
-
-### Description
-Gets the contents that the exclamation box spawns.
-A single content has 5 keys: `id`, `unused`, `firstByte`, `model`, and `behavior`:
-- `id`: Required; what value the box's oBehParams2ndByte needs to be to spawn this object.
-- `unused`: Optional; unused by vanilla.
-- `firstByte`: Optional; Overrides the 1st byte given to the spawned object.
-- `model`: Required; The model that the object will spawn with. Uses `ModelExtendedId`.
-- `behavior`: Required; The behavior ID that the object will spawn with. Uses `BehaviorId`.
-
-### Lua Example
-```lua
-local contents = get_exclamation_box_contents()
-for index, content in pairs(contents) do -- Enter the main table
-    djui_chat_message_create("Table index " .. index) -- Print the current table index
-    for key, value in pairs(content) do
-       djui_chat_message_create(key .. ": " .. value) -- Print a key-value pair within this subtable
-    end
-end
-```
-
-### Parameters
-- None
-
-### Returns
-- `table` of [ExclamationBoxContent](./structs.md#ExclamationBoxContent)
 
 [:arrow_up_small:](#)
 
