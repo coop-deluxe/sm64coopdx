@@ -395,11 +395,7 @@ def doc_constant(fname, processed_constant):
             return ''
 
         enum = 'enum ' + processed_constant['identifier']
-# <<<<<<< HEAD
-#         s += '\n### [%s](#%s)\n' % (enum, 'enum-' + processed_constant['identifier'])
-# =======
         s += '\n### %s\n' % (enum)
-# >>>>>>> upstream/dev
         s += '| Identifier | Value |\n'
         s += '| :--------- | :---- |\n'
         for c in constants:
