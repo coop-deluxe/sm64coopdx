@@ -292,22 +292,34 @@ static bool djui_base_hook_check_slices(struct DjuiBase *base) {
     // iterate through hooked slices
     for (u32 i = 0; i < MAX_DJUI_HOOKED_SLICES; i++) {
         if (base->hookSlices[i].ptr == NULL) { continue; }
+        if (base->hookSlices[i].on_changed == NULL) { continue; }
 
         // check if the value changed, and if so...
-        if (memcmp(base->hookSlices[i].ptr, base->prevHookSlices[i].ptr, base->hookSlices[i].size) != 0) {
-            // free previous prev hook slice allocation
-            free(base->prevHookSlices[i].ptr);
+        if (base->prevHookSlices[i].ptr != NULL &&
+            memcmp(base->hookSlices[i].ptr, base->prevHookSlices[i].ptr, base->hookSlices[i].size) == 0
+        ) {
+            continue;
+        }
 
-            // allocate new memory
-            base->prevHookSlices[i].ptr = malloc(base->prevHookSlices[i].size);
+        // free previous prev hook slice allocation
+        free(base->prevHookSlices[i].ptr);
+        base->prevHookSlices[i].ptr = NULL;
 
-            // copy memory over
-            memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, base->hookSlices[i].size);
+        // allocate new memory
+        base->prevHookSlices[i].ptr = malloc(base->hookSlices[i].size);
+        if (base->prevHookSlices[i].ptr == NULL) {
+            LOG_ERROR("Failed to allocate hooked slice snapshot!");
+            base->prevHookSlices[i].size = 0;
+            continue;
+        }
+        base->prevHookSlices[i].size = base->hookSlices[i].size;
 
-            // call update func
-            if (base->hookSlices[i].on_changed(base)) {
-                return true;
-            }
+        // copy memory over
+        memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, base->hookSlices[i].size);
+
+        // call update func
+        if (base->hookSlices[i].on_changed(base)) {
+            return true;
         }
     }
 
@@ -316,6 +328,7 @@ static bool djui_base_hook_check_slices(struct DjuiBase *base) {
 
 void djui_base_hook_on_changed(struct DjuiBase *base, void *ptr, size_t size, bool (*on_slice_changed)(struct DjuiBase *)) {
     // sanity checks
+    if (base == NULL) { return; }
     if (ptr == NULL) { return; }
     if (size == 0) { return; }
     if (on_slice_changed == NULL) { return; }
@@ -324,16 +337,22 @@ void djui_base_hook_on_changed(struct DjuiBase *base, void *ptr, size_t size, bo
     for (u32 i = 0; i < MAX_DJUI_HOOKED_SLICES; i++) {
         if (base->hookSlices[i].ptr != NULL) { continue; }
 
+        void *snapshot = malloc(size);
+        if (snapshot == NULL) {
+            LOG_ERROR("Failed to allocate hooked slice snapshot!");
+            return;
+        }
+        memcpy(snapshot, ptr, size);
+
         // set data
         base->hookSlices[i].ptr = ptr;
         base->hookSlices[i].size = size;
         base->hookSlices[i].on_changed = on_slice_changed;
 
         // set prev hook slice
-        base->prevHookSlices[i].size = size;
         free(base->prevHookSlices[i].ptr);
-        base->prevHookSlices[i].ptr = malloc(base->prevHookSlices[i].size);
-        memcpy(base->prevHookSlices[i].ptr, base->hookSlices[i].ptr, size);
+        base->prevHookSlices[i].ptr = snapshot;
+        base->prevHookSlices[i].size = size;
 
         return;
     }

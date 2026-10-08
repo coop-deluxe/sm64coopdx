@@ -79,6 +79,7 @@ static void djui_panel_dynos_rebuild_list(UNUSED struct DjuiBase* caller) {
 
 void djui_panel_dynos_create(struct DjuiBase* caller) {
     gDjuiInPlayerMenu = true;
+    sSearchInputbox = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(DYNOS, DYNOS), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {

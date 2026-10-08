@@ -274,6 +274,11 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     if (gModsInited) {
         mods_update_selectable();
     }
+
+    sSearchInputbox = NULL;
+    sBackButton = NULL;
+    sRefreshButton = NULL;
+
     djui_panel_host_mods_description_create();
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MODS, MODS), true);
