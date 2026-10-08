@@ -301,17 +301,20 @@ extern u8 gOverrideAllowToxicGasCamera;
 #define DOOR_ENTER_LOBBY     2
 
 // Might rename these to reflect what they are used for instead "SET_45" etc.
-#define CAM_FOV_SET_45      1
-#define CAM_FOV_DEFAULT     2
-#define CAM_FOV_APP_45      4
-#define CAM_FOV_SET_30      5
-#define CAM_FOV_APP_20      6
-#define CAM_FOV_BBH         7
-#define CAM_FOV_APP_80      9
-#define CAM_FOV_APP_30      10
-#define CAM_FOV_APP_60      11
-#define CAM_FOV_ZOOM_30     12
-#define CAM_FOV_SET_29      13
+enum CameraFov {
+    CAM_FOV_NONE,
+    CAM_FOV_SET_45,
+    CAM_FOV_DEFAULT,
+    CAM_FOV_APP_45 = 4,
+    CAM_FOV_SET_30,
+    CAM_FOV_APP_20,
+    CAM_FOV_BBH,
+    CAM_FOV_APP_80 = 9,
+    CAM_FOV_APP_30,
+    CAM_FOV_APP_60,
+    CAM_FOV_ZOOM_30,
+    CAM_FOV_SET_29,
+};
 
 #define CAM_EVENT_CANNON              1
 #define CAM_EVENT_SHOT_FROM_CANNON    2

@@ -8,11 +8,13 @@
 - [BehaviorTrajectories](#BehaviorTrajectories)
 - [BehaviorValues](#BehaviorValues)
 - [Camera](#Camera)
+- [CameraFOVStatus](#CameraFOVStatus)
 - [ChainSegment](#ChainSegment)
 - [Character](#Character)
 - [Color](#Color)
 - [Controller](#Controller)
 - [CustomLevelInfo](#CustomLevelInfo)
+- [CustomWarpNode](#CustomWarpNode)
 - [DateTime](#DateTime)
 - [DialogEntry](#DialogEntry)
 - [DisplayListNode](#DisplayListNode)
@@ -103,7 +105,7 @@
 
 <br />
 
-## [AnimInfo](#AnimInfo)
+## AnimInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -123,7 +125,7 @@
 
 <br />
 
-## [Animation](#Animation)
+## Animation
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -142,7 +144,7 @@
 
 <br />
 
-## [Area](#Area)
+## Area
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -172,7 +174,7 @@
 
 <br />
 
-## [BehaviorDialogs](#BehaviorDialogs)
+## BehaviorDialogs
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -265,7 +267,7 @@
 
 <br />
 
-## [BehaviorTrajectories](#BehaviorTrajectories)
+## BehaviorTrajectories
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -304,7 +306,7 @@
 
 <br />
 
-## [BehaviorValues](#BehaviorValues)
+## BehaviorValues
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -346,7 +348,7 @@
 
 <br />
 
-## [Camera](#Camera)
+## Camera
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -367,7 +369,23 @@
 
 <br />
 
-## [ChainSegment](#ChainSegment)
+## CameraFOVStatus
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| fovFunc | `integer` |  |
+| fov | `number` |  |
+| fovOffset | `number` |  |
+| shakeAmplitude | `number` |  |
+| shakePhase | `integer` |  |
+| shakeSpeed | `integer` |  |
+| decay | `integer` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## ChainSegment
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -382,7 +400,7 @@
 
 <br />
 
-## [Character](#Character)
+## Character
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -665,7 +683,7 @@
 
 <br />
 
-## [Color](#Color)
+## Color
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -677,7 +695,7 @@
 
 <br />
 
-## [Controller](#Controller)
+## Controller
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -697,7 +715,7 @@
 
 <br />
 
-## [CustomLevelInfo](#CustomLevelInfo)
+## CustomLevelInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -718,7 +736,19 @@
 
 <br />
 
-## [DateTime](#DateTime)
+## CustomWarpNode
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| node | [ObjectWarpNode](structs.md#ObjectWarpNode) | read-only |
+| spawnInfo | [SpawnInfo](structs.md#SpawnInfo) | read-only |
+| marioSpawnType | [enum MarioSpawnType](constants.md#enum-MarioSpawnType) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## DateTime
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -733,7 +763,7 @@
 
 <br />
 
-## [DialogEntry](#DialogEntry)
+## DialogEntry
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -748,7 +778,7 @@
 
 <br />
 
-## [DisplayListNode](#DisplayListNode)
+## DisplayListNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -760,7 +790,7 @@
 
 <br />
 
-## [DjuiColor](#DjuiColor)
+## DjuiColor
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -773,7 +803,7 @@
 
 <br />
 
-## [DjuiInteractableTheme](#DjuiInteractableTheme)
+## DjuiInteractableTheme
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -790,7 +820,7 @@
 
 <br />
 
-## [DjuiPanelTheme](#DjuiPanelTheme)
+## DjuiPanelTheme
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -800,7 +830,7 @@
 
 <br />
 
-## [DjuiTheme](#DjuiTheme)
+## DjuiTheme
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -814,7 +844,7 @@
 
 <br />
 
-## [DjuiThreePanelTheme](#DjuiThreePanelTheme)
+## DjuiThreePanelTheme
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -825,7 +855,7 @@
 
 <br />
 
-## [ExclamationBoxContent](#ExclamationBoxContent)
+## ExclamationBoxContent
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -839,7 +869,7 @@
 
 <br />
 
-## [FirstPersonCamera](#FirstPersonCamera)
+## FirstPersonCamera
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -858,7 +888,7 @@
 
 <br />
 
-## [FnGraphNode](#FnGraphNode)
+## FnGraphNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -868,7 +898,7 @@
 
 <br />
 
-## [Gfx](#Gfx)
+## Gfx
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -879,7 +909,7 @@
 
 <br />
 
-## [GlobalObjectAnimations](#GlobalObjectAnimations)
+## GlobalObjectAnimations
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -944,7 +974,7 @@
 
 <br />
 
-## [GlobalObjectCollisionData](#GlobalObjectCollisionData)
+## GlobalObjectCollisionData
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1054,7 +1084,7 @@
 
 <br />
 
-## [GlobalTextures](#GlobalTextures)
+## GlobalTextures
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1077,7 +1107,7 @@
 
 <br />
 
-## [GraphNode](#GraphNode)
+## GraphNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1094,7 +1124,7 @@
 
 <br />
 
-## [GraphNodeAnimatedPart](#GraphNodeAnimatedPart)
+## GraphNodeAnimatedPart
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1106,7 +1136,7 @@
 
 <br />
 
-## [GraphNodeBackground](#GraphNodeBackground)
+## GraphNodeBackground
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1120,7 +1150,7 @@
 
 <br />
 
-## [GraphNodeBillboard](#GraphNodeBillboard)
+## GraphNodeBillboard
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1132,7 +1162,7 @@
 
 <br />
 
-## [GraphNodeBone](#GraphNodeBone)
+## GraphNodeBone
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1146,7 +1176,7 @@
 
 <br />
 
-## [GraphNodeCamera](#GraphNodeCamera)
+## GraphNodeCamera
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1165,7 +1195,7 @@
 
 <br />
 
-## [GraphNodeCullingRadius](#GraphNodeCullingRadius)
+## GraphNodeCullingRadius
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1176,7 +1206,7 @@
 
 <br />
 
-## [GraphNodeDisplayList](#GraphNodeDisplayList)
+## GraphNodeDisplayList
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1187,7 +1217,7 @@
 
 <br />
 
-## [GraphNodeGenerated](#GraphNodeGenerated)
+## GraphNodeGenerated
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1198,7 +1228,7 @@
 
 <br />
 
-## [GraphNodeHeldObject](#GraphNodeHeldObject)
+## GraphNodeHeldObject
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1213,7 +1243,7 @@
 
 <br />
 
-## [GraphNodeLevelOfDetail](#GraphNodeLevelOfDetail)
+## GraphNodeLevelOfDetail
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1225,7 +1255,7 @@
 
 <br />
 
-## [GraphNodeMasterList](#GraphNodeMasterList)
+## GraphNodeMasterList
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1235,7 +1265,7 @@
 
 <br />
 
-## [GraphNodeObject](#GraphNodeObject)
+## GraphNodeObject
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1270,7 +1300,7 @@
 
 <br />
 
-## [GraphNodeObjectParent](#GraphNodeObjectParent)
+## GraphNodeObjectParent
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1281,7 +1311,7 @@
 
 <br />
 
-## [GraphNodeOrthoProjection](#GraphNodeOrthoProjection)
+## GraphNodeOrthoProjection
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1292,7 +1322,7 @@
 
 <br />
 
-## [GraphNodePerspective](#GraphNodePerspective)
+## GraphNodePerspective
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1301,13 +1331,15 @@
 | near | `integer` |  |
 | far | `integer` |  |
 | prevFov | `number` |  |
+| prevNear | `number` |  |
+| prevFar | `number` |  |
 | prevTimestamp | `number` |  |
 
 [:arrow_up_small:](#)
 
 <br />
 
-## [GraphNodeRoot](#GraphNodeRoot)
+## GraphNodeRoot
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1323,7 +1355,7 @@
 
 <br />
 
-## [GraphNodeRotation](#GraphNodeRotation)
+## GraphNodeRotation
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1335,7 +1367,7 @@
 
 <br />
 
-## [GraphNodeScale](#GraphNodeScale)
+## GraphNodeScale
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1347,7 +1379,7 @@
 
 <br />
 
-## [GraphNodeScaleXYZ](#GraphNodeScaleXYZ)
+## GraphNodeScaleXYZ
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1359,7 +1391,7 @@
 
 <br />
 
-## [GraphNodeShadow](#GraphNodeShadow)
+## GraphNodeShadow
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1372,7 +1404,7 @@
 
 <br />
 
-## [GraphNodeStart](#GraphNodeStart)
+## GraphNodeStart
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1382,7 +1414,7 @@
 
 <br />
 
-## [GraphNodeSwitchCase](#GraphNodeSwitchCase)
+## GraphNodeSwitchCase
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1394,7 +1426,7 @@
 
 <br />
 
-## [GraphNodeTranslation](#GraphNodeTranslation)
+## GraphNodeTranslation
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1406,7 +1438,7 @@
 
 <br />
 
-## [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
+## GraphNodeTranslationRotation
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1419,7 +1451,7 @@
 
 <br />
 
-## [HudDisplay](#HudDisplay)
+## HudDisplay
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1435,7 +1467,7 @@
 
 <br />
 
-## [InstantWarp](#InstantWarp)
+## InstantWarp
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1447,7 +1479,7 @@
 
 <br />
 
-## [LakituState](#LakituState)
+## LakituState
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1489,7 +1521,7 @@
 
 <br />
 
-## [LevelValues](#LevelValues)
+## LevelValues
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1558,7 +1590,7 @@
 
 <br />
 
-## [MarioAnimation](#MarioAnimation)
+## MarioAnimation
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1569,7 +1601,7 @@
 
 <br />
 
-## [MarioBodyState](#MarioBodyState)
+## MarioBodyState
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1608,7 +1640,7 @@
 
 <br />
 
-## [MarioState](#MarioState)
+## MarioState
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1698,7 +1730,7 @@
 
 <br />
 
-## [Mat4](#Mat4)
+## Mat4
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1723,7 +1755,7 @@
 
 <br />
 
-## [Mod](#Mod)
+## Mod
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1748,7 +1780,7 @@
 
 <br />
 
-## [ModAudio](#ModAudio)
+## ModAudio
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1779,7 +1811,7 @@
 
 <br />
 
-## [ModFs](#ModFs)
+## ModFs
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1808,7 +1840,7 @@
 
 <br />
 
-## [ModFsFile](#ModFsFile)
+## ModFsFile
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1849,7 +1881,7 @@
 
 <br />
 
-## [NametagsSettings](#NametagsSettings)
+## NametagsSettings
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1860,7 +1892,7 @@
 
 <br />
 
-## [NetworkPlayer](#NetworkPlayer)
+## NetworkPlayer
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -1898,7 +1930,7 @@
 
 <br />
 
-## [Object](#Object)
+## Object
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2678,7 +2710,7 @@
 
 <br />
 
-## [ObjectHitbox](#ObjectHitbox)
+## ObjectHitbox
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2696,7 +2728,7 @@
 
 <br />
 
-## [ObjectNode](#ObjectNode)
+## ObjectNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2708,7 +2740,7 @@
 
 <br />
 
-## [ObjectWarpNode](#ObjectWarpNode)
+## ObjectWarpNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2720,7 +2752,7 @@
 
 <br />
 
-## [Painting](#Painting)
+## Painting
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2765,7 +2797,7 @@
 
 <br />
 
-## [PaintingValues](#PaintingValues)
+## PaintingValues
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2790,7 +2822,7 @@
 
 <br />
 
-## [PlayerCameraState](#PlayerCameraState)
+## PlayerCameraState
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2806,7 +2838,7 @@
 
 <br />
 
-## [PlayerPalette](#PlayerPalette)
+## PlayerPalette
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2816,7 +2848,7 @@
 
 <br />
 
-## [RayIntersectionInfo](#RayIntersectionInfo)
+## RayIntersectionInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2827,7 +2859,7 @@
 
 <br />
 
-## [RomhackCameraSettings](#RomhackCameraSettings)
+## RomhackCameraSettings
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2846,7 +2878,7 @@
 
 <br />
 
-## [ServerSettings](#ServerSettings)
+## ServerSettings
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2868,7 +2900,7 @@
 
 <br />
 
-## [SpawnInfo](#SpawnInfo)
+## SpawnInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2884,7 +2916,7 @@
 
 <br />
 
-## [SpawnParticlesInfo](#SpawnParticlesInfo)
+## SpawnParticlesInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2905,7 +2937,7 @@
 
 <br />
 
-## [StarPositions](#StarPositions)
+## StarPositions
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2940,7 +2972,7 @@
 
 <br />
 
-## [StarsNeededForDialog](#StarsNeededForDialog)
+## StarsNeededForDialog
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2955,7 +2987,7 @@
 
 <br />
 
-## [StaticObjectCollision](#StaticObjectCollision)
+## StaticObjectCollision
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2966,7 +2998,7 @@
 
 <br />
 
-## [Surface](#Surface)
+## Surface
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -2993,7 +3025,7 @@
 
 <br />
 
-## [TextureInfo](#TextureInfo)
+## TextureInfo
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3008,7 +3040,7 @@
 
 <br />
 
-## [Vec2f](#Vec2f)
+## Vec2f
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3019,7 +3051,7 @@
 
 <br />
 
-## [Vec2i](#Vec2i)
+## Vec2i
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3030,7 +3062,7 @@
 
 <br />
 
-## [Vec2s](#Vec2s)
+## Vec2s
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3041,7 +3073,7 @@
 
 <br />
 
-## [Vec3f](#Vec3f)
+## Vec3f
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3053,7 +3085,7 @@
 
 <br />
 
-## [Vec3i](#Vec3i)
+## Vec3i
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3065,7 +3097,7 @@
 
 <br />
 
-## [Vec3s](#Vec3s)
+## Vec3s
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3077,7 +3109,7 @@
 
 <br />
 
-## [Vec4f](#Vec4f)
+## Vec4f
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3090,7 +3122,7 @@
 
 <br />
 
-## [Vec4i](#Vec4i)
+## Vec4i
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3103,7 +3135,7 @@
 
 <br />
 
-## [Vec4s](#Vec4s)
+## Vec4s
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3116,7 +3148,7 @@
 
 <br />
 
-## [Vtx](#Vtx)
+## Vtx
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3138,7 +3170,7 @@
 
 <br />
 
-## [WallCollisionData](#WallCollisionData)
+## WallCollisionData
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3157,11 +3189,11 @@
 
 <br />
 
-## [WarpNode](#WarpNode)
+## WarpNode
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
-| id | `integer` |  |
+| id | `integer` | read-only |
 | destLevel | `integer` |  |
 | destArea | `integer` |  |
 | destNode | `integer` |  |
@@ -3170,7 +3202,7 @@
 
 <br />
 
-## [WaterDropletParams](#WaterDropletParams)
+## WaterDropletParams
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3190,7 +3222,7 @@
 
 <br />
 
-## [Waypoint](#Waypoint)
+## Waypoint
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3201,7 +3233,7 @@
 
 <br />
 
-## [Whirlpool](#Whirlpool)
+## Whirlpool
 
 | Field | Type | Access |
 | ----- | ---- | ------ |

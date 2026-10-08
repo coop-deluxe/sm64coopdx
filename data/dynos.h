@@ -10,7 +10,7 @@
 #include <math.h>
 #include <limits.h>
 #include <dirent.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #ifdef __cplusplus
 #include <new>
 #include <utility>
@@ -52,6 +52,13 @@ enum {
     DYNOS_MOD_DATA_ERROR_SIZE_IS_ABOVE_MAX,
     DYNOS_MOD_DATA_ERROR_ALREADY_EXISTS,
     DYNOS_MOD_DATA_ERROR_POOL_IS_FULL,
+};
+
+enum {
+    DYNOS_LEVEL_PARSE_CONTINUE,
+    DYNOS_LEVEL_PARSE_SKIP,
+    DYNOS_LEVEL_PARSE_RETURN,
+    DYNOS_LEVEL_PARSE_STOP
 };
 
 #endif

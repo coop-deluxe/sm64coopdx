@@ -1,3 +1,5 @@
+#include <ctype.h>
+
 #include "pc/network/network.h"
 #include "pc/network/socket/socket.h"
 #include "pc/lua/smlua_hooks.h"

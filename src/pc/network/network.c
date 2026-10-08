@@ -472,7 +472,7 @@ void network_reconnect_begin(void) {
 
     network_shutdown(false, false, false, true);
 
-    djui_connect_menu_open();
+    djui_connect_menu_open(true);
 }
 
 static void network_reconnect_update(void) {

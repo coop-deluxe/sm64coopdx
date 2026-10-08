@@ -148,7 +148,6 @@ void discord_activity_update_check(void) {
             snprintf(gCoopNetPassword, 64, "%s", sQueuedLobbyPassword);
             network_reset_reconnect_and_rehost();
             network_set_system(NS_COOPNET);
-            network_init(NT_CLIENT, false);
             djui_panel_join_message_create(NULL);
         }
     }

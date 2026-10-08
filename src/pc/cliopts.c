@@ -20,7 +20,7 @@ static void print_help(void) {
 #endif
     log_to_terminal("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
     log_to_terminal("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
-    log_to_terminal("--hide-loading-screen     Hides the loading screen before the menu boots up.\n");
+    log_to_terminal("--hide-splash-screen      Hides the splash screen before the menu boots up.\n");
     log_to_terminal("--fullscreen              Starts the game in full screen mode.\n");
     log_to_terminal("--windowed                Starts the game in windowed mode.\n");
     log_to_terminal("--width WIDTH             Sets the window width.\n");
@@ -75,8 +75,8 @@ bool parse_cli_opts(int argc, char* argv[]) {
             arg_string("--savepath", argv[++i], gCLIOpts.savePath, SYS_MAX_PATH);
         } else if (!strcmp(argv[i], "--configfile") && (i + 1) < argc) {
             arg_string("--configfile", argv[++i], gCLIOpts.configFile, SYS_MAX_PATH);
-        } else if (!strcmp(argv[i], "--hide-loading-screen")) {
-            gCLIOpts.hideLoadingScreen = true;
+        } else if (!strcmp(argv[i], "--hide-splash-screen")) {
+            gCLIOpts.hideSplashScreen = true;
         } else if (!strcmp(argv[i], "--fullscreen")) {
             gCLIOpts.fullscreen = 1;
         } else if (!strcmp(argv[i], "--windowed")) {

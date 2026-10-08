@@ -12,6 +12,16 @@
 #include "pc/debuglog.h"
 
 /**
+ * Return the size in bytes of a graph node type.
+ */
+u32 get_graph_node_type_size(s16 type) {
+#define GRAPH_NODE_TYPE(_name_, _value_, _type_, ...) { if (type == _name_) { return (u32) sizeof(struct _type_); } }
+#include "src/engine/graph_node_types.inl"
+#undef GRAPH_NODE_TYPE
+    return 0;
+}
+
+/**
  * Initialize a geo node with a given type. Sets all links such that there
  * are no siblings, parent or children for this node.
  */
@@ -88,9 +98,9 @@ struct GraphNodePerspective *init_graph_node_perspective(struct DynamicPool *poo
     if (graphNode != NULL) {
         init_scene_graph_node_links(&graphNode->fnNode.node, GRAPH_NODE_TYPE_PERSPECTIVE);
 
-        graphNode->fov = fov;
-        graphNode->near = near;
-        graphNode->far = far;
+        graphNode->prevFov = graphNode->fov = fov;
+        graphNode->prevNear = graphNode->near = near;
+        graphNode->prevFar = graphNode->far = far;
         graphNode->fnNode.func = nodeFunc;
         graphNode->unused = unused;
 
