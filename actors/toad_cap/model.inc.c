@@ -5,16 +5,16 @@ static const Lights1 toad_cap_black_lights_group = gdSPDefLights1(
 
 #include "actors/mario/mario_externs.h"
 #include "actors/toad_player/toad_player_externs.h"
-#define toad_cap_texture_metal_shade              mario_texture_metal_shade
-#define toad_cap_texture_metal_light              mario_texture_metal_light
+#define toad_cap_texture_metal_shade              mario_texture_metal
+#define toad_cap_texture_metal_light              mario_texture_metal
 #define toad_cap_texture_cap                      toad_player_texture_cap
 #define toad_cap_texture_spots                    toad_player_texture_spots
 #define toad_cap_texture_wings_half_1             mario_texture_wings_half_1
 #define toad_cap_texture_wings_half_2             mario_texture_wings_half_2
-#define toad_cap_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1_shade
-#define toad_cap_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1_light
-#define toad_cap_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2_shade
-#define toad_cap_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2_light
+#define toad_cap_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1
+#define toad_cap_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1
+#define toad_cap_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2
+#define toad_cap_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2
 
 Vtx toad_cap_mesh_layer_1_vtx_0[94] = {
     {{ {-175, 118, 0}, 0, {-418, 482}, {134, 35, 0, 0} }},
