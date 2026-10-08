@@ -271,8 +271,9 @@ static void djui_mod_folder_open(UNUSED struct DjuiBase* caller) {
 }
 
 void djui_panel_host_mods_create(struct DjuiBase* caller) {
-
-    mods_update_selectable();
+    if (gModsInited) {
+        mods_update_selectable();
+    }
     djui_panel_host_mods_description_create();
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_MODS, MODS), true);
