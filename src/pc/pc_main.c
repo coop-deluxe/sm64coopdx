@@ -696,6 +696,7 @@ int main(int argc, char *argv[]) {
     }
 
     set_splash_screen_setup_text("Loading...");
+    render_splash_screen();
 
     // load rom assets
     rom_assets_load();
