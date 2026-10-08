@@ -49,7 +49,6 @@ GFX_SYMBOL(1, gsSPCullDisplayList,       2,  0,                 GFX_PARAM_INT, G
 GFX_SYMBOL(1, gsDPSetAlphaDither,        1,  0,                 GFX_PARAM_INT)
 GFX_SYMBOL(1, gsDPSetCombineKey,         1,  0,                 GFX_PARAM_INT)
 GFX_SYMBOL(1, gsDPPipelineMode,          1,  0,                 GFX_PARAM_INT)
-GFX_SYMBOL(1, gsSPSetOtherMode,          4,  0,                 GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT)
 GFX_SYMBOL(1, gsDPSetTextureDetail,      1,  0,                 GFX_PARAM_INT)
 GFX_SYMBOL(1, gsDPSetColorDither,        1,  0,                 GFX_PARAM_INT)
 GFX_SYMBOL(1, gsDPSetPrimDepth,          2,  0,                 GFX_PARAM_INT, GFX_PARAM_INT)
@@ -97,3 +96,4 @@ GFX_SYMBOL(0, gsDPLoadTextureBlock_4b,   11, PTYPE_PNTR_TEX,    GFX_PARAM_TEX, G
                                                                 GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT,
                                                                 GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT)
 GFX_SYMBOL(0, gsSPLightColor,            2,  0,                 GFX_PARAM_INT, GFX_PARAM_INT)
+GFX_SYMBOL(0, gsSPSetOtherMode,          4,  0,                 GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT, GFX_PARAM_INT)
