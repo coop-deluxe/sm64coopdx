@@ -18,7 +18,7 @@ jobs:
                 os: windows-latest
                 make: make -j$(nproc)
                 exe: .exe
-                zip: dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
+                zip: dynos lang mods palettes databases coop.map discord_game_sdk.dll sm64coopdx.exe coopdx_updater.exe
 
               - name: Linux
                 os: ubuntu-22.04
@@ -26,7 +26,7 @@ jobs:
                   sudo apt update
                   sudo apt install -y build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
                 make: make -j$(nproc)
-                zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
+                zip: dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: SteamOS
                 os: ubuntu-22.04
@@ -34,7 +34,7 @@ jobs:
                   sudo apt update
                   sudo apt install -y build-essential git python3 libglew-dev libz-dev libcurl4-openssl-dev zip
                 make: make -j$(nproc)
-                zip: dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx coopdx_updater
+                zip: dynos lang mods palettes databases libdiscord_game_sdk.so sm64coopdx coopdx_updater
 
               - name: macOS_ARM
                 os: macos-15
