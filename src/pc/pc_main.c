@@ -501,21 +501,28 @@ void game_exit(void) {
     LOG_INFO("exiting cleanly");
 
     if (!gGameInited) {
-        MUTEX_LOCK(sLoadingThread);
-        sShuttingDown = true;
-        MUTEX_UNLOCK(sLoadingThread);
+        if (sLoadingThread.mutexInited) {
+            MUTEX_LOCK(sLoadingThread);
+            sShuttingDown = true;
+            MUTEX_UNLOCK(sLoadingThread);
+        } else {
+            sShuttingDown = true;
+        }
     } else {
         sShuttingDown = true;
     }
 
-    join_thread(&sLoadingThread);
+    if (sLoadingThread.state == RUNNING) {
+        join_thread(&sLoadingThread);
+    }
+    if (sLoadingThread.mutexInited) {
+        destroy_mutex(&sLoadingThread);
+    }
     game_deinit();
     exit(0);
 }
 
 void set_loading_message(const char *format, ...) {
-    if (gCLIOpts.hideLoadingScreen) { return; }
-    if (sLoadingThread.state != RUNNING) { return; }
     if (gGameInited) { return; }
 
     char buffer[MAX_LOADING_MESSAGE];
@@ -532,8 +539,6 @@ void set_loading_message(const char *format, ...) {
 }
 
 void set_loading_percentage(f32 percent) {
-    if (gCLIOpts.hideLoadingScreen) { return; }
-    if (sLoadingThread.state != RUNNING) { return; }
     if (gGameInited) { return; }
     if (percent < 0 || percent > 1) { return; }
 
@@ -674,7 +679,7 @@ int main(int argc, char *argv[]) {
 
     // render the rom setup screen
     if (!main_rom_handler()) {
-        if (!gCLIOpts.hideLoadingScreen) {
+        if (!gCLIOpts.hideSplashScreen) {
             render_rom_setup_screen(); // holds the game load until a valid rom is provided
         } else {
             log_to_terminal("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
@@ -683,7 +688,9 @@ int main(int argc, char *argv[]) {
     }
 
     // render splash screen
-    render_splash_screen();
+    if (!gCLIOpts.hideSplashScreen) {
+        render_splash_screen();
+    }
 
     // load rom assets
     rom_assets_load();
@@ -704,14 +711,16 @@ int main(int argc, char *argv[]) {
     djui_console_message_dequeue();
 
     // start the thread for setting up the game
-    bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
-        if (init_thread_handle(&sLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
-            threadSuccess = true;
+    // if the thread fails to start, just run the game init on the main thread
+    if (gCLIOpts.headless || init_thread_handle(&sLoadingThread, main_game_init, NULL, NULL, 0) != 0) {
+        // threading is not available, so use the main thread
+        // init the mutex for non threaded loading to allow mutex locks later on to work
+        if (!sLoadingThread.mutexInited) {
+            init_mutex(&sLoadingThread);
         }
-    }
-    if (!threadSuccess) {
-        main_game_init(NULL); // failsafe incase threading doesn't work
+
+        // load the game on the main thread
+        main_game_init(NULL);
     }
 
     // Initialize the audio thread if possible.
@@ -783,8 +792,13 @@ int main(int argc, char *argv[]) {
 
             MUTEX_UNLOCK(sLoadingThread);
 
-            if (gGameInited && sLoadingThread.state != INVALID) {
-                destroy_mutex(&sLoadingThread);
+            if (gGameInited) {
+                if (sLoadingThread.state == RUNNING) {
+                    join_thread(&sLoadingThread);
+                }
+                if (sLoadingThread.mutexInited) {
+                    destroy_mutex(&sLoadingThread);
+                }
             }
         }
 
