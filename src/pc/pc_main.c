@@ -19,7 +19,6 @@
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
-#include "rom_setup.h"
 #include "splash_screen.h"
 #include "cliopts.h"
 #include "configfile.h"
@@ -44,6 +43,7 @@
 #include "pc/djui/djui_unicode.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_panel_modlist.h"
+#include "pc/djui/djui_panel_join_message.h"
 #include "pc/djui/djui_ctx_display.h"
 #include "pc/djui/djui_fps_display.h"
 #include "pc/djui/djui_lua_profiler.h"
@@ -677,20 +677,25 @@ int main(int argc, char *argv[]) {
         gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
 
-    // render the rom setup screen
+    // render splash screen
+    if (!gCLIOpts.hideSplashScreen) {
+        render_splash_screen();
+    }
+
+    // request rom if no rom is found
     if (!main_rom_handler()) {
         if (!gCLIOpts.hideSplashScreen) {
-            render_rom_setup_screen(); // holds the game load until a valid rom is provided
+            set_splash_screen_setup_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
+            while (!gRomIsValid) {
+                render_splash_screen();
+            }
         } else {
             log_to_terminal("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
             return 0;
         }
     }
 
-    // render splash screen
-    if (!gCLIOpts.hideSplashScreen) {
-        render_splash_screen();
-    }
+    set_splash_screen_setup_text("Loading...");
 
     // load rom assets
     rom_assets_load();
@@ -765,7 +770,7 @@ int main(int argc, char *argv[]) {
                 snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
                 snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
                 configJoinPort = gCLIOpts.networkPort;
-                network_init(NT_CLIENT, false);
+                djui_panel_join_message_create(NULL);
                 sQueueNetworkInitType = -1;
             } else if (sQueueNetworkInitType == NT_SERVER) {
                 if (gCLIOpts.network == NT_SERVER) {
