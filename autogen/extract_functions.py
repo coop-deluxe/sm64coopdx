@@ -96,7 +96,7 @@ def extract_functions(filename):
         line = line.strip()
         if '(' not in line or ')' not in line or '=' in line:
             continue
-        if line.startswith('static ') or line.startswith('extern '):
+        if line.startswith('static ') or line.startswith('extern ') or line.startswith('ENUM ('):
             continue
 
         # add function

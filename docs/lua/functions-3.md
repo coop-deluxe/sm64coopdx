@@ -2956,16 +2956,16 @@ Gets the current visual scaling factor of DJUI
 Gets the current DJUI HUD resolution
 
 ### Lua Example
-`local integerValue = djui_hud_get_resolution()`
+`local enumValue = djui_hud_get_resolution()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum HudUtilsResolution](constants.md#enum-HudUtilsResolution)
 
 ### C Prototype
-`u8 djui_hud_get_resolution(void);`
+`enum (HudUtilsResolution) u8 djui_hud_get_resolution(void);`
 
 [:arrow_up_small:](#)
 
@@ -2988,7 +2988,7 @@ Sets the current DJUI HUD resolution
 - None
 
 ### C Prototype
-`void djui_hud_set_resolution(enum HudUtilsResolution resolutionType);`
+`void djui_hud_set_resolution(enum (HudUtilsResolution) u8 resolutionType);`
 
 [:arrow_up_small:](#)
 
@@ -3000,16 +3000,16 @@ Sets the current DJUI HUD resolution
 Gets the current DJUI HUD texture filter
 
 ### Lua Example
-`local integerValue = djui_hud_get_filter()`
+`local enumValue = djui_hud_get_filter()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum HudUtilsFilter](constants.md#enum-HudUtilsFilter)
 
 ### C Prototype
-`u8 djui_hud_get_filter(void);`
+`enum (HudUtilsFilter) u8 djui_hud_get_filter(void);`
 
 [:arrow_up_small:](#)
 
@@ -3032,7 +3032,7 @@ Sets the current DJUI HUD texture filter
 - None
 
 ### C Prototype
-`void djui_hud_set_filter(enum HudUtilsFilter filterType);`
+`void djui_hud_set_filter(enum (HudUtilsFilter) u8 filterType);`
 
 [:arrow_up_small:](#)
 
@@ -3044,16 +3044,16 @@ Sets the current DJUI HUD texture filter
 Gets the current DJUI HUD font
 
 ### Lua Example
-`local integerValue = djui_hud_get_font()`
+`local enumValue = djui_hud_get_font()`
 
 ### Parameters
 - None
 
 ### Returns
-- `integer`
+- [enum DjuiFontType](constants.md#enum-DjuiFontType)
 
 ### C Prototype
-`s8 djui_hud_get_font(void);`
+`enum (DjuiFontType) s8 djui_hud_get_font(void);`
 
 [:arrow_up_small:](#)
 
@@ -3070,13 +3070,13 @@ Sets the current DJUI HUD font
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| fontType | `integer` |
+| fontType | [enum DjuiFontType](constants.md#enum-DjuiFontType) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_font(s8 fontType);`
+`void djui_hud_set_font(enum (DjuiFontType) s8 fontType);`
 
 [:arrow_up_small:](#)
 
@@ -3231,11 +3231,11 @@ Gets the current DJUI HUD rotation
 
 ### Returns
 - `integer`
-- `number`
-- `number`
+- [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX)
+- [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY)
 
 ### C Prototype
-`void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);`
+`void djui_hud_get_rotation(RET s16 *rotation, RET enum (HudUtilsRotationPivotX) f32 *pivotX, RET enum (HudUtilsRotationPivotY) f32 *pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3253,14 +3253,14 @@ Sets the current DJUI HUD rotation
 | Field | Type |
 | ----- | ---- |
 | rotation | `integer` |
-| pivotX | `number` |
-| pivotY | `number` |
+| pivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| pivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation(s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation(s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3278,17 +3278,17 @@ Sets the current DJUI HUD rotation interpolated
 | Field | Type |
 | ----- | ---- |
 | prevRotation | `integer` |
-| prevPivotX | `number` |
-| prevPivotY | `number` |
+| prevPivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| prevPivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 | rotation | `integer` |
-| pivotX | `number` |
-| pivotY | `number` |
+| pivotX | [enum HudUtilsRotationPivotX](constants.md#enum-HudUtilsRotationPivotX) |
+| pivotY | [enum HudUtilsRotationPivotY](constants.md#enum-HudUtilsRotationPivotY) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_rotation_interpolated(s16 prevRotation, f32 prevPivotX, f32 prevPivotY, s16 rotation, f32 pivotX, f32 pivotY);`
+`void djui_hud_set_rotation_interpolated(s16 prevRotation, enum (HudUtilsRotationPivotX) f32 prevPivotX, enum (HudUtilsRotationPivotY) f32 prevPivotY, s16 rotation, enum (HudUtilsRotationPivotX) f32 pivotX, enum (HudUtilsRotationPivotY) f32 pivotY);`
 
 [:arrow_up_small:](#)
 
@@ -3306,11 +3306,11 @@ Gets the current DJUI HUD text alignment
 - None
 
 ### Returns
-- `number`
-- `number`
+- [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign)
+- [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign)
 
 ### C Prototype
-`void djui_hud_get_text_alignment(RET f32 *textHAlign, RET f32 *textVAlign);`
+`void djui_hud_get_text_alignment(RET enum (HudUtilsHorizontalAlign) f32 *textHAlign, RET enum (HudUtilsVerticalAlign) f32 *textVAlign);`
 
 [:arrow_up_small:](#)
 
@@ -3327,14 +3327,14 @@ Sets the current DJUI HUD text alignment
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| textHAlign | `number` |
-| textVAlign | `number` |
+| textHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| textVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_text_alignment(f32 textHAlign, f32 textVAlign);`
+`void djui_hud_set_text_alignment(enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);`
 
 [:arrow_up_small:](#)
 
@@ -3351,16 +3351,16 @@ Sets the current DJUI HUD text alignment interpolated
 ### Parameters
 | Field | Type |
 | ----- | ---- |
-| prevTextHAlign | `number` |
-| prevTextVAlign | `number` |
-| textHAlign | `number` |
-| textVAlign | `number` |
+| prevTextHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| prevTextVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
+| textHAlign | [enum HudUtilsHorizontalAlign](constants.md#enum-HudUtilsHorizontalAlign) |
+| textVAlign | [enum HudUtilsVerticalAlign](constants.md#enum-HudUtilsVerticalAlign) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_text_alignment_interpolated(f32 prevTextHAlign, f32 prevTextVAlign, f32 textHAlign, f32 textVAlign);`
+`void djui_hud_set_text_alignment_interpolated(enum (HudUtilsHorizontalAlign) f32 prevTextHAlign, enum (HudUtilsVerticalAlign) f32 prevTextVAlign, enum (HudUtilsHorizontalAlign) f32 textHAlign, enum (HudUtilsVerticalAlign) f32 textVAlign);`
 
 [:arrow_up_small:](#)
 
@@ -7327,607 +7327,6 @@ Sets the level number and handles the act select screen. `param` is used for ove
 
 ### C Prototype
 `s32 lvl_set_current_level(s16 param, s16 levelNum);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from lighting_engine.h
-
-<br />
-
-
-## le_is_enabled
-
-### Description
-Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
-
-### Lua Example
-`local booleanValue = le_is_enabled()`
-
-### Parameters
-- None
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_is_enabled(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_mode
-
-### Description
-Sets the lighting engine mode to `mode`
-
-### Lua Example
-`le_set_mode(mode)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| mode | [enum LEMode](constants.md#enum-LEMode) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_mode(enum LEMode mode);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_mode
-
-### Description
-Gets the lighting engine mode
-
-### Lua Example
-`local enumValue = le_get_mode()`
-
-### Parameters
-- None
-
-### Returns
-- [enum LEMode](constants.md#enum-LEMode)
-
-### C Prototype
-`enum LEMode le_get_mode(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_tone_mapping
-
-### Description
-Sets the lighting engine's tone mapping mode to `toneMapping`
-
-### Lua Example
-`le_set_tone_mapping(toneMapping)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_ambient_color
-
-### Description
-Outputs the lighting engine's ambient color to `out`
-
-### Lua Example
-`le_get_ambient_color(out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_ambient_color(VEC_OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_ambient_color
-
-### Description
-Sets the lighting engine ambient color
-
-### Lua Example
-`le_set_ambient_color(r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_ambient_color(u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_max_lights_per_vertex
-
-### Description
-Sets the max amount of lights that can affect a vertex
-
-### Lua Example
-`le_set_max_lights_per_vertex(count)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| count | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_max_lights_per_vertex(u8 count);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_enabled
-
-### Description
-This will let the user control the lighting engine in real time to disable or enable it.
-
-### Lua Example
-`le_set_enabled(value)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| value | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_enabled(bool value);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_calculate_lighting_color
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_calculate_lighting_color_with_normal
-
-### Description
-Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
-
-### Lua Example
-`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| normal | [Vec3f](structs.md#Vec3f) |
-| out | [Color](structs.md#Color) |
-| lightIntensityScalar | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, VEC_OUT Color out, f32 lightIntensityScalar);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_calculate_lighting_dir
-
-### Description
-Calculates the lighting direction from a position and outputs the result in `out`
-
-### Lua Example
-`le_calculate_lighting_dir(pos, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| pos | [Vec3f](structs.md#Vec3f) |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_calculate_lighting_dir(Vec3f pos, VEC_OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_add_light
-
-### Description
-Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
-
-### Lua Example
-`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-| radius | `number` |
-| intensity | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_remove_light
-
-### Description
-Removes a lighting engine point light corresponding to `id`
-
-### Lua Example
-`le_remove_light(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_remove_light(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_count
-
-### Description
-Gets the total number of lights currently loaded in the lighting engine
-
-### Lua Example
-`local integerValue = le_get_light_count()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 le_get_light_count(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_light_exists
-
-### Description
-Checks if a lighting engine point light corresponding to `id` exists
-
-### Lua Example
-`local booleanValue = le_light_exists(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_light_exists(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_pos
-
-### Description
-Outputs a lighting engine point light's position to `out`
-
-### Lua Example
-`le_get_light_pos(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Vec3f](structs.md#Vec3f) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_pos(s16 id, VEC_OUT Vec3f out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_light_pos
-
-### Description
-Sets a lighting engine point light's position to `x`, `y`, `z`
-
-### Lua Example
-`le_set_light_pos(id, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| x | `number` |
-| y | `number` |
-| z | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_color
-
-### Description
-Outputs a lighting engine point light's color to `out`
-
-### Lua Example
-`le_get_light_color(id, out)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| out | [Color](structs.md#Color) |
-
-### Returns
-- None
-
-### C Prototype
-`void le_get_light_color(s16 id, VEC_OUT Color out);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_light_color
-
-### Description
-Sets a lighting engine point light's color to `r`, `g`, `b`
-
-### Lua Example
-`le_set_light_color(id, r, g, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| r | `integer` |
-| g | `integer` |
-| b | `integer` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_radius
-
-### Description
-Gets a lighting engine point light's `radius`
-
-### Lua Example
-`local numberValue = le_get_light_radius(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_radius(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_light_radius
-
-### Description
-Sets a lighting engine point light's `radius`
-
-### Lua Example
-`le_set_light_radius(id, radius)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| radius | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_radius(s16 id, f32 radius);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_intensity
-
-### Description
-Gets a lighting engine point light's `intensity`
-
-### Lua Example
-`local numberValue = le_get_light_intensity(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 le_get_light_intensity(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_light_intensity
-
-### Description
-Sets a lighting engine point light's `intensity`
-
-### Lua Example
-`le_set_light_intensity(id, intensity)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| intensity | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_intensity(s16 id, f32 intensity);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_get_light_use_surface_normals
-
-### Description
-Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`local booleanValue = le_get_light_use_surface_normals(id)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool le_get_light_use_surface_normals(s16 id);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## le_set_light_use_surface_normals
-
-### Description
-Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
-
-### Lua Example
-`le_set_light_use_surface_normals(id, useSurfaceNormals)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| id | `integer` |
-| useSurfaceNormals | `boolean` |
-
-### Returns
-- None
-
-### C Prototype
-`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
 
 [:arrow_up_small:](#)
 

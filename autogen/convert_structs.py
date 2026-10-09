@@ -207,6 +207,11 @@ def parse_struct(struct_str, sortFields = False):
         if ':' in field_str:
             continue
 
+        field_enum = None
+        if 'enum (' in field_str:
+            field_enum = re.sub(r'.*enum \((.*)\).*', 'enum \\1', field_str)
+            field_str = re.sub(r'enum \(.*\) ', '', field_str)
+
         is_c_array = False
         if cobject_c_array_identifier in field_str:
             field_str = field_str.replace(cobject_c_array_identifier, '').strip()
@@ -231,6 +236,8 @@ def parse_struct(struct_str, sortFields = False):
         field['identifier'] = field_id.strip()
         field['field_str'] = field_str
         field['is_c_array'] = is_c_array
+        if field_enum:
+            field['enum'] = field_enum
 
         # handle function members
         if field['type'].startswith(cobject_function_identifier):
@@ -635,7 +642,7 @@ def doc_struct_field(struct, field):
     if '???' in lvt or '???' in lot:
         return '', False
 
-    ftype, flink = translate_type_to_lua(ftype)
+    ftype, flink = translate_type_to_lua(field.get('enum', ftype))
 
     if ftype == cobject_function_identifier:
         flink = doc_find_function_link(field['function'])
@@ -780,7 +787,7 @@ def def_struct(struct):
         if '???' in lvt or '???' in lot:
             continue
 
-        ftype, flink = translate_type_to_lua(ftype)
+        ftype, flink = translate_type_to_lua(field.get('enum', ftype))
 
         # try to get the function signature
         if ftype == cobject_function_identifier:
