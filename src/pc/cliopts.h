@@ -29,7 +29,7 @@ struct CLIOptions {
     char joinIp[IP_MAX_LEN];
     char playerName[MAX_CONFIG_STRING];
     unsigned int playerCount;
-    bool hideLoadingScreen;
+    bool hideSplashScreen;
     bool skipUpdateCheck;
     bool noDiscord;
     bool coopnet;

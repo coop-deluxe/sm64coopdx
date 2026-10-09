@@ -1,7 +1,7 @@
 #pragma once
 
 #include <PR/ultratypes.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <stdint.h>
 #include <stdbool.h>
