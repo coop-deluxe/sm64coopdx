@@ -32282,6 +32282,38 @@ int smlua_func_warp_to_warpnode(lua_State* L) {
     return 1;
 }
 
+int smlua_func_warp_with_transition(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top < 6 || top > 7) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected between %u and %u, Received %u", "warp_with_transition", 6, 7, top);
+        return 0;
+    }
+
+    s32 aLevel = smlua_to_integer(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "warp_with_transition"); return 0; }
+    s32 aArea = smlua_to_integer(L, 2);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 2, "warp_with_transition"); return 0; }
+    s32 aAct = smlua_to_integer(L, 3);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 3, "warp_with_transition"); return 0; }
+    s16 aTransType = smlua_to_integer(L, 4);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 4, "warp_with_transition"); return 0; }
+    s16 aTime = smlua_to_integer(L, 5);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 5, "warp_with_transition"); return 0; }
+    Color aColor; smlua_get_color(aColor, 6);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 6, "warp_with_transition"); return 0; }
+    s32 aWarpId = (s32) 0;
+    if (top >= 7) {
+        aWarpId = smlua_to_integer(L, 7);
+        if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 7, "warp_with_transition"); return 0; }
+    }
+
+    lua_pushboolean(L, warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId));
+
+    return 1;
+}
+
 int smlua_func_warp_to_level(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38276,6 +38308,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "level_register", smlua_func_level_register);
     smlua_bind_function(L, "level_is_vanilla_level", smlua_func_level_is_vanilla_level);
     smlua_bind_function(L, "warp_to_warpnode", smlua_func_warp_to_warpnode);
+    smlua_bind_function(L, "warp_with_transition", smlua_func_warp_with_transition);
     smlua_bind_function(L, "warp_to_level", smlua_func_warp_to_level);
     smlua_bind_function(L, "warp_restart_level", smlua_func_warp_restart_level);
     smlua_bind_function(L, "warp_to_start_level", smlua_func_warp_to_start_level);

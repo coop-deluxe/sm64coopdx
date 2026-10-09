@@ -19,7 +19,7 @@
 #include "rom_assets.h"
 #include "rom_checker.h"
 #include "pc_main.h"
-#include "loading.h"
+#include "splash_screen.h"
 #include "cliopts.h"
 #include "configfile.h"
 #include "thread.h"
@@ -43,6 +43,7 @@
 #include "pc/djui/djui_unicode.h"
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_panel_modlist.h"
+#include "pc/djui/djui_panel_join_message.h"
 #include "pc/djui/djui_ctx_display.h"
 #include "pc/djui/djui_fps_display.h"
 #include "pc/djui/djui_lua_profiler.h"
@@ -70,7 +71,7 @@
 #include <windows.h>
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 extern Vp gViewportFullscreen;
 
@@ -96,7 +97,24 @@ static f64 sFpsTimeLast = 0;
 static f64 sFrameTimeStart = 0;
 static u32 sDrawnFrames = 0;
 
+char gLoadingMessage[MAX_LOADING_MESSAGE] = { 0 };
+f32 gLoadingPercent = 0;
+
 bool gGameInited = false;
+bool gModsInited = false;
+bool gDynosPacksInited = false;
+static bool sShuttingDown = false;
+
+// for the purposes of safety while threading, use queue variables in the loading thread
+// and update the main variables in the main loop
+static char sQueueLoadingMessage[MAX_LOADING_MESSAGE] = { 0 };
+static f32 sQueueLoadingPercent = 0;
+static bool sQueueUpdateInfo = false;
+static bool sQueueGameInited = false;
+static bool sQueueModsInited = false;
+static bool sQueueDynosPacksInited = false;
+static s16 sQueueNetworkInitType = -1;
+
 bool gGfxInited = false;
 
 f32 gMasterVolume;
@@ -109,6 +127,8 @@ u8 gLuaVolumeEnv = 127;
 struct AudioAPI* gAudioApi = &audio_null;
 struct GfxRenderingAPI* gRenderApi = &gfx_dummy_renderer_api;
 
+static struct ThreadHandle sLoadingThread = { 0 };
+
 extern void gfx_run(Gfx *commands);
 extern void thread5_game_loop(void *arg);
 extern void create_next_audio_buffer(s16 *samples, u32 num_samples);
@@ -118,7 +138,6 @@ void dispatch_audio_sptask(UNUSED struct SPTask *spTask) {}
 void set_vblank_handler(UNUSED s32 index, UNUSED struct VblankHandler *handler, UNUSED OSMesgQueue *queue, UNUSED OSMesg *msg) {}
 
 void send_display_list(struct SPTask *spTask) {
-    if (!gGameInited) { return; }
     gfx_run((Gfx *)spTask->task.t.data_ptr);
 }
 
@@ -204,14 +223,22 @@ static s32 get_num_frames_to_draw(f64 t, u32 frameLimit) {
 
 u32 get_display_refresh_rate(void) {
     static u32 refreshRate = 0;
+
     if (!refreshRate) {
-        SDL_DisplayMode mode;
-        if (SDL_GetCurrentDisplayMode(0, &mode) == 0) {
-            if (mode.refresh_rate > 0) { refreshRate = (u32) mode.refresh_rate; }
+        SDL_DisplayID display = SDL_GetPrimaryDisplay();
+        const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(display);
+
+        if (mode && mode->refresh_rate > 0.f) {
+            refreshRate = (u32)roundf(mode->refresh_rate);
         } else {
             refreshRate = 60;
         }
     }
+
+    if (refreshRate < 30) {
+        refreshRate = 30;
+    }
+
     return refreshRate;
 }
 
@@ -472,40 +499,128 @@ void game_deinit(void) {
 
 void game_exit(void) {
     LOG_INFO("exiting cleanly");
+
+    if (!gGameInited) {
+        if (sLoadingThread.mutexInited) {
+            MUTEX_LOCK(sLoadingThread);
+            sShuttingDown = true;
+            MUTEX_UNLOCK(sLoadingThread);
+        } else {
+            sShuttingDown = true;
+        }
+    } else {
+        sShuttingDown = true;
+    }
+
+    if (sLoadingThread.state == RUNNING) {
+        join_thread(&sLoadingThread);
+    }
+    if (sLoadingThread.mutexInited) {
+        destroy_mutex(&sLoadingThread);
+    }
     game_deinit();
     exit(0);
 }
 
-void* main_game_init(UNUSED void* dummy) {
-    // load language
-    if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
+void set_loading_message(const char *format, ...) {
+    if (gGameInited) { return; }
 
-    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading"));
-    dynos_gfx_init();
-    enable_queued_dynos_packs();
-    sync_objects_init_system();
+    char buffer[MAX_LOADING_MESSAGE];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(buffer, sizeof(buffer), format, args);
+    va_end(args);
+
+    MUTEX_LOCK(sLoadingThread);
+
+    snprintf(sQueueLoadingMessage, MAX_LOADING_MESSAGE, "%s", buffer);
+
+    MUTEX_UNLOCK(sLoadingThread);
+}
+
+void set_loading_percentage(f32 percent) {
+    if (gGameInited) { return; }
+    if (percent < 0 || percent > 1) { return; }
+
+    MUTEX_LOCK(sLoadingThread);
+
+    sQueueLoadingPercent = percent;
+
+    MUTEX_UNLOCK(sLoadingThread);
+}
+
+void *main_game_init(UNUSED void *dummy) {
+    #define CHECK_SHUTDOWN() \
+        MUTEX_LOCK(sLoadingThread); \
+        if (sShuttingDown) { \
+            MUTEX_UNLOCK(sLoadingThread); \
+            return NULL; \
+        } \
+        MUTEX_UNLOCK(sLoadingThread);
 
     if (gCLIOpts.network != NT_SERVER && !gCLIOpts.skipUpdateCheck) {
         check_for_updates();
+
+        MUTEX_LOCK(sLoadingThread);
+
+        sQueueUpdateInfo = true;
+
+        MUTEX_UNLOCK(sLoadingThread);
     }
 
-    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Loading ROM Assets"));
-    rom_assets_load();
+    CHECK_SHUTDOWN()
+
+    set_loading_message("Loading");
+
+    dynos_gfx_init();
+    enable_queued_dynos_packs();
+
+    MUTEX_LOCK(sLoadingThread);
+
+    sQueueDynosPacksInited = true;
+
+    MUTEX_UNLOCK(sLoadingThread);
+
+    CHECK_SHUTDOWN()
+
+    sync_objects_init_system();
     smlua_text_utils_init();
+
+    CHECK_SHUTDOWN()
 
     mods_init();
     enable_queued_mods();
-    LOADING_SCREEN_MUTEX(
-        gCurrLoadingSegment.percentage = 0;
-        loading_screen_set_segment_text("Starting Game");
-    );
 
-    audio_init();
-    sound_init();
-    network_player_init();
+    MUTEX_LOCK(sLoadingThread);
+
+    sQueueModsInited = true;
+
+    MUTEX_UNLOCK(sLoadingThread);
+
+    CHECK_SHUTDOWN()
+
     mumble_init();
 
-    gGameInited = true;
+    set_loading_message("Finalizing");
+
+    CHECK_SHUTDOWN()
+
+    MUTEX_LOCK(sLoadingThread);
+
+    if (gCLIOpts.network == NT_CLIENT) {
+        sQueueNetworkInitType = NT_CLIENT;
+    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet) {
+        sQueueNetworkInitType = NT_SERVER;
+    } else {
+        sQueueNetworkInitType = NT_NONE;
+    }
+
+    sQueueGameInited = true;
+
+    MUTEX_UNLOCK(sLoadingThread);
+
+    #undef CHECK_SHUTDOWN
+
     return NULL;
 }
 
@@ -562,36 +677,38 @@ int main(int argc, char *argv[]) {
         gfx_wm_set_scroll_callback(mouse_on_scroll);
     }
 
-    // render the rom setup screen
+    // render splash screen
+    if (!gCLIOpts.hideSplashScreen) {
+        render_splash_screen();
+    }
+
+    // request rom if no rom is found
     if (!main_rom_handler()) {
-        if (!gCLIOpts.hideLoadingScreen) {
-            render_rom_setup_screen(); // holds the game load until a valid rom is provided
+        if (!gCLIOpts.hideSplashScreen) {
+            set_splash_screen_setup_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
+            while (!gRomIsValid) {
+                render_splash_screen();
+            }
         } else {
             log_to_terminal("ERROR: could not find valid vanilla us sm64 rom in game's user folder\n");
             return 0;
         }
     }
 
-    // start the thread for setting up the game
-    bool threadSuccess = false;
-    if (!gCLIOpts.hideLoadingScreen && !gCLIOpts.headless) {
-        if (init_thread_handle(&gLoadingThread, main_game_init, NULL, NULL, 0) == 0) {
-            render_loading_screen(); // render the loading screen while the game is setup
-            threadSuccess = true;
-            destroy_mutex(&gLoadingThread);
-        }
-    }
-    if (!threadSuccess) {
-        main_game_init(NULL); // failsafe incase threading doesn't work
-    }
+    set_splash_screen_setup_text("Loading...");
+    render_splash_screen();
+
+    // load rom assets
+    rom_assets_load();
+
+    // load language
+    if (!djui_language_init(configLanguage)) { snprintf(configLanguage, MAX_CONFIG_STRING, "%s", ""); }
 
     // initialize sm64 data and controllers
     thread5_game_loop(NULL);
-
-    // Initialize the audio thread if possible.
-    // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
-
-    loading_screen_reset();
+    audio_init();
+    sound_init();
+    network_player_init();
 
     // initialize djui
     djui_init();
@@ -599,38 +716,21 @@ int main(int argc, char *argv[]) {
     djui_init_late();
     djui_console_message_dequeue();
 
-    show_update_popup();
-
-    if (can_update_game()) {
-        djui_open_update_panel();
-    }
-
-    // initialize network
-    if (gCLIOpts.network == NT_CLIENT) {
-        network_set_system(NS_SOCKET);
-        snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
-        snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
-        configJoinPort = gCLIOpts.networkPort;
-        network_init(NT_CLIENT, false);
-    } else if (gCLIOpts.network == NT_SERVER || gCLIOpts.coopnet) {
-        if (gCLIOpts.network == NT_SERVER) {
-            configNetworkSystem = NS_SOCKET;
-            configHostPort = gCLIOpts.networkPort;
-        } else {
-            configNetworkSystem = NS_COOPNET;
-            snprintf(configPassword, MAX_CONFIG_STRING, "%s", gCLIOpts.coopnetPassword);
+    // start the thread for setting up the game
+    // if the thread fails to start, just run the game init on the main thread
+    if (gCLIOpts.headless || init_thread_handle(&sLoadingThread, main_game_init, NULL, NULL, 0) != 0) {
+        // threading is not available, so use the main thread
+        // init the mutex for non threaded loading to allow mutex locks later on to work
+        if (!sLoadingThread.mutexInited) {
+            init_mutex(&sLoadingThread);
         }
 
-        // horrible, hacky fix for mods that access marioObj straight away
-        // best fix: host with the standard main menu method
-        static struct Object sHackyObject = { 0 };
-        gMarioStates[0].marioObj = &sHackyObject;
-
-        extern void djui_panel_do_host(bool reconnecting, bool playSound);
-        djui_panel_do_host(NULL, false);
-    } else {
-        network_init(NT_NONE, false);
+        // load the game on the main thread
+        main_game_init(NULL);
     }
+
+    // Initialize the audio thread if possible.
+    // init_thread_handle(&gAudioThread, audio_thread, NULL, NULL, 0);
 
     // initialize terminal
     terminal_init();
@@ -639,6 +739,74 @@ int main(int argc, char *argv[]) {
     while (true) {
         debug_context_reset();
         CTX_BEGIN(CTX_TOTAL);
+
+        // if game is not initialized, synchronize our state with the threaded loading
+        // and initialize anything necessary
+        if (!gGameInited) {
+            MUTEX_LOCK(sLoadingThread);
+
+            if (sQueueLoadingMessage[0] != '\0') {
+                snprintf(gLoadingMessage, MAX_LOADING_MESSAGE, "%s", sQueueLoadingMessage);
+                sQueueLoadingMessage[0] = '\0';
+            }
+
+            gLoadingPercent = sQueueLoadingPercent;
+
+            if (sQueueUpdateInfo) {
+                show_update_popup();
+
+                if (can_update_game()) {
+                    djui_open_update_panel();
+                }
+
+                sQueueUpdateInfo = false;
+            }
+
+            gDynosPacksInited = sQueueDynosPacksInited;
+            gModsInited = sQueueModsInited;
+            gGameInited = sQueueGameInited;
+
+            if (sQueueNetworkInitType == NT_CLIENT) {
+                network_set_system(NS_SOCKET);
+                snprintf(gGetHostName, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
+                snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gCLIOpts.joinIp);
+                configJoinPort = gCLIOpts.networkPort;
+                djui_panel_join_message_create(NULL);
+                sQueueNetworkInitType = -1;
+            } else if (sQueueNetworkInitType == NT_SERVER) {
+                if (gCLIOpts.network == NT_SERVER) {
+                    configNetworkSystem = NS_SOCKET;
+                    configHostPort = gCLIOpts.networkPort;
+                } else {
+                    configNetworkSystem = NS_COOPNET;
+                    snprintf(configPassword, MAX_CONFIG_STRING, "%s", gCLIOpts.coopnetPassword);
+                }
+
+                // horrible, hacky fix for mods that access marioObj straight away
+                // best fix: host with the standard main menu method
+                static struct Object sHackyObject = { 0 };
+                gMarioStates[0].marioObj = &sHackyObject;
+
+                extern void djui_panel_do_host(bool reconnecting, bool playSound);
+                djui_panel_do_host(NULL, false);
+                sQueueNetworkInitType = -1;
+            } else if (sQueueNetworkInitType == NT_NONE) {
+                network_init(NT_NONE, false);
+                sQueueNetworkInitType = -1;
+            }
+
+            MUTEX_UNLOCK(sLoadingThread);
+
+            if (gGameInited) {
+                if (sLoadingThread.state == RUNNING) {
+                    join_thread(&sLoadingThread);
+                }
+                if (sLoadingThread.mutexInited) {
+                    destroy_mutex(&sLoadingThread);
+                }
+            }
+        }
+
         gfx_wm_main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
         discord_update();
