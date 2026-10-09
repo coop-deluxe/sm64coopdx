@@ -529,6 +529,188 @@ void OPTIMIZE_O3 aResampleImpl(uint8_t flags, uint16_t pitch, RESAMPLE_STATE sta
     memcpy(state + 8, in, 8 * sizeof(int16_t));
 }
 
+void OPTIMIZE_O3 aResampleImplHermite(uint8_t flags, uint16_t pitch, RESAMPLE_STATE state) {
+    int16_t tmp[16];
+    int16_t *in_initial = rspa.buf.as_s16 + rspa.in / sizeof(int16_t);
+    int16_t *in = in_initial;
+    int16_t *out = rspa.buf.as_s16 + rspa.out / sizeof(int16_t);
+    int nbytes = ROUND_UP_16(rspa.nbytes);
+    uint32_t pitch_accumulator;
+    int i;
+#if HAS_SSE41 || HAS_NEON
+    int half;
+#endif
+    if (flags & A_INIT) {
+        memset(tmp, 0, 5 * sizeof(int16_t));
+    } else {
+        memcpy(tmp, state, 16 * sizeof(int16_t));
+    }
+    if (flags & 2) {
+        memcpy(in - 8, tmp + 8, 8 * sizeof(int16_t));
+        in -= tmp[5] / sizeof(int16_t);
+    }
+    in -= 4;
+    pitch_accumulator = (uint16_t)tmp[4];
+    memcpy(in, tmp, 4 * sizeof(int16_t));
+
+#if HAS_SSE41
+    __m128i multiples = _mm_setr_epi16(0, 2, 4, 6, 8, 10, 12, 14);
+    __m128i pitchvec = _mm_set1_epi16((int16_t)pitch);
+    __m128i pitchvec_8_steps = _mm_set1_epi32((pitch << 1) * 8);
+    __m128i pitchacclo_vec = _mm_set1_epi32((uint16_t)pitch_accumulator);
+    __m128i pl = _mm_mullo_epi16(multiples, pitchvec);
+    __m128i ph = _mm_mulhi_epu16(multiples, pitchvec);
+    __m128i acc_a = _mm_add_epi32(_mm_unpacklo_epi16(pl, ph), pitchacclo_vec);
+    __m128i acc_b = _mm_add_epi32(_mm_unpackhi_epi16(pl, ph), pitchacclo_vec);
+    const __m128 half_f = _mm_set1_ps(0.5f);
+    const __m128 one_and_half_f = _mm_set1_ps(1.5f);
+    const __m128 two_f = _mm_set1_ps(2.0f);
+    const __m128 two_and_half_f = _mm_set1_ps(2.5f);
+    const __m128 phase_scale = _mm_set1_ps(1.0f / 65536.0f);
+
+    do {
+        __m128i accs[2] = {acc_a, acc_b};
+        __m128i results[2];
+
+        for (half = 0; half < 2; half++) {
+            uint32_t acc[4];
+            int p0, p1, p2, p3;
+            __m128 x, y0, y1, y2, y3;
+            __m128 c0, c1, c2, c3, sample;
+
+            _mm_storeu_si128((__m128i *)acc, accs[half]);
+            p0 = (int)(acc[0] >> 16);
+            p1 = (int)(acc[1] >> 16);
+            p2 = (int)(acc[2] >> 16);
+            p3 = (int)(acc[3] >> 16);
+
+            x = _mm_mul_ps(
+                _mm_cvtepi32_ps(_mm_setr_epi32((uint16_t)acc[0], (uint16_t)acc[1],
+                                               (uint16_t)acc[2], (uint16_t)acc[3])),
+                phase_scale);
+            y0 = _mm_cvtepi32_ps(_mm_setr_epi32(in[p0], in[p1], in[p2], in[p3]));
+            y1 = _mm_cvtepi32_ps(_mm_setr_epi32(in[p0 + 1], in[p1 + 1], in[p2 + 1], in[p3 + 1]));
+            y2 = _mm_cvtepi32_ps(_mm_setr_epi32(in[p0 + 2], in[p1 + 2], in[p2 + 2], in[p3 + 2]));
+            y3 = _mm_cvtepi32_ps(_mm_setr_epi32(in[p0 + 3], in[p1 + 3], in[p2 + 3], in[p3 + 3]));
+
+            c0 = y1;
+            c1 = _mm_mul_ps(half_f, _mm_sub_ps(y2, y0));
+            c2 = _mm_sub_ps(
+                _mm_add_ps(y0, _mm_mul_ps(two_f, y2)),
+                _mm_add_ps(_mm_mul_ps(two_and_half_f, y1), _mm_mul_ps(half_f, y3)));
+            c3 = _mm_add_ps(
+                _mm_mul_ps(half_f, _mm_sub_ps(y3, y0)),
+                _mm_mul_ps(one_and_half_f, _mm_sub_ps(y1, y2)));
+
+            sample = _mm_add_ps(_mm_mul_ps(c3, x), c2);
+            sample = _mm_add_ps(_mm_mul_ps(sample, x), c1);
+            sample = _mm_add_ps(_mm_mul_ps(sample, x), c0);
+            results[half] = _mm_cvttps_epi32(sample);
+        }
+
+        _mm_storeu_si128((__m128i *)out, _mm_packs_epi32(results[0], results[1]));
+        acc_a = _mm_add_epi32(acc_a, pitchvec_8_steps);
+        acc_b = _mm_add_epi32(acc_b, pitchvec_8_steps);
+        out += 8;
+        nbytes -= 8 * sizeof(int16_t);
+    } while (nbytes > 0);
+
+    in += (uint16_t)_mm_extract_epi16(acc_a, 1);
+    pitch_accumulator = (uint16_t)_mm_extract_epi16(acc_a, 0);
+#elif HAS_NEON
+    static const uint16_t multiples_data[8] = {0, 2, 4, 6, 8, 10, 12, 14};
+    uint16x8_t multiples = vld1q_u16(multiples_data);
+    uint32x4_t pitchvec_8_steps = vdupq_n_u32((pitch << 1) * 8);
+    uint32x4_t pitchacclo_vec = vdupq_n_u32((uint16_t)pitch_accumulator);
+    uint32x4_t acc_a = vmlal_n_u16(pitchacclo_vec, vget_low_u16(multiples), pitch);
+    uint32x4_t acc_b = vmlal_n_u16(pitchacclo_vec, vget_high_u16(multiples), pitch);
+
+    do {
+        uint32x4_t accs[2] = {acc_a, acc_b};
+        int32x4_t results[2];
+
+        for (half = 0; half < 2; half++) {
+            uint32_t acc[4];
+            uint32_t frac[4];
+            int32_t v0[4], v1[4], v2[4], v3[4];
+            int p0, p1, p2, p3;
+            float32x4_t x, y0, y1, y2, y3;
+            float32x4_t c0, c1, c2, c3, sample;
+
+            vst1q_u32(acc, accs[half]);
+            p0 = (int)(acc[0] >> 16);
+            p1 = (int)(acc[1] >> 16);
+            p2 = (int)(acc[2] >> 16);
+            p3 = (int)(acc[3] >> 16);
+            frac[0] = (uint16_t)acc[0];
+            frac[1] = (uint16_t)acc[1];
+            frac[2] = (uint16_t)acc[2];
+            frac[3] = (uint16_t)acc[3];
+
+            v0[0] = in[p0];     v0[1] = in[p1];     v0[2] = in[p2];     v0[3] = in[p3];
+            v1[0] = in[p0 + 1]; v1[1] = in[p1 + 1]; v1[2] = in[p2 + 1]; v1[3] = in[p3 + 1];
+            v2[0] = in[p0 + 2]; v2[1] = in[p1 + 2]; v2[2] = in[p2 + 2]; v2[3] = in[p3 + 2];
+            v3[0] = in[p0 + 3]; v3[1] = in[p1 + 3]; v3[2] = in[p2 + 3]; v3[3] = in[p3 + 3];
+
+            x = vmulq_n_f32(vcvtq_f32_u32(vld1q_u32(frac)), 1.0f / 65536.0f);
+            y0 = vcvtq_f32_s32(vld1q_s32(v0));
+            y1 = vcvtq_f32_s32(vld1q_s32(v1));
+            y2 = vcvtq_f32_s32(vld1q_s32(v2));
+            y3 = vcvtq_f32_s32(vld1q_s32(v3));
+
+            c0 = y1;
+            c1 = vmulq_n_f32(vsubq_f32(y2, y0), 0.5f);
+            c2 = vsubq_f32(
+                vaddq_f32(y0, vmulq_n_f32(y2, 2.0f)),
+                vaddq_f32(vmulq_n_f32(y1, 2.5f), vmulq_n_f32(y3, 0.5f)));
+            c3 = vaddq_f32(
+                vmulq_n_f32(vsubq_f32(y3, y0), 0.5f),
+                vmulq_n_f32(vsubq_f32(y1, y2), 1.5f));
+
+            sample = vaddq_f32(vmulq_f32(c3, x), c2);
+            sample = vaddq_f32(vmulq_f32(sample, x), c1);
+            sample = vaddq_f32(vmulq_f32(sample, x), c0);
+            results[half] = vcvtq_s32_f32(sample);
+        }
+
+        vst1q_s16(out, vcombine_s16(vqmovn_s32(results[0]), vqmovn_s32(results[1])));
+        acc_a = vaddq_u32(acc_a, pitchvec_8_steps);
+        acc_b = vaddq_u32(acc_b, pitchvec_8_steps);
+        out += 8;
+        nbytes -= 8 * sizeof(int16_t);
+    } while (nbytes > 0);
+
+    in += vgetq_lane_u16(vreinterpretq_u16_u32(acc_a), 1);
+    pitch_accumulator = vgetq_lane_u16(vreinterpretq_u16_u32(acc_a), 0);
+#else
+    do {
+        for (i = 0; i < 8; i++) {
+            float c0 = in[1];
+            float c1 = 0.5f * (in[2] - in[0]);
+            float c2 = in[0] - 2.5f * in[1] + 2.0f * in[2] - 0.5f * in[3];
+            float c3 = 0.5f * (in[3] - in[0]) + 1.5f * (in[1] - in[2]);
+            float x = pitch_accumulator * (1.0f / 65536.0f);
+            *out++ = clamp16(((c3 * x + c2) * x + c1) * x + c0);
+
+            pitch_accumulator += (pitch << 1);
+            in += pitch_accumulator >> 16;
+            pitch_accumulator %= 0x10000;
+        }
+        nbytes -= 8 * sizeof(int16_t);
+    } while (nbytes > 0);
+#endif
+
+    state[4] = (int16_t)pitch_accumulator;
+    memcpy(state, in, 4 * sizeof(int16_t));
+    i = (in - in_initial + 4) & 7;
+    in -= i;
+    if (i != 0) {
+        i = -8 - i;
+    }
+    state[5] = i;
+    memcpy(state + 8, in, 8 * sizeof(int16_t));
+}
+
 
 void OPTIMIZE_O3 aEnvMixerImpl(uint8_t flags, ENVMIX_STATE state) {
     int16_t *in = rspa.buf.as_s16 + rspa.in / sizeof(int16_t);
