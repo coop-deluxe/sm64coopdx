@@ -17,6 +17,7 @@ void set_koopa_shell_underwater_hitbox(void) {
 }
 
 void bhv_koopa_shell_underwater_loop(void) {
+    // standard distance-based syncing system
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 500.0f);
     }

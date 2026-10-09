@@ -172,12 +172,11 @@ static void pokey_on_received_post(UNUSED u8 localIndex) {
  */
 static void pokey_act_uninitialized(void) {
     struct Object *bodyPart;
-    s32 i;
     s16 partModel;
 
     partModel = MODEL_POKEY_HEAD;
 
-    for (i = 0; i < 5; i++) {
+    for (s32 i = 0; i < 5; i++) {
         // Spawn body parts at y offsets 480, 360, 240, 120, 0
         // behavior param 0 = head, 4 = lowest body part
         bodyPart = spawn_object_relative(i, 0, -i * 120 + 480, 0, o, partModel, bhvPokeyBodyPart);
@@ -194,6 +193,7 @@ static void pokey_act_uninitialized(void) {
     o->oPokeyBottomBodyPartSize = 1.0f;
     o->oAction = POKEY_ACT_WANDER;
 
+    // uses standard distance-based sync
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject* so = sync_object_init(o, 4000.0f);
         if (so) {
@@ -216,7 +216,7 @@ static void pokey_act_uninitialized(void) {
  * if mario gets too close, then shy away from him.
  */
 static void pokey_act_wander(void) {
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
@@ -260,8 +260,7 @@ static void pokey_act_wander(void) {
             }
 
             if (o->oPokeyTurningAwayFromWall) {
-                o->oPokeyTurningAwayFromWall =
-                    obj_resolve_collisions_and_turn(o->oPokeyTargetYaw, 0x200);
+                o->oPokeyTurningAwayFromWall = obj_resolve_collisions_and_turn(o->oPokeyTargetYaw, 0x200);
             } else {
                 // If far from home, turn back toward home
                 if (distanceToPlayer >= 25000.0f) {

@@ -351,6 +351,7 @@ static void circling_amp_idle_loop(void) {
  * and calls the common amp cooldown function when the amp is cooling down.
  */
 void bhv_circling_amp_loop(void) {
+    // syncing is done via distance for this object. This works well enough
     if (!sync_object_is_initialized(o->oSyncID)) {
         struct SyncObject *so = sync_object_init(o, 4000.0f);
         if (so) {

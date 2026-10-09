@@ -8,8 +8,7 @@
  * Update function for bhvBbhTiltingTrapPlatform.
  */
 void bhv_bbh_tilting_trap_platform_loop(void) {
-    UNUSED s32 unused;
-
+    // distance-based syncing does the trick for this platform
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 1000.0f);
         sync_object_init_field(o, o->oAngleVelPitch);

@@ -37,8 +37,7 @@ void bhv_activated_back_and_forth_platform_init(void) {
         o->oActivatedBackAndForthPlatformFlipRotation = 0x8000;
     }
 
-    o->collisionData =
-        segmented_to_virtual(sActivatedBackAndForthPlatformCollisionModels[platformType]);
+    o->collisionData = segmented_to_virtual(sActivatedBackAndForthPlatformCollisionModels[platformType]);
 
     // Max distance the platform should move.
     // Equivalent to 50 * (oBehParams2ndByte & 0x7F), i.e. 50 * (oBehParams2ndByte % 128).
@@ -56,6 +55,7 @@ void bhv_activated_back_and_forth_platform_init(void) {
 
     o->oActivatedBackAndForthPlatformStartYaw = o->oFaceAngleYaw;
 
+    // uses event based syncing. Syncs when we finish a cycle
     sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
     sync_object_init_field(o, o->oPosX);
     sync_object_init_field(o, o->oPosY);
@@ -77,10 +77,9 @@ void bhv_activated_back_and_forth_platform_init(void) {
  */
 void bhv_activated_back_and_forth_platform_update(void) {
     u8 doSendNetwork = FALSE;
-    UNUSED s32 unused[3];
 
-    struct MarioState* marioState = nearest_possible_mario_state_to_object(o);
-    struct Object* player = marioState ? marioState->marioObj : NULL;
+    struct MarioState *marioState = nearest_possible_mario_state_to_object(o);
+    struct Object *player = marioState ? marioState->marioObj : NULL;
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
 
     // oVelY is used for vertical platforms' movement and also for

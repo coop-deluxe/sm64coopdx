@@ -3,7 +3,6 @@
 
 void bhv_bobomb_bully_death_smoke_init(void) {
     o->oPosY -= 300.0f;
-
     cur_obj_scale(10.0f);
 }
 
@@ -31,8 +30,9 @@ void bhv_bobomb_explosion_bubble_loop(void) {
         spawn_object(o, MODEL_SMALL_WATER_SPLASH, bhvObjectWaterSplash);
     }
 
-    if (o->oTimer >= 61)
+    if (o->oTimer >= 61) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+    }
 
     o->oPosY += o->oVelY;
     o->oTimer++;
@@ -60,8 +60,7 @@ void create_respawner(s32 model, const BehaviorScript *behToSpawn, s32 minSpawnD
         return;
     }
 
-    struct Object *respawner = spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvRespawner, o->oHomeX,
-                                                         o->oHomeY, o->oHomeZ, 0, 0, 0);
+    struct Object *respawner = spawn_object_abs_with_rot(o, 0, MODEL_NONE, bhvRespawner, o->oHomeX, o->oHomeY, o->oHomeZ, 0, 0, 0);
     u32 syncID = o->oSyncID;
     if (respawner != NULL) {
         respawner->oBehParams = o->oBehParams;

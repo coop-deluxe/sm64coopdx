@@ -23,6 +23,7 @@ enum PacketType {
     PACKET_COLLECT_STAR,
     PACKET_COLLECT_COIN,
     PACKET_COLLECT_ITEM,
+    PACKET_THI_WATER_DRAINED,
     PACKET_GLOBAL_POPUP,
     PACKET_DEBUG_SYNC,
     PACKET_JOIN_REQUEST,
@@ -220,6 +221,10 @@ void network_receive_collect_coin(struct Packet* p);
 // packet_collect_item.c
 void network_send_collect_item(struct Object* o);
 void network_receive_collect_item(struct Packet* p);
+
+// packet_thi_water_drained.c
+void network_send_thi_water_drained();
+void network_receive_thi_water_drained(struct Packet *p);
 
 // packet_join.c
 void network_send_join_request(void);

@@ -47,8 +47,10 @@
 #include "hardcoded.h"
 #include "engine/surface_load.h"
 #include "pc/network/network.h"
-#include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/smlua.h"
 #include "pc/lua/smlua_hooks.h"
+#include "pc/lua/utils/smlua_model_utils.h"
+#include "pc/lua/utils/smlua_obj_utils.h"
 
 #define POS_OP_SAVE_POSITION 0
 #define POS_OP_COMPUTE_VELOCITY 1

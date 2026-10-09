@@ -101,7 +101,6 @@ extern s8 gDoorAdjacentRooms[60][2];
 extern s16 gMarioCurrentRoom;
 extern s16 gDoorCurrentRoom;
 extern s16 D_8035FEE2;
-extern s16 D_8035FEE4;
 extern s16 gTHIWaterDrained;
 extern s16 gTTCSpeedSetting;
 extern s16 gMarioShotFromCannon;

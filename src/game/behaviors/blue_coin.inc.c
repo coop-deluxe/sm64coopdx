@@ -118,6 +118,11 @@ void bhv_blue_coin_switch_init(void) {
  * Update function for bhvBlueCoinSwitch.
  */
 void bhv_blue_coin_switch_loop(void) {
+    // syncing works here by only syncing the object when a network event is called
+    // Events include:
+    // 1. A mario ground pounds the switch. If this happens, sync the action to be ACT_RECEDING
+    // 2. All blue coins disappear OR the timer ends if that happens either sync the respawning act
+    // or sync object deletion
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, SYNC_DISTANCE_ONLY_EVENTS);
         sync_object_init_field(o, o->oAction);

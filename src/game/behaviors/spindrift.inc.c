@@ -13,18 +13,20 @@ struct ObjectHitbox sSpindriftHitbox = {
 };
 
 void bhv_spindrift_loop(void) {
+    // uses standard distance-based syncing
     if (!sync_object_is_initialized(o->oSyncID)) {
         sync_object_init(o, 4000.0f);
         sync_object_init_field(o, o->oFlags);
     }
 
-    struct Object* player = nearest_player_to_object(o);
+    struct Object *player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
     s32 angleToPlayer = player ? obj_angle_to_object(o, player) : 0;
 
     o->activeFlags |= ACTIVE_FLAG_UNK10;
-    if (cur_obj_set_hitbox_and_die_if_attacked(&sSpindriftHitbox, SOUND_OBJ_DYING_ENEMY1, 0))
+    if (cur_obj_set_hitbox_and_die_if_attacked(&sSpindriftHitbox, SOUND_OBJ_DYING_ENEMY1, 0)) {
         cur_obj_change_action(1);
+    }
     cur_obj_update_floor_and_walls();
     switch (o->oAction) {
         case 0:

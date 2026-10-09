@@ -38,9 +38,9 @@ void bhv_flame_mario_loop(void) {
     }
 
     cur_obj_scale(2.0f);
-    if (o->oTimer != 0)
-        if (o->oTimer & 1)
-            spawn_object(o->parentObj, MODEL_BURN_SMOKE, bhvBlackSmokeMario);
+    if (o->oTimer != 0 && o->oTimer & 1) {
+        spawn_object(o->parentObj, MODEL_BURN_SMOKE, bhvBlackSmokeMario);
+    }
     o->parentObj->prevObj = o; // weird?
     obj_set_parent_relative_pos(o, 40, -120, 0);
     if (!(o->parentObj->oMarioParticleFlags & 0x800)) {

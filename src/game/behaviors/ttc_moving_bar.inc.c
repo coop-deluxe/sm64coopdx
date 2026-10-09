@@ -34,7 +34,8 @@ void bhv_ttc_moving_bar_init(void) {
 
     o->oMoveAngleYaw = 0x4000 - o->oMoveAngleYaw;
 
-    struct SyncObject* so = sync_object_init(o, 4000.0f);
+    // uses standard distance-based syncing
+    struct SyncObject *so = sync_object_init(o, 4000.0f);
     if (so) {
         so->minUpdateRate = 5.0f;
         sync_object_init_field(o, o->oTTCMovingBarDelay);
@@ -155,6 +156,15 @@ static void ttc_moving_bar_act_retract(void) {
  * Update function for bhvTTCMovingBar.
  */
 void bhv_ttc_moving_bar_update(void) {
+    if (gTTCSpeedSetting == TTC_SPEED_STOPPED) {
+        if (o->oTTCMovingBarDelay != 0 && (o->oTTCMovingBarDelay = gTTCMovingBarDelays[gTTCSpeedSetting]) == 0) {
+            o->oTTCMovingBarOffset = 250.0f;
+        }
+        return;
+    } else if (o->oTTCMovingBarDelay == 0) {
+        o->oTTCMovingBarDelay = gTTCMovingBarDelays[gTTCSpeedSetting];
+    }
+
     o->oTTCMovingBarStartOffset = o->oTTCMovingBarOffset;
     obj_perform_position_op(POS_OP_SAVE_POSITION);
 

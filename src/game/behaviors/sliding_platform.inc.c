@@ -21,6 +21,7 @@ void bhv_wf_sliding_platform_init(void) {
 
     o->oTimer = position_based_random_float_position() * 100.0f;
 
+    // uses area timer to sync the object
     o->areaTimerType = AREA_TIMER_TYPE_LOOP;
     o->areaTimer = 0;
     o->areaTimerDuration = 152;
