@@ -2775,6 +2775,31 @@ CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
 --- | `CONSOLE_MESSAGE_WARNING`
 --- | `CONSOLE_MESSAGE_ERROR`
 
+CS_0              =  0 --- @type DjuiCombinerSource
+CS_1              =  1 --- @type DjuiCombinerSource
+CS_TEXTURE        =  2 --- @type DjuiCombinerSource
+CS_COLOR          =  3 --- @type DjuiCombinerSource
+CS_TEXT           =  4 --- @type DjuiCombinerSource
+CS_COMBINED       =  5 --- @type DjuiCombinerSource
+CS_NOISE          =  6 --- @type DjuiCombinerSource
+CS_TEXTURE_ALPHA  =  7 --- @type DjuiCombinerSource
+CS_COLOR_ALPHA    =  8 --- @type DjuiCombinerSource
+CS_TEXT_ALPHA     =  9 --- @type DjuiCombinerSource
+CS_COMBINED_ALPHA = 10 --- @type DjuiCombinerSource
+
+--- @alias DjuiCombinerSource
+--- | `CS_0`
+--- | `CS_1`
+--- | `CS_TEXTURE`
+--- | `CS_COLOR`
+--- | `CS_TEXT`
+--- | `CS_COMBINED`
+--- | `CS_NOISE`
+--- | `CS_TEXTURE_ALPHA`
+--- | `CS_COLOR_ALPHA`
+--- | `CS_TEXT_ALPHA`
+--- | `CS_COMBINED_ALPHA`
+
 --- @type number
 ROTATION_PIVOT_X_LEFT = 0.0
 
