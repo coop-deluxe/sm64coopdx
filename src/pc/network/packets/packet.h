@@ -24,6 +24,7 @@ enum PacketType {
     PACKET_COLLECT_COIN,
     PACKET_COLLECT_ITEM,
     PACKET_GLOBAL_POPUP,
+    PACKET_GLOBAL_CHAT_MESSAGE,
     PACKET_DEBUG_SYNC,
     PACKET_JOIN_REQUEST,
     PACKET_JOIN,
@@ -363,9 +364,13 @@ void network_receive_download_request(struct Packet* p);
 void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
 
+// packet_global_chat_message.c
+void network_send_global_chat_message(const char *message);
+void network_receive_global_chat_message(struct Packet *p);
+
 // packet_global_popup.c
-void network_send_global_popup(const char* message, int lines);
-void network_receive_global_popup(struct Packet* p);
+void network_send_global_popup(const char *message, int lines);
+void network_receive_global_popup(struct Packet *p);
 
 // packet_lua_sync_table.c
 void network_send_lua_sync_table_request(void);
