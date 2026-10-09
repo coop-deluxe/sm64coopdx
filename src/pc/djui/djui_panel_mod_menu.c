@@ -139,11 +139,7 @@ static void djui_panel_mod_menu_mod_create_element(struct DjuiBase *parent, int 
             break;
         }
         case MOD_MENU_ELEMENT_SELECTIONBOX: {
-            char *choices[MAX_MOD_MENU_ELEMENT_CHOICES];
-            for (u32 i = 0; i < modMenuElement->choicesCount; i++) {
-                choices[i] = modMenuElement->choices[i];
-            }
-            struct DjuiSelectionbox *selectionbox = djui_selectionbox_create(parent, modMenuElement->name, choices, modMenuElement->choicesCount, &modMenuElement->uintValue, djui_panel_mod_menu_mod_selectionbox);
+            struct DjuiSelectionbox *selectionbox = djui_selectionbox_create(parent, modMenuElement->name, modMenuElement->choices, modMenuElement->choicesCount, &modMenuElement->uintValue, djui_panel_mod_menu_mod_selectionbox);
             selectionbox->base.tag = i;
             break;
         }

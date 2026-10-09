@@ -22,7 +22,7 @@ As a general rule, each of these functions take in an index returned by the appr
 
 ### Pushing and popping panels
 
-For each element created, a panel ID may be specified. A blank panel id is the root panel. When passing in a panel ID during creation of a element, it links that element to that panel.
+For each element created, a panel ID may be specified. A blank panel ID is the root panel. When passing in a panel ID during creation of a element, it links that element to that panel.
 
 To navigate to a submenu, or "push" a panel, you can use the `mod_menu_push_panel` function. This function takes in a `panelID`, and optionally `headerText` and `hideBackButton` arguments.
 
@@ -54,4 +54,4 @@ end, PANEL_RESET_SAVE_DATA_ALERT)
 ## Limitations
 
 - Not all updates done on an element will be reflected instantly in the mod menu
-- Currently, you cannot remove a mod menu element. Part of the reason for this is due to elements being unable to instantly be reflected.
+- Currently, you cannot remove a mod menu element. Part of the reason for this is due to elements being unable to instantly be reflected

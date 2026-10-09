@@ -499,7 +499,7 @@ indexInputbox = hook_mod_menu_inputbox("Network Player Description", "", 100, on
 
 <br />
 
-## [hook_mod_menu_selectionbox](#hook_mod_menu_selectionbox)
+## hook_mod_menu_selectionbox
 
 ### Description
 Allows Lua to add selectionboxes to their designated mod menu submenu.
@@ -625,7 +625,7 @@ update_mod_menu_element_inputbox(indexInputbox, stringValue)
 
 <br />
 
-## [update_mod_menu_element_selectionbox](#update_mod_menu_element_selectionbox)
+## update_mod_menu_element_selectionbox
 
 ### Description
 Updates a mod menu selectionbox value and optionally choices.

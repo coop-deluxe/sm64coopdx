@@ -1533,6 +1533,14 @@ int smlua_hook_on_sync_table_change(lua_State* L) {
 
 struct GrowingArray *gHookedModMenuElements = NULL;
 
+static void free_choices(char **choices, u32 choiceCount) {
+    if (choices == NULL) { return; }
+    for (u32 i = 0; i < choiceCount; i++) {
+        free(choices[i]);
+    }
+    free(choices);
+}
+
 int smlua_hook_mod_menu_text(lua_State* L) {
     if (L == NULL) { return 0; }
     if (!smlua_functions_valid_param_range(L, 1, 2)) { return 0; }
@@ -1824,27 +1832,38 @@ int smlua_hook_mod_menu_selectionbox(lua_State* L) {
         return 0;
     }
 
-    char choices[MAX_MOD_MENU_ELEMENT_CHOICES][MAX_MOD_MENU_ELEMENT_CHOICE_NAME_LEN] = { 0 };
+    size_t tableLength = lua_rawlen(L, 3);
+    if (tableLength == 0) {
+        LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
+        return 0;
+    }
+
+    char **choices = calloc(1, sizeof(char *) * tableLength);
+    if (choices == NULL) {
+        LOG_LUA_LINE("Hook mod menu element: Ran out of memory to hook element!");
+        return 0;
+    }
     u32 choicesCount = 0;
 
-    size_t tableLength = lua_rawlen(L, 3);
     for (u32 i = 1; i <= tableLength; i++) {
         lua_rawgeti(L, 3, i);
 
         const char *choiceStr = smlua_to_string(L, -1);
-        if (choiceStr != NULL && gSmLuaConvertSuccess) {
-            snprintf(choices[choicesCount], sizeof(choices[choicesCount]), "%s", choiceStr);
-            choicesCount++;
+        if (!gSmLuaConvertSuccess || choiceStr == NULL) {
+            LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
+            free_choices(choices, choicesCount);
+            return 0;
         }
 
+        choices[choicesCount] = strdup(choiceStr);
+        if (choices[choicesCount] == NULL) {
+            LOG_LUA_LINE("Hook mod menu element: Ran out of memory to hook element!");
+            free_choices(choices, choicesCount);
+            return 0;
+        }
+        choicesCount++;
+
         lua_pop(L, 1);
-
-        if (choicesCount == MAX_MOD_MENU_ELEMENT_CHOICES) { break; }
-    }
-
-    if (choicesCount == 0) {
-        LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
-        return 0;
     }
 
     const char *panelId = "";
@@ -1852,6 +1871,7 @@ int smlua_hook_mod_menu_selectionbox(lua_State* L) {
         panelId = smlua_to_string(L, 5);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Hook mod menu element: failed to get panel id entry");
+            free_choices(choices, choicesCount);
             return 0;
         }
 
@@ -1862,6 +1882,7 @@ int smlua_hook_mod_menu_selectionbox(lua_State* L) {
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);
     if (ref == -1) {
         LOG_LUA_LINE("Hook mod menu element: tried to hook undefined function '%s'", gLuaActiveMod->name);
+        free_choices(choices, choicesCount);
         return 0;
     }
 
@@ -1873,7 +1894,7 @@ int smlua_hook_mod_menu_selectionbox(lua_State* L) {
     modMenuElement->uintValue = defaultValue;
     modMenuElement->stringValue[0] = '\0';
     modMenuElement->length = 0;
-    memcpy(modMenuElement->choices, choices, sizeof(choices));
+    modMenuElement->choices = choices;
     modMenuElement->choicesCount = choicesCount;
     modMenuElement->reference = ref;
     modMenuElement->mod = gLuaActiveMod;
@@ -2012,33 +2033,45 @@ int smlua_update_mod_menu_element_selectionbox(lua_State* L) {
 
     if (paramCount > 2) {
         if (!lua_istable(L, 3)) {
-            LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
+            LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
             return 0;
         }
 
-        char choices[MAX_MOD_MENU_ELEMENT_CHOICES][MAX_MOD_MENU_ELEMENT_CHOICE_NAME_LEN] = { 0 };
-        u32 choicesCount = 0;
         size_t tableLength = lua_rawlen(L, 3);
+        if (tableLength == 0) {
+            LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+            return 0;
+        }
+
+        char **choices = calloc(1, sizeof(char *) * tableLength);
+        if (choices == NULL) {
+            LOG_LUA_LINE("Update mod menu element: Ran out of memory to update element!");
+            return 0;
+        }
+        u32 choicesCount = 0;
         for (u32 i = 1; i <= tableLength; i++) {
             lua_rawgeti(L, 3, i);
 
             const char *choiceStr = smlua_to_string(L, -1);
-            if (choiceStr != NULL && gSmLuaConvertSuccess) {
-                snprintf(choices[choicesCount], sizeof(choices[choicesCount]), "%s", choiceStr);
-                choicesCount++;
+            if (!gSmLuaConvertSuccess || choiceStr == NULL) {
+                LOG_LUA_LINE("Update mod menu element: tried to update invalid element");
+                free_choices(choices, choicesCount);
+                return 0;
             }
 
+            choices[choicesCount] = strdup(choiceStr);
+            if (choices[choicesCount] == NULL) {
+                LOG_LUA_LINE("Update mod menu element: Ran out of memory to update element!");
+                free_choices(choices, choicesCount);
+                return 0;
+            }
+            choicesCount++;
+
             lua_pop(L, 1);
-
-            if (choicesCount == MAX_MOD_MENU_ELEMENT_CHOICES) { break; }
         }
 
-        if (choicesCount == 0) {
-            LOG_LUA_LINE("Hook mod menu element: tried to hook invalid element");
-            return 0;
-        }
-
-        memcpy(modMenuElement->choices, choices, sizeof(choices));
+        free_choices(modMenuElement->choices, modMenuElement->choicesCount);
+        modMenuElement->choices = choices;
         modMenuElement->choicesCount = choicesCount;
     }
 
@@ -2179,6 +2212,12 @@ void smlua_clear_hooks(void) {
     }
     sHookedChatCommandsCount = 0;
 
+    growing_array_for_each_(gHookedModMenuElements, struct LuaHookedModMenuElement, modMenuElement) {
+        for (u32 i = 0; i < modMenuElement->choicesCount; i++) {
+            free(modMenuElement->choices[i]);
+        }
+        free(modMenuElement->choices);
+    }
     gHookedModMenuElements = growing_array_init(gHookedModMenuElements, 32, malloc, free);
 
     growing_array_for_each_(gHookedBehaviors, struct LuaHookedBehavior, hooked) {

@@ -112,8 +112,6 @@ static const char* LuaActionHookTypeArgName[] = {
 #define MAX_MOD_MENU_ELEMENT_NAME_LEN 64
 #define MAX_MOD_MENU_ELEMENT_PANEL_ID_LEN 64
 #define MAX_MOD_MENU_ELEMENT_STRING_VALUE_LEN 256
-#define MAX_MOD_MENU_ELEMENT_CHOICES 64
-#define MAX_MOD_MENU_ELEMENT_CHOICE_NAME_LEN 64
 
 enum LuaModMenuElementType {
     MOD_MENU_ELEMENT_TEXT,
@@ -133,7 +131,7 @@ struct LuaHookedModMenuElement {
     bool boolValue;
     u32 uintValue;
     char stringValue[MAX_MOD_MENU_ELEMENT_STRING_VALUE_LEN];
-    char choices[MAX_MOD_MENU_ELEMENT_CHOICES][MAX_MOD_MENU_ELEMENT_CHOICE_NAME_LEN];
+    char **choices; // because djui is stupid, this can't be const
     u32 choicesCount;
     u32 length;
     u32 sliderMin;
