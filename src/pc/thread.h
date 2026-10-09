@@ -2,13 +2,14 @@
 #define THREADING_H
 
 #include <pthread.h>
+#include <stdbool.h>
 
 #include "cliopts.h"
 #include "types.h"
 
 // Macros
-#define MUTEX_LOCK(handle) if (handle.state == RUNNING) { lock_mutex(&handle); }
-#define MUTEX_UNLOCK(handle) if (handle.state == RUNNING) { unlock_mutex(&handle); }
+#define MUTEX_LOCK(handle) do { if ((handle).mutexInited) { lock_mutex(&(handle)); } } while (0)
+#define MUTEX_UNLOCK(handle) do { if ((handle).mutexInited) { unlock_mutex(&(handle)); } } while (0)
 
 // Types
 enum ThreadState {
@@ -21,12 +22,13 @@ struct ThreadHandle {
     pthread_t thread;
     pthread_mutex_t mutex;
     enum ThreadState state;
+    bool mutexInited;
 };
 
 // Functions
 //// Thread Handle
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size);
-void cleanup_thread_handle(struct ThreadHandle *handle);
+void free_thread_handle(struct ThreadHandle *handle);
 
 //// Thread
 int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size);

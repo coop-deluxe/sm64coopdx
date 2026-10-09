@@ -5,10 +5,12 @@
 #include "pc/djui/djui.h"
 #include "pc/djui/djui_panel_join_message.h"
 #include "pc/debuglog.h"
+#include "pc/pc_main.h"
 #include "pc/mods/mod_cache.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
+    SOFT_ASSERT(gGameInited);
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
 

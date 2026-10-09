@@ -80,7 +80,7 @@ static void ScanPackBins(struct PackData* aPack) {
             }
             if (!success) {
                 PrintError(
-                    "Invalid sequence override filename (expected format: <name>.<sequenceId>.<bankId>.<defaultVolume>.m64): '%s.m64'",
+                    "  ERROR! Invalid sequence override filename (expected format: <name>.<sequenceId>.<bankId>.<defaultVolume>.m64): '%s.m64'",
                     _SeqName.begin()
                 );
             }

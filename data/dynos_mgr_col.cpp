@@ -61,7 +61,7 @@ Collision* DynOS_Col_Get(const char* collisionName) {
 void DynOS_Col_ModShutdown() {
     auto& _DynosCollisions = DynosCollisions();
     for (auto &pair : _DynosCollisions) {
-        Delete(pair.second);
+        DeleteNode(pair.second);
     }
     _DynosCollisions.clear();
 }

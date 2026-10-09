@@ -5,6 +5,7 @@
 #include "engine/math_util.h"
 #include "area.h"
 #include "level_update.h"
+#include "level_commands.h"
 #include "save_file.h"
 #include "sound_init.h"
 #include "level_table.h"
@@ -863,7 +864,7 @@ void disable_warp_checkpoint(void) {
  * game should set a warp checkpoint.
  */
 void check_if_should_set_warp_checkpoint(struct WarpNode *warpNode) {
-    if (warpNode->destLevel & 0x80) {
+    if (warpNode->destLevel & WARP_CHECKPOINT) {
         // Overwrite the warp checkpoint variables.
         gWarpCheckpoint.actNum = gCurrActNum;
         gWarpCheckpoint.courseNum = gCurrCourseNum;

@@ -3,6 +3,7 @@
 #include "game/level_update.h"
 #include "level_commands.h"
 #include "game/area.h"
+#include "pc/lua/utils/smlua_level_utils.h"
 
 #include "make_const_nonconst.h"
 
@@ -40,7 +41,7 @@
 
 #define STUB_LEVEL(_0, _1, _2, _3, _4, _5, _6, _7, _8)
 #define DEFINE_LEVEL(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) + 3
-static const LevelScript script_exec_level_table[2
+static const LevelScript script_exec_level_table[5
   #include "level_defines.h"
 ];
 #undef DEFINE_LEVEL
@@ -190,6 +191,7 @@ static const LevelScript goto_debug_level_select[] = {
 static const LevelScript script_exec_level_table[] = {
     GET_OR_SET(/*op*/ OP_GET, /*var*/ VAR_CURR_LEVEL_NUM),
     #include "levels/level_defines.h"
+    JUMP_IF(OP_GEQ, CUSTOM_LEVEL_NUM_START, script_exec_level_custom),
     EXIT(),
 };
 #undef DEFINE_LEVEL

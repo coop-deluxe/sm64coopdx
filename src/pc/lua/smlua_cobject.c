@@ -1003,6 +1003,8 @@ void smlua_cobject_init_globals(void) {
 
     EXPOSE_GLOBAL(LOT_LAKITUSTATE, gLakituState);
 
+    EXPOSE_GLOBAL(LOT_CAMERAFOVSTATUS, gFOVState);
+
     EXPOSE_GLOBAL(LOT_SERVERSETTINGS, gServerSettings);
 
     EXPOSE_GLOBAL(LOT_NAMETAGSSETTINGS, gNametagsSettings);
