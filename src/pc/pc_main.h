@@ -46,6 +46,7 @@ extern u8 gLuaVolumeLevel;
 extern u8 gLuaVolumeSfx;
 extern u8 gLuaVolumeEnv;
 
+u32 get_display_refresh_rate(void);
 void set_loading_message(const char *format, ...);
 void set_loading_percentage(f32 percent);
 void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG, u8 clearColorB);
