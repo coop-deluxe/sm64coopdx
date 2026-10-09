@@ -245,7 +245,7 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
 }
 
 void DynOS_Actor_GeneratePack(const SysPath &aPackFolder) {
-    Print("Processing actors: \"%s\"", aPackFolder.c_str());
+    LOG_INFO("Processing actors: \"%s\"", aPackFolder.c_str());
 
     if (!DynOS_ShouldGeneratePack(aPackFolder,  { ".bin", ".col" })) {
         return;
