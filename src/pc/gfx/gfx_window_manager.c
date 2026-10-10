@@ -173,10 +173,10 @@ void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
     if (height) { *height = h; }
 }
 
-static void gfx_wm_onkeydown(int scancode) {
+static void gfx_wm_onkeydown(int scancode, bool repeated) {
     const bool *state = SDL_GetKeyboardState(NULL);
 
-    if ((state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) {
+    if (!repeated && (state[SDL_SCANCODE_LALT] || state[SDL_SCANCODE_RALT]) && state[SDL_SCANCODE_RETURN]) {
         configWindow.fullscreen = !configWindow.fullscreen;
         configWindow.settings_changed = true;
         return;
@@ -230,7 +230,7 @@ void gfx_wm_handle_events(void) {
                 if (kb_text_editing) { kb_text_editing((char *)event.edit.text, event.edit.start); }
                 break;
             case SDL_EVENT_KEY_DOWN:
-                gfx_wm_onkeydown(event.key.scancode);
+                gfx_wm_onkeydown(event.key.scancode, event.key.repeat);
                 break;
             case SDL_EVENT_KEY_UP:
                 gfx_wm_onkeyup(event.key.scancode);

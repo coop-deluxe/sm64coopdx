@@ -14,7 +14,7 @@
 #include "audio/external.h"
 #include "sounds.h"
 
-static bool hideMessage = false;
+static bool sHideMessage = false;
 
 void djui_panel_do_host(bool reconnecting, bool playSound) {
     stop_demo(NULL);
@@ -44,7 +44,7 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
 }
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {
-    if (hideMessage) { configHideSocketWarning = true; }
+    if (sHideMessage) { configHideSocketWarning = true; }
     network_reset_reconnect_and_rehost();
     djui_panel_do_host(false, true);
 }
@@ -68,7 +68,7 @@ void djui_panel_host_message_create(struct DjuiBase* caller) {
         djui_base_set_color(&text1->base, 220, 220, 220, 255);
         djui_text_set_drop_shadow(text1, 64, 64, 64, 100);
 
-        struct DjuiCheckbox* chkHide = djui_checkbox_create(body, DLANG(HOST_MESSAGE, WARN_SOCKET_HIDE), &hideMessage, NULL);
+        struct DjuiCheckbox* chkHide = djui_checkbox_create(body, DLANG(HOST_MESSAGE, WARN_SOCKET_HIDE), &sHideMessage, NULL);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 64);
         {
