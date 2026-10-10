@@ -92,14 +92,14 @@ static void djui_selectionbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED
 
 static void djui_selectionbox_destroy(struct DjuiBase* base) {
     struct DjuiSelectionbox* selectionbox = (struct DjuiSelectionbox*)base;
-    for (int i = 0; i < selectionbox->choiceCount; i++) {
+    for (u32 i = 0; i < selectionbox->choiceCount; i++) {
         free(selectionbox->choices[i]);
     }
     free(selectionbox->choices);
     free(selectionbox);
 }
 
-struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u8 choiceCount, unsigned int* value, void (*on_value_change)(struct DjuiBase*)) {
+struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u32 choiceCount, unsigned int* value, void (*on_value_change)(struct DjuiBase*)) {
     struct DjuiSelectionbox* selectionbox = calloc(1, sizeof(struct DjuiSelectionbox));
     struct DjuiBase* base = &selectionbox->base;
 
@@ -109,7 +109,7 @@ struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const
 
     selectionbox->value = value;
     selectionbox->choices = calloc(choiceCount, sizeof(char*));
-    for (int i = 0; i < choiceCount; i++) {
+    for (u32 i = 0; i < choiceCount; i++) {
         u32 length = strlen(choices[i]);
         selectionbox->choices[i] = calloc((length + 1), sizeof(char));
         sprintf(selectionbox->choices[i], "%s", choices[i]);
