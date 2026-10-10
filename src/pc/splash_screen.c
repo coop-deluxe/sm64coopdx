@@ -39,7 +39,7 @@ static void splash_screen_produce_one_frame(void) {
 
 static bool splash_screen_on_render(struct DjuiBase *base) {
     u32 windowWidth, windowHeight;
-    gfx_get_dimensions(&windowWidth, &windowHeight);
+    gfx_get_adjusted_dimensions(&windowWidth, &windowHeight);
     f32 scale = djui_gfx_get_scale();
     windowWidth /= scale;
     windowHeight /= scale;
