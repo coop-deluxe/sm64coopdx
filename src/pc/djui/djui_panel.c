@@ -25,7 +25,12 @@ bool djui_panel_removing_any_panel(void) {
 
 static struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
     while (child) {
-        if (child->base->visible && child->base->interactable && child->base->interactable->enabled) {
+        if (!child->base->visible) {
+            child = child->next;
+            continue;
+        }
+
+        if (child->base->interactable && child->base->interactable->enabled) {
             return child->base;
         }
         struct DjuiBase* check = djui_panel_find_first_interactable(child->base->child);
