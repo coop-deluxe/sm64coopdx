@@ -83,10 +83,50 @@ static GLuint sFallbackTexture = 0;
 
 static const char *sVanillaTexUniformNames[MAX_TEXTURES] = { "uTex0", "uTex1" };
 
+static bool gfx_opengl_is_texture_cached(u32 tex) {
+    // check the texture cache to see if the texture cached exists there
+    for (u32 i = 0; i < sTextureCacheCount; i++) {
+        if (tex == sTextureCache[i].tex) {
+            return true;
+        }
+    }
+
+    // check custom frame passes to see if the texture exists there
+    for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
+        struct FramePass *framePass = &gFramePasses[i];
+        if (!framePass->active) { continue; }
+
+        if (framePass->colorTexture == tex) {
+            return true;
+        }
+
+        if (framePass->depthTexture == tex) {
+            return true;
+        }
+    }
+
+    // check default geo frame pass textures
+    if (gDefaultGeoFramePass.colorTexture == tex) {
+        return true;
+    }
+
+    if (gDefaultGeoFramePass.depthTexture == tex) {
+        return true;
+    }
+
+    return false;
+}
+
 static void gfx_opengl_cleanup_internal_textures(void) {
-    // clear internal textures
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    u32 newCount = 0;
+
+    for (u32 i = 0; i < sInternalTexturesCount; i++) {
+        if (gfx_opengl_is_texture_cached(sInternalTextures[i].tex)) {
+            sInternalTextures[newCount++] = sInternalTextures[i];
+        }
+    }
+
+    sInternalTexturesCount = newCount;
 }
 
 static bool gfx_opengl_is_legacy(void);

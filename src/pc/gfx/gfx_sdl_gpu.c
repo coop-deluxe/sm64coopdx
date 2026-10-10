@@ -470,10 +470,50 @@ static void gfx_sdl_gpu_reset_state(void) {
     memset(sLastSamplerBindings, 0, sizeof(sLastSamplerBindings));
 }
 
+static bool gfx_sdl_gpu_is_texture_cached(SDL_GPUTexture *texture) {
+    // check the texture cache to see if the texture cached exists there
+    for (u32 i = 0; i < sTextureCacheCount; i++) {
+        if (texture == sTextureCache[i].texture) {
+            return true;
+        }
+    }
+
+    // check custom frame passes to see if the texture exists there
+    for (s32 i = 0; i < MAX_CUSTOM_FRAME_PASSES; i++) {
+        struct FramePass *framePass = &gFramePasses[i];
+        if (!framePass->active) { continue; }
+
+        if (framePass->colorTex == texture) {
+            return true;
+        }
+
+        if (framePass->depthTex == texture) {
+            return true;
+        }
+    }
+
+    // check default geo frame pass textures
+    if (gDefaultGeoFramePass.colorTex == texture) {
+        return true;
+    }
+
+    if (gDefaultGeoFramePass.depthTex == texture) {
+        return true;
+    }
+
+    return false;
+}
+
 static void gfx_sdl_gpu_cleanup_internal_textures(void) {
-    // clear internal textures
-    memset(sInternalTextures, 0, sizeof(sInternalTextures));
-    sInternalTexturesCount = 0;
+    u32 newCount = 0;
+
+    for (u32 i = 0; i < sInternalTexturesCount; i++) {
+        if (gfx_sdl_gpu_is_texture_cached(sInternalTextures[i].textureSamplerBinding.texture)) {
+            sInternalTextures[newCount++] = sInternalTextures[i];
+        }
+    }
+
+    sInternalTexturesCount = newCount;
 }
 
 static void gfx_sdl_gpu_create_depth_texture(void) {
