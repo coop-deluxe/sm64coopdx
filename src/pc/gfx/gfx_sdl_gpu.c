@@ -734,7 +734,8 @@ static void gfx_sdl_gpu_build_program(struct ShaderProgramSdlGpu *prg, struct Sh
         },
         .rasterizer_state = {
             .cull_mode = SDL_GPU_CULLMODE_NONE,
-            .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE
+            .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
+            .enable_depth_clip = true
         }
     };
 
