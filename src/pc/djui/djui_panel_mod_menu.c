@@ -155,9 +155,12 @@ void djui_panel_mod_menu_mod_destroy(struct DjuiBase *base) {
 
     sPanelsEntered--;
     sCurrentPanelId = NULL;
+    sLastActiveBase = NULL;
 }
 
 void djui_panel_mod_menu_mod_create(struct DjuiBase *caller) {
+    if (djui_panel_removing_any_panel()) { return; }
+
     struct Mod *mod = NULL;
     if (caller && !caller->bTag) {
         for (int i = 0; i < gActiveMods.entryCount; i++) {
