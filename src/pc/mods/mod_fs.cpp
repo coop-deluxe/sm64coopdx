@@ -32,6 +32,7 @@ static const char *MOD_FS_FILE_ALLOWED_EXTENSIONS[] = {
     ".tex", ".png",                     // textures
     ".lvl",                             // levels
     ".m64", ".aiff", ".mp3", ".ogg",    // audio
+    ".anim", ".atbl",                   // animations
     NULL
 };
 

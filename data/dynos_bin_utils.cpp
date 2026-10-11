@@ -240,6 +240,9 @@ void DynOS_Gfx_Free(GfxData* aGfxData) {
         for (auto& _Node : aGfxData->mAnimations) {
             DeleteNode(_Node);
         }
+        for (auto& _Node : aGfxData->mAnimationTables) {
+            DeleteNode(_Node);
+        }
         for (auto& _Node : aGfxData->mCollisions) {
             DeleteNode(_Node);
         }

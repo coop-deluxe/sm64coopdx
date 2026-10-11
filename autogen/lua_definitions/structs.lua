@@ -25,6 +25,14 @@
 --- @field public valuesLength integer
 --- @field public indexLength integer
 
+--- @class AnimationInfo
+--- @field public name string
+--- @field public index integer
+--- @field public anim Animation
+
+--- @class AnimationTable
+--- @field public count integer
+
 --- @class Area
 --- @field public index integer
 --- @field public flags integer

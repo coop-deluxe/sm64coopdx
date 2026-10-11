@@ -2,6 +2,7 @@
 #define SMLUA_ANIM_UTILS_H
 
 #include "types.h"
+#include "pc/lua/smlua.h"
 
 typedef struct AnimationTable ObjectAnimPointer;
 
@@ -66,14 +67,38 @@ struct GlobalObjectAnimations {
 
 extern struct GlobalObjectAnimations gGlobalObjectAnimations;
 
+struct AnimationInfo {
+    const char *name;
+    s32 index;
+    struct Animation *anim;
+};
+
 /* |description|Gets a vanilla mario Animation with `index`|descriptionEnd| */
 struct Animation *get_mario_vanilla_animation(u16 index);
 
 void smlua_anim_util_reset();
-void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, u16 *values, u32 valuesLength, u16 *index, u32 indexLength);
-/* |description|Sets the animation of `obj` to the animation `name` corresponds to|descriptionEnd| */
-void smlua_anim_util_set_animation(struct Object *obj, const char *name);
-/* |description|Gets the name of the current animation playing on `obj`, returns `nil` if there's no name|descriptionEnd| */
+
+/* |description|Gets the animation with `name` and returns an `Animation`|descriptionEnd| */
+struct Animation *smlua_anim_util_get_animation(const char *name);
+/* |description|Gets the animation table with `name` and returns an `AnimationTable`|descriptionEnd| */
+struct AnimationTable *smlua_anim_util_get_table(const char *name);
+/* |description|Registers an animation with `name` and returns the index, returns -1 on failure|descriptionEnd| */
+OVERLOAD(smlua_anim_util_register_animation) s32 smlua_anim_util_register_animation_with_name(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index);
+/* |description|Registers an animation and returns the index, returns -1 on failure|descriptionEnd| */
+OVERLOAD(smlua_anim_util_register_animation) s32 smlua_anim_util_register_animation(s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index);
+/* |description|Sets the animation of `obj` to the animation with `name` |descriptionEnd| */
+OVERLOAD(smlua_anim_util_set_animation) void smlua_anim_util_set_animation_with_name(struct Object *obj, const char *name);
+/* |description|Sets the animation of `obj` to the animation with `index` |descriptionEnd| */
+OVERLOAD(smlua_anim_util_set_animation) void smlua_anim_util_set_animation_with_index(struct Object *obj, s32 index);
+/* |description|Sets the animation of `obj` to `anim` |descriptionEnd| */
+OVERLOAD(smlua_anim_util_set_animation) void smlua_anim_util_set_animation(struct Object *obj, struct Animation *anim);
+/* |description|Sets the animation table of `obj` to `animTable` |descriptionEnd| */
+void smlua_anim_util_set_table(struct Object *obj, struct AnimationTable *animTable);
+/* |description|Gets the name of the current animation of `obj`, returns `nil` if there's no name|descriptionEnd| */
 const char *smlua_anim_util_get_current_animation_name(struct Object *obj);
+/* |description|Gets the index of the current animation of `obj`, returns -1 if there's no index|descriptionEnd| */
+s32 smlua_anim_util_get_current_animation_index(struct Object *obj);
+/* |description|Gets the info of the current animation of `obj`, returns `nil` if there's no info|descriptionEnd| */
+struct AnimationInfo *smlua_anim_util_get_current_info(struct Object *obj);
 
 #endif
