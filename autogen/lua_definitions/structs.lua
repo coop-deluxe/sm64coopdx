@@ -2283,6 +2283,7 @@
 
 --- @class TextureInfo
 --- @field public texture Pointer_Texture
+--- @field public pixels Pointer_Texture
 --- @field public name string
 --- @field public width integer
 --- @field public height integer

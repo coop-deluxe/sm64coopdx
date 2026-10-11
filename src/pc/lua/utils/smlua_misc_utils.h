@@ -281,9 +281,12 @@ struct GraphNodeHeldObject* geo_get_current_held_object(void);
 /* |description|Skips graph node interpolation for a frame|descriptionEnd|*/
 void geo_skip_interpolation(struct GraphNode *node, struct GraphNodeObject *obj);
 
-/* |description|Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels|descriptionEnd|*/
-LuaTable texture_to_lua_table(const Texture *tex);
-/* |description|Gets the name of the provided texture pointer `tex`|descriptionEnd|*/
-const char *get_texture_name(const Texture *tex);
+/* |description|Registers a vertex buffer to be used for a scrolling texture with optional `offset` and `size`, use with `RM_Scroll_Texture` or `editor_Scroll_Texture`|descriptionEnd|*/
+void add_scroll_target(u32 index, const char *name, OPTIONAL u32 offset, OPTIONAL u32 size);
+
+/* |description|Sets the contents that an exclamation box can spawn, takes an array of `ExclamationBoxContent`|descriptionEnd|*/
+void set_exclamation_box_contents(LuaTable contents);
+/* |description|Gets the contents that an exclamation box can spawn, gives an array of `ExclamationBoxContent`|descriptionEnd|*/
+LuaTable get_exclamation_box_contents(void);
 
 #endif

@@ -169,6 +169,10 @@ struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY
     return &info;
 }
 
+struct RayIntersectionInfo* collision_find_surface_on_ray_default_precision(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ) {
+    return collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, 3.0f);
+}
+
 struct Surface* collision_find_floor(f32 x, f32 y, f32 z) {
     static struct Surface *surface;
     find_floor(x, y, z, &surface);
