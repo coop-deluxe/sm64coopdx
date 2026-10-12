@@ -1,6 +1,7 @@
 #pragma once
 #include "djui.h"
 #include "djui_base.h"
+#include "gfx_cc.h"
 
 #define DJUI_MTX_PUSH   1
 #define DJUI_MTX_NOPUSH 2
@@ -13,21 +14,7 @@ extern const Gfx dl_djui_img_end[];
 void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
 
-enum DjuiCombinerSource {
-    CS_0,
-    CS_1,
-    CS_TEXTURE,        // TEXEL0
-    CS_COLOR,          // ENVIRONMENT
-    CS_TEXT,           // PRIMITIVE
-    CS_COMBINED,       // COMBINED
-    CS_NOISE,          // NOISE
-    CS_TEXTURE_ALPHA,  // TEXEL0_ALPHA
-    CS_COLOR_ALPHA,    // ENV_ALPHA
-    CS_TEXT_ALPHA,     // PRIMITIVE_ALPHA
-    CS_COMBINED_ALPHA, // COMBINED_ALPHA
-};
-
-typedef enum DjuiCombinerSource CombinerCycle[2][4];
+typedef enum ColorCombinerSource CombinerCycle[2][4];
 
 struct CombinerState {
     CombinerCycle cycle[2];
@@ -38,7 +25,7 @@ extern struct CombinerState gCombinerState;
 extern bool gCombinerUpdated;
 extern bool gCombinerOverride;
 extern u32 gCombinerCycleType;
-void djui_gfx_update_combine_mode(enum DjuiCombinerSource mode);
+void djui_gfx_update_combine_mode(enum ColorCombinerSource mode);
 
 /* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
 f32 djui_gfx_get_scale(void);

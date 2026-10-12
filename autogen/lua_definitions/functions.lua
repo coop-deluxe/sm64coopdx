@@ -4037,10 +4037,10 @@ end
 
 --- @param cycle integer
 --- @param alpha boolean
---- @param a DjuiCombinerSource
---- @param b DjuiCombinerSource
---- @param c DjuiCombinerSource
---- @param d DjuiCombinerSource
+--- @param a ColorCombinerSource
+--- @param b ColorCombinerSource
+--- @param c ColorCombinerSource
+--- @param d ColorCombinerSource
 --- Sets the current DJUI HUD combiner.<br>
 --- Each part uses the following equation: `P = (A - B) * C + D`.<br>
 --- Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED

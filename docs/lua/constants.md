@@ -19,8 +19,6 @@
     - [enum DialogId](#enum-DialogId)
 - [djui_console.h](#djui_consoleh)
     - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
-- [djui_gfx.h](#djui_gfxh)
-    - [enum DjuiCombinerSource](#enum-DjuiCombinerSource)
 - [djui_hud_utils.h](#djui_hud_utilsh)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
@@ -35,6 +33,8 @@
 - [gbi_extension.h](#gbi_extensionh)
 - [geo_commands.h](#geo_commandsh)
     - [enum SkyBackgroundParams](#enum-SkyBackgroundParams)
+- [gfx_cc.h](#gfx_cch)
+    - [enum ColorCombinerSource](#enum-ColorCombinerSource)
 - [gfx_pc.h](#gfx_pch)
     - [enum ShaderFlag](#enum-ShaderFlag)
 - [graph_node.h](#graph_nodeh)
@@ -1232,27 +1232,6 @@
 
 <br />
 
-## djui_gfx.h
-
-### enum DjuiCombinerSource
-| Identifier | Value |
-| :--------- | :---- |
-| CS_0 | 0 |
-| CS_1 | 1 |
-| CS_TEXTURE | 2 |
-| CS_COLOR | 3 |
-| CS_TEXT | 4 |
-| CS_COMBINED | 5 |
-| CS_NOISE | 6 |
-| CS_TEXTURE_ALPHA | 7 |
-| CS_COLOR_ALPHA | 8 |
-| CS_TEXT_ALPHA | 9 |
-| CS_COMBINED_ALPHA | 10 |
-
-[:arrow_up_small:](#)
-
-<br />
-
 ## djui_hud_utils.h
 - ROTATION_PIVOT_X_LEFT
 - ROTATION_PIVOT_X_CENTER
@@ -1440,6 +1419,39 @@
 | BACKGROUND_ABOVE_CLOUDS | 8 |
 | BACKGROUND_PURPLE_SKY | 9 |
 | BACKGROUND_CUSTOM | 10 |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## gfx_cc.h
+
+### enum ColorCombinerSource
+| Identifier | Value |
+| :--------- | :---- |
+| CCS_0 | 0 |
+| CCS_1 | 1 |
+| CCS_TEXEL0 | 2 |
+| CCS_TEXEL1 | 3 |
+| CCS_PRIM | 4 |
+| CCS_SHADE | 5 |
+| CCS_ENV | 6 |
+| CCS_COMBINED | 7 |
+| CCS_TEXEL0A | 8 |
+| CCS_TEXEL1A | 9 |
+| CCS_PRIMA | 10 |
+| CCS_SHADEA | 11 |
+| CCS_ENVA | 12 |
+| CCS_COMBINEDA | 13 |
+| CCS_LOD | 14 |
+| CCS_NOISE | 15 |
+| CCS_COUNT | 16 |
+- SHADER_OPT_ALPHA
+- SHADER_OPT_FOG
+- SHADER_OPT_TEXTURE_EDGE
+- SHADER_OPT_NOISE
+- SHADER_CMD_LENGTH
+- CC_MAX_SHADERS
 
 [:arrow_up_small:](#)
 

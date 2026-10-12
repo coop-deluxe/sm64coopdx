@@ -47,38 +47,42 @@ bool gCombinerOverride = false;
 u32 gCombinerCycleType = G_CYC_FILL;
 static Gfx sDjuiCombineMode = { 0 };
 
-static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum DjuiCombinerSource source) {
+static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum ColorCombinerSource source) {
     if (alpha) {
         switch (source) {
-            default:                return G_ACMUX_0;
-            case CS_1:              return G_ACMUX_1;
-            case CS_TEXTURE:
-            case CS_TEXTURE_ALPHA:  return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
-            case CS_COLOR:
-            case CS_COLOR_ALPHA:    return G_ACMUX_ENVIRONMENT;
-            case CS_TEXT:
-            case CS_TEXT_ALPHA:     return G_ACMUX_PRIMITIVE;
-            case CS_COMBINED:
-            case CS_COMBINED_ALPHA: return G_ACMUX_COMBINED;
+            default:            return G_ACMUX_0;
+            case CCS_1:         return G_ACMUX_1;
+            case CCS_TEXEL0:
+            case CCS_TEXEL1:
+            case CCS_TEXEL0A:
+            case CCS_TEXEL1A:   return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
+            case CCS_ENV:
+            case CCS_ENVA:      return G_ACMUX_ENVIRONMENT;
+            case CCS_PRIM:
+            case CCS_PRIMA:     return G_ACMUX_PRIMITIVE;
+            case CCS_COMBINED:
+            case CCS_COMBINEDA: return G_ACMUX_COMBINED;
         }
     } else {
         switch (source) {
-            default:                return G_CCMUX_0;
-            case CS_1:              return G_CCMUX_1;
-            case CS_TEXTURE:        return cycle ? G_CCMUX_TEXEL1 : G_CCMUX_TEXEL0;
-            case CS_COLOR:          return G_CCMUX_ENVIRONMENT;
-            case CS_TEXT:           return G_CCMUX_PRIMITIVE;
-            case CS_COMBINED:       return G_CCMUX_COMBINED;
-            case CS_TEXTURE_ALPHA:  return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
-            case CS_COLOR_ALPHA:    return G_CCMUX_ENV_ALPHA;
-            case CS_TEXT_ALPHA:     return G_CCMUX_PRIMITIVE_ALPHA;
-            case CS_COMBINED_ALPHA: return G_CCMUX_COMBINED_ALPHA;
-            case CS_NOISE:          return G_CCMUX_NOISE;
+            default:            return G_CCMUX_0;
+            case CCS_1:         return G_CCMUX_1;
+            case CCS_TEXEL0:
+            case CCS_TEXEL1:    return cycle ? G_CCMUX_TEXEL1 : G_CCMUX_TEXEL0;
+            case CCS_ENV:       return G_CCMUX_ENVIRONMENT;
+            case CCS_PRIM:      return G_CCMUX_PRIMITIVE;
+            case CCS_COMBINED:  return G_CCMUX_COMBINED;
+            case CCS_TEXEL0A:
+            case CCS_TEXEL1A:   return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
+            case CCS_ENVA:      return G_CCMUX_ENV_ALPHA;
+            case CCS_PRIMA:     return G_CCMUX_PRIMITIVE_ALPHA;
+            case CCS_COMBINEDA: return G_CCMUX_COMBINED_ALPHA;
+            case CCS_NOISE:     return G_CCMUX_NOISE;
         }
     }
 }
 
-void djui_gfx_update_combine_mode(enum DjuiCombinerSource mode) {
+void djui_gfx_update_combine_mode(enum ColorCombinerSource mode) {
     u32 cycleType = G_CYC_1CYCLE;
 
     if (gCombinerOverride) {

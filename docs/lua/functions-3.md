@@ -3286,16 +3286,16 @@ Cycle 2 may be used to extend the equation, with the result of the previous cycl
 | ----- | ---- |
 | cycle | `integer` |
 | alpha | `boolean` |
-| a | [enum DjuiCombinerSource](constants.md#enum-DjuiCombinerSource) |
-| b | [enum DjuiCombinerSource](constants.md#enum-DjuiCombinerSource) |
-| c | [enum DjuiCombinerSource](constants.md#enum-DjuiCombinerSource) |
-| d | [enum DjuiCombinerSource](constants.md#enum-DjuiCombinerSource) |
+| a | [enum ColorCombinerSource](constants.md#enum-ColorCombinerSource) |
+| b | [enum ColorCombinerSource](constants.md#enum-ColorCombinerSource) |
+| c | [enum ColorCombinerSource](constants.md#enum-ColorCombinerSource) |
+| d | [enum ColorCombinerSource](constants.md#enum-ColorCombinerSource) |
 
 ### Returns
 - None
 
 ### C Prototype
-`void djui_hud_set_combiner(u8 cycle, bool alpha, enum DjuiCombinerSource a, enum DjuiCombinerSource b, enum DjuiCombinerSource c, enum DjuiCombinerSource d);`
+`void djui_hud_set_combiner(u8 cycle, bool alpha, enum ColorCombinerSource a, enum ColorCombinerSource b, enum ColorCombinerSource c, enum ColorCombinerSource d);`
 
 [:arrow_up_small:](#)
 

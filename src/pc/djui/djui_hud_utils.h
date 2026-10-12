@@ -98,7 +98,7 @@ Sets the current DJUI HUD combiner.
 Each part uses the following equation: `P = (A - B) * C + D`.
 Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
 |descriptionEnd| */
-void djui_hud_set_combiner(u8 cycle, bool alpha, enum DjuiCombinerSource a, enum DjuiCombinerSource b, enum DjuiCombinerSource c, enum DjuiCombinerSource d);
+void djui_hud_set_combiner(u8 cycle, bool alpha, enum ColorCombinerSource a, enum ColorCombinerSource b, enum ColorCombinerSource c, enum ColorCombinerSource d);
 /* |description|Resets the current DJUI HUD combiner|descriptionEnd| */
 void djui_hud_reset_combiner();
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
