@@ -82,7 +82,7 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum ColorCom
     }
 }
 
-void djui_gfx_update_combine_mode(enum ColorCombinerSource mode) {
+void djui_gfx_update_combine_mode(enum DjuiCombineMode mode) {
     u32 cycleType = G_CYC_1CYCLE;
 
     if (gCombinerOverride) {
@@ -106,9 +106,9 @@ void djui_gfx_update_combine_mode(enum ColorCombinerSource mode) {
         
         *(gDisplayListHead++) = sDjuiCombineMode;
     } else switch (mode) {
-        case CS_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
-        case CS_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
-        case CS_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycleType = G_CYC_2CYCLE; break;
+        case CM_COLOR:   gDPSetCombineMode(gDisplayListHead++, G_CC_FADE, G_CC_PASS2); break;
+        case CM_TEXTURE: gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_PASS2); break;
+        case CM_TEXT:    gDPSetCombineMode(gDisplayListHead++, G_CC_FADEA, G_CC_MODULATERGBA_PRIM2); cycleType = G_CYC_2CYCLE; break;
         default: break;
     }
 
@@ -202,7 +202,7 @@ inline static u8 djui_gfx_power_of_two(u32 value) {
 }
 
 void djui_gfx_render_texture(const Texture* texture, u32 w, u32 h, u8 fmt, u8 siz, bool filter) {
-    djui_gfx_update_combine_mode(CS_TEXTURE);
+    djui_gfx_update_combine_mode(CM_TEXTURE);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
     gDPSetTextureOverrideDjui(gDisplayListHead++, texture, djui_gfx_power_of_two(w), djui_gfx_power_of_two(h), fmt, siz);
     gSPDisplayList(gDisplayListHead++, dl_djui_image);
@@ -233,7 +233,7 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
     vtx[3] = (Vtx) {{{ 0,          0, 0 }, 0, { ( tileX          * 2048.0f) / (f32)w + 1, ( tileY          * 2048.0f) / (f32)h + 1 }, { 0xff, 0xff, 0xff, 0xff }}};
 
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    djui_gfx_update_combine_mode(CS_TEXTURE);
+    djui_gfx_update_combine_mode(CM_TEXTURE);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, filter ? G_TF_BILERP : G_TF_POINT);
 
@@ -255,7 +255,7 @@ void djui_gfx_render_texture_tile(const Texture* texture, u32 w, u32 h, u8 fmt, 
 
 void djui_gfx_render_texture_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    djui_gfx_update_combine_mode(CS_TEXT);
+    djui_gfx_update_combine_mode(CM_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, djui_hud_get_filter() ? G_TF_BILERP : G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
@@ -287,7 +287,7 @@ void djui_gfx_render_texture_font_end() {
 
 void djui_gfx_render_texture_tile_font_begin() {
     gSPClearGeometryMode(gDisplayListHead++, G_LIGHTING | G_CULL_BOTH);
-    djui_gfx_update_combine_mode(CS_TEXT);
+    djui_gfx_update_combine_mode(CM_TEXT);
     gDPSetRenderMode(gDisplayListHead++, G_RM_XLU_SURF, G_RM_XLU_SURF2);
     gDPSetTextureFilter(gDisplayListHead++, G_TF_POINT);
     gSPTexture(gDisplayListHead++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);

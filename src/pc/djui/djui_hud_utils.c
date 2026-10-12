@@ -1014,7 +1014,7 @@ static void djui_hud_render_rect_internal(f32 x, f32 y, f32 width, f32 height, s
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedW, translatedH, 1.0f);
 
     // render
-    djui_gfx_update_combine_mode(CS_COLOR);
+    djui_gfx_update_combine_mode(CM_COLOR);
     gSPDisplayList(gDisplayListHead++, dl_djui_simple_rect);
 
     // pop

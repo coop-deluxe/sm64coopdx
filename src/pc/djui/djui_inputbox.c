@@ -491,7 +491,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
         }
     }
 
-    djui_gfx_update_combine_mode(CS_COLOR);
+    djui_gfx_update_combine_mode(CM_COLOR);
 
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
