@@ -58,6 +58,8 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum ColorCom
             case CCS_TEXEL1A:   return cycle ? G_ACMUX_TEXEL1 : G_ACMUX_TEXEL0;
             case CCS_ENV:
             case CCS_ENVA:      return G_ACMUX_ENVIRONMENT;
+            case CCS_SHADE:
+            case CCS_SHADEA:    return G_ACMUX_SHADE;
             case CCS_PRIM:
             case CCS_PRIMA:     return G_ACMUX_PRIMITIVE;
             case CCS_COMBINED:
@@ -70,14 +72,16 @@ static u8 djui_gfx_translate_combiner_source(u8 cycle, bool alpha, enum ColorCom
             case CCS_TEXEL0:
             case CCS_TEXEL1:    return cycle ? G_CCMUX_TEXEL1 : G_CCMUX_TEXEL0;
             case CCS_ENV:       return G_CCMUX_ENVIRONMENT;
+            case CCS_SHADE:     return G_CCMUX_SHADE;
             case CCS_PRIM:      return G_CCMUX_PRIMITIVE;
             case CCS_COMBINED:  return G_CCMUX_COMBINED;
             case CCS_TEXEL0A:
             case CCS_TEXEL1A:   return cycle ? G_CCMUX_TEXEL1_ALPHA : G_CCMUX_TEXEL0_ALPHA;
             case CCS_ENVA:      return G_CCMUX_ENV_ALPHA;
+            case CCS_SHADEA:    return G_CCMUX_SHADE_ALPHA;
             case CCS_PRIMA:     return G_CCMUX_PRIMITIVE_ALPHA;
             case CCS_COMBINEDA: return G_CCMUX_COMBINED_ALPHA;
-            case CCS_NOISE:     return G_CCMUX_NOISE;
+            // case CCS_NOISE:  return G_CCMUX_NOISE;
         }
     }
 }

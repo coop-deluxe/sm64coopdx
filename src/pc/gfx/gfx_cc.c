@@ -152,8 +152,8 @@ static uint8_t color_comb_component_b(uint32_t v, uint8_t cycle) {
         case G_CCMUX_PRIMITIVE:         return CCS_PRIM;
         case G_CCMUX_SHADE:             return CCS_SHADE;
         case G_CCMUX_ENVIRONMENT:       return CCS_ENV;
-        //case G_CCMUX_CENTER:          return CC_CENTER; // is this correct for "Chrome Key Center"?
-        //case G_CCMUX_K4:              return CC_K4;
+        //case G_CCMUX_CENTER:          return CCS_CENTER; // is this correct for "Chrome Key Center"?
+        //case G_CCMUX_K4:              return CCS_K4;
         case G_CCMUX_0:                 return CCS_0;
 
         case G_CCMUX_COMBINED_ALPHA:    return cycle ? CCS_COMBINEDA : CCS_0;
@@ -175,7 +175,7 @@ static uint8_t color_comb_component_c(uint32_t v, uint8_t cycle) {
         case G_CCMUX_PRIMITIVE:         return CCS_PRIM;
         case G_CCMUX_SHADE:             return CCS_SHADE;
         case G_CCMUX_ENVIRONMENT:       return CCS_ENV;
-        //case G_CCMUX_CENTER:          return CC_CENTER; // is this correct for "Chrome Key Center"?
+        //case G_CCMUX_CENTER:          return CCS_CENTER; // is this correct for "Chrome Key Center"?
         case G_CCMUX_COMBINED_ALPHA:    return cycle ? CCS_COMBINEDA : CCS_0;
         case G_CCMUX_TEXEL0_ALPHA:      return CCS_TEXEL0A;
         case G_CCMUX_TEXEL1_ALPHA:      return CCS_TEXEL1A;
@@ -183,8 +183,8 @@ static uint8_t color_comb_component_c(uint32_t v, uint8_t cycle) {
         case G_CCMUX_SHADE_ALPHA:       return CCS_SHADEA;
         case G_CCMUX_ENV_ALPHA:         return CCS_ENVA;
         case G_CCMUX_LOD_FRACTION:      return CCS_LOD;
-        //case G_CCMUX_PRIM_LOD_FRAC:   return CC_PRIM_LOD_FRACTION;
-        //case G_CCMUX_K5:              return CC_K5;
+        //case G_CCMUX_PRIM_LOD_FRAC:   return CCS_PRIM_LOD_FRACTION;
+        //case G_CCMUX_K5:              return CCS_K5;
         case G_CCMUX_0:                 return CCS_0;
         default:                        return CCS_0;
     }
@@ -254,7 +254,7 @@ static uint8_t color_comb_component_c_alpha(uint32_t v, uint8_t cycle) {
         case G_ACMUX_PRIMITIVE:         return CCS_PRIMA;
         case G_ACMUX_SHADE:             return CCS_SHADEA;
         case G_ACMUX_ENVIRONMENT:       return CCS_ENVA;
-        //case G_CCMUX_PRIM_LOD_FRAC:   return CC_PRIM_LOD_FRACTION;
+        //case G_CCMUX_PRIM_LOD_FRAC:   return CCS_PRIM_LOD_FRACTION;
         case G_ACMUX_0:                 return CCS_0;
         default:                        return CCS_0;
     }
