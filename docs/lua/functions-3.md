@@ -3274,9 +3274,9 @@ Sets the number of cycles used by the combiner
 ## djui_hud_set_combiner
 
 ### Description
-Sets the current DJUI HUD combiner.
+Sets the current DJUI HUD combiner. Use cycles 1 or 2 only.
 Each part uses the following equation: `P = (A - B) * C + D`.
-Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CCS_COMBINED
 
 ### Lua Example
 `djui_hud_set_combiner(cycle, alpha, a, b, c, d)`
@@ -3316,7 +3316,7 @@ Resets the current DJUI HUD combiner
 - None
 
 ### C Prototype
-`void djui_hud_reset_combiner();`
+`void djui_hud_reset_combiner(void);`
 
 [:arrow_up_small:](#)
 

@@ -94,13 +94,13 @@ void djui_hud_reset_text_color(void);
 /* |description|Sets the number of cycles used by the combiner|descriptionEnd| */
 void djui_hud_set_combiner_cycles(u8 cycles);
 /* |description|
-Sets the current DJUI HUD combiner.
+Sets the current DJUI HUD combiner. Use cycles 1 or 2 only.
 Each part uses the following equation: `P = (A - B) * C + D`.
-Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CCS_COMBINED(A)
 |descriptionEnd| */
 void djui_hud_set_combiner(u8 cycle, bool alpha, enum ColorCombinerSource a, enum ColorCombinerSource b, enum ColorCombinerSource c, enum ColorCombinerSource d);
 /* |description|Resets the current DJUI HUD combiner|descriptionEnd| */
-void djui_hud_reset_combiner();
+void djui_hud_reset_combiner(void);
 /* |description|Gets the current DJUI HUD rotation|descriptionEnd| */
 void djui_hud_get_rotation(RET s16 *rotation, RET f32 *pivotX, RET f32 *pivotY);
 /* |description|Sets the current DJUI HUD rotation|descriptionEnd| */

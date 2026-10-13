@@ -4041,9 +4041,9 @@ end
 --- @param b ColorCombinerSource
 --- @param c ColorCombinerSource
 --- @param d ColorCombinerSource
---- Sets the current DJUI HUD combiner.<br>
+--- Sets the current DJUI HUD combiner. Use cycles 1 or 2 only.<br>
 --- Each part uses the following equation: `P = (A - B) * C + D`.<br>
---- Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CS_COMBINED
+--- Cycle 2 may be used to extend the equation, with the result of the previous cycle accessible through CCS_COMBINED
 function djui_hud_set_combiner(cycle, alpha, a, b, c, d)
     -- ...
 end

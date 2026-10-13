@@ -431,7 +431,7 @@ void djui_hud_set_combiner(u8 cycle, bool alpha,
     gCombinerOverride = true;
 }
 
-void djui_hud_reset_combiner() {
+void djui_hud_reset_combiner(void) {
     gCombinerState.is2cycle = false;
     gCombinerOverride = false;
     gCombinerCycleType = G_CYC_FILL;
