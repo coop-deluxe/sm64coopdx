@@ -61,6 +61,11 @@ static uint8_t shader_program_pool_index = 0;
 static GLuint opengl_vbo;
 static GLuint opengl_vao;
 
+#define VBO_RING_MAX_BATCH_BYTES ((size_t)MAX_BUFFERED * (26 * 3) * sizeof(float))
+#define VBO_RING_BYTES (VBO_RING_MAX_BATCH_BYTES * 4)
+static size_t vbo_ring_byte_cursor = 0;
+static bool vbo_ring_ready = false;
+
 static int tex_cache_size = 0;
 static int num_textures = 0;
 static struct GLTexture *tex_cache = NULL;
@@ -75,13 +80,13 @@ static bool gfx_opengl_z_is_from_0_to_1(void) {
     return false;
 }
 
-static void gfx_opengl_vertex_array_set_attribs(struct ShaderProgram *prg) {
+static void gfx_opengl_vertex_array_set_attribs(struct ShaderProgram *prg, size_t baseOffsetBytes) {
     size_t num_floats = prg->num_floats;
     size_t pos = 0;
 
     for (int i = 0; i < prg->num_attribs; i++) {
         glEnableVertexAttribArray(prg->attrib_locations[i]);
-        glVertexAttribPointer(prg->attrib_locations[i], prg->attrib_sizes[i], GL_FLOAT, GL_FALSE, num_floats * sizeof(float), (void *) (pos * sizeof(float)));
+        glVertexAttribPointer(prg->attrib_locations[i], prg->attrib_sizes[i], GL_FLOAT, GL_FALSE, num_floats * sizeof(float), (void *)(uintptr_t)(baseOffsetBytes + pos * sizeof(float)));
         pos += prg->attrib_sizes[i];
     }
 }
@@ -118,7 +123,7 @@ static void gfx_opengl_unload_shader(struct ShaderProgram *old_prg) {
 static void gfx_opengl_load_shader(struct ShaderProgram *new_prg) {
     opengl_prg = new_prg;
     glUseProgram(new_prg->opengl_program_id);
-    gfx_opengl_vertex_array_set_attribs(new_prg);
+    gfx_opengl_vertex_array_set_attribs(new_prg, 0);
     gfx_opengl_set_shader_uniforms(new_prg);
     gfx_opengl_set_texture_uniforms(new_prg, 0);
     gfx_opengl_set_texture_uniforms(new_prg, 1);
@@ -790,9 +795,21 @@ static void gfx_opengl_set_use_alpha(bool use_alpha) {
 }
 
 static void gfx_opengl_draw_triangles(float buf_vbo[], size_t buf_vbo_len, size_t buf_vbo_num_tris) {
-    //printf("flushing %d tris\n", buf_vbo_num_tris);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buf_vbo_len, buf_vbo, GL_STREAM_DRAW);
+    size_t len_bytes = sizeof(float) * buf_vbo_len;
+    if (!vbo_ring_ready || vbo_ring_byte_cursor + len_bytes > VBO_RING_BYTES) {
+        // create the vertex buffer object
+        glBufferData(GL_ARRAY_BUFFER, VBO_RING_BYTES, NULL, GL_STREAM_DRAW);
+        vbo_ring_byte_cursor = 0;
+        vbo_ring_ready = true;
+    }
+    if (opengl_prg != NULL) {
+        gfx_opengl_vertex_array_set_attribs(opengl_prg, vbo_ring_byte_cursor);
+    }
+
+    // stream the vertex data into the ring buffer and draw it
+    glBufferSubData(GL_ARRAY_BUFFER, vbo_ring_byte_cursor, len_bytes, buf_vbo);
     glDrawArrays(GL_TRIANGLES, 0, 3 * buf_vbo_num_tris);
+    vbo_ring_byte_cursor += len_bytes;
 }
 
 static inline bool gl_version_is_supported(int major, int minor, bool is_es) {
@@ -839,6 +856,9 @@ static void gfx_opengl_init(void) {
     glGenBuffers(1, &opengl_vbo);
 
     glBindBuffer(GL_ARRAY_BUFFER, opengl_vbo);
+
+    vbo_ring_byte_cursor = 0;
+    vbo_ring_ready = false;
 
     if (vmajor >= 3 && !is_es) {
         glGenVertexArrays(1, &opengl_vao);
