@@ -240,6 +240,10 @@ struct MtxInterp {
     void *displayList;
     Mtx interp;
     u8 usingCamSpace;
+    f32 tranfsA[13];
+    f32 tranfsB[13];
+    bool staged;
+    bool isStatic; // For non-moving geometry
 };
 
 static struct GrowingArray* sMtxTbl = NULL;
@@ -311,7 +315,7 @@ void patch_mtx_interpolated(f32 delta) {
         f32 fov = sPerspectiveNode->fov;
         f32 near = get_first_person_enabled() ? 1.f : replace_value_if_not_zero(MIN(sPerspectiveNode->near, gProjectionMaxNearValue), gOverrideNear);
         f32 far = replace_value_if_not_zero(sPerspectiveNode->far, gOverrideFar);
-        
+
         if (gCamSkipInterp) {
             sPerspectiveNode->prevFov = fov;
             sPerspectiveNode->prevNear = near;
@@ -395,23 +399,56 @@ void patch_mtx_interpolated(f32 delta) {
         mtxf_to_mtx(&camInterp, camInterp.m);
     }
 
+    // In accurate interpolation mode, decompose the matrix pairs.
+    // skip interpolating static geometry which would waste compute time anyway.
+    bool useAccurateMtx = sizeof(void *) > 4 && configInterpolationMode;
+    if (useAccurateMtx) {
+        for (u32 i = 0; i < sMtxTbl->count; i++) {
+            struct MtxInterp *interp = sMtxTbl->buffer[i];
+            if (interp->staged) { continue; }
+            if (!interp->usingCamSpace && memcmp(interp->mtxPrev, interp->mtx, sizeof(Mtx)) == 0) {
+                interp->isStatic = true;
+            } else if (interp->usingCamSpace && translateCamSpace) {
+                Mtx tmpA, tmpB;
+                mtxf_copy(tmpA.m, interp->mtxPrev->m);
+                mtxf_copy(tmpB.m, interp->mtx->m);
+                mtxf_mul(tmpA.m, tmpA.m, prevCamTranfInv.m);
+                mtxf_mul(tmpB.m, tmpB.m, camTranfInv.m);
+                mtx_decompose(&tmpA, interp->tranfsA);
+                mtx_decompose(&tmpB, interp->tranfsB);
+            } else {
+                mtx_decompose(interp->mtxPrev, interp->tranfsA);
+                mtx_decompose(interp->mtx, interp->tranfsB);
+            }
+            interp->staged = true;
+        }
+    }
+
     for (u32 i = 0; i < sMtxTbl->count; i++) {
         struct MtxInterp *interp = sMtxTbl->buffer[i];
         Gfx *pos = interp->pos;
         Mtx *srcMtx = interp->mtx;
         Mtx *srcMtxPrev = interp->mtxPrev;
 
-        if (interp->usingCamSpace && translateCamSpace) {
-            // transform out of camera space so the matrix can interp in world space
-            Mtx bufMtx, bufMtxPrev;
-            mtxf_copy(bufMtx.m, srcMtx->m);
-            mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
-            mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
-            mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
-            srcMtx = &bufMtx;
-            srcMtxPrev = &bufMtxPrev;
+        if (useAccurateMtx && interp->staged) {
+            if (interp->isStatic) {
+                memcpy(&interp->interp, interp->mtx, sizeof(Mtx));
+            } else {
+                mtx_interpolate_staged(&interp->interp, interp->tranfsA, interp->tranfsB, delta);
+            }
+        } else {
+            if (interp->usingCamSpace && translateCamSpace) {
+                // transform out of camera space so the matrix can interp in world space
+                Mtx bufMtx, bufMtxPrev;
+                mtxf_copy(bufMtx.m, srcMtx->m);
+                mtxf_copy(bufMtxPrev.m, srcMtxPrev->m);
+                mtxf_mul(bufMtx.m, bufMtx.m, camTranfInv.m);
+                mtxf_mul(bufMtxPrev.m, bufMtxPrev.m, prevCamTranfInv.m);
+                srcMtx = &bufMtx;
+                srcMtxPrev = &bufMtxPrev;
+            }
+            delta_interpolate_mtx(&interp->interp, srcMtxPrev, srcMtx, delta);
         }
-        delta_interpolate_mtx(&interp->interp, srcMtxPrev, srcMtx, delta);
         if (interp->usingCamSpace) {
             // transform back to camera space, respecting camera interpolation
             mtxf_mul(interp->interp.m, interp->interp.m, camInterp.m);
@@ -552,6 +589,8 @@ static void geo_process_master_list_sub(struct GraphNodeMasterList *node) {
                 interp->mtxPrev = currList->transformPrev;
                 interp->displayList = currList->displayList;
                 interp->usingCamSpace = currList->usingCamSpace;
+                interp->staged = false;
+                interp->isStatic = false;
 
                 gSPMatrix(gDisplayListHead++, VIRTUAL_TO_PHYSICAL(currList->transformPrev),
                           G_MTX_MODELVIEW | G_MTX_LOAD | G_MTX_NOPUSH);
@@ -1897,7 +1936,7 @@ static void geo_process_bone(struct GraphNodeBone *node) {
 
         get_world_mtx_from_transform(
             gCurMarioBodyState->animPartsMtx[gCurMarioBodyState->currAnimPart],
-            gMatStack[gMatStackIndex], 
+            gMatStack[gMatStackIndex],
             *gCurGraphNodeCamera->matrixPtr
         );
     }
