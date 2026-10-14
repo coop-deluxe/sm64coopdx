@@ -311,16 +311,17 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
 // Retrieve cache
 //
 
-static u32 sTexRegistryVersion = 1;
 #define TEX_RETRIEVE_CACHE_BITS 9
 #define TEX_RETRIEVE_CACHE_SIZE (1u << TEX_RETRIEVE_CACHE_BITS)
 #define TEX_RETRIEVE_CACHE_MASK (TEX_RETRIEVE_CACHE_SIZE - 1u)
+
 struct TexRetrieveCacheEntry {
     void *ptr;
     DataNode<TexData> *node;
     u32 version;
 };
 
+static u32 sTexRegistryVersion = 1;
 static TexRetrieveCacheEntry sTexRetrieveCache[TEX_RETRIEVE_CACHE_SIZE];
 
 static inline u32 DynOS_Tex_CacheIndex(void *aPtr) {
@@ -354,7 +355,6 @@ static inline void DynOS_Tex_CacheStore(void *aPtr, DataNode<TexData> *aNode) {
     entry.node = aNode;
     entry.version = sTexRegistryVersion;
 }
-
 
 //
 // Make textures valid/invalid
