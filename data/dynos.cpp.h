@@ -3,6 +3,8 @@
 #ifdef __cplusplus
 
 #include "dynos.h"
+#include <deque>
+#include <map>
 #include <vector>
 
 extern "C" {
@@ -113,8 +115,8 @@ private:
             return false;
         }
         if (newSize > mCapacity) {
-            mCapacity = MAX(newSize, MAX(256, mCapacity * 2));
-            u8 *newBuffer = (u8 *) calloc(mCapacity, 1);
+            s32 newCapacity = MAX(newSize, MAX(256, mCapacity > DYNOS_BIN_FILE_MAX_SIZE / 2 ? DYNOS_BIN_FILE_MAX_SIZE : mCapacity * 2));
+            u8 *newBuffer = (u8 *) calloc(newCapacity, 1);
             if (!newBuffer) {
                 return false;
             }
@@ -122,6 +124,7 @@ private:
                 memcpy(newBuffer, mData, mSize);
                 free(mData);
             }
+            mCapacity = newCapacity;
             mData = newBuffer;
         }
         mSize = MAX(mSize, newSize);
@@ -169,7 +172,7 @@ public:
     }
 
     static BinFile *OpenB(const u8 *aBuffer, s32 aSize) {
-        if (aSize > DYNOS_BIN_FILE_MAX_SIZE) {
+        if (aSize < 0 || aSize > DYNOS_BIN_FILE_MAX_SIZE) {
             return NULL;
         }
         BinFile *_BinFile = (BinFile *) calloc(1, sizeof(BinFile));
@@ -706,6 +709,15 @@ struct AudioOverrideEntry {
     u8* buffer;
 };
 
+struct GoddardHeadEntry {
+    bool enabled;
+    bool loaded;
+    char* headName;
+    char* filename;
+    u64 length;
+    u8* buffer;
+};
+
 struct PackData {
     s32 mIndex;
     bool mEnabled;
@@ -713,6 +725,7 @@ struct PackData {
     String mDisplayName;
     std::vector<std::pair<std::string, GfxData *>> mGfxData;
     std::vector<DataNode<TexData>*> mTextures;
+    std::vector<struct GoddardHeadEntry *> mGoddardHeads;
     std::vector<struct AudioOverrideEntry *> mAudioOverrides;
     bool mLoaded;
 };
@@ -972,6 +985,13 @@ std::pair<std::string, GfxData *>* DynOS_Pack_GetActor(PackData* aPackData, cons
 void DynOS_Pack_AddActor(PackData* aPackData, const char* aActorName, GfxData* aGfxData);
 DataNode<TexData>* DynOS_Pack_GetTex(PackData* aPackData, const char* aTexName);
 void DynOS_Pack_AddTex(PackData* aPackData, DataNode<TexData>* aTexData);
+const u8 *DynOS_Goddard_GetData();
+s32 DynOS_Goddard_GetSize();
+void DynOS_Goddard_SetHead(const char* aHeadName);
+void DynOS_Goddard_ActivatePackHead(GoddardHeadEntry* aHead);
+void DynOS_Goddard_DeactivatePackHead(GoddardHeadEntry* aHead);
+GoddardHeadEntry* DynOS_Goddard_AddHead(const char* aHeadName, const char* aFilepath, bool aIsPack);
+void DynOS_Goddard_ModShutdown();
 
 //
 // Audio Manager
