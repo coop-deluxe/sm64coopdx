@@ -70,7 +70,6 @@ void djui_panel_join_lobby(struct DjuiBase* caller) {
     snprintf(gCoopNetPassword, 64, "%s", sPassword);
     network_reset_reconnect_and_rehost();
     network_set_system(NS_COOPNET);
-    network_init(NT_CLIENT, false);
     djui_panel_join_message_create(caller);
 }
 

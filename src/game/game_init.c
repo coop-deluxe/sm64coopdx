@@ -490,7 +490,7 @@ void read_controller_inputs(void) {
             sInputBuffer[sInputBufferHead].extStickX  = controller->controllerData->ext_stick_x;
             sInputBuffer[sInputBufferHead].extStickY  = controller->controllerData->ext_stick_y;
             sInputBuffer[sInputBufferHead].buttonDown = controller->controllerData->button;
-            
+
             s32 delay = clamp((s32)configInputDelay, 0, INPUT_BUFFER_MAX_DELAY);
             s32 tail = (sInputBufferHead - delay + INPUT_BUFFER_SIZE) % INPUT_BUFFER_SIZE;
             u16 delayedButton = sInputBuffer[tail].buttonDown;

@@ -23,14 +23,14 @@ __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
     rom_assets_queue(_name, ROM_ASSET_TEXTURE, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
 }
 
-#define ROM_ASSET_LOAD_SAMPLE(_name, _ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
+#define ROM_ASSET_LOAD_SAMPLE(_name, _address, _size) \
 __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
-    rom_assets_queue(_ptr, ROM_ASSET_SAMPLE, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
+    rom_assets_queue(&gSoundDataRaw[SAMPLE_##_name], ROM_ASSET_SAMPLE, _address, _size, 0, _size); \
 }
 
-#define ROM_ASSET_LOAD_SEQUENCE(_name, _ptr, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
+#define ROM_ASSET_LOAD_SEQUENCE(_name, _address, _size) \
 __attribute__((constructor)) static void _name ## _rom_assets_queue () { \
-    rom_assets_queue(_ptr, ROM_ASSET_SAMPLE, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize); \
+    rom_assets_queue(&gMusicData[SEQUENCE_##_name], ROM_ASSET_SAMPLE, _address, _size, 0, _size); \
 }
 
 #define ROM_ASSET_LOAD_COLLISION(_name, _physicalAddress, _physicalSize, _segmentedAddress, _segmentedSize) \
