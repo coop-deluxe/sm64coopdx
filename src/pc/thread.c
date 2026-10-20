@@ -217,7 +217,7 @@ bool queue_thread_callback_call(struct ThreadHandle *handle) {
 void call_queued_thread_callbacks(void) {
     pthread_mutex_lock(&sThreadCallbackMutex);
 
-    void (*callbacks[MAX_QUEUED_THREAD_CALLBACKS])(void);
+    ThreadCallback callbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
     u32 callbackCount = sThreadCallbackCount;
 
     memcpy(callbacks, sThreadCallbacks, callbackCount * sizeof(*callbacks));
