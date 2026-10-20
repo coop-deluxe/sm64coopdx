@@ -6,7 +6,7 @@
 
 #define MAX_QUEUED_THREAD_CALLBACKS 32
 
-static ThreadCallback sThreadCallbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
+static ThreadCallbackFunc sThreadCallbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
 static u32 sThreadCallbackCount = 0;
 
 static pthread_mutex_t sThreadCallbackMutex = PTHREAD_MUTEX_INITIALIZER;
@@ -217,7 +217,7 @@ bool queue_thread_callback_call(struct ThreadHandle *handle) {
 void call_queued_thread_callbacks(void) {
     pthread_mutex_lock(&sThreadCallbackMutex);
 
-    ThreadCallback callbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
+    ThreadCallbackFunc callbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
     u32 callbackCount = sThreadCallbackCount;
 
     memcpy(callbacks, sThreadCallbacks, callbackCount * sizeof(*callbacks));
