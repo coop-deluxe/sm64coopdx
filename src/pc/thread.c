@@ -6,7 +6,7 @@
 
 #define MAX_QUEUED_THREAD_CALLBACKS 32
 
-static void (*sThreadCallbacks[MAX_QUEUED_THREAD_CALLBACKS])(void) = { 0 };
+static ThreadCallback sThreadCallbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
 static u32 sThreadCallbackCount = 0;
 
 static pthread_mutex_t sThreadCallbackMutex = PTHREAD_MUTEX_INITIALIZER;

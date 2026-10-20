@@ -18,12 +18,14 @@ enum ThreadState {
     THREAD_STATE_RUNNING = 2
 };
 
+typedef void (*ThreadCallback)(void);
+
 struct ThreadHandle {
     pthread_t thread;
     pthread_mutex_t mutex;
     enum ThreadState state;
     bool mutexInited;
-    void (*callback)(void);
+    ThreadCallback callback;
 };
 
 // Functions
