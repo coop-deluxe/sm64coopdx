@@ -200,6 +200,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
 }
 
 static void djui_panel_rebuild_mods_list(UNUSED struct DjuiBase *caller) {
+    if (gModRefreshThread.state == THREAD_STATE_RUNNING) { return; }
     djui_base_destroy_children(&sModLayout->base);
     djui_panel_host_mods_add_mods(&sModLayout->base);
     djui_paginated_calculate_height(sModPaginated);
