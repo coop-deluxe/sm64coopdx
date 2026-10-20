@@ -15,7 +15,7 @@
 enum ThreadState {
     THREAD_STATE_INVALID = 0,
     THREAD_STATE_STOPPED = 1,
-    THREAD_STATE_RUNNING = 2,
+    THREAD_STATE_RUNNING = 2
 };
 
 struct ThreadHandle {
