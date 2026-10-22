@@ -333,10 +333,6 @@ def build_to_c(built_files):
                 if comment != -1:
                     line = line[:comment].strip()
 
-                # Close gaps
-                for char in '=&|~+-^*/%<>(){}.,':
-                    line = char.join(x.strip() for x in line.split(char))
-
                 txt += line.strip() + '\n'
 
     # Vec types constants
@@ -356,6 +352,11 @@ def build_to_c(built_files):
         if line.startswith("#"):
             txt += '%s\n' % line
             continue
+
+        # Close gaps
+        for char in '=&|~+-^*/%<>(){}.,':
+            line = char.join(x.strip() for x in line.split(char))
+
         txt += '"%s\\n"\n' % line
     txt += ';'
     return txt
