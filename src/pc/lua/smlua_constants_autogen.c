@@ -119,7 +119,7 @@ const char gSmluaConstants[] =
 "return x>=0 and 1 or-1\n"
 "end\n"
 "function math.sign0(x)\n"
-"return x ~=0 and(x>0 and 1 or-1)or 0\n"
+"return x~=0 and(x>0 and 1 or-1)or 0\n"
 "end\n"
 "function math.lerp(a,b,t)\n"
 "return a+(b-a)*t\n"

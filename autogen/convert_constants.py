@@ -334,7 +334,7 @@ def build_to_c(built_files):
                     line = line[:comment].strip()
 
                 # Close gaps
-                for char in '=&|+-^*/%<>(){}.,':
+                for char in '=&|~+-^*/%<>(){}.,':
                     line = char.join(x.strip() for x in line.split(char))
 
                 txt += line.strip() + '\n'
