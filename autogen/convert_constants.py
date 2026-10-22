@@ -328,6 +328,15 @@ def build_to_c(built_files):
     for filename in [*in_filenames, deprecated_filename]:
         with open(get_path(filename), 'r') as f:
             for line in f.readlines():
+                # Strip comments
+                comment = line.find('--')
+                if comment != -1:
+                    line = line[:comment].strip()
+
+                # Close gaps
+                for char in '=&|+-^*/%<>(){}.,':
+                    line = char.join(x.strip() for x in line.split(char))
+
                 txt += line.strip() + '\n'
 
     # Vec types constants
@@ -342,7 +351,7 @@ def build_to_c(built_files):
         txt = txt.replace('\n\n', '\n')
 
     lines = txt.splitlines()
-    txt = 'const char gSmluaConstants[] = ""\n'
+    txt = 'const char gSmluaConstants[] =\n'
     for line in lines:
         if line.startswith("#"):
             txt += '%s\n' % line
