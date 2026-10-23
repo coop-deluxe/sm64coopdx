@@ -176,16 +176,17 @@ static bool ns_socket_initialize(enum NetworkType networkType, UNUSED bool recon
         // copy hostname to be saved to config file
         snprintf(configJoinIp, MAX_CONFIG_STRING, "%s", gGetHostName);
 
-        // kick off first packet
+        // open join menu
         char joinText[128] = { 0 };
         snprintf(joinText, 63, "%s %d", configJoinIp, configJoinPort);
-        djui_connect_menu_open();
+        djui_connect_menu_open(false);
 
         gNetworkType = NT_CLIENT;
     }
 
     LOG_INFO("initialized");
 
+    // kick off first packet
     if (networkType == NT_CLIENT) {
         network_send_mod_list_request();
     }
