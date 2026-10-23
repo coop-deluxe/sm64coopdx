@@ -13,7 +13,7 @@ verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbos
 
 in_filenames = ['autogen/lua_constants/built-in.lua', 'autogen/lua_constants/math.lua']
 deprecated_filename = 'autogen/lua_constants/deprecated.lua'
-out_filename = 'src/pc/lua/constants_autogen.lua'
+out_filename = 'src/pc/lua/smlua_constants_autogen.lua'
 out_filename_docs = 'docs/lua/constants.md'
 out_filename_defs = 'autogen/lua_definitions/constants.lua'
 

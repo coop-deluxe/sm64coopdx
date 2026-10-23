@@ -16,7 +16,8 @@
 #include "pc/fs/fmem.h"
 
 const char gSmluaConstants[] = {
-#embed "constants_autogen.lua"
+#embed "smlua_constants_autogen.lua"
+,0
 };
 
 extern void smlua_free_custom_field(void *p);
