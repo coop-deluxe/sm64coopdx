@@ -72,3 +72,5 @@
 | HOOK_ON_DYNOS_PACK_TOGGLED | Called after a DynOS pack is toggled | `string` dynosPackName, `boolean` enabled |
 | HOOK_BEFORE_PLAY_MODE_UPDATE | Called before the play mode is ran. Return a number to override the play mode to be ran. | `number` playMode |
 | HOOK_ON_PLAY_MODE_UPDATE | Called after the play mode is ran. Return a number to override the change level. | `number` playMode |
+| HOOK_ON_TEXT_INPUT | Called when text input is detected. | `string` text |
+| HOOK_ON_TEXT_EDITING | Called during complex text input editing methods like IME | `string` text, `integer` start |

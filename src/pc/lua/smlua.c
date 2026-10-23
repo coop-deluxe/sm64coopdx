@@ -12,6 +12,7 @@
 #include "pc/lua/utils/smlua_model_utils.h"
 #include "pc/lua/utils/smlua_level_utils.h"
 #include "pc/lua/utils/smlua_anim_utils.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 #include "pc/djui/djui.h"
 #include "pc/fs/fmem.h"
 
@@ -433,6 +434,7 @@ void smlua_shutdown(void) {
     smlua_model_util_clear();
     smlua_level_util_reset();
     smlua_anim_util_reset();
+    smlua_input_util_clear();
     smlua_clear_custom_fields();
     mod_storage_shutdown();
     mod_fs_shutdown();

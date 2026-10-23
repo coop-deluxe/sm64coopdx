@@ -11902,6 +11902,28 @@ function vtx_delete_all()
     -- ...
 end
 
+--- @return integer
+--- Returns the current gamepad index in the config file
+function smlua_input_util_get_current_gamepad()
+    -- ...
+end
+
+--- Starts text input and grabs input focus
+function smlua_input_util_start_text_input()
+    -- ...
+end
+
+--- Stops text input and loses input focus
+function smlua_input_util_stop_text_input()
+    -- ...
+end
+
+--- @return boolean
+--- Checks if text input is active and if you have input focus
+function smlua_input_util_text_input_active()
+    -- ...
+end
+
 --- @param areaIndex integer
 --- Instantly changes the current area to `areaIndex`
 function smlua_level_util_change_area(areaIndex)
