@@ -164,24 +164,6 @@ ifneq ($(TARGET_BITS),0)
   BITS := -m$(TARGET_BITS)
 endif
 
-ifeq ($(WINDOWS_AUTO_BUILDER),1)
-  export SHELL=sh.exe
-
-  ifeq ($(TARGET_BITS),32)
-    EXTRA_INCLUDES := ../include/1 ../include/2 ../include/3 ../include/4
-    EXTRA_CPP_INCLUDES := -I../include/cpp
-  else
-    EXTRA_INCLUDES :=
-    EXTRA_CPP_INCLUDES :=
-  endif
-
-  EXTRA_CFLAGS += -Wno-expansion-to-defined
-  EXTRA_CPP_FLAGS := -Wno-class-conversion -Wno-packed-not-aligned
-else
-  EXTRA_INCLUDES ?=
-  EXTRA_CPP_INCLUDES ?=
-endif
-
 ifeq ($(TARGET_BITS), 32)
     DEFINES += BITS_32=1
 endif
@@ -237,13 +219,7 @@ else ifeq ($(OPT_LEVEL),7) # Aggresive Size Optimization
   OPT_FLAGS := -Oz
 else
   ifeq ($(DEBUG),0)
-    # Can't use O2 or higher right now for auto-builders, coop-compiler produces strange graphical errors
-    # likely due to undefined behavior somewhere
-    #ifeq ($(WINDOWS_AUTO_BUILDER),1)
-    #  OPT_FLAGS := -O1
-    #else
     OPT_FLAGS := -O2
-    #endif
   else
     OPT_FLAGS := -O0
   endif
@@ -415,13 +391,11 @@ TOOLS_DIR := tools
 PYTHON := python3
 
 ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
-  ifeq ($(WINDOWS_AUTO_BUILDER),0)
-    $(info Building tools...)
-    DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
-      ifeq ($(DUMMY),FAIL)
-        $(error Failed to build tools)
-      endif
-  endif
+  $(info Building tools...)
+  DUMMY != $(MAKE) -C $(TOOLS_DIR) >&2 || echo FAIL
+    ifeq ($(DUMMY),FAIL)
+      $(error Failed to build tools)
+    endif
 
   $(info Building Game...)
 
@@ -429,9 +403,9 @@ endif
 
 ifneq ($(filter sound,$(MAKECMDGOALS)),)
   DUMMY != $(PYTHON) extract_assets.py $(VERSION) >&2 || echo FAIL
-  ifeq ($(DUMMY),FAIL)
-    $(error Failed to extract assets)
-  endif
+    ifeq ($(DUMMY),FAIL)
+      $(error Failed to extract assets)
+    endif
 endif
 
 
@@ -620,10 +594,7 @@ ifeq ($(OSX_BUILD),1)
   AS := i686-w64-mingw32-as
 endif
 
-ifeq ($(WINDOWS_AUTO_BUILDER),1)
-  CC      := cc
-  CXX     := g++
-else ifeq ($(COMPILER),gcc)
+ifeq ($(COMPILER),gcc)
   CC      := $(CROSS)gcc
   CXX     := $(CROSS)g++
   ifeq ($(OSX_BUILD),0)
@@ -709,7 +680,7 @@ INCLUDE_DIRS := include $(BUILD_DIR) $(BUILD_DIR)/include src .
 ifeq ($(TARGET_N64),1)
   INCLUDE_DIRS += include/libc
 else
-  INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include $(EXTRA_INCLUDES)
+  INCLUDE_DIRS += sound lib/lua/include lib/coopnet/include
 endif
 
 # Configure backend flags
@@ -1183,11 +1154,11 @@ ifeq ($(TARGET_N64),1)
 endif
 
 $(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
-$(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/sequences.bin $(SOUND_BIN_DIR)/bank_sets
+$(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/bank_sets
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
 ifeq ($(VERSION),sh)
-  $(BUILD_DIR)/src/audio/load.o: $(SOUND_BIN_DIR)/bank_sets $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/tbl_header
+  $(BUILD_DIR)/src/audio/load.o: $(SOUND_BIN_DIR)/bank_sets
 endif
 
 $(CRASH_TEXTURE_C_FILES): TEXTURE_ENCODING := u32
@@ -1311,46 +1282,23 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(RM) $@.dummy1
 	@$(RM) $@.dummy2
 
-$(SOUND_BIN_DIR)/sound_data.tbl: sound/sound_data_compressed.tbl
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.tbl $(SOUND_BIN_DIR)/sound_data.tbl
-
-$(SOUND_BIN_DIR)/sound_data.ctl: sound/sound_data_compressed.ctl
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sound_data_compressed.ctl $(SOUND_BIN_DIR)/sound_data.ctl
-
-$(SOUND_BIN_DIR)/bank_sets: sound/bank_sets_compressed
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/bank_sets_compressed $(SOUND_BIN_DIR)/bank_sets
-
-$(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
-	@true
-
-$(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
-	@true
-
-$(SOUND_BIN_DIR)/sequences.bin: sound/sequences_compressed.bin
-	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
-
-$(SOUND_BIN_DIR)/sequences_header: $(SOUND_BIN_DIR)/sequences.bin
-	@true
+$(SOUND_BIN_DIR)/bank_sets: $(ENDIAN_BITWIDTH) $(wildcard sound/compressed/$(VERSION)/*/*)
+	@$(PRINT) "$(GREEN)Decompressing sound data$(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/sound_decompress.py $(SOUND_BIN_DIR)/ $(VERSION) $$(cat $(ENDIAN_BITWIDTH))
 
 $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
 	$(call print,Converting to M64:,$<,$@)
 	$(V)$(OBJCOPY) -j .rodata $< -O binary $@
 
 sound: sound/sequences.json sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
-	@$(PRINT) "$(GREEN)Generating sound data$(NO_COL)"
-	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/tbl_header $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
-	@$(PRINT) "$(GREEN)...compressed$(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sound_data.tbl sound/sound_data_compressed.tbl
-	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sound_data.ctl sound/sound_data_compressed.ctl
-	@$(PRINT) "$(GREEN)Generating sequence data$(NO_COL)"
+	$(V)find $(SOUND_BIN_DIR) -maxdepth 1 -type f -delete
+	@$(PRINT) "$(GREEN)Generating sound data...$(NO_COL)"
+	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py $(SOUND_BIN_DIR)/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/tbl_header $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
+	@$(PRINT) "$(GREEN)sequence data...$(NO_COL)"
 	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py --sequences $(SOUND_BIN_DIR)/sequences.bin $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
-	@$(PRINT) "$(GREEN)...compressed$(NO_COL)\n"
-	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/bank_sets sound/bank_sets_compressed
-	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sequences.bin sound/sequences_compressed.bin
+	@$(PRINT) "$(GREEN)compressing...$(NO_COL)"
+	$(V)$(PYTHON) $(TOOLS_DIR)/sound_compress.py $(SOUND_BIN_DIR)/ $(VERSION) $$(cat $(ENDIAN_BITWIDTH))
+	@$(PRINT) "$(GREEN)done$(NO_COL)\n"
 
 
 #==============================================================================#
@@ -1399,8 +1347,8 @@ $(GLOBAL_ASM_DEP).$(NON_MATCHING):
 # Compile C++ code
 $(BUILD_DIR)/%.o: %.cpp
 	$(call print,Compiling:,$<,$@)
-	$(V)$(CXX) $(PROF_FLAGS) -fsyntax-only $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
-	$(V)$(CXX) $(PROF_FLAGS) -c $(EXTRA_CPP_FLAGS) $(EXTRA_CPP_INCLUDES) $(CFLAGS) -o $@ $<
+	$(V)$(CXX) $(PROF_FLAGS) -fsyntax-only $(EXTRA_CPP_FLAGS) $(CFLAGS) -MMD -MP -MT $@ -MF $(BUILD_DIR)/$*.d $<
+	$(V)$(CXX) $(PROF_FLAGS) -c $(EXTRA_CPP_FLAGS) $(CFLAGS) -o $@ $<
 
 # Compile C code
 $(BUILD_DIR)/%.o: %.c
