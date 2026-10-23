@@ -1282,16 +1282,16 @@ $(ENDIAN_BITWIDTH): $(TOOLS_DIR)/determine-endian-bitwidth.c
 	@$(RM) $@.dummy1
 	@$(RM) $@.dummy2
 
-$(SOUND_BIN_DIR)/bank_sets: $(ENDIAN_BITWIDTH)
-	@$(PRINT) "$(GREEN)Decompressing sound data...$(NO_COL)"
+$(SOUND_BIN_DIR)/bank_sets: $(ENDIAN_BITWIDTH) $(wildcard sound/compressed/$(VERSION)/*/*)
+	@$(PRINT) "$(GREEN)Decompressing sound data$(NO_COL)\n"
 	$(V)$(PYTHON) $(TOOLS_DIR)/sound_decompress.py $(SOUND_BIN_DIR)/ $(VERSION) $$(cat $(ENDIAN_BITWIDTH))
-	@$(PRINT) "$(GREEN)done$(NO_COL)\n"
 
 $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
 	$(call print,Converting to M64:,$<,$@)
 	$(V)$(OBJCOPY) -j .rodata $< -O binary $@
 
 sound: sound/sequences.json sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
+	$(V)find $(SOUND_BIN_DIR) -maxdepth 1 -type f -delete
 	@$(PRINT) "$(GREEN)Generating sound data...$(NO_COL)"
 	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py $(SOUND_BIN_DIR)/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/tbl_header $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
 	@$(PRINT) "$(GREEN)sequence data...$(NO_COL)"
