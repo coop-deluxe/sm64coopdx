@@ -346,9 +346,6 @@ def build_to_lua(built_files):
     while ('\n\n' in txt):
         txt = txt.replace('\n\n', '\n')
 
-    for char in '=&|~+-^*/%<>(){}.,':
-        txt = char.join(x.strip() for x in txt.split(char))
-
     return txt
 
 ############################################################################
