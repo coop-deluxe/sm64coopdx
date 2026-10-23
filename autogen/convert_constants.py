@@ -13,7 +13,7 @@ verbose = len(sys.argv) > 1 and (sys.argv[1] == "-v" or sys.argv[1] == "--verbos
 
 in_filenames = ['autogen/lua_constants/built-in.lua', 'autogen/lua_constants/math.lua']
 deprecated_filename = 'autogen/lua_constants/deprecated.lua'
-out_filename = 'src/pc/lua/smlua_constants_autogen.c'
+out_filename = 'src/pc/lua/constants_autogen.lua'
 out_filename_docs = 'docs/lua/constants.md'
 out_filename_defs = 'autogen/lua_definitions/constants.lua'
 
@@ -321,7 +321,7 @@ def build_vec_type_constant(type_name, vec_type, constant, values):
     txt += '})'
     return txt
 
-def build_to_c(built_files):
+def build_to_lua(built_files):
     txt = ''
 
     # Built-in and deprecated
@@ -346,19 +346,9 @@ def build_to_c(built_files):
     while ('\n\n' in txt):
         txt = txt.replace('\n\n', '\n')
 
-    lines = txt.splitlines()
-    txt = 'const char gSmluaConstants[] =\n'
-    for line in lines:
-        if line.startswith("#"):
-            txt += '%s\n' % line
-            continue
+    for char in '=&|~+-^*/%<>(){}.,':
+        txt = char.join(x.strip() for x in txt.split(char))
 
-        # Close gaps
-        for char in '=&|~+-^*/%<>(){}.,':
-            line = char.join(x.strip() for x in line.split(char))
-
-        txt += '"%s\\n"\n' % line
-    txt += ';'
     return txt
 
 ############################################################################
@@ -509,10 +499,9 @@ def main():
     built_files = build_files(processed_files)
     validate_identifiers(built_files)
 
-    built_c = build_to_c(built_files)
-
+    built_lua = build_to_lua(built_files)
     with open(get_path(out_filename), 'w', encoding='utf-8', newline='\n') as out:
-        out.write(built_c)
+        out.write(built_lua)
 
     doc = doc_files(processed_files)
     with open(get_path(out_filename_docs), 'w', encoding='utf-8', newline='\n') as out:

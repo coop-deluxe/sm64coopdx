@@ -15,6 +15,10 @@
 #include "pc/djui/djui.h"
 #include "pc/fs/fmem.h"
 
+const char gSmluaConstants[] = {
+#embed "constants.lua"
+};
+
 extern void smlua_free_custom_field(void *p);
 
 lua_State* gLuaState = NULL;
@@ -341,7 +345,6 @@ void smlua_init(void) {
     smlua_bind_sync_table();
     smlua_init_require_system();
 
-    extern const char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
 
     smlua_cobject_init_globals();
