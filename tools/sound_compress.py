@@ -1,7 +1,7 @@
 import sys, os, zlib
 
 build = sys.argv[1]
-cache = 'sound/compressed/%s/%s%s/' % (sys.argv[2], sys.argv[4], sys.argv[6])
+cache = 'sound/compressed/%s/%se%s/' % (sys.argv[2], sys.argv[4][0], sys.argv[6])
 
 os.makedirs(cache, exist_ok=True)
 
