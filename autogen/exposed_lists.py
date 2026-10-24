@@ -51,6 +51,7 @@ constants_files = [
     "include/PR/gbi.h",
     "include/PR/gbi_extension.h",
     "src/pc/gfx/gfx_pc.h",
+    "src/pc/gfx/gfx_cc.h",
     "src/engine/surface_load.h",
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",

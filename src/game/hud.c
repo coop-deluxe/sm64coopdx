@@ -623,49 +623,47 @@ void render_hud(void) {
         create_dl_ortho_matrix();
 #endif
 
-        bool showHud = (!gDjuiInMainMenu && !gOverrideHideHud);
-
         if (gCurrentArea != NULL && gCurrentArea->camera != NULL && gCurrentArea->camera->mode == CAMERA_MODE_INSIDE_CANNON) {
             render_hud_cannon_reticle();
         }
 
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES && showHud) {
-            render_hud_mario_lives();
-        }
-
-        // coop hud elements
-        if (showHud) {
+        if (!gDjuiInMainMenu && !gOverrideHideHud) {
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_LIVES) {
+                render_hud_mario_lives();
+            }
+    
+            // coop hud elements
             if (gLevelValues.hudCapTimer) {
                 render_hud_cap_timer();
             }
 
             render_hud_red_coins_and_secrets_radar();
-        }
-
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT && showHud) {
-            render_hud_coins();
-        }
-
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT && showHud) {
-            render_hud_stars();
-        }
-
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS && showHud) {
-            render_hud_keys();
-        }
-
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER && showHud) {
-            if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA && showHud) {
-                render_hud_camera_status();
+    
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_COIN_COUNT) {
+                render_hud_coins();
             }
-
-            if (hudDisplayFlags & HUD_DISPLAY_FLAG_POWER && showHud) {
-                render_hud_power_meter();
+    
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_STAR_COUNT) {
+                render_hud_stars();
             }
-        }
-
-        if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER && showHud) {
-            render_hud_timer();
+    
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_KEYS) {
+                render_hud_keys();
+            }
+    
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA_AND_POWER) {
+                if (hudDisplayFlags & HUD_DISPLAY_FLAG_CAMERA) {
+                    render_hud_camera_status();
+                }
+    
+                if (hudDisplayFlags & HUD_DISPLAY_FLAG_POWER) {
+                    render_hud_power_meter();
+                }
+            }
+    
+            if (hudDisplayFlags & HUD_DISPLAY_FLAG_TIMER) {
+                render_hud_timer();
+            }
         }
     }
 }

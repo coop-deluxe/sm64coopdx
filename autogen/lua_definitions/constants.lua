@@ -3074,6 +3074,61 @@ BACKGROUND_CUSTOM          = 10 --- @type SkyBackgroundParams
 --- | `BACKGROUND_PURPLE_SKY`
 --- | `BACKGROUND_CUSTOM`
 
+CCS_0         =  0 --- @type ColorCombinerSource
+CCS_1         =  1 --- @type ColorCombinerSource
+CCS_TEXEL0    =  2 --- @type ColorCombinerSource
+CCS_TEXEL1    =  3 --- @type ColorCombinerSource
+CCS_PRIM      =  4 --- @type ColorCombinerSource
+CCS_SHADE     =  5 --- @type ColorCombinerSource
+CCS_ENV       =  6 --- @type ColorCombinerSource
+CCS_COMBINED  =  7 --- @type ColorCombinerSource
+CCS_TEXEL0A   =  8 --- @type ColorCombinerSource
+CCS_TEXEL1A   =  9 --- @type ColorCombinerSource
+CCS_PRIMA     = 10 --- @type ColorCombinerSource
+CCS_SHADEA    = 11 --- @type ColorCombinerSource
+CCS_ENVA      = 12 --- @type ColorCombinerSource
+CCS_COMBINEDA = 13 --- @type ColorCombinerSource
+CCS_LOD       = 14 --- @type ColorCombinerSource
+CCS_NOISE     = 15 --- @type ColorCombinerSource
+CCS_COUNT     = 16 --- @type ColorCombinerSource
+
+--- @alias ColorCombinerSource
+--- | `CCS_0`
+--- | `CCS_1`
+--- | `CCS_TEXEL0`
+--- | `CCS_TEXEL1`
+--- | `CCS_PRIM`
+--- | `CCS_SHADE`
+--- | `CCS_ENV`
+--- | `CCS_COMBINED`
+--- | `CCS_TEXEL0A`
+--- | `CCS_TEXEL1A`
+--- | `CCS_PRIMA`
+--- | `CCS_SHADEA`
+--- | `CCS_ENVA`
+--- | `CCS_COMBINEDA`
+--- | `CCS_LOD`
+--- | `CCS_NOISE`
+--- | `CCS_COUNT`
+
+--- @type integer
+SHADER_OPT_ALPHA = (1 << 24)
+
+--- @type integer
+SHADER_OPT_FOG = (1 << 25)
+
+--- @type integer
+SHADER_OPT_TEXTURE_EDGE = (1 << 26)
+
+--- @type integer
+SHADER_OPT_NOISE = (1 << 27)
+
+--- @type integer
+SHADER_CMD_LENGTH = 16
+
+--- @type integer
+CC_MAX_SHADERS = 64
+
 SHADER_FLAG_HUE           = 0 --- @type ShaderFlag
 SHADER_FLAG_SATURATION    = 1 --- @type ShaderFlag
 SHADER_FLAG_BRIGHTNESS    = 2 --- @type ShaderFlag
