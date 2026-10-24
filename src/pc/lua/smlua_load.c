@@ -42,17 +42,20 @@ static int smlua_custom_load(lua_State *L) {
         return 2;
     }
 
-    if (lua_istable(L, 4)) {
+    bool hasEnv = lua_gettop(L) >= 4;
+    if (hasEnv) {
         lua_pushvalue(L, 4);
         lua_setupvalue(L, -2, 1);
     } else {
         // fallback to the caller's environment
         smlua_push_caller_env(L);
-        if (lua_istable(L, -1)) {
-            lua_setupvalue(L, -2, 1);
-        } else {
-            lua_pop(L, 1);
+        if (!lua_istable(L, -1)) {
+            lua_pop(L, 2); // pop the lookup result and compiled chunk.
+            lua_pushnil(L);
+            lua_pushliteral(L, "load() could not determine caller environment; ""pass an environment table as argument 4");
+            return 2;
         }
+        lua_setupvalue(L, -2, 1);
     }
 
     return 1;
