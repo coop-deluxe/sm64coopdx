@@ -96,6 +96,7 @@ static const f64 sFrameTime = (1.0 / ((double)FRAMERATE));
 static f64 sFpsTimeLast = 0;
 static f64 sFrameTimeStart = 0;
 static u32 sDrawnFrames = 0;
+static f64 sRenderCostEMA = 0.002;
 
 char gLoadingMessage[MAX_LOADING_MESSAGE] = { 0 };
 f32 gLoadingPercent = 0;
@@ -303,47 +304,95 @@ void produce_interpolation_frames_and_delay(void) {
     }
 
     f64 targetTime = sFrameTimeStart + sFrameTime;
-    s32 numFramesToDraw = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
+    s32 numFramesTotal = get_num_frames_to_draw(sFrameTimeStart, refreshRate);
+    const f64 interpFrameTime = sFrameTime / (f64) numFramesTotal;
+    const f64 skipSlack = MIN(interpFrameTime * 0.5, 0.002);
 
-    f64 curTime = clock_elapsed_f64();
-    f64 loopStartTime = curTime;
-    f64 expectedTime = 0;
-    u16 framesDrawn = 0;
-    const f64 interpFrameTime = sFrameTime / (f64) numFramesToDraw;
+    f64 curTime = 0;
 
-    // interpolate and render
-    // make sure to draw at least one frame to prevent the game from freezing completely
-    // (including inputs and window events) if the game update duration is greater than 33ms
-    do {
-        curTime = clock_elapsed_f64();
-        ++framesDrawn;
+    if (!isPacedGrid) {
+        s32 safetyBudget = 1000;
+        do {
+            curTime = clock_elapsed_f64();
+            gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+            gRenderingDelta = gFramePercentage;
 
-        // when we know how many frames to draw, use a precise delta
-        f64 idealTime = isPacedGrid ? (sFrameTimeStart + interpFrameTime * framesDrawn) : curTime;
-        f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
-        gFramePercentage = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
-        gRenderingDelta = delta;
+            gfx_start_frame();
+            if (!gSkipInterpolationTitleScreen) { patch_interpolations(gRenderingDelta); }
+            send_display_list(gGfxSPTask);
+            gfx_end_frame_render();
+            gfx_display_frame();
 
-        gfx_start_frame();
-        if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
-        send_display_list(gGfxSPTask);
-        gfx_end_frame_render();
-        gfx_display_frame();
+            sDrawnFrames++;
+        } while ((curTime = clock_elapsed_f64()) < targetTime && safetyBudget-- > 0);
+    } else {
+        bool vsyncOn = configWindow.vsync && gRenderApi != &gfx_dummy_renderer_api;
+        u32 drawnThisTick = 0;
+        for (s32 i = 1; i <= numFramesTotal; i++) {
+            f64 deadline = sFrameTimeStart + interpFrameTime * (f64) i;
+            f64 renderBudget = MIN(MAX(sRenderCostEMA, 0.0), interpFrameTime);
+            curTime = clock_elapsed_f64();
+            if (curTime > targetTime) {
+                if (drawnThisTick == 0) {
+                    gFramePercentage = 1.f;
+                    gRenderingDelta = 1.f;
+                    gfx_start_frame();
+                    if (!gSkipInterpolationTitleScreen) { patch_interpolations(1.f); }
+                    send_display_list(gGfxSPTask);
+                    gfx_end_frame_render();
+                    gfx_display_frame();
+                    sDrawnFrames++;
+                }
+                break;
+            }
+            if (curTime > deadline - renderBudget + skipSlack && i < numFramesTotal) {
+                if (vsyncOn) {
+                    continue;
+                }
+                f32 wallDelta = clamp((curTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+                gFramePercentage = wallDelta;
+                gRenderingDelta = wallDelta;
+                f64 buildStart = clock_elapsed_f64();
+                gfx_start_frame();
+                if (!gSkipInterpolationTitleScreen) { patch_interpolations(wallDelta); }
+                send_display_list(gGfxSPTask);
+                gfx_end_frame_render();
+                sRenderCostEMA += ((clock_elapsed_f64() - buildStart) - sRenderCostEMA) * 0.0625;
+                gfx_display_frame();
+                sDrawnFrames++;
+                drawnThisTick++;
+                continue;
+            }
+            if (shouldDelay) {
+                f64 renderStartTarget = deadline - renderBudget;
+                if (curTime < renderStartTarget) {
+                    precise_delay_f64(renderStartTarget - curTime);
+                }
+            }
+            f64 idealTime = MIN(deadline, targetTime);
+            f32 delta = clamp((idealTime - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+            gFramePercentage = clamp((clock_elapsed_f64() - sFrameTimeStart) / sFrameTime, 0.f, 1.f);
+            gRenderingDelta = delta;
 
-        // delay if our framerate is capped
+            f64 buildStart = clock_elapsed_f64();
+            gfx_start_frame();
+            if (!gSkipInterpolationTitleScreen) { patch_interpolations(delta); }
+            send_display_list(gGfxSPTask);
+            gfx_end_frame_render();
+            sRenderCostEMA += ((clock_elapsed_f64() - buildStart) - sRenderCostEMA) * 0.0625;
+            gfx_display_frame();
+
+            sDrawnFrames++;
+            drawnThisTick++;
+        }
         if (shouldDelay) {
-            expectedTime += (targetTime - curTime) / (f64) numFramesToDraw;
-            f64 now = clock_elapsed_f64();
-            f64 elapsedTime = now - loopStartTime;
-            f64 delay = (expectedTime - elapsedTime);
-            if (delay > 0.0) {
-                precise_delay_f64(delay);
+            curTime = clock_elapsed_f64();
+            if (curTime < targetTime) {
+                precise_delay_f64(targetTime - curTime);
             }
         }
-
-        sDrawnFrames++;
-        if (isPacedGrid) { numFramesToDraw--; }
-    } while ((curTime = clock_elapsed_f64()) < targetTime && numFramesToDraw > 0);
+        curTime = clock_elapsed_f64();
+    }
 
     // compute and update the frame rate every second
     if ((curTime = clock_elapsed_f64()) >= sFpsTimeLast + 1.0) {
