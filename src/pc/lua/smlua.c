@@ -1,4 +1,5 @@
 #include "smlua.h"
+#include "pc/lua/smlua_load.h"
 #include "pc/lua/smlua_require.h"
 #include "pc/lua/smlua_live_reload.h"
 #include "game/hardcoded.h"
@@ -266,7 +267,6 @@ int smlua_load_script(struct Mod* mod, struct ModFile* file, u16 remoteIndex, bo
             lua_getglobal(L, "_G"); // get global table
 
             // remove certain default functions
-            lua_pushstring(L, "load");           lua_pushnil(L); lua_settable(L, -3);
             lua_pushstring(L, "loadfile");       lua_pushnil(L); lua_settable(L, -3);
             lua_pushstring(L, "loadstring");     lua_pushnil(L); lua_settable(L, -3);
             lua_pushstring(L, "collectgarbage"); lua_pushnil(L); lua_settable(L, -3);
@@ -340,6 +340,7 @@ void smlua_init(void) {
     smlua_bind_functions_autogen();
     smlua_bind_sync_table();
     smlua_init_require_system();
+    smlua_bind_custom_load();
 
     extern const char gSmluaConstants[];
     smlua_exec_str(gSmluaConstants);
