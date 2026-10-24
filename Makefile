@@ -86,7 +86,7 @@ WINDOWS_AUTO_BUILDER ?= 0
 # Setup extra cflags
 EXTRA_CFLAGS ?=
 EXTRA_CPP_FLAGS ?=
-EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs -Wno-missing-braces -Wno-missing-field-initializers -Wno-c23-extensions
+EXTRA_CFLAGS += -Wno-format-security -Wno-trigraphs -Wno-missing-braces -Wno-missing-field-initializers
 
 dev:; @$(MAKE) DEVELOPMENT=1
 
@@ -629,13 +629,14 @@ else ifeq ($(COMPILER),gcc)
   ifeq ($(OSX_BUILD),0)
 	  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
   else
-	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=$(MIN_MACOS_VERSION)
+    # TODO: This is actually clang! macOS "gcc" is just a symlink to clang. Should go to the clang branch instead!
+	  EXTRA_CFLAGS += -Wno-unused-result -Wno-c23-extensions -mmacosx-version-min=$(MIN_MACOS_VERSION)
   endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
   CPP     := clang++
-  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
+  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result -Wno-c23-extensions
 else
   ifeq ($(USE_QEMU_IRIX),1)
     IRIX_ROOT := $(TOOLS_DIR)/ido5.3_compiler
