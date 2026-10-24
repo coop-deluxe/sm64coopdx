@@ -1,5 +1,27 @@
 #include <stdbool.h>
+#include <string.h>
 #include "smlua.h"
+
+static void smlua_push_caller_env(lua_State *L) {
+    lua_Debug ar;
+    if (!lua_getstack(L, 1, &ar) || !lua_getinfo(L, "f", &ar)) {
+        lua_pushnil(L);
+        return;
+    }
+
+    const char *name;
+    for (int i = 1; (name = lua_getupvalue(L, -1, i)) != NULL; i++) {
+        if (strcmp(name, "_ENV") == 0) {
+            lua_insert(L, -2);
+            lua_pop(L, 1);
+            return;
+        }
+        lua_pop(L, 1);
+    }
+
+    lua_pop(L, 1);
+    lua_pushnil(L);
+}
 
 static int smlua_custom_load(lua_State *L) {
     if (!lua_isstring(L, 1)) {
@@ -23,6 +45,14 @@ static int smlua_custom_load(lua_State *L) {
     if (lua_istable(L, 4)) {
         lua_pushvalue(L, 4);
         lua_setupvalue(L, -2, 1);
+    } else {
+        // fallback to the caller's environment
+        smlua_push_caller_env(L);
+        if (lua_istable(L, -1)) {
+            lua_setupvalue(L, -2, 1);
+        } else {
+            lua_pop(L, 1);
+        }
     }
 
     return 1;
