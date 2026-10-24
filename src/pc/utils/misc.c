@@ -288,7 +288,7 @@ static void rot_quat_to_mtx_rot(Vec3f a[3], Vec4f q) {
 }
 
 // rotation quaternion spherical linear interpolation
-static void rot_quat_slerp(Vec4f out, Vec4f a, Vec4f b, f32 t) {
+static void rot_quat_slerp(Vec4f out, const f32 *a, Vec4f b, f32 t) {
     // credit where it's due:
     // Martin John Baker
     // https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/index.htm
@@ -503,15 +503,9 @@ static void rematrix(Mtx * mat, f32 tranfs[13]) {
     }
 }
 
-inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+inline static void delta_interpolate_mtx_blend(Mtx* out, const f32* matTranfsA, f32* matTranfsB, f32 delta) {
     int i = 0;
-    f32 matTranfsA[13] = { 0 };
-    f32 matTranfsB[13] = { 0 };
-
     f32 antiDelta = 1.0f - delta;
-
-    unmatrix(a, matTranfsA);
-    unmatrix(b, matTranfsB);
 
     // skip rot quat
     for (i = 0; i < 6; ++i) {
@@ -526,13 +520,31 @@ inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 
     rematrix(out, matTranfsB);
 }
 
+inline static void delta_interpolate_mtx_accurate(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
+    f32 matTranfsA[13] = { 0 };
+    f32 matTranfsB[13] = { 0 };
+
+    unmatrix(a, matTranfsA);
+    unmatrix(b, matTranfsB);
+
+    delta_interpolate_mtx_blend(out, matTranfsA, matTranfsB, delta);
+}
+
+void mtx_interpolate_staged(Mtx* out, const f32* tranfsA, f32* tranfsB, f32 delta) {
+    f32 tmpB[13];
+    memcpy(tmpB, tranfsB, sizeof(tmpB));
+    delta_interpolate_mtx_blend(out, tranfsA, tmpB, delta);
+}
+
+void mtx_decompose(Mtx* mat, f32* tranfsOut) {
+    unmatrix(mat, tranfsOut);
+}
+
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta) {
     // HACK: Limit accurate interpolation to 64-bit builds
-    if (sizeof(void*) > 4) {
-        if (configInterpolationMode) {
-            delta_interpolate_mtx_accurate(out, a, b, delta);
-            return;
-        }
+    if (sizeof(void *) > 4 && configInterpolationMode) {
+        delta_interpolate_mtx_accurate(out, a, b, delta);
+        return;
     }
 
     // this isn't the right way to do things.
