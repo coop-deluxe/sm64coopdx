@@ -1993,3 +1993,30 @@ bool smlua_call_event_hooks_HOOK_ON_PLAY_MODE_UPDATE(s16 playmode, s32 *changeLe
     }
     return hookResult;
 }
+
+bool smlua_call_event_hooks_HOOK_SOCKET_RECEIVE(const char *data) {
+    lua_State *L = gLuaState;
+    if (L == NULL) { return false; }
+    bool hookResult = false;
+
+    struct LuaHookedEvent *hook = &sHookedEvents[HOOK_SOCKET_RECEIVE];
+    for (int i = 0; i < hook->count; i++) {
+        s32 prevTop = lua_gettop(L);
+
+        // push the callback onto the stack
+        lua_rawgeti(L, LUA_REGISTRYINDEX, hook->reference[i]);
+
+        // push data
+        lua_pushstring(L, data);
+
+        // call the callback
+        if (0 != smlua_call_hook(L, 1, 0, 0, hook->mod[i], hook->modFile[i])) {
+            LOG_LUA("Failed to call the callback for hook %s - '%s/%s'", sLuaHookedEventTypeName[HOOK_SOCKET_RECEIVE], hook->mod[i]->relativePath, hook->modFile[i]->relativePath);
+            continue;
+        }
+        hookResult = true;
+
+        lua_settop(L, prevTop);
+    }
+    return hookResult;
+}
