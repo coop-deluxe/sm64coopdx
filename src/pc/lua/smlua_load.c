@@ -24,6 +24,7 @@ static void smlua_push_caller_env(lua_State *L) {
 }
 
 static int smlua_custom_load(lua_State *L) {
+    bool hasEnv = lua_gettop(L) >= 4;
     if (!lua_isstring(L, 1)) {
         lua_pushnil(L);
         lua_pushliteral(L, "load() expected string in argument 1");
@@ -42,7 +43,6 @@ static int smlua_custom_load(lua_State *L) {
         return 2;
     }
 
-    bool hasEnv = lua_gettop(L) >= 4;
     if (hasEnv) {
         lua_pushvalue(L, 4);
         lua_setupvalue(L, -2, 1);
