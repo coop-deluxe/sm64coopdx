@@ -241,26 +241,10 @@ void network_receive_mod_list_entry(struct Packet* p) {
         packet_read(p, 0, 0);
     }
 
-    // get relative path length
-    u16 relativePathLength = 0;
+    // get relative entry path len
     u16 relativeEntryPathFileLength = 0;
-    packet_read(p, &relativePathLength, sizeof(u16));
-    if (relativePathLength == 0 || relativePathLength >= SYS_MAX_PATH) {
-        LOG_ERROR("Relative path length is invalid!");
-        return;
-    }
-
-    // get relative path
-    packet_read(p, mod->relativePath, relativePathLength * sizeof(u8));
-    if (path_has_traversal(mod->relativePath)) {
-        LOG_ERROR("Received an invalid relative path!");
-        mod->relativePath[0] = '\0'; // clear relative path so it isn't incorrectly used elsewhere
-        return;
-    }
-
-    // get realtive entry path len
     packet_read(p, &relativeEntryPathFileLength, sizeof(u16));
-    if (relativeEntryPathFileLength >= SYS_MAX_PATH) {
+    if (relativeEntryPathFileLength == 0 || relativeEntryPathFileLength >= SYS_MAX_PATH) {
         LOG_ERROR("Relative entry path file length is too large!");
         return;
     }
@@ -269,7 +253,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, mod->relativeEntryPath, relativeEntryPathFileLength * sizeof(u8));
     if (path_has_traversal(mod->relativeEntryPath)) {
         LOG_ERROR("Received an invalid relative entry path!");
-        mod->relativeEntryPath[0] = '\0';
+        mod->relativeEntryPath[0] = '\0'; // clear relative path so it isn't incorrectly used elsewhere
         return;
     }
 

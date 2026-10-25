@@ -371,6 +371,11 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
         return (mod_allocate_file(mod, mod->relativePath) != NULL);
     }
 
+    // deal with manifest
+    if (mod->hasManifest) {
+        if (!mod_allocate_file(mod, MOD_MANIFEST_ENTRY_FILE)) { return false; }
+    }
+
     // deal with mod directory
     {
         const char* fileTypes[] = { ".lua", ".luac", NULL };
