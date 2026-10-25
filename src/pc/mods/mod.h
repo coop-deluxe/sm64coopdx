@@ -35,11 +35,11 @@ struct ModFile {
 };
 
 struct Mod {
-    char name[MOD_NAME_SIZE];
-    char* incompatible;
-    char* category;
-    char* description;
-    char id[MOD_ID_SIZE];
+    char *name;
+    char *incompatible;
+    char *category;
+    char *description;
+    char *id;
     char relativePath[SYS_MAX_PATH];
     char basePath[SYS_MAX_PATH];
     char relativeEntryPath[SYS_MAX_PATH];

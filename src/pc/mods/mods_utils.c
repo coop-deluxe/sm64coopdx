@@ -228,10 +228,10 @@ bool path_ends_with_filepath(const char *path, const char *filepath) {
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-char* extract_lua_field(char* fieldName, char* buffer) {
+char *extract_lua_field(const char *fieldName, char *buffer) {
     size_t length = strlen(fieldName);
     if (strncmp(fieldName, buffer, length) == 0) {
-        char* s = &buffer[length];
+        char *s = &buffer[length];
         while (*s == ' ' || *s == '\t') { s++; }
         return s;
     }

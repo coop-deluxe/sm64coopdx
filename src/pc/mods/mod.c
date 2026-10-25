@@ -198,6 +198,11 @@ void mod_clear(struct Mod* mod) {
         }
     }
 
+    if (mod->name != NULL) {
+        free(mod->name);
+        mod->name = NULL;
+    }
+
     if (mod->incompatible != NULL) {
         free(mod->incompatible);
         mod->incompatible = NULL;
@@ -211,6 +216,11 @@ void mod_clear(struct Mod* mod) {
     if (mod->description != NULL) {
         free(mod->description);
         mod->description = NULL;
+    }
+
+    if (mod->id != NULL) {
+        free(mod->id);
+        mod->id = NULL;
     }
 
     if (mod->files != NULL) {
@@ -418,13 +428,39 @@ static void mod_set_loading_order(struct Mod* mod) {
     }
 }
 
+static bool mod_extract_string_lua_field(char **outValue, const char *fieldName, char *buffer) {
+    size_t fullFieldSize = strlen(fieldName) + strlen("-- :") + 1;
+
+    char *fullFieldName = calloc(fullFieldSize, sizeof(char));
+    snprintf(fullFieldName, fullFieldSize, "-- %s:", fieldName);
+
+    const char *extracted = extract_lua_field(fullFieldName, buffer);
+    if (extracted) {
+        free(*outValue);
+        *outValue = strdup(extracted);
+        free(fullFieldName);
+        return true;
+    }
+
+    free(fullFieldName);
+    return false;
+}
+
+static bool mod_extract_bool_lua_field(bool *outValue, const char *fieldName, char *buffer) {
+    char *fieldValue = NULL;
+    if (!mod_extract_string_lua_field(&fieldValue, fieldName, buffer)) { return false; }
+
+    *outValue = (strcmp(fieldValue, "true") == 0);
+    return true;
+}
+
 static void mod_extract_fields_from_lua_file(struct Mod *mod) {
     // get full path
     char path[SYS_MAX_PATH] = { 0 };
-    char* relativePath = NULL;
+    char *relativePath = NULL;
     if (mod->isDirectory) {
-        for (int i = 0; i < mod->fileCount; i++) {
-            struct ModFile* file = &mod->files[i];
+        for (u32 i = 0; i < mod->fileCount; i++) {
+            struct ModFile *file = &mod->files[i];
             if (!pathcmp(file->relativePath, mod->relativeEntryPath)) {
                 relativePath = file->relativePath;
             }
@@ -439,7 +475,7 @@ static void mod_extract_fields_from_lua_file(struct Mod *mod) {
     }
 
     // open file
-    FILE* f = fopen(path, "rb");
+    FILE *f = fopen(path, "rb");
     if (f == NULL) {
         LOG_ERROR("Failed to open '%s'", path);
         return;
@@ -458,40 +494,33 @@ static void mod_extract_fields_from_lua_file(struct Mod *mod) {
             return;
         }
 
-        // extract the field
-        char* extracted = NULL;
-        if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
-            if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod name field '%s'", mod->name);
-            }
-        } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
-            mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
-            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
-            }
-        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
-            mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
-            if (snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod category field '%s'", mod->category);
-            }
-        } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
-            mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
-            if (snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod description field '%s'", mod->description);
-            }
-        } else if (!mod->id[0] && (extracted = extract_lua_field("-- id:", buffer))) {
-            if (snprintf(mod->id, MOD_ID_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod id field '%s'", mod->id);
-            }
-        } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
-            mod->pausable = !strcmp(extracted, "true");
-        } else if ((extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
-            mod->ignoreScriptWarnings = !strcmp(extracted, "true");
-        }
+        // extract strings
+        if (mod_extract_string_lua_field(&mod->name, "name", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->incompatible, "incompatible", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->category, "category", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->description, "description", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->id, "id", buffer)) { continue; }
+
+        // extract bools
+        if (mod_extract_bool_lua_field(&mod->pausable, "pausable", buffer)) { continue; }
+        if (mod_extract_bool_lua_field(&mod->ignoreScriptWarnings, "ignore-script-warnings", buffer)) { continue; }
     }
 
     // close file
     fclose(f);
+}
+
+static void mod_extract_string_manifest_field(char **outValue, const char *fieldName, yyjson_val *root) {
+    const char *name = yyjson_get_str(yyjson_obj_get(root, fieldName));
+    if (name) {
+        free(*outValue);
+        *outValue = strdup(name);
+    }
+}
+
+static void mod_extract_bool_manifest_field(bool *outValue, const char *fieldName, yyjson_val *root) {
+    yyjson_val *jsonObj = yyjson_obj_get(root, fieldName);
+    *outValue = yyjson_is_bool(jsonObj) ? yyjson_get_bool(jsonObj) : *outValue;
 }
 
 static void mod_extract_fields_from_manifest(struct Mod *mod) {
@@ -504,32 +533,46 @@ static void mod_extract_fields_from_manifest(struct Mod *mod) {
     }
 
     yyjson_doc *doc = get_yyjson_doc_from_path(manifestPath);
-    if (!doc) { return; }
+    if (doc == NULL) { return; }
     yyjson_val *root = yyjson_doc_get_root(doc);
 
-    const char *name = yyjson_get_str(yyjson_obj_get(root, "name"));
-    if (name) {
-        snprintf(mod->name, MOD_NAME_SIZE, "%s", name);
-    }
+    // process manifest fields
+    mod_extract_string_manifest_field(&mod->name, "name", root);
 
-
+    // manually extract incompatible field due to it being able to be a string array or regular string
     yyjson_val *incompatibleObj = yyjson_obj_get(root, "incompatible");
     const char *incompatibleStr = yyjson_get_str(incompatibleObj);
     char incompatible[MOD_INCOMPATIBLE_SIZE] = { 0 };
+
     if (incompatibleStr) {
+        // load as a string
         snprintf(incompatible, MOD_INCOMPATIBLE_SIZE, "%s", incompatibleStr);
     } else if (yyjson_is_arr(incompatibleObj)) {
-        // try loading as an array instead
+        // load as an array
+        u32 writePos = 0;
+
+        // iterate through array
         u32 idx;
         u32 max;
         yyjson_val *hit;
         yyjson_arr_foreach(incompatibleObj, idx, max, hit) {
+            // get string element
             const char *string = yyjson_get_str(hit);
             if (!string) { continue; }
 
-            char oldIncompatibleString[MOD_INCOMPATIBLE_SIZE] = { 0 };
-            strcpy(oldIncompatibleString, incompatible);
-            snprintf(incompatible, MOD_INCOMPATIBLE_SIZE, "%s %s", oldIncompatibleString, string);
+            size_t stringLength = strlen(string);
+
+            const char *spacer = (idx == max - 1 ? "" : " ");
+            size_t spacerLength = strlen(spacer);
+
+            // make sure new string can fit
+            if (stringLength + spacerLength > MOD_INCOMPATIBLE_SIZE - writePos) { continue; }
+
+            // write data using the data string and spacer
+            snprintf(incompatible + writePos, MOD_INCOMPATIBLE_SIZE - writePos, "%s%s", string, spacer);
+
+            // increment write pos
+            writePos += stringLength + spacerLength;
         }
     }
 
@@ -539,35 +582,18 @@ static void mod_extract_fields_from_manifest(struct Mod *mod) {
         snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", incompatible);
     }
 
-    const char *category = yyjson_get_str(yyjson_obj_get(root, "category"));
-    if (category) {
-        free(mod->category);
-        mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
-        snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", category);
-    }
+    mod_extract_string_manifest_field(&mod->category, "category", root);
+    mod_extract_string_manifest_field(&mod->description, "description", root);
+    mod_extract_string_manifest_field(&mod->id, "id", root);
+    mod_extract_bool_manifest_field(&mod->pausable, "pausable", root);
+    mod_extract_bool_manifest_field(&mod->ignoreScriptWarnings, "ignoreScriptWarnings", root);
 
-    const char *description = yyjson_get_str(yyjson_obj_get(root, "description"));
-    if (description) {
-        free(mod->description);
-        mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
-        snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", description);
-    }
-
-    const char *id = yyjson_get_str(yyjson_obj_get(root, "id"));
-    if (id) {
-        snprintf(mod->id, MOD_ID_SIZE, "%s", id);
-    }
-
-    yyjson_val *pausableObj = yyjson_obj_get(root, "pausable");
-    mod->pausable = yyjson_is_bool(pausableObj) ? yyjson_get_bool(pausableObj) : mod->pausable;
-
-    mod->ignoreScriptWarnings = yyjson_get_bool(yyjson_obj_get(root, "ignoreScriptWarnings"));
     yyjson_doc_free(doc);
 }
 
 static void mod_extract_fields(struct Mod *mod) {
     // default to null
-    mod->name[0] = 0;
+    mod->name = NULL;
     mod->incompatible = NULL;
     mod->category = NULL;
     mod->description = NULL;
@@ -751,10 +777,8 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     mod_extract_fields(mod);
 
     // set name
-    if (!mod->name[0]) {
-        if (snprintf(mod->name, MOD_NAME_SIZE, "%s", modName) < 0) {
-            LOG_INFO("Truncated mod name field '%s'", mod->name);
-        }
+    if (mod->name == NULL) {
+        mod->name = strdup(modName);
     }
 
     // set category

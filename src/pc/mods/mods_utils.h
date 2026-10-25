@@ -19,7 +19,7 @@ int pathcmp(const char *path, const char *path2);
 bool path_ends_with(const char* path, const char* suffix);
 bool path_ends_with_filepath(const char *path, const char *filepath);
 
-char* extract_lua_field(char* fieldName, char* buffer);
+char *extract_lua_field(const char *fieldName, char *buffer);
 
 void normalize_path(char* path);
 bool concat_path(char* destination, char* path, char* fname);

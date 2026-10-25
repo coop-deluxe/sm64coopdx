@@ -741,7 +741,7 @@ yyjson_doc *get_yyjson_doc_from_path(const char *path) {
 
     // get yyjson doc (must be freed)
     yyjson_doc *doc = yyjson_read(fileContents, size, 0);
-    if (!doc) {
+    if (doc == NULL) {
         free(fileContents);
         return NULL;
     }
