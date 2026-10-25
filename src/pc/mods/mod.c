@@ -691,7 +691,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         if (doc) {
             yyjson_val *root = yyjson_doc_get_root(doc);
             const char *jsonEntryFilePath = yyjson_get_str(yyjson_obj_get(root, "entryFile"));
-            if (jsonEntryFilePath != NULL && !path_has_traversal(jsonEntryFilePath)) {
+            if (jsonEntryFilePath != NULL && !path_has_traversal(jsonEntryFilePath) && path_ends_with(jsonEntryFilePath, ".lua")) {
                 manifestModEntryPath = jsonEntryFilePath;
             }
         }
