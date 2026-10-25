@@ -59,11 +59,17 @@ void network_send_mod_list(void) {
     for (u16 i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];
 
-        u16 nameLength = strlen(mod->name);
-        if (nameLength > MOD_NAME_MAX_LENGTH) { nameLength = MOD_NAME_MAX_LENGTH; }
+        u16 nameLength = 0;
+        if (mod->name) {
+            nameLength = strlen(mod->name);
+            if (nameLength > MOD_NAME_MAX_LENGTH) { nameLength = MOD_NAME_MAX_LENGTH; }
+        }
 
-        u16 idLength = strlen(mod->id);
-        if (idLength > MOD_ID_MAX_LENGTH) { idLength = MOD_ID_MAX_LENGTH; }
+        u16 idLength = 0;
+        if (mod->id) {
+            idLength = strlen(mod->id);
+            if (idLength > MOD_ID_MAX_LENGTH) { idLength = MOD_ID_MAX_LENGTH; }
+        }
 
         u16 incompatibleLength = 0;
         if (mod->incompatible) {
@@ -79,9 +85,17 @@ void network_send_mod_list(void) {
         packet_init(&p, PACKET_MOD_LIST_ENTRY, true, PLMT_NONE);
         packet_write(&p, &i, sizeof(u16));
         packet_write(&p, &nameLength, sizeof(u16));
-        packet_write(&p, mod->name, sizeof(u8) * nameLength);
+        if (mod->name) {
+            packet_write(&p, mod->name, sizeof(u8) * nameLength);
+        } else {
+            packet_write(&p, "", 0);
+        }
         packet_write(&p, &idLength, sizeof(u16));
-        packet_write(&p, mod->id, sizeof(u8) * idLength);
+        if (mod->id) {
+            packet_write(&p, mod->id, sizeof(u8) * idLength);
+        } else {
+            packet_write(&p, "", 0);
+        }
         packet_write(&p, &incompatibleLength, sizeof(u16));
         if (mod->incompatible) {
             packet_write(&p, mod->incompatible, sizeof(u8) * incompatibleLength);
@@ -209,8 +223,13 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // get name
-    packet_read(p, mod->name, nameLength * sizeof(u8));
-    mod->name[nameLength] = 0;
+    if (nameLength > 0) {
+        char modName[MOD_NAME_SIZE] = { 0 };
+        packet_read(p, modName, nameLength * sizeof(u8));
+        mod->name = strdup(modName);
+    } else {
+        packet_read(p, 0, 0);
+    }
 
     // get id length
     u16 idLength = 0;
@@ -221,8 +240,13 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // get id
-    packet_read(p, mod->id, idLength * sizeof(u8));
-    mod->id[idLength] = 0;
+    if (idLength > 0) {
+        char modId[MOD_NAME_SIZE] = { 0 };
+        packet_read(p, modId, idLength * sizeof(u8));
+        mod->id = strdup(modId);
+    } else {
+        packet_read(p, 0, 0);
+    }
 
     // get incompatible length
     u16 incompatibleLength = 0;
@@ -241,6 +265,22 @@ void network_receive_mod_list_entry(struct Packet* p) {
         packet_read(p, 0, 0);
     }
 
+    // get relative path len
+    u16 relativePathLength = 0;
+    packet_read(p, &relativePathLength, sizeof(u16));
+    if (relativePathLength == 0 || relativePathLength >= SYS_MAX_PATH) {
+        LOG_ERROR("Relative path length is too large!");
+        return;
+    }
+
+    // get relative path
+    packet_read(p, mod->relativePath, relativePathLength * sizeof(u8));
+    if (path_has_traversal(mod->relativePath)) {
+        LOG_ERROR("Received an invalid relative path!");
+        mod->relativePath[0] = '\0'; // clear relative path so it isn't incorrectly used elsewhere
+        return;
+    }
+
     // get relative entry path len
     u16 relativeEntryPathFileLength = 0;
     packet_read(p, &relativeEntryPathFileLength, sizeof(u16));
@@ -253,7 +293,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
     packet_read(p, mod->relativeEntryPath, relativeEntryPathFileLength * sizeof(u8));
     if (path_has_traversal(mod->relativeEntryPath)) {
         LOG_ERROR("Received an invalid relative entry path!");
-        mod->relativeEntryPath[0] = '\0'; // clear relative path so it isn't incorrectly used elsewhere
+        mod->relativeEntryPath[0] = '\0'; // clear relative entry path so it isn't incorrectly used elsewhere
         return;
     }
 
