@@ -241,7 +241,7 @@ void network_receive_mod_list_entry(struct Packet* p) {
 
     // get id
     if (idLength > 0) {
-        char modId[MOD_NAME_SIZE] = { 0 };
+        char modId[MOD_ID_SIZE] = { 0 };
         packet_read(p, modId, idLength * sizeof(u8));
         mod->id = strdup(modId);
     } else {

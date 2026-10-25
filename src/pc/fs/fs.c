@@ -430,7 +430,7 @@ bool fs_sys_rmdir(const char *name) {
 
 bool fs_sys_load_file(const char *path, char **outContents, size_t *outSize) {
     // open file with the task to read
-    FILE *file = fopen(path, "r");
+    FILE *file = fopen(path, "rb");
     if (!file) { return false; }
 
     // get size of file

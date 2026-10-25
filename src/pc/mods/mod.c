@@ -456,6 +456,7 @@ static bool mod_extract_bool_lua_field(bool *outValue, const char *fieldName, ch
     if (!mod_extract_string_lua_field(&fieldValue, fieldName, buffer)) { return false; }
 
     *outValue = (strcmp(fieldValue, "true") == 0);
+    free(fieldValue);
     return true;
 }
 
@@ -698,7 +699,6 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         snprintf(relativeEntryFilePath, SYS_MAX_PATH, "%s", (manifestModEntryPath != NULL ? manifestModEntryPath : MOD_ENTRY_FILE));
         hasManifest = fs_sys_file_exists(manifestPath);
         isCustomEntryFile = (manifestModEntryPath != NULL);
-        free((char *)manifestModEntryPath);
         yyjson_doc_free(doc);
 
         // get full entry lua path
