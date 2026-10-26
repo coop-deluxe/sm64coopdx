@@ -1073,6 +1073,7 @@
 --- @field public ceilNormalMaxY number
 --- @field public skipGoddard integer
 --- @field public skipFileSelect integer
+--- @field public fixAllActs integer
 
 --- @class MarioAnimation
 --- @field public currentAnimAddr Pointer_integer

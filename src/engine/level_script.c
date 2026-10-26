@@ -574,20 +574,31 @@ static void level_cmd_init_mario(void) {
     sCurrentCmd = CMD_NEXT;
 }
 
+bool act_flags_match_act(u8 actFlags, s16 actNum) {
+    if (gLevelValues.disableActs) {
+        return true;
+    }
+
+    u8 allActs = gLevelValues.fixAllActs ? ALL_ACTS : ALL_ACTS_MACRO;
+
+    if (actFlags == allActs) {
+        return true;
+    }
+
+    if (actNum > 0 && actNum <= 8) {
+        return (actFlags & (1 << (actNum - 1))) != 0;
+    }
+
+    return actFlags == ALL_ACTS;
+}
+
 static void level_cmd_place_object(void) {
     u16 model;
     struct SpawnInfo *spawnInfo;
 
     u8 actFlags = CMD_GET(u8, 2);
-    u8 actMatch;
 
-    if (gCurrActNum > 0) {
-        actMatch = actFlags & (1 << (gCurrActNum - 1)) || actFlags == ALL_ACTS_MACRO;
-    } else {
-        actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
-    }
-
-    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
+    if (sCurrAreaIndex != -1 && act_flags_match_act(actFlags, gCurrActNum)) {
         model = CMD_GET(u8, 3);
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
@@ -994,15 +1005,8 @@ static void level_cmd_place_object_ext_lua_params(void) {
     )));
 
     level_cmd_get_lua_param(actFlags, u8, OBJECT_EXT_LUA_ACTS);
-    u8 actMatch;
 
-    if (gCurrActNum > 0) {
-        actMatch = actFlags & (1 << (gCurrActNum - 1)) || actFlags == ALL_ACTS_MACRO;
-    } else {
-        actMatch = (actFlags == ALL_ACTS_MACRO) || (actFlags == ALL_ACTS);
-    }
-
-    if (sCurrAreaIndex != -1 && (gLevelValues.disableActs || actMatch)) {
+    if (sCurrAreaIndex != -1 && act_flags_match_act(actFlags, gCurrActNum)) {
         spawnInfo = dynamic_pool_alloc(gLevelPool, sizeof(struct SpawnInfo));
 
         level_cmd_get_lua_param(modelId, u32, OBJECT_EXT_LUA_MODEL);
