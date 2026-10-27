@@ -80,8 +80,7 @@ f32 djui_gfx_get_max_scale(void) {
 }
 
 f32 djui_gfx_get_scale(void) {
-    if (configDjuiScale == 0) {
-        // auto
+    if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
         gfx_wm_get_drawable_size(&windowWidth, &windowHeight);
         return MAX(round_to_multiple_f(((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f, 0.25f), DJUI_MIN_SCALE);
