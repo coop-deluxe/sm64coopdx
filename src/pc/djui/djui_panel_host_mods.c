@@ -16,6 +16,7 @@
 #include "djui_panel_playerlist.h"
 #include "djui_panel_pause.h"
 #include "pc/thread.h"
+#include "pc/debuglog.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
 
@@ -166,7 +167,7 @@ bool should_add_mod_to_list(struct Mod* mod, const char* category) {
 
 void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     bool foundAny = false;
-    for (int i = 0; i < gLocalMods.entryCount; i++) {
+    for (u32 i = 0; i < gLocalMods.entryCount; i++) {
         struct Mod* mod = gLocalMods.entries[i];
         char* category = mod->category != NULL ? mod->category : mod->incompatible;
         if (category != NULL) {
@@ -198,17 +199,21 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
     }
 }
 
-static void djui_panel_rebuild_mods_list(UNUSED struct DjuiBase* caller) {
-    if (gModRefreshThread.state == RUNNING) { return; }
+static void djui_panel_rebuild_mods_list(UNUSED struct DjuiBase *caller) {
+    if (gModRefreshThread.state == THREAD_STATE_RUNNING) { return; }
     djui_base_destroy_children(&sModLayout->base);
     djui_panel_host_mods_add_mods(&sModLayout->base);
     djui_paginated_calculate_height(sModPaginated);
 }
 
-static void* threaded_mod_refresh(UNUSED void* unused) {
+static void *threaded_mod_refresh(UNUSED void *unused) {
     mods_refresh_local();
+    queue_thread_callback_call(&gModRefreshThread);
+    return NULL;
+}
 
-    if (gModRefreshThread.state == RUNNING) { join_thread(&gModRefreshThread); }
+static void threaded_mod_refreshed(void) {
+    join_thread(&gModRefreshThread);
 
     mods_update_selectable();
     djui_panel_host_mods_add_mods(&sModLayout->base);
@@ -219,17 +224,20 @@ static void* threaded_mod_refresh(UNUSED void* unused) {
     djui_base_set_enabled(&sBackButton->base, true);
     gDjuiPanelDisableBack = false;
 
-    return NULL;
+    djui_panel_rebuild_mods_list(NULL);
 }
 
 static void djui_panel_menu_refresh(UNUSED struct DjuiBase* base) {
     djui_base_destroy_children(&sModLayout->base);
+
+    gModRefreshThread.callback = threaded_mod_refreshed;
     if (init_thread_handle(&gModRefreshThread, threaded_mod_refresh, NULL, NULL, 0) == 0) {
         djui_text_set_text(sRefreshButton->text, DLANG(LOBBIES, REFRESHING));
         djui_base_set_enabled(&sRefreshButton->base, false);
         djui_base_set_enabled(&sBackButton->base, false);
         gDjuiPanelDisableBack = true;
     } else {
+        LOG_ERROR("Failed to thread mod refresh, refreshing on main thread...");
         threaded_mod_refresh(NULL);
     }
 }
