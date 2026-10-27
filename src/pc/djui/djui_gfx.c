@@ -83,9 +83,13 @@ f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
         gfx_wm_get_drawable_size(&windowWidth, &windowHeight);
-        return MAX(round_to_multiple_f(((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f, 0.25f), DJUI_MIN_SCALE);
+
+        f32 scaleX = (f32)windowWidth / (f32)SCREEN_WIDTH;
+        f32 scaleY = (f32)windowHeight / (f32)SCREEN_HEIGHT;
+
+        return MAX(round_to_multiple_f(MIN(scaleX, scaleY) / 4.0f, 0.25f), DJUI_MIN_SCALE);
     } else {
-        return MAX(DJUI_MIN_SCALE, MIN(configDjuiScale, djui_gfx_get_max_scale()));
+        return clamp(configDjuiScale, DJUI_MIN_SCALE, djui_gfx_get_max_scale());
     }
 }
 

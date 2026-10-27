@@ -103,9 +103,6 @@ static void gfx_wm_reset_dimension_and_pos(void) {
 
 void gfx_wm_init(const char *window_title) {
     if (gCLIOpts.headless) { return; }
-#if defined(_WIN32)
-    SetProcessDPIAware();
-#endif
 
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     SDL_Init(SDL_INIT_VIDEO);
