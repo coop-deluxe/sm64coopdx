@@ -194,7 +194,9 @@ void network_receive_player(struct Packet* p);
 
 // packet_object.c
 void network_send_object(struct Object* o);
+void network_send_object_to(u8 sendToLocalIndex, struct Object* o);
 void network_send_object_reliability(struct Object* o, bool reliable);
+void network_send_object_reliability_to(u8 sendToLocalIndex, struct Object* o, bool reliable);
 void network_receive_object(struct Packet* p);
 void network_update_objects(void);
 
