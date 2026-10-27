@@ -27,7 +27,30 @@ bool mouse_relative_enabled;
 void controller_mouse_read_window(void) {
     if (!mouse_init_ok) { return; }
 
+    // SDL_GetMouseState for some reason grabs the coordinates in window scale, not drawable scale
+    // Thanks to the folks at SDL, for some reason no function is provided to get the mouse coordinates in
+    // "drawable space" which isn't exactly convenient. So to calculate the scale manually, we need to
+    // apply a scale to the mouse coordinates to convert from window scale to drawable scale
+    u32 windowSizeX;
+    u32 windowSizeY;
+    u32 drawableX;
+    u32 drawableY;
+    gfx_wm_get_window_size(&windowSizeX, &windowSizeY);
+    gfx_wm_get_drawable_size(&drawableX, &drawableY);
+
+    if (windowSizeX == 0 || windowSizeY == 0) { return; }
+
+    f32 scaleX = (f32)drawableX / (f32)windowSizeX;
+    f32 scaleY = (f32)drawableY / (f32)windowSizeY;
+
+    // grab mouse coords
     mouse_window_buttons = SDL_GetMouseState(&mouse_window_x, &mouse_window_y);
+
+    // account for scaling
+    mouse_window_x *= scaleX;
+    mouse_window_y *= scaleY;
+
+    // account for 4:3 usage
     mouse_window_x -= gfx_current_dimensions.x_adjust_4by3;
     mouse_window_y -= gfx_current_dimensions.y_adjust_4by3;
 }

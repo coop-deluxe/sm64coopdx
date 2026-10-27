@@ -69,19 +69,27 @@ f32 round_to_multiple_f(f32 value, f32 multiple) {
     return roundf(value / multiple) * multiple;
 }
 
+f32 djui_gfx_get_max_scale(void) {
+    u32 windowWidth, windowHeight;
+    gfx_wm_get_drawable_size(&windowWidth, &windowHeight);
+
+    f32 scaleX = (f32)windowWidth / (f32)SCREEN_WIDTH;
+    f32 scaleY = (f32)windowHeight / (f32)SCREEN_HEIGHT;
+
+    return MAX(round_to_multiple_f((MIN(scaleX, scaleY)) / 3.0f, 0.25f), DJUI_MIN_SCALE);
+}
+
 f32 djui_gfx_get_scale(void) {
     if (configDjuiScale == 0) { // auto
         u32 windowWidth, windowHeight;
-        gfx_get_dimensions(&windowWidth, &windowHeight);
-        return clamp(round_to_multiple_f(((f32)windowHeight / (f32)SCREEN_HEIGHT) / 4.0f, 0.5f), 0.5f, 1.5f);
+        gfx_wm_get_drawable_size(&windowWidth, &windowHeight);
+
+        f32 scaleX = (f32)windowWidth / (f32)SCREEN_WIDTH;
+        f32 scaleY = (f32)windowHeight / (f32)SCREEN_HEIGHT;
+
+        return MAX(round_to_multiple_f(MIN(scaleX, scaleY) / 4.0f, 0.25f), DJUI_MIN_SCALE);
     } else {
-        switch (configDjuiScale) {
-            case 1:  return 0.5f;
-            case 2:  return 0.75f;
-            case 3:  return 1.0f;
-            case 4:  return 1.5f;
-            default: return 1.0f;
-        }
+        return clamp(configDjuiScale, DJUI_MIN_SCALE, djui_gfx_get_max_scale());
     }
 }
 

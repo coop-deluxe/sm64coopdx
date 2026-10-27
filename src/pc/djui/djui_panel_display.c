@@ -14,6 +14,7 @@ static struct DjuiText* sRestartText = NULL;
 static u32 sMsaaSelection = 0;
 static u32 sMsaaOriginal = OPTION_ORIGINAL_UNSET;
 static u32 sGfxWindowBackendOriginal = OPTION_ORIGINAL_UNSET;
+static u32 sAllowHidpiOriginal = OPTION_ORIGINAL_UNSET;
 
 static void djui_panel_display_apply(UNUSED struct DjuiBase* caller) {
     configWindow.settings_changed = true;
@@ -39,7 +40,11 @@ static void djui_panel_display_frame_limit_text_change(struct DjuiBase* caller) 
 }
 
 static void djui_panel_display_update_restart_text(UNUSED struct DjuiBase* caller) {
-    if (sMsaaOriginal != configWindow.msaa || sGfxWindowBackendOriginal != configGraphicsBackend) {
+    if (
+        sMsaaOriginal != configWindow.msaa ||
+        sGfxWindowBackendOriginal != configGraphicsBackend ||
+        sAllowHidpiOriginal != configAllowHidpi
+    ) {
         djui_text_set_text(sRestartText, DLANG(DISPLAY, MUST_RESTART));
     } else {
         djui_text_set_text(sRestartText, "");
@@ -65,12 +70,16 @@ void djui_panel_display_create(struct DjuiBase* caller) {
     // save original msaa value
     if (sMsaaOriginal == OPTION_ORIGINAL_UNSET) { sMsaaOriginal = configWindow.msaa; }
     if (sGfxWindowBackendOriginal == OPTION_ORIGINAL_UNSET) { sGfxWindowBackendOriginal = configGraphicsBackend; }
+    if (sAllowHidpiOriginal == OPTION_ORIGINAL_UNSET) { sAllowHidpiOriginal = configAllowHidpi; }
 
     {
         djui_checkbox_create(body, DLANG(DISPLAY, FULLSCREEN), &configWindow.fullscreen, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, FORCE_4BY3), &configForce4By3, djui_panel_display_apply);
         djui_checkbox_create(body, DLANG(DISPLAY, SHOW_FPS), &configShowFPS, NULL);
         djui_checkbox_create(body, DLANG(DISPLAY, VSYNC), &configWindow.vsync, djui_panel_display_apply);
+#if !defined(_WIN32)
+        djui_checkbox_create(body, DLANG(DISPLAY, ALLOW_HIDPI), &configAllowHidpi, djui_panel_display_update_restart_text);
+#endif
 
 #if defined(_WIN32)
         static char *gfxBackendChoices[] = { "OpenGL", "DirectX 11" };

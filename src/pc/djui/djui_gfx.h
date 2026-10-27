@@ -5,6 +5,8 @@
 #define DJUI_MTX_PUSH   1
 #define DJUI_MTX_NOPUSH 2
 
+#define DJUI_MIN_SCALE 0.25f
+
 extern const Gfx dl_djui_menu_rect[];
 extern const Gfx dl_djui_simple_rect[];
 extern const Gfx dl_djui_img_begin[];
@@ -12,6 +14,8 @@ extern const Gfx dl_djui_img_end[];
 
 void djui_gfx_displaylist_begin(void);
 void djui_gfx_displaylist_end(void);
+
+f32 djui_gfx_get_max_scale(void);
 
 /* |description|Gets the current visual scaling factor of DJUI|descriptionEnd| */
 f32 djui_gfx_get_scale(void);
