@@ -58,6 +58,8 @@ static char* sLevelChoices[18] = {
     "WDW"
 };
 
+static u32 sDjuiScale = 0;
+
 void djui_panel_main_menu_create(struct DjuiBase* caller);
 
 static void djui_panel_level_menu(UNUSED struct DjuiBase* caller) {
@@ -89,6 +91,11 @@ static void djui_panel_staff_roll(UNUSED struct DjuiBase* caller) {
 extern bool gDjuiChangingTheme;
 static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* caller) {
     gDjuiChangingTheme = true;
+
+    // set djui scale
+    configDjuiScale = (sDjuiScale * 0.25f);
+
+    // reload djui panels
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();
         gDjuiInMainMenu = true;
@@ -114,6 +121,7 @@ static void djui_panel_menu_options_djui_setting_change(UNUSED struct DjuiBase* 
         djui_text_set_text(gDjuiModReload, DLANG(MISC, L_BUTTON));
     }
 
+    // reload chat box
     if (gDjuiChatBox) {
         struct DjuiTheme* theme = gDjuiThemes[configDjuiTheme];
         struct DjuiColor* textColor = &theme->interactables.textColor;
@@ -128,8 +136,9 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(MENU_OPTIONS, MENU_TITLE), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
 
-    djui_themes_init();
+    sDjuiScale = (u32)(configDjuiScale / 0.25f);
 
+    djui_themes_init();
     {
         djui_checkbox_create(body, DLANG(DJUI_THEMES, CENTER), &configDjuiThemeCenter, djui_panel_menu_options_djui_setting_change);
         djui_checkbox_create(body, DLANG(DJUI_THEMES, GRADIENTS), &configDjuiThemeGradients, djui_panel_menu_options_djui_setting_change);
@@ -142,8 +151,24 @@ void djui_panel_main_menu_create(struct DjuiBase* caller) {
         }
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_THEME), themeChoices, DJUI_THEME_MAX, &configDjuiTheme, djui_panel_menu_options_djui_setting_change);
 
-        char* djuiScaleChoices[5] = {DLANG(DJUI_THEMES, AUTO), "x0.5", "x0.75", "x1.0", "x1.5"};
-        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, 5, &configDjuiScale, djui_panel_menu_options_djui_setting_change);
+        u32 maxDjuiScaleOptions = (djui_gfx_get_max_scale() / 0.25f) + 1; // + 1 for auto
+        char **djuiScaleChoices = calloc(maxDjuiScaleOptions, sizeof(char *));
+
+        djuiScaleChoices[0] = strdup(DLANG(DJUI_THEMES, AUTO));
+
+        for (u32 i = 1; i < maxDjuiScaleOptions; i++) {
+            char choice[16] = { 0 };
+            snprintf(choice, sizeof(choice), "%gx", 0.25f * (f32)i);
+            djuiScaleChoices[i] = strdup(choice);
+        }
+        if (sDjuiScale > maxDjuiScaleOptions - 1) { sDjuiScale = maxDjuiScaleOptions - 1; }
+        djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_SCALE), djuiScaleChoices, maxDjuiScaleOptions, &sDjuiScale, djui_panel_menu_options_djui_setting_change);
+
+        for (u32 i = 0; i < maxDjuiScaleOptions; i++) {
+            free(djuiScaleChoices[i]);
+        }
+        free(djuiScaleChoices);
+        djuiScaleChoices = NULL;
 
         char* djuiFontChoices[2] = {DLANG(DJUI_THEMES, FONT_NORMAL), DLANG(DJUI_THEMES, FONT_ALIASED)};
         djui_selectionbox_create(body, DLANG(DJUI_THEMES, DJUI_FONT), djuiFontChoices, 2, &configDjuiThemeFont, djui_panel_menu_options_djui_setting_change);

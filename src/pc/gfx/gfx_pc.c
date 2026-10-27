@@ -2061,7 +2061,7 @@ static void gfx_sp_reset(void) {
 }
 
 void gfx_get_dimensions(uint32_t *width, uint32_t *height) {
-    gfx_wm_get_dimensions(width, height);
+    gfx_wm_get_drawable_size(width, height);
     if (configForce4By3) {
         if (((4.0f / 3.0f) * *height) < *width) {
             *width = (4.0f / 3.0f) * *height;
@@ -2095,7 +2095,7 @@ void gfx_start_frame(void) {
         rdp.loaded_texture[1].size_bytes = 0;
     }
     gfx_wm_handle_events();
-    gfx_wm_get_dimensions(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
+    gfx_wm_get_drawable_size(&gfx_current_dimensions.width, &gfx_current_dimensions.height);
     if (gfx_current_dimensions.width == 0) {
         // Avoid division by zero
         gfx_current_dimensions.width = 1;

@@ -136,7 +136,19 @@ void gfx_wm_main_loop(void (*run_one_game_iter)(void)) {
     run_one_game_iter();
 }
 
-void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height) {
+void gfx_wm_get_drawable_size(uint32_t *width, uint32_t *height) {
+    if (currBackend == GFX_WINDOW_BACKEND_DUMMY) {
+        if (width) { *width = 320; }
+        if (height) { *height = 240; }
+        return;
+    }
+    int w, h;
+    SDL_GetWindowSizeInPixels(sSdlWindow, &w, &h);
+    if (width) { *width = w; }
+    if (height) { *height = h; }
+}
+
+void gfx_wm_get_window_size(uint32_t *width, uint32_t *height) {
     if (currBackend == GFX_WINDOW_BACKEND_DUMMY) {
         if (width) { *width = 320; }
         if (height) { *height = 240; }

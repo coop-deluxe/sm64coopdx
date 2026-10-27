@@ -42,7 +42,8 @@ void gfx_wm_set_keyboard_callbacks(kb_callback_t on_key_down, kb_callback_t on_k
     void (*on_text_input)(char*), void (*on_text_editing)(char*, int));
 void gfx_wm_set_scroll_callback(void (*on_scroll)(float, float));
 void gfx_wm_main_loop(void (*run_one_game_iter)(void));
-void gfx_wm_get_dimensions(uint32_t *width, uint32_t *height);
+void gfx_wm_get_drawable_size(uint32_t *width, uint32_t *height);
+void gfx_wm_get_window_size(uint32_t *width, uint32_t *height);
 void gfx_wm_handle_events(void);
 bool gfx_wm_start_frame(void);
 void gfx_wm_swap_buffers_begin(void);
