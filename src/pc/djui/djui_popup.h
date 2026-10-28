@@ -1,5 +1,8 @@
 #pragma once
+
 #include "djui.h"
+
+#define MAX_GLOBAL_POPUP_MESSAGE_LENGTH 512
 
 struct DjuiPopup {
     struct DjuiBase base;

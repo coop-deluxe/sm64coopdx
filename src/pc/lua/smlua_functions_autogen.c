@@ -32714,6 +32714,23 @@ int smlua_func_djui_get_playerlist_page_index(lua_State* L) {
     return 1;
 }
 
+int smlua_func_djui_chat_message_create_global(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 1) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "djui_chat_message_create_global", 1, top);
+        return 0;
+    }
+
+    const char* message = smlua_to_string(L, 1);
+    if (!gSmLuaConvertSuccess) { LOG_LUA("Failed to convert parameter %u for function '%s'", 1, "djui_chat_message_create_global"); return 0; }
+
+    djui_chat_message_create_global(message);
+
+    return 0;
+}
+
 int smlua_func_djui_is_chatbox_open(lua_State* L) {
     if (L == NULL) { return 0; }
 
@@ -38333,6 +38350,7 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "djui_is_playerlist_open", smlua_func_djui_is_playerlist_open);
     smlua_bind_function(L, "djui_attempting_to_open_playerlist", smlua_func_djui_attempting_to_open_playerlist);
     smlua_bind_function(L, "djui_get_playerlist_page_index", smlua_func_djui_get_playerlist_page_index);
+    smlua_bind_function(L, "djui_chat_message_create_global", smlua_func_djui_chat_message_create_global);
     smlua_bind_function(L, "djui_is_chatbox_open", smlua_func_djui_is_chatbox_open);
     smlua_bind_function(L, "djui_menu_get_font", smlua_func_djui_menu_get_font);
     smlua_bind_function(L, "djui_menu_get_theme", smlua_func_djui_menu_get_theme);

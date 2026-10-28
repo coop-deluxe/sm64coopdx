@@ -1998,6 +1998,29 @@ Gets the DJUI playerlist's page index
 
 <br />
 
+## djui_chat_message_create_global
+
+### Description
+Creates a chat message that is broadcasted to every client
+
+### Lua Example
+`djui_chat_message_create_global(message)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| message | `string` |
+
+### Returns
+- None
+
+### C Prototype
+`void djui_chat_message_create_global(const char *message);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## djui_is_chatbox_open
 
 ### Description
