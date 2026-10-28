@@ -1386,6 +1386,15 @@
 - G_SETSCISSOR
 - G_TEXRECTFLIP
 - G_TEXRECT
+- G_IM_FMT_RGBA
+- G_IM_FMT_YUV
+- G_IM_FMT_CI
+- G_IM_FMT_IA
+- G_IM_FMT_I
+- G_IM_SIZ_4b
+- G_IM_SIZ_8b
+- G_IM_SIZ_16b
+- G_IM_SIZ_32b
 
 [:arrow_up_small:](#)
 

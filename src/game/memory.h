@@ -92,6 +92,7 @@ struct DynamicPool* dynamic_pool_init(void);
 void* dynamic_pool_alloc(struct DynamicPool *pool, u32 size);
 void dynamic_pool_free(struct DynamicPool *pool, void* ptr);
 void dynamic_pool_free_pool(struct DynamicPool *pool);
+bool dynamic_pool_contains(struct DynamicPool *pool, void* ptr);
 
 struct GrowingPool* growing_pool_init(struct GrowingPool* pool, u32 nodeSize);
 void* growing_pool_alloc(struct GrowingPool *pool, u32 size);
