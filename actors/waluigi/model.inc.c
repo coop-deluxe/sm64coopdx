@@ -42,38 +42,38 @@ static const Lights1 waluigi_black_lights_group = gdSPDefLights1(
 );
 
 #include "actors/mario/mario_externs.h"
-#define waluigi_texture_metal_shade              mario_texture_metal_shade
-#define waluigi_texture_metal_light              mario_texture_metal_light
+#define waluigi_texture_metal_shade              mario_texture_metal
+#define waluigi_texture_metal_light              mario_texture_metal
 #define waluigi_texture_yellow_button            mario_texture_yellow_button
 #define waluigi_texture_wings_half_1             mario_texture_wings_half_1
 #define waluigi_texture_wings_half_2             mario_texture_wings_half_2
-#define waluigi_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1_shade
-#define waluigi_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1_light
-#define waluigi_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2_shade
-#define waluigi_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2_light
+#define waluigi_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1
+#define waluigi_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1
+#define waluigi_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2
+#define waluigi_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2
 
 ALIGNED8 const Texture waluigi_texture_r_logo[] = {
-#include "actors/waluigi/custom_waluigi_logo.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_logo.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_r_blend[] = {
-#include "actors/waluigi/custom_waluigi_logo_blend.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_logo.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_r_cap[] = {
-#include "actors/waluigi/custom_waluigi_cap.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_logo.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_hair_sideburn[] = {
-#include "actors/waluigi/custom_waluigi_sideburn.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_sideburn.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_add_sideburn[] = {
-#include "actors/waluigi/custom_waluigi_sideburn_add.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_sideburn.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_skin_sideburn[] = {
-#include "actors/waluigi/custom_waluigi_skin.rgba16.inc.c"
+#include "actors/waluigi/custom_waluigi_sideburn.ia16.inc.c"
 };
 
 ALIGNED8 const Texture waluigi_texture_mouth[] = {

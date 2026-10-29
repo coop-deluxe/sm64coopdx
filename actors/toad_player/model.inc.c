@@ -31,21 +31,21 @@ static const Lights1 toad_player_black_lights_group = gdSPDefLights1(
     0x00, 0x00, 0x00, 0x28, 0x28, 0x28);
 
 #include "actors/mario/mario_externs.h"
-#define toad_player_texture_metal_shade              mario_texture_metal_shade
-#define toad_player_texture_metal_light              mario_texture_metal_light
+#define toad_player_texture_metal_shade              mario_texture_metal
+#define toad_player_texture_metal_light              mario_texture_metal
 #define toad_player_texture_wings_half_1             mario_texture_wings_half_1
 #define toad_player_texture_wings_half_2             mario_texture_wings_half_2
-#define toad_player_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1_shade
-#define toad_player_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1_light
-#define toad_player_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2_shade
-#define toad_player_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2_light
+#define toad_player_texture_metal_wings_half_1_shade mario_texture_metal_wings_half_1
+#define toad_player_texture_metal_wings_half_1_light mario_texture_metal_wings_half_1
+#define toad_player_texture_metal_wings_half_2_shade mario_texture_metal_wings_half_2
+#define toad_player_texture_metal_wings_half_2_light mario_texture_metal_wings_half_2
 
 ALIGNED8 const Texture toad_player_texture_cap[] = {
-    #include "actors/toad_player/custom_toad_cap.ia16.inc.c"
+    #include "actors/toad_player/custom_toad_head.ia16.inc.c"
 };
 
 ALIGNED8 const Texture toad_player_texture_spots[] = {
-    #include "actors/toad_player/custom_toad_spots.ia16.inc.c"
+    #include "actors/toad_player/custom_toad_head.ia16.inc.c"
 };
 
 ALIGNED8 const Texture toad_player_texture_hair[] = {
@@ -53,11 +53,11 @@ ALIGNED8 const Texture toad_player_texture_hair[] = {
 };
 
 ALIGNED8 const Texture toad_player_texture_face_neutral[] = {
-    #include "actors/toad_player/custom_toad_face_neutral.rgba32.inc.c"
+    #include "actors/toad_player/custom_toad_eyes_center.rgba32.inc.c"
 };
 
 ALIGNED8 const Texture toad_player_texture_face_dead[] = {
-    #include "actors/toad_player/custom_toad_face_dead.rgba32.inc.c"
+    #include "actors/toad_player/custom_toad_eyes_dead.rgba32.inc.c"
 };
 
 ALIGNED8 const Texture toad_player_texture_eyes_front[] = {
