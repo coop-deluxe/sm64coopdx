@@ -14,7 +14,7 @@ static s16 verts_mario_eyebrow_right[][3] = {
     { 41, 345, 382 },
 };
 
-static struct GdVtxData vtx_mario_eyebrow_right = { ARRAY_COUNT(verts_mario_eyebrow_right), 0x1, verts_mario_eyebrow_right };
+struct GdVtxData vtx_mario_eyebrow_right = { ARRAY_COUNT(verts_mario_eyebrow_right), 0x1, verts_mario_eyebrow_right };
 
 static u16 facedata_mario_eyebrow_right[][4] = {
     { 0, 0, 1, 2 },    { 0, 3, 4, 5 },    { 0, 20, 23, 19 }, { 0, 1, 25, 22 }, { 0, 0, 21, 13 },
@@ -27,7 +27,7 @@ static u16 facedata_mario_eyebrow_right[][4] = {
     { 0, 9, 7, 5 },
 };
 
-static struct GdFaceData faces_mario_eyebrow_right = { ARRAY_COUNT(facedata_mario_eyebrow_right), 0x1, facedata_mario_eyebrow_right };
+struct GdFaceData faces_mario_eyebrow_right = { ARRAY_COUNT(facedata_mario_eyebrow_right), 0x1, facedata_mario_eyebrow_right };
 
 struct DynList dynlist_mario_eyebrow_right_shape[] = {
     BeginList(),
@@ -62,7 +62,7 @@ static s16 verts_mario_eyebrow_left[][3] = {
     { -212, 358, 323 },
 };
 
-static struct GdVtxData vtx_mario_eyebrow_left = { ARRAY_COUNT(verts_mario_eyebrow_left), 0x1, verts_mario_eyebrow_left };
+struct GdVtxData vtx_mario_eyebrow_left = { ARRAY_COUNT(verts_mario_eyebrow_left), 0x1, verts_mario_eyebrow_left };
 
 static u16 facedata_mario_eyebrow_left[][4] = {
     { 0, 0, 1, 2 },    { 0, 8, 22, 6 },   { 0, 6, 7, 8 },    { 0, 9, 10, 11 },  { 0, 1, 12, 2 },
@@ -75,7 +75,7 @@ static u16 facedata_mario_eyebrow_left[][4] = {
     { 0, 25, 13, 11 },
 };
 
-static struct GdFaceData faces_mario_eyebrow_left = { ARRAY_COUNT(facedata_mario_eyebrow_left), 0x1, facedata_mario_eyebrow_left };
+struct GdFaceData faces_mario_eyebrow_left = { ARRAY_COUNT(facedata_mario_eyebrow_left), 0x1, facedata_mario_eyebrow_left };
 
 struct DynList dynlist_mario_eyebrow_left_shape[] = {
     BeginList(),
@@ -118,7 +118,7 @@ static s16 verts_mario_mustache[][3] = {
     { -121, -188, 384 }, { 75, -191, 396 },   { 304, 20, 332 },    { -304, 20, 332 },
 };
 
-static struct GdVtxData vtx_mario_mustache = { ARRAY_COUNT(verts_mario_mustache), 0x1, verts_mario_mustache };
+struct GdVtxData vtx_mario_mustache = { ARRAY_COUNT(verts_mario_mustache), 0x1, verts_mario_mustache };
 
 static u16 facedata_mario_mustache[][4] = {
     { 0, 0, 1, 2 },    { 0, 3, 4, 5 },    { 0, 3, 5, 46 },   { 0, 6, 0, 7 },    { 0, 6, 7, 33 },
@@ -143,7 +143,7 @@ static u16 facedata_mario_mustache[][4] = {
     { 0, 17, 48, 55 }, { 0, 35, 49, 7 },  { 0, 54, 11, 23 }, { 0, 46, 5, 45 },  { 0, 5, 36, 45 },
 };
 
-static struct GdFaceData faces_mario_mustache = { ARRAY_COUNT(facedata_mario_mustache), 0x1, facedata_mario_mustache };
+struct GdFaceData faces_mario_mustache = { ARRAY_COUNT(facedata_mario_mustache), 0x1, facedata_mario_mustache };
 
 struct DynList dynlist_mario_mustache_shape[] = {
     BeginList(),

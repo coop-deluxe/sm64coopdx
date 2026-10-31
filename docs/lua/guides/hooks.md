@@ -46,15 +46,15 @@ id_bhvExample = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_example_init, bhv
 ### Parameters
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| behaviorId | [enum BehaviorId](../constants.md#enum-BehaviorId) \| `integer` \| `nil` | The behavior id of the object to modify. Pass in as `nil` to create a custom object |
-| objectList | [enum ObjectList](../constants.md#enum-ObjectList) \| `integer` \| `nil` | Object list. Pass in as `nil` to use the vanilla object list or the already assigned object list in case of multiple hooks |
+| behaviorId | [BehaviorId](../structs.md#BehaviorId) \| `integer` \| `nil` | The behavior id of the object to modify. Pass in as `nil` to create a custom object |
+| objectList | [ObjectList](../structs.md#ObjectList) \| `integer` \| `nil` | Object list. Pass in as `nil` to use the vanilla object list or the already assigned object list in case of multiple hooks |
 | replaceBehavior | `bool` | Whether or not to completely replace the behavior (ignored for non-vanilla behaviors, which are always replaced) |
 | initFunction | `function` | Run on object creation |
 | loopFunction | `function` | Run every frame |
 | behaviorName | `string` | Optional, name to give to the behavior to be able to retrieve it with `get_id_from_behavior_name` |
 
 ### Returns
-- [enum BehaviorId](../constants.md#enum-BehaviorId)
+- [BehaviorId](../structs.md#BehaviorId)
 
 [:arrow_up_small:](#)
 
@@ -197,7 +197,7 @@ hook_event(HOOK_MARIO_UPDATE, mario_update)
 ### Parameters
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| hookEventType | [enum LuaHookedEventType](../constants.md#enum-LuaHookedEventType) | When a function should run |
+| hookEventType | [LuaHookedEventType](../structs.md#LuaHookedEventType) | When a function should run |
 | func | `function` | The function to run |
 
 ### Returns
@@ -280,7 +280,7 @@ hook_mario_action(ACT_WALL_SLIDE, { every_frame = act_wall_slide, gravity = act_
 | ----- | ---- | ----------- |
 | actionId | `integer` | The action to replace |
 | funcOrFuncTable | `function` \| `table` | Action function or table with entries for action hooks |
-| interactionType | [enum InteractionFlag](../constants.md#enum-InteractionFlag) | Optional; The flag that determines how the action interacts with other objects |
+| interactionType | [InteractionFlag](../structs.md#InteractionFlag) | Optional; The flag that determines how the action interacts with other objects |
 
 ### Returns
 - None

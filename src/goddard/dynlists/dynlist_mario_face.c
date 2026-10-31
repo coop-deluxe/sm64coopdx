@@ -118,7 +118,7 @@ static s16 mario_Face_VtxData[][3] = {
     { -67, -114, 567 },   { 66, -114, 567 },    { 76, 126, 434 },     { -157, 46, 567 },
 };
 
-static struct GdVtxData mario_Face_VtxInfo = { ARRAY_COUNT(mario_Face_VtxData), 0x1, mario_Face_VtxData };
+struct GdVtxData mario_Face_VtxInfo = { ARRAY_COUNT(mario_Face_VtxData), 0x1, mario_Face_VtxData };
 
 static u16 mario_Face_FaceData[][4] = {
     { 0, 43, 102, 112 },  { 0, 102, 42, 188 },  { 0, 354, 356, 188 }, { 0, 188, 198, 354 },
@@ -343,7 +343,7 @@ static u16 mario_Face_FaceData[][4] = {
     { 7, 156, 424, 427 },
 };
 
-static struct GdFaceData mario_Face_FaceInfo = { ARRAY_COUNT(mario_Face_FaceData), 0x1, mario_Face_FaceData };
+struct GdFaceData mario_Face_FaceInfo = { ARRAY_COUNT(mario_Face_FaceData), 0x1, mario_Face_FaceData };
 
 struct DynList dynlist_mario_face_shape[] = {
     BeginList(),
