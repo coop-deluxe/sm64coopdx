@@ -64,6 +64,8 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
 
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_star(struct Packet* p) {

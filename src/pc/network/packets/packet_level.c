@@ -48,6 +48,8 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
             // send sync valid
             network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, -1, false);
         }
+        
+        packet_clear(&p);
     }
     packet_ordered_end();
 

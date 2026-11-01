@@ -52,6 +52,8 @@ void network_send_collect_item(struct Object* o) {
     packet_write(&p, &o->oPosX, sizeof(f32) * 3);
 
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_item(struct Packet* p) {

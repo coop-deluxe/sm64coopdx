@@ -34,6 +34,7 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
     packet_write(&p, &myGlobalIndex,  sizeof(u8));
     packet_write(&p, &forGlobalIndex, sizeof(u8));
     network_send_to((informServer ? gNetworkPlayerServer->localIndex : toNp->localIndex), &p);
+    packet_clear(&p);
 
     LOG_INFO("tx sync valid");
 }

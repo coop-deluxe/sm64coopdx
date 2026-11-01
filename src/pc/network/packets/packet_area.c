@@ -93,6 +93,8 @@ void network_send_area(struct NetworkPlayer* toNp) {
 
         // send area packet
         network_send_to(toNp->localIndex, &p);
+        
+        packet_clear(&p);
 
         // send objects
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
@@ -122,10 +124,11 @@ void network_send_area(struct NetworkPlayer* toNp) {
             if (so == NULL || so->o == NULL) { continue; }
             if (so->lastReliablePacketIsStale) { continue; }
             struct Packet* entPacket = sync_object_get_last_reliable_packet(so->id);
-            if (entPacket->error) { continue; }
+            if (datagram_has_error(&entPacket->dg)) { continue; }
             struct Packet p2 = { 0 };
             packet_duplicate(entPacket, &p2);
             network_send_to(toNp->localIndex, &p2);
+            packet_clear(&p2);
         }
 
         // send sync valid

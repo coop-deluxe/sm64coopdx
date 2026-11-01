@@ -1,13 +1,16 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "types.h"
+
 #include <PR/ultratypes.h>
 #include <time.h>
-#include "types.h"
 #include <assert.h>
 #include <stdbool.h>
 
 #define PACKET_LENGTH 3000
+#include "pc/network/packets/datagram.h"
+
 #define PACKET_DESTINATION_BROADCAST ((u8)-1)
 #define PACKET_DESTINATION_SERVER ((u8)-2)
 
@@ -89,29 +92,25 @@ enum PacketLevelMatchType {
 };
 
 struct Packet {
-    enum PacketType packetType;
-    u8 localIndex;
-    u16 dataLength;
-    u16 cursor;
+    struct Datagram dg;
     void* addr;
-    bool error;
-    bool writeError;
+    enum PacketType packetType;
+    bool sent;
     bool reliable;
     bool levelAreaMustMatch;
     bool levelMustMatch;
     bool requestBroadcast;
     bool keepSendingAfterDisconnect;
+    u8 localIndex;
     u8 destGlobalId;
     u16 seqId;
-    bool sent;
-    u8 orderedFromGlobalId;
     u16 orderedGroupId;
     u16 orderedSeqId;
+    u8 orderedFromGlobalId;
     u8 courseNum;
     u8 actNum;
-    s16 levelNum;
     u8 areaIndex;
-    u8 buffer[PACKET_LENGTH];
+    s16 levelNum;
 };
 
 enum KickReasonType {
@@ -153,14 +152,13 @@ struct LSTNetworkType {
 extern u8 gAllowOrderedPacketClear;
 
 // packet.c
-void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize);
-bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize);
 void packet_process(struct Packet* p);
 void packet_receive(struct Packet* packet);
 bool packet_spoofed(struct Packet* p, u8 globalIndex);
 
 // packet_read_write.c
 void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch);
+void packet_clear(struct Packet* packet);
 void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
 void packet_set_flags(struct Packet* packet);
 void packet_set_destination(struct Packet* packet, u8 destGlobalId);

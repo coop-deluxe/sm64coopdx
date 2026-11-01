@@ -84,7 +84,7 @@ void sync_object_forget(u32 syncId) {
         u32 syncId2 = so->o->oSyncID;
         struct SyncObject* so2 = sync_object_get(syncId2);
         if (so == so2) {
-            so->lastReliablePacket.error = true;
+            so->lastReliablePacket.dg.flags |= SET_BIT(1, 2); // Set error flag.
         }
         area_remove_sync_ids_add(syncId2);
     }
@@ -122,7 +122,7 @@ void sync_object_forget(u32 syncId) {
 void sync_object_forget_last_reliable_packet(u32 syncId) {
     struct SyncObject* so = sync_object_get(syncId);
     if (!so) { return; }
-    so->lastReliablePacket.error = true;
+    so->lastReliablePacket.dg.flags |= SET_BIT(1, 2); // Set error flag.
 }
 
 // MurmurHash3 finalizer
@@ -200,7 +200,7 @@ struct SyncObject* sync_object_init(struct Object *o, float maxSyncDistance) {
     memset(so->extraFields, 0, sizeof(so->extraFields));
     memset(so->extraFieldsSizeBytes, 0, sizeof(so->extraFieldsSizeBytes));
 
-    so->lastReliablePacket.error = true;
+    so->lastReliablePacket.dg.flags |= SET_BIT(1, 2); // Set error flag.
     o->coopFlags |= COOP_OBJ_FLAG_INITIALIZED;
 
     return so;

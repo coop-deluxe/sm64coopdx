@@ -222,6 +222,8 @@ void network_send_download_request(u64 offset) {
     packet_write(&p, &offset, sizeof(u64));
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    
+    packet_clear(&p);
 
     LOG_INFO("Requesting group: %llu [ %llu <---> %llu ]", (offset / GROUP_SIZE), offset, offset + GROUP_SIZE);
 }
@@ -312,6 +314,7 @@ after_filled:;
     packet_write(&p, &chunkFill,    sizeof(u64));
     packet_write(&p, &chunk,        sizeof(u8) * chunkFill);
     network_send_to(0, &p);
+    packet_clear(&p);
 
     //LOG_INFO("Sent chunk: offset %llu, length %llu", requestOffset, chunkFill);
 }

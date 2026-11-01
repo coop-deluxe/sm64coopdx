@@ -46,6 +46,7 @@ void network_send_change_area(void) {
     packet_write(&p, &gCurrLevelNum,   sizeof(s16));
     packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
+    packet_clear(&p);
 
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     np->currAreaSyncValid  = false;

@@ -14,6 +14,7 @@ void network_send_kick(u8 localIndex, enum KickReasonType kickReason) {
     p.keepSendingAfterDisconnect = (kickReason == EKT_REJOIN);
     packet_write(&p, &kickReasonType, sizeof(u8));
     network_send_to(localIndex, &p);
+    packet_clear(&p);
 }
 
 void network_receive_kick(struct Packet* p) {

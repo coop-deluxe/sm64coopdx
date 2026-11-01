@@ -8,6 +8,7 @@ void network_send_death(void) {
     packet_init(&p, PACKET_DEATH, true, PLMT_NONE);
     packet_write(&p, &gMarioStates[0].numLives, sizeof(u8));
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_death(struct Packet* p) {

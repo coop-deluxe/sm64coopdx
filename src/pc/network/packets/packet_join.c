@@ -53,6 +53,9 @@ void network_send_join_request(void) {
     packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    
+    packet_clear(&p);
+    
     LOG_INFO("sending join request");
 }
 
@@ -60,7 +63,7 @@ void network_receive_join_request(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("received join request");
 
-    if (p->dataLength > 5) {
+    if (datagram_length(&p->dg) > 5) {
         char version[MAX_VERSION_LENGTH] = { 0 };
         packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
         packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
@@ -95,7 +98,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
             return;
         }
     }
-    LOG_INFO("chose globalIndex: %d", globalIndex);
+    LOG_INFO("Chose globalIndex: %d", globalIndex);
 
     // do connection event
     network_player_connected(NPT_CLIENT, globalIndex, sJoinRequestPlayerModel, &sJoinRequestPlayerPalette, sJoinRequestPlayerName, sJoinRequestDiscordId);
@@ -108,7 +111,7 @@ void network_send_join(struct Packet* joinRequestPacket) {
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
-    LOG_INFO("sending version: %s", version);
+    LOG_INFO("Sending version: %s", version);
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN, true, PLMT_NONE);
@@ -129,7 +132,9 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     network_send_to(globalIndex, &p);
-    LOG_INFO("sending join packet");
+    LOG_INFO("Sending join packet");
+    
+    packet_clear(&p);
 
     network_send_network_players(globalIndex);
 }
@@ -137,14 +142,14 @@ void network_send_join(struct Packet* joinRequestPacket) {
 void network_receive_join(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     if (gNetworkPlayerLocal != NULL) { return; }
-    LOG_INFO("received join packet");
+    LOG_INFO("Received join packet");
     gCurrentlyJoining = true;
 
     gOverrideEeprom = eeprom;
 
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
-    LOG_INFO("client has version: %s", version);
+    LOG_INFO("Client has version: %s", version);
 
     char remoteVersion[MAX_VERSION_LENGTH] = { 0 };
     u8 myGlobalIndex = UNKNOWN_GLOBAL_INDEX;
@@ -156,10 +161,10 @@ void network_receive_join(struct Packet* p) {
 
     // verify version
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
-    LOG_INFO("server has version: %s", version);
+    LOG_INFO("Server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
         network_shutdown(true, false, false, false);
-        LOG_ERROR("version mismatch");
+        LOG_ERROR("Version mismatch");
         char mismatchMessage[256] = { 0 };
         snprintf(mismatchMessage, 256, "\\#ffa0a0\\Error:\\#\\ Version mismatch.\n\nYour version: \\#a0a0ff\\%s\\#\\\nTheir version: \\#a0a0ff\\%s\\#\\\n\nSomeone is out of date!\n", version, remoteVersion);
         djui_panel_join_message_error(mismatchMessage);

@@ -73,7 +73,10 @@ void network_send_chat(char* message, u8 globalIndex) {
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &messageLength, sizeof(u16));
     packet_write(&p, message, messageLength * sizeof(u8));
+    
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_chat(struct Packet* p) {

@@ -60,8 +60,10 @@ void network_send_collect_coin(struct Object* o) {
     packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
     packet_write(&p, &o->oDamageOrCoinValue, sizeof(s32));
     packet_write(&p, &gCurrAreaIndex, sizeof(s16));
-
+    
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_coin(struct Packet* p) {

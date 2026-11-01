@@ -35,6 +35,7 @@ void network_send_debug_sync(void) {
         packet_write(&p, &so->id, sizeof(u32));
         packet_write(&p, &behaviorId, sizeof(u32));
         network_send(&p);
+        packet_clear(&p);
     }
 }
 

@@ -10,11 +10,12 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     if (!gNetworkPlayers[0].moderator) return;
 
     u8 cccType = ccc; struct Packet p = { 0 };
-    LOG_INFO("sending chat command to host with type: %d", cccType);
+    LOG_INFO("Sending chat command to host with type: %d", cccType);
     packet_init(&p, PACKET_COMMAND, false, PLMT_NONE);
     packet_write(&p, &globalIndex, sizeof(u8));
     packet_write(&p, &cccType, sizeof(u8));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
+    packet_clear(&p);
 }
 
 void network_receive_chat_command(struct Packet *p) {

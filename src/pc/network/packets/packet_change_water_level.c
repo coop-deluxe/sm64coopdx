@@ -6,8 +6,8 @@ void network_send_change_water_level(u8 index, s16 height) {
     packet_init(&p, PACKET_CHANGE_WATER_LEVEL, true, PLMT_AREA);
     packet_write(&p, &index, sizeof(u8));
     packet_write(&p, &height, sizeof(s16));
-
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_change_water_level(struct Packet* p) {

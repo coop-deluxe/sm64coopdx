@@ -13,6 +13,7 @@ void network_send_save_file(s32 fileIndex) {
     packet_write(&p, &fileIndex,                sizeof(s32));
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
     network_send_to(gNetworkPlayerServer->localIndex, &p);
+    packet_clear(&p);
 }
 
 void network_receive_save_file(struct Packet* p) {

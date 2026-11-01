@@ -22,6 +22,7 @@ void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z,
     packet_write(&p, &o->oHomeX, sizeof(u32) * 3);
 
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_spawn_star(struct Packet* p) {
@@ -87,6 +88,7 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
     packet_write(&p, &params, sizeof(u32));
 
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_spawn_star_nle(struct Packet* p) {

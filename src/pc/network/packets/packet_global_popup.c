@@ -17,6 +17,8 @@ void network_send_global_popup(const char* message, int lines) {
 
     // send the packet
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_global_popup(struct Packet* p) {

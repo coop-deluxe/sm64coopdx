@@ -18,6 +18,7 @@ void network_send_level_area_request(struct NetworkPlayer* fromNp, struct Networ
     packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
     packet_write(&p, &fromNp->currAreaIndex,     sizeof(s16));
     network_send_to(toNp->localIndex, &p);
+    packet_clear(&p);
     LOG_INFO("tx level area request");
 }
 

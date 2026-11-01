@@ -146,6 +146,7 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
         LOG_INFO("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
     }
+    packet_clear(&p);
 }
 
 void network_receive_level_respawn_info(struct Packet* p) {
