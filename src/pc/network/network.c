@@ -337,6 +337,7 @@ void network_send_to(u8 localIndex, struct Packet* p) {
     }
     
     if (datagram_length(&dg) >= PACKET_LENGTH) {
+        LOG_ERROR("Packet is too large: %u", datagram_length(&dg));
         datagram_clear(&dg);
         return;
     }
