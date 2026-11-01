@@ -46,13 +46,72 @@ OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b) {
     }
 }
 
+OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
+    if (!dg) { return; }
+    
+    s64 truncated_size = dg->length - length;
+    if (truncated_size <= 0) {
+        if (dg->addr) { free(dg->addr); }
+        memset(dg->buffer, 0, BUFFER_LENGTH);
+        dg->length = 0;
+        return;
+    }
+    
+    // Choose the current buffer in use.
+    void *buffer = NULL;
+    if (dg->length < BUFFER_LENGTH) {
+        buffer = dg->buffer;
+    } else {
+        buffer = dg->addr;
+    }
+    
+    if (truncated_size < BUFFER_LENGTH) {
+        // We will now use the stack buffer.
+        if (buffer != dg->buffer) { // Using heap for buffer.
+            memcpy(dg->buffer, buffer, truncated_size);
+            free(dg->addr);
+            memset(&dg->buffer[truncated_size], 0, BUFFER_LENGTH - truncated_size);
+            dg->length = (u32)truncated_size;
+            return;
+        }
+        
+        memset(&dg->buffer[truncated_size], 0, length);
+        dg->length = (u32)truncated_size;
+        return;
+    }
+    
+    // We will now use the heap buffer.
+
+    if (buffer != dg->addr) { // Using stack for buffer.
+        // Allocate our new buffer.
+        u8 *heap_buffer = malloc(truncated_size + 1);
+        heap_buffer[truncated_size] = 0;
+#ifdef DEBUG
+        assert(heap_buffer != NULL);
+#endif
+        // Copy over the contents that were not truncated.
+        memcpy(heap_buffer, buffer, truncated_size);
+        
+        // Clear out the stack buffer.
+        memset(dg->buffer, 0, BUFFER_LENGTH);
+        
+        // Set the new buffer.
+        dg->addr = heap_buffer;
+        dg->length = (u32)truncated_size;
+        return;
+    }
+    
+    memset(&dg->addr[truncated_size], 0, length);
+    dg->length = (u32)truncated_size;
+}
+
 OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length) {
     u32 hash = 0;
     u16 byte = 0;
     
-    if (length >= dg->length) {
+    if (length > dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
-        SOFT_ASSERT_RETURN(length < dg->length, 0);
+        SOFT_ASSERT_RETURN(length <= dg->length, 0);
         return 0;
     }
     
@@ -269,22 +328,23 @@ OPTIMIZE_O3 u8 *datagram_get_remaining_bytes(struct Datagram *dg) {
 OPTIMIZE_O3 bool datagram_compress(struct Datagram *dg) {
     if (!dg || GET_BIT(dg->flags, 2)) { return FALSE; }
     
-    // Allocate our buffer for compression.
     u32 length = dg->length;
-    u8 *buffer = malloc(length + 1);
+    
+    // Allocate our buffer for compression.
+    uLongf compression_length = compressBound(length);
+    u8 *buffer = malloc(compression_length + 1);
 #ifdef DEBUG
     assert(buffer != NULL);
 #endif
-    buffer[length] = 0;
+    buffer[compression_length] = 0;
     
     bool result = FALSE;
-    uLongf compressed_length = 0;
     if (length < BUFFER_LENGTH) {
         // We are using the stack buffer still.
-        result = compress2((Bytef *)buffer, &compressed_length, (Bytef *)dg->buffer, length, Z_BEST_COMPRESSION) == Z_OK;
+        result = compress2((Bytef *)buffer, &compression_length, (Bytef *)dg->buffer, length, Z_BEST_COMPRESSION) == Z_OK;
     } else {
         // We are no longer using the stack buffer.
-        result = compress2((Bytef *)buffer, &compressed_length, (Bytef *)dg->addr, length, Z_BEST_COMPRESSION) == Z_OK;
+        result = compress2((Bytef *)buffer, &compression_length, (Bytef *)dg->addr, length, Z_BEST_COMPRESSION) == Z_OK;
     }
     if (!result) {
         // Set the error flag as the Datagram has failed to compress.
@@ -304,13 +364,15 @@ OPTIMIZE_O3 bool datagram_compress(struct Datagram *dg) {
     datagram_add_uint32(dg, length);
     
     // Store the compressed length.
-    datagram_add_uint32(dg, compressed_length);
+    datagram_add_uint32(dg, compression_length);
     
     // Append the compressed data.
-    datagram_append_data(dg, (u8 *)buffer, compressed_length);
+    datagram_append_data(dg, (u8 *)buffer, compression_length);
     
     // Free the compression buffer.
     free(buffer);
+    
+    return TRUE;
 }
 
 OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg) {
@@ -319,6 +381,19 @@ OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg) {
     // Read the lengths for the compressed Datagram.
     u32 length = datagram_read_uint32(dg);
     u32 compressed_length = datagram_read_uint32(dg);
+    
+    // Abort if we had any read errors.
+    if (datagram_has_read_error(dg)) {
+        dg->flags |= SET_BIT(1, 7); // Compression Error
+        return FALSE; 
+    }
+    
+    // We shouldn't accept anything past these sizes.
+    if (length >= MAX_DECOMPRESS_LENGTH || compressed_length >= MAX_DECOMPRESS_LENGTH) {
+        dg->flags |= SET_BIT(1, 2); // Error
+        dg->flags |= SET_BIT(1, 7); // Compression Error
+        return FALSE; 
+    }
     
     // Allocate our buffer for the compressed data.
     u8 *buffer = malloc(compressed_length + 1);
@@ -337,7 +412,7 @@ OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg) {
     datagram_add_padding(dg, length);
     
     bool result = FALSE;
-    uLongf decompressed_length = 0;
+    uLongf decompressed_length = length;
     if (length < BUFFER_LENGTH) {
         // We are using the stack buffer still.
         result = uncompress((Bytef *)dg->buffer, &decompressed_length, (Bytef *)buffer, compressed_length) == Z_OK;

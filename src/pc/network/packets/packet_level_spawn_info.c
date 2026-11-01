@@ -51,7 +51,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     datagram_add_uint8(&p.dg, areaIndex);
 
     // Write the amount of deletions
-    u32 del_cursor_position = datagram_cursor_position(&p.dg);
+    u32 del_cursor_position = datagram_length(&p.dg);
     u8 spawnInfoDeletionCount = 0;
     datagram_add_uint8(&p.dg, 0);
 
@@ -71,7 +71,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         spawnInfoIndex++;
     }
     
-    u32 cursor_position = datagram_cursor_position(&p.dg);
+    u32 cursor_position = datagram_length(&p.dg);
     datagram_seek(&p.dg, del_cursor_position);
     datagram_write_uint8(&p.dg, spawnInfoDeletionCount);
     datagram_seek(&p.dg, cursor_position);

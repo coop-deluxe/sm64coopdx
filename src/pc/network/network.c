@@ -336,7 +336,10 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
     
-    SOFT_ASSERT(datagram_length(&dg) < PACKET_LENGTH);
+    if (datagram_length(&dg) >= PACKET_LENGTH) {
+        datagram_clear(&dg);
+        return;
+    }
 
     // rate limit packets
     bool tooManyPackets = false;
@@ -441,7 +444,6 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
     
     // Append the data we received over the network.
     datagram_append_data(&p.dg, data, dataLength);
-    datagram_seek(&p.dg, 3);
     
     // Set the compression flag manually.
     p.dg.flags |= SET_BIT(1, 1);
@@ -464,7 +466,7 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         return;
     }
     // Remove the last 4 bytes containing our hash.
-    p.dg.length -= 4;
+    datagram_truncate(&p.dg, 4);
     
     // Read packet type
     p.packetType = datagram_read_uint8(&p.dg);

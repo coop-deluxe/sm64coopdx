@@ -15,6 +15,7 @@ extern "C" {
 #endif // __cplusplus
 
 #define BUFFER_LENGTH 200
+#define MAX_DECOMPRESS_LENGTH 5000
 
 struct Datagram {
     u32 length;
@@ -41,6 +42,11 @@ OPTIMIZE_O3 void datagram_clear(struct Datagram *dg);
 Copies the contents and state of Datagram A into Datagram B.
 |descriptionEnd| */
 OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b);
+
+/* |description|
+Truncates the Datagram by the amount specified by length.
+|descriptionEnd| */
+OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length);
 
 /* |description|
 Generates a hash for the amount of contents in the Datagram specified by the length.

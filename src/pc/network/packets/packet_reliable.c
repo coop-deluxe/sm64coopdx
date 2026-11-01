@@ -104,7 +104,8 @@ void network_remember_reliable(struct Packet* p) {
     if (datagram_has_write_error(&p->dg)) { return; }
 
     struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
-    node->p = *p;
+    memcpy(&node->p, p, sizeof(struct Packet));
+    datagram_copy(&p->dg, &node->p.dg);
     node->p.addr = network_duplicate_address(p->localIndex);
     node->p.sent = true;
     node->lastSend = clock_elapsed();
@@ -115,6 +116,7 @@ void network_remember_reliable(struct Packet* p) {
     if (tail == NULL) {
         // start of the list
         if (head != NULL) {
+            packet_clear(&node->p);
             free(node);
             SOFT_ASSERT(head == NULL);
         }
@@ -126,6 +128,7 @@ void network_remember_reliable(struct Packet* p) {
 
     // add to end of list
     if (tail->next != NULL) {
+        packet_clear(&node->p);
         free(node);
         SOFT_ASSERT(tail->next == NULL);
     }

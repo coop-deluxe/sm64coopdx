@@ -115,7 +115,7 @@ void network_send_mod_list(void) {
     struct Packet p2 = { 0 };
     packet_init(&p2, PACKET_MOD_LIST_DONE, true, PLMT_NONE);
     network_send_to(0, &p2);
-    packet_clear(&p);
+    packet_clear(&p2);
 
     packet_ordered_end();
 }
