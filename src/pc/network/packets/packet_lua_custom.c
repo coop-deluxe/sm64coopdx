@@ -67,9 +67,11 @@ void network_send_lua_custom(bool broadcast) {
         struct LSTNetworkType lntKey = smlua_to_lnt(L, -2);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert key to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
+            packet_clear(&p);
             return;
         }
 
@@ -77,9 +79,11 @@ void network_send_lua_custom(bool broadcast) {
         struct LSTNetworkType lntValue = smlua_to_lnt(L, -1);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert value to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntValue)) {
+            packet_clear(&p);
             return;
         }
 

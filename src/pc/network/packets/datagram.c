@@ -69,10 +69,21 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
     if (truncated_size < BUFFER_LENGTH) {
         // We will now use the stack buffer.
         if (buffer != dg->buffer) { // Using heap for buffer.
+            // Copy contents to a temporary buffer.
+            u8 *temp_buffer = malloc(truncated_size + 1);
+            temp_buffer[truncated_size] = 0;
+            memcpy(temp_buffer, buffer, truncated_size);
+            
+            // Free the heap buffer.
             free(dg->addr);
-            memcpy(dg->buffer, buffer, truncated_size);
+            
+            // Copy contents from temp buffer.
+            memcpy(dg->buffer, temp_buffer, truncated_size);
             memset(&dg->buffer[truncated_size], 0, BUFFER_LENGTH - truncated_size);
             dg->length = (u32)truncated_size;
+            
+            // Free the temp buffer.
+            free(temp_buffer);
             return;
         }
         
