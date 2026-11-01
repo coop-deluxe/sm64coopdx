@@ -52,7 +52,7 @@ OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length) {
     
     if (length >= dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
-        SOFT_ASSERT(length < dg->length);
+        SOFT_ASSERT_RETURN(length < dg->length, 0);
         return 0;
     }
     
