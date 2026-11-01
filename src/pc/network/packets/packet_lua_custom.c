@@ -90,9 +90,10 @@ void network_send_lua_custom(bool broadcast) {
     lua_pop(L, 1); // Pop key
     
     // Update the current key count.
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
     datagram_write_uint8(&p.dg, keyCount);
-    datagram_seek(&p.dg, datagram_cursor_position(&p.dg));
+    datagram_seek(&p.dg, restoreCursorPosition);
 
     // Send packet
     if (broadcast) {

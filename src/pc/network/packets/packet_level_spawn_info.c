@@ -71,9 +71,10 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         spawnInfoIndex++;
     }
     
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
     datagram_write_uint8(&p.dg, spawnInfoDeletionCount);
-    datagram_seek(&p.dg, datagram_cursor_position(&p.dg));
+    datagram_seek(&p.dg, restoreCursorPosition);
 
     // send the packet if there are deletions
     if (spawnInfoDeletionCount > 0) {

@@ -53,6 +53,7 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
     if (truncated_size <= 0) {
         if (dg->length >= BUFFER_LENGTH && dg->addr) { free(dg->addr); }
         memset(dg->buffer, 0, BUFFER_LENGTH);
+        dg->cursor = 0;
         dg->length = 0;
         return;
     }
