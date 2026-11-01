@@ -147,6 +147,9 @@ u8 packet_initial_read(struct Packet* packet) {
     
     // Read packet type
     packet->packetType = datagram_read_uint8(&packet->dg);
+    
+    // Read sequence ID
+    packet->seqId = datagram_read_uint16(&packet->dg);
 
     // Read packet flags
     u8 flags = datagram_read_uint8(&packet->dg);
