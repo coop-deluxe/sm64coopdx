@@ -54,7 +54,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
 
     // Write the current amount of deletions.
     u8 macroDeletionCount = 0;
-    u32 otherCursorPosition = datagram_length(&p.dg);
+    u32 cursorPosition = datagram_length(&p.dg);
     datagram_add_uint8(&p.dg, macroDeletionCount);
 
     // Loop through macro objects for deletions
@@ -78,14 +78,13 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     }
     
     // Update the current amount of deletions.
-    u32 cursorPosition = datagram_length(&p.dg);
-    datagram_seek(&p.dg, otherCursorPosition);
-    datagram_write_uint8(&p.dg, macroDeletionCount);
     datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, macroDeletionCount);
+    datagram_seek(&p.dg, datagram_cursor_position(&p.dg));
 
     // Write the amount of special cases.
     u8 macroSpecialCount = 0;
-    otherCursorPosition = datagram_length(&p.dg);
+    cursorPosition = datagram_length(&p.dg);
     datagram_add_uint8(&p.dg, macroSpecialCount);
 
     // loop through macro objects for special cases
@@ -110,10 +109,9 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     }
     
     // Update the amount of special cases.
-    cursorPosition = datagram_length(&p.dg);
-    datagram_seek(&p.dg, otherCursorPosition);
-    datagram_write_uint8(&p.dg, macroSpecialCount);
     datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, macroSpecialCount);
+    datagram_seek(&p.dg, datagram_cursor_position(&p.dg));
 
     // Send the packet if there are deletions
     if (macroDeletionCount > 0 || macroSpecialCount > 0) {

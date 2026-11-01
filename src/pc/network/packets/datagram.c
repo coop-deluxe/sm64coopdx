@@ -49,9 +49,9 @@ OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b) {
 OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
     if (!dg) { return; }
     
-    s64 truncated_size = dg->length - length;
+    s64 truncated_size = (s64)dg->length - (s64)length;
     if (truncated_size <= 0) {
-        if (dg->addr) { free(dg->addr); }
+        if (dg->length >= BUFFER_LENGTH && dg->addr) { free(dg->addr); }
         memset(dg->buffer, 0, BUFFER_LENGTH);
         dg->length = 0;
         return;
@@ -68,8 +68,8 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
     if (truncated_size < BUFFER_LENGTH) {
         // We will now use the stack buffer.
         if (buffer != dg->buffer) { // Using heap for buffer.
-            memcpy(dg->buffer, buffer, truncated_size);
             free(dg->addr);
+            memcpy(dg->buffer, buffer, truncated_size);
             memset(&dg->buffer[truncated_size], 0, BUFFER_LENGTH - truncated_size);
             dg->length = (u32)truncated_size;
             return;
