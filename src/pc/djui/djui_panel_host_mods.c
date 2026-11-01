@@ -17,6 +17,8 @@
 #include "djui_panel_pause.h"
 #include "pc/thread.h"
 
+extern const Texture exclamation_box_seg8_texture_08015E28[];
+
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
 
 struct ModCategory {
@@ -46,6 +48,7 @@ enum ModCategories {
 static struct DjuiFlowLayout* sModLayout = NULL;
 static struct DjuiThreePanel* sDescriptionPanel = NULL;
 static struct DjuiText* sTooltip = NULL;
+static struct DjuiImage* sTooltipIcon = NULL;
 static struct DjuiPaginated* sModPaginated = NULL;
 static struct DjuiButton* sBackButton = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
@@ -56,6 +59,18 @@ static bool sWarned = false;
 struct ThreadHandle gModRefreshThread = { 0 };
 
 void djui_panel_host_mods_create(struct DjuiBase* caller);
+
+#define TOOLTIP_ICON_GAP 6
+
+static void djui_panel_host_mods_tooltip_icon_render_pre(struct DjuiBase* base, UNUSED bool* skipRender) {
+    struct DjuiText* text = sTooltip;
+    f32 scale = text->fontScale;
+    f32 lineHeight = text->font->lineHeight * scale;
+    u16 lineCount = djui_text_count_lines(text, text->base.comp.height / lineHeight);
+    f32 vOffset = (text->base.comp.height / scale) / 2.0f - (lineCount * text->font->charHeight) / 2.0f;
+    f32 y = vOffset * scale + (text->font->charHeight * scale - base->height.value) / 2.0f;
+    djui_base_set_location(base, 0, y);
+}
 
 static void djui_panel_host_mods_description_create(void) {
     f32 bodyHeight = 1000;
@@ -79,30 +94,57 @@ static void djui_panel_host_mods_description_create(void) {
         djui_flow_layout_set_margin(body, 16);
         djui_flow_layout_set_flow_direction(body, DJUI_FLOW_DIR_DOWN);
 
-        struct DjuiText* description = djui_text_create(&panel->base, "");
+        struct DjuiRect* container = djui_rect_container_create(&panel->base, 0);
+
+        struct DjuiText* description = djui_text_create(&container->base, "");
         djui_base_set_size_type(&description->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&description->base, 1.0f, 1.0f);
         djui_base_set_color(&description->base, 222, 222, 222, 255);
         djui_text_set_alignment(description, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
         djui_text_set_drop_shadow(description, 64, 64, 64, 100);
         sTooltip = description;
+
+        sTooltipIcon = djui_image_create(&container->base, exclamation_box_seg8_texture_08015E28, 32, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+        f32 iconSize = sTooltip->font->charHeight * sTooltip->fontScale * (10.0f / 16.0f);
+        djui_base_set_size(&sTooltipIcon->base, iconSize, iconSize);
+        djui_base_set_alignment(&sTooltipIcon->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+        djui_base_set_visible(&sTooltipIcon->base, false);
+        sTooltipIcon->base.on_render_pre = djui_panel_host_mods_tooltip_icon_render_pre;
     }
     sDescriptionPanel = panel;
 }
 
 static void djui_mod_checkbox_on_hover(struct DjuiBase* base) {
     char* description = "";
+    char buffer[MOD_DESCRIPTION_SIZE + 256] = { 0 };
+    bool tooLarge = false;
     if (base->tag >= 0 && base->tag < gLocalMods.entryCount) {
         struct Mod* mod = gLocalMods.entries[base->tag];
         char* d = mod->description;
         if (d != NULL) {
-            description = mod->description;
+            description = d;
+        }
+        tooLarge = (mod->size >= MAX_MOD_SIZE);
+        if (tooLarge) {
+            char sizeMb[16] = { 0 };
+            char info[256] = { 0 };
+            char pad[24] = { 0 };
+            f32 spaceWidth = sTooltip->font->char_width(" ") * sTooltip->fontScale;
+            int spaces = (int)((sTooltipIcon->base.height.value + TOOLTIP_ICON_GAP) / spaceWidth + 0.999f);
+            if (spaces > (int)sizeof(pad) - 1) { spaces = (int)sizeof(pad) - 1; }
+            for (int i = 0; i < spaces; i++) { pad[i] = ' '; }
+            snprintf(sizeMb, sizeof(sizeMb), "%u", (u32)(mod->size / 1048576));
+            djui_language_replace(DLANG(HOST_MODS, TOO_LARGE_INFO), info, sizeof(info), '@', sizeMb);
+            snprintf(buffer, sizeof(buffer), "%s%s%s%s", pad, info, (description[0] != '\0') ? "\n\n" : "", description);
+            description = buffer;
         }
     }
+    djui_base_set_visible(&sTooltipIcon->base, tooLarge);
     djui_text_set_text(sTooltip, description);
 }
 
 static void djui_mod_checkbox_on_hover_end(UNUSED struct DjuiBase* base) {
+    djui_base_set_visible(&sTooltipIcon->base, false);
     djui_text_set_text(sTooltip, "");
 }
 
@@ -142,6 +184,7 @@ static void djui_panel_host_mods_destroy(struct DjuiBase* base) {
     }
     sModLayout = NULL;
     sTooltip = NULL;
+    sTooltipIcon = NULL;
 }
 
 bool should_add_mod_to_list(struct Mod* mod, const char* category) {
@@ -186,6 +229,13 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
         struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
         checkbox->base.tag = i;
         djui_base_set_enabled(&checkbox->base, mod->selectable);
+        if (mod->size >= MAX_MOD_SIZE) {
+            struct DjuiImage* icon = djui_image_create(&checkbox->base, exclamation_box_seg8_texture_08015E28, 32, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+            f32 iconSize = checkbox->text->font->charHeight * checkbox->text->fontScale * (10.0f / 16.0f);
+            djui_base_set_size(&icon->base, iconSize, iconSize);
+            djui_base_set_alignment(&icon->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
+            djui_base_set_location(&checkbox->text->base, iconSize + TOOLTIP_ICON_GAP, 0);
+        }
         djui_interactable_hook_hover(&checkbox->base, djui_mod_checkbox_on_hover, djui_mod_checkbox_on_hover_end);
         foundAny = true;
     }
@@ -241,6 +291,7 @@ static bool djui_panel_host_mods_reload_panel(UNUSED struct DjuiBase *caller) {
     }
     sModLayout = NULL;
     sTooltip = NULL;
+    sTooltipIcon = NULL;
 
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();

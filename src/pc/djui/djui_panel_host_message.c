@@ -13,10 +13,16 @@
 #include "engine/math_util.h"
 #include "audio/external.h"
 #include "sounds.h"
+#include "djui_panel_host.h"
 
 static bool sHideMessage = false;
 
 void djui_panel_do_host(bool reconnecting, bool playSound) {
+    if (djui_host_blocked_by_mod_size()) {
+        djui_popup_create(DLANG(HOST, BIG_MODS_COOPNET), 4);
+        return;
+    }
+
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;

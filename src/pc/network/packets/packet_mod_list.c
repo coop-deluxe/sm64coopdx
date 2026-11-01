@@ -7,6 +7,7 @@
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/mods/mod_cache.h"
+#include "pc/network/coopnet/coopnet.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
@@ -258,11 +259,13 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // sanity check mod size
-    if (mod->size >= MAX_MOD_SIZE) {
+#ifdef COOPNET
+    if (gNetworkSystem == &gNetworkSystemCoopNet && mod->size >= MAX_MOD_SIZE) {
         djui_popup_create(DLANG(NOTIF, DISCONNECT_BIG_MOD), 4);
         network_shutdown(false, false, false, false);
         return;
     }
+#endif
 
     // get file count and allocate them
     packet_read(p, &mod->fileCount, sizeof(u16));
