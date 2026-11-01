@@ -56,6 +56,7 @@ void network_send_lua_custom(bool broadcast) {
     s32 tableIndex = paramIndex;
     if (lua_type(L, tableIndex) != LUA_TTABLE) {
         LOG_LUA_LINE("Tried to send a packet with a non-table");
+        packet_clear(&p);
         return;
     }
 
