@@ -53,6 +53,7 @@ extern unsigned int configGraphicsBackend;
 extern unsigned int configFiltering;
 extern bool         configShowFPS;
 extern bool         configShowPing;
+extern bool         configAllowHidpi;
 extern enum RefreshRateMode configFramerateMode;
 extern unsigned int configFrameLimit;
 extern unsigned int configInterpolationMode;
@@ -174,7 +175,7 @@ extern unsigned int configDjuiTheme;
 extern bool         configDjuiThemeCenter;
 extern bool         configDjuiThemeGradients;
 extern unsigned int configDjuiThemeFont;
-extern unsigned int configDjuiScale;
+extern float        configDjuiScale;
 // other
 extern unsigned int configRulesVersion;
 extern bool         configHideSocketWarning;

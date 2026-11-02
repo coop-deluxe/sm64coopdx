@@ -86,6 +86,7 @@ unsigned int configGraphicsBackend                = GFX_WINDOW_BACKEND_OPENGL;
 unsigned int configFiltering                      = 2; // 0 = Nearest, 1 = Bilinear, 2 = Trilinear
 bool         configShowFPS                        = false;
 bool         configShowPing                       = false;
+bool         configAllowHidpi                     = true;
 enum RefreshRateMode configFramerateMode          = RRM_AUTO;
 unsigned int configFrameLimit                     = 60;
 unsigned int configInterpolationMode              = 1;
@@ -240,7 +241,7 @@ bool         configDjuiThemeCenter                = true;
 #endif
 bool         configDjuiThemeGradients             = true;
 unsigned int configDjuiThemeFont                  = FONT_NORMAL;
-unsigned int configDjuiScale                      = 0;
+float configDjuiScale                             = 0;
 // other
 unsigned int configRulesVersion                   = 0;
 bool         configHideSocketWarning              = false;
@@ -264,6 +265,7 @@ static const struct ConfigOption options[] = {
     {.name = "texture_filtering",              .type = CONFIG_TYPE_UINT, .uintValue = &configFiltering},
     {.name = "show_fps",                       .type = CONFIG_TYPE_BOOL, .boolValue = &configShowFPS},
     {.name = "show_ping",                      .type = CONFIG_TYPE_BOOL, .boolValue = &configShowPing},
+    {.name = "allow_hidpi",                    .type = CONFIG_TYPE_BOOL, .boolValue = &configAllowHidpi},
     {.name = "framerate_mode",                 .type = CONFIG_TYPE_UINT, .uintValue = &configFramerateMode},
     {.name = "frame_limit",                    .type = CONFIG_TYPE_UINT, .uintValue = &configFrameLimit},
     {.name = "interpolation_mode",             .type = CONFIG_TYPE_UINT, .uintValue = &configInterpolationMode},
@@ -402,7 +404,7 @@ static const struct ConfigOption options[] = {
     {.name = "djui_theme_center",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeCenter},
     {.name = "djui_theme_gradients",           .type = CONFIG_TYPE_BOOL,   .boolValue   = &configDjuiThemeGradients},
     {.name = "djui_theme_font",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiThemeFont},
-    {.name = "djui_scale",                     .type = CONFIG_TYPE_UINT,   .uintValue   = &configDjuiScale},
+    {.name = "djui_scale",                     .type = CONFIG_TYPE_FLOAT,  .floatValue  = &configDjuiScale},
     // other
     {.name = "rules_version",                  .type = CONFIG_TYPE_UINT,   .uintValue   = &configRulesVersion},
     {.name = "hide_socket_warning",            .type = CONFIG_TYPE_BOOL,   .boolValue   = &configHideSocketWarning},
@@ -831,7 +833,6 @@ NEXT_OPTION:
     if (configPlayerModel >= CT_MAX) { configPlayerModel = 0; }
 
     if (configDjuiTheme >= DJUI_THEME_MAX) { configDjuiTheme = 0; }
-    if (configDjuiScale >= 5) { configDjuiScale = 0; }
 
     if (gCLIOpts.fullscreen == 1) {
         configWindow.fullscreen = true;
