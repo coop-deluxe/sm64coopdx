@@ -34,6 +34,13 @@ static void network_update_offset_groups(void);
 static void mark_groups_loaded_from_hash(void);
 
 void network_start_download_requests(void) {
+    if ((u64)gRemoteMods.size > MAX_DIRECT_MOD_SIZE) {
+        LOG_ERROR("Refusing to allocate offset groups for an oversized download");
+        djui_popup_create(DLANG(NOTIF, DISCONNECT_BIG_MOD), 4);
+        network_shutdown(false, false, false, false);
+        return;
+    }
+
     sTotalDownloadBytes = 0;
     gDownloadProgress = 0;
     gDownloadProgressInf = 0;
@@ -44,9 +51,16 @@ void network_start_download_requests(void) {
 
     if (sOffsetGroupsCompleted != NULL) {
         free(sOffsetGroupsCompleted);
+        sOffsetGroupsCompleted = NULL;
     }
 
     sOffsetGroupsCompleted = calloc(sOffsetGroupCount, sizeof(bool));
+    if (sOffsetGroupsCompleted == NULL) {
+        sOffsetGroupCount = 0;
+        LOG_ERROR("Failed to allocate offset group completion table");
+        network_shutdown(false, false, false, false);
+        return;
+    }
 
     memset(&sOffsetGroup[0], 0, sizeof(struct OffsetGroup));
     memset(&sOffsetGroup[1], 0, sizeof(struct OffsetGroup));
@@ -116,12 +130,12 @@ static bool network_start_offset_group(struct OffsetGroup* og) {
         struct OffsetGroup* otherOg = (og == &sOffsetGroup[0])
             ? &sOffsetGroup[1]
             : &sOffsetGroup[0];
-        if (otherOg->active && otherOg->offset[0] == (i * GROUP_SIZE)) {
+        if (otherOg->active && otherOg->offset[0] == ((u64)i * GROUP_SIZE)) {
             continue;
         }
 
         if (!sOffsetGroupsCompleted[i]) {
-            offset = (i * GROUP_SIZE);
+            offset = ((u64)i * GROUP_SIZE);
             foundIndex = true;
             break;
         }
