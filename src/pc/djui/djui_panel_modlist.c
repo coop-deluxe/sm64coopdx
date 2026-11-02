@@ -6,6 +6,8 @@
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
 
+extern const Texture exclamation_box_seg8_texture_08015E28[];
+
 struct DjuiThreePanel* gDjuiModList = NULL;
 
 void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
@@ -49,8 +51,18 @@ void djui_panel_modlist_create(UNUSED struct DjuiBase* caller) {
         djui_flow_layout_set_flow_direction(row, DJUI_FLOW_DIR_RIGHT);
         djui_flow_layout_set_margin(row, 8);
 
+        struct DjuiImage* icon = NULL;
+        if (mod->size >= MAX_MOD_SIZE) {
+            icon = djui_image_create(&row->base, exclamation_box_seg8_texture_08015E28, 32, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+            djui_base_set_alignment(&icon->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_CENTER);
+        }
+
         int t = 220;
         struct DjuiText* t2 = djui_text_create(&row->base, mod->name);
+        if (icon != NULL) {
+            f32 iconSize = t2->font->charHeight * t2->fontScale * (10.0f / 16.0f);
+            djui_base_set_size(&icon->base, iconSize, iconSize);
+        }
         djui_base_set_size_type(&t2->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&t2->base, 1.0f, 32.0f);
         djui_base_set_color(&t2->base, t, t, t, 255);

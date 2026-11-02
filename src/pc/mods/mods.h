@@ -7,6 +7,9 @@
 #include "mod.h"
 
 #define MAX_MOD_SIZE (35 * 1048576) // 35MB
+// Direct connections may exceed MAX_MOD_SIZE. The client still trusts the
+// advertised size when it allocates download bookkeeping, so keep a hard cap.
+#define MAX_DIRECT_MOD_SIZE ((u64)2 * 1024 * 1048576) // 2 GiB
 #define MOD_DIRECTORY "mods"
 #define TMP_DIRECTORY ".tmp"
 

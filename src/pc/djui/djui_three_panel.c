@@ -69,10 +69,12 @@ void djui_three_panel_recalculate_body_size(struct DjuiThreePanel* threePanel) {
 
     f32 bodyHeight = body->margin.value;
     while (child != NULL) {
-        bodyHeight += body->margin.value;
-        bodyHeight += child->base->height.value;
-        if (child->base->height.type != DJUI_SVT_ABSOLUTE) {
-            return;
+        if (child->base->visible) {
+            if (child->base->height.type != DJUI_SVT_ABSOLUTE) {
+                return;
+            }
+            bodyHeight += body->margin.value;
+            bodyHeight += child->base->height.value;
         }
         child = child->next;
     }

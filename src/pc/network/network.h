@@ -121,6 +121,8 @@ extern u32 gNetworkStartupTimer;
 
 // network.c
 void network_set_system(enum NetworkSystemType nsType);
+void network_set_system_local(void);
+bool network_is_local_session(void);
 bool network_init(enum NetworkType inNetworkType, bool reconnecting);
 void network_on_init_area(void);
 void network_on_loaded_area(void);
