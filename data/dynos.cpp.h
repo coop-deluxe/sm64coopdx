@@ -1114,11 +1114,12 @@ void DynOS_Gfx_ModShutdown();
 //
 
 typedef s64 (*RDConstantFunc)(const String& _Arg, bool* found);
+typedef s64 (*RDFunctionFunc)(const String& _Name, const Array<s64>& _Args, bool* found);
 
 u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& token);
 void DynOS_Gfx_GenerateModPacks(char* modPath);
 void DynOS_Gfx_GeneratePacks(const char* directory);
-s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func);
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func, RDFunctionFunc funcFunc = NULL);
 
 u64 DynOS_NewDataIdentifier();
 void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename);
@@ -1175,6 +1176,7 @@ DataNode<Gfx>* DynOS_Gfx_Parse(GfxData* aGfxData, DataNode<Gfx>* aNode);
 void DynOS_Gfx_Write(BinFile *aFile, GfxData *aGfxData, DataNode<Gfx> *aNode);
 void DynOS_Gfx_Load(BinFile *aFile, GfxData *aGfxData);
 s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found);
+s64 DynOS_Gfx_ParseGfxFunctions(const String& _Name, const Array<s64>& _Args, bool* found);
 
 bool DynOS_Gfx_Validate_GetPointerTypes(u32 aWordsW0, u8 &outCommandId, u32 &outPtrTypes);
 bool DynOS_Gfx_Validate_CheckCommands(GfxData *aGfxData, const DataNode<Gfx> *aNode);
