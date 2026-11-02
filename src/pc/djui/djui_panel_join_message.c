@@ -3,12 +3,16 @@
 #include "djui_panel_menu.h"
 #include "djui_panel_main.h"
 #include "djui_panel_join_message.h"
+#include "djui_panel_loading.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
+#include "pc/debuglog.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 
 #define DJUI_JOIN_MESSAGE_ELAPSE 60
 bool gDjuiPanelJoinMessageVisible = false;
+bool gDjuiPanelJoinMessageStartedConnection = false;
 float gDownloadProgress = 0;
 float gDownloadProgressInf = 0;
 char gDownloadEstimate[DOWNLOAD_ESTIMATE_LENGTH] = "";
@@ -16,11 +20,12 @@ char gDownloadEstimate[DOWNLOAD_ESTIMATE_LENGTH] = "";
 static struct DjuiText* sPanelText = NULL;
 static bool sDisplayingError = false;
 
-
 void djui_panel_join_message_error(char* message) {
     djui_panel_join_message_create(NULL);
     sDisplayingError = true;
-    djui_text_set_text(sPanelText, message);
+    if (sPanelText) {
+        djui_text_set_text(sPanelText, message);
+    }
 }
 
 void djui_panel_join_message_cancel(struct DjuiBase* caller) {
@@ -37,6 +42,10 @@ bool djui_panel_join_message_back(struct DjuiBase* caller) {
 
 void djui_panel_join_message_render_pre(struct DjuiBase* base, UNUSED bool* unused) {
     if (sDisplayingError) { return; }
+    if (!gDjuiPanelJoinMessageStartedConnection && gGameInited) {
+        network_init(NT_CLIENT, false);
+        gDjuiPanelJoinMessageStartedConnection = true;
+    }
     struct DjuiText* text1 = (struct DjuiText*)base;
     u16 lastElapse = (base->tag / DJUI_JOIN_MESSAGE_ELAPSE);
     base->tag = (base->tag + 1) % (DJUI_JOIN_MESSAGE_ELAPSE * 3);
@@ -58,6 +67,14 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
 
     // don't recreate panel if it's already visible
     if (gDjuiPanelJoinMessageVisible) { return; }
+
+    // if we aren't loaded, load the load panel instead
+    if (!gGameInited) {
+        djui_panel_loading_create(caller, djui_panel_join_message_create);
+        return;
+    }
+
+    sPanelText = NULL;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(JOIN_MESSAGE, JOINING), true);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -85,4 +102,5 @@ void djui_panel_join_message_create(struct DjuiBase* caller) {
     djui_panel_add(caller, panel, NULL);
     gDjuiPanelJoinMessageVisible = true;
     sDisplayingError = false;
+    gDjuiPanelJoinMessageStartedConnection = false;
 }

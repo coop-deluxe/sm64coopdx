@@ -15,6 +15,13 @@ static void djui_panel_join_private_lobbies(struct DjuiBase* caller) {
     djui_panel_join_lobbies_create(caller, sInputboxPassword->buffer);
 }
 
+static void djui_panel_join_private_lobbies_password_text_change(UNUSED struct DjuiBase* caller) {
+    snprintf(configJoinPassword, 64, "%s", sInputboxPassword->buffer);
+    if (strlen(sInputboxPassword->buffer) >= 64) {
+        djui_inputbox_set_text(sInputboxPassword, configJoinPassword);
+    }
+}
+
 void djui_panel_join_private_create(struct DjuiBase* caller) {
     struct DjuiBase* defaultBase = NULL;
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(LOBBIES, PRIVATE_LOBBIES), true);
@@ -33,6 +40,8 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         inputbox1->passwordChar[0] = '#';
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
+        djui_inputbox_set_text(inputbox1, configJoinPassword);
+        djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_private_lobbies_password_text_change);
         sInputboxPassword = inputbox1;
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);

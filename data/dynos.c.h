@@ -19,6 +19,7 @@ void  dynos_gfx_swap_animations(void *ptr);
 // -- warps -- //
 LevelScript* dynos_get_level_script(const char* scriptEntryName);
 bool dynos_warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId);
+bool dynos_warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, s32 aWarpId);
 bool dynos_warp_to_level(s32 aLevel, s32 aArea, s32 aAct);
 bool dynos_warp_restart_level(void);
 bool dynos_warp_to_start_level(void);

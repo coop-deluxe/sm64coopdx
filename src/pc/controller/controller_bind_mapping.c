@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include "controller_bind_mapping.h"
 #include "controller_api.h"
 #include "controller_sdl.h"
 
-static int inverted_scancode_table[512];
-static SDL_Scancode bind_to_sdl_scancode[512] = { 0 };
+static int inverted_scancode_table[SDL_SCANCODE_COUNT];
+static SDL_Scancode bind_to_sdl_scancode[SDL_SCANCODE_COUNT] = { 0 };
 
 const SDL_Scancode windows_scancode_table[] = {
     /*  0                        1                            2                         3                            4                     5                            6                            7  */
@@ -72,18 +72,17 @@ void controller_bind_init(void) {
         inverted_scancode_table[scancode_rmapping_nonextended[i][1]] += 0x100;
     }
 
-    for (size_t i = 0; i < 512; i++) {
-        if (inverted_scancode_table[i] >= 512) { continue; }
+    for (size_t i = 0; i < SDL_SCANCODE_COUNT; i++) {
+        if (inverted_scancode_table[i] >= SDL_SCANCODE_COUNT) { continue; }
         bind_to_sdl_scancode[inverted_scancode_table[i]] = i;
     }
 
 }
 
 int translate_sdl_scancode(int scancode) {
-    if (scancode < 512) {
+    if (scancode < SDL_SCANCODE_COUNT) {
         return inverted_scancode_table[scancode];
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -136,13 +135,13 @@ const char* translate_bind_to_name(int bind) {
     }
 
     // keyboard
-    if (bind >= 512) { return name; }
+    if (bind >= SDL_SCANCODE_COUNT) { return name; }
 
     SDL_Scancode sc = bind_to_sdl_scancode[bind];
     if (sc == 0) { return name; }
 
     const char* sc_name = SDL_GetScancodeName(sc);
-    SDL_Keycode kc = SDL_GetKeyFromScancode(sc);
+    SDL_Keycode kc = SDL_GetKeyFromScancode(sc, SDL_KMOD_NONE, false);
     if (kc != 0) {
         const char* kc_name = SDL_GetKeyName(kc);
         if ((*kc_name & 0x80) == 0) { sc_name = kc_name; }

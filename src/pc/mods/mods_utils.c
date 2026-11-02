@@ -174,6 +174,13 @@ bool str_ends_with(const char *string, const char *suffix) {
     return stringLength >= suffixLength && strncmp(string + stringLength - suffixLength, suffix, suffixLength) == 0;
 }
 
+const char *str_strip_prefix(const char *string, const char *prefix) {
+    if (str_starts_with(string, prefix)) {
+        return string + strlen(prefix);
+    }
+    return string;
+}
+
 bool path_ends_with(const char* path, const char* suffix) {
     if (path == NULL || suffix == NULL) { return false; }
 

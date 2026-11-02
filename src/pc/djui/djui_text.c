@@ -1,4 +1,5 @@
 #include <string.h>
+#include <ctype.h>
 #include "djui.h"
 #include "djui_unicode.h"
 #include "djui_hud_utils.h"

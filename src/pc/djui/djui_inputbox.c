@@ -68,15 +68,13 @@ void djui_inputbox_select_all(struct DjuiInputbox* inputbox) {
 }
 
 void djui_inputbox_move_cursor_to_end(struct DjuiInputbox* inputbox) {
-    inputbox->selection[1] = djui_unicode_len(inputbox->buffer);
-    inputbox->selection[0] = djui_unicode_len(inputbox->buffer);
+    inputbox->selection[0] = inputbox->selection[1] = djui_unicode_len(inputbox->buffer);
     sCursorBlink = 0;
     djui_inputbox_on_change(inputbox);
 }
 
 void djui_inputbox_move_cursor_to_position(struct DjuiInputbox* inputbox, u16 newCursorPosition) {
-    inputbox->selection[1] = newCursorPosition;
-    inputbox->selection[0] = newCursorPosition;
+    inputbox->selection[0] = inputbox->selection[1] = newCursorPosition;
     sCursorBlink = 0;
     djui_inputbox_on_change(inputbox);
 }
@@ -122,8 +120,7 @@ static void djui_inputbox_on_cursor_down_begin(struct DjuiBase* base, UNUSED boo
     u16 index = djui_inputbox_get_cursor_index(inputbox);
     u16 selLength = abs(inputbox->selection[0] - inputbox->selection[1]);
     if (selLength != djui_unicode_len(inputbox->buffer) || djui_interactable_is_input_focus(base)) {
-        inputbox->selection[0] = index;
-        inputbox->selection[1] = index;
+        inputbox->selection[0] = inputbox->selection[1] = index;
         djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, djui_inputbox_on_cursor_down, NULL);
     } else {
         djui_interactable_hook_cursor_down(base, djui_inputbox_on_cursor_down_begin, NULL, NULL);
@@ -199,128 +196,132 @@ bool djui_inputbox_on_key_down(struct DjuiBase *base, int scancode) {
         case SCANCODE_ALT_RIGHT:     gDjuiInputHeldAlt     |= (1 << 1); return true;
     }
 
-    // [Left], [Ctrl]+[Left], [Shift]+[Left], [Ctrl]+[Shift]+[Left]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_LEFT) {
-        if (gDjuiInputHeldControl) {
-            sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
-        } else if (sel[0] > 0) {
-            sel[0]--;
-        }
-        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Right], [Ctrl]+[Right], [Shift]+[Right], [Ctrl]+[Shift]+[Right]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_RIGHT) {
-        if (gDjuiInputHeldControl) {
-            sel[0] = djui_inputbox_jump_word_right(msg, len, sel[0]);
-        } else if (sel[0] < len) {
-            sel[0]++;
-        }
-        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Home], [Shift]+[Home]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_HOME) {
-        sel[0] = 0;
-        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [End], [Shift]+[End]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_END) {
-        sel[0] = len;
-        if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Backspace], [Ctrl]+[Backspace]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_BACKSPACE) {
-        if (sel[0] == sel[1]) {
+    if (!gDjuiInputHeldAlt) {
+        // [Left], [Ctrl]+[Left], [Shift]+[Left], [Ctrl]+[Shift]+[Left]
+        if (scancode == SCANCODE_LEFT) {
             if (gDjuiInputHeldControl) {
                 sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
             } else if (sel[0] > 0) {
                 sel[0]--;
             }
+            if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
+            sCursorBlink = 0;
+            return true;
         }
-        if (sel[0] != sel[1]) {
-            djui_inputbox_delete_selection(inputbox);
-        }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Delete], [Ctrl]+[Delete]
-    if (!gDjuiInputHeldAlt && scancode == SCANCODE_DELETE) {
-        if (sel[0] == sel[1]) {
+    
+        // [Right], [Ctrl]+[Right], [Shift]+[Right], [Ctrl]+[Shift]+[Right]
+        if (scancode == SCANCODE_RIGHT) {
             if (gDjuiInputHeldControl) {
-                sel[1] = djui_inputbox_jump_word_right(msg, len, sel[1]);
-            } else if (sel[1] < len) {
-                sel[1]++;
+                sel[0] = djui_inputbox_jump_word_right(msg, len, sel[0]);
+            } else if (sel[0] < len) {
+                sel[0]++;
             }
+            if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
+            sCursorBlink = 0;
+            return true;
         }
-        if (sel[0] != sel[1]) {
-            djui_inputbox_delete_selection(inputbox);
+    
+        // [Home], [Shift]+[Home]
+        if (scancode == SCANCODE_HOME) {
+            sel[0] = 0;
+            if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
+            sCursorBlink = 0;
+            return true;
         }
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Ctrl]+[V], [Shift]+[Insert]
-    if (!gDjuiInputHeldAlt &&
-        ((!gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_V) ||
-        (!gDjuiInputHeldControl && gDjuiInputHeldShift && scancode == SCANCODE_INSERT))) {
-        djui_interactable_on_text_input(gfx_wm_get_clipboard_text());
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Ctrl]+[C], [Ctrl]+[X]
-    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && gDjuiInputHeldControl &&
-        (scancode == SCANCODE_C || scancode == SCANCODE_X)) {
-        if (sel[0] != sel[1]) {
-            char clipboardText[256] = { 0 };
-            char* cs1 = djui_unicode_at_index(msg, s1);
-            char* cs2 = djui_unicode_at_index(msg, s2);
-            snprintf(clipboardText, fmin(256, 1 + cs2 - cs1), "%s", cs1);
-            gfx_wm_set_clipboard_text(clipboardText);
-            if (scancode == SCANCODE_X) {
+    
+        // [End], [Shift]+[End]
+        if (scancode == SCANCODE_END) {
+            sel[0] = len;
+            if (!gDjuiInputHeldShift) { sel[1] = sel[0]; }
+            sCursorBlink = 0;
+            return true;
+        }
+    
+        // [Backspace], [Ctrl]+[Backspace]
+        if (scancode == SCANCODE_BACKSPACE) {
+            if (sel[0] == sel[1]) {
+                if (gDjuiInputHeldControl) {
+                    sel[0] = djui_inputbox_jump_word_left(msg, len, sel[0]);
+                } else if (sel[0] > 0) {
+                    sel[0]--;
+                }
+            }
+            if (sel[0] != sel[1]) {
                 djui_inputbox_delete_selection(inputbox);
-                sCursorBlink = 0;
+            }
+            sCursorBlink = 0;
+            return true;
+        }
+    
+        // [Delete], [Ctrl]+[Delete]
+        if (scancode == SCANCODE_DELETE) {
+            if (sel[0] == sel[1]) {
+                if (gDjuiInputHeldControl) {
+                    sel[1] = djui_inputbox_jump_word_right(msg, len, sel[1]);
+                } else if (sel[1] < len) {
+                    sel[1]++;
+                }
+            }
+            if (sel[0] != sel[1]) {
+                djui_inputbox_delete_selection(inputbox);
+            }
+            sCursorBlink = 0;
+            return true;
+        }
+    
+        // [Ctrl]+[V], [Shift]+[Insert]
+        if (((!gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_V) ||
+            (!gDjuiInputHeldControl && gDjuiInputHeldShift && scancode == SCANCODE_INSERT))) {
+            djui_interactable_on_text_input(gfx_wm_get_clipboard_text());
+            sCursorBlink = 0;
+            return true;
+        }
+    
+        // [Ctrl]+[C], [Ctrl]+[X]
+        if (!gDjuiInputHeldShift) {
+            if (gDjuiInputHeldControl) {
+                if (scancode == SCANCODE_C || scancode == SCANCODE_X) {
+                    if (sel[0] != sel[1]) {
+                        char clipboardText[256] = { 0 };
+                        char* cs1 = djui_unicode_at_index(msg, s1);
+                        char* cs2 = djui_unicode_at_index(msg, s2);
+                        snprintf(clipboardText, fmin(256, 1 + cs2 - cs1), "%s", cs1);
+                        gfx_wm_set_clipboard_text(clipboardText);
+                        if (scancode == SCANCODE_X) {
+                            djui_inputbox_delete_selection(inputbox);
+                            sCursorBlink = 0;
+                        }
+                    }
+                    return true;
+                }
+            
+                // [Ctrl]+[A]
+                if (scancode == SCANCODE_A) {
+                    inputbox->selection[0] = djui_unicode_len(msg);
+                    inputbox->selection[1] = 0;
+                    sCursorBlink = 0;
+                    return true;
+                }
+            } else {
+                // [Esc]
+                if (scancode == SCANCODE_ESCAPE) {
+                    djui_interactable_set_input_focus(NULL);
+                    if (inputbox->on_escape_press) {
+                        inputbox->on_escape_press(inputbox);
+                    }
+                    return true;
+                }
+            
+                // [Enter]
+                if (scancode == SCANCODE_ENTER) {
+                    djui_interactable_set_input_focus(NULL);
+                    if (inputbox->on_enter_press) {
+                        inputbox->on_enter_press(inputbox);
+                    }
+                    return true;
+                }
             }
         }
-        return true;
-    }
-
-    // [Ctrl]+[A]
-    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && gDjuiInputHeldControl && scancode == SCANCODE_A) {
-        inputbox->selection[0] = djui_unicode_len(msg);
-        inputbox->selection[1] = 0;
-        sCursorBlink = 0;
-        return true;
-    }
-
-    // [Esc]
-    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && !gDjuiInputHeldControl && scancode == SCANCODE_ESCAPE) {
-        djui_interactable_set_input_focus(NULL);
-        if (inputbox->on_escape_press) {
-            inputbox->on_escape_press(inputbox);
-        }
-        return true;
-    }
-
-    // [Enter]
-    if (!gDjuiInputHeldAlt && !gDjuiInputHeldShift && !gDjuiInputHeldControl && scancode == SCANCODE_ENTER) {
-        djui_interactable_set_input_focus(NULL);
-        if (inputbox->on_enter_press) {
-            inputbox->on_enter_press(inputbox);
-        }
-        return true;
     }
 
     return true;
@@ -344,29 +345,31 @@ void djui_inputbox_on_focus_begin(UNUSED struct DjuiBase* base) {
     gfx_wm_start_text_input();
 }
 
-void djui_inputbox_on_focus_end(UNUSED struct DjuiBase* base) {
+void djui_inputbox_on_focus_end(struct DjuiBase* base) {
+    struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
+    inputbox->selection[1] = inputbox->selection[0];
     gfx_wm_stop_text_input();
 }
 
 void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
     struct DjuiInputbox *inputbox = (struct DjuiInputbox *) base;
     char* msg = inputbox->buffer;
-    int msgLen = strlen(msg);
-    int textLen = strlen(text);
 
     // make sure we're not just printing garbage characters
-    bool containsValidAscii = false;
     char* tinput = text;
     while (*tinput != '\0') {
-        if (djui_unicode_valid_char(tinput)) {
-            containsValidAscii = true;
-            break;
-        }
+        if (djui_unicode_valid_char(tinput)) { break; }
         tinput = djui_unicode_next_char(tinput);
+        if (*tinput == '\0') { return; }
     }
-    if (!containsValidAscii) {
-        return;
+
+    // erase selection
+    if (inputbox->selection[0] != inputbox->selection[1]) {
+        djui_inputbox_delete_selection(inputbox);
     }
+
+    int msgLen = strlen(msg);
+    int textLen = strlen(text);
 
     // truncate
     if (textLen + msgLen >= inputbox->bufferSize) {
@@ -374,11 +377,6 @@ void djui_inputbox_on_text_input(struct DjuiBase *base, char* text) {
         if (space <= 1) { return; }
         text[space - 1] = '\0';
         textLen = space - 1;
-    }
-
-    // erase selection
-    if (inputbox->selection[0] != inputbox->selection[1]) {
-        djui_inputbox_delete_selection(inputbox);
     }
 
     // sanitize
@@ -495,7 +493,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
 
     // render only cursor when there is no selection width
     if (selection[0] == selection[1]) {
-        if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
+        if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK) {
             create_dl_translation_matrix(DJUI_MTX_PUSH, renderX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
             create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
 
@@ -527,7 +525,7 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 
     // render selection cursor
-    if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK && djui_interactable_is_input_focus(&inputbox->base)) {
+    if (sCursorBlink < DJUI_INPUTBOX_MID_BLINK) {
         f32 cX = (inputbox->selection[0] < inputbox->selection[1]) ? x : (x + width);
         create_dl_translation_matrix(DJUI_MTX_PUSH, cX - DJUI_INPUTBOX_CURSOR_WIDTH / 2.0f, -0.1f, 0);
         create_dl_scale_matrix(DJUI_MTX_NOPUSH, DJUI_INPUTBOX_CURSOR_WIDTH, 0.8f, 1.0f);
@@ -537,24 +535,37 @@ static void djui_inputbox_render_selection(struct DjuiInputbox* inputbox) {
     }
 }
 
-static void djui_inputbox_keep_selection_in_view(struct DjuiInputbox* inputbox) {
+static void djui_inputbox_keep_in_view(struct DjuiInputbox* inputbox) {
     const struct DjuiFont* font = gDjuiFonts[configDjuiThemeFont == 0 ? FONT_NORMAL : FONT_ALIASED];
 
     // calculate where our cursor is
-    f32 cursorX = inputbox->viewX;
+    f32 end = inputbox->viewX;
+    f32 cursorX = end;
     char* c = inputbox->buffer;
-    for (u16 i = 0; i < inputbox->selection[0]; i++) {
+    for (u16 i = 0; i < inputbox->bufferSize; i++) {
+        if (i == inputbox->selection[0]) { cursorX = end; }
         if (*c == '\0') { break; }
         char* dc = inputbox->passwordChar[0] ? inputbox->passwordChar : c;
-        cursorX += font->char_width(dc) * font->defaultFontScale;
+        end += font->char_width(dc) * font->defaultFontScale;
         c = djui_unicode_next_char(c);
     }
 
-    // shift viewing window
-    if (cursorX > inputbox->base.comp.width) {
-        inputbox->viewX -= cursorX - inputbox->base.comp.width;
-    } else if (cursorX < 0) {
-        inputbox->viewX -= cursorX;
+    // text doesn't fit in box, shift to view
+    if (end - inputbox->viewX > inputbox->base.comp.width) {
+        if (end < inputbox->base.comp.width) {
+            inputbox->viewX -= end - inputbox->base.comp.width;
+            cursorX -= end - inputbox->base.comp.width;
+        }
+
+        if (djui_interactable_is_input_focus(&inputbox->base)) {
+            if (cursorX > inputbox->base.comp.width) {
+                inputbox->viewX -= cursorX - inputbox->base.comp.width;
+            } else if (cursorX < 0) {
+                inputbox->viewX -= cursorX;
+            }
+        }
+    } else {
+        inputbox->viewX = 0;
     }
 }
 
@@ -568,8 +579,8 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     comp->x += 2;
     comp->width -= 2;
 
-    // shift the viewing window to keep the selection in view
-    djui_inputbox_keep_selection_in_view(inputbox);
+    // shift the viewing window to keep the text/selection in view
+    djui_inputbox_keep_in_view(inputbox);
 
     // translate position
     f32 translatedX = comp->x + inputbox->viewX;
@@ -583,7 +594,9 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     create_dl_scale_matrix(DJUI_MTX_NOPUSH, translatedFontSize, translatedFontSize, 1.0f);
 
     // render selection
-    djui_inputbox_render_selection(inputbox);
+    if (djui_interactable_is_input_focus(&inputbox->base)) {
+        djui_inputbox_render_selection(inputbox);
+    }
 
     // begin font
     if (font->textBeginDisplayList != NULL) {
@@ -608,7 +621,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
     font->render_begin();
     for (u16 i = 0; i < inputbox->bufferSize; i++) {
 
-        //render composition text
+        // render composition text
         if (selection[0] == i && inputbox->imeBuffer != NULL) {
             char *ime = inputbox->imeBuffer;
             while (*ime != '\0') {
@@ -619,7 +632,7 @@ static bool djui_inputbox_render(struct DjuiBase* base) {
 
         if (*c == '\0') { break; }
 
-        // deal with seleciton color
+        // deal with selection color
         if (selection[0] != selection[1]) {
             bool insideSelection = (i >= selection[0]) && (i < selection[1]);
             if (insideSelection && !wasInsideSelection) {

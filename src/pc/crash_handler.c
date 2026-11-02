@@ -5,7 +5,7 @@ char gLastRemoteBhv[256] = "";
 
 #if defined(_WIN32) || defined(__linux__)
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include <PR/ultratypes.h>
 #include <PR/gbi.h>
@@ -639,17 +639,11 @@ static void crash_handler(const int signalNum, siginfo_t *info, UNUSED ucontext_
     crash_handler_add_info_str(&pText, 8, 208, "RemoteBhv", gLastRemoteBhv);
 
     // sounds
-    if (SDL_WasInit(SDL_INIT_AUDIO) || SDL_InitSubSystem(SDL_INIT_AUDIO) == 0) {
-        SDL_AudioSpec want, have;
-        want.freq = 32000;
-        want.format = AUDIO_S16SYS;
-        want.channels = 1;
-        want.samples = 0x200;
-        want.callback = NULL;
-        want.userdata = NULL;
-        s32 device = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
-        if (device) {
-            SDL_PauseAudioDevice(device, 0);
+    if (!SDL_WasInit(SDL_INIT_AUDIO) && SDL_InitSubSystem(SDL_INIT_AUDIO)) {
+        const SDL_AudioSpec spec = { SDL_AUDIO_S16, 1, 32000 };
+        SDL_AudioDeviceID device = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
+        if (device != 0) {
+            SDL_ResumeAudioDevice(device);
         }
     }
 

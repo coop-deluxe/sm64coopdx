@@ -434,6 +434,12 @@ void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLev
 }
 
 void run_command(char *command, bool onConsole) {
+    // if the game is not initialized, bail early
+    if (!gGameInited) {
+        command_message_create("Game still being initialized! Please wait before running any commands!", CONSOLE_MESSAGE_ERROR);
+        return;
+    }
+
     // directly set active state of certain commands
     set_command_active("nametags", gServerSettings.nametags);
     set_command_active("host", gDjuiInMainMenu);

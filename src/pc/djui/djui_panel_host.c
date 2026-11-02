@@ -7,10 +7,12 @@
 #include "djui_panel_host_save.h"
 #include "djui_panel_host_message.h"
 #include "djui_panel_rules.h"
+#include "djui_panel_loading.h"
 #include "game/save_file.h"
 #include "pc/network/network.h"
 #include "pc/utils/misc.h"
 #include "pc/configfile.h"
+#include "pc/pc_main.h"
 #include "pc/update_checker.h"
 
 static struct DjuiRect* sRectPort = NULL;
@@ -65,6 +67,11 @@ static void djui_panel_host_password_text_change(UNUSED struct DjuiBase* caller)
 
 extern void djui_panel_do_host(bool reconnecting, bool playSound);
 static void djui_panel_host_do_host(struct DjuiBase* caller) {
+    if (!gGameInited) {
+        djui_panel_loading_create(caller, djui_panel_host_do_host);
+        return;
+    }
+
     if (!djui_panel_host_port_valid()) {
         djui_interactable_set_input_focus(&sInputboxPort->base);
         djui_inputbox_select_all(sInputboxPort);
@@ -197,14 +204,6 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             defaultBase = (gNetworkType == NT_SERVER)
                         ? &button1->base
                         : &button2->base;
-        }
-
-        if (gUpdateMessage) {
-            struct DjuiText* message = djui_text_create(&panel->base, DLANG(NOTIF, UPDATE_AVAILABLE));
-            djui_base_set_size_type(&message->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-            djui_base_set_size(&message->base, 1.0f, 1.0f);
-            djui_base_set_color(&message->base, 255, 255, 160, 255);
-            djui_text_set_alignment(message, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
         }
     }
 

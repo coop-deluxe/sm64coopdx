@@ -25,6 +25,8 @@ static u16 sKeyboardButtons = 0;
 static bool sIgnoreInteractableUntilCursorReleased = false;
 static bool sIgnoreAllInputsWhenBinding = false;
 static int sPendingConsoleToggleScancode = -1;
+static int sPendingChatToggleScancode = -1;
+static int sPendingChatCommandToggleScancode = -1;
 
 struct DjuiBase* gDjuiHovered = NULL;
 struct DjuiBase* gDjuiCursorDownOn = NULL;
@@ -183,7 +185,7 @@ void djui_interactable_set_binding(struct DjuiBase* base) {
 }
 
 void djui_interactable_set_input_focus(struct DjuiBase* base) {
-    if (gDjuiConsoleFocus && base != &gDjuiConsole->inputbox->base) {
+    if ((gDjuiConsoleFocus && base != &gDjuiConsole->inputbox->base) || gInteractableFocus == base) {
         return;
     }
 
@@ -248,16 +250,24 @@ bool djui_interactable_on_key_down(int scancode) {
         }
 
         if (!gDjuiConsoleFocus) {
-            if (pressChat && !gDjuiConsoleFocus) {
+            if (pressChat) {
+                if (sPendingChatToggleScancode == scancode) {
+                    return true;
+                }
+                sPendingChatToggleScancode = scancode;
                 djui_chat_box_toggle();
                 return true;
             }
     
-            if (pressChatCommand && !gDjuiConsoleFocus) {
+            if (pressChatCommand) {
+                if (sPendingChatCommandToggleScancode == scancode) {
+                    return true;
+                }
+                sPendingChatCommandToggleScancode = scancode;
                 djui_chat_box_open_with_text("/");
                 return true;
             }
-
+    
             if (pressMute && configVoiceChatActivationMode == VOICECHAT_ACTMODE_THRESHOLD) {
                 voicechat_toggle_mute();
                 return true;
@@ -267,13 +277,12 @@ bool djui_interactable_on_key_down(int scancode) {
                 voicechat_toggle_deafen();
                 return true;
             }
-
+    
             if (pressPushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) {
                 voicechat_set_mute(false);
                 return true;
             }
         }
-
     }
 
     if ((gDjuiPlayerList != NULL || gDjuiModList != NULL)) {
@@ -339,6 +348,14 @@ void djui_interactable_on_key_up(int scancode) {
             djui_console_toggle();
         }
         sPendingConsoleToggleScancode = -1;
+    }
+
+    if (sPendingChatToggleScancode != -1 && scancode == sPendingChatToggleScancode) {
+        sPendingChatToggleScancode = -1;
+    }
+
+    if (sPendingChatCommandToggleScancode != -1 && scancode == sPendingChatCommandToggleScancode) {
+        sPendingChatCommandToggleScancode = -1;
     }
 
     if (gDjuiPlayerList != NULL || gDjuiModList != NULL) {

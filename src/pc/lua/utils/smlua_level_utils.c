@@ -22,6 +22,24 @@ struct LevelWarpNodes {
 
 static void *sCustomWarpNodes = NULL;
 
+static s32 level_custom_set_entry(UNUSED s16 arg, s32 levelNum) {
+    if (levelNum >= CUSTOM_LEVEL_NUM_START) {
+        struct CustomLevelInfo *info = smlua_level_util_get_info(levelNum);
+        if (info && info->script) {
+            script_exec_level_custom[8] = (LevelScript) info->script; // Set level entry parameter of EXECUTE command
+            return levelNum;
+        }
+    }
+    return 0;
+}
+
+LevelScript script_exec_level_custom[] = {
+    CALL(0, level_custom_set_entry),
+    JUMP_IF(OP_LT, CUSTOM_LEVEL_NUM_START, script_exec_level_custom + 9), // Skip EXECUTE command if not a valid custom level script
+    EXECUTE(0, 0, 0, NULL),
+    RETURN(),
+};
+
 void smlua_level_util_reset(void) {
     struct CustomLevelInfo* node = sCustomLevelHead;
 
@@ -193,6 +211,10 @@ bool level_is_vanilla_level(s16 levelNum) {
 
 bool warp_to_warpnode(s32 aLevel, s32 aArea, s32 aAct, s32 aWarpId) {
     return dynos_warp_to_warpnode(aLevel, aArea, aAct, aWarpId);
+}
+
+bool warp_with_transition(s32 aLevel, s32 aArea, s32 aAct, s16 aTransType, s16 aTime, Color aColor, OPTIONAL s32 aWarpId) {
+    return dynos_warp_with_transition(aLevel, aArea, aAct, aTransType, aTime, aColor, aWarpId);
 }
 
 bool warp_to_level(s32 aLevel, s32 aArea, s32 aAct) {
