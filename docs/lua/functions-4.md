@@ -6,6 +6,607 @@
 
 
 ---
+# functions from lighting_engine.h
+
+<br />
+
+
+## le_is_enabled
+
+### Description
+Gets whether the lighting engine has been enabled or not. It becomes enabled once a light is added or the ambient color is set
+
+### Lua Example
+`local booleanValue = le_is_enabled()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_is_enabled(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_mode
+
+### Description
+Sets the lighting engine mode to `mode`
+
+### Lua Example
+`le_set_mode(mode)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| mode | [enum LEMode](constants.md#enum-LEMode) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_mode(enum LEMode mode);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_mode
+
+### Description
+Gets the lighting engine mode
+
+### Lua Example
+`local enumValue = le_get_mode()`
+
+### Parameters
+- None
+
+### Returns
+- [enum LEMode](constants.md#enum-LEMode)
+
+### C Prototype
+`enum LEMode le_get_mode(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_tone_mapping
+
+### Description
+Sets the lighting engine's tone mapping mode to `toneMapping`
+
+### Lua Example
+`le_set_tone_mapping(toneMapping)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| toneMapping | [enum LEToneMapping](constants.md#enum-LEToneMapping) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_tone_mapping(enum LEToneMapping toneMapping);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_ambient_color
+
+### Description
+Outputs the lighting engine's ambient color to `out`
+
+### Lua Example
+`le_get_ambient_color(out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_ambient_color(VEC_OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_ambient_color
+
+### Description
+Sets the lighting engine ambient color
+
+### Lua Example
+`le_set_ambient_color(r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_ambient_color(u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_max_lights_per_vertex
+
+### Description
+Sets the max amount of lights that can affect a vertex
+
+### Lua Example
+`le_set_max_lights_per_vertex(count)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| count | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_max_lights_per_vertex(u8 count);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_enabled
+
+### Description
+This will let the user control the lighting engine in real time to disable or enable it.
+
+### Lua Example
+`le_set_enabled(value)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| value | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_enabled(bool value);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_color
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color(pos, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color(Vec3f pos, VEC_OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_color_with_normal
+
+### Description
+Calculates the lighting with `lightIntensityScalar` at a position and with a normal and outputs the color in `out`
+
+### Lua Example
+`le_calculate_lighting_color_with_normal(pos, normal, out, lightIntensityScalar)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| normal | [Vec3f](structs.md#Vec3f) |
+| out | [Color](structs.md#Color) |
+| lightIntensityScalar | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_color_with_normal(Vec3f pos, Vec3f normal, VEC_OUT Color out, f32 lightIntensityScalar);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_calculate_lighting_dir
+
+### Description
+Calculates the lighting direction from a position and outputs the result in `out`
+
+### Lua Example
+`le_calculate_lighting_dir(pos, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| pos | [Vec3f](structs.md#Vec3f) |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_calculate_lighting_dir(Vec3f pos, VEC_OUT Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_add_light
+
+### Description
+Adds a lighting engine point light at `x`, `y`, `z` with color `r`, `g`, `b` and `radius` with `intensity`
+
+### Lua Example
+`local integerValue = le_add_light(x, y, z, r, g, b, radius, intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+| radius | `number` |
+| intensity | `number` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 le_add_light(f32 x, f32 y, f32 z, u8 r, u8 g, u8 b, f32 radius, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_remove_light
+
+### Description
+Removes a lighting engine point light corresponding to `id`
+
+### Lua Example
+`le_remove_light(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_remove_light(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_count
+
+### Description
+Gets the total number of lights currently loaded in the lighting engine
+
+### Lua Example
+`local integerValue = le_get_light_count()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`s16 le_get_light_count(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_light_exists
+
+### Description
+Checks if a lighting engine point light corresponding to `id` exists
+
+### Lua Example
+`local booleanValue = le_light_exists(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_light_exists(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_pos
+
+### Description
+Outputs a lighting engine point light's position to `out`
+
+### Lua Example
+`le_get_light_pos(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Vec3f](structs.md#Vec3f) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_light_pos(s16 id, VEC_OUT Vec3f out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_pos
+
+### Description
+Sets a lighting engine point light's position to `x`, `y`, `z`
+
+### Lua Example
+`le_set_light_pos(id, x, y, z)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| x | `number` |
+| y | `number` |
+| z | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_pos(s16 id, f32 x, f32 y, f32 z);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_color
+
+### Description
+Outputs a lighting engine point light's color to `out`
+
+### Lua Example
+`le_get_light_color(id, out)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| out | [Color](structs.md#Color) |
+
+### Returns
+- None
+
+### C Prototype
+`void le_get_light_color(s16 id, VEC_OUT Color out);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_color
+
+### Description
+Sets a lighting engine point light's color to `r`, `g`, `b`
+
+### Lua Example
+`le_set_light_color(id, r, g, b)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| r | `integer` |
+| g | `integer` |
+| b | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_color(s16 id, u8 r, u8 g, u8 b);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_radius
+
+### Description
+Gets a lighting engine point light's `radius`
+
+### Lua Example
+`local numberValue = le_get_light_radius(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_radius(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_radius
+
+### Description
+Sets a lighting engine point light's `radius`
+
+### Lua Example
+`le_set_light_radius(id, radius)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| radius | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_radius(s16 id, f32 radius);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_intensity
+
+### Description
+Gets a lighting engine point light's `intensity`
+
+### Lua Example
+`local numberValue = le_get_light_intensity(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `number`
+
+### C Prototype
+`f32 le_get_light_intensity(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_intensity
+
+### Description
+Sets a lighting engine point light's `intensity`
+
+### Lua Example
+`le_set_light_intensity(id, intensity)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| intensity | `number` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_intensity(s16 id, f32 intensity);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_get_light_use_surface_normals
+
+### Description
+Gets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`local booleanValue = le_get_light_use_surface_normals(id)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool le_get_light_use_surface_normals(s16 id);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## le_set_light_use_surface_normals
+
+### Description
+Sets whether a lighting engine point light will use a surface's normals to determine its brightness with `useSurfaceNormals`
+
+### Lua Example
+`le_set_light_use_surface_normals(id, useSurfaceNormals)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| id | `integer` |
+| useSurfaceNormals | `boolean` |
+
+### Returns
+- None
+
+### C Prototype
+`void le_set_light_use_surface_normals(s16 id, bool useSurfaceNormals);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from load.h
 
 <br />
@@ -6380,811 +6981,6 @@ Converts a 3D integer vector `a` into a 3D short integer vector and stores the r
 
 ### C Prototype
 `Vec3sp vec3i_to_vec3s(VEC_OUT Vec3s dest, Vec3i a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from math_util_vec3s.inl
-
-<br />
-
-
-## vec3s_zero
-
-### Description
-Sets the components of the 3D short integer vector `v` to 0
-
-### Lua Example
-`local vec3sValue = vec3s_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_zero(VEC_OUT Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_copy
-
-### Description
-Copies the contents of a 3D short integer vector (`src`) into another 3D short integer vector (`dest`)
-
-### Lua Example
-`local vec3sValue = vec3s_copy(dest, src)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| src | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_copy(VEC_OUT Vec3s dest, Vec3s src);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_set
-
-### Description
-Sets the values of the 3D short integer vector `dest` to the given x, y, and z values
-
-### Lua Example
-`local vec3sValue = vec3s_set(dest, x, y, z)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| x | `integer` |
-| y | `integer` |
-| z | `integer` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_set(VEC_OUT Vec3s dest, s16 x, s16 y, s16 z);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_add
-
-### Description
-Adds the components of the 3D short integer vector `a` to `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_add(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_add(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_sum
-
-### Description
-Adds the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_sum(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_sum(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_sub
-
-### Description
-Subtracts the components of the 3D short integer vector `a` from `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_sub(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_sub(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_dif
-
-### Description
-Subtracts the components of the 3D short integer vector `b` from the components of `a` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_dif(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_dif(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_mul
-
-### Description
-Multiplies each component of the 3D short integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3sValue = vec3s_mul(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_mul(VEC_OUT Vec3s dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_mult
-
-### Description
-Multiplies the components of the 3D short integer vector `dest` with the components of `a`
-
-### Lua Example
-`local vec3sValue = vec3s_mult(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_mult(VEC_OUT Vec3s dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_prod
-
-### Description
-Multiplies the components of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_prod(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_prod(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_div
-
-### Description
-Divides each component of the 3D short integer vector `dest` by the scalar value `a`
-
-### Lua Example
-`local vec3sValue = vec3s_div(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_div(VEC_OUT Vec3s dest, f32 a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_length
-
-### Description
-Calculates the length (magnitude) of the 3D short integer vector `a`
-
-### Lua Example
-`local numberValue = vec3s_length(a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_length(Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_normalize
-
-### Description
-Normalizes the 3D short integer vector `v` so that its length (magnitude) becomes 1, while retaining its direction
-
-### Lua Example
-`local vec3sValue = vec3s_normalize(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_normalize(VEC_OUT Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_set_magnitude
-
-### Description
-Sets the length (magnitude) of 3D short integer vector `v`, while retaining its direction
-
-### Lua Example
-`local vec3sValue = vec3s_set_magnitude(v, mag)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-| mag | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_set_magnitude(VEC_OUT Vec3s v, f32 mag);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_dot
-
-### Description
-Computes the dot product of the two 3D short integer vectors `a` and `b`
-
-### Lua Example
-`local numberValue = vec3s_dot(a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_dot(Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_cross
-
-### Description
-Computes the cross product of two 3D short integer vectors `a` and `b` and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_cross(dest, a, b)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_cross(VEC_OUT Vec3s dest, Vec3s a, Vec3s b);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_combine
-
-### Description
-Takes two 3D short integer vectors `vecA` and `vecB`, multiplies them by `sclA` and `sclB` respectively, adds the scaled vectors together and stores the result in `dest`
-
-### Lua Example
-`local vec3sValue = vec3s_combine(dest, vecA, vecB, sclA, sclB)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3s](structs.md#Vec3s) |
-| vecA | [Vec3s](structs.md#Vec3s) |
-| vecB | [Vec3s](structs.md#Vec3s) |
-| sclA | `number` |
-| sclB | `number` |
-
-### Returns
-- [Vec3s](structs.md#Vec3s)
-
-### C Prototype
-`Vec3sp vec3s_combine(VEC_OUT Vec3s dest, Vec3s vecA, Vec3s vecB, f32 sclA, f32 sclB);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_dist
-
-### Description
-Calculates the distance between two 3D short integer vectors `v1` and `v2`
-
-### Lua Example
-`local numberValue = vec3s_dist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3s](structs.md#Vec3s) |
-| v2 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_dist(Vec3s v1, Vec3s v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_hdist
-
-### Description
-Calculates the horizontal distance between two 3D short integer vectors `v1` and `v2`, as if their y component was 0
-
-### Lua Example
-`local numberValue = vec3s_hdist(v1, v2)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v1 | [Vec3s](structs.md#Vec3s) |
-| v2 | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 vec3s_hdist(Vec3s v1, Vec3s v2);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_is_zero
-
-### Description
-Returns `true` if all components of the 3D short integer vector `v` are zero
-
-### Lua Example
-`local booleanValue = vec3s_is_zero(v)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| v | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool vec3s_is_zero(Vec3s v);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_to_vec3f
-
-### Description
-Converts a 3D short integer vector `a` into a 3D floating-point vector and stores the result in `dest`
-
-### Lua Example
-`local vec3fValue = vec3s_to_vec3f(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3f](structs.md#Vec3f)
-
-### C Prototype
-`Vec3fp vec3s_to_vec3f(VEC_OUT Vec3f dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## vec3s_to_vec3i
-
-### Description
-Converts a 3D short integer vector `a` into a 3D integer vector and stores the result in `dest`
-
-### Lua Example
-`local vec3iValue = vec3s_to_vec3i(dest, a)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| dest | [Vec3i](structs.md#Vec3i) |
-| a | [Vec3s](structs.md#Vec3s) |
-
-### Returns
-- [Vec3i](structs.md#Vec3i)
-
-### C Prototype
-`Vec3ip vec3s_to_vec3i(VEC_OUT Vec3i dest, Vec3s a);`
-
-[:arrow_up_small:](#)
-
-<br />
-
----
-# functions from misc.h
-
-<br />
-
-
-## smooth_step
-
-### Description
-Smoothly steps between `edge0` and `edge1` with `x` as delta
-
-### Lua Example
-`local numberValue = smooth_step(edge0, edge1, x)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| edge0 | `number` |
-| edge1 | `number` |
-| x | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`float smooth_step(float edge0, float edge1, float x);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## update_all_mario_stars
-
-### Description
-Updates every Mario state's star count with the save file total star count
-
-### Lua Example
-`update_all_mario_stars()`
-
-### Parameters
-- None
-
-### Returns
-- None
-
-### C Prototype
-`void update_all_mario_stars(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## clock_elapsed
-
-### Description
-Gets the current clock elapsed time
-
-### Lua Example
-`local numberValue = clock_elapsed()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 clock_elapsed(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## clock_elapsed_f64
-
-### Description
-Gets the current clock elapsed time with double precision
-
-### Lua Example
-`local numberValue = clock_elapsed_f64()`
-
-### Parameters
-- None
-
-### Returns
-- `number`
-
-### C Prototype
-`f64 clock_elapsed_f64(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## clock_elapsed_ticks
-
-### Description
-Gets the current clock elapsed time in frames
-
-### Lua Example
-`local integerValue = clock_elapsed_ticks()`
-
-### Parameters
-- None
-
-### Returns
-- `integer`
-
-### C Prototype
-`u32 clock_elapsed_ticks(void);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## clock_is_date
-
-### Description
-Checks whether it is the day given
-
-### Lua Example
-`local booleanValue = clock_is_date(month, day)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| month | `integer` |
-| day | `integer` |
-
-### Returns
-- `boolean`
-
-### C Prototype
-`bool clock_is_date(u8 month, u8 day);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## delta_interpolate_f32
-
-### Description
-Linearly interpolates between `a` and `b` with `delta`
-
-### Lua Example
-`local numberValue = delta_interpolate_f32(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `number` |
-| b | `number` |
-| delta | `number` |
-
-### Returns
-- `number`
-
-### C Prototype
-`f32 delta_interpolate_f32(f32 a, f32 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## delta_interpolate_s32
-
-### Description
-Linearly interpolates between `a` and `b` with `delta`
-
-### Lua Example
-`local integerValue = delta_interpolate_s32(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| delta | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s32 delta_interpolate_s32(s32 a, s32 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## delta_interpolate_angle
-
-### Description
-Interpolates angle between `a` and `b` with `delta`
-
-### Lua Example
-`local integerValue = delta_interpolate_angle(a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| a | `integer` |
-| b | `integer` |
-| delta | `number` |
-
-### Returns
-- `integer`
-
-### C Prototype
-`s16 delta_interpolate_angle(s16 a, s16 b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## delta_interpolate_vec3f
-
-### Description
-Linearly interpolates `res` between `a` and `b` with `delta`
-
-### Lua Example
-`delta_interpolate_vec3f(res, a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| res | [Vec3f](structs.md#Vec3f) |
-| a | [Vec3f](structs.md#Vec3f) |
-| b | [Vec3f](structs.md#Vec3f) |
-| delta | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void delta_interpolate_vec3f(VEC_OUT Vec3f res, Vec3f a, Vec3f b, f32 delta);`
-
-[:arrow_up_small:](#)
-
-<br />
-
-## delta_interpolate_vec3s
-
-### Description
-Linearly interpolates `res` between `a` and `b` with `delta`
-
-### Lua Example
-`delta_interpolate_vec3s(res, a, b, delta)`
-
-### Parameters
-| Field | Type |
-| ----- | ---- |
-| res | [Vec3s](structs.md#Vec3s) |
-| a | [Vec3s](structs.md#Vec3s) |
-| b | [Vec3s](structs.md#Vec3s) |
-| delta | `number` |
-
-### Returns
-- None
-
-### C Prototype
-`void delta_interpolate_vec3s(VEC_OUT Vec3s res, Vec3s a, Vec3s b, f32 delta);`
 
 [:arrow_up_small:](#)
 

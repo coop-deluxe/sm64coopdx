@@ -4,24 +4,24 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-enum {
-    CC_0,
-    CC_TEXEL0,
-    CC_TEXEL1,
-    CC_PRIM,
-    CC_SHADE,
-    CC_ENV,
-    CC_TEXEL0A,
-    CC_LOD,
-    CC_1,
-    CC_TEXEL1A,
-    CC_COMBINED,
-    CC_COMBINEDA,
-    CC_PRIMA,
-    CC_SHADEA,
-    CC_ENVA,
-    CC_NOISE,
-    CC_ENUM_MAX,
+enum ColorCombinerSource {
+    CCS_0,
+    CCS_1,
+    CCS_TEXEL0,
+    CCS_TEXEL1,
+    CCS_PRIM,
+    CCS_SHADE,
+    CCS_ENV,
+    CCS_COMBINED,
+    CCS_TEXEL0A,
+    CCS_TEXEL1A,
+    CCS_PRIMA,
+    CCS_SHADEA,
+    CCS_ENVA,
+    CCS_COMBINEDA,
+    CCS_LOD,
+    CCS_NOISE,
+    CCS_COUNT,
 };
 
 enum {
