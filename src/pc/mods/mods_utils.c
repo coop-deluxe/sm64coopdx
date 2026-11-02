@@ -25,6 +25,20 @@ bool mods_has_too_large_mod(void) {
     return false;
 }
 
+bool mods_exceeds_direct_download_limit(void) {
+    u64 totalSize = 0;
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod == NULL || !mod->enabled) { continue; }
+        u64 modSize = (u64)mod->size;
+        if (modSize > MAX_DIRECT_MOD_SIZE || totalSize > MAX_DIRECT_MOD_SIZE - modSize) {
+            return true;
+        }
+        totalSize += modSize;
+    }
+    return false;
+}
+
 static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
     if (a->incompatible == NULL || b->incompatible == NULL) {
         return false;

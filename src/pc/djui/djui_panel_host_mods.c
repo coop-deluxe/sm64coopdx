@@ -15,6 +15,7 @@
 #include "djui_panel_modlist.h"
 #include "djui_panel_playerlist.h"
 #include "djui_panel_pause.h"
+#include "djui_panel_singleplayer.h"
 #include "pc/thread.h"
 
 extern const Texture exclamation_box_seg8_texture_08015E28[];
@@ -293,20 +294,29 @@ static bool djui_panel_host_mods_reload_panel(UNUSED struct DjuiBase *caller) {
     sTooltip = NULL;
     sTooltipIcon = NULL;
 
+    bool fromSingleplayer = djui_panel_singleplayer_is_open();
     if (gDjuiInMainMenu) {
         djui_panel_shutdown();
         gDjuiInMainMenu = true;
         djui_panel_playerlist_create(NULL);
         djui_panel_modlist_create(NULL);
         djui_panel_main_create(NULL);
-        djui_panel_host_create(NULL);
+        if (fromSingleplayer) {
+            djui_panel_singleplayer_create(NULL);
+        } else {
+            djui_panel_host_create(NULL);
+        }
         djui_panel_host_mods_create(NULL);
     } else if (gDjuiPanelPauseCreated) {
         djui_panel_shutdown();
         djui_panel_playerlist_create(NULL);
         djui_panel_modlist_create(NULL);
         djui_panel_pause_create(NULL);
-        djui_panel_host_create(NULL);
+        if (fromSingleplayer) {
+            djui_panel_singleplayer_create(NULL);
+        } else {
+            djui_panel_host_create(NULL);
+        }
         djui_panel_host_mods_create(NULL);
     }
 

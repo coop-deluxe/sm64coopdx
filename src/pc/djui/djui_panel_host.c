@@ -25,7 +25,16 @@ static struct DjuiInputbox* sInputboxPort = NULL;
 static struct DjuiText* sBigModText = NULL;
 static struct DjuiImage* sBigModIcon = NULL;
 static struct DjuiButton* sHostButton = NULL;
-static int sBigModState = -1;
+
+enum HostModLimitState {
+    HOST_MOD_LIMIT_UNKNOWN = -1,
+    HOST_MOD_LIMIT_NONE,
+    HOST_MOD_LIMIT_BIG_MOD,
+    HOST_MOD_LIMIT_COOPNET,
+    HOST_MOD_LIMIT_DIRECT,
+};
+
+static enum HostModLimitState sBigModState = HOST_MOD_LIMIT_UNKNOWN;
 #ifdef COOPNET
 static struct DjuiRect* sRectPassword = NULL;
 static struct DjuiInputbox* sInputboxPassword = NULL;
@@ -51,18 +60,30 @@ static void djui_panel_host_set_big_mod_text(const char* message) {
     djui_text_set_text(sBigModText, buffer);
 }
 
+static enum HostModLimitState djui_panel_host_mod_limit_state(void) {
+    if (mods_exceeds_direct_download_limit()) { return HOST_MOD_LIMIT_DIRECT; }
+    if (djui_host_blocked_by_mod_size()) { return HOST_MOD_LIMIT_COOPNET; }
+    if (mods_has_too_large_mod()) { return HOST_MOD_LIMIT_BIG_MOD; }
+    return HOST_MOD_LIMIT_NONE;
+}
+
+static bool djui_panel_host_mod_limit_blocks(enum HostModLimitState state) {
+    return state == HOST_MOD_LIMIT_COOPNET || state == HOST_MOD_LIMIT_DIRECT;
+}
+
 static void djui_panel_host_on_render_pre(struct DjuiBase* base, UNUSED bool* skipRender) {
-    int state = djui_host_blocked_by_mod_size() ? 2 : (mods_has_too_large_mod() ? 1 : 0);
+    enum HostModLimitState state = djui_panel_host_mod_limit_state();
     if (state == sBigModState) { return; }
     sBigModState = state;
 
-    if (state == 0) {
-        djui_text_set_text(sBigModText, "");
-    } else {
-        djui_panel_host_set_big_mod_text((state == 2) ? DLANG(HOST, BIG_MODS_COOPNET) : DLANG(HOST, BIG_MODS_LOADED));
+    switch (state) {
+        case HOST_MOD_LIMIT_DIRECT:  djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_DIRECT_LIMIT)); break;
+        case HOST_MOD_LIMIT_COOPNET: djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_COOPNET)); break;
+        case HOST_MOD_LIMIT_BIG_MOD: djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_LOADED)); break;
+        default:                     djui_text_set_text(sBigModText, ""); break;
     }
-    djui_base_set_visible(&sBigModText->base, state != 0);
-    djui_base_set_enabled(&sHostButton->base, state != 2);
+    djui_base_set_visible(&sBigModText->base, state != HOST_MOD_LIMIT_NONE);
+    djui_base_set_enabled(&sHostButton->base, !djui_panel_host_mod_limit_blocks(state));
 
     struct DjuiThreePanel* panel = (struct DjuiThreePanel*)base;
     djui_three_panel_set_body_size(panel, 0);
@@ -264,13 +285,13 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
             sHostButton = button2;
 
-            defaultBase = (gNetworkType == NT_SERVER || djui_host_blocked_by_mod_size())
+            defaultBase = (gNetworkType == NT_SERVER || djui_panel_host_mod_limit_blocks(djui_panel_host_mod_limit_state()))
                         ? &button1->base
                         : &button2->base;
         }
     }
 
-    sBigModState = -1;
+    sBigModState = HOST_MOD_LIMIT_UNKNOWN;
     panel->base.on_render_pre = djui_panel_host_on_render_pre;
 
     djui_panel_add(caller, panel, defaultBase);

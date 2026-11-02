@@ -14,27 +14,30 @@
 #include "audio/external.h"
 #include "sounds.h"
 #include "djui_panel_host.h"
+#include "djui_panel_host_message.h"
+#include "djui_panel_singleplayer.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
 
 static bool sHideMessage = false;
 
-void djui_panel_do_host(bool reconnecting, bool playSound) {
-    if (djui_host_blocked_by_mod_size()) {
-        djui_popup_create(DLANG(HOST, BIG_MODS_COOPNET), 4);
-        return;
-    }
-
+static void djui_panel_start_server(bool reconnecting, bool playSound, bool localOnly) {
     stop_demo(NULL);
     djui_panel_shutdown();
     extern s16 gCurrSaveFileNum;
     gCurrSaveFileNum = configHostSaveSlot;
     update_all_mario_stars();
 
+    if (localOnly) {
+        network_set_system_local();
+    } else {
 #ifndef COOPNET
-    if (configNetworkSystem == NS_COOPNET) { configNetworkSystem = NS_SOCKET; }
+        if (configNetworkSystem == NS_COOPNET) { configNetworkSystem = NS_SOCKET; }
 #endif
-    if (configNetworkSystem == NS_COOPNET && configAmountOfPlayers == 1) { configNetworkSystem = NS_SOCKET; }
-    if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
-    network_set_system(configNetworkSystem);
+        if (configNetworkSystem == NS_COOPNET && configAmountOfPlayers == 1) { configNetworkSystem = NS_SOCKET; }
+        if (configNetworkSystem >= NS_MAX) { configNetworkSystem = NS_MAX; }
+        network_set_system(configNetworkSystem);
+    }
 
     network_init(NT_SERVER, reconnecting);
     djui_panel_modlist_create(NULL);
@@ -47,6 +50,30 @@ void djui_panel_do_host(bool reconnecting, bool playSound) {
     if (playSound) { gDelayedInitSound = CHAR_SOUND_OKEY_DOKEY; }
 
     play_transition(WARP_TRANSITION_FADE_INTO_STAR, 0x14, 0x00, 0x00, 0x00);
+}
+
+bool djui_panel_host_check_mod_limits(void) {
+    if (mods_exceeds_direct_download_limit()) {
+        djui_popup_create(DLANG(HOST, BIG_MODS_DIRECT_LIMIT), 4);
+        return false;
+    }
+
+    if (djui_host_blocked_by_mod_size()) {
+        djui_popup_create(DLANG(HOST, BIG_MODS_COOPNET), 4);
+        return false;
+    }
+
+    return true;
+}
+
+void djui_panel_do_host(bool reconnecting, bool playSound) {
+    if (!djui_panel_host_check_mod_limits()) { return; }
+
+    djui_panel_start_server(reconnecting, playSound, false);
+}
+
+void djui_panel_do_singleplayer(bool reconnecting, bool playSound) {
+    djui_panel_start_server(reconnecting, playSound, true);
 }
 
 void djui_panel_host_message_do_host(UNUSED struct DjuiBase* caller) {

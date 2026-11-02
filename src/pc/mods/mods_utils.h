@@ -6,6 +6,7 @@
 #include "pc/platform.h"
 
 bool mods_has_too_large_mod(void);
+bool mods_exceeds_direct_download_limit(void);
 void mods_update_selectable(void);
 void mods_delete_tmp(void);
 
