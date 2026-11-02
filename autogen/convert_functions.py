@@ -132,9 +132,6 @@ def build_param(fid, param, i):
     ptype = param['type']
     pid = param['identifier']
 
-    if "struct TextureInfo" in ptype and "*" in ptype:
-        return '    struct TextureInfo *texInfo = smlua_to_texture_info(L, %d);\n' % (i)
-
     if ptype in VEC_TYPES:
         if ptype == "Vec3f" and fid in SOUND_FUNCTIONS:
             return vec3f_sound_before.replace('$[IDENTIFIER]', str(pid)).replace('$[INDEX]', str(i))

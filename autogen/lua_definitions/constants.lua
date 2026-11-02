@@ -3038,6 +3038,33 @@ G_TEXRECTFLIP = 0xe5
 G_TEXRECT = 0xe4
 
 --- @type integer
+G_IM_FMT_RGBA = 0
+
+--- @type integer
+G_IM_FMT_YUV = 1
+
+--- @type integer
+G_IM_FMT_CI = 2
+
+--- @type integer
+G_IM_FMT_IA = 3
+
+--- @type integer
+G_IM_FMT_I = 4
+
+--- @type integer
+G_IM_SIZ_4b = 0
+
+--- @type integer
+G_IM_SIZ_8b = 1
+
+--- @type integer
+G_IM_SIZ_16b = 2
+
+--- @type integer
+G_IM_SIZ_32b = 3
+
+--- @type integer
 G_VTX_EXT = 0x11
 
 --- @type integer

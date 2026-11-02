@@ -10878,9 +10878,22 @@ function get_mario_vanilla_animation(index)
     -- ...
 end
 
+--- @param name string
+--- @param flags integer
+--- @param animYTransDivisor integer
+--- @param startFrame integer
+--- @param loopStart integer
+--- @param loopEnd integer
+--- @param values table
+--- @param index table
+--- Registers an animation with `name` as the identifier that can be used by objects
+function smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)
+    -- ...
+end
+
 --- @param obj Object
 --- @param name string
---- Sets the animation of `obj` to the animation `name` corresponds to
+--- Sets the animation of `obj` to the animation registered with `name`
 function smlua_anim_util_set_animation(obj, name)
     -- ...
 end
@@ -11409,6 +11422,31 @@ end
 --- Centers the free camera.<br>
 --- This function is designed for rotating the camera to face Mario's facing angle when Free Camera is enabled
 function center_free_camera()
+    -- ...
+end
+
+--- @param startX number
+--- @param startY number
+--- @param startZ number
+--- @param dirX number
+--- @param dirY number
+--- @param dirZ number
+--- @param precision number
+--- @return RayIntersectionInfo
+--- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, bigger `precision` is higher
+function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)
+    -- ...
+end
+
+--- @param startX number
+--- @param startY number
+--- @param startZ number
+--- @param dirX number
+--- @param dirY number
+--- @param dirZ number
+--- @return RayIntersectionInfo
+--- Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with default precision (3.0)
+function collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)
     -- ...
 end
 
@@ -12686,17 +12724,24 @@ function geo_skip_interpolation(node, obj)
     -- ...
 end
 
---- @param tex Pointer_Texture
---- @return table
---- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
-function texture_to_lua_table(tex)
+--- @param index integer
+--- @param name string
+--- @param offset? integer
+--- @param size? integer
+--- Registers a vertex buffer to be used for a scrolling texture with optional `offset` and `size`, use with `RM_Scroll_Texture` or `editor_Scroll_Texture`
+function add_scroll_target(index, name, offset, size)
     -- ...
 end
 
---- @param tex Pointer_Texture
---- @return string
---- Gets the name of the provided texture pointer `tex`
-function get_texture_name(tex)
+--- @param contents table
+--- Sets the contents that an exclamation box can spawn, takes an array of `ExclamationBoxContent`
+function set_exclamation_box_contents(contents)
+    -- ...
+end
+
+--- @return table
+--- Gets the contents that an exclamation box can spawn, gives an array of `ExclamationBoxContent`
+function get_exclamation_box_contents()
     -- ...
 end
 
@@ -13321,6 +13366,85 @@ end
 --- @return string
 --- Gets the current language
 function smlua_text_utils_get_language()
+    -- ...
+end
+
+--- @param textureName string
+--- @return TextureInfo
+--- Gets the `TextureInfo` of a texture by name. Works with vanilla textures
+function smlua_texture_util_get_info(textureName)
+    -- ...
+end
+
+--- @param pixelTable table
+--- @param name string
+--- @param width integer
+--- @param height integer
+--- @param format integer
+--- @param size integer
+--- @return TextureInfo
+--- Creates a new custom TextureInfo from the provided data and RGBA texture table
+function smlua_texture_util_create_info(pixelTable, name, width, height, format, size)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- @param pixelTable? table
+--- @param name? string
+--- @param width? integer
+--- @param height? integer
+--- @param format? Pointer_integer
+--- @param size? Pointer_integer
+--- Modifies a custom TextureInfo using the provided data and RGBA texture table
+function smlua_texture_util_modify_info(texInfo, pixelTable, name, width, height, format, size)
+    -- ...
+end
+
+--- @param texInfo TextureInfo
+--- Deletes a custom TextureInfo
+function smlua_texture_util_delete_info(texInfo)
+    -- ...
+end
+
+--- @param dst TextureInfo
+--- @param src TextureInfo
+--- Copies the data from a TextureInfo from `src` to `dst`, `dst` must be a custom texture
+function smlua_texture_util_copy_info(dst, src)
+    -- ...
+end
+
+--- @param src TextureInfo
+--- @param name? string
+--- @return TextureInfo
+--- Duplicates a TextureInfo with an optional different `name`
+function smlua_texture_util_duplicate_info(src, name)
+    -- ...
+end
+
+--- @param textureName string
+--- @param overrideTexInfo TextureInfo
+--- Overrides a vanilla texture with a custom `TextureInfo`
+function smlua_texture_util_override_set(textureName, overrideTexInfo)
+    -- ...
+end
+
+--- @param textureName string
+--- Resets an overridden texture
+function smlua_texture_util_override_reset(textureName)
+    -- ...
+end
+
+--- @param texture Pointer_Texture
+--- @return table
+--- Converts a texture's pixels to a Lua table. Returns nil if failed. Otherwise, returns a 1-indexed table of RGBA pixels
+function smlua_texture_util_to_table(texture)
+    -- ...
+end
+
+--- @param texture Pointer_Texture
+--- @return string
+--- Gets the name of the provided texture pointer `texture`
+function smlua_texture_util_get_name(texture)
     -- ...
 end
 
