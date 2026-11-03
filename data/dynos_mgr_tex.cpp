@@ -308,6 +308,55 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
 }
 
 //
+// Retrieve cache
+//
+
+#define TEX_RETRIEVE_CACHE_BITS 9
+#define TEX_RETRIEVE_CACHE_SIZE (1u << TEX_RETRIEVE_CACHE_BITS)
+#define TEX_RETRIEVE_CACHE_MASK (TEX_RETRIEVE_CACHE_SIZE - 1u)
+
+struct TexRetrieveCacheEntry {
+    void *ptr;
+    DataNode<TexData> *node;
+    u32 version;
+};
+
+static u32 sTexRegistryVersion = 1;
+static TexRetrieveCacheEntry sTexRetrieveCache[TEX_RETRIEVE_CACHE_SIZE];
+
+static inline u32 DynOS_Tex_CacheIndex(void *aPtr) {
+    return ((u32)(((uintptr_t)aPtr) >> 4)) & TEX_RETRIEVE_CACHE_MASK;
+}
+
+static inline void DynOS_Tex_BumpRegistryVersion(void) { sTexRegistryVersion++; }
+
+static inline void DynOS_Tex_CacheStore(void *aPtr, DataNode<TexData> *aNode) {
+    u32 index = DynOS_Tex_CacheIndex(aPtr);
+
+    // Look for a free slot in the cache
+    for (u32 i = 0; i < TEX_RETRIEVE_CACHE_SIZE; ++i) {
+        TexRetrieveCacheEntry &entry = sTexRetrieveCache[(index + i) & TEX_RETRIEVE_CACHE_MASK];
+
+        // Check if this slot is available, else get the next slot
+        if (entry.version == sTexRegistryVersion && entry.ptr != aPtr) {
+            continue;
+        }
+
+        // Found a slot, use it
+        entry.ptr = aPtr;
+        entry.node = aNode;
+        entry.version = sTexRegistryVersion;
+        return;
+    }
+
+    // All slots are unavailable, so overwrite the home slot of the hash
+    TexRetrieveCacheEntry &entry = sTexRetrieveCache[index];
+    entry.ptr = aPtr;
+    entry.node = aNode;
+    entry.version = sTexRegistryVersion;
+}
+
+//
 // Make textures valid/invalid
 //
 
@@ -315,6 +364,7 @@ void DynOS_Tex_Valid(GfxData* aGfxData) {
     for (auto &_Texture : aGfxData->mTextures) {
         DynosValidTextures().insert(_Texture);
     }
+    DynOS_Tex_BumpRegistryVersion();
 }
 
 void DynOS_Tex_Invalid(GfxData* aGfxData) {
@@ -331,6 +381,7 @@ void DynOS_Tex_Update() {
         DynosValidTextures().erase(_Texture);
     }
     schedule.clear();
+    DynOS_Tex_BumpRegistryVersion();
 }
 
 //
@@ -339,23 +390,37 @@ void DynOS_Tex_Update() {
 
 static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
     {
-        auto _LuaOverrideTexture = DynosOverrideLuaTextures()[(const Texture*)aPtr];
-        if (_LuaOverrideTexture && _LuaOverrideTexture->node) {
-            return _LuaOverrideTexture->node;
+        auto &_LuaOverrideTextures = DynosOverrideLuaTextures();
+        auto _LuaOverrideIt = _LuaOverrideTextures.find((const Texture*)aPtr);
+        if (_LuaOverrideIt != _LuaOverrideTextures.end() && _LuaOverrideIt->second && _LuaOverrideIt->second->node) {
+            return _LuaOverrideIt->second->node;
         }
-        auto _LuaOverrideTexData = DynosOverrideLuaTexData()[(DataNode<TexData>*)aPtr];
-        if (_LuaOverrideTexData && _LuaOverrideTexData->node) {
-            return _LuaOverrideTexData->node;
+        auto &_LuaOverrideTexData = DynosOverrideLuaTexData();
+        auto _LuaOverrideDataIt = _LuaOverrideTexData.find((DataNode<TexData>*)aPtr);
+        if (_LuaOverrideDataIt != _LuaOverrideTexData.end() && _LuaOverrideDataIt->second && _LuaOverrideDataIt->second->node) {
+            return _LuaOverrideDataIt->second->node;
         }
     }
 
-    auto _Override = DynosOverrideTextures()[(const Texture*)aPtr];
-    if (_Override && _Override->node) {
-        return _Override->node;
+    auto &_Overrides = DynosOverrideTextures();
+    auto _OverrideIt = _Overrides.find((const Texture*)aPtr);
+    if (_OverrideIt != _Overrides.end() && _OverrideIt->second && _OverrideIt->second->node) {
+        return _OverrideIt->second->node;
+    }
+
+    // Check cache for faster lookup
+    {
+        u32 index = DynOS_Tex_CacheIndex(aPtr);
+        for (u32 i = 0; i < TEX_RETRIEVE_CACHE_SIZE; ++i) {
+            const TexRetrieveCacheEntry &entry = sTexRetrieveCache[(index + i) & TEX_RETRIEVE_CACHE_MASK];
+            if (entry.version != sTexRegistryVersion) { break; }
+            if (entry.ptr == aPtr) { return entry.node; }
+        }
     }
 
     auto& _ValidTextures = DynosValidTextures();
     if (_ValidTextures.find((DataNode<TexData>*)aPtr) != _ValidTextures.end()) {
+        DynOS_Tex_CacheStore(aPtr, (DataNode<TexData>*)aPtr);
         return (DataNode<TexData>*)aPtr;
     }
 
@@ -367,6 +432,7 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
         }
     );
     if (_TexNode != _ValidTextures.end()) {
+        DynOS_Tex_CacheStore(aPtr, *_TexNode);
         return *_TexNode;
     }
 
@@ -374,10 +440,12 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
     for (auto &_DynosCustomTex : _DynosCustomTexs) {
         auto& _Node = _DynosCustomTex.second;
         if (aPtr == (void *) _Node->mData->mRawData.begin()) {
+            DynOS_Tex_CacheStore(aPtr, _Node);
             return _Node;
         }
     }
 
+    DynOS_Tex_CacheStore(aPtr, NULL);
     return NULL;
 }
 
@@ -441,6 +509,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture) {
 
     // Add to valid
     DynosValidTextures().insert(aNode);
+    DynOS_Tex_BumpRegistryVersion();
 }
 
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
@@ -461,15 +530,16 @@ void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
     const Texture* _BuiltinTex = DynOS_Builtin_Tex_GetFromName(aNode->mName.begin());
     auto& _DynosOverrideTextures = DynosOverrideTextures();
     if (_BuiltinTex) {
-        auto _Override = _DynosOverrideTextures[_BuiltinTex];
-        if (_Override && _Override->node == aNode) {
-            _DynosOverrideTextures.erase(_BuiltinTex);
+        auto _OverrideIt = _DynosOverrideTextures.find(_BuiltinTex);
+        if (_OverrideIt != _DynosOverrideTextures.end() && _OverrideIt->second && _OverrideIt->second->node == aNode) {
+            _DynosOverrideTextures.erase(_OverrideIt);
         }
     }
 
     // Remove from valid
     auto& _Schedule = DynosScheduledInvalidTextures();
     _Schedule.push_back(aNode);
+    DynOS_Tex_BumpRegistryVersion();
 }
 
 bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {
@@ -634,15 +704,15 @@ void DynOS_Tex_Override_Reset(const char* aTexName) {
 
     if (_BuiltinTexture) {
         auto& _DynosOverrideLuaTextures = DynosOverrideLuaTextures();
-        auto _Override = _DynosOverrideLuaTextures[_BuiltinTexture];
-        if (_Override) {
-            _DynosOverrideLuaTextures.erase(_BuiltinTexture);
+        auto _OverrideIt = _DynosOverrideLuaTextures.find(_BuiltinTexture);
+        if (_OverrideIt != _DynosOverrideLuaTextures.end()) {
+            _DynosOverrideLuaTextures.erase(_OverrideIt);
         }
     } else {
         auto& _DynosOverrideLuaTexData = DynosOverrideLuaTexData();
-        auto _Override = _DynosOverrideLuaTexData[_BuiltinTexData];
-        if (_Override) {
-            _DynosOverrideLuaTexData.erase(_BuiltinTexData);
+        auto _OverrideIt = _DynosOverrideLuaTexData.find(_BuiltinTexData);
+        if (_OverrideIt != _DynosOverrideLuaTexData.end()) {
+            _DynosOverrideLuaTexData.erase(_OverrideIt);
         }
     }
 }
