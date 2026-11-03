@@ -57,11 +57,11 @@ void djui_panel_rules_create(struct DjuiBase* caller) {
 
             struct DjuiRect* rect = djui_rect_container_create(body, 64);
             {
-                djui_button_left_create(&rect->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_rules_deny);
-                djui_button_right_create(&rect->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_NORMAL, djui_panel_rules_accept);
+                djui_button_left_create(&rect->base, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_rules_deny);
+                djui_button_right_create(&rect->base, DLANG(MENU, YES), DJUI_BUTTON_STYLE_PRIMARY, djui_panel_rules_accept);
             }
         } else {
-            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+            djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
         }
 
     }

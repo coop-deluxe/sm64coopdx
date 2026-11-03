@@ -5,6 +5,8 @@
 extern f32 gCursorX;
 extern f32 gCursorY;
 
+extern struct DjuiBase* gInputControlledBase;
+
 void djui_cursor_set_visible(bool visible);
 bool djui_cursor_inside_base(struct DjuiBase* base);
 void djui_cursor_input_controlled_center(struct DjuiBase* base);
