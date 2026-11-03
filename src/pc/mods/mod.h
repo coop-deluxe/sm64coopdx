@@ -9,11 +9,16 @@
 #define MOD_INCOMPATIBLE_MAX_LENGTH 256
 #define MOD_CATEGORY_MAX_LENGTH 64
 #define MOD_DESCRIPTION_MAX_LENGTH 800
+#define MOD_ID_MAX_LENGTH 128
 
 #define MOD_NAME_SIZE (MOD_NAME_MAX_LENGTH + 1)
 #define MOD_INCOMPATIBLE_SIZE (MOD_INCOMPATIBLE_MAX_LENGTH + 1)
 #define MOD_CATEGORY_SIZE (MOD_CATEGORY_MAX_LENGTH + 1)
 #define MOD_DESCRIPTION_SIZE (MOD_DESCRIPTION_MAX_LENGTH + 1)
+#define MOD_ID_SIZE (MOD_ID_MAX_LENGTH + 1)
+
+#define MOD_MANIFEST_ENTRY_FILE "manifest.json"
+#define MOD_ENTRY_FILE "main.lua"
 
 struct Mods;
 
@@ -30,16 +35,20 @@ struct ModFile {
 };
 
 struct Mod {
-    char name[MOD_NAME_SIZE];
-    char* incompatible;
-    char* category;
-    char* description;
+    char *name;
+    char *incompatible;
+    char *category;
+    char *description;
+    char *id;
     char relativePath[SYS_MAX_PATH];
     char basePath[SYS_MAX_PATH];
+    char relativeEntryPath[SYS_MAX_PATH];
     struct ModFile* files;
     s32 index;
     u16 fileCount;
     u16 fileCapacity;
+    bool hasManifest;
+    bool isCustomEntryFile;
     bool isDirectory;
     bool enabled;
     bool selectable;
