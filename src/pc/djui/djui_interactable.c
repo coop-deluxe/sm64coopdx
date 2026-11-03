@@ -334,14 +334,11 @@ bool djui_interactable_on_key_down(int scancode) {
 }
 
 void djui_interactable_on_key_up(int scancode) {
-    if (!gDjuiChatBoxFocus) {
-        bool disablePushToTalk = false;
-        for (int i = 0; i < MAX_BINDS; i++) {
-            if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
-        }
-
-        if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
+    bool disablePushToTalk = false;
+    for (int i = 0; i < MAX_BINDS; i++) {
+        if (scancode == (int)configKeyPushToTalk[i]) disablePushToTalk = true;
     }
+    if (disablePushToTalk && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK) voicechat_set_mute(true);
 
     if (sPendingConsoleToggleScancode != -1 && scancode == sPendingConsoleToggleScancode) {
         if (!gDjuiChatBoxFocus) {

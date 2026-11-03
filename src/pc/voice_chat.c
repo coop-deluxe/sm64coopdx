@@ -82,6 +82,7 @@ static u32 voicechat_num_frames_in_buffer(struct VoiceBuffer* buffer) {
 }
 
 static bool voicechat_is_ingame(s32 id) {
+    if (id == UNKNOWN_LOCAL_INDEX) return false;
     return gNetworkPlayers[id].connected && (gServerSettings.voiceChat == VOICECHAT_TYPE_VOICE || (
         gNetworkPlayers[id].currLevelNum  == gNetworkPlayers[0].currLevelNum &&
         gNetworkPlayers[id].currAreaIndex == gNetworkPlayers[0].currAreaIndex &&
@@ -190,6 +191,8 @@ void voicechat_shutdown() {
 }
 
 void voicechat_init_player(s32 id) {
+    if (id == UNKNOWN_LOCAL_INDEX) return;
+
     // clear any previous state
     voicechat_shutdown_player(id);
 
@@ -217,6 +220,12 @@ void voicechat_init_player(s32 id) {
 
     if (id == 0 && configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
         gVoicePlayers[id].clientMutedState |= VOICECHAT_MUTE_LOCAL;
+}
+
+bool voicechat_player_is_initialized(s32 id) {
+    if (id == UNKNOWN_LOCAL_INDEX) return false;
+    if (id == 0) return gVoicePlayers[0].internal.encoder;
+    else return gVoicePlayers[0].internal.decoder;
 }
 
 u32 voicechat_encode_audio(u8* packet, u32 max_size) {
@@ -273,7 +282,7 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
         memset(player_pcm + n, 0, sizeof(player_pcm) - n * sizeof(s16));
 
         f32 vol_left = 1, vol_right = 1;
-        if (gServerSettings.voiceChat == VOICECHAT_TYPE_PROXIMITY) {
+        if (gServerSettings.voiceChat == VOICECHAT_TYPE_PROXIMITY && gCamera) {
             f32 volume;
             f32 dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
             if (dist < FULL_VOL_RADIUS) volume = 1;

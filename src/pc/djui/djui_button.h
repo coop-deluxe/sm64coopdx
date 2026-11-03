@@ -5,6 +5,7 @@ struct DjuiButton {
     struct DjuiBase base;
     struct DjuiRect* rect;
     union {
+        struct DjuiBase* contentBase;
         struct DjuiText* text;
         struct DjuiImage* icon;
     };

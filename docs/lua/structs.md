@@ -3150,8 +3150,7 @@
 
 <br />
 
-<<<<<<< HEAD
-## [VoicePlayer](#VoicePlayer)
+## VoicePlayer
 
 | Field | Type | Access |
 | ----- | ---- | ------ |
@@ -3166,10 +3165,7 @@
 
 <br />
 
-## [Vtx](#Vtx)
-=======
 ## Vtx
->>>>>>> de46969e86c9120e052e495571e8077e16d9652d
 
 | Field | Type | Access |
 | ----- | ---- | ------ |

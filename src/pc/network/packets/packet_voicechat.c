@@ -31,6 +31,9 @@ void network_receive_voicechat_frame(struct Packet* p) {
     u8 global_index;
     packet_read(p, &global_index, sizeof(u8));
 
+    u8 local_index = network_local_index_from_global(global_index);
+    if (local_index != p->localIndex) return;
+
     u32 frame_size;
     packet_read(p, &frame_size, sizeof(u32));
 
@@ -39,10 +42,7 @@ void network_receive_voicechat_frame(struct Packet* p) {
     u8 frame_data[frame_size];
     packet_read(p, frame_data, frame_size);
     
-    voicechat_decode_audio(
-        network_local_index_from_global(global_index),
-        frame_data, frame_size
-    );
+    voicechat_decode_audio(local_index, frame_data, frame_size);
 }
 
 void network_send_voicechat_muted(u8 receiverIndex, u8 mask, bool muted) {

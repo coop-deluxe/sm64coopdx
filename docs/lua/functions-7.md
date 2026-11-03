@@ -6832,7 +6832,7 @@ Checks if a sync object is owned locally using a `syncId`
 <br />
 
 
-## [voicechat_toggle_mute](#voicechat_toggle_mute)
+## voicechat_toggle_mute
 
 ### Description
 Toggles mute state on the current player
@@ -6853,7 +6853,7 @@ Toggles mute state on the current player
 
 <br />
 
-## [voicechat_toggle_global_mute](#voicechat_toggle_global_mute)
+## voicechat_toggle_global_mute
 
 ### Description
 Toggles global mute state on another player
@@ -6876,7 +6876,7 @@ Toggles global mute state on another player
 
 <br />
 
-## [voicechat_toggle_mute_other](#voicechat_toggle_mute_other)
+## voicechat_toggle_mute_other
 
 ### Description
 Toggles mute state on another player for the current client
@@ -6899,7 +6899,7 @@ Toggles mute state on another player for the current client
 
 <br />
 
-## [voicechat_toggle_deafen](#voicechat_toggle_deafen)
+## voicechat_toggle_deafen
 
 ### Description
 Toggles deafen state on the current player
@@ -6920,7 +6920,7 @@ Toggles deafen state on the current player
 
 <br />
 
-## [voicechat_set_mute](#voicechat_set_mute)
+## voicechat_set_mute
 
 ### Description
 Sets mute state on the current player
@@ -6943,7 +6943,7 @@ Sets mute state on the current player
 
 <br />
 
-## [voicechat_set_global_mute](#voicechat_set_global_mute)
+## voicechat_set_global_mute
 
 ### Description
 Sets global mute state on another player
@@ -6967,7 +6967,7 @@ Sets global mute state on another player
 
 <br />
 
-## [voicechat_set_mute_other](#voicechat_set_mute_other)
+## voicechat_set_mute_other
 
 ### Description
 Sets mute state on another player for the current client
@@ -6991,7 +6991,7 @@ Sets mute state on another player for the current client
 
 <br />
 
-## [voicechat_set_deafen](#voicechat_set_deafen)
+## voicechat_set_deafen
 
 ### Description
 Sets deafen state on the current player
@@ -7014,7 +7014,7 @@ Sets deafen state on the current player
 
 <br />
 
-## [voicechat_create_channel](#voicechat_create_channel)
+## voicechat_create_channel
 
 ### Description
 Creates a new voice channel and returns its ID.
@@ -7036,7 +7036,7 @@ The ID of the default channel is always 0
 
 <br />
 
-## [voicechat_remove_channel](#voicechat_remove_channel)
+## voicechat_remove_channel
 
 ### Description
 Removes a voice channel.
@@ -7061,7 +7061,7 @@ The default channel cannot be removed
 
 <br />
 
-## [voicechat_hear](#voicechat_hear)
+## voicechat_hear
 
 ### Description
 Sets if players in `channel` should be able to hear players in `other_channel`
@@ -7086,7 +7086,7 @@ Sets if players in `channel` should be able to hear players in `other_channel`
 
 <br />
 
-## [voicechat_can_hear](#voicechat_can_hear)
+## voicechat_can_hear
 
 ### Description
 Checks if players in `channel` can hear players in `other_channel`

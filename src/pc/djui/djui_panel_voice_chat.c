@@ -177,8 +177,8 @@ static void djui_panel_voice_chat_add_players(struct DjuiBase* body) {
         djui_base_set_alignment(&gmute->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_CENTER);
 
         djui_base_set_size(&icon->base,        32, 32);
-        djui_base_set_size(&lmute->text->base, 32, 32);
-        djui_base_set_size(&gmute->text->base, 32, 32);
+        djui_base_set_size(lmute->contentBase, 32, 32);
+        djui_base_set_size(gmute->contentBase, 32, 32);
 
         djui_base_set_size_type(&lmute->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size_type(&gmute->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);

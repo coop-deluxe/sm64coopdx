@@ -1542,7 +1542,7 @@ ifeq ($(OSX_BUILD),1)
   GLEW_ID  := $(shell otool -D $(GLEW_LIB) | tail -n1)
   SDL_LIB := $(shell find $(BREW_PREFIX)/lib/ | grep "libSDL3\." | sort -n | uniq | head -n 1)
   SDL_ID  := $(shell otool -D $(SDL_LIB) | tail -n1)
-  OPUS_LIB := $(shell find $(BREW_PREFIX)/lib/ | grep libopus | sort -n | uniq)
+  OPUS_LIB := $(shell find $(BREW_PREFIX)/lib/ | grep libopus | sort -n | uniq | head -n 1)
   OPUS_ID  := $(shell otool -D $(OPUS_LIB) | tail -n1)
 endif
 
