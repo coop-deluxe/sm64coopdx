@@ -64,8 +64,10 @@ void djui_panel_voice_chat_create(struct DjuiBase* caller) {
         djui_slider_create(body, DLANG(VOICECHAT, MICROPHONE_GAIN), &configVoiceChatMicrophoneGain, 0, 400, NULL);
         sActivationThresholdSlider = &djui_slider_create(body, DLANG(VOICECHAT, ACTIVATION_THRESHOLD), &configVoiceChatActivationThreshold, 0, 100, djui_panel_threshold_value_change)->base;
 
-        djui_progress_bar_create(body, &sThreshold, 0, 1, false);
-        djui_progress_bar_create(body, &gVoiceChatMicLevel, 0, 1, false);
+        struct DjuiProgressBar* thresholdProgress = djui_progress_bar_create(body, &sThreshold, 0, 1, false);
+        struct DjuiProgressBar* micLevelProgress = djui_progress_bar_create(body, &gVoiceChatMicLevel, 0, 1, false);
+        thresholdProgress->smoothenHigh = micLevelProgress->smoothenHigh = 0;
+        thresholdProgress->smoothenLow  = micLevelProgress->smoothenLow  = 1;
         djui_checkbox_create(body, DLANG(VOICECHAT, LOOPBACK), &gVoiceChatLoopback, NULL);
 
         djui_panel_mode_value_change(NULL);
