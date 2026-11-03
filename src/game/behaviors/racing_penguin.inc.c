@@ -303,7 +303,7 @@ void bhv_penguin_race_finish_line_update(void) {
     }
 
     if (o->parentObj->oRacingPenguinReachedBottom
-        || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f && get_mario_state_from_object(o)->action != ACT_BUBBLED)) {
+        || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f && get_mario_state_from_object(player)->action != ACT_BUBBLED)) {
         if (!o->parentObj->oRacingPenguinReachedBottom && !o->parentObj->oRacingPenguinMarioWon) {
             o->parentObj->oRacingPenguinMarioWon = TRUE;
             network_send_object(o->parentObj);
