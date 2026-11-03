@@ -19,12 +19,12 @@ static void djui_selectionbox_update_style(struct DjuiBase* base) {
 
         djui_base_set_border_color(&selectionbox->rect->base, bc.r, bc.g, bc.b, bc.a);
         djui_base_set_color(&selectionbox->rect->base, rc.r, rc.g, rc.b, rc.a);
-        djui_base_set_color(&selectionbox->rectText->base, tc.r, tc.g, tc.b, tc.a);
+        djui_base_set_color(&selectionbox->rectText->base, tc.r / 2, tc.g / 2, tc.b / 2, tc.a);
 
         djui_base_set_location(&selectionbox->rectText->base, 0.0f, 3.0f);
         djui_base_set_color(&selectionbox->rectImage->base, tc.r, tc.g, tc.b, tc.a);
         djui_base_set_color(&selectionbox->rectImage2->base, tc.r, tc.g, tc.b, tc.a);
-        djui_base_set_color(&selectionbox->text->base, 220, 220, 220, 255);
+        djui_base_set_color(&selectionbox->text->base, 100, 100, 100, 255);
     } else if (gDjuiCursorDownOn == base && activeRegion) {
         struct DjuiColor bc = theme->interactables.cursorDownBorderColor;
         struct DjuiColor rc = theme->interactables.cursorDownRectColor;
