@@ -314,7 +314,7 @@ void bhv_penguin_race_finish_line_update(void) {
 void bhv_penguin_race_shortcut_check_update(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    if (distanceToPlayer < 500.0f && o->parentObj && !o->parentObj->oRacingPenguinMarioCheated) {
+    if (distanceToPlayer < 500.0f && o->parentObj && get_mario_state_from_object(player)->action != ACT_BUBBLED && !o->parentObj->oRacingPenguinMarioCheated) {
         o->parentObj->oRacingPenguinMarioCheated = TRUE;
         network_send_object(o->parentObj);
     }
