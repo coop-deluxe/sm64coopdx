@@ -2897,6 +2897,8 @@
 | maxPlayers | `integer` |  |
 | pauseAnywhere | `integer` |  |
 | voiceChat | `integer` |  |
+| voiceChatFullVolRadius | `integer` |  |
+| voiceChatHearingRadius | `integer` |  |
 
 [:arrow_up_small:](#)
 

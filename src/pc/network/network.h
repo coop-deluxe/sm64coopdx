@@ -95,6 +95,8 @@ struct ServerSettings {
     u8 maxPlayers;
     u8 pauseAnywhere;
     u8 voiceChat;
+    u32 voiceChatFullVolRadius;
+    u32 voiceChatHearingRadius;
 };
 
 struct NametagsSettings {

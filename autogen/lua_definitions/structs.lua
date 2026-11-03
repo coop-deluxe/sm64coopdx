@@ -2198,6 +2198,8 @@
 --- @field public maxPlayers integer
 --- @field public pauseAnywhere integer
 --- @field public voiceChat integer
+--- @field public voiceChatFullVolRadius integer
+--- @field public voiceChatHearingRadius integer
 
 --- @class SpawnInfo
 --- @field public startPos Vec3s

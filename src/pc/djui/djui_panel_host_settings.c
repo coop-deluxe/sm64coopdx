@@ -10,7 +10,9 @@
 #include "pc/voice_chat.h"
 
 static unsigned int sKnockbackIndex = 0;
-struct DjuiInputbox* sPlayerAmount = NULL;
+static struct DjuiInputbox* sPlayerAmount = NULL;
+static struct DjuiSlider* sVoiceChatFullVolSlider = NULL;
+static struct DjuiSlider* sVoiceChatHearingSlider = NULL;
 static bool sFalse = false;
 
 static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* caller) {
@@ -18,6 +20,20 @@ static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* ca
         case 0:  configPlayerKnockbackStrength = 10; break;
         case 1:  configPlayerKnockbackStrength = 25; break;
         default: configPlayerKnockbackStrength = 60; break;
+    }
+}
+
+static void djui_panel_voice_chat_fullvol_change(UNUSED struct DjuiBase* caller) {
+    if (configVoiceChatHearingRadius < configVoiceChatFullVolRadius) {
+        configVoiceChatHearingRadius = configVoiceChatFullVolRadius;
+        djui_slider_update_value(&sVoiceChatHearingSlider->base);
+    }
+}
+
+static void djui_panel_voice_chat_hearing_change(UNUSED struct DjuiBase* caller) {
+    if (configVoiceChatFullVolRadius > configVoiceChatHearingRadius) {
+        configVoiceChatFullVolRadius = configVoiceChatHearingRadius;
+        djui_slider_update_value(&sVoiceChatFullVolSlider->base);
     }
 }
 
@@ -88,6 +104,11 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
             DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
         }, 3, configVoiceChatPtr, NULL);
         djui_base_set_enabled(&selVoiceChat->base, configVoiceChatPtr == &configVoiceChat);
+
+        sVoiceChatFullVolSlider = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_FULLVOL_RADIUS), &configVoiceChatFullVolRadius, 0,    16384, djui_panel_voice_chat_fullvol_change);
+        djui_base_set_enabled(&sVoiceChatFullVolSlider->base, *configVoiceChatPtr != VOICECHAT_TYPE_PROXIMITY);
+        sVoiceChatHearingSlider = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_HEARING_RADIUS), &configVoiceChatHearingRadius, 4096, 32768, djui_panel_voice_chat_hearing_change);
+        djui_base_set_enabled(&sVoiceChatHearingSlider->base, *configVoiceChatPtr != VOICECHAT_TYPE_PROXIMITY);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {

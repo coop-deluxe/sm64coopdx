@@ -138,7 +138,8 @@ void network_receive_network_players(struct Packet *p) {
             }
 
             if (gServerSettings.voiceChat != VOICECHAT_TYPE_DISABLED) {
-                voicechat_init_player(localIndex);
+                if (!voicechat_player_is_inited(localIndex))
+                    voicechat_init_player(localIndex);
 
                 struct VoiceList* data = voice_list_get(gNetworkSystem->get_id_str(localIndex));
                 if (data) {

@@ -2534,7 +2534,7 @@ static struct LuaObjectField sRomhackCameraSettingsFields[LUA_ROMHACK_CAMERA_SET
     { "zoomedOutHeight", LVT_U32, offsetof(struct RomhackCameraSettings, zoomedOutHeight), false, LOT_NONE },
 };
 
-#define LUA_SERVER_SETTINGS_FIELD_COUNT 14
+#define LUA_SERVER_SETTINGS_FIELD_COUNT 16
 static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COUNT] = {
     { "bouncyLevelBounds",           LVT_S32, offsetof(struct ServerSettings, bouncyLevelBounds),           false, LOT_NONE },
     { "bubbleDeath",                 LVT_U8,  offsetof(struct ServerSettings, bubbleDeath),                 false, LOT_NONE },
@@ -2550,6 +2550,8 @@ static struct LuaObjectField sServerSettingsFields[LUA_SERVER_SETTINGS_FIELD_COU
     { "skipIntro",                   LVT_U8,  offsetof(struct ServerSettings, skipIntro),                   false, LOT_NONE },
     { "stayInLevelAfterStar",        LVT_S32, offsetof(struct ServerSettings, stayInLevelAfterStar),        false, LOT_NONE },
     { "voiceChat",                   LVT_U8,  offsetof(struct ServerSettings, voiceChat),                   false, LOT_NONE },
+    { "voiceChatFullVolRadius",      LVT_U32, offsetof(struct ServerSettings, voiceChatFullVolRadius),      false, LOT_NONE },
+    { "voiceChatHearingRadius",      LVT_U32, offsetof(struct ServerSettings, voiceChatHearingRadius),      false, LOT_NONE },
 };
 
 #define LUA_SPAWN_INFO_FIELD_COUNT 8

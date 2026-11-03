@@ -59,6 +59,11 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
         }, 3, &sVoiceChat, NULL);
         djui_base_set_enabled(&selectionbox6->base, false);
 
+        struct DjuiSlider* slider1 = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_FULLVOL_RADIUS), &gServerSettings.voiceChatFullVolRadius, 0,    16384, NULL);
+        djui_base_set_enabled(&slider1->base, false);
+        struct DjuiSlider* slider2 = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_HEARING_RADIUS), &gServerSettings.voiceChatHearingRadius, 4096, 32768, NULL);
+        djui_base_set_enabled(&slider2->base, false);
+
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
             struct DjuiText* text1 = djui_text_create(&rect1->base, DLANG(HOST_SETTINGS, AMOUNT_OF_PLAYERS));

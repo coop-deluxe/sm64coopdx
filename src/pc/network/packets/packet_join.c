@@ -126,6 +126,8 @@ void network_send_join(struct Packet* joinRequestPacket) {
     packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
     packet_write(&p, &gServerSettings.nametags, sizeof(u8));
     packet_write(&p, &gServerSettings.voiceChat, sizeof(u8));
+    packet_write(&p, &gServerSettings.voiceChatFullVolRadius, sizeof(f32));
+    packet_write(&p, &gServerSettings.voiceChatHearingRadius, sizeof(f32));
     packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
@@ -180,6 +182,8 @@ void network_receive_join(struct Packet* p) {
     packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
     packet_read(p, &gServerSettings.nametags, sizeof(u8));
     packet_read(p, &gServerSettings.voiceChat, sizeof(u8));
+    packet_read(p, &gServerSettings.voiceChatFullVolRadius, sizeof(f32));
+    packet_read(p, &gServerSettings.voiceChatHearingRadius, sizeof(f32));
     packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
     packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
     packet_read(p, &gServerSettings.pvpType, sizeof(u8));

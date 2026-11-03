@@ -92,6 +92,8 @@ struct ServerSettings gServerSettings = {
     .pauseAnywhere = FALSE,
     .pvpType = PLAYER_PVP_CLASSIC,
     .voiceChat = VOICECHAT_TYPE_DISABLED,
+    .voiceChatFullVolRadius = 4096,
+    .voiceChatHearingRadius = 16384,
 };
 
 struct NametagsSettings gNametagsSettings = {
@@ -138,6 +140,8 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.enablePlayerList = TRUE;
     gServerSettings.nametags = configNametags;
     gServerSettings.voiceChat = configVoiceChat;
+    gServerSettings.voiceChatFullVolRadius = configVoiceChatFullVolRadius;
+    gServerSettings.voiceChatHearingRadius = configVoiceChatHearingRadius;
     gServerSettings.maxPlayers = configAmountOfPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
     gServerSettings.pvpType = configPvpType;

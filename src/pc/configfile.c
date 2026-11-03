@@ -227,6 +227,8 @@ unsigned int configPlayerKnockbackStrength        = 25;
 unsigned int configStayInLevelAfterStar           = 0;
 bool         configNametags                       = true;
 unsigned int configVoiceChat                      = 0; // 0 = Disabled, 1 = Voice, 2 = Proximity
+unsigned int configVoiceChatFullVolRadius         = 4096;
+unsigned int configVoiceChatHearingRadius         = 16384;
 bool         configModDevMode                     = false;
 unsigned int configBouncyLevelBounds              = 0;
 bool         configSkipIntro                      = 0;
@@ -406,6 +408,8 @@ static const struct ConfigOption options[] = {
     {.name = "coop_nametags",                  .type = CONFIG_TYPE_BOOL,   .boolValue   = &configNametags},
     {.name = "coop_mod_dev_mode",              .type = CONFIG_TYPE_BOOL,   .boolValue   = &configModDevMode},
     {.name = "coop_voice_chat",                .type = CONFIG_TYPE_UINT,   .uintValue   = &configVoiceChat},
+    {.name = "coop_voice_chat_fullvol_radius", .type = CONFIG_TYPE_UINT,   .uintValue   = &configVoiceChatFullVolRadius},
+    {.name = "coop_voice_chat_hearing_radius", .type = CONFIG_TYPE_UINT,   .uintValue   = &configVoiceChatHearingRadius},
     {.name = "coop_bouncy_bounds",             .type = CONFIG_TYPE_UINT,   .uintValue   = &configBouncyLevelBounds},
     {.name = "skip_intro",                     .type = CONFIG_TYPE_BOOL,   .boolValue   = &configSkipIntro},
     {.name = "pause_anywhere",                 .type = CONFIG_TYPE_BOOL,   .boolValue   = &configPauseAnywhere},

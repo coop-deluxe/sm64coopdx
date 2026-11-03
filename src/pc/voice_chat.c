@@ -19,9 +19,6 @@
 #define MIN_FRAMES_REQUIRED 2
 #define MAX_FRAMES 16
 
-#define HEARING_RADIUS 8192
-#define FULL_VOL_RADIUS 1024
-
 bool gVoiceChatLoopback = false;
 float gVoiceChatMicLevel = 0;
 
@@ -222,7 +219,7 @@ void voicechat_init_player(s32 id) {
         gVoicePlayers[id].clientMutedState |= VOICECHAT_MUTE_LOCAL;
 }
 
-bool voicechat_player_is_initialized(s32 id) {
+bool voicechat_player_is_inited(s32 id) {
     if (id == UNKNOWN_LOCAL_INDEX) return false;
     if (id == 0) return gVoicePlayers[0].internal.encoder;
     else return gVoicePlayers[0].internal.decoder;
@@ -285,8 +282,8 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
         if (gServerSettings.voiceChat == VOICECHAT_TYPE_PROXIMITY && gCamera) {
             f32 volume;
             f32 dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
-            if (dist < FULL_VOL_RADIUS) volume = 1;
-            else volume = 1 - (dist - FULL_VOL_RADIUS) / (HEARING_RADIUS - FULL_VOL_RADIUS);
+            if (dist < gServerSettings.voiceChatFullVolRadius) volume = 1;
+            else volume = 1 - (dist - gServerSettings.voiceChatFullVolRadius) / (gServerSettings.voiceChatHearingRadius - gServerSettings.voiceChatFullVolRadius);
             if (volume <= 0.0f) continue;
     
             Vec3f forward, right, to_target;

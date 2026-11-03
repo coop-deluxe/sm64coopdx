@@ -163,6 +163,8 @@ extern unsigned int configStayInLevelAfterStar;
 extern bool         configNametags;
 extern bool         configModDevMode;
 extern unsigned int configVoiceChat;
+extern unsigned int configVoiceChatFullVolRadius;
+extern unsigned int configVoiceChatHearingRadius;
 extern unsigned int configBouncyLevelBounds;
 extern bool         configSkipIntro;
 extern bool         configPauseAnywhere;
