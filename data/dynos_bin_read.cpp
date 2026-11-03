@@ -209,7 +209,7 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     // Ignore UNUSED keyword
                 } else if (_Buffer == "struct") {
                     // Ignore struct keyword
-                } else if (_Buffer == "u64") {
+                } else if (_Buffer == "u64" || _Buffer == "u16" || _Buffer == "s16") {
                     _DataType = DATA_TYPE_UNUSED;
                 } else if (_Buffer == "Lights0") {
                     _DataType = DATA_TYPE_LIGHT_0;
@@ -250,6 +250,10 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
                     _DataType = DATA_TYPE_MOVTEXQC;
                 } else if (_Buffer == "BehaviorScript") {
                     _DataType = DATA_TYPE_BEHAVIOR_SCRIPT;
+                } else if (_Buffer == "Animation") {
+                    _DataType = DATA_TYPE_ANIMATION;
+                } else if (_Buffer == "AnimationTable") {
+                    _DataType = DATA_TYPE_ANIMATION_TABLE;
                 } else {
                     PrintDataError("  ERROR: Unknown type name: %s", _Buffer.begin());
                 }
@@ -273,23 +277,25 @@ void DynOS_Read_Source(GfxData *aGfxData, const SysPath &aFilename) {
             // Adding new data node
             else if (_Buffer.Length() != 0) {
                 switch (_DataType) {
-                    case DATA_TYPE_LIGHT:           AppendNewNode(aGfxData, aGfxData->mLights,       _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_LIGHT_0:         AppendNewNode(aGfxData, aGfxData->mLight0s,      _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_LIGHT_T:         AppendNewNode(aGfxData, aGfxData->mLightTs,      _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_AMBIENT_T:       AppendNewNode(aGfxData, aGfxData->mAmbientTs,    _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_TEXTURE:         AppendNewNode(aGfxData, aGfxData->mTextures,     _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_TEXTURE_LIST:    AppendNewNode(aGfxData, aGfxData->mTextureLists, _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_VERTEX:          AppendNewNode(aGfxData, aGfxData->mVertices,     _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_DISPLAY_LIST:    AppendNewNode(aGfxData, aGfxData->mDisplayLists, _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_GEO_LAYOUT:      AppendNewNode(aGfxData, aGfxData->mGeoLayouts,   _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_COLLISION:       AppendNewNode(aGfxData, aGfxData->mCollisions,   _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_LEVEL_SCRIPT:    AppendNewNode(aGfxData, aGfxData->mLevelScripts, _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_MACRO_OBJECT:    AppendNewNode(aGfxData, aGfxData->mMacroObjects, _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_TRAJECTORY:      AppendNewNode(aGfxData, aGfxData->mTrajectories, _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_MOVTEX:          AppendNewNode(aGfxData, aGfxData->mMovtexs,      _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_MOVTEXQC:        AppendNewNode(aGfxData, aGfxData->mMovtexQCs,    _Buffer, pDataName, pDataTokens);    break;
-                    case DATA_TYPE_ROOMS:           AppendNewNode(aGfxData, aGfxData->mRooms,        _Buffer, pDataName, pDataTokens);    break;
+                    case DATA_TYPE_LIGHT:           AppendNewNode(aGfxData, aGfxData->mLights,          _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_LIGHT_0:         AppendNewNode(aGfxData, aGfxData->mLight0s,         _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_LIGHT_T:         AppendNewNode(aGfxData, aGfxData->mLightTs,         _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_AMBIENT_T:       AppendNewNode(aGfxData, aGfxData->mAmbientTs,       _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_TEXTURE:         AppendNewNode(aGfxData, aGfxData->mTextures,        _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_TEXTURE_LIST:    AppendNewNode(aGfxData, aGfxData->mTextureLists,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_VERTEX:          AppendNewNode(aGfxData, aGfxData->mVertices,        _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_DISPLAY_LIST:    AppendNewNode(aGfxData, aGfxData->mDisplayLists,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_GEO_LAYOUT:      AppendNewNode(aGfxData, aGfxData->mGeoLayouts,      _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_COLLISION:       AppendNewNode(aGfxData, aGfxData->mCollisions,      _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_LEVEL_SCRIPT:    AppendNewNode(aGfxData, aGfxData->mLevelScripts,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_MACRO_OBJECT:    AppendNewNode(aGfxData, aGfxData->mMacroObjects,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_TRAJECTORY:      AppendNewNode(aGfxData, aGfxData->mTrajectories,    _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_MOVTEX:          AppendNewNode(aGfxData, aGfxData->mMovtexs,         _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_MOVTEXQC:        AppendNewNode(aGfxData, aGfxData->mMovtexQCs,       _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_ROOMS:           AppendNewNode(aGfxData, aGfxData->mRooms,           _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_BEHAVIOR_SCRIPT: AppendNewNode(aGfxData, aGfxData->mBehaviorScripts, _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_ANIMATION:       AppendNewNode(aGfxData, aGfxData->mAnimations,      _Buffer, pDataName, pDataTokens); break;
+                    case DATA_TYPE_ANIMATION_TABLE: AppendNewNode(aGfxData, aGfxData->mAnimationTables, _Buffer, pDataName, pDataTokens); break;
                     case DATA_TYPE_UNUSED:          pDataTokens = (Array<String> *) 1;                                                    break;
                 }
                 _Buffer.Clear();

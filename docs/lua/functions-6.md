@@ -1148,6 +1148,31 @@ Initializes an animation with acceleration and sound state for the current objec
 
 <br />
 
+## obj_init_animation_with_sound
+
+### Description
+Initializes an animation with sound state for an object
+
+### Lua Example
+`obj_init_animation_with_sound(obj, animations, animIndex)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| animations | [AnimationTable](structs.md#AnimationTable) |
+| animIndex | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void obj_init_animation_with_sound(struct Object *obj, const struct AnimationTable* animations, s32 animIndex);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## cur_obj_enable_rendering_and_become_tangible
 
 ### Description
@@ -6191,10 +6216,110 @@ Gets a vanilla mario Animation with `index`
 
 <br />
 
+## smlua_anim_util_get_animation
+
+### Description
+Gets the animation with `name` and returns an `Animation`
+
+### Lua Example
+`local animationValue = smlua_anim_util_get_animation(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- [Animation](structs.md#Animation)
+
+### C Prototype
+`struct Animation *smlua_anim_util_get_animation(const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_anim_util_get_table
+
+### Description
+Gets the animation table with `name` and returns an `AnimationTable`
+
+### Lua Example
+`local animationTableValue = smlua_anim_util_get_table(name)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+
+### Returns
+- [AnimationTable](structs.md#AnimationTable)
+
+### C Prototype
+`struct AnimationTable *smlua_anim_util_get_table(const char *name);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_anim_util_register_animation
+
+### Description
+Registers an animation with `name` and returns the index, returns -1 on failure
+
+### Lua Example
+`local integerValue = smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| flags | `integer` |
+| animYTransDivisor | `integer` |
+| startFrame | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+| values | `table` |
+| index | `table` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_anim_util_register_animation_with_name(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index);`
+
+---
+### Description
+Registers an animation and returns the index, returns -1 on failure
+
+### Lua Example
+`local integerValue = smlua_anim_util_register_animation(flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| flags | `integer` |
+| animYTransDivisor | `integer` |
+| startFrame | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+| values | `table` |
+| index | `table` |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_anim_util_register_animation(s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## smlua_anim_util_set_animation
 
 ### Description
-Sets the animation of `obj` to the animation `name` corresponds to
+Sets the animation of `obj` to the animation with `name`
 
 ### Lua Example
 `smlua_anim_util_set_animation(obj, name)`
@@ -6209,7 +6334,69 @@ Sets the animation of `obj` to the animation `name` corresponds to
 - None
 
 ### C Prototype
-`void smlua_anim_util_set_animation(struct Object *obj, const char *name);`
+`void smlua_anim_util_set_animation_with_name(struct Object *obj, const char *name);`
+
+---
+### Description
+Sets the animation of `obj` to the animation with `index`
+
+### Lua Example
+`smlua_anim_util_set_animation(obj, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| index | `integer` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_set_animation_with_index(struct Object *obj, s32 index);`
+
+---
+### Description
+Sets the animation of `obj` to `anim`
+
+### Lua Example
+`smlua_anim_util_set_animation(obj, anim)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| anim | [Animation](structs.md#Animation) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_set_animation(struct Object *obj, struct Animation *anim);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_anim_util_set_table
+
+### Description
+Sets the animation table of `obj` to `animTable`
+
+### Lua Example
+`smlua_anim_util_set_table(obj, animTable)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+| animTable | [AnimationTable](structs.md#AnimationTable) |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_set_table(struct Object *obj, struct AnimationTable *animTable);`
 
 [:arrow_up_small:](#)
 
@@ -6218,7 +6405,7 @@ Sets the animation of `obj` to the animation `name` corresponds to
 ## smlua_anim_util_get_current_animation_name
 
 ### Description
-Gets the name of the current animation playing on `obj`, returns `nil` if there's no name
+Gets the name of the current animation of `obj`, returns `nil` if there's no name
 
 ### Lua Example
 `local stringValue = smlua_anim_util_get_current_animation_name(obj)`
@@ -6233,6 +6420,52 @@ Gets the name of the current animation playing on `obj`, returns `nil` if there'
 
 ### C Prototype
 `const char *smlua_anim_util_get_current_animation_name(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_anim_util_get_current_animation_index
+
+### Description
+Gets the index of the current animation of `obj`, returns -1 if there's no index
+
+### Lua Example
+`local integerValue = smlua_anim_util_get_current_animation_index(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- `integer`
+
+### C Prototype
+`s32 smlua_anim_util_get_current_animation_index(struct Object *obj);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_anim_util_get_current_info
+
+### Description
+Gets the info of the current animation of `obj`, returns `nil` if there's no info
+
+### Lua Example
+`local animationInfoValue = smlua_anim_util_get_current_info(obj)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| obj | [Object](structs.md#Object) |
+
+### Returns
+- [AnimationInfo](structs.md#AnimationInfo)
+
+### C Prototype
+`struct AnimationInfo *smlua_anim_util_get_current_info(struct Object *obj);`
 
 [:arrow_up_small:](#)
 

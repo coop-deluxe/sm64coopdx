@@ -3,6 +3,8 @@
 # Supported Structs
 - [AnimInfo](#AnimInfo)
 - [Animation](#Animation)
+- [AnimationInfo](#AnimationInfo)
+- [AnimationTable](#AnimationTable)
 - [Area](#Area)
 - [BehaviorDialogs](#BehaviorDialogs)
 - [BehaviorTrajectories](#BehaviorTrajectories)
@@ -139,6 +141,28 @@
 | length | `integer` | read-only |
 | valuesLength | `integer` | read-only |
 | indexLength | `integer` | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## AnimationInfo
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| name | `string` | read-only |
+| index | `integer` |  |
+| anim | [Animation](structs.md#Animation) |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## AnimationTable
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| count | `integer` | read-only |
 
 [:arrow_up_small:](#)
 

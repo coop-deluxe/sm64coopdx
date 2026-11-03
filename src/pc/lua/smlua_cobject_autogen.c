@@ -193,6 +193,19 @@ static struct LuaObjectField sAnimationFields[LUA_ANIMATION_FIELD_COUNT] = {
     { "valuesLength",      LVT_U32,   offsetof(struct Animation, valuesLength),      true, LOT_NONE    },
 };
 
+#define LUA_ANIMATION_INFO_FIELD_COUNT 3
+static struct LuaObjectField sAnimationInfoFields[LUA_ANIMATION_INFO_FIELD_COUNT] = {
+    { "anim",  LVT_COBJECT_P, offsetof(struct AnimationInfo, anim),  false, LOT_ANIMATION },
+    { "index", LVT_S32,       offsetof(struct AnimationInfo, index), false, LOT_NONE      },
+    { "name",  LVT_STRING_P,  offsetof(struct AnimationInfo, name),  true,  LOT_NONE      },
+};
+
+#define LUA_ANIMATION_TABLE_FIELD_COUNT 1
+static struct LuaObjectField sAnimationTableFields[LUA_ANIMATION_TABLE_FIELD_COUNT] = {
+//  { "const anims", LVT_???, offsetof(struct AnimationTable, const anims), true, LOT_???  }, <--- UNIMPLEMENTED
+    { "count",       LVT_U32, offsetof(struct AnimationTable, count),       true, LOT_NONE },
+};
+
 #define LUA_AREA_FIELD_COUNT 21
 static struct LuaObjectField sAreaFields[LUA_AREA_FIELD_COUNT] = {
     { "camera",              LVT_COBJECT_P, offsetof(struct Area, camera),              false, LOT_CAMERA                                     },
@@ -2726,6 +2739,8 @@ static struct LuaObjectField sWhirlpoolFields[LUA_WHIRLPOOL_FIELD_COUNT] = {
 struct LuaObjectTable sLuaObjectAutogenTable[LOT_AUTOGEN_MAX - LOT_AUTOGEN_MIN] = {
     { LOT_ANIMINFO,                     sAnimInfoFields,                     LUA_ANIM_INFO_FIELD_COUNT                       },
     { LOT_ANIMATION,                    sAnimationFields,                    LUA_ANIMATION_FIELD_COUNT                       },
+    { LOT_ANIMATIONINFO,                sAnimationInfoFields,                LUA_ANIMATION_INFO_FIELD_COUNT                  },
+    { LOT_ANIMATIONTABLE,               sAnimationTableFields,               LUA_ANIMATION_TABLE_FIELD_COUNT                 },
     { LOT_AREA,                         sAreaFields,                         LUA_AREA_FIELD_COUNT                            },
     { LOT_BEHAVIORDIALOGS,              sBehaviorDialogsFields,              LUA_BEHAVIOR_DIALOGS_FIELD_COUNT                },
     { LOT_BEHAVIORTRAJECTORIES,         sBehaviorTrajectoriesFields,         LUA_BEHAVIOR_TRAJECTORIES_FIELD_COUNT           },
@@ -2834,6 +2849,8 @@ const char *sLuaLotNames[] = {
 
     [LOT_ANIMINFO] = "AnimInfo",
     [LOT_ANIMATION] = "Animation",
+    [LOT_ANIMATIONINFO] = "AnimationInfo",
+    [LOT_ANIMATIONTABLE] = "AnimationTable",
     [LOT_AREA] = "Area",
     [LOT_BEHAVIORDIALOGS] = "BehaviorDialogs",
     [LOT_BEHAVIORTRAJECTORIES] = "BehaviorTrajectories",

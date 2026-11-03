@@ -67,8 +67,8 @@ static bool DynOS_Actor_WriteBinary(const SysPath &aOutputFilename, GfxData *aGf
             }
         }
     }
-    DynOS_Anim_Write(_File, aGfxData);
-    DynOS_Anim_Table_Write(_File, aGfxData);
+    DynOS_Anim_WriteAll(_File, aGfxData);
+    DynOS_Anim_Table_WriteAll(_File, aGfxData);
     BinFile::Close(_File);
     return DynOS_Bin_Compress(aOutputFilename);
 }
@@ -111,7 +111,7 @@ GfxData *DynOS_Actor_LoadFromBinary(const SysPath &aPackFolder, const char *aAct
                 case DATA_TYPE_DISPLAY_LIST:    DynOS_Gfx_Load       (_File, _GfxData); break;
                 case DATA_TYPE_GEO_LAYOUT:      DynOS_Geo_Load       (_File, _GfxData); break;
                 case DATA_TYPE_ANIMATION:       DynOS_Anim_Load      (_File, _GfxData); break;
-                case DATA_TYPE_ANIMATION_TABLE: DynOS_Anim_Table_Load(_File, _GfxData); break;
+                case DATA_TYPE_ANIMATION_TABLE: DynOS_Anim_Table_LoadSeparate(_File, _GfxData); break;
                 case DATA_TYPE_GFXDYNCMD:       DynOS_GfxDynCmd_Load (_File, _GfxData); break;
                 default:                        _Done = true;                           break;
             }
@@ -193,11 +193,9 @@ static void DynOS_Actor_Generate(const SysPath &aPackFolder, Array<Pair<u64, Str
         DynOS_Geo_Parse(_GfxData, _GeoNode, true);
 
         // Init animation data
-        for (auto &_AnimBuffer : _GfxData->mAnimValues) Delete(_AnimBuffer);
-        for (auto &_AnimBuffer : _GfxData->mAnimIndices) Delete(_AnimBuffer);
+        for (auto &_AnimBuffer : _GfxData->mAnimBuffers) Delete(_AnimBuffer);
         for (auto &_AnimNode : _GfxData->mAnimations) Delete(_AnimNode);
-        _GfxData->mAnimValues.Clear();
-        _GfxData->mAnimIndices.Clear();
+        _GfxData->mAnimBuffers.Clear();
         _GfxData->mAnimations.Clear();
         _GfxData->mAnimationTable.Clear();
 
