@@ -222,7 +222,7 @@ void voicechat_init_player(s32 id) {
 bool voicechat_player_is_inited(s32 id) {
     if (id == UNKNOWN_LOCAL_INDEX) return false;
     if (id == 0) return gVoicePlayers[0].internal.encoder;
-    else return gVoicePlayers[0].internal.decoder;
+    else return gVoicePlayers[id].internal.decoder;
 }
 
 u32 voicechat_encode_audio(u8* packet, u32 max_size) {
@@ -261,6 +261,8 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
     s16 mixed[num_samples * 2 /* stereo */];
     memset(mixed, 0, sizeof(mixed)); // initialize via memset cuz older gcc was complaining about "= {}"
 
+    if (!gServerSettings.voiceChat) return;
+
     // skip over player 0 because thats the client
     for (s32 i = 1; i < MAX_PLAYERS; i++) {
         gVoicePlayers[i].talking = false;
@@ -283,6 +285,7 @@ void voicechat_mix(s16* out_pcm, u32 num_out_samples) {
             f32 volume;
             f32 dist = vec3f_dist(gMarioStates[i].pos, gMarioState->pos);
             if (dist < gServerSettings.voiceChatFullVolRadius) volume = 1;
+            else if (gServerSettings.voiceChatHearingRadius == gServerSettings.voiceChatFullVolRadius) volume = 0;
             else volume = 1 - (dist - gServerSettings.voiceChatFullVolRadius) / (gServerSettings.voiceChatHearingRadius - gServerSettings.voiceChatFullVolRadius);
             if (volume <= 0.0f) continue;
     

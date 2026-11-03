@@ -27,12 +27,12 @@ void network_send_voicechat_frame(void) {
 }
 
 void network_receive_voicechat_frame(struct Packet* p) {
-    // really curious why p->orderedFromGlobalId is a wrong value...
+    if (!gServerSettings.voiceChat) return;
+
     u8 global_index;
     packet_read(p, &global_index, sizeof(u8));
-
-    u8 local_index = network_local_index_from_global(global_index);
-    if (local_index != p->localIndex) return;
+    struct NetworkPlayer* np = network_player_from_global_index(global_index);
+    if (!np || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) return;
 
     u32 frame_size;
     packet_read(p, &frame_size, sizeof(u32));
@@ -42,7 +42,7 @@ void network_receive_voicechat_frame(struct Packet* p) {
     u8 frame_data[frame_size];
     packet_read(p, frame_data, frame_size);
     
-    voicechat_decode_audio(local_index, frame_data, frame_size);
+    voicechat_decode_audio(np->localIndex, frame_data, frame_size);
 }
 
 void network_send_voicechat_muted(u8 receiverIndex, u8 mask, bool muted) {

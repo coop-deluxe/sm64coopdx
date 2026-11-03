@@ -10,6 +10,7 @@
 #include "pc/voice_chat.h"
 
 static unsigned int sKnockbackIndex = 0;
+static unsigned int sVoiceChatDisabled = VOICECHAT_TYPE_DISABLED;
 static struct DjuiInputbox* sPlayerAmount = NULL;
 static struct DjuiSlider* sVoiceChatFullVolSlider = NULL;
 static struct DjuiSlider* sVoiceChatHearingSlider = NULL;
@@ -21,6 +22,17 @@ static void djui_panel_host_settings_knockback_change(UNUSED struct DjuiBase* ca
         case 1:  configPlayerKnockbackStrength = 25; break;
         default: configPlayerKnockbackStrength = 60; break;
     }
+}
+
+static bool is_public_coopnet_lobby() {
+    return configNetworkSystem == NS_COOPNET && configPassword[0] == 0;
+}
+
+static void djui_panel_voice_chat_change(UNUSED struct DjuiBase* caller) {
+    unsigned int* configVoiceChatPtr = &configVoiceChat;
+    if (is_public_coopnet_lobby()) configVoiceChatPtr = &sVoiceChatDisabled;
+    djui_base_set_enabled(&sVoiceChatFullVolSlider->base, *configVoiceChatPtr == VOICECHAT_TYPE_PROXIMITY);
+    djui_base_set_enabled(&sVoiceChatHearingSlider->base, *configVoiceChatPtr == VOICECHAT_TYPE_PROXIMITY);
 }
 
 static void djui_panel_voice_chat_fullvol_change(UNUSED struct DjuiBase* caller) {
@@ -62,10 +74,6 @@ static void djui_panel_host_player_text_change(struct DjuiBase* caller) {
     configAmountOfPlayers = atoi(sPlayerAmount->buffer);
 }
 
-static bool is_public_coopnet_lobby() {
-    return configNetworkSystem == NS_COOPNET && configPassword[0] == 0;
-}
-
 void djui_panel_host_settings_create(struct DjuiBase* caller) {
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(HOST_SETTINGS, SETTINGS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -96,19 +104,18 @@ void djui_panel_host_settings_create(struct DjuiBase* caller) {
         struct DjuiCheckbox* chkDevMode = djui_checkbox_create(body, DLANG(HOST_SETTINGS, MOD_DEV_MODE), (configNetworkSystem == NS_SOCKET) ? &configModDevMode : &sFalse, NULL);
         djui_base_set_enabled(&chkDevMode->base, configNetworkSystem == NS_SOCKET);
 
-        static unsigned int sVoiceChatDisabled = VOICECHAT_TYPE_DISABLED;
         unsigned int* configVoiceChatPtr = &configVoiceChat;
         
         if (is_public_coopnet_lobby()) configVoiceChatPtr = &sVoiceChatDisabled;
         struct DjuiSelectionbox* selVoiceChat = djui_selectionbox_create(body, DLANG(OPTIONS, VOICECHAT), (char*[]){
             DLANG(HOST_SETTINGS, VOICECHAT_DISABLED), DLANG(HOST_SETTINGS, VOICECHAT_VOICE), DLANG(HOST_SETTINGS, VOICECHAT_PROXIMITY)
-        }, 3, configVoiceChatPtr, NULL);
+        }, 3, configVoiceChatPtr, djui_panel_voice_chat_change);
         djui_base_set_enabled(&selVoiceChat->base, configVoiceChatPtr == &configVoiceChat);
 
         sVoiceChatFullVolSlider = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_FULLVOL_RADIUS), &configVoiceChatFullVolRadius, 0,    16384, djui_panel_voice_chat_fullvol_change);
-        djui_base_set_enabled(&sVoiceChatFullVolSlider->base, *configVoiceChatPtr != VOICECHAT_TYPE_PROXIMITY);
+        djui_base_set_enabled(&sVoiceChatFullVolSlider->base, *configVoiceChatPtr == VOICECHAT_TYPE_PROXIMITY);
         sVoiceChatHearingSlider = djui_slider_create(body, DLANG(HOST_SETTINGS, VOICECHAT_HEARING_RADIUS), &configVoiceChatHearingRadius, 4096, 32768, djui_panel_voice_chat_hearing_change);
-        djui_base_set_enabled(&sVoiceChatHearingSlider->base, *configVoiceChatPtr != VOICECHAT_TYPE_PROXIMITY);
+        djui_base_set_enabled(&sVoiceChatHearingSlider->base, *configVoiceChatPtr == VOICECHAT_TYPE_PROXIMITY);
 
         struct DjuiRect* rect1 = djui_rect_container_create(body, 32);
         {
