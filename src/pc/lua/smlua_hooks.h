@@ -109,7 +109,9 @@ static const char* LuaActionHookTypeArgName[] = {
 
 #define ACTION_HOOK_CONTINUE_EXECUTION -1
 
-#define MAX_HOOKED_MOD_MENU_ELEMENTS 256
+#define MAX_MOD_MENU_ELEMENT_NAME_LEN 64
+#define MAX_MOD_MENU_ELEMENT_PANEL_ID_LEN 64
+#define MAX_MOD_MENU_ELEMENT_STRING_VALUE_LEN 256
 
 enum LuaModMenuElementType {
     MOD_MENU_ELEMENT_TEXT,
@@ -117,16 +119,20 @@ enum LuaModMenuElementType {
     MOD_MENU_ELEMENT_CHECKBOX,
     MOD_MENU_ELEMENT_SLIDER,
     MOD_MENU_ELEMENT_INPUTBOX,
+    MOD_MENU_ELEMENT_SELECTIONBOX,
     MOD_MENU_ELEMENT_MAX
 };
 
 struct LuaHookedModMenuElement {
     enum LuaModMenuElementType element;
-    char name[64];
+    char name[MAX_MOD_MENU_ELEMENT_NAME_LEN];
+    char panelId[MAX_MOD_MENU_ELEMENT_PANEL_ID_LEN];
     // use a union here?
     bool boolValue;
     u32 uintValue;
-    char stringValue[256];
+    char stringValue[MAX_MOD_MENU_ELEMENT_STRING_VALUE_LEN];
+    char **choices; // because djui is stupid, this can't be const
+    u32 choicesCount;
     u32 length;
     u32 sliderMin;
     u32 sliderMax;
@@ -136,8 +142,7 @@ struct LuaHookedModMenuElement {
 };
 
 extern u32 gLuaMarioActionIndex[];
-extern struct LuaHookedModMenuElement gHookedModMenuElements[];
-extern int gHookedModMenuElementsCount;
+extern struct GrowingArray *gHookedModMenuElements;
 
 #define LUA_BEHAVIOR_START    (1 << 15)
 #define LUA_BEHAVIOR_NEW_ID   (UINT16_MAX) // behavior id is 2-bytes long

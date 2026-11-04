@@ -19,8 +19,17 @@ bool djui_panel_is_active(void) {
     return (sPanelList != NULL);
 }
 
+bool djui_panel_removing_any_panel(void) {
+    return (sPanelRemoving != NULL);
+}
+
 static struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild* child) {
     while (child) {
+        if (!child->base->visible) {
+            child = child->next;
+            continue;
+        }
+
         if (child->base->interactable && child->base->interactable->enabled) {
             return child->base;
         }
@@ -35,7 +44,7 @@ static struct DjuiBase* djui_panel_find_first_interactable(struct DjuiBaseChild*
 }
 
 struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel* threePanel, struct DjuiBase* defaultElementBase) {
-    if (sPanelRemoving != NULL) { return NULL; }
+    if (djui_panel_removing_any_panel()) { return NULL; }
     struct DjuiBase* panelBase = &threePanel->base;
     bool firstPanel = (sPanelList == NULL);
     gDjuiPanelJoinMessageVisible = false;
@@ -96,7 +105,7 @@ struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel*
 }
 
 void djui_panel_back(void) {
-    if (sPanelRemoving != NULL) { return; }
+    if (djui_panel_removing_any_panel()) { return; }
     if (sPanelList == NULL) { return; }
     if (gDjuiPanelDisableBack) { return; }
     if (sPanelList->parent == NULL) {
@@ -137,7 +146,7 @@ void djui_panel_back(void) {
 }
 
 void djui_panel_back_no_transition(void) {
-    if (sPanelRemoving != NULL) { return; }
+    if (djui_panel_removing_any_panel()) { return; }
     if (sPanelList == NULL) { return; }
     if (gDjuiPanelDisableBack) { return; }
     if (sPanelList->parent == NULL) {
@@ -251,7 +260,7 @@ void djui_panel_shutdown(void) {
         panel = next;
     }
 
-    if (sPanelRemoving != NULL) {
+    if (djui_panel_removing_any_panel()) {
         struct DjuiPanel* panel = sPanelRemoving;
         sPanelRemoving = NULL;
         if (panel->on_panel_destroy) {
