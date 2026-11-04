@@ -129,10 +129,9 @@ extern bool         configCameraToxicGas;
 extern bool         configLuaProfiler;
 extern bool         configDebugPrint;
 extern bool         configDebugInfo;
+extern bool         configDebugWarning;
 extern bool         configDebugError;
-#ifdef DEVELOPMENT
 extern bool         configCtxProfiler;
-#endif
 // player settings
 extern char         configPlayerName[MAX_CONFIG_STRING];
 extern unsigned int configPlayerModel;

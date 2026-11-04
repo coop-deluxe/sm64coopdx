@@ -2416,6 +2416,20 @@ COURSE_MIN      =              1 --- @type CourseNum
 --- | `COURSE_MAX`
 --- | `COURSE_MIN`
 
+LOG_TYPE_DEBUG   = 0 --- @type LogType
+LOG_TYPE_INFO    = 1 --- @type LogType
+LOG_TYPE_WARNING = 2 --- @type LogType
+LOG_TYPE_ERROR   = 3 --- @type LogType
+
+--- @alias LogType
+--- | `LOG_TYPE_DEBUG`
+--- | `LOG_TYPE_INFO`
+--- | `LOG_TYPE_WARNING`
+--- | `LOG_TYPE_ERROR`
+
+--- @type integer
+MAX_LOG_SIZE = 8192
+
 DIALOG_NONE  =  -1 --- @type DialogId
 DIALOG_000   =   0 --- @type DialogId
 DIALOG_001   =   1 --- @type DialogId
@@ -2765,15 +2779,6 @@ DIALOG_COUNT = 170 --- @type DialogId
 
 --- @type integer
 MAX_CONSOLE_INPUT_LENGTH = 500
-
-CONSOLE_MESSAGE_INFO    = 0 --- @type ConsoleMessageLevel
-CONSOLE_MESSAGE_WARNING = 1 --- @type ConsoleMessageLevel
-CONSOLE_MESSAGE_ERROR   = 2 --- @type ConsoleMessageLevel
-
---- @alias ConsoleMessageLevel
---- | `CONSOLE_MESSAGE_INFO`
---- | `CONSOLE_MESSAGE_WARNING`
---- | `CONSOLE_MESSAGE_ERROR`
 
 --- @type number
 ROTATION_PIVOT_X_LEFT = 0.0

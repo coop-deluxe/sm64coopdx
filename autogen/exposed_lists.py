@@ -55,6 +55,7 @@ constants_files = [
     "src/pc/lua/utils/smlua_audio_utils.h",
     "src/pc/lua/utils/smlua_text_utils.h",
     "src/game/hardcoded.h",
+    "src/pc/debuglog.h",
 ]
 
 # For each file, expose only these constants

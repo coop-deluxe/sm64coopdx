@@ -17,6 +17,7 @@
 #include "smlua_sync_table.h"
 
 #include "pc/debuglog.h"
+#include "pc/terminal.h"
 #include "pc/djui/djui_console.h"
 
 #define LOG_LUA(...) { \
@@ -27,7 +28,7 @@
         smlua_mod_error(); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
-        djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_ERROR); \
+        djui_console_message_create(gDjuiConsoleTmpBuffer, LOG_TYPE_ERROR); \
     } \
 }
 
@@ -46,7 +47,7 @@
         smlua_mod_warning(false); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
-        djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_WARNING); \
+        djui_console_message_create(gDjuiConsoleTmpBuffer, LOG_TYPE_WARNING); \
     } \
 }
 
@@ -64,7 +65,7 @@
         log_to_terminal("\x1b[0m\n"); \
         snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, __VA_ARGS__); \
         sys_swap_backslashes(gDjuiConsoleTmpBuffer); \
-        djui_console_message_create(gDjuiConsoleTmpBuffer, CONSOLE_MESSAGE_WARNING); \
+        djui_console_message_create(gDjuiConsoleTmpBuffer, LOG_TYPE_WARNING); \
     } \
 }
 

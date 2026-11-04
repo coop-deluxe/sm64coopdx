@@ -800,45 +800,54 @@ T *CopyBytes(const T *aPtr, u64 aSize) {
 
 template <typename... Args>
 void PrintNoNewLine(const char *aFmt, Args... aArgs) {
+    if (!log_type_should_print(LOG_TYPE_INFO)) { return; }
     log_to_terminal(aFmt, aArgs...);
     fflush(stdout);
 }
 
 template <typename... Args>
 void Print(const char *aFmt, Args... aArgs) {
+    if (!log_type_should_print(LOG_TYPE_INFO)) { return; }
     log_to_terminal(aFmt, aArgs...);
     log_to_terminal("\r\n");
     fflush(stdout);
 }
 
 template <typename... Args>
-void PrintConsole(enum ConsoleMessageLevel level, const char *aFmt, Args... aArgs) {
+void PrintConsole(enum LogType logType, const char *aFmt, Args... aArgs) {
     snprintf(gDjuiConsoleTmpBuffer, CONSOLE_MAX_TMP_BUFFER, aFmt, aArgs...);
     sys_swap_backslashes(gDjuiConsoleTmpBuffer);
-    djui_console_message_create(gDjuiConsoleTmpBuffer, level);
+    djui_console_message_create(gDjuiConsoleTmpBuffer, logType);
 }
 
 template <typename... Args>
 void PrintInfoNoNewLine(const char *aFmt, Args... aArgs) {
+    if (!log_type_should_print(LOG_TYPE_INFO)) { return; }
     PrintNoNewLine(aFmt, aArgs...);
-    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+    PrintConsole(LOG_TYPE_INFO, aFmt, aArgs...);
 }
 
 template <typename... Args>
 void PrintInfo(const char *aFmt, Args... aArgs) {
+    if (!log_type_should_print(LOG_TYPE_INFO)) { return; }
     Print(aFmt, aArgs...);
-    PrintConsole(CONSOLE_MESSAGE_INFO, aFmt, aArgs...);
+    PrintConsole(LOG_TYPE_INFO, aFmt, aArgs...);
 }
 
 template <typename... Args>
 void PrintError(const char *aFmt, Args... aArgs) {
-    Print(aFmt, aArgs...);
-    PrintConsole(CONSOLE_MESSAGE_ERROR, aFmt, aArgs...);
+    if (!log_type_should_print(LOG_TYPE_ERROR)) { return; }
+    log_to_terminal(aFmt, aArgs...);
+    log_to_terminal("\r\n");
+    PrintConsole(LOG_TYPE_ERROR, aFmt, aArgs...);
 }
 #define PrintDataError(...) { \
+    if (log_type_should_print(LOG_TYPE_ERROR)) { \
     if (aGfxData && aGfxData->mErrorCount == 0) { Print("  ERROR!"); } \
-    Print(__VA_ARGS__); \
-    PrintConsole(CONSOLE_MESSAGE_ERROR, __VA_ARGS__); \
+    log_to_terminal(__VA_ARGS__); \
+    log_to_terminal("\r\n"); \
+    PrintConsole(LOG_TYPE_ERROR, __VA_ARGS__); \
+    } \
     if (aGfxData) { aGfxData->mErrorCount++; } \
 }
 
