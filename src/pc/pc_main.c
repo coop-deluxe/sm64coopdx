@@ -425,7 +425,7 @@ void produce_one_frame(void) {
     CTX_EXTENT(CTX_SMLUA, smlua_update);
 
     // If we aren't threaded
-    if (gAudioThread.state == INVALID) {
+    if (gAudioThread.state == THREAD_STATE_INVALID) {
         CTX_EXTENT(CTX_AUDIO, buffer_audio);
     }
 
@@ -512,7 +512,7 @@ void game_exit(void) {
         sShuttingDown = true;
     }
 
-    if (sLoadingThread.state == RUNNING) {
+    if (sLoadingThread.state == THREAD_STATE_RUNNING) {
         join_thread(&sLoadingThread);
     }
     if (sLoadingThread.mutexInited) {
@@ -798,7 +798,7 @@ int main(int argc, char *argv[]) {
             MUTEX_UNLOCK(sLoadingThread);
 
             if (gGameInited) {
-                if (sLoadingThread.state == RUNNING) {
+                if (sLoadingThread.state == THREAD_STATE_RUNNING) {
                     join_thread(&sLoadingThread);
                 }
                 if (sLoadingThread.mutexInited) {
@@ -806,6 +806,8 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
+
+        call_queued_thread_callbacks();
 
         gfx_wm_main_loop(produce_one_frame);
 #ifdef DISCORD_SDK
