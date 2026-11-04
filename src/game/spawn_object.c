@@ -12,6 +12,7 @@
 #include "object_helpers.h"
 #include "object_list_processor.h"
 #include "spawn_object.h"
+#include "level_update.h"
 #include "types.h"
 #include "pc/network/network.h"
 #include "pc/lua/smlua_hooks.h"
@@ -378,6 +379,20 @@ struct Object *create_object(const BehaviorScript *bhvScript) {
     if (!bhvScript) { return NULL; }
     s32 objListIndex = OBJ_LIST_DEFAULT;
     const BehaviorScript *behavior = smlua_override_behavior(bhvScript);
+
+    if (gDjuiInMainMenu) {
+        // iterate through behavior scripts
+        struct MenuLevel *menuLevel = get_menu_level();
+        const BehaviorScript **bhvToRemove = menuLevel->behaviorsToRemove;
+
+        while (*bhvToRemove != NULL) {
+            if (*bhvToRemove == behavior) {
+                return NULL; // menu level does not want this object spawned
+            }
+
+            bhvToRemove++;
+        }
+    }
 
     // If the first behavior script command is "begin <object list>", then
     // extract the object list from it

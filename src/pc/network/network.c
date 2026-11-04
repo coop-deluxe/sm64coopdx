@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
+#include "game/sound_init.h"
 #include "game/level_update.h"
 #include "object_constants.h"
 #include "behavior_table.h"
@@ -734,13 +735,14 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     camera_reset_overrides();
     romhack_camera_reset_settings();
     free_vtx_scroll_targets();
+    fadeout_music(0);
     dynos_mod_shutdown();
     mods_clear(&gActiveMods);
     mods_clear(&gRemoteMods);
     smlua_shutdown();
     extern s16 gChangeLevel;
-    s16 menuLevel = get_menu_level();
-    gChangeLevel = menuLevel;
+    struct MenuLevel *menuLevel = get_menu_level();
+    gChangeLevel = menuLevel->level;
     network_player_init();
     gMarioStates[0].cap = 0;
     gMarioStates[0].input = 0;
