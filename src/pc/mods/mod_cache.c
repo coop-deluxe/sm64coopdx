@@ -255,6 +255,21 @@ void mod_cache_update(struct Mod* mod, struct ModFile* file) {
     normalize_path(modFilePath);
     file->cachedPath = strdup(modFilePath);
 
+    // update file/mod sizes
+    FILE* f = fopen(file->cachedPath, "rb");
+
+    if (f == NULL) {
+        LOG_ERROR("Failed to open mod file to update size: '%s'", file->cachedPath);
+        return;
+    }
+
+    fseek(f, 0, SEEK_END);
+    size_t newSize = ftell(f);
+    fclose(f);
+
+    mod->size = mod->size - file->size + newSize;
+    file->size = newSize;
+
     // hash and cache
     mod_cache_md5(file->cachedPath, file->dataHash);
     mod_cache_add_internal(file->dataHash, 0, (char*)file->cachedPath);
