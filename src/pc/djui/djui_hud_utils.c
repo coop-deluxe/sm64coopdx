@@ -337,7 +337,7 @@ u8 djui_hud_get_resolution(void) {
     return sHudUtilsState.resolution;
 }
 
-void djui_hud_set_resolution(enum HudUtilsResolution resolutionType) {
+void djui_hud_set_resolution(u8 resolutionType) {
     if (resolutionType >= RESOLUTION_COUNT) { return; }
     sHudUtilsState.resolution = resolutionType;
 }
@@ -346,7 +346,7 @@ u8 djui_hud_get_filter(void) {
     return sHudUtilsState.filter;
 }
 
-void djui_hud_set_filter(enum HudUtilsFilter filterType) {
+void djui_hud_set_filter(u8 filterType) {
     if (filterType >= FILTER_COUNT) { return; }
     sHudUtilsState.filter = filterType;
 }

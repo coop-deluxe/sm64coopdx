@@ -100,7 +100,8 @@ def extract_constants(filename):
     txt = ''
     for line in tmp.splitlines():
         line = line.strip()
-        if line.startswith('enum '):
+        if line.startswith('enum ') \
+        or line.startswith('ENUM ('):
             txt += line + '\n'
         if line.startswith('#define '):
             pieces = line.split(' ')
