@@ -60,7 +60,7 @@ Returns the length of the remaining bytes after the current cursor position.
 |descriptionEnd| */
 INLINE OPTIMIZE_O3 u32 datagram_get_remaining_size(struct Datagram *dg) {
     if (!dg || dg->length <= 0) { return 0; }
-    s64 length = dg->length - dg->cursor;
+    s64 length = (s64)dg->length - (s64)dg->cursor;
     if (length <= 0) { return 0; }
     return (u32)length;
 }

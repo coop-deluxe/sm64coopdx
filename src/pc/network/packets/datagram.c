@@ -22,6 +22,12 @@ OPTIMIZE_O3 bool datagram_clear(struct Datagram *dg) {
 
 OPTIMIZE_O3 bool datagram_copy(struct Datagram *a, struct Datagram *b) {
     if (!a || !b) { return FALSE; }
+    if (a == b) { return TRUE; }
+    
+    // Make sure to properly deallocate any buffers.
+    if (datagram_is_initialized(b) && b->length >= BUFFER_LENGTH && b->addr) {
+        free(b->addr);
+    }
     
     // Copy over the state from Datagram A into Datagram B.
     memcpy(b, a, sizeof(struct Datagram));
@@ -73,7 +79,7 @@ OPTIMIZE_O3 bool datagram_truncate(struct Datagram *dg, u32 length) {
         // We will now use the stack buffer.
         if (buffer != dg->buffer) { // Using heap for buffer.
             // Copy contents to a temporary buffer.
-            u8 *temp_buffer = malloc(truncated_size + 1);
+            u8 temp_buffer[BUFFER_LENGTH];
             temp_buffer[truncated_size] = 0;
             memcpy(temp_buffer, buffer, truncated_size);
             
@@ -85,8 +91,6 @@ OPTIMIZE_O3 bool datagram_truncate(struct Datagram *dg, u32 length) {
             memset(&dg->buffer[truncated_size], 0, BUFFER_LENGTH - truncated_size);
             dg->length = (u32)truncated_size;
             
-            // Free the temp buffer.
-            free(temp_buffer);
             return TRUE;
         }
         
@@ -217,13 +221,13 @@ OPTIMIZE_O3 bool datagram_append_data(struct Datagram *dg, void *data, u32 lengt
 OPTIMIZE_O3 bool datagram_read_data(struct Datagram *dg, void *data, u32 length) {
     if (!dg || !data) { return FALSE; }
     
-    u32 new_position = dg->cursor + length;
-    if (new_position > dg->length) {
+    if (dg->cursor > dg->length || length > dg->length - dg->cursor) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 5); // Read Error
-        SOFT_ASSERT_RETURN(new_position < dg->length, FALSE);
+        SOFT_ASSERT_RETURN(dg->cursor <= dg->length && length <= dg->length - dg->cursor, FALSE);
         return FALSE; 
     }
+    u32 new_position = dg->cursor + length;
     
     if (dg->length < BUFFER_LENGTH) {
         // We are using the stack buffer still. So we read from it instead of a allocated buffer.
@@ -240,13 +244,13 @@ OPTIMIZE_O3 bool datagram_read_data(struct Datagram *dg, void *data, u32 length)
 OPTIMIZE_O3 bool datagram_write_data(struct Datagram *dg, void *data, u32 length) {
     if (!dg || !data) { return FALSE; }
     
-    u32 new_position = dg->cursor + length;
-    if (new_position > dg->length) {
+    if (dg->cursor > dg->length || length > dg->length - dg->cursor) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 6); // Write Error
-        SOFT_ASSERT_RETURN(new_position < dg->length, FALSE);
+        SOFT_ASSERT_RETURN(dg->cursor <= dg->length && length <= dg->length - dg->cursor, FALSE);
         return FALSE; 
     }
+    u32 new_position = dg->cursor + length;
     
     if (dg->length < BUFFER_LENGTH) {
         // We are using the stack buffer still. So we write into it instead of a allocated buffer.

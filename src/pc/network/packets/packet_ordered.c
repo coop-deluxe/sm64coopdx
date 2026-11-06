@@ -112,6 +112,7 @@ static void packet_ordered_add_to_table(struct OrderedPacketTable* opt, struct P
 
     // Copy the packet over to the list
     memcpy(&opl->p, p, sizeof(struct Packet));
+    datagram_init(&opl->p.dg);
     datagram_copy(&p->dg, &opl->p.dg);
     opl->next = NULL;
 

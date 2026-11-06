@@ -18,7 +18,7 @@
 #define GLUE(a, b) a ## b
 #define GLUE2(a, b) GLUE(a, b)
 
-#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
+#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num))
 #define GET_BIT(val, num) (((val) >> (num)) & 0x01)
 
 // Avoid compiler warnings for unused variables

@@ -105,6 +105,7 @@ void network_remember_reliable(struct Packet* p) {
 
     struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
     memcpy(&node->p, p, sizeof(struct Packet));
+    datagram_init(&node->p.dg);
     datagram_copy(&p->dg, &node->p.dg);
     node->p.addr = network_duplicate_address(p->localIndex);
     node->p.sent = true;

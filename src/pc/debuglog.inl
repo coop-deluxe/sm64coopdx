@@ -11,7 +11,10 @@
 OPTIMIZE_O3 INLINE int _debuglog_print_timestamp(char* buffer, size_t bufferSize) {
     time_t ltime = time(NULL);
 #if defined(_WIN32)
-    char* str = asctime(localtime(&ltime));
+    struct tm* lctime = localtime(&ltime);
+    if (lctime == NULL) { return 0; }
+    char* str = asctime(lctime);
+    if (str == NULL) { return 0; }
 #else
     struct tm ltime2 = { 0 };
     localtime_r(&ltime, &ltime2);

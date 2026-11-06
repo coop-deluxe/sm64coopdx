@@ -172,12 +172,17 @@ OPTIMIZE_O3 u8 packet_initial_read(struct Packet *packet) {
 }
 
 OPTIMIZE_O3 bool packet_check_hash(struct Packet *packet) {
+    if (!packet) { return FALSE; }
+    
     u32 length = datagram_length(&packet->dg);
+    if (length < 4) { return FALSE; }
     u32 localHash = datagram_hash(&packet->dg, length - 4);
     
     u32 old_pos = datagram_cursor_position(&packet->dg);
     datagram_seek(&packet->dg, length - 4);
+    if (datagram_has_seek_error(&packet->dg)) { return FALSE; }
     u32 packetHash = datagram_read_uint32(&packet->dg);
+    if (datagram_has_read_error(&packet->dg)) { return FALSE; }
     datagram_seek(&packet->dg, old_pos);
     return localHash == packetHash;
 }
