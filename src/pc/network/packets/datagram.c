@@ -154,7 +154,7 @@ OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length) {
 OPTIMIZE_O3 bool datagram_seek(struct Datagram *dg, u32 offset) {
     if (!dg) { return FALSE; }
     
-    if (offset >= dg->length) {
+    if (offset > dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 3); // Seek Error
         SOFT_ASSERT_RETURN(offset < dg->length, FALSE);
