@@ -26,6 +26,11 @@
 #define OBJECT_POOL_CAPACITY 1200
 
 /**
+ * The maximum number of Environment Levels.
+ */
+#define ENVIORMENT_LEVEL_CAPACITY 20
+
+/**
  * Every object is categorized into an object list, which controls the order
  * they are processed and which objects they can collide with.
  */

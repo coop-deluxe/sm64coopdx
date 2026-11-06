@@ -17,6 +17,16 @@ extern "C" {
 #define BUFFER_LENGTH 200
 #define MAX_DECOMPRESS_LENGTH 5000
 
+union f32_bits {
+    u32  u;
+    f32  f;
+};
+
+union f64_bits {
+    u64  u;
+    f64  f;
+};
+
 struct Datagram {
     u32 length;
     u32 cursor; // For read iteration.
@@ -35,18 +45,24 @@ OPTIMIZE_O3 void datagram_init(struct Datagram *dg);
 
 /* |description|
 Clears a Datagram and resets it to the default state for use.
+Returns false on failure.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_clear(struct Datagram *dg);
+OPTIMIZE_O3 bool datagram_clear(struct Datagram *dg);
 
 /* |description|
 Copies the contents and state of Datagram A into Datagram B.
+Returns false on failure or if an error occurs.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b);
+OPTIMIZE_O3 bool datagram_copy(struct Datagram *a, struct Datagram *b);
 
 /* |description|
 Truncates the Datagram by the amount specified by length.
+Returns false on failure.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length);
+OPTIMIZE_O3 bool datagram_truncate(struct Datagram *dg, u32 length);
 
 /* |description|
 Generates a hash for the amount of contents in the Datagram specified by the length.
@@ -55,28 +71,38 @@ OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length);
 
 /* |description|
 Seeks (Moves the cursor) to the specified position in the Datagram.
+Returns false on failure.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_seek(struct Datagram *dg, u32 offset);
+OPTIMIZE_O3 bool datagram_seek(struct Datagram *dg, u32 offset);
 
 /* |description|
 Appends data to the end of the Datagram.
+Returns false on failure or if an error occurs.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_append_data(struct Datagram *dg, void *data, u32 length);
+OPTIMIZE_O3 bool datagram_append_data(struct Datagram *dg, void *data, u32 length);
 
 /* |description|
 Reads data from the current cursor position in the Datagram.
+Returns false on failure or if an error occurs.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_read_data(struct Datagram *dg, void *data, u32 length);
+OPTIMIZE_O3 bool datagram_read_data(struct Datagram *dg, void *data, u32 length);
 
 /* |description|
 Writes data to the current cursor position in the Datagram.
+Returns false on failure or if an error occurs.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_write_data(struct Datagram *dg, void *data, u32 length);
+OPTIMIZE_O3 bool datagram_write_data(struct Datagram *dg, void *data, u32 length);
 
 /* |description|
 Adds the amount of empty padding specified to the Datagram.
+Returns false on failure or if an error occurs.
+Returns true on success.
 |descriptionEnd| */
-OPTIMIZE_O3 void datagram_add_padding(struct Datagram *dg, u32 length);
+OPTIMIZE_O3 bool datagram_add_padding(struct Datagram *dg, u32 length);
 
 /* |description|
 Returns a copy of all the contents in the Datagram.
@@ -108,46 +134,6 @@ Error flag will also be set on failure to decompress as the Datagram will be lef
 in a invalid state, Please use datagram_clear() to reset the Datagram.
 |descriptionEnd| */
 OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg);
-
-/* |description|
-Returns if a error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_error(struct Datagram *dg);
-
-/* |description|
-Returns if a seek error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_seek_error(struct Datagram *dg);
-
-/* |description|
-Returns if a append error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_append_error(struct Datagram *dg);
-
-/* |description|
-Returns if a read error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_read_error(struct Datagram *dg);
-
-/* |description|
-Returns if a write error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_write_error(struct Datagram *dg);
-
-/* |description|
-Returns if a compression error has occured while working with this Datagram.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_has_compression_error(struct Datagram *dg);
-
-/* |description|
-Returns if the Datagram is valid and is ready for use.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_is_initialized(struct Datagram *dg);
-
-/* |description|
-Returns if the Datagram has compressed its contents.
-|descriptionEnd| */
-OPTIMIZE_O3 bool datagram_is_compressed(struct Datagram *dg);
 
 // Include the INLINE functions.
 #include "datagram.inl"

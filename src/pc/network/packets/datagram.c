@@ -11,16 +11,17 @@ OPTIMIZE_O3 void datagram_init(struct Datagram *dg) {
     dg->flags |= SET_BIT(1, 0); // Initialized
 }
 
-OPTIMIZE_O3 void datagram_clear(struct Datagram *dg) {
-    if (!dg) { return; }
+OPTIMIZE_O3 bool datagram_clear(struct Datagram *dg) {
+    if (!dg) { return FALSE; }
     
     if (dg->length >= BUFFER_LENGTH && dg->addr) { free(dg->addr); }
     memset(dg, 0, sizeof(struct Datagram));
     dg->flags |= SET_BIT(1, 0); // Initialized
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b) {
-    if (!a || !b) { return; }
+OPTIMIZE_O3 bool datagram_copy(struct Datagram *a, struct Datagram *b) {
+    if (!a || !b) { return FALSE; }
     
     // Copy over the state from Datagram A into Datagram B.
     memcpy(b, a, sizeof(struct Datagram));
@@ -33,8 +34,8 @@ OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b) {
             b->flags |= SET_BIT(1, 2); // Error
             b->addr = NULL;
             b->length = 0;
-            SOFT_ASSERT(a->addr);
-            return;
+            SOFT_ASSERT_RETURN(a->addr, FALSE);
+            return FALSE;
         }
         
         // Allocate the new buffer to copy into.
@@ -44,10 +45,12 @@ OPTIMIZE_O3 void datagram_copy(struct Datagram *a, struct Datagram *b) {
         // We're done.
         b->addr = buffer;
     }
+    
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
-    if (!dg) { return; }
+OPTIMIZE_O3 bool datagram_truncate(struct Datagram *dg, u32 length) {
+    if (!dg) { return FALSE; }
     
     s64 truncated_size = (s64)dg->length - (s64)length;
     if (truncated_size <= 0) {
@@ -55,7 +58,7 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
         memset(dg->buffer, 0, BUFFER_LENGTH);
         dg->cursor = 0;
         dg->length = 0;
-        return;
+        return TRUE;
     }
     
     // Choose the current buffer in use.
@@ -84,12 +87,12 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
             
             // Free the temp buffer.
             free(temp_buffer);
-            return;
+            return TRUE;
         }
         
         memset(&dg->buffer[truncated_size], 0, length);
         dg->length = (u32)truncated_size;
-        return;
+        return TRUE;
     }
     
     // We will now use the heap buffer.
@@ -110,11 +113,12 @@ OPTIMIZE_O3 void datagram_truncate(struct Datagram *dg, u32 length) {
         // Set the new buffer.
         dg->addr = heap_buffer;
         dg->length = (u32)truncated_size;
-        return;
+        return TRUE;
     }
     
     memset(&dg->addr[truncated_size], 0, length);
     dg->length = (u32)truncated_size;
+    return TRUE;
 }
 
 OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length) {
@@ -143,21 +147,22 @@ OPTIMIZE_O3 u32 datagram_hash(struct Datagram *dg, u32 length) {
     return hash;
 }
 
-OPTIMIZE_O3 void datagram_seek(struct Datagram *dg, u32 offset) {
-    if (!dg) { return; }
+OPTIMIZE_O3 bool datagram_seek(struct Datagram *dg, u32 offset) {
+    if (!dg) { return FALSE; }
     
     if (offset >= dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 3); // Seek Error
-        SOFT_ASSERT(offset < dg->length);
-        return; 
+        SOFT_ASSERT_RETURN(offset < dg->length, FALSE);
+        return FALSE; 
     }
     
     dg->cursor = offset;
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_append_data(struct Datagram *dg, void *data, u32 length) {
-    if (!dg || !data) { return; }
+OPTIMIZE_O3 bool datagram_append_data(struct Datagram *dg, void *data, u32 length) {
+    if (!dg || !data) { return FALSE; }
     
     u32 old_length = dg->length;
     u32 new_length = old_length + length;
@@ -167,8 +172,8 @@ OPTIMIZE_O3 void datagram_append_data(struct Datagram *dg, void *data, u32 lengt
     if (new_length < old_length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 4); // Append Error
-        SOFT_ASSERT(new_length >= old_length);
-        return;
+        SOFT_ASSERT_RETURN(new_length >= old_length, FALSE);
+        return FALSE;
     }
     
     if (new_length < BUFFER_LENGTH) {
@@ -205,17 +210,19 @@ OPTIMIZE_O3 void datagram_append_data(struct Datagram *dg, void *data, u32 lengt
         memcpy(&dg->addr[old_length], data, length);
         dg->length = new_length;
     }
+    
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_read_data(struct Datagram *dg, void *data, u32 length) {
-    if (!dg || !data) { return; }
+OPTIMIZE_O3 bool datagram_read_data(struct Datagram *dg, void *data, u32 length) {
+    if (!dg || !data) { return FALSE; }
     
     u32 new_position = dg->cursor + length;
     if (new_position > dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 5); // Read Error
-        SOFT_ASSERT(new_position < dg->length);
-        return; 
+        SOFT_ASSERT_RETURN(new_position < dg->length, FALSE);
+        return FALSE; 
     }
     
     if (dg->length < BUFFER_LENGTH) {
@@ -226,17 +233,19 @@ OPTIMIZE_O3 void datagram_read_data(struct Datagram *dg, void *data, u32 length)
         memcpy(data, &dg->addr[dg->cursor], length);
     }
     dg->cursor = new_position;
+    
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_write_data(struct Datagram *dg, void *data, u32 length) {
-    if (!dg || !data) { return; }
+OPTIMIZE_O3 bool datagram_write_data(struct Datagram *dg, void *data, u32 length) {
+    if (!dg || !data) { return FALSE; }
     
     u32 new_position = dg->cursor + length;
     if (new_position > dg->length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 6); // Write Error
-        SOFT_ASSERT(new_position < dg->length);
-        return; 
+        SOFT_ASSERT_RETURN(new_position < dg->length, FALSE);
+        return FALSE; 
     }
     
     if (dg->length < BUFFER_LENGTH) {
@@ -247,10 +256,12 @@ OPTIMIZE_O3 void datagram_write_data(struct Datagram *dg, void *data, u32 length
         memcpy(&dg->addr[dg->cursor], data, length);
     }
     dg->cursor = new_position;
+    
+    return TRUE;
 }
 
-OPTIMIZE_O3 void datagram_add_padding(struct Datagram *dg, u32 length) {
-    if (!dg) { return; }
+OPTIMIZE_O3 bool datagram_add_padding(struct Datagram *dg, u32 length) {
+    if (!dg) { return FALSE; }
     
     u32 old_length = dg->length;
     u32 new_length = old_length + length;
@@ -260,8 +271,8 @@ OPTIMIZE_O3 void datagram_add_padding(struct Datagram *dg, u32 length) {
     if (new_length < old_length) {
         dg->flags |= SET_BIT(1, 2); // Error
         dg->flags |= SET_BIT(1, 4); // Append Error
-        SOFT_ASSERT(new_length >= old_length);
-        return;
+        SOFT_ASSERT_RETURN(new_length >= old_length, FALSE);
+        return FALSE;
     }
     
     if (new_length < BUFFER_LENGTH) {
@@ -295,6 +306,8 @@ OPTIMIZE_O3 void datagram_add_padding(struct Datagram *dg, u32 length) {
         memset(&dg->addr[old_length], 0, length);
         dg->length = new_length;
     }
+    
+    return TRUE;
 }
 
 OPTIMIZE_O3 u8 *datagram_get_message(struct Datagram *dg) {
@@ -338,7 +351,7 @@ OPTIMIZE_O3 u8 *datagram_get_remaining_bytes(struct Datagram *dg) {
 }
 
 OPTIMIZE_O3 bool datagram_compress(struct Datagram *dg) {
-    if (!dg || GET_BIT(dg->flags, 2)) { return FALSE; }
+    if (!dg || datagram_is_compressed(dg)) { return FALSE; }
     
     u32 length = dg->length;
     
@@ -388,7 +401,7 @@ OPTIMIZE_O3 bool datagram_compress(struct Datagram *dg) {
 }
 
 OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg) {
-    if (!dg || !GET_BIT(dg->flags, 1)) { return FALSE; }
+    if (!dg || !datagram_is_compressed(dg)) { return FALSE; }
     
     // Read the lengths for the compressed Datagram.
     u32 length = datagram_read_uint32(dg);
@@ -455,42 +468,4 @@ OPTIMIZE_O3 bool datagram_decompress(struct Datagram *dg) {
     free(buffer);
     
     return result;
-}
-OPTIMIZE_O3 bool datagram_has_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 2);
-}
-
-OPTIMIZE_O3 bool datagram_has_seek_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 3);
-}
-
-OPTIMIZE_O3 bool datagram_has_append_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 4);
-}
-
-OPTIMIZE_O3 bool datagram_has_read_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 5);
-}
-
-OPTIMIZE_O3 bool datagram_has_write_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 6);
-}
-
-OPTIMIZE_O3 bool datagram_has_compression_error(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 7);
-}
-OPTIMIZE_O3 bool datagram_is_initialized(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 0);
-}
-
-OPTIMIZE_O3 bool datagram_is_compressed(struct Datagram *dg) {
-    if (!dg) { return FALSE; }
-    return GET_BIT(dg->flags, 1);
 }

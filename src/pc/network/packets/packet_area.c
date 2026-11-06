@@ -41,31 +41,31 @@ void network_send_area(struct NetworkPlayer* toNp) {
         struct Packet p = { 0 };
         packet_init(&p, PACKET_AREA, true, PLMT_NONE);
 
-        // level location
-        packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-        packet_write(&p, &gCurrActStarNum, sizeof(s16));
-        packet_write(&p, &gCurrLevelNum,   sizeof(s16));
-        packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
+        // Level Location
+        packet_write_int16(&p, gCurrCourseNum);
+        packet_write_int16(&p, gCurrActStarNum);
+        packet_write_int16(&p, gCurrLevelNum);
+        packet_write_int16(&p, gCurrAreaIndex);
 
-        // area variables
-        packet_write(&p, &gNetworkAreaTimer, sizeof(u32));
-        packet_write(&p, &gNetworkAreaRandomSeed, sizeof(u32));
-        packet_write(&p, gEnvironmentLevels, sizeof(s32));
+        // Area Variables
+        packet_write_uint32(&p, gNetworkAreaTimer);
+        packet_write_uint32(&p, gNetworkAreaRandomSeed);
+        packet_write_int32(&p, gEnvironmentLevels[0]); // Only syncs WDW water level. Would this cause problems for mods?
 
-        // level control timer
-        packet_write(&p, &levelControlTimerVisible, sizeof(u8));
-        packet_write(&p, &levelControlTimerRunning, sizeof(u8));
-        packet_write(&p, &gControlTimerStartNat,    sizeof(u32));
-        packet_write(&p, &gControlTimerStopNat,     sizeof(u32));
+        // Level Control Timer
+        packet_write_bool(&p, levelControlTimerVisible);
+        packet_write_bool(&p, levelControlTimerRunning);
+        packet_write_uint32(&p, gControlTimerStartNat);
+        packet_write_uint32(&p, gControlTimerStopNat);
 
-        // write sync id removals
-        packet_write(&p, &sRemoveSyncIdsIndex, sizeof(u32));
+        // Write Sync ID removals
+        packet_write_uint32(&p, sRemoveSyncIdsIndex);
         for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
-            packet_write(&p, &sRemoveSyncIds[i], sizeof(u32));
+            packet_write_uint32(&p, sRemoveSyncIds[i]);
             LOG_INFO("tx remove sync id %d", sRemoveSyncIds[i]);
         }
 
-        // count respawners and write
+        // Count our respawners.
         u16 respawnerCount = 0;
 
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
@@ -73,36 +73,37 @@ void network_send_area(struct NetworkPlayer* toNp) {
                 respawnerCount++;
             }
         }
+        
+        // Write the amount of respawners.
+        packet_write_uint16(&p, respawnerCount);
 
-        packet_write(&p, &respawnerCount, sizeof(u16));
-
-        // write respawners
+        // Write all of our respawners.
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->behavior != smlua_override_behavior(bhvRespawner)) { continue; }
             u32 behaviorToRespawn = get_id_from_behavior(so->o->oRespawnerBehaviorToRespawn);
-            packet_write(&p, &so->o->oPosX, sizeof(f32));
-            packet_write(&p, &so->o->oPosY, sizeof(f32));
-            packet_write(&p, &so->o->oPosZ, sizeof(f32));
-            packet_write(&p, &so->o->oBehParams, sizeof(s32));
-            packet_write(&p, &so->o->oRespawnerModelToRespawn, sizeof(s32));
-            packet_write(&p, &so->o->oRespawnerMinSpawnDist, sizeof(f32));
-            packet_write(&p, &behaviorToRespawn, sizeof(u32));
-            packet_write(&p, &so->o->oSyncID, sizeof(u32));
+            packet_write_float32(&p, so->o->oPosX);
+            packet_write_float32(&p, so->o->oPosY);
+            packet_write_float32(&p, so->o->oPosZ);
+            packet_write_int32(&p, so->o->oBehParams);
+            packet_write_int32(&p, so->o->oRespawnerModelToRespawn);
+            packet_write_float32(&p, so->o->oRespawnerMinSpawnDist);
+            packet_write_uint32(&p, behaviorToRespawn);
+            packet_write_uint32(&p, so->o->oSyncID);
             LOG_INFO("tx respawner");
         }
 
-        // send area packet
+        // Send the Area Packet
         network_send_to(toNp->localIndex, &p);
         
         packet_clear(&p);
 
-        // send objects
+        // Send all of our objects
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL || so->o->oSyncID != so->id) { continue; }
             if (so->o->behavior == smlua_override_behavior(bhvRespawner)) { continue; }
 
-            // static objects have deterministic sync ids based on spawn order,
-            // so we send an update packet rather than a spawn packet
+            // Static objects have deterministic sync ids based on their spawn order,
+            // So we send an update packet rather than a spawn packet for them.
             if (so->id < SYNC_ID_BLOCK_SIZE) {
                 network_send_object_reliability_to(toNp->localIndex, so->o, true);
 
@@ -110,7 +111,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             } else {
                 struct Object* spawn_objects[] = { so->o };
 
-                // find model
+                // Find the model
                 u32 model = dynos_model_get_id_from_graph_node(so->o->header.gfx.sharedChild);
 
                 u32 models[] = { model };
@@ -119,7 +120,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             }
         }
 
-        // send last reliable ent packet
+        // Send last reliable ent packet
         for (struct SyncObject* so = sync_object_get_first(); so != NULL; so = sync_object_get_next()) {
             if (so == NULL || so->o == NULL) { continue; }
             if (so->lastReliablePacketIsStale) { continue; }
@@ -131,7 +132,7 @@ void network_send_area(struct NetworkPlayer* toNp) {
             packet_clear(&p2);
         }
 
-        // send sync valid
+        // Send sync valid
         network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex, false);
     }
     packet_ordered_end();
@@ -143,55 +144,57 @@ void network_receive_area(struct Packet* p) {
     LOG_INFO("rx area");
 
     if (p == NULL) {
-        LOG_ERROR("rx area: the packet was NULL, failed to receive the area.");
+        LOG_ERROR("rx area: The packet was NULL, Failed to receive the area.");
         return;
     }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= 2 + (sizeof(u16) * 1) + (sizeof(s16) * 4) + (sizeof(s32) * 1) + (sizeof(u32) * 5));
 
-    // read level location
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum,   sizeof(s16));
-    packet_read(p, &actNum,      sizeof(s16));
-    packet_read(p, &levelNum,    sizeof(s16));
-    packet_read(p, &areaIndex,   sizeof(s16));
+    // Read the Level Location.
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
 
-    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
+    extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, gCurrAreaIndex;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum || areaIndex != gCurrAreaIndex) {
         LOG_ERROR("rx area: received an improper location");
         return;
     }
 
-    // read area variables
-    packet_read(p, &gNetworkAreaTimer, sizeof(u32));
-    packet_read(p, &gNetworkAreaRandomSeed, sizeof(u32));
+    // Read the Area variables
+    gNetworkAreaTimer = packet_read_uint32(p);
+    gNetworkAreaRandomSeed = packet_read_uint32(p);
+
     gNetworkAreaTimerClock = clock_elapsed_ticks() - gNetworkAreaTimer;
-    packet_read(p, gEnvironmentLevels, sizeof(s32));
+    gEnvironmentLevels[0] = packet_read_int32(p);
     if (gCurrLevelNum == LEVEL_WDW && gEnvironmentRegions != NULL && gEnvironmentRegionsLength > 6) {
-        gEnvironmentRegions[6] = *gEnvironmentLevels;
+        gEnvironmentRegions[6] = gEnvironmentLevels[0];
     }
 
-    // read control timer variables
-    bool levelControlTimerRunning = false;
-    bool levelControlTimerVisible = false;
-    packet_read(p, &levelControlTimerVisible, sizeof(u8));
-    packet_read(p, &levelControlTimerRunning, sizeof(u8));
+    // Read the Control Timer variables
+    bool levelControlTimerRunning = packet_read_bool(p);
+    bool levelControlTimerVisible = packet_read_bool(p);
     if (levelControlTimerVisible) {
         level_control_timer(TIMER_CONTROL_SHOW);
     }
     if (levelControlTimerRunning) {
         level_control_timer(TIMER_CONTROL_START);
     }
-    packet_read(p, &gControlTimerStartNat, sizeof(u32));
-    packet_read(p, &gControlTimerStopNat,  sizeof(u32));
+    gControlTimerStartNat = packet_read_uint32(p);
+    gControlTimerStopNat = packet_read_uint32(p);
 
-    // read removed sync ids
+    // Read all of the removed sync ids,m
     area_remove_sync_ids_clear();
-    packet_read(p, &sRemoveSyncIdsIndex, sizeof(u32));
+    sRemoveSyncIdsIndex = packet_read_uint32(p);
     if (sRemoveSyncIdsIndex >= SYNC_ID_BLOCK_SIZE) {
         LOG_ERROR("rx area: invalid number of sync ids to remove: %u", sRemoveSyncIdsIndex);
         sRemoveSyncIdsIndex = SYNC_ID_BLOCK_SIZE - 1;
     }
     for (u32 i = 0; i < sRemoveSyncIdsIndex; i++) {
-        packet_read(p, &sRemoveSyncIds[i], sizeof(u32));
+        sRemoveSyncIds[i] = packet_read_uint32(p);
         struct SyncObject* so = sync_object_get(sRemoveSyncIds[i]);
         if (!so) { continue; }
 
@@ -203,30 +206,21 @@ void network_receive_area(struct Packet* p) {
         LOG_INFO("rx remove sync id %d", sRemoveSyncIds[i]);
     }
 
-    // read respawner count
-    u16 respawnerCount = 0;
-    packet_read(p, &respawnerCount, sizeof(u16));
+    // Read the respawner count
+    u16 respawnerCount = packet_read_uint16(p);
 
-    // read respawners
+    // Read of all the respawners.
     for (s32 i = 0; i < respawnerCount; i++) {
-        f32 posX, posY, posZ;
-        packet_read(p, &posX, sizeof(f32));
-        packet_read(p, &posY, sizeof(f32));
-        packet_read(p, &posZ, sizeof(f32));
-
-        s32 behParams, respawnerModelToRespawn;
-        packet_read(p, &behParams, sizeof(s32));
-        packet_read(p, &respawnerModelToRespawn, sizeof(s32));
-
-        f32 respawnerMinSpawnDist;
-        packet_read(p, &respawnerMinSpawnDist, sizeof(f32));
-
-        u32 behaviorToRespawn, syncId;
-        packet_read(p, &behaviorToRespawn, sizeof(u32));
-        packet_read(p, &syncId, sizeof(u32));
+        f32 posX = packet_read_float32(p);
+        f32 posY = packet_read_float32(p);
+        f32 posZ = packet_read_float32(p);
+        s32 behParams = packet_read_int32(p);
+        s32 respawnerModelToRespawn = packet_read_int32(p);
+        f32 respawnerMinSpawnDist = packet_read_float32(p);
+        u32 behaviorToRespawn = packet_read_uint32(p);
+        u32 syncId = packet_read_uint32(p);
 
         struct SyncObject* so = sync_object_get(syncId);
-
         if (so == NULL) {
             LOG_ERROR("rx area: Sync object was NULL, Skipping respawner.");
             LOG_DEBUG("rx area debug: Sync Object DEBUG:\n\n \
@@ -244,25 +238,25 @@ void network_receive_area(struct Packet* p) {
         }
 
         LOG_INFO("rx respawner");
-        if (syncId < SYNC_ID_BLOCK_SIZE) {
-            struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
-            if (respawner != NULL) {
-                respawner->parentObj = respawner;
-                respawner->oBehParams = behParams;
-                respawner->oRespawnerModelToRespawn = respawnerModelToRespawn;
-                respawner->oRespawnerMinSpawnDist = respawnerMinSpawnDist;
-                respawner->oRespawnerBehaviorToRespawn = get_behavior_from_id(behaviorToRespawn);
-                respawner->oSyncID = syncId;
-            }
-
-            struct Object* o = so->o;
-            if (o != NULL) {
-                o->oSyncID = 0;
-                o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
-            }
-
-            if (respawner != NULL) { so->o = respawner; }
-            LOG_INFO("rx respawner replaced!");
+        if (syncId >= SYNC_ID_BLOCK_SIZE) { continue; }
+          
+        struct Object* respawner = spawn_object_abs_with_rot(gMarioStates[0].marioObj, 0, MODEL_NONE, bhvRespawner, posX, posY, posZ, 0, 0, 0);
+        if (respawner != NULL) {
+            respawner->parentObj = respawner;
+            respawner->oBehParams = behParams;
+            respawner->oRespawnerModelToRespawn = respawnerModelToRespawn;
+            respawner->oRespawnerMinSpawnDist = respawnerMinSpawnDist;
+            respawner->oRespawnerBehaviorToRespawn = get_behavior_from_id(behaviorToRespawn);
+            respawner->oSyncID = syncId;
         }
+
+        struct Object* o = so->o;
+        if (o != NULL) {
+            o->oSyncID = 0;
+            o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
+        }
+
+        if (respawner != NULL) { so->o = respawner; }
+        LOG_INFO("rx respawner replaced!");
     }
 }

@@ -15,7 +15,7 @@ static bool sOrderedPackets = false;
 static u16 sCurrentOrderedGroupId = 0;
 static u16 sCurrentOrderedSeqId = 0;
 
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch) {
+OPTIMIZE_O3 void packet_init(struct Packet *packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch) {
     datagram_init(&packet->dg);
     packet->packetType = packetType;
     packet->reliable = reliable;
@@ -77,12 +77,7 @@ void packet_init(struct Packet* packet, enum PacketType packetType, bool reliabl
     }
 }
 
-void packet_clear(struct Packet* packet) {
-    datagram_clear(&packet->dg);
-    memset(packet, 0, sizeof(struct Packet));
-}
-
-void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
+OPTIMIZE_O3 void packet_duplicate(struct Packet *srcPacket, struct Packet *dstPacket) {
     dstPacket->packetType = srcPacket->packetType;
     dstPacket->reliable = srcPacket->reliable;
     dstPacket->levelAreaMustMatch = srcPacket->levelAreaMustMatch;
@@ -112,7 +107,7 @@ void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket) {
     datagram_seek(&dstPacket->dg, old_pos);
 }
 
-void packet_set_flags(struct Packet* packet) {
+OPTIMIZE_O3 void packet_set_flags(struct Packet *packet) {
     u8 flags = 0;
     flags |= SET_BIT(packet->levelAreaMustMatch,  0);
     flags |= SET_BIT(packet->requestBroadcast,    1);
@@ -126,7 +121,7 @@ void packet_set_flags(struct Packet* packet) {
     datagram_seek(&packet->dg, old_pos);
 }
 
-void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
+OPTIMIZE_O3 void packet_set_destination(struct Packet *packet, u8 destGlobalId) {
     // Preserve the old cursor position.
     u32 old_pos = datagram_cursor_position(&packet->dg);
     datagram_seek(&packet->dg, PACKET_DESTINATION_OFFSET);
@@ -134,15 +129,7 @@ void packet_set_destination(struct Packet* packet, u8 destGlobalId) {
     datagram_seek(&packet->dg, old_pos);
 }
 
-void packet_write(struct Packet* packet, void* data, u16 length) {
-    // LEGACY FUNCTION, Please use the datagram functions instead.
-    // This is only supported for legacy reasons.
-    
-    datagram_append_data(&packet->dg, data, length);
-    packet->dg.cursor += length;
-}
-
-u8 packet_initial_read(struct Packet* packet) {
+OPTIMIZE_O3 u8 packet_initial_read(struct Packet *packet) {
     datagram_seek_start(&packet->dg);
     
     // Read packet type
@@ -184,18 +171,7 @@ u8 packet_initial_read(struct Packet* packet) {
     return TRUE;
 }
 
-void packet_read(struct Packet* packet, void* data, u16 length) {
-    // LEGACY FUNCTION, Please use the datagram functions instead.
-    // This is only supported for legacy reasons.
-
-    datagram_read_data(&packet->dg, (u8 *)data, length);
-}
-
-u32 packet_hash(struct Packet* packet) {
-    return datagram_hash(&packet->dg, datagram_length(&packet->dg));
-}
-
-bool packet_check_hash(struct Packet* packet) {
+OPTIMIZE_O3 bool packet_check_hash(struct Packet *packet) {
     u32 length = datagram_length(&packet->dg);
     u32 localHash = datagram_hash(&packet->dg, length - 4);
     
@@ -206,7 +182,7 @@ bool packet_check_hash(struct Packet* packet) {
     return localHash == packetHash;
 }
 
-void packet_ordered_begin(void) {
+OPTIMIZE_O3 void packet_ordered_begin(void) {
     if (sOrderedPackets) { return; }
     sOrderedPackets = true;
 
@@ -215,12 +191,12 @@ void packet_ordered_begin(void) {
     sCurrentOrderedSeqId = 1;
 }
 
-void packet_ordered_end(void) {
+OPTIMIZE_O3 void packet_ordered_end(void) {
     sOrderedPackets = false;
     sCurrentOrderedSeqId = 0;
 }
 
-void packet_set_ordered_data(struct Packet* packet) {
+OPTIMIZE_O3 void packet_set_ordered_data(struct Packet *packet) {
     if (packet->orderedGroupId == 0) { return; }
     if (packet->orderedSeqId != 0) { return; }
     packet->orderedSeqId = sCurrentOrderedSeqId++;

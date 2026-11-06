@@ -1,153 +1,9 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include "types.h"
-
-#include <PR/ultratypes.h>
-#include <time.h>
-#include <assert.h>
-#include <stdbool.h>
-
-#define PACKET_LENGTH 3000
-#include "pc/network/packets/datagram.h"
-
-#define PACKET_DESTINATION_BROADCAST ((u8)-1)
-#define PACKET_DESTINATION_SERVER ((u8)-2)
+#include "pc/network/packets/packet_defs.h"
 
 struct NetworkPlayer;
-
-enum PacketType {
-    PACKET_ACK,
-    PACKET_PLAYER,
-    PACKET_OBJECT,
-    PACKET_SPAWN_OBJECTS,
-    PACKET_SPAWN_STAR,
-    PACKET_SPAWN_STAR_NLE,
-    PACKET_COLLECT_STAR,
-    PACKET_COLLECT_COIN,
-    PACKET_COLLECT_ITEM,
-    PACKET_GLOBAL_POPUP,
-    PACKET_DEBUG_SYNC,
-    PACKET_JOIN_REQUEST,
-    PACKET_JOIN,
-    PACKET_CHAT,
-    PACKET_KICK,
-    PACKET_KEEP_ALIVE,
-    PACKET_LEAVING,
-    PACKET_SAVE_FILE,
-    PACKET_SAVE_SET_FLAG,
-    PACKET_SAVE_REMOVE_FLAG,
-    PACKET_NETWORK_PLAYERS,
-    PACKET_DEATH,
-
-    PACKET_PING,
-    PACKET_PONG,
-    PACKET_UNUSED_23,
-
-    PACKET_CHANGE_LEVEL,
-    PACKET_CHANGE_AREA,
-    PACKET_LEVEL_AREA_REQUEST,
-    PACKET_LEVEL_REQUEST,
-    PACKET_LEVEL,
-    PACKET_AREA_REQUEST,
-    PACKET_AREA,
-    PACKET_SYNC_VALID,
-    PACKET_LEVEL_SPAWN_INFO,
-    PACKET_LEVEL_MACRO,
-    PACKET_LEVEL_AREA_INFORM,
-    PACKET_LEVEL_RESPAWN_INFO,
-    PACKET_CHANGE_WATER_LEVEL,
-
-    PACKET_PLAYER_SETTINGS,
-
-    PACKET_MOD_LIST_REQUEST,
-    PACKET_MOD_LIST,
-    PACKET_DOWNLOAD_REQUEST,
-    PACKET_DOWNLOAD,
-    PACKET_MOD_LIST_ENTRY,
-    PACKET_MOD_LIST_FILE,
-    PACKET_MOD_LIST_DONE,
-
-    PACKET_LUA_SYNC_TABLE_REQUEST,
-    PACKET_LUA_SYNC_TABLE,
-
-    PACKET_NETWORK_PLAYERS_REQUEST,
-
-    PACKET_REQUEST_FAILED,
-
-    PACKET_LUA_CUSTOM,
-    PACKET_LUA_CUSTOM_BYTESTRING,
-
-    PACKET_COMMAND,
-    PACKET_MODERATOR,
-
-    ///
-    PACKET_CUSTOM = 255,
-};
-
-enum PacketLevelMatchType {
-    PLMT_NONE,
-    PLMT_AREA,
-    PLMT_LEVEL
-};
-
-struct Packet {
-    struct Datagram dg;
-    void* addr;
-    enum PacketType packetType;
-    bool sent;
-    bool reliable;
-    bool levelAreaMustMatch;
-    bool levelMustMatch;
-    bool requestBroadcast;
-    bool keepSendingAfterDisconnect;
-    u8 localIndex;
-    u8 destGlobalId;
-    u16 seqId;
-    u16 orderedGroupId;
-    u16 orderedSeqId;
-    u8 orderedFromGlobalId;
-    u8 courseNum;
-    u8 actNum;
-    u8 areaIndex;
-    s16 levelNum;
-};
-
-enum KickReasonType {
-    EKT_CLOSE_CONNECTION,
-    EKT_FULL_PARTY,
-    EKT_KICKED,
-    EKT_BANNED,
-    EKT_REJOIN,
-};
-
-enum ChatConfirmCommand {
-    CCC_NONE,
-    CCC_KICK,
-    CCC_BAN,
-    CCC_PERMBAN,
-    CCC_MODERATOR,
-};
-
-struct LSTNetworkType {
-    enum {
-        LST_NETWORK_TYPE_INTEGER,
-        LST_NETWORK_TYPE_NUMBER,
-        LST_NETWORK_TYPE_BOOLEAN,
-        LST_NETWORK_TYPE_STRING,
-        LST_NETWORK_TYPE_NIL,
-        LST_NETWORK_TYPE_MAX
-    } type;
-
-    union {
-        long long integer;
-        double number;
-        u8 boolean;
-        char* string;
-    } value;
-
-    size_t size;
-};
 
 extern u8 gAllowOrderedPacketClear;
 
@@ -157,20 +13,7 @@ void packet_receive(struct Packet* packet);
 bool packet_spoofed(struct Packet* p, u8 globalIndex);
 
 // packet_read_write.c
-void packet_init(struct Packet* packet, enum PacketType packetType, bool reliable, enum PacketLevelMatchType levelAreaMustMatch);
-void packet_clear(struct Packet* packet);
-void packet_duplicate(struct Packet* srcPacket, struct Packet* dstPacket);
-void packet_set_flags(struct Packet* packet);
-void packet_set_destination(struct Packet* packet, u8 destGlobalId);
-void packet_write(struct Packet* packet, void* data, u16 length);
-u8 packet_initial_read(struct Packet* packet);
-void packet_read(struct Packet* packet, void* data, u16 length);
-u32 packet_hash(struct Packet* packet);
-bool packet_check_hash(struct Packet* packet);
-void packet_ordered_begin(void);
-void packet_ordered_end(void);
-void packet_ordered_clear_all(void);
-void packet_set_ordered_data(struct Packet* packet);
+#include "pc/network/packets/packet_read_write.h"
 
 // packet_reliable.c
 void network_forget_all_reliable(void);

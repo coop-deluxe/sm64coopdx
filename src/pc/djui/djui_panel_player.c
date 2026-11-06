@@ -5,7 +5,7 @@
 #include "djui_panel_main.h"
 #include "djui_panel_pause.h"
 #include "djui_panel_options.h"
-#include "pc/network/network_player.h"
+#include "pc/network/network.h"
 #include "pc/platform.h"
 #include "game/level_update.h"
 #include "game/area.h"
