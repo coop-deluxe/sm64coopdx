@@ -280,6 +280,10 @@ static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
 // ----- main send/receive ----- //
 
 void network_send_object(struct Object* o) {
+    network_send_object_to(PACKET_DESTINATION_BROADCAST, o);
+}
+
+void network_send_object_to(u8 sendToLocalIndex, struct Object* o) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
     // sanity check SyncObject
@@ -311,10 +315,14 @@ void network_send_object(struct Object* o) {
     }
 
     bool reliable = (o->activeFlags == ACTIVE_FLAG_DEACTIVATED || so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS);
-    network_send_object_reliability(o, reliable);
+    network_send_object_reliability_to(sendToLocalIndex, o, reliable);
 }
 
 void network_send_object_reliability(struct Object* o, bool reliable) {
+    network_send_object_reliability_to(PACKET_DESTINATION_BROADCAST, o, reliable);
+}
+
+void network_send_object_reliability_to(u8 sendToLocalIndex, struct Object* o, bool reliable) {
     // don't send sync objects while area sync is invalid
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) {
         return;
@@ -381,7 +389,11 @@ void network_send_object_reliability(struct Object* o, bool reliable) {
     }
 
     // send the packet out
-    network_send(&p);
+    if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
+        network_send(&p);
+    } else {
+        network_send_to(sendToLocalIndex, &p);
+    }
 
     // trigger on_sent_post callback
     if (so->on_sent_post != NULL) {
