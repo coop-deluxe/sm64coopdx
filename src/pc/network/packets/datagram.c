@@ -333,10 +333,9 @@ OPTIMIZE_O3 u8 *datagram_get_message(struct Datagram *dg) {
 }
 
 OPTIMIZE_O3 u8 *datagram_get_remaining_bytes(struct Datagram *dg) {
-    if (!dg || dg->length <= 0) { return NULL; }
+    if (!dg) { return NULL; }
   
-    s64 length = dg->length - dg->cursor;
-    
+    u32 length = datagram_get_remaining_size(dg);
     if (length <= 0) { return NULL; }
     
     u8 *buffer = malloc(length + 1);

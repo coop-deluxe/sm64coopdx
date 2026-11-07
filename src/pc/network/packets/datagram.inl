@@ -39,7 +39,7 @@ Returns true on success.
 INLINE OPTIMIZE_O3 bool datagram_seek_end(struct Datagram *dg) {
     if (!dg || dg->length <= 0) { return FALSE; }
     
-    dg->cursor = dg->length - 1;
+    dg->cursor = dg->length;
     return TRUE;
 }
 

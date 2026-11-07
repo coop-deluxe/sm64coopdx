@@ -207,7 +207,7 @@ void network_send_download(u64 offset);
 void network_receive_download(struct Packet* p);
 
 // packet_global_popup.c
-void network_send_global_popup(const char* message, int lines);
+void network_send_global_popup(const char* message, s32 lines);
 void network_receive_global_popup(struct Packet* p);
 
 // packet_lua_sync_table.c

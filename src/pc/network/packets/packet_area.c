@@ -175,8 +175,8 @@ void network_receive_area(struct Packet* p) {
     }
 
     // Read the Control Timer variables
-    bool levelControlTimerRunning = packet_read_bool(p);
     bool levelControlTimerVisible = packet_read_bool(p);
+    bool levelControlTimerRunning = packet_read_bool(p);
     if (levelControlTimerVisible) {
         level_control_timer(TIMER_CONTROL_SHOW);
     }

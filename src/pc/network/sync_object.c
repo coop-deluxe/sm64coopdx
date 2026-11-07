@@ -53,6 +53,7 @@ void sync_objects_update(void) {
                 sForgetList = next;
             }
             //LOG_INFO("Freeing sync object %u : %s\n", entry->so->id, get_behavior_name_from_id(get_id_from_behavior(entry->so->behavior)));
+            datagram_clear(&entry->so->lastReliablePacket.dg);
             free(entry->so);
             free(entry);
 

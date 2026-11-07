@@ -219,7 +219,7 @@ void network_send_download_request(u64 offset) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_DOWNLOAD_REQUEST, true, PLMT_NONE);
-    packet_write(&p, &offset, sizeof(u64));
+    packet_write_uint64(&p, offset);
 
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
     
@@ -230,10 +230,13 @@ void network_send_download_request(u64 offset) {
 
 void network_receive_download_request(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u64));
 
-    // receive requested offset
-    u64 requestOffset;
-    packet_read(p, &requestOffset, sizeof(u64));
+    // Receive requested offset
+    u64 requestOffset = packet_read_uint64(p);
 
     for (u64 i = 0; i < OFFSET_COUNT; i++) {
         u64 sendOffset = requestOffset + (i * CHUNK_SIZE);
@@ -307,12 +310,12 @@ void network_send_download(u64 requestOffset) {
     }
 after_filled:;
 
-    // send the packet
+    // Send the packet
     struct Packet p = { 0 };
     packet_init(&p, PACKET_DOWNLOAD, true, PLMT_NONE);
-    packet_write(&p, &requestOffset, sizeof(u64));
-    packet_write(&p, &chunkFill,    sizeof(u64));
-    packet_write(&p, &chunk,        sizeof(u8) * chunkFill);
+    packet_write_uint64(&p, requestOffset);
+    packet_write_uint64(&p, chunkFill);
+    packet_write(&p, &chunk, sizeof(u8) * chunkFill);
     network_send_to(0, &p);
     packet_clear(&p);
 
@@ -369,18 +372,20 @@ void network_receive_download(struct Packet* p) {
             return;
         }
     }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u64) * 2));
 
-    // read the chunk
-    u64 receiveOffset     = 0;
-    u64 chunkLength       = 0;
-    u8  chunk[CHUNK_SIZE+1] = { 0 };
-    packet_read(p, &receiveOffset, sizeof(u64));
-    packet_read(p, &chunkLength,   sizeof(u64));
+    // Read the chunk
+    u64 receiveOffset = packet_read_uint64(p);
+    u64 chunkLength = packet_read_uint64(p);
     if (chunkLength > CHUNK_SIZE) {
         LOG_ERROR("Received improper chunk length");
         return;
     }
-    packet_read(p, &chunk,         sizeof(u8) * chunkLength);
+    u8 chunk[CHUNK_SIZE+1] = { 0 };
+    packet_read(p, &chunk, sizeof(u8) * chunkLength);
 
     // mark the offset group as received
     bool foundGroup = false;

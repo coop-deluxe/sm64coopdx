@@ -30,10 +30,10 @@
 extern u8* gOverrideEeprom;
 static u8 eeprom[512] = { 0 };
 
-static u8   sJoinRequestPlayerModel;
-static struct PlayerPalette sJoinRequestPlayerPalette;
-static char sJoinRequestPlayerName[MAX_CONFIG_STRING];
-static char sJoinRequestDiscordId[64];
+static u8   sJoinRequestPlayerModel = 0;
+static struct PlayerPalette sJoinRequestPlayerPalette = { 0 };
+static char sJoinRequestPlayerName[MAX_CONFIG_STRING] = { 0 };
+static char sJoinRequestDiscordId[64] = { 0 };
 bool gCurrentlyJoining = false;
 
 void network_send_join_request(void) {
@@ -44,11 +44,12 @@ void network_send_join_request(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN_REQUEST, true, PLMT_NONE);
+    
     char version[MAX_VERSION_LENGTH] = { 0 };
     snprintf(version, MAX_VERSION_LENGTH, "%s", get_version());
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-
-    packet_write(&p, &configPlayerModel,   sizeof(u8));
+    
+    packet_write_uint8(&p, configPlayerModel);
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
     packet_write(&p, &configPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
 
@@ -62,11 +63,16 @@ void network_send_join_request(void) {
 void network_receive_join_request(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     LOG_INFO("received join request");
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= MAX_VERSION_LENGTH);
+    
+    char version[MAX_VERSION_LENGTH] = { 0 };
+    packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
 
-    if (datagram_length(&p->dg) > 5) {
-        char version[MAX_VERSION_LENGTH] = { 0 };
-        packet_read(p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-        packet_read(p, &sJoinRequestPlayerModel,   sizeof(u8));
+    if (packet_get_remaining_size(p) >= sizeof(u8) + sizeof(struct PlayerPalette) + (sizeof(u8) * MAX_CONFIG_STRING)) {
+        sJoinRequestPlayerModel = packet_read_uint8(p);
         packet_read(p, &sJoinRequestPlayerPalette, sizeof(struct PlayerPalette));
         packet_read(p, &sJoinRequestPlayerName,    sizeof(u8) * MAX_CONFIG_STRING);
     } else {
@@ -116,19 +122,19 @@ void network_send_join(struct Packet* joinRequestPacket) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_JOIN, true, PLMT_NONE);
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
-    packet_write(&p, &globalIndex, sizeof(u8));
-    packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
-    packet_write(&p, &gServerSettings.playerInteractions, sizeof(u8));
-    packet_write(&p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
-    packet_write(&p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
-    packet_write(&p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
-    packet_write(&p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_write(&p, &gServerSettings.bubbleDeath, sizeof(u8));
-    packet_write(&p, &gServerSettings.headlessServer, sizeof(u8));
-    packet_write(&p, &gServerSettings.nametags, sizeof(u8));
-    packet_write(&p, &gServerSettings.maxPlayers, sizeof(u8));
-    packet_write(&p, &gServerSettings.pauseAnywhere, sizeof(u8));
-    packet_write(&p, &gServerSettings.pvpType, sizeof(u8));
+    packet_write_uint8(&p, globalIndex);
+    packet_write_int16(&p, gCurrSaveFileNum);
+    packet_write_uint8(&p, gServerSettings.playerInteractions);
+    packet_write_uint8(&p, gServerSettings.bouncyLevelBounds);
+    packet_write_uint8(&p, gServerSettings.playerKnockbackStrength);
+    packet_write_uint8(&p, gServerSettings.stayInLevelAfterStar);
+    packet_write_uint8(&p, gServerSettings.skipIntro);
+    packet_write_uint8(&p, gServerSettings.bubbleDeath);
+    packet_write_uint8(&p, gServerSettings.headlessServer);
+    packet_write_uint8(&p, gServerSettings.nametags);
+    packet_write_uint8(&p, gServerSettings.maxPlayers);
+    packet_write_uint8(&p, gServerSettings.pauseAnywhere);
+    packet_write_uint8(&p, gServerSettings.pvpType);
     packet_write(&p, eeprom, sizeof(u8) * 512);
 
     network_send_to(globalIndex, &p);
@@ -158,8 +164,12 @@ void network_receive_join(struct Packet* p) {
         LOG_ERROR("Received join packet, but already in-game!");
         return;
     }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * MAX_VERSION_LENGTH) + (sizeof(u8) * 12) + sizeof(s16) + (sizeof(u8) * 512));
 
-    // verify version
+    // Verify version
     packet_read(p, &remoteVersion, sizeof(u8) * MAX_VERSION_LENGTH);
     LOG_INFO("Server has version: %s", version);
     if (memcmp(version, remoteVersion, MAX_VERSION_LENGTH) != 0) {
@@ -170,20 +180,20 @@ void network_receive_join(struct Packet* p) {
         djui_panel_join_message_error(mismatchMessage);
         return;
     }
-
-    packet_read(p, &myGlobalIndex, sizeof(u8));
-    packet_read(p, &gCurrSaveFileNum, sizeof(s16));
-    packet_read(p, &gServerSettings.playerInteractions, sizeof(u8));
-    packet_read(p, &gServerSettings.bouncyLevelBounds, sizeof(u8));
-    packet_read(p, &gServerSettings.playerKnockbackStrength, sizeof(u8));
-    packet_read(p, &gServerSettings.stayInLevelAfterStar, sizeof(u8));
-    packet_read(p, &gServerSettings.skipIntro, sizeof(u8));
-    packet_read(p, &gServerSettings.bubbleDeath, sizeof(u8));
-    packet_read(p, &gServerSettings.headlessServer, sizeof(u8));
-    packet_read(p, &gServerSettings.nametags, sizeof(u8));
-    packet_read(p, &gServerSettings.maxPlayers, sizeof(u8));
-    packet_read(p, &gServerSettings.pauseAnywhere, sizeof(u8));
-    packet_read(p, &gServerSettings.pvpType, sizeof(u8));
+    
+    myGlobalIndex = packet_read_uint8(p);
+    gCurrSaveFileNum = packet_read_int16(p);
+    gServerSettings.playerInteractions = packet_read_uint8(p);
+    gServerSettings.bouncyLevelBounds = packet_read_uint8(p);
+    gServerSettings.playerKnockbackStrength = packet_read_uint8(p);
+    gServerSettings.stayInLevelAfterStar = packet_read_uint8(p);
+    gServerSettings.skipIntro = packet_read_uint8(p);
+    gServerSettings.bubbleDeath = packet_read_uint8(p);
+    gServerSettings.headlessServer = packet_read_uint8(p);
+    gServerSettings.nametags = packet_read_uint8(p);
+    gServerSettings.maxPlayers = packet_read_uint8(p);
+    gServerSettings.pauseAnywhere = packet_read_uint8(p);
+    gServerSettings.pvpType = packet_read_uint8(p);
     packet_read(p, eeprom, sizeof(u8) * 512);
 
     network_player_connected(NPT_SERVER, 0, 0, &DEFAULT_MARIO_PALETTE, "Player", "0");
