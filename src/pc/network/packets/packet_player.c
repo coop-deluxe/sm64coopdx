@@ -235,11 +235,12 @@ void network_send_player(u8 localIndex) {
     packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
     packet_write(&p, &data, sizeof(struct PacketPlayerData));
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_player(struct Packet* p) {
-    u8 globalIndex = 0;
-    packet_read(p, &globalIndex, sizeof(u8));
+    u8 globalIndex = datagram_read_uint8(&p->dg);
+    
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
 
@@ -248,8 +249,14 @@ void network_receive_player(struct Packet* p) {
 
     struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
+    
+    // Read the current Player action from the Datagram.
+    u32 position = datagram_cursor_position(&p->dg);
+    datagram_seek(&p->dg, position + offsetof(struct PacketPlayerData, action));
+    u32 action = datagram_read_uint32(&p->dg);
+    datagram_seek(&p->dg, position);
 
-    if (gNetworkType == NT_SERVER && *((u32*)(p->buffer + p->cursor + offsetof(struct PacketPlayerData, action))) == ACT_DEBUG_FREE_MOVE) {
+    if (gNetworkType == NT_SERVER && action == ACT_DEBUG_FREE_MOVE) {
 #ifdef DEVELOPMENT
         if (m->action != ACT_DEBUG_FREE_MOVE) {
             construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);

@@ -122,6 +122,7 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
             LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
         }
     }
+    packet_clear(&p);
 }
 
 void network_receive_spawn_objects(struct Packet* p) {

@@ -13,6 +13,7 @@ void network_send_ping(struct NetworkPlayer* toNp) {
     packet_write(&p, &toNp->globalIndex, sizeof(u8));
     packet_write(&p, &timestamp,        sizeof(f64));
     network_send_to(toNp->localIndex, &p);
+    packet_clear(&p);
 
     //LOG_INFO("tx ping");
 }
@@ -31,6 +32,7 @@ void network_receive_ping(struct Packet* p) {
     packet_write(&p2, &globalIndex, sizeof(u8));
     packet_write(&p2, &timestamp,   sizeof(f64));
     network_send_to(p->localIndex, &p2);
+    packet_clear(&p2);
 }
 
 void network_receive_pong(struct Packet* p) {

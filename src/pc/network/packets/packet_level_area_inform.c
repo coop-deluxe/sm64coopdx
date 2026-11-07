@@ -24,6 +24,7 @@ void network_send_level_area_inform(void) {
     packet_write(&p, &np->currLevelSyncValid, sizeof(u8));
     packet_write(&p, &np->currAreaSyncValid,  sizeof(u8));
     network_send(&p);
+    packet_clear(&p);
 
     LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
 }

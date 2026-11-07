@@ -18,6 +18,7 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
     packet_write(&p, &fromNp->currActNum,        sizeof(s16));
     packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
     network_send_to(toNp->localIndex, &p);
+    packet_clear(&p);
     LOG_INFO("tx level request");
 }
 

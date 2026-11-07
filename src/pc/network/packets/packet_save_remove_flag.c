@@ -15,6 +15,7 @@ void network_send_save_remove_flag(s32 fileIndex, s32 courseIndex, u8 courseStar
     packet_write(&p, &flagsToRemove, sizeof(u32));
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_save_remove_flag(struct Packet* p) {

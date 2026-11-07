@@ -26,6 +26,7 @@ void network_send_leaving(u8 globalIndex) {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
     }
     LOG_INFO("Sending leaving event for %d", globalIndex);
+    packet_clear(&p);
 }
 
 void network_receive_leaving(struct Packet* p) {

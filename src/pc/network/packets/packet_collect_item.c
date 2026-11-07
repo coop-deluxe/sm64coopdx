@@ -48,18 +48,27 @@ void network_send_collect_item(struct Object* o) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_ITEM, true, PLMT_AREA);
-    packet_write(&p, &behaviorId, sizeof(u32));
-    packet_write(&p, &o->oPosX, sizeof(f32) * 3);
+    packet_write_uint32(&p, behaviorId);
+    packet_write_float32(&p, o->oPosX);
+    packet_write_float32(&p, o->oPosY);
+    packet_write_float32(&p, o->oPosZ);
 
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_item(struct Packet* p) {
-    u32 behaviorId;
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u32) + (sizeof(f32) * 3));
+    
     f32 pos[3] = { 0 };
-
-    packet_read(p, &behaviorId, sizeof(u32));
-    packet_read(p, &pos, sizeof(f32) * 3);
+    
+    u32 behaviorId = packet_read_uint32(p);
+    pos[0] = packet_read_float32(p);
+    pos[1] = packet_read_float32(p);
+    pos[2] = packet_read_float32(p);
 
     const void* behavior = get_behavior_from_id(behaviorId);
 

@@ -54,6 +54,7 @@ void network_send_mod_list(void) {
     packet_write(&p, &version, sizeof(u8) * MAX_VERSION_LENGTH);
     packet_write(&p, &gActiveMods.entryCount, sizeof(u16));
     network_send_to(0, &p);
+    packet_clear(&p);
 
     LOG_INFO("sent mod list (%u):", gActiveMods.entryCount);
     for (u16 i = 0; i < gActiveMods.entryCount; i++) {
@@ -90,6 +91,7 @@ void network_send_mod_list(void) {
         packet_write(&p, &mod->ignoreScriptWarnings, sizeof(u8));
         packet_write(&p, &mod->fileCount, sizeof(u16));
         network_send_to(0, &p);
+        packet_clear(&p);
         LOG_INFO("    '%s': %llu", mod->name, (u64)mod->size);
 
         for (u16 j = 0; j < mod->fileCount; j++) {
@@ -105,6 +107,7 @@ void network_send_mod_list(void) {
             packet_write(&p, &fileSize, sizeof(u64));
             packet_write(&p, &file->dataHash[0], sizeof(u8) * 16);
             network_send_to(0, &p);
+            packet_clear(&p);
             LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
         }
     }
@@ -112,9 +115,9 @@ void network_send_mod_list(void) {
     struct Packet p2 = { 0 };
     packet_init(&p2, PACKET_MOD_LIST_DONE, true, PLMT_NONE);
     network_send_to(0, &p2);
+    packet_clear(&p2);
 
     packet_ordered_end();
-
 }
 
 void network_receive_mod_list(struct Packet* p) {

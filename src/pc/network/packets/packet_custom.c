@@ -33,7 +33,10 @@ void network_send_custom(u8 customId, bool reliable, enum PacketLevelMatchType l
     packet_init(&p, PACKET_CUSTOM, reliable, levelAreaMustMatch);
     packet_write(&p, &customId, sizeof(u8));
     customPackets[customId].send_callback(&p, params);
+    
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_custom(struct Packet* p) {

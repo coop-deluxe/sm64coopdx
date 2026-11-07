@@ -26,7 +26,7 @@ static struct Object* get_object_matching_respawn_info(u32* respawnInfo) {
 ////
 
 static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 areaIndex) {
-    // check that the area is active
+    // Check that the area is active
     if (areaIndex >= MAX_AREAS) {
         LOG_ERROR("network_send_level_spawn_info_area: area index is invalid");
         return;
@@ -39,43 +39,49 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         return;
     }
 
-    // write header
+    // Write header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_SPAWN_INFO, true, PLMT_NONE);
-    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-    packet_write(&p, &gCurrActStarNum, sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
+    datagram_add_int16(&p.dg, gCurrCourseNum);
+    datagram_add_int16(&p.dg, gCurrActStarNum);
+    datagram_add_int16(&p.dg, gCurrLevelNum);
+    datagram_add_int16(&p.dg, gCurrAreaIndex);
 
-    // write this area's index
-    packet_write(&p, &areaIndex, sizeof(u8));
+    // Write this areas index
+    datagram_add_uint8(&p.dg, areaIndex);
 
-    // write the amount of deletions
-    u8 zero = 0;
-    u8* spawnInfoDeletionCount = &p.buffer[p.cursor];
-    packet_write(&p, &zero, sizeof(u8));
+    // Write the amount of deletions
+    u32 cursorPosition = datagram_length(&p.dg);
+    u8 spawnInfoDeletionCount = 0;
+    datagram_add_uint8(&p.dg, 0);
 
-    // loop through spawn infos
+    // Loop through spawn infos
     struct SpawnInfo* spawnInfo = area->objectSpawnInfos;
     u16 spawnInfoIndex = 0;
 
     while (spawnInfo != NULL) {
-        // if a spawn info object was destroyed, send its spawn info index
+        // If a spawn info object was destroyed, Send its spawn info index.
         if (((spawnInfo->behaviorArg >> 8) & RESPAWN_INFO_DONT_RESPAWN) == RESPAWN_INFO_DONT_RESPAWN) {
-            *spawnInfoDeletionCount = *spawnInfoDeletionCount + 1;
-            packet_write(&p, &spawnInfoIndex, sizeof(u16));
+            spawnInfoDeletionCount += 1;
+            datagram_add_uint16(&p.dg, spawnInfoIndex);
             LOG_INFO("tx spawn info deletion: index %d", spawnInfoIndex);
         }
 
         spawnInfo = spawnInfo->next;
         spawnInfoIndex++;
     }
+    
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
+    datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, spawnInfoDeletionCount);
+    datagram_seek(&p.dg, restoreCursorPosition);
 
     // send the packet if there are deletions
-    if (*spawnInfoDeletionCount > 0) {
+    if (spawnInfoDeletionCount > 0) {
         network_send_to(destNp->localIndex, &p);
-        LOG_INFO("tx spawn info for area %d (count %d)", areaIndex, *spawnInfoDeletionCount);
+        LOG_INFO("tx spawn info for area %d (count %d)", areaIndex, spawnInfoDeletionCount);
     }
+    packet_clear(&p);
 }
 
 void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
@@ -94,20 +100,18 @@ void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
 }
 
 void network_receive_level_spawn_info(struct Packet* p) {
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum,       sizeof(s16));
-    packet_read(p, &actNum,          sizeof(s16));
-    packet_read(p, &levelNum,        sizeof(s16));
-    packet_read(p, &areaIndex,       sizeof(s16));
+    s16 courseNum = datagram_read_int16(&p->dg);
+    s16 actNum = datagram_read_int16(&p->dg);
+    s16 levelNum = datagram_read_int16(&p->dg);
+    s16 areaIndex = datagram_read_int16(&p->dg);
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }
-
-    u8 thisAreaIndex, spawnInfoDeletionCount;
-    packet_read(p, &thisAreaIndex, sizeof(u8));
-    packet_read(p, &spawnInfoDeletionCount, sizeof(u8));
+    
+    u8 thisAreaIndex = datagram_read_uint8(&p->dg);
+    u8 spawnInfoDeletionCount = datagram_read_uint8(&p->dg);
     LOG_INFO("rx spawn info (count %d)", spawnInfoDeletionCount);
     if (spawnInfoDeletionCount <= 0) { return; }
     if (thisAreaIndex >= MAX_AREAS) {
@@ -117,9 +121,7 @@ void network_receive_level_spawn_info(struct Packet* p) {
 
     struct SpawnInfo* spawnInfo = gAreaData[thisAreaIndex].objectSpawnInfos;
     u16 spawnInfoIndex = 0;
-
-    u16 spawnInfoDeleteIndex;
-    packet_read(p, &spawnInfoDeleteIndex, sizeof(u16));
+    u16 spawnInfoDeleteIndex = datagram_read_uint16(&p->dg);
 
     while (spawnInfo != NULL && spawnInfoDeletionCount > 0) {
         if (spawnInfoIndex == spawnInfoDeleteIndex) {
@@ -137,7 +139,7 @@ void network_receive_level_spawn_info(struct Packet* p) {
                 }
             }
             spawnInfoDeletionCount--;
-            packet_read(p, &spawnInfoDeleteIndex, sizeof(u16));
+            spawnInfoDeleteIndex = datagram_read_uint16(&p->dg);
         }
 
         spawnInfo = spawnInfo->next;

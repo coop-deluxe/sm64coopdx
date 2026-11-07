@@ -41,72 +41,86 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         return;
     }
 
-    // write header
+    // Write header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_MACRO, true, PLMT_NONE);
-    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-    packet_write(&p, &gCurrActStarNum, sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
+    datagram_add_int16(&p.dg, gCurrCourseNum);
+    datagram_add_int16(&p.dg, gCurrActStarNum);
+    datagram_add_int16(&p.dg, gCurrLevelNum);
+    datagram_add_int16(&p.dg, gCurrAreaIndex);
 
-    // write this area's index
-    packet_write(&p, &areaIndex, sizeof(u8));
+    // Write this areas index
+    datagram_add_uint8(&p.dg, areaIndex);
 
-    // write the amount of deletions
-    u8 zero = 0;
-    u8* macroDeletionCount = &p.buffer[p.cursor];
-    packet_write(&p, &zero, sizeof(u8));
+    // Write the current amount of deletions.
+    u8 macroDeletionCount = 0;
+    u32 cursorPosition = datagram_length(&p.dg);
+    datagram_add_uint8(&p.dg, macroDeletionCount);
 
-    // loop through macro objects for deletions
-    s16* macroObjList = area->macroObjects;
+    // Loop through macro objects for deletions
+    s16 *macroObjList = area->macroObjects;
     while (macroObjList != NULL && *macroObjList != -1) {
-        // grab preset ID
+        // Grab preset ID
         s32 presetID = (*macroObjList & 0x1FF) - 31; // Preset identifier for MacroObjectPresets array
         if (presetID < 0) { break; }
 
-        // parse respawn info
+        // Parse respawn info
         macroObjList += 4;
         s16* respawnInfo = macroObjList++;
 
-        // if a macro object was destroyed, send its respawnInfo offset
+        // If a macro object was destroyed, send its respawnInfo offset
         if (((*respawnInfo >> 8) & RESPAWN_INFO_DONT_RESPAWN) == RESPAWN_INFO_DONT_RESPAWN) {
-            *macroDeletionCount = *macroDeletionCount + 1;
+            macroDeletionCount += 1;
             u16 offset = respawnInfo - area->macroObjects;
-            packet_write(&p, &offset, sizeof(u16));
+            datagram_add_uint16(&p.dg, offset);
             LOG_INFO("tx macro: offset %d", offset);
         }
     }
+    
+    // Update the current amount of deletions.
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
+    datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, macroDeletionCount);
+    datagram_seek(&p.dg, restoreCursorPosition);
 
-    // write the amount of special cases
-    u8* macroSpecialCount = &p.buffer[p.cursor];
-    packet_write(&p, &zero, sizeof(u8));
+    // Write the amount of special cases.
+    u8 macroSpecialCount = 0;
+    cursorPosition = datagram_length(&p.dg);
+    datagram_add_uint8(&p.dg, macroSpecialCount);
 
     // loop through macro objects for special cases
     macroObjList = area->macroObjects;
     while (macroObjList != NULL && *macroObjList != -1) {
-        // grab preset ID
+        // Grab preset ID
         s32 presetID = (*macroObjList & 0x1FF) - 31; // Preset identifier for MacroObjectPresets array
         if (presetID < 0) { break; }
 
-        // parse respawn info
+        // Parse respawn info
         macroObjList += 4;
         s16* respawnInfo = macroObjList++;
 
-        // check for special cases
+        // Check for special cases
         u16 index = respawnInfo - area->macroObjects;
         if (area->macroObjectsAltered[index] != 0) {
-            *macroSpecialCount = *macroSpecialCount + 1;
-            packet_write(&p, &index, sizeof(u16));
-            packet_write(&p, respawnInfo, sizeof(s16));
+            macroSpecialCount += 1;
+            datagram_add_uint16(&p.dg, index);
+            datagram_add_int16(&p.dg, *respawnInfo);
             LOG_INFO("tx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         }
     }
+    
+    // Update the amount of special cases.
+    restoreCursorPosition = datagram_cursor_position(&p.dg);
+    datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, macroSpecialCount);
+    datagram_seek(&p.dg, restoreCursorPosition);
 
-    // send the packet if there are deletions
-    if (*macroDeletionCount > 0 || *macroSpecialCount > 0) {
+    // Send the packet if there are deletions
+    if (macroDeletionCount > 0 || macroSpecialCount > 0) {
         network_send_to(destNp->localIndex, &p);
-        LOG_INFO("tx macro for area %d (count %d, %d)", areaIndex, *macroDeletionCount, *macroSpecialCount);
+        LOG_INFO("tx macro for area %d (count %d, %d)", areaIndex, macroDeletionCount, macroSpecialCount);
     }
+    packet_clear(&p);
 }
 
 void network_send_level_macro(struct NetworkPlayer* destNp) {

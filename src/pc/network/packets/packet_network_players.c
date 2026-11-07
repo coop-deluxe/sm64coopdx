@@ -40,6 +40,7 @@ static void network_send_to_network_players(u8 sendToLocalIndex) {
     }
 
     network_send_to(sendToLocalIndex, &p);
+    packet_clear(&p);
     LOG_INFO("sent list of %d network players to %d", connectedCount, sendToLocalIndex);
 }
 
@@ -48,6 +49,7 @@ void network_send_network_players_request(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_NETWORK_PLAYERS_REQUEST, true, PLMT_NONE);
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    packet_clear(&p);
     LOG_INFO("sending network players request");
 }
 

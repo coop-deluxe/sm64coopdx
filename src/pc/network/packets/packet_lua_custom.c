@@ -7,7 +7,6 @@
 
 void network_send_lua_custom(bool broadcast) {
     lua_State* L = gLuaState;
-    u16 zero = 0;
     s32 paramIndex = 1;
 
     if (!L) {
@@ -15,14 +14,14 @@ void network_send_lua_custom(bool broadcast) {
         return;
     }
 
-    // figure out mod index
+    // Figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
 
-    // get local index
+    // Get local index
     s32 toLocalIndex = 0;
     if (!broadcast) {
         toLocalIndex = smlua_to_integer(L, paramIndex++);
@@ -36,63 +35,78 @@ void network_send_lua_custom(bool broadcast) {
         }
     }
 
-    // get reliability
+    // Get reliability
     bool reliability = smlua_to_boolean(L, paramIndex++);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Invalid 'reliable' type");
         return;
     }
 
-    // write packet header
+    // Write packet header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_CUSTOM, reliability, PLMT_NONE);
-    packet_write(&p, &modIndex, sizeof(u16));
-    u8* keyCount = &p.buffer[p.cursor];
-    packet_write(&p, &zero, sizeof(u8));
+    datagram_add_uint16(&p.dg, modIndex);
+    
+    // Write our current key count.
+    u32 cursorPosition = datagram_length(&p.dg);
+    u8 keyCount = 0;
+    datagram_add_uint8(&p.dg, keyCount);
 
-    // make sure value passed in is a table
+    // Make sure value passed in is a table
     s32 tableIndex = paramIndex;
     if (lua_type(L, tableIndex) != LUA_TTABLE) {
         LOG_LUA_LINE("Tried to send a packet with a non-table");
+        packet_clear(&p);
         return;
     }
 
-    // iterate table
+    // Iterate table
     s32 iterateIndex = lua_gettop(L);
     lua_pushnil(L);  // first key
     while (lua_next(L, iterateIndex) != 0) {
-        // convert and write key
+        // Convert and write key
         struct LSTNetworkType lntKey = smlua_to_lnt(L, -2);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert key to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
+            packet_clear(&p);
             return;
         }
 
-        // convert and write value
+        // Convert and write value
         struct LSTNetworkType lntValue = smlua_to_lnt(L, -1);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert value to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntValue)) {
+            packet_clear(&p);
             return;
         }
 
-        // increment key count
-        *keyCount = *keyCount + 1;
-        lua_pop(L, 1); // pop value
+        // Increment key count
+        keyCount += 1;
+        lua_pop(L, 1); // Pop value
     }
-    lua_pop(L, 1); // pop key
+    lua_pop(L, 1); // Pop key
+    
+    // Update the current key count.
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
+    datagram_seek(&p.dg, cursorPosition);
+    datagram_write_uint8(&p.dg, keyCount);
+    datagram_seek(&p.dg, restoreCursorPosition);
 
-    // send packet
+    // Send packet
     if (broadcast) {
         network_send(&p);
     } else {
         network_send_to(toLocalIndex, &p);
     }
+    packet_clear(&p);
 }
 
 void network_receive_lua_custom(struct Packet* p) {
@@ -232,7 +246,7 @@ void network_receive_lua_custom_bytestring(struct Packet* p) {
     static char sBytestring[MAX_BYTESTRING_LENGTH + 1] = "";
     packet_read(p, &sBytestring, bytestringLength);
 
-    if (p->error) {
+    if (datagram_has_error(&p->dg)) {
         LOG_ERROR("Received malformed lua custom bytestring packet");
         return;
     }
