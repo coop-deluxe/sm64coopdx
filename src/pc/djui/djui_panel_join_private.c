@@ -24,7 +24,7 @@ static void djui_panel_join_private_lobbies_password_text_change(UNUSED struct D
 }
 
 static void djui_panel_join_private_lobbies_password_update_visibility(UNUSED struct DjuiBase* caller) {
-   sInputboxPassword->passwordChar[0] = sPasswordVisible ? 0 : '#';
+    sInputboxPassword->passwordChar[0] = sPasswordVisible ? 0 : '#';
 }
 
 void djui_panel_join_private_create(struct DjuiBase* caller) {
