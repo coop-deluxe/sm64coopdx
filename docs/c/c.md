@@ -34,6 +34,7 @@ This is the coding format, conventions, and style we use:
 - For `.c` files, use a corresponding `.h` file, and have it next to the `.c` file
 - For `.cpp` files, use a corresponding `.hpp` file, not a `.h` file, and have it next to the `.cpp` file
 - Headers in isolation should use `.inl`
+- Comments should start with an uppercase letter, not a lowercase letter
 
 *NOTE: To avoid confusion regarding Camel Case, always use pure camel case. For acronyms, do not treat each letter of an acronym as a separate letter, treat the whole thing as a word.*
 

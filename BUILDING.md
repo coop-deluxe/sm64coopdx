@@ -33,7 +33,7 @@ Enter `pacman -Syuu` in the prompt and hit Enter. Press `Y` when it asks if you 
 #### Install Dependencies
 
 ```sh
-pacman -S unzip make git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-glew mingw-w64-ucrt-x86_64-sdl3 mingw-w64-ucrt-x86_64-python
+pacman -S unzip make git mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-glew mingw-w64-ucrt-x86_64-sdl3 mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-pkg-config
 ```
 
 ### Linux
@@ -84,7 +84,7 @@ The final build will be found in `build/us_pc/sm64coopdx`. The extension is depe
 
 You can append [build flags](#build-flags) after your `make` or `gmake` command for any needed changes.
 
-# Build Flags
+## Build Flags
 
 - `-j`: Jobs amount, may speed up compilation. Recommended to use the number of cores, or the result of `nproc`.
 - `DISCORD_SDK [0|1]`: Enable or disable Discord Game SDK
