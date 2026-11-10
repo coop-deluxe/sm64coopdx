@@ -574,7 +574,7 @@ const GeoLayout waluigi_metal_vanish_geo_right_hand[] = {
       GEO_ANIMATED_PART(LAYER_TRANSPARENT, 114, 0, 0, waluigi_metal_right_hand_cap_shared_dl),
       GEO_ANIMATED_PART(LAYER_TRANSPARENT, 114, 0, 0, waluigi_metal_right_hand_cap_shared_dl),
       GEO_OPEN_NODE(),
-         GEO_DISPLAY_LIST(LAYER_TRANSPARENT, waluigi_metal_right_hand_cap_shared_dl_wings_transparent),
+         GEO_DISPLAY_LIST(LAYER_TRANSPARENT, waluigi_metal_right_hand_cap_shared_dl_wings),
       GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_RETURN(),
