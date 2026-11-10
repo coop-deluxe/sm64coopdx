@@ -1132,6 +1132,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     define_builtin_tex(wario_texture_eyes_down, "actors/wario/custom_wario_eyes_down_unused.rgba16.png", 64, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(wario_texture_eyes_dead, "actors/wario/custom_wario_eyes_dead.rgba16.png", 64, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(waluigi_texture_r_logo, "actors/waluigi/custom_waluigi_logo.ia16.png", 32, 32, G_IM_FMT_IA, G_IM_SIZ_16b),
+    define_builtin_tex(waluigi_texture_r_logo_color, "actors/waluigi/custom_waluigi_logo_color.ia16.png", 32, 32, G_IM_FMT_IA, G_IM_SIZ_16b),
     define_builtin_tex(waluigi_texture_hair_sideburn, "actors/waluigi/custom_waluigi_sideburn.ia16.png", 32, 32, G_IM_FMT_IA, G_IM_SIZ_16b),
     define_builtin_tex(waluigi_texture_mouth, "actors/waluigi/custom_waluigi_mouth.rgba16.png", 64, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(waluigi_texture_mouth_dead, "actors/waluigi/custom_waluigi_mouth_dead.rgba16.png", 64, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b),

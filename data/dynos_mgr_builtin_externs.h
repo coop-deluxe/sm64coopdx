@@ -1702,6 +1702,7 @@ extern ALIGNED8 const Texture wario_texture_eyes_up[];
 extern ALIGNED8 const Texture wario_texture_eyes_down[];
 extern ALIGNED8 const Texture wario_texture_eyes_dead[];
 extern ALIGNED8 const Texture waluigi_texture_r_logo[];
+extern ALIGNED8 const Texture waluigi_texture_r_logo_color[];
 extern ALIGNED8 const Texture waluigi_texture_hair_sideburn[];
 extern ALIGNED8 const Texture waluigi_texture_mouth[];
 extern ALIGNED8 const Texture waluigi_texture_mouth_dead[];
