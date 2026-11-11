@@ -15,6 +15,7 @@ extern "C" {
 #include "mods/mods.h"
 #include "splash_screen.h"
 #include "fs/fs.h"
+#include "pc/cliopts.h"
 }
 
 namespace fs = std::filesystem;
@@ -93,7 +94,12 @@ void legacy_folder_handler(void) {
     rename_tmp_folder();
 }
 
+void rom_on_drop_file(const char *path);
+
 bool main_rom_handler(void) {
+    // a launcher can hand us the player's ROM; a wrong file reports itself like a dropped one
+    if (gCLIOpts.gamePath[0]) { rom_on_drop_file(gCLIOpts.gamePath); }
+    if (gRomIsValid) { return true; }
     if (scan_path_for_rom(fs_get_write_path(""))) { return true; }
     scan_path_for_rom(sys_exe_path_dir());
     return gRomIsValid;
