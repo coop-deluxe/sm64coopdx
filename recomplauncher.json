@@ -1,0 +1,58 @@
+{
+  "$schema": "https://recomplauncher.com/schema/recomplauncher.json",
+  "format": 1,
+  "name": "Super Mario 64 Coop Deluxe",
+  "repo": "coop-deluxe/sm64coopdx",
+  "game": {
+    "kind": "iso",
+    "label": "Your Super Mario 64 (U) [!].z64 ROM, the unmodified US release.",
+    "check": { "ids": ["NSME"] }
+  },
+  "start": {
+    "program": ["sm64coopdx.exe", "sm64coopdx"],
+    "args": ["--game", "{game}", "--skip-update-check"]
+  },
+  "saves": [
+    "{local}/sm64coopdx/sm64_save_file*.bin",
+    "{local}/sm64coopdx/sm64config.txt",
+    "{config}/sm64coopdx/sm64_save_file*.bin",
+    "{config}/sm64coopdx/sm64config.txt"
+  ],
+  "folders": {
+    "saves": [
+      { "path": "{local}/sm64coopdx", "if": "{local}/sm64coopdx" },
+      { "path": "{config}/sm64coopdx" }
+    ]
+  },
+  "settings": [
+    {
+      "id": "window", "label": "Window", "in": "args",
+      "help": "Fullscreen fills your screen. Windowed keeps the game in a window.",
+      "choices": [
+        { "label": "Game's option", "args": [] },
+        { "label": "Fullscreen", "args": ["--fullscreen"] },
+        { "label": "Windowed", "args": ["--windowed"] }
+      ]
+    },
+    {
+      "id": "backend", "label": "Graphics backend", "in": "args",
+      "help": "Windows only. DirectX or OpenGL: try the other one if the picture looks wrong.",
+      "choices": [
+        { "label": "Game's option", "args": [] },
+        { "label": "DirectX", "args": ["--backend", "directx"] },
+        { "label": "OpenGL", "args": ["--backend", "opengl"] }
+      ]
+    },
+    {
+      "id": "intro", "label": "Intro", "in": "args",
+      "help": "The Peach and Lakitu intro on a new save with no stars.",
+      "choices": [
+        { "label": "Play it", "args": [] },
+        { "label": "Skip it", "args": ["--skip-intro"] }
+      ]
+    }
+  ],
+  "actions": [
+    { "id": "saves", "label": "Saves", "help": "Your saves, settings and the copy of the ROM the game keeps.", "open": "saves" }
+  ]
+}
