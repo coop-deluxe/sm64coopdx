@@ -683,9 +683,10 @@ int main(int argc, char *argv[]) {
     }
 
     // request rom if no rom is found
+    // set before the handler so it can add a note about a rejected --game file
+    set_splash_screen_setup_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
     if (!main_rom_handler()) {
         if (!gCLIOpts.hideSplashScreen) {
-            set_splash_screen_setup_text("No rom detected, drag & drop Super Mario 64 (U) [!].z64 on to this screen");
             while (!gRomIsValid) {
                 render_splash_screen();
             }
