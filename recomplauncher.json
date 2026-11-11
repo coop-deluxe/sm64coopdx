@@ -16,7 +16,9 @@
     "{appdata}/sm64coopdx/sm64_save_file*.bin",
     "{appdata}/sm64coopdx/sm64config.txt",
     "{appdata}/sm64ex-coop/sm64_save_file*.bin",
-    "{appdata}/sm64ex-coop/sm64config.txt"
+    "{appdata}/sm64ex-coop/sm64config.txt",
+    "{appdata}/sm64coopdx/sav",
+    "{appdata}/sm64ex-coop/sav"
   ],
   "folders": {
     "saves": [
