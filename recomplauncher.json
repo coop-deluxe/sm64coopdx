@@ -13,15 +13,16 @@
     "args": ["--game", "{game}", "--skip-update-check"]
   },
   "saves": [
-    "{local}/sm64coopdx/sm64_save_file*.bin",
-    "{local}/sm64coopdx/sm64config.txt",
-    "{config}/sm64coopdx/sm64_save_file*.bin",
-    "{config}/sm64coopdx/sm64config.txt"
+    "{appdata}/sm64coopdx/sm64_save_file*.bin",
+    "{appdata}/sm64coopdx/sm64config.txt",
+    "{appdata}/sm64ex-coop/sm64_save_file*.bin",
+    "{appdata}/sm64ex-coop/sm64config.txt"
   ],
   "folders": {
     "saves": [
-      { "path": "{local}/sm64coopdx", "if": "{local}/sm64coopdx" },
-      { "path": "{config}/sm64coopdx" }
+      { "path": "{appdata}/sm64coopdx", "if": "{appdata}/sm64coopdx" },
+      { "path": "{appdata}/sm64ex-coop", "if": "{appdata}/sm64ex-coop" },
+      { "path": "{appdata}/sm64coopdx" }
     ]
   },
   "settings": [
@@ -47,7 +48,7 @@
       "id": "intro", "label": "Intro", "in": "args",
       "help": "The Peach and Lakitu intro on a new save with no stars.",
       "choices": [
-        { "label": "Play it", "args": [] },
+        { "label": "Game's option", "args": [] },
         { "label": "Skip it", "args": ["--skip-intro"] }
       ]
     }
