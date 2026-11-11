@@ -89,16 +89,26 @@ inline static bool scan_path_for_rom(const char *dir) {
     return false;
 }
 
+static bool is_game_arg_valid(void) {
+    const char *path = gCLIOpts.gamePath;
+#if defined(_WIN32)
+    // same as dropped files: the short path survives non-ASCII folder names
+    char shortPath[SYS_MAX_PATH];
+    if (sys_windows_short_path_from_mbs(shortPath, SYS_MAX_PATH, path)) { path = shortPath; }
+#endif
+    return is_rom_valid(path);
+}
+
 extern "C" {
 void legacy_folder_handler(void) {
     rename_tmp_folder();
 }
 
-void rom_on_drop_file(const char *path);
-
 bool main_rom_handler(void) {
-    // a launcher can hand us the player's ROM; a wrong file reports itself like a dropped one
-    if (gCLIOpts.gamePath[0]) { rom_on_drop_file(gCLIOpts.gamePath); }
+    // a launcher can hand us the player's ROM; if it isn't the right one, say so and look as usual
+    if (gCLIOpts.gamePath[0] && !is_game_arg_valid()) {
+        append_to_splash_screen_setup_text("\n\\#ffc000\\The file passed with --game was not a valid, vanilla SM64 rom.");
+    }
     if (gRomIsValid) { return true; }
     if (scan_path_for_rom(fs_get_write_path(""))) { return true; }
     scan_path_for_rom(sys_exe_path_dir());
