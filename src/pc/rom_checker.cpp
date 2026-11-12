@@ -3,6 +3,7 @@
 #include <vector>
 #include <filesystem>
 #include <sstream>
+#include <cstdlib>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -16,6 +17,7 @@ extern "C" {
 #include "splash_screen.h"
 #include "fs/fs.h"
 #include "pc/cliopts.h"
+#include "pc/terminal.h"
 }
 
 namespace fs = std::filesystem;
@@ -89,8 +91,8 @@ inline static bool scan_path_for_rom(const char *dir) {
     return false;
 }
 
-static bool is_game_arg_valid(void) {
-    const char *path = gCLIOpts.gamePath;
+static bool is_rom_path_arg_valid(void) {
+    const char *path = gCLIOpts.romPath;
 #if defined(_WIN32)
     // same as dropped files: the short path survives non-ASCII folder names
     char shortPath[SYS_MAX_PATH];
@@ -105,9 +107,10 @@ void legacy_folder_handler(void) {
 }
 
 bool main_rom_handler(void) {
-    // a launcher can hand us the player's ROM; if it isn't the right one, say so and look as usual
-    if (gCLIOpts.gamePath[0] && !is_game_arg_valid()) {
-        append_to_splash_screen_setup_text("\n\\#ffc000\\The file passed with --game was not a valid, vanilla SM64 rom.");
+    // the player asked for this exact ROM, so a wrong one is an error rather than a reason to look elsewhere
+    if (gCLIOpts.romPath[0] && !is_rom_path_arg_valid()) {
+        log_to_terminal("ERROR: could not find valid vanilla us sm64 rom at the path given with --rom-path\n");
+        exit(1);
     }
     if (gRomIsValid) { return true; }
     if (scan_path_for_rom(fs_get_write_path(""))) { return true; }

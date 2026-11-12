@@ -20,7 +20,7 @@ struct CLIOptions {
 #endif
     char savePath[SYS_MAX_PATH];
     char configFile[SYS_MAX_PATH];
-    char gamePath[SYS_MAX_PATH];
+    char romPath[SYS_MAX_PATH];
     unsigned int fullscreen;
     unsigned int width;
     unsigned int height;
