@@ -370,8 +370,8 @@ inline static void buffer_audio(void) {
 
     if (!shouldMute) {
         set_sequence_player_volume(SEQ_PLAYER_LEVEL, (f32)configMusicVolume / 127.0f * (f32)gLuaVolumeLevel / 127.0f);
-        set_sequence_player_volume(SEQ_PLAYER_SFX,   (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
-        set_sequence_player_volume(SEQ_PLAYER_ENV,   (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f);
+        set_sequence_player_volume(SEQ_PLAYER_SFX, (f32)configSfxVolume / 127.0f * (f32)gLuaVolumeSfx / 127.0f);
+        set_sequence_player_volume(SEQ_PLAYER_ENV, (f32)configEnvVolume / 127.0f * (f32)gLuaVolumeEnv / 127.0f);
     }
 
     int samplesLeft = gAudioApi->buffered();

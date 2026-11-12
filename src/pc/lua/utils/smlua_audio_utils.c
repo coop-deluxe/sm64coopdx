@@ -244,8 +244,13 @@ static struct ModAudio *find_mod_audio(const char *filepath) {
     return NULL;
 }
 
-struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
+struct ModAudio *audio_load_internal(const char *filename, enum ModAudioType type, struct ModAudio *audio) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
+    const char *filepath = filename;
+    if (audio) {
+        filepath = audio->filepath;
+        goto load;
+    }
 
     // check file type
     bool validFileType = false;
@@ -263,7 +268,6 @@ struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
         return NULL;
     }
 
-    const char *filepath = filename;
     if (!is_mod_fs_file(filename)) {
 
         // normalize filename
@@ -291,7 +295,7 @@ struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
     }
 
     // find stream in ModAudio list
-    struct ModAudio *audio = find_mod_audio(filepath);
+    audio = find_mod_audio(filepath);
     if (audio && audio->loaded) {
         if (type != audio->type) {
             LOG_LUA_LINE("Tried to load a %s, when a %s already exists for '%s'", sModAudioTypes[type], sModAudioTypes[audio->type], filename);
@@ -315,6 +319,7 @@ struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
         }
     }
 
+load:
     void *buffer = NULL;
     u32 size = 0;
     bool decoderInit = false;
@@ -400,6 +405,10 @@ error:
         dynamic_pool_free(sModAudioPool, audio);
     }
     return NULL;
+}
+
+struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
+    audio_load_internal(filename, type, NULL);
 }
 
 void audio_stream_play(struct ModAudio *audio, bool restart, f32 volume) {
@@ -511,9 +520,7 @@ void audio_destroy(struct ModAudio *audio) {
 void audio_reload(struct ModAudio *audio) {
     if (audio->copy) { audio = audio->parent; }
     if (audio->loaded) { audio_destroy(audio); }
-    char *filename = strrchr(audio->filepath, *PATH_SEPARATOR);
-
-    audio_load(filename, audio->type);
+    audio_load_internal(NULL, audio->type, audio);
 }
 
 f32 audio_get_volume(struct ModAudio *audio) {
@@ -578,7 +585,7 @@ void audio_get_loop_points(struct ModAudio *audio, RET u64 *loopStart, RET u64 *
 }
 
 void audio_set_loop_points(struct ModAudio *audio, s64 loopStart, OPTIONAL s64 loopEnd) {
-    if (!audio_sanity_check(audio, MA_TYPE_STREAM, "set loop points for")) { return; }
+    if (!audio_sanity_check(audio, MA_TYPE_NONE, "set loop points for")) { return; }
 
     u64 length; ma_data_source_get_length_in_pcm_frames(&audio->decoder, &length);
     if (loopStart < 0) loopStart = length + loopStart % length;
