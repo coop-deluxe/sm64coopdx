@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <sstream>
 #include <cstdlib>
+#include <cstring>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -64,11 +65,15 @@ static bool is_rom_valid(const std::string romPath) {
         if (md5->md5 == ss.str()) {
             std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
 
-            // Copy the rom to the user path
-            if (romPath != destPath && !std::filesystem::exists(std::filesystem::path(destPath))) {
+            // Copy the rom to the user path, replacing a file there that is not the same rom
+            u8 destHash[16] = { 0 };
+            mod_cache_md5(destPath.c_str(), destHash);
+            bool destIsSameRom = !memcmp(destHash, dataHash, 16);
+            if (romPath != destPath && !destIsSameRom) {
                 std::filesystem::copy_file(
                     std::filesystem::path(romPath),
-                    std::filesystem::path(destPath)
+                    std::filesystem::path(destPath),
+                    std::filesystem::copy_options::overwrite_existing
                 );
             }
 
