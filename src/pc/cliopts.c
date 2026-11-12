@@ -77,7 +77,12 @@ bool parse_cli_opts(int argc, char* argv[]) {
         } else if (!strcmp(argv[i], "--configfile") && (i + 1) < argc) {
             arg_string("--configfile", argv[++i], gCLIOpts.configFile, SYS_MAX_PATH);
         } else if (!strcmp(argv[i], "--rom-path") && (i + 1) < argc) {
-            arg_string("--rom-path", argv[++i], gCLIOpts.romPath, SYS_MAX_PATH);
+            // an empty or too-long path must not quietly fall back to the normal ROM search
+            const char *romPathArg = argv[++i];
+            if (romPathArg[0] == '\0' || !arg_string("--rom-path", romPathArg, gCLIOpts.romPath, SYS_MAX_PATH)) {
+                fprintf(stderr, "ERROR: --rom-path needs a valid path\n");
+                exit(1);
+            }
         } else if (!strcmp(argv[i], "--hide-splash-screen")) {
             gCLIOpts.hideSplashScreen = true;
         } else if (!strcmp(argv[i], "--fullscreen")) {
