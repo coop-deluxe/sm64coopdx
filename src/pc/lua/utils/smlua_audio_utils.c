@@ -246,6 +246,8 @@ static struct ModAudio *find_mod_audio(const char *filepath) {
 
 struct ModAudio *audio_load_internal(const char *filename, enum ModAudioType type, struct ModAudio *audio) {
     if (!sModAudioPool) { smlua_audio_custom_init(); }
+
+    bool brandNew = false;
     const char *filepath = filename;
     if (audio) {
         filepath = audio->filepath;
@@ -295,18 +297,16 @@ struct ModAudio *audio_load_internal(const char *filename, enum ModAudioType typ
     }
 
     // find stream in ModAudio list
-    audio = find_mod_audio(filepath);
-    if (audio && audio->loaded) {
-        if (type != audio->type) {
-            LOG_LUA_LINE("Tried to load a %s, when a %s already exists for '%s'", sModAudioTypes[type], sModAudioTypes[audio->type], filename);
-            return NULL;
+    if ((audio = find_mod_audio(filepath)) != NULL) {
+        if (audio->loaded) {
+            if (type != audio->type) {
+                LOG_LUA_LINE("Tried to load a %s, when a %s already exists for '%s'", sModAudioTypes[type], sModAudioTypes[audio->type], filename);
+                return NULL;
+            }
+            return audio;
         }
-        return audio;
-    }
-
-    // allocate in ModAudio pool if needed
-    bool brandNew = (audio == NULL);
-    if (brandNew) {
+    } else { // allocate in ModAudio pool
+        brandNew = true;
         audio = dynamic_pool_alloc(sModAudioPool, sizeof(struct ModAudio));
         if (!audio) {
             LOG_LUA_LINE("Could not allocate space for new mod audio!");
@@ -408,7 +408,7 @@ error:
 }
 
 struct ModAudio *audio_load(const char *filename, enum ModAudioType type) {
-    audio_load_internal(filename, type, NULL);
+    return audio_load_internal(filename, type, NULL);
 }
 
 void audio_stream_play(struct ModAudio *audio, bool restart, f32 volume) {
