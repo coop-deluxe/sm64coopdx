@@ -44,18 +44,18 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     // Write header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_MACRO, true, PLMT_NONE);
-    datagram_add_int16(&p.dg, gCurrCourseNum);
-    datagram_add_int16(&p.dg, gCurrActStarNum);
-    datagram_add_int16(&p.dg, gCurrLevelNum);
-    datagram_add_int16(&p.dg, gCurrAreaIndex);
+    packet_write_int16(&p, gCurrCourseNum);
+    packet_write_int16(&p, gCurrActStarNum);
+    packet_write_int16(&p, gCurrLevelNum);
+    packet_write_int16(&p, gCurrAreaIndex);
 
     // Write this areas index
-    datagram_add_uint8(&p.dg, areaIndex);
+    packet_write_uint8(&p, areaIndex);
 
     // Write the current amount of deletions.
     u8 macroDeletionCount = 0;
     u32 cursorPosition = datagram_length(&p.dg);
-    datagram_add_uint8(&p.dg, macroDeletionCount);
+    packet_write_uint8(&p, macroDeletionCount);
 
     // Loop through macro objects for deletions
     s16 *macroObjList = area->macroObjects;
@@ -72,7 +72,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         if (((*respawnInfo >> 8) & RESPAWN_INFO_DONT_RESPAWN) == RESPAWN_INFO_DONT_RESPAWN) {
             macroDeletionCount += 1;
             u16 offset = respawnInfo - area->macroObjects;
-            datagram_add_uint16(&p.dg, offset);
+            packet_write_uint16(&p, offset);
             LOG_INFO("tx macro: offset %d", offset);
         }
     }
@@ -80,13 +80,13 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     // Update the current amount of deletions.
     u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    datagram_write_uint8(&p.dg, macroDeletionCount);
+    packet_write_uint8(&p, macroDeletionCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Write the amount of special cases.
     u8 macroSpecialCount = 0;
     cursorPosition = datagram_length(&p.dg);
-    datagram_add_uint8(&p.dg, macroSpecialCount);
+    packet_write_uint8(&p, macroSpecialCount);
 
     // loop through macro objects for special cases
     macroObjList = area->macroObjects;
@@ -103,8 +103,8 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
         u16 index = respawnInfo - area->macroObjects;
         if (area->macroObjectsAltered[index] != 0) {
             macroSpecialCount += 1;
-            datagram_add_uint16(&p.dg, index);
-            datagram_add_int16(&p.dg, *respawnInfo);
+            packet_write_uint16(&p, index);
+            packet_write_int16(&p, *respawnInfo);
             LOG_INFO("tx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         }
     }
@@ -112,7 +112,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     // Update the amount of special cases.
     restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    datagram_write_uint8(&p.dg, macroSpecialCount);
+    packet_write_uint8(&p, macroSpecialCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Send the packet if there are deletions
@@ -139,19 +139,23 @@ void network_send_level_macro(struct NetworkPlayer* destNp) {
 }
 
 void network_receive_level_macro(struct Packet* p) {
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum, sizeof(s16));
-    packet_read(p, &actNum,    sizeof(s16));
-    packet_read(p, &levelNum,  sizeof(s16));
-    packet_read(p, &areaIndex, sizeof(s16));
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 3) + (sizeof(s16) * 4));
+    
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }
 
-    u8 thisAreaIndex;
-    packet_read(p, &thisAreaIndex, sizeof(u8));
+    u8 thisAreaIndex = packet_read_uint8(p);
     if (thisAreaIndex >= MAX_AREAS) {
         LOG_ERROR("Receiving 'location response' with invalid areaIndex!");
         return;
@@ -162,13 +166,11 @@ void network_receive_level_macro(struct Packet* p) {
     }
 
     // read and execute macro deletions
-    u8 macroDeletionCount;
-    packet_read(p, &macroDeletionCount, sizeof(u8));
+    u8 macroDeletionCount = packet_read_uint8(p);
     LOG_INFO("rx macro (count %d)", macroDeletionCount);
 
     while (macroDeletionCount-- > 0) {
-        u16 index;
-        packet_read(p, &index, sizeof(u16));
+        u16 index = packet_read_uint16(p);
         LOG_INFO("rx macro deletion: index %d", index);
 
         // mark respawninfo as dont respawn
@@ -191,14 +193,13 @@ void network_receive_level_macro(struct Packet* p) {
     }
 
     // read and execute macro specials
-    u8 macroSpecialCount;
-    packet_read(p, &macroSpecialCount, sizeof(u8));
+    u8 macroSpecialCount = packet_read_uint8(p);
     while (macroSpecialCount-- > 0) {
-        u16 index;
-        packet_read(p, &index, sizeof(u16));
-
+        u16 index = packet_read_uint16(p);
+        
         s16* respawnInfo = gAreaData[thisAreaIndex].macroObjects + index;
-        packet_read(p, respawnInfo, sizeof(s16));
+        *respawnInfo = packet_read_int16(p);
+        
         LOG_INFO("rx macro special: index %d, respawnInfo %d", index, *respawnInfo);
         gAreaData[thisAreaIndex].macroObjectsAltered[index] = true;
 

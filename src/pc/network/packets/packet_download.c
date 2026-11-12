@@ -380,7 +380,7 @@ void network_receive_download(struct Packet* p) {
     // Read the chunk
     u64 receiveOffset = packet_read_uint64(p);
     u64 chunkLength = packet_read_uint64(p);
-    if (chunkLength > CHUNK_SIZE) {
+    if (chunkLength > CHUNK_SIZE || chunkLength > packet_get_remaining_size(p)) {
         LOG_ERROR("Received improper chunk length");
         return;
     }
