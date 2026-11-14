@@ -37,6 +37,8 @@ void delta_interpolate_normal(s8* res, s8* a, s8* b, f32 delta);
 void delta_interpolate_rgba(u8* res, u8* a, u8* b, f32 delta);
 void delta_interpolate_mtx(Mtx* out, Mtx* a, Mtx* b, f32 delta);
 void detect_and_skip_mtx_interpolation(Mtx** mtxPrev, Mtx** mtx);
+void mtx_decompose(Mtx* mat, f32* tranfsOut);
+void mtx_interpolate_staged(Mtx* out, const f32* tranfsA, f32* tranfsB, f32 delta);
 
 void str_seperator_concat(char *output_buffer, int buffer_size, char** strings, int num_strings, char* seperator);
 void open_url(const char* url);
