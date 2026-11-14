@@ -157,6 +157,10 @@ void network_receive_level_respawn_info(struct Packet* p) {
     packet_read(p, &actNum,          sizeof(s16));
     packet_read(p, &levelNum,        sizeof(s16));
     packet_read(p, &areaIndex,       sizeof(s16));
+    if (areaIndex >= MAX_AREAS) {
+        LOG_ERROR("network_receive_level_respawn_info: Received area index is invalid");
+        return;
+    }
 
     // read object info
     bool isMacroObject;

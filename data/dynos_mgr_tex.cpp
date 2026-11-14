@@ -1,4 +1,5 @@
 #include <map>
+#include <unordered_map>
 #include <set>
 #include <string>
 #include <vector>
@@ -45,7 +46,8 @@ static std::vector<std::pair<std::string, DataNode<TexData> *>> &DynosCustomTexs
     return sDynosCustomTexs;
 }
 
-static bool sDynosDumpTextureCache = false;
+// Texture node cache for faster lookup
+static std::unordered_map<void *, DataNode<TexData> *> sDynosTextureNodeCache;
 
 //
 // Conversion
@@ -308,55 +310,6 @@ static bool DynOS_Tex_Cache(THN **aOutput, DataNode<TexData> *aNode, s32 aTile, 
 }
 
 //
-// Retrieve cache
-//
-
-#define TEX_RETRIEVE_CACHE_BITS 9
-#define TEX_RETRIEVE_CACHE_SIZE (1u << TEX_RETRIEVE_CACHE_BITS)
-#define TEX_RETRIEVE_CACHE_MASK (TEX_RETRIEVE_CACHE_SIZE - 1u)
-
-struct TexRetrieveCacheEntry {
-    void *ptr;
-    DataNode<TexData> *node;
-    u32 version;
-};
-
-static u32 sTexRegistryVersion = 1;
-static TexRetrieveCacheEntry sTexRetrieveCache[TEX_RETRIEVE_CACHE_SIZE];
-
-static inline u32 DynOS_Tex_CacheIndex(void *aPtr) {
-    return ((u32)(((uintptr_t)aPtr) >> 4)) & TEX_RETRIEVE_CACHE_MASK;
-}
-
-static inline void DynOS_Tex_BumpRegistryVersion(void) { sTexRegistryVersion++; }
-
-static inline void DynOS_Tex_CacheStore(void *aPtr, DataNode<TexData> *aNode) {
-    u32 index = DynOS_Tex_CacheIndex(aPtr);
-
-    // Look for a free slot in the cache
-    for (u32 i = 0; i < TEX_RETRIEVE_CACHE_SIZE; ++i) {
-        TexRetrieveCacheEntry &entry = sTexRetrieveCache[(index + i) & TEX_RETRIEVE_CACHE_MASK];
-
-        // Check if this slot is available, else get the next slot
-        if (entry.version == sTexRegistryVersion && entry.ptr != aPtr) {
-            continue;
-        }
-
-        // Found a slot, use it
-        entry.ptr = aPtr;
-        entry.node = aNode;
-        entry.version = sTexRegistryVersion;
-        return;
-    }
-
-    // All slots are unavailable, so overwrite the home slot of the hash
-    TexRetrieveCacheEntry &entry = sTexRetrieveCache[index];
-    entry.ptr = aPtr;
-    entry.node = aNode;
-    entry.version = sTexRegistryVersion;
-}
-
-//
 // Make textures valid/invalid
 //
 
@@ -364,7 +317,7 @@ void DynOS_Tex_Valid(GfxData* aGfxData) {
     for (auto &_Texture : aGfxData->mTextures) {
         DynosValidTextures().insert(_Texture);
     }
-    DynOS_Tex_BumpRegistryVersion();
+    sDynosTextureNodeCache.clear();
 }
 
 void DynOS_Tex_Invalid(GfxData* aGfxData) {
@@ -381,7 +334,7 @@ void DynOS_Tex_Update() {
         DynosValidTextures().erase(_Texture);
     }
     schedule.clear();
-    DynOS_Tex_BumpRegistryVersion();
+    sDynosTextureNodeCache.clear();
 }
 
 //
@@ -409,43 +362,39 @@ static DataNode<TexData> *DynOS_Tex_RetrieveNode(void *aPtr) {
     }
 
     // Check cache for faster lookup
-    {
-        u32 index = DynOS_Tex_CacheIndex(aPtr);
-        for (u32 i = 0; i < TEX_RETRIEVE_CACHE_SIZE; ++i) {
-            const TexRetrieveCacheEntry &entry = sTexRetrieveCache[(index + i) & TEX_RETRIEVE_CACHE_MASK];
-            if (entry.version != sTexRegistryVersion) { break; }
-            if (entry.ptr == aPtr) { return entry.node; }
-        }
+    auto _CachedNodeIt = sDynosTextureNodeCache.find(aPtr);
+    if (_CachedNodeIt != sDynosTextureNodeCache.end()) {
+        return _CachedNodeIt->second;
     }
 
     auto& _ValidTextures = DynosValidTextures();
     if (_ValidTextures.find((DataNode<TexData>*)aPtr) != _ValidTextures.end()) {
-        DynOS_Tex_CacheStore(aPtr, (DataNode<TexData>*)aPtr);
+        sDynosTextureNodeCache[aPtr] = (DataNode<TexData>*)aPtr;
         return (DataNode<TexData>*)aPtr;
     }
 
     // DynOS_Tex_GetFromData passes aPtr as `const Texture *`, the check above isn't going to find it
-    auto _TexNode = std::find_if(
+    auto _TexNodeIt = std::find_if(
         _ValidTextures.begin(), _ValidTextures.end(),
         [aPtr](DataNode<TexData> *aTexNode) {
             return aTexNode->mData && aTexNode->mData->mRawData.begin() == (Texture *) aPtr;
         }
     );
-    if (_TexNode != _ValidTextures.end()) {
-        DynOS_Tex_CacheStore(aPtr, *_TexNode);
-        return *_TexNode;
+    if (_TexNodeIt != _ValidTextures.end()) {
+        sDynosTextureNodeCache[aPtr] = *_TexNodeIt;
+        return *_TexNodeIt;
     }
 
     auto& _DynosCustomTexs = DynosCustomTexs();
     for (auto &_DynosCustomTex : _DynosCustomTexs) {
-        auto& _Node = _DynosCustomTex.second;
+        auto &_Node = _DynosCustomTex.second;
         if (aPtr == (void *) _Node->mData->mRawData.begin()) {
-            DynOS_Tex_CacheStore(aPtr, _Node);
+            sDynosTextureNodeCache[aPtr] = _Node;
             return _Node;
         }
     }
 
-    DynOS_Tex_CacheStore(aPtr, NULL);
+    sDynosTextureNodeCache[aPtr] = NULL;
     return NULL;
 }
 
@@ -509,7 +458,7 @@ void DynOS_Tex_Activate(DataNode<TexData>* aNode, bool aCustomTexture) {
 
     // Add to valid
     DynosValidTextures().insert(aNode);
-    DynOS_Tex_BumpRegistryVersion();
+    sDynosTextureNodeCache.clear();
 }
 
 void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
@@ -539,7 +488,7 @@ void DynOS_Tex_Deactivate(DataNode<TexData>* aNode) {
     // Remove from valid
     auto& _Schedule = DynosScheduledInvalidTextures();
     _Schedule.push_back(aNode);
-    DynOS_Tex_BumpRegistryVersion();
+    sDynosTextureNodeCache.clear();
 }
 
 bool DynOS_Tex_AddCustom(const SysPath &aFilename, const char *aTexName) {

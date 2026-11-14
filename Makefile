@@ -427,12 +427,13 @@ ifeq ($(filter clean distclean print-%,$(MAKECMDGOALS)),)
 
 endif
 
-#==============================================================================#
-# Extra Source Files                                                           #
-#==============================================================================#
+ifneq ($(filter sound,$(MAKECMDGOALS)),)
+  DUMMY != $(PYTHON) extract_assets.py $(VERSION) >&2 || echo FAIL
+  ifeq ($(DUMMY),FAIL)
+    $(error Failed to extract assets)
+  endif
+endif
 
-# Copy missing instrument samples from the music sound banks
-_ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 
 #==============================================================================#
 # Target Executable and Sources                                                #
@@ -441,6 +442,7 @@ _ := $(shell $(PYTHON) $(TOOLS_DIR)/copy_extended_sounds.py)
 BUILD_DIR_BASE := build
 # BUILD_DIR is the location where all build artifacts are placed
 BUILD_DIR := $(BUILD_DIR_BASE)/$(VERSION)_pc
+EXTRA_CFLAGS += --embed-dir=$(BUILD_DIR)
 
 ifeq ($(WINDOWS_BUILD),1)
 	EXE := $(BUILD_DIR)/sm64coopdx.exe
@@ -627,13 +629,14 @@ else ifeq ($(COMPILER),gcc)
   ifeq ($(OSX_BUILD),0)
 	  EXTRA_CFLAGS += -Wno-unused-result -Wno-format-truncation
   else
-	  EXTRA_CFLAGS += -Wno-unused-result -mmacosx-version-min=$(MIN_MACOS_VERSION)
+    # TODO: This is actually clang! macOS "gcc" is just a symlink to clang. Should go to the clang branch instead!
+	  EXTRA_CFLAGS += -Wno-unused-result -Wno-c23-extensions -mmacosx-version-min=$(MIN_MACOS_VERSION)
   endif
 else ifeq ($(COMPILER),clang)
   CC      := clang
   CXX     := clang++
   CPP     := clang++
-  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result
+  EXTRA_CFLAGS += -Wno-unused-function -Wno-unused-variable -Wno-unknown-warning-option -Wno-self-assign -Wno-unknown-pragmas -Wno-unused-result -Wno-c23-extensions
 else
   ifeq ($(USE_QEMU_IRIX),1)
     IRIX_ROOT := $(TOOLS_DIR)/ido5.3_compiler
@@ -759,14 +762,14 @@ DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 CC_CHECK := $(CC)
 
 ifeq ($(WINDOWS_BUILD),1)
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
+  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu23 -Wall -Wextra $(TARGET_CFLAGS) -DWINSOCK
   CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv -DWINSOCK
 
   ifeq ($(TARGET_BITS), 32)
     BACKEND_LDFLAGS += -ldbghelp
   endif
 else ifeq ($(TARGET_N64),0) # Linux / Other builds below
-  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -Wall -Wextra $(TARGET_CFLAGS)
+  CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(BACKEND_CFLAGS) $(DEF_INC_CFLAGS) -std=gnu23 -Wall -Wextra $(TARGET_CFLAGS)
   CFLAGS := $(OPT_FLAGS) $(DEF_INC_CFLAGS) $(BACKEND_CFLAGS) $(TARGET_CFLAGS) -fno-strict-aliasing -fwrapv
 else # C compiler options for N64
   CC_CHECK_CFLAGS := -fsyntax-only -fsigned-char $(CC_CFLAGS) $(TARGET_CFLAGS) -std=gnu90 -Wall -Wextra -Wno-main -DNON_MATCHING -DAVOID_UB $(DEF_INC_CFLAGS)
@@ -1167,7 +1170,7 @@ $(BUILD_DIR)/$(LANG_DIR):
 	@$(CP) -f -r $(LANG_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(MOD_DIR):
-	$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
+	@$(CP) -f -r $(MOD_DIR) $(BUILD_DIR)
 
 $(BUILD_DIR)/$(PALETTES_DIR):
 	@$(CP) -f -r $(PALETTES_DIR) $(BUILD_DIR)
@@ -1181,11 +1184,11 @@ ifeq ($(TARGET_N64),1)
 endif
 
 $(BUILD_DIR)/src/game/characters.o:   $(SOUND_SAMPLE_TABLES)
-$(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl.inc.c $(SOUND_BIN_DIR)/sound_data.tbl.inc.c $(SOUND_BIN_DIR)/sequences.bin.inc.c $(SOUND_BIN_DIR)/bank_sets.inc.c
+$(SOUND_BIN_DIR)/sound_data.o:        $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/sequences.bin $(SOUND_BIN_DIR)/bank_sets
 $(BUILD_DIR)/levels/scripts.o:        $(BUILD_DIR)/include/level_headers.h
 
 ifeq ($(VERSION),sh)
-  $(BUILD_DIR)/src/audio/load.o: $(SOUND_BIN_DIR)/bank_sets.inc.c $(SOUND_BIN_DIR)/sequences_header.inc.c $(SOUND_BIN_DIR)/ctl_header.inc.c $(SOUND_BIN_DIR)/tbl_header.inc.c
+  $(BUILD_DIR)/src/audio/load.o: $(SOUND_BIN_DIR)/bank_sets $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/tbl_header
 endif
 
 $(CRASH_TEXTURE_C_FILES): TEXTURE_ENCODING := u32
@@ -1296,7 +1299,6 @@ endif
 $(BUILD_DIR)/%.table: %.aiff
 	$(call print,Extracting codebook:,$<,$@)
 	$(V)$(AIFF_EXTRACT_CODEBOOK) $< >$@
-	$(call print,Piping:,$<,$@.inc.c)
 
 $(BUILD_DIR)/%.aifc: $(BUILD_DIR)/%.table %.aiff
 	$(call print,Encoding VADPCM:,$<,$@)
@@ -1328,7 +1330,7 @@ $(SOUND_BIN_DIR)/ctl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 $(SOUND_BIN_DIR)/tbl_header: $(SOUND_BIN_DIR)/sound_data.ctl
 	@true
 
-$(SOUND_BIN_DIR)/sequences.bin:
+$(SOUND_BIN_DIR)/sequences.bin: sound/sequences_compressed.bin
 	@$(PRINT) "$(GREEN)Decompressing:  $(BLUE)$@ $(NO_COL)\n"
 	$(V)$(PYTHON) $(TOOLS_DIR)/decompress.py sound/sequences_compressed.bin $(SOUND_BIN_DIR)/sequences.bin
 
@@ -1339,16 +1341,22 @@ $(SOUND_BIN_DIR)/%.m64: $(SOUND_BIN_DIR)/%.o
 	$(call print,Converting to M64:,$<,$@)
 	$(V)$(OBJCOPY) -j .rodata $< -O binary $@
 
+sound: sound/sequences.json sound/sound_banks/ $(SOUND_BANK_FILES) $(SOUND_SAMPLE_AIFCS) $(SOUND_SEQUENCE_DIRS) $(SOUND_SEQUENCE_FILES) $(ENDIAN_BITWIDTH)
+	@$(PRINT) "$(GREEN)Generating sound data$(NO_COL)"
+	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py $(BUILD_DIR)/sound/samples/ sound/sound_banks/ $(SOUND_BIN_DIR)/sound_data.ctl $(SOUND_BIN_DIR)/ctl_header $(SOUND_BIN_DIR)/sound_data.tbl $(SOUND_BIN_DIR)/tbl_header $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
+	@$(PRINT) "$(GREEN)...compressed$(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sound_data.tbl sound/sound_data_compressed.tbl
+	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sound_data.ctl sound/sound_data_compressed.ctl
+	@$(PRINT) "$(GREEN)Generating sequence data$(NO_COL)"
+	$(V)$(PYTHON) $(TOOLS_DIR)/assemble_sound.py --sequences $(SOUND_BIN_DIR)/sequences.bin $(SOUND_BIN_DIR)/sequences_header $(SOUND_BIN_DIR)/bank_sets sound/sound_banks/ sound/sequences.json $(SOUND_SEQUENCE_FILES) $(C_DEFINES) $$(cat $(ENDIAN_BITWIDTH))
+	@$(PRINT) "$(GREEN)...compressed$(NO_COL)\n"
+	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/bank_sets sound/bank_sets_compressed
+	$(V)$(PYTHON) $(TOOLS_DIR)/compress.py $(SOUND_BIN_DIR)/sequences.bin sound/sequences_compressed.bin
+
 
 #==============================================================================#
 # Generated Source Code Files                                                  #
 #==============================================================================#
-
-# Convert binary file to a comma-separated list of byte values for inclusion in C code
-$(BUILD_DIR)/%.inc.c: $(BUILD_DIR)/%
-	$(call print,Piping:,$<,$@)
-	$(V)hexdump -v -e '1/1 "0x%X,"' $< > $@
-	$(V)echo >> $@
 
 # Generate animation data
 $(BUILD_DIR)/assets/mario_anim_data.c: $(wildcard assets/anims/*.inc.c)
@@ -1516,7 +1524,7 @@ else
 	$(V)$(LD) $(PROF_FLAGS) -L $(BUILD_DIR) -o $@ $(O_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
 endif
 
-.PHONY: all clean distclean default diff test load libultra res
+.PHONY: all clean distclean default diff test load libultra res sound
 .PRECIOUS: $(BUILD_DIR)/bin/%.elf $(SOUND_BIN_DIR)/%.ctl $(SOUND_BIN_DIR)/%.tbl $(SOUND_SAMPLE_TABLES) $(SOUND_BIN_DIR)/%.s $(BUILD_DIR)/%
 # with no prerequisites, .SECONDARY causes no intermediate target to be removed
 .SECONDARY:

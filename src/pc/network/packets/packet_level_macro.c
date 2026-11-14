@@ -29,6 +29,10 @@ static struct Object* get_object_matching_respawn_info(s16* respawnInfo) {
 
 static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaIndex) {
     // check that the area is active
+    if (areaIndex >= MAX_AREAS) {
+        LOG_ERROR("network_send_level_macro_area: area index is invalid");
+        return;
+    }
     struct Area* area = &gAreaData[areaIndex];
     if (area->root == NULL) { return; }
 
