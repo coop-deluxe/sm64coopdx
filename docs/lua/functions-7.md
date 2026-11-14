@@ -1268,6 +1268,96 @@ Deletes all vertex buffers created by `vtx_create`
 <br />
 
 ---
+# functions from smlua_input_utils.h
+
+<br />
+
+
+## smlua_input_util_get_current_gamepad
+
+### Description
+Returns the current gamepad index in the config file
+
+### Lua Example
+`local integerValue = smlua_input_util_get_current_gamepad()`
+
+### Parameters
+- None
+
+### Returns
+- `integer`
+
+### C Prototype
+`u32 smlua_input_util_get_current_gamepad(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_input_util_start_text_input
+
+### Description
+Starts text input and grabs input focus
+
+### Lua Example
+`smlua_input_util_start_text_input()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_input_util_start_text_input(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_input_util_stop_text_input
+
+### Description
+Stops text input and loses input focus
+
+### Lua Example
+`smlua_input_util_stop_text_input()`
+
+### Parameters
+- None
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_input_util_stop_text_input(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+## smlua_input_util_text_input_active
+
+### Description
+Checks if text input is active and if you have input focus
+
+### Lua Example
+`local booleanValue = smlua_input_util_text_input_active()`
+
+### Parameters
+- None
+
+### Returns
+- `boolean`
+
+### C Prototype
+`bool smlua_input_util_text_input_active(void);`
+
+[:arrow_up_small:](#)
+
+<br />
+
+---
 # functions from smlua_level_utils.h
 
 <br />

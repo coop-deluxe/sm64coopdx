@@ -43,7 +43,7 @@ extern "C" f64 clock_elapsed_f64(void);
 
 using namespace Microsoft::WRL; // For ComPtr
 
-static SDL_Window *sSdlWindow;
+static SDL_Window *sSDLWindow;
 
 static struct {
     HWND h_wnd;
@@ -67,7 +67,7 @@ static void load_dxgi_library(void) {
     *(FARPROC *)&dxgi.CreateDXGIFactory2 = GetProcAddress(dxgi.dxgi_module, "CreateDXGIFactory2");
 }
 
-#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSdlWindow) & SDL_WINDOW_FULLSCREEN) != 0)
+#define IS_FULLSCREEN() ((SDL_GetWindowFlags(sSDLWindow) & SDL_WINDOW_FULLSCREEN) != 0)
 
 static void gfx_window_dxgi_on_resize(void) {
     if (dxgi.swap_chain.Get() != nullptr) {
@@ -101,12 +101,12 @@ static void gfx_window_dxgi_init(const char *window_title) {
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, configWindow.w);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, configWindow.h);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, SDL_WINDOW_RESIZABLE);
-    sSdlWindow = SDL_CreateWindowWithProperties(props);
+    sSDLWindow = SDL_CreateWindowWithProperties(props);
     SDL_DestroyProperties(props);
 
-    gfx_wm_set_window(sSdlWindow);
+    gfx_wm_set_window(sSDLWindow);
 
-    dxgi.h_wnd = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(sSdlWindow), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+    dxgi.h_wnd = (HWND)SDL_GetPointerProperty(SDL_GetWindowProperties(sSDLWindow), SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
 
     load_dxgi_library();
 }
@@ -159,7 +159,7 @@ void gfx_window_dxgi_create_factory_and_device(bool debug, int d3d_version, bool
     }
     create_device_fn(adapter.Get(), false);
 
-    SDL_SetWindowTitle(sSdlWindow, dxgi.window_title.c_str());
+    SDL_SetWindowTitle(sSDLWindow, dxgi.window_title.c_str());
 }
 
 ComPtr<IDXGISwapChain1> gfx_window_dxgi_create_swap_chain(IUnknown *device) {

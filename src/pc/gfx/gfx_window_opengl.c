@@ -47,8 +47,8 @@
 #define GL_MAX_SAMPLES 0x8D57
 #endif
 
-static SDL_Window *sSdlWindow;
-static SDL_GLContext sGlContext = NULL;
+static SDL_Window *sSDLWindow;
+static SDL_GLContext sGLContext = NULL;
 static bool sAppliedVsync = false;
 
   //////////////////////////
@@ -123,12 +123,12 @@ static void gfx_window_opengl_init(const char *window_title) {
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, configWindow.w);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, configWindow.h);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-    sSdlWindow = SDL_CreateWindowWithProperties(props);
+    sSDLWindow = SDL_CreateWindowWithProperties(props);
     SDL_DestroyProperties(props);
 
-    sGlContext = SDL_GL_CreateContext(sSdlWindow);
+    sGLContext = SDL_GL_CreateContext(sSDLWindow);
 
-    gfx_wm_set_window(sSdlWindow);
+    gfx_wm_set_window(sSDLWindow);
     if (gfx_window_opengl_set_vsync(configWindow.vsync)) {
         sAppliedVsync = configWindow.vsync;
     }
@@ -179,7 +179,7 @@ static bool gfx_window_opengl_start_frame(void) {
 }
 
 static void gfx_window_opengl_swap_buffers_begin(void) {
-    SDL_GL_SwapWindow(sSdlWindow);
+    SDL_GL_SwapWindow(sSDLWindow);
 }
 
 static void gfx_window_opengl_swap_buffers_end(void) {

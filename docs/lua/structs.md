@@ -24,8 +24,10 @@
 - [DjuiTheme](#DjuiTheme)
 - [DjuiThreePanelTheme](#DjuiThreePanelTheme)
 - [ExclamationBoxContent](#ExclamationBoxContent)
+- [Finger](#Finger)
 - [FirstPersonCamera](#FirstPersonCamera)
 - [FnGraphNode](#FnGraphNode)
+- [Gamepad](#Gamepad)
 - [Gfx](#Gfx)
 - [GlobalObjectAnimations](#GlobalObjectAnimations)
 - [GlobalObjectCollisionData](#GlobalObjectCollisionData)
@@ -57,6 +59,7 @@
 - [GraphNodeTranslationRotation](#GraphNodeTranslationRotation)
 - [HudDisplay](#HudDisplay)
 - [InstantWarp](#InstantWarp)
+- [Key](#Key)
 - [LakituState](#LakituState)
 - [LevelValues](#LevelValues)
 - [MarioAnimation](#MarioAnimation)
@@ -869,6 +872,18 @@
 
 <br />
 
+## Finger
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| pos | [Vec2f](structs.md#Vec2f) | read-only |
+| pressure | `number` |  |
+| touched | `boolean` |  |
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## FirstPersonCamera
 
 | Field | Type | Access |
@@ -893,6 +908,34 @@
 | Field | Type | Access |
 | ----- | ---- | ------ |
 | node | [GraphNode](structs.md#GraphNode) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## Gamepad
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| name | `string` | read-only |
+| index | `integer` | read-only |
+| playerIndex | `integer` |  |
+| buttons | `Array` <`boolean`> | read-only, starts at index 0 |
+| leftTrigger | `integer` | read-only |
+| rightTrigger | `integer` | read-only |
+| leftStick | [Vec2s](structs.md#Vec2s) | read-only |
+| rightStick | [Vec2s](structs.md#Vec2s) | read-only |
+| gyro | [Vec3f](structs.md#Vec3f) | read-only |
+| accelerometer | [Vec3f](structs.md#Vec3f) | read-only |
+| leftGyro | [Vec3f](structs.md#Vec3f) | read-only |
+| rightGyro | [Vec3f](structs.md#Vec3f) | read-only |
+| leftAccelerometer | [Vec3f](structs.md#Vec3f) | read-only |
+| rightAccelerometer | [Vec3f](structs.md#Vec3f) | read-only |
+| touchpad | `Array` <`Finger`> | read-only |
+| rumbleLowFreq | `integer` |  |
+| rumbleHighFreq | `integer` |  |
+| rumbleDurationMs | `integer` |  |
+| ledColor | [Color](structs.md#Color) | read-only |
 
 [:arrow_up_small:](#)
 
@@ -1474,6 +1517,18 @@
 | id | `integer` |  |
 | area | `integer` |  |
 | displacement | [Vec3s](structs.md#Vec3s) | read-only |
+
+[:arrow_up_small:](#)
+
+<br />
+
+## Key
+
+| Field | Type | Access |
+| ----- | ---- | ------ |
+| down | `boolean` |  |
+| pressed | `boolean` |  |
+| released | `boolean` |  |
 
 [:arrow_up_small:](#)
 

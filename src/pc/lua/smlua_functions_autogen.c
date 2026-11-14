@@ -37,6 +37,7 @@
 #include "src/pc/lua/utils/smlua_audio_utils.h"
 #include "src/pc/lua/utils/smlua_level_utils.h"
 #include "src/pc/lua/utils/smlua_anim_utils.h"
+#include "src/pc/lua/utils/smlua_input_utils.h"
 #include "src/pc/lua/utils/smlua_deprecated.h"
 #include "src/game/platform_displacement.h"
 #include "src/game/spawn_sound.h"
@@ -32140,6 +32141,66 @@ int smlua_func_vtx_delete_all(lua_State* L) {
 }
 
   /////////////////////////
+ // smlua_input_utils.h //
+/////////////////////////
+
+int smlua_func_smlua_input_util_get_current_gamepad(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_input_util_get_current_gamepad", 0, top);
+        return 0;
+    }
+
+    lua_pushinteger(L, smlua_input_util_get_current_gamepad());
+
+    return 1;
+}
+
+int smlua_func_smlua_input_util_start_text_input(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_input_util_start_text_input", 0, top);
+        return 0;
+    }
+
+    smlua_input_util_start_text_input();
+
+    return 0;
+}
+
+int smlua_func_smlua_input_util_stop_text_input(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_input_util_stop_text_input", 0, top);
+        return 0;
+    }
+
+    smlua_input_util_stop_text_input();
+
+    return 0;
+}
+
+int smlua_func_smlua_input_util_text_input_active(lua_State* L) {
+    if (L == NULL) { return 0; }
+
+    int top = lua_gettop(L);
+    if (top != 0) {
+        LOG_LUA_LINE("Improper param count for '%s': Expected %u, Received %u", "smlua_input_util_text_input_active", 0, top);
+        return 0;
+    }
+
+    lua_pushboolean(L, smlua_input_util_text_input_active());
+
+    return 1;
+}
+
+  /////////////////////////
  // smlua_level_utils.h //
 /////////////////////////
 
@@ -38299,6 +38360,12 @@ void smlua_bind_functions_autogen(void) {
     smlua_bind_function(L, "vtx_resize", smlua_func_vtx_resize);
     smlua_bind_function(L, "vtx_delete", smlua_func_vtx_delete);
     smlua_bind_function(L, "vtx_delete_all", smlua_func_vtx_delete_all);
+
+    // smlua_input_utils.h
+    smlua_bind_function(L, "smlua_input_util_get_current_gamepad", smlua_func_smlua_input_util_get_current_gamepad);
+    smlua_bind_function(L, "smlua_input_util_start_text_input", smlua_func_smlua_input_util_start_text_input);
+    smlua_bind_function(L, "smlua_input_util_stop_text_input", smlua_func_smlua_input_util_stop_text_input);
+    smlua_bind_function(L, "smlua_input_util_text_input_active", smlua_func_smlua_input_util_text_input_active);
 
     // smlua_level_utils.h
     smlua_bind_function(L, "smlua_level_util_change_area", smlua_func_smlua_level_util_change_area);
