@@ -10,6 +10,7 @@
 #ifdef COOPNET
 
 static struct DjuiInputbox* sInputboxPassword = NULL;
+static bool sPasswordVisible = false;
 
 static void djui_panel_join_private_lobbies(struct DjuiBase* caller) {
     djui_panel_join_lobbies_create(caller, sInputboxPassword->buffer);
@@ -20,6 +21,10 @@ static void djui_panel_join_private_lobbies_password_text_change(UNUSED struct D
     if (strlen(sInputboxPassword->buffer) >= 64) {
         djui_inputbox_set_text(sInputboxPassword, configJoinPassword);
     }
+}
+
+static void djui_panel_join_private_lobbies_password_update_visibility(UNUSED struct DjuiBase *caller) {
+    sInputboxPassword->passwordChar[0] = sPasswordVisible ? 0 : '#';
 }
 
 void djui_panel_join_private_create(struct DjuiBase* caller) {
@@ -37,12 +42,14 @@ void djui_panel_join_private_create(struct DjuiBase* caller) {
         djui_base_set_color(&text1->base, 220, 220, 220, 255);
 
         struct DjuiInputbox* inputbox1 = djui_inputbox_create(body, 256);
-        inputbox1->passwordChar[0] = '#';
         djui_base_set_size_type(&inputbox1->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_size(&inputbox1->base, 1.0f, 32.0f);
         djui_inputbox_set_text(inputbox1, configJoinPassword);
         djui_interactable_hook_value_change(&inputbox1->base, djui_panel_join_private_lobbies_password_text_change);
         sInputboxPassword = inputbox1;
+        djui_panel_join_private_lobbies_password_update_visibility(body);
+
+        djui_checkbox_create(body, DLANG(LOBBIES, SHOW_PASSWORD), &sPasswordVisible, djui_panel_join_private_lobbies_password_update_visibility);
 
         struct DjuiRect* rect2 = djui_rect_container_create(body, 64);
         {
