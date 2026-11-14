@@ -111,6 +111,7 @@ struct LevelValues {
     f32 ceilNormalMaxY;
     u8 skipGoddard;
     u8 skipFileSelect;
+    u8 fixAllActs;
 };
 
 extern struct LevelValues gLevelValues;

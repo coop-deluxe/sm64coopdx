@@ -15,6 +15,7 @@ extern LevelScript* gLevelScriptActive;
 
 extern u8 level_script_entry[];
 
+bool act_flags_match_act(u8 actFlags, s16 actNum);
 struct LevelCommand *level_script_execute(struct LevelCommand *cmd);
 
 #endif // LEVEL_SCRIPT_H
