@@ -42,18 +42,18 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     // Write header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_SPAWN_INFO, true, PLMT_NONE);
-    datagram_add_int16(&p.dg, gCurrCourseNum);
-    datagram_add_int16(&p.dg, gCurrActStarNum);
-    datagram_add_int16(&p.dg, gCurrLevelNum);
-    datagram_add_int16(&p.dg, gCurrAreaIndex);
+    packet_write_int16(&p, gCurrCourseNum);
+    packet_write_int16(&p, gCurrActStarNum);
+    packet_write_int16(&p, gCurrLevelNum);
+    packet_write_int16(&p, gCurrAreaIndex);
 
     // Write this areas index
-    datagram_add_uint8(&p.dg, areaIndex);
+    packet_write_uint8(&p, areaIndex);
 
     // Write the amount of deletions
     u32 cursorPosition = datagram_length(&p.dg);
     u8 spawnInfoDeletionCount = 0;
-    datagram_add_uint8(&p.dg, 0);
+    packet_write_uint8(&p, 0);
 
     // Loop through spawn infos
     struct SpawnInfo* spawnInfo = area->objectSpawnInfos;
@@ -63,7 +63,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
         // If a spawn info object was destroyed, Send its spawn info index.
         if (((spawnInfo->behaviorArg >> 8) & RESPAWN_INFO_DONT_RESPAWN) == RESPAWN_INFO_DONT_RESPAWN) {
             spawnInfoDeletionCount += 1;
-            datagram_add_uint16(&p.dg, spawnInfoIndex);
+            packet_write_uint16(&p, spawnInfoIndex);
             LOG_INFO("tx spawn info deletion: index %d", spawnInfoIndex);
         }
 
@@ -73,7 +73,7 @@ static void network_send_level_spawn_info_area(struct NetworkPlayer* destNp, u8 
     
     u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    datagram_write_uint8(&p.dg, spawnInfoDeletionCount);
+    packet_write_uint8(&p, spawnInfoDeletionCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // send the packet if there are deletions
@@ -100,18 +100,24 @@ void network_send_level_spawn_info(struct NetworkPlayer* destNp) {
 }
 
 void network_receive_level_spawn_info(struct Packet* p) {
-    s16 courseNum = datagram_read_int16(&p->dg);
-    s16 actNum = datagram_read_int16(&p->dg);
-    s16 levelNum = datagram_read_int16(&p->dg);
-    s16 areaIndex = datagram_read_int16(&p->dg);
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 2) + sizeof(u16) + (sizeof(s16) * 4));
+    
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
 
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
         LOG_ERROR("Receiving 'location response' with the wrong location!");
         return;
     }
     
-    u8 thisAreaIndex = datagram_read_uint8(&p->dg);
-    u8 spawnInfoDeletionCount = datagram_read_uint8(&p->dg);
+    u8 thisAreaIndex = packet_read_uint8(p);
+    u8 spawnInfoDeletionCount = packet_read_uint8(p);
     LOG_INFO("rx spawn info (count %d)", spawnInfoDeletionCount);
     if (spawnInfoDeletionCount <= 0) { return; }
     if (thisAreaIndex >= MAX_AREAS) {
@@ -121,7 +127,7 @@ void network_receive_level_spawn_info(struct Packet* p) {
 
     struct SpawnInfo* spawnInfo = gAreaData[thisAreaIndex].objectSpawnInfos;
     u16 spawnInfoIndex = 0;
-    u16 spawnInfoDeleteIndex = datagram_read_uint16(&p->dg);
+    u16 spawnInfoDeleteIndex = packet_read_uint16(p);
 
     while (spawnInfo != NULL && spawnInfoDeletionCount > 0) {
         if (spawnInfoIndex == spawnInfoDeleteIndex) {
@@ -139,7 +145,7 @@ void network_receive_level_spawn_info(struct Packet* p) {
                 }
             }
             spawnInfoDeletionCount--;
-            spawnInfoDeleteIndex = datagram_read_uint16(&p->dg);
+            spawnInfoDeleteIndex = packet_read_uint16(p);
         }
 
         spawnInfo = spawnInfo->next;

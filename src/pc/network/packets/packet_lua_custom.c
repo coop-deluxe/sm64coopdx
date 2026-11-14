@@ -45,12 +45,12 @@ void network_send_lua_custom(bool broadcast) {
     // Write packet header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_CUSTOM, reliability, PLMT_NONE);
-    datagram_add_uint16(&p.dg, modIndex);
+    packet_write_uint16(&p, modIndex);
     
     // Write our current key count.
     u32 cursorPosition = datagram_length(&p.dg);
     u8 keyCount = 0;
-    datagram_add_uint8(&p.dg, keyCount);
+    packet_write_uint8(&p, keyCount);
 
     // Make sure value passed in is a table
     s32 tableIndex = paramIndex;
@@ -97,7 +97,7 @@ void network_send_lua_custom(bool broadcast) {
     // Update the current key count.
     u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    datagram_write_uint8(&p.dg, keyCount);
+    packet_write_uint8(&p, keyCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Send packet
@@ -110,11 +110,15 @@ void network_send_lua_custom(bool broadcast) {
 }
 
 void network_receive_lua_custom(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + sizeof(u16));
+    
     lua_State* L = gLuaState;
-    u16 modIndex = 0;
-    u8  keyCount = 0;
-    packet_read(p, &modIndex, sizeof(u16));
-    packet_read(p, &keyCount, sizeof(u8));
+    u16 modIndex = packet_read_uint16(p);
+    u8  keyCount = packet_read_uint8(p);
 
     if (!L) {
         LOG_ERROR("Received lua custom packet when lua is dead");
@@ -160,14 +164,14 @@ void network_send_lua_custom_bytestring(bool broadcast) {
         return;
     }
 
-    // figure out mod index
+    // Figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
 
-    // get local index
+    // Get local index
     s32 toLocalIndex = 0;
     if (!broadcast) {
         toLocalIndex = smlua_to_integer(L, paramIndex++);
@@ -181,40 +185,40 @@ void network_send_lua_custom_bytestring(bool broadcast) {
         }
     }
 
-    // get reliability
+    // Get reliability
     bool reliability = smlua_to_boolean(L, paramIndex++);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Invalid 'reliable' type");
         return;
     }
 
-    // write packet header
+    // Write packet header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_CUSTOM_BYTESTRING, reliability, PLMT_NONE);
-    packet_write(&p, &modIndex, sizeof(u16));
+    packet_write_uint16(&p, modIndex);
 
-    // make sure value passed in is a string
+    // Make sure value passed in is a string
     s32 bytestringIndex = paramIndex;
     if (lua_type(L, bytestringIndex) != LUA_TSTRING) {
         LOG_LUA_LINE("Tried to send a bytestring packet with a non-string");
         return;
     }
 
-    // get string information
+    // Get the string information
     size_t totalLength = 0;
     const char* bytestring = lua_tolstring(L, bytestringIndex, &totalLength);
 
-    // check length
+    // Check the string length
     if (totalLength <= 0 || totalLength > MAX_BYTESTRING_LENGTH) {
         LOG_LUA_LINE("Tried to send a bytestring packet with an invalid length '%llu'. Must be above 0 and below '%u'", (u64)totalLength, MAX_BYTESTRING_LENGTH);
         return;
     }
 
-    // write length
+    // Write the string length
     u16 bytestringLength = totalLength;
-    packet_write(&p, &bytestringLength, sizeof(u16));
+    packet_write_uint16(&p, bytestringLength);
 
-    // write bytestring
+    // Write the byte string
     packet_write(&p, (char*)bytestring, totalLength);
 
     // send packet
@@ -226,11 +230,15 @@ void network_send_lua_custom_bytestring(bool broadcast) {
 }
 
 void network_receive_lua_custom_bytestring(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u16) * 2));
+    
     lua_State* L = gLuaState;
-    u16 modIndex = 0;
-    u16 bytestringLength = 0;
-    packet_read(p, &modIndex, sizeof(u16));
-    packet_read(p, &bytestringLength, sizeof(u16));
+    u16 modIndex = packet_read_uint16(p);
+    u16 bytestringLength = packet_read_uint16(p);
 
     if (!L) {
         LOG_ERROR("Received lua custom bytestring packet when lua is dead");
@@ -242,7 +250,7 @@ void network_receive_lua_custom_bytestring(struct Packet* p) {
         return;
     }
 
-    // read byte string
+    // Read the byte string
     static char sBytestring[MAX_BYTESTRING_LENGTH + 1] = "";
     packet_read(p, &sBytestring, bytestringLength);
 
