@@ -21,6 +21,7 @@ void network_send_request_failed(struct NetworkPlayer *toNp, u8 requestType) {
     packet_write(&p, &requestType, sizeof(u8));
 
     network_send_to(toNp->localIndex, &p);
+    packet_clear(&p);
     LOG_INFO("tx request failed");
 }
 

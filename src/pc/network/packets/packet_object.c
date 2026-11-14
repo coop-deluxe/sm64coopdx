@@ -394,6 +394,7 @@ void network_send_object_reliability_to(u8 sendToLocalIndex, struct Object* o, b
     } else {
         network_send_to(sendToLocalIndex, &p);
     }
+    packet_clear(&p);
 
     // trigger on_sent_post callback
     if (so->on_sent_post != NULL) {

@@ -97,12 +97,12 @@ static u16 get_spawn_info_index_of_object(struct Object* o) {
 void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     if (gNetworkType == NT_NONE || gNetworkPlayerLocal == NULL) { return; }
 
-    // make sure our area is valid
+    // Make sure our area is valid
     if (!gNetworkPlayerLocal->currAreaSyncValid) {
         return;
     }
 
-    // make sure we can find the object
+    // Make sure we can find the object
     u16 macroOffset    = get_macro_offset_of_object(o);
     u16 spawnInfoIndex = get_spawn_info_index_of_object(o);
     if (macroOffset == ERR_COULD_NOT_FIND_OBJECT && spawnInfoIndex == ERR_COULD_NOT_FIND_OBJECT) {
@@ -111,24 +111,22 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
     }
     bool isMacroObject = (macroOffset != ERR_COULD_NOT_FIND_OBJECT);
 
-    // write header
+    // Write header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_RESPAWN_INFO, true, PLMT_NONE);
-    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-    packet_write(&p, &gCurrActStarNum, sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
+    packet_write_int16(&p, gCurrCourseNum);
+    packet_write_int16(&p, gCurrActStarNum);
+    packet_write_int16(&p, gCurrLevelNum);
+    packet_write_int16(&p, gCurrAreaIndex);
 
-    // write object info
-    packet_write(&p, &isMacroObject,    sizeof(u8));
-    packet_write(&p, isMacroObject
-                     ? &macroOffset
-                     : &spawnInfoIndex, sizeof(u16));
-    packet_write(&p, &respawnInfoBits,  sizeof(u8));
+    // Write object info
+    packet_write_uint8(&p, isMacroObject);
+    packet_write_uint16(&p, isMacroObject ? macroOffset : spawnInfoIndex);
+    packet_write_uint8(&p, respawnInfoBits);
 
-    // send the packet
+    // Send the packet
     if (gNetworkType == NT_SERVER) {
-        // broadcast
+        // Broadcast
         for (s32 i = 1; i < MAX_PLAYERS; i++) {
             struct NetworkPlayer* np = &gNetworkPlayers[i];
             if (!np->connected)                      { continue; }
@@ -140,36 +138,39 @@ void network_send_level_respawn_info(struct Object* o, u8 respawnInfoBits) {
             struct Packet p2 = { 0 };
             packet_duplicate(&p, &p2);
             network_send_to(np->localIndex, &p2);
+            packet_clear(&p2);
             LOG_INFO("tx level respawn info to %d", np->globalIndex);
         }
     } else {
         network_send_to(gNetworkPlayerServer->localIndex, &p);
         LOG_INFO("tx level respawn info to %d", gNetworkPlayerServer->globalIndex);
     }
+    packet_clear(&p);
 }
 
 void network_receive_level_respawn_info(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u16) + (sizeof(u8) * 2) + (sizeof(s16) * 4));
+    
     LOG_INFO("rx level respawn info");
 
-    // read header
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum,       sizeof(s16));
-    packet_read(p, &actNum,          sizeof(s16));
-    packet_read(p, &levelNum,        sizeof(s16));
-    packet_read(p, &areaIndex,       sizeof(s16));
+    // Read header
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
     if (areaIndex >= MAX_AREAS) {
         LOG_ERROR("network_receive_level_respawn_info: Received area index is invalid");
         return;
     }
 
-    // read object info
-    bool isMacroObject;
-    u16 offsetOrIndex;
-    u8 respawnInfoBits;
-    packet_read(p, &isMacroObject,   sizeof(u8));
-    packet_read(p, &offsetOrIndex,   sizeof(u16));
-    packet_read(p, &respawnInfoBits, sizeof(u8));
-
+    // Read object info
+    bool isMacroObject = packet_read_uint8(p);
+    u16 offsetOrIndex = packet_read_uint16(p);
+    u8 respawnInfoBits = packet_read_uint8(p);
 
     bool levelMismatch = (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum);
     if (gNetworkType == NT_SERVER) {
@@ -192,6 +193,7 @@ void network_receive_level_respawn_info(struct Packet* p) {
             struct Packet p2 = { 0 };
             packet_duplicate(p, &p2);
             network_send_to(np->localIndex, &p2);
+            packet_clear(&p2);
         }
 
         // do not have the server apply the changes unless their level matches

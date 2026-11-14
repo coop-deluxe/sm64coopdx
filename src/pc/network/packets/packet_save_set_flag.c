@@ -15,6 +15,7 @@ void network_send_save_set_flag(s32 fileIndex, s32 courseIndex, u8 courseStars, 
     packet_write(&p, &flags,                    sizeof(u32));
     packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_save_set_flag(struct Packet* p) {

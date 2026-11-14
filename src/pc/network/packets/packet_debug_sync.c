@@ -32,18 +32,20 @@ void network_send_debug_sync(void) {
         u32 behaviorId = get_id_from_behavior((so->behavior == NULL) ? so->behavior : so->o->behavior);
         struct Packet p = { 0 };
         packet_init(&p, PACKET_DEBUG_SYNC, false, PLMT_AREA);
-        packet_write(&p, &so->id, sizeof(u32));
-        packet_write(&p, &behaviorId, sizeof(u32));
+        packet_write_uint32(&p, so->id);
+        packet_write_uint32(&p, behaviorId);
         network_send(&p);
+        packet_clear(&p);
     }
 }
 
 void network_receive_debug_sync(struct Packet* p) {
-    u32 id;
-    u32 behaviorId;
-
-    packet_read(p, &id, sizeof(u32));
-    packet_read(p, &behaviorId, sizeof(u32));
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u32) * 2));
+  
+    u32 id = packet_read_uint32(p);
+    u32 behaviorId = packet_read_uint32(p);
 
     char* behaviorName = (char*)get_behavior_name_from_id(behaviorId);
     if (!behaviorName) { behaviorName = "UNKNOWN"; }

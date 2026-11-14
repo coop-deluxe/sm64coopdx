@@ -22,6 +22,7 @@ void network_send_player_settings(void) {
     }
 
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_player_settings(struct Packet* p) {

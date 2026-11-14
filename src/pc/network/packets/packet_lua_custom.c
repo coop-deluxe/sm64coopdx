@@ -7,7 +7,6 @@
 
 void network_send_lua_custom(bool broadcast) {
     lua_State* L = gLuaState;
-    u16 zero = 0;
     s32 paramIndex = 1;
 
     if (!L) {
@@ -15,14 +14,14 @@ void network_send_lua_custom(bool broadcast) {
         return;
     }
 
-    // figure out mod index
+    // Figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
 
-    // get local index
+    // Get local index
     s32 toLocalIndex = 0;
     if (!broadcast) {
         toLocalIndex = smlua_to_integer(L, paramIndex++);
@@ -36,71 +35,90 @@ void network_send_lua_custom(bool broadcast) {
         }
     }
 
-    // get reliability
+    // Get reliability
     bool reliability = smlua_to_boolean(L, paramIndex++);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Invalid 'reliable' type");
         return;
     }
 
-    // write packet header
+    // Write packet header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_CUSTOM, reliability, PLMT_NONE);
-    packet_write(&p, &modIndex, sizeof(u16));
-    u8* keyCount = &p.buffer[p.cursor];
-    packet_write(&p, &zero, sizeof(u8));
+    packet_write_uint16(&p, modIndex);
+    
+    // Write our current key count.
+    u32 cursorPosition = datagram_length(&p.dg);
+    u8 keyCount = 0;
+    packet_write_uint8(&p, keyCount);
 
-    // make sure value passed in is a table
+    // Make sure value passed in is a table
     s32 tableIndex = paramIndex;
     if (lua_type(L, tableIndex) != LUA_TTABLE) {
         LOG_LUA_LINE("Tried to send a packet with a non-table");
+        packet_clear(&p);
         return;
     }
 
-    // iterate table
+    // Iterate table
     s32 iterateIndex = lua_gettop(L);
     lua_pushnil(L);  // first key
     while (lua_next(L, iterateIndex) != 0) {
-        // convert and write key
+        // Convert and write key
         struct LSTNetworkType lntKey = smlua_to_lnt(L, -2);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert key to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntKey)) {
+            packet_clear(&p);
             return;
         }
 
-        // convert and write value
+        // Convert and write value
         struct LSTNetworkType lntValue = smlua_to_lnt(L, -1);
         if (!gSmLuaConvertSuccess) {
             LOG_LUA_LINE("Failed to convert value to LNT (tx)");
+            packet_clear(&p);
             return;
         }
         if (!packet_write_lnt(&p, &lntValue)) {
+            packet_clear(&p);
             return;
         }
 
-        // increment key count
-        *keyCount = *keyCount + 1;
-        lua_pop(L, 1); // pop value
+        // Increment key count
+        keyCount += 1;
+        lua_pop(L, 1); // Pop value
     }
-    lua_pop(L, 1); // pop key
+    lua_pop(L, 1); // Pop key
+    
+    // Update the current key count.
+    u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
+    datagram_seek(&p.dg, cursorPosition);
+    packet_write_uint8(&p, keyCount);
+    datagram_seek(&p.dg, restoreCursorPosition);
 
-    // send packet
+    // Send packet
     if (broadcast) {
         network_send(&p);
     } else {
         network_send_to(toLocalIndex, &p);
     }
+    packet_clear(&p);
 }
 
 void network_receive_lua_custom(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + sizeof(u16));
+    
     lua_State* L = gLuaState;
-    u16 modIndex = 0;
-    u8  keyCount = 0;
-    packet_read(p, &modIndex, sizeof(u16));
-    packet_read(p, &keyCount, sizeof(u8));
+    u16 modIndex = packet_read_uint16(p);
+    u8  keyCount = packet_read_uint8(p);
 
     if (!L) {
         LOG_ERROR("Received lua custom packet when lua is dead");
@@ -146,14 +164,14 @@ void network_send_lua_custom_bytestring(bool broadcast) {
         return;
     }
 
-    // figure out mod index
+    // Figure out mod index
     if (gLuaActiveMod == NULL) {
         LOG_LUA_LINE("Could not figure out the current active mod!");
         return;
     }
     u16 modIndex = gLuaActiveMod->index;
 
-    // get local index
+    // Get local index
     s32 toLocalIndex = 0;
     if (!broadcast) {
         toLocalIndex = smlua_to_integer(L, paramIndex++);
@@ -167,40 +185,40 @@ void network_send_lua_custom_bytestring(bool broadcast) {
         }
     }
 
-    // get reliability
+    // Get reliability
     bool reliability = smlua_to_boolean(L, paramIndex++);
     if (!gSmLuaConvertSuccess) {
         LOG_LUA("Invalid 'reliable' type");
         return;
     }
 
-    // write packet header
+    // Write packet header
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_CUSTOM_BYTESTRING, reliability, PLMT_NONE);
-    packet_write(&p, &modIndex, sizeof(u16));
+    packet_write_uint16(&p, modIndex);
 
-    // make sure value passed in is a string
+    // Make sure value passed in is a string
     s32 bytestringIndex = paramIndex;
     if (lua_type(L, bytestringIndex) != LUA_TSTRING) {
         LOG_LUA_LINE("Tried to send a bytestring packet with a non-string");
         return;
     }
 
-    // get string information
+    // Get the string information
     size_t totalLength = 0;
     const char* bytestring = lua_tolstring(L, bytestringIndex, &totalLength);
 
-    // check length
+    // Check the string length
     if (totalLength <= 0 || totalLength > MAX_BYTESTRING_LENGTH) {
         LOG_LUA_LINE("Tried to send a bytestring packet with an invalid length '%llu'. Must be above 0 and below '%u'", (u64)totalLength, MAX_BYTESTRING_LENGTH);
         return;
     }
 
-    // write length
+    // Write the string length
     u16 bytestringLength = totalLength;
-    packet_write(&p, &bytestringLength, sizeof(u16));
+    packet_write_uint16(&p, bytestringLength);
 
-    // write bytestring
+    // Write the byte string
     packet_write(&p, (char*)bytestring, totalLength);
 
     // send packet
@@ -212,11 +230,15 @@ void network_send_lua_custom_bytestring(bool broadcast) {
 }
 
 void network_receive_lua_custom_bytestring(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u16) * 2));
+    
     lua_State* L = gLuaState;
-    u16 modIndex = 0;
-    u16 bytestringLength = 0;
-    packet_read(p, &modIndex, sizeof(u16));
-    packet_read(p, &bytestringLength, sizeof(u16));
+    u16 modIndex = packet_read_uint16(p);
+    u16 bytestringLength = packet_read_uint16(p);
 
     if (!L) {
         LOG_ERROR("Received lua custom bytestring packet when lua is dead");
@@ -228,11 +250,11 @@ void network_receive_lua_custom_bytestring(struct Packet* p) {
         return;
     }
 
-    // read byte string
+    // Read the byte string
     static char sBytestring[MAX_BYTESTRING_LENGTH + 1] = "";
     packet_read(p, &sBytestring, bytestringLength);
 
-    if (p->error) {
+    if (datagram_has_error(&p->dg)) {
         LOG_ERROR("Received malformed lua custom bytestring packet");
         return;
     }

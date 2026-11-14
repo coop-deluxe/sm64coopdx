@@ -12,9 +12,6 @@
 #include "pc/utils/string_linked_list.h"
 #include "../cliopts.h"
 
-#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num));
-#define GET_BIT(val, num) (((val) >> (num)) & 0x01)
-
 // Mario 64 specific externs
 extern struct MarioState gMarioStates[];
 
@@ -27,11 +24,11 @@ extern struct MarioState gMarioStates[];
                         : (gNetworkType == NT_SERVER ? "Server" : " None ")) \
 
 #ifdef DEVELOPMENT
-#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("failed assert at line %d", __LINE__); assert(_condition); } }
-#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("failed assert at line %d", __LINE__); assert(_condition); } }
+#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("Failed assert at line %d", __LINE__); assert(_condition); } }
+#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("Failed assert at line %d", __LINE__); assert(_condition); } }
 #else
-#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("failed soft assert at line %d", __LINE__); return; } }
-#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("failed soft assert at line %d", __LINE__); return _retval; } }
+#define SOFT_ASSERT(_condition) { if (!(_condition)) { LOG_ERROR("Failed soft assert at line %d", __LINE__); return; } }
+#define SOFT_ASSERT_RETURN(_condition, _retval) { if (!(_condition)) { LOG_ERROR("Failed soft assert at line %d", __LINE__); return _retval; } }
 #endif
 
 enum NetworkSystemType {

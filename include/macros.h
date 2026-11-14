@@ -18,6 +18,9 @@
 #define GLUE(a, b) a ## b
 #define GLUE2(a, b) GLUE(a, b)
 
+#define SET_BIT(val, num) ((((u8)(val)) & 0x01) << (num))
+#define GET_BIT(val, num) (((val) >> (num)) & 0x01)
+
 // Avoid compiler warnings for unused variables
 #ifdef __GNUC__
 #define UNUSED __attribute__((unused))
@@ -65,18 +68,39 @@
 #define BSWAP32(x) \
     ( (((x) >> 24) & 0x000000FF) | (((x) >>  8) & 0x0000FF00) | \
       (((x) <<  8) & 0x00FF0000) | (((x) << 24) & 0xFF000000) )
+#define BSWAP64(x) \
+    ( (((x) >> 56) & 0x00000000000000FF) | (((x) >>  8) & 0x00000000FF000000) | \
+      (((x) >> 40) & 0x000000000000FF00) | (((x) >> 24) & 0x0000000000FF0000) | \
+      (((x) << 24) & 0x0000FF0000000000) | (((x) << 40) & 0x00FF000000000000) | \
+      (((x) <<  8) & 0x000000FF00000000) | (((x) << 56) & 0xFF00000000000000) )
 
 // Convenience macros for endian conversions
 #if IS_BIG_ENDIAN
 # define BE_TO_HOST16(x) (x)
 # define BE_TO_HOST32(x) (x)
+# define BE_TO_HOST64(x) (x)
 # define LE_TO_HOST16(x) BSWAP16(x)
 # define LE_TO_HOST32(x) BSWAP32(x)
+# define LE_TO_HOST64(x) BSWAP64(x)
+# define HOST_TO_BE16(x) (x)
+# define HOST_TO_BE32(x) (x)
+# define HOST_TO_BE64(x) (x)
+# define HOST_TO_LE16(x) BSWAP16(x)
+# define HOST_TO_LE32(x) BSWAP32(x)
+# define HOST_TO_LE64(x) BSWAP64(x)
 #else
 # define BE_TO_HOST16(x) BSWAP16(x)
 # define BE_TO_HOST32(x) BSWAP32(x)
+# define BE_TO_HOST64(x) BSWAP64(x)
 # define LE_TO_HOST16(x) (x)
 # define LE_TO_HOST32(x) (x)
+# define LE_TO_HOST64(x) (x)
+# define HOST_TO_BE16(x) BSWAP16(x)
+# define HOST_TO_BE32(x) BSWAP32(x)
+# define HOST_TO_BE64(x) BSWAP64(x)
+# define HOST_TO_LE16(x) (x)
+# define HOST_TO_LE32(x) (x)
+# define HOST_TO_LE64(x) (x)
 #endif
 
 // Optimize

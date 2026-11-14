@@ -1,46 +1,8 @@
 #include <stdio.h>
 #include <zlib.h>
-#include "../network.h"
 #include "pc/network/ban_list.h"
+#include "pc/network/network.h"
 #include "pc/debuglog.h"
-
-static u32 sCompBufferLen = 0;
-static Bytef* sCompBuffer = NULL;
-
-static void increase_comp_buffer(u32 compressedLen) {
-    if (compressedLen <= sCompBufferLen && sCompBuffer) { return; }
-
-    if (sCompBuffer != NULL) { free(sCompBuffer); }
-
-    sCompBufferLen = compressedLen;
-    sCompBuffer = (Bytef*)malloc(sCompBufferLen);
-}
-
-void packet_compress(struct Packet* p, u8** compBuffer, u32* compSize) {
-    uLong sourceSize = p->dataLength + sizeof(u32);
-    uLongf compressedLen = compressBound(sourceSize);
-    increase_comp_buffer(PACKET_LENGTH);
-
-    if (sCompBuffer && compress2((Bytef*)sCompBuffer, &compressedLen, (Bytef*)p->buffer, sourceSize, Z_BEST_COMPRESSION) == Z_OK) {
-        *compBuffer = sCompBuffer;
-        *compSize = compressedLen;
-    } else {
-        *compBuffer = NULL;
-        *compSize = 0;
-    }
-}
-
-bool packet_decompress(struct Packet* p, u8* compBuffer, u32 compSize) {
-    increase_comp_buffer(PACKET_LENGTH);
-    if (!sCompBuffer) { return false; }
-    uLong decompSize = PACKET_LENGTH;
-    if (uncompress((Bytef*)p->buffer, &decompSize, (Bytef*)compBuffer, compSize) == Z_OK) {
-        p->dataLength = decompSize - sizeof(u32);
-        return true;
-    } else {
-        return false;
-    }
-}
 
 void packet_process(struct Packet* p) {
     if (gNetworkType == NT_NONE) { return; }
@@ -141,85 +103,86 @@ void packet_process(struct Packet* p) {
 
         // custom
         case PACKET_CUSTOM:                  network_receive_custom(p);                  break;
-        default: LOG_ERROR("received unknown packet: %d", p->buffer[0]);
+        default: LOG_ERROR("Received unknown packet: %d", p->packetType);
     }
 }
 
 void packet_receive(struct Packet* p) {
-    u8 packetType = (u8)p->buffer[0];
+    u8 packetType = p->packetType;
 
-    // send an ACK if requested
+    // Send an ACK if requested
     network_send_ack(p);
 
-    // refuse packets from banned players
+    // Refuse packets from banned players
     if (gNetworkType == NT_SERVER) {
         if (ban_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
-            LOG_INFO("kicking banned player");
+            LOG_INFO("Kicking banned player");
             network_send_kick(0, EKT_BANNED);
             return;
         }
     }
 
-    // refuse packets from unknown servers
+    // Refuse packets from unknown servers
     if (gNetworkServerAddr != NULL && gNetworkType == NT_CLIENT) {
         bool fromServer = (p->localIndex == UNKNOWN_LOCAL_INDEX);
         if (gNetworkPlayerServer != NULL) { fromServer = fromServer || p->localIndex == gNetworkPlayerServer->localIndex; }
         if (fromServer && !gNetworkSystem->match_addr(gNetworkServerAddr, p->addr)) {
-            LOG_INFO("refusing packet from unknown server");
+            LOG_INFO("Refusing packet from unknown server");
             return;
         }
     }
 
-    // refuse packets from unknown players other than join request
+    // Refuse packets from unknown players other than join request
     if (gNetworkType == NT_SERVER && p->localIndex == UNKNOWN_LOCAL_INDEX && !network_allow_unknown_local_index(packetType)) {
         if (gNetworkStartupTimer > 0) {
-            LOG_INFO("refusing packet from unknown player on startup, packetType: %d", packetType);
+            LOG_INFO("Refusing packet from unknown player on startup, packetType: %d", packetType);
             return;
         }
         if (packetType != PACKET_PLAYER) {
-            LOG_INFO("closing connection for packetType: %d", packetType);
+            LOG_INFO("Closing connection for packetType: %d", packetType);
             network_send_kick(0, EKT_CLOSE_CONNECTION);
         }
-        LOG_INFO("refusing packet from unknown player, packetType: %d", packetType);
+        LOG_INFO("Refusing packet from unknown player, packetType: %d", packetType);
         return;
     }
 
-    // check if we've already seen this packet
+    // Check if we've already seen this packet
     if (p->localIndex != 0 && p->localIndex != UNKNOWN_LOCAL_INDEX && p->seqId != 0 && gNetworkPlayers[p->localIndex].connected) {
         u32 packetHash = packet_hash(p);
         struct NetworkPlayer* np = &gNetworkPlayers[p->localIndex];
         for (s32 i = 0; i < MAX_RX_SEQ_IDS; i++) {
             if (np->rxSeqIds[i] == p->seqId && np->rxPacketHash[i] == packetHash) {
-                LOG_INFO("received duplicate packet %u", packetType);
+                LOG_INFO("Received duplicate packet %u", packetType);
                 return;
             }
         }
-        // remember seq id
+        // Remember seq id
         np->rxSeqIds[np->onRxSeqId] = p->seqId;
         np->rxPacketHash[np->onRxSeqId] = packetHash;
         np->onRxSeqId++;
         //if (np->onRxSeqId >= MAX_RX_SEQ_IDS) { np->onRxSeqId = 0; }
     }
 
-    // parse the packet without processing the rest
+    // Parse the packet without processing the rest
     if (packet_initial_read(p)) {
         if (gNetworkType == NT_SERVER && p->destGlobalId != PACKET_DESTINATION_BROADCAST && p->destGlobalId != 0 && packetType != PACKET_ACK && packetType != PACKET_MOD_LIST_REQUEST) {
-            // this packet is meant for someone else
+            // This packet is meant for someone else
             struct Packet p2 = { 0 };
             packet_duplicate(p, &p2);
             network_send_to(p->destGlobalId, &p2);
+            packet_clear(&p2);
         } else if (p->orderedGroupId != 0) {
-            // add the packet to the ordered bucket (may process immediately if it's in order)
+            // Add the packet to the ordered bucket (may process immediately if it's in order)
             packet_ordered_add(p);
         } else {
-            // process the packet
+            // Process the packet
             packet_process(p);
         }
     } else {
-        LOG_ERROR("packet initial read failed, packetType: %d", packetType);
+        LOG_ERROR("Packet initial read failed, packetType: %d", packetType);
     }
 
-    // broadcast packet
+    // Broadcast packet
     if (p->requestBroadcast) {
         if (gNetworkType == NT_SERVER && gNetworkSystem->requireServerBroadcast) {
             for (s32 i = 1; i < MAX_PLAYERS; i++) {

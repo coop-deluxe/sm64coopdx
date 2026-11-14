@@ -10,6 +10,7 @@ void network_send_lua_sync_table_request(void) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_SYNC_TABLE_REQUEST, true, PLMT_NONE);
     network_send_to((gNetworkPlayerServer != NULL) ? gNetworkPlayerServer->localIndex : 0, &p);
+    packet_clear(&p);
     LOG_INFO("sending lua sync table request");
 }
 
@@ -26,9 +27,9 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LUA_SYNC_TABLE, true, PLMT_NONE);
-    packet_write(&p, &seq, sizeof(u64));
-    packet_write(&p, &modRemoteIndex, sizeof(u16));
-    packet_write(&p, &lntKeyCount, sizeof(u16));
+    packet_write_uint64(&p, seq);
+    packet_write_uint16(&p, modRemoteIndex);
+    packet_write_uint16(&p, lntKeyCount);
 
     //LOG_INFO("TX SYNC (%llu):", seq);
     for (s32 i = 0; i < lntKeyCount; i++) {
@@ -45,20 +46,23 @@ void network_send_lua_sync_table(u8 toLocalIndex, u64 seq, u16 modRemoteIndex, u
     } else {
         network_send_to(toLocalIndex, &p);
     }
+    packet_clear(&p);
 }
 
 void network_receive_lua_sync_table(struct Packet* p) {
-    if (gLuaState == NULL) { return; }
+    if (p == NULL || gLuaState == NULL) { return; }
 
-    u64 seq = 0;
-    u16 modRemoteIndex = 0;
-    u16 lntKeyCount = 0;
     struct LSTNetworkType lntKeys[MAX_UNWOUND_LNT] = { 0 };
     struct LSTNetworkType lntValue = { 0 };
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u16) * 2) + sizeof(u64));
 
-    packet_read(p, &seq, sizeof(u64));
-    packet_read(p, &modRemoteIndex, sizeof(u16));
-    packet_read(p, &lntKeyCount, sizeof(u16));
+    u64 seq = packet_read_uint64(p);
+    u16 modRemoteIndex = packet_read_uint16(p);
+    u16 lntKeyCount = packet_read_uint16(p);
+
     if (lntKeyCount >= MAX_UNWOUND_LNT) { LOG_ERROR("Tried to receive too many lnt keys"); return; }
 
     //LOG_INFO("RX SYNC (%llu):", seq);
@@ -71,7 +75,7 @@ void network_receive_lua_sync_table(struct Packet* p) {
 
     if (!packet_read_lnt(p, &lntValue)) { goto cleanup; }
 
-    if (p->error) { LOG_ERROR("Packet read error"); return; }
+    if (datagram_has_error(&p->dg)) { LOG_ERROR("Packet read error"); return; }
     smlua_set_sync_table_field_from_network(seq, modRemoteIndex, lntKeyCount, lntKeys, &lntValue);
 
 cleanup:
