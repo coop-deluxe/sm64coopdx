@@ -15,14 +15,28 @@
 #include <mach-o/dyld.h>
 #endif
 
-void mods_size_enforce(struct Mods* mods) {
-    for (int i = 0; i < mods->entryCount; i++) {
-        struct Mod* mod = mods->entries[i];
-        if (mod->size >= MAX_MOD_SIZE) {
-            mod->enabled = false;
-            mod->selectable = false;
+bool mods_has_too_large_mod(void) {
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod->enabled && mod->size >= MAX_MOD_SIZE) {
+            return true;
         }
     }
+    return false;
+}
+
+bool mods_exceeds_direct_download_limit(void) {
+    u64 totalSize = 0;
+    for (int i = 0; i < gLocalMods.entryCount; i++) {
+        struct Mod* mod = gLocalMods.entries[i];
+        if (mod == NULL || !mod->enabled) { continue; }
+        u64 modSize = (u64)mod->size;
+        if (modSize > MAX_DIRECT_MOD_SIZE || totalSize > MAX_DIRECT_MOD_SIZE - modSize) {
+            return true;
+        }
+        totalSize += modSize;
+    }
+    return false;
 }
 
 static bool mods_incompatible_match(struct Mod* a, struct Mod* b) {
@@ -77,8 +91,6 @@ void mods_update_selectable(void) {
             }
         }
     }
-
-    mods_size_enforce(&gLocalMods);
 }
 
 void mods_delete_folder(char* path) {
