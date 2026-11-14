@@ -20,6 +20,7 @@ static void print_help(void) {
 #endif
     log_to_terminal("--savepath SAVEPATH       Overrides the default save/config path ('!' expands to executable path).\n");
     log_to_terminal("--configfile CONFIGNAME   Saves the configuration file as CONFIGNAME.\n");
+    log_to_terminal("--rom-path ROMPATH        Uses the vanilla US SM64 ROM at ROMPATH instead of looking for one.\n");
     log_to_terminal("--hide-splash-screen      Hides the splash screen before the menu boots up.\n");
     log_to_terminal("--fullscreen              Starts the game in full screen mode.\n");
     log_to_terminal("--windowed                Starts the game in windowed mode.\n");
@@ -75,6 +76,13 @@ bool parse_cli_opts(int argc, char* argv[]) {
             arg_string("--savepath", argv[++i], gCLIOpts.savePath, SYS_MAX_PATH);
         } else if (!strcmp(argv[i], "--configfile") && (i + 1) < argc) {
             arg_string("--configfile", argv[++i], gCLIOpts.configFile, SYS_MAX_PATH);
+        } else if (!strcmp(argv[i], "--rom-path") && (i + 1) < argc) {
+            // an empty or too-long path must not quietly fall back to the normal ROM search
+            const char *romPathArg = argv[++i];
+            if (romPathArg[0] == '\0' || !arg_string("--rom-path", romPathArg, gCLIOpts.romPath, SYS_MAX_PATH)) {
+                fprintf(stderr, "ERROR: --rom-path needs a valid path\n");
+                exit(1);
+            }
         } else if (!strcmp(argv[i], "--hide-splash-screen")) {
             gCLIOpts.hideSplashScreen = true;
         } else if (!strcmp(argv[i], "--fullscreen")) {

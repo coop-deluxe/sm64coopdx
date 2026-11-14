@@ -3,6 +3,8 @@
 #include <vector>
 #include <filesystem>
 #include <sstream>
+#include <cstdlib>
+#include <cstring>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -15,6 +17,8 @@ extern "C" {
 #include "mods/mods.h"
 #include "splash_screen.h"
 #include "fs/fs.h"
+#include "pc/cliopts.h"
+#include "pc/terminal.h"
 }
 
 namespace fs = std::filesystem;
@@ -61,11 +65,15 @@ static bool is_rom_valid(const std::string romPath) {
         if (md5->md5 == ss.str()) {
             std::string destPath = fs_get_write_path("") + std::string("baserom.") + md5->localizationName + ".z64";
 
-            // Copy the rom to the user path
-            if (romPath != destPath && !std::filesystem::exists(std::filesystem::path(destPath))) {
+            // Copy the rom to the user path, replacing a file there that is not the same rom
+            u8 destHash[16] = { 0 };
+            mod_cache_md5(destPath.c_str(), destHash);
+            bool destIsSameRom = !memcmp(destHash, dataHash, 16);
+            if (romPath != destPath && !destIsSameRom) {
                 std::filesystem::copy_file(
                     std::filesystem::path(romPath),
-                    std::filesystem::path(destPath)
+                    std::filesystem::path(destPath),
+                    std::filesystem::copy_options::overwrite_existing
                 );
             }
 
@@ -88,12 +96,28 @@ inline static bool scan_path_for_rom(const char *dir) {
     return false;
 }
 
+static bool is_rom_path_arg_valid(void) {
+    const char *path = gCLIOpts.romPath;
+#if defined(_WIN32)
+    // same as dropped files: the short path survives non-ASCII folder names
+    char shortPath[SYS_MAX_PATH];
+    if (sys_windows_short_path_from_mbs(shortPath, SYS_MAX_PATH, path)) { path = shortPath; }
+#endif
+    return is_rom_valid(path);
+}
+
 extern "C" {
 void legacy_folder_handler(void) {
     rename_tmp_folder();
 }
 
 bool main_rom_handler(void) {
+    // the player asked for this exact ROM, so a wrong one is an error rather than a reason to look elsewhere
+    if (gCLIOpts.romPath[0] && !is_rom_path_arg_valid()) {
+        log_to_terminal("ERROR: could not find valid vanilla us sm64 rom at the path given with --rom-path\n");
+        exit(1);
+    }
+    if (gRomIsValid) { return true; }
     if (scan_path_for_rom(fs_get_write_path(""))) { return true; }
     scan_path_for_rom(sys_exe_path_dir());
     return gRomIsValid;
