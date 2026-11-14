@@ -19,6 +19,7 @@
 #include <ctype.h>
 
 #include "misc.h"
+#include "yyjson.h"
 
 #include "course_table.h"
 #include "game/area.h"
@@ -727,4 +728,24 @@ void update_game(void) {
     execl(updateExecFilePath, "coopdx_updater", "--game-update", NULL);
     exit(1);
 #endif
+}
+
+yyjson_doc *get_yyjson_doc_from_path(const char *path) {
+    // get file contents and size
+    char *fileContents = NULL;
+    size_t size = 0;
+
+    if (!fs_sys_load_file(path, &fileContents, &size)) {
+        return NULL;
+    }
+
+    // get yyjson doc (must be freed)
+    yyjson_doc *doc = yyjson_read(fileContents, size, 0);
+    if (!doc) {
+        free(fileContents);
+        return NULL;
+    }
+
+    free(fileContents); // we no longer need this
+    return doc;
 }

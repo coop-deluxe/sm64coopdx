@@ -71,7 +71,7 @@ void djui_panel_client_server_settings_create(struct DjuiBase* caller) {
             djui_base_set_enabled(&inputbox1->base, false);
         }
 
-        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
+        djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_SECONDARY, djui_panel_menu_back);
     }
     djui_panel_add(caller, panel, NULL);
 }

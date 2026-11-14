@@ -13,5 +13,6 @@ struct DjuiSelectionbox {
     u8 choiceCount;
 };
 
+void djui_selectionbox_update_style(struct DjuiBase* base);
 struct DjuiSelectionbox* djui_selectionbox_create(struct DjuiBase* parent, const char* message, char* choices[], u8 choiceCount, unsigned int* value, void (*on_value_change)(struct DjuiBase*));
 void djui_selectionbox_update_value(struct DjuiBase* base);

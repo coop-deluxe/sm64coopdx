@@ -2832,22 +2832,26 @@ FILTER_COUNT   = 2 --- @type HudUtilsFilter
 FONT_LEGACY      = -1 --- @type DjuiFontType
 FONT_NORMAL      =  0 --- @type DjuiFontType
 FONT_MENU        =  1 --- @type DjuiFontType
-FONT_HUD         =  2 --- @type DjuiFontType
-FONT_ALIASED     =  3 --- @type DjuiFontType
-FONT_CUSTOM_HUD  =  4 --- @type DjuiFontType
-FONT_RECOLOR_HUD =  5 --- @type DjuiFontType
-FONT_SPECIAL     =  6 --- @type DjuiFontType
-FONT_COUNT       =  7 --- @type DjuiFontType
+FONT_MENU_DARK   =  2 --- @type DjuiFontType
+FONT_HUD         =  3 --- @type DjuiFontType
+FONT_ALIASED     =  4 --- @type DjuiFontType
+FONT_CUSTOM_HUD  =  5 --- @type DjuiFontType
+FONT_RECOLOR_HUD =  6 --- @type DjuiFontType
+FONT_SPECIAL     =  7 --- @type DjuiFontType
+FONT_CLASSIC     =  8 --- @type DjuiFontType
+FONT_COUNT       =  9 --- @type DjuiFontType
 
 --- @alias DjuiFontType
 --- | `FONT_LEGACY`
 --- | `FONT_NORMAL`
 --- | `FONT_MENU`
+--- | `FONT_MENU_DARK`
 --- | `FONT_HUD`
 --- | `FONT_ALIASED`
 --- | `FONT_CUSTOM_HUD`
 --- | `FONT_RECOLOR_HUD`
 --- | `FONT_SPECIAL`
+--- | `FONT_CLASSIC`
 --- | `FONT_COUNT`
 
 DJUI_RAINBOW_COLOR_RED    = 0 --- @type DjuiRainbowColor
@@ -2860,6 +2864,141 @@ DJUI_RAINBOW_COLOR_YELLOW = 3 --- @type DjuiRainbowColor
 --- | `DJUI_RAINBOW_COLOR_GREEN`
 --- | `DJUI_RAINBOW_COLOR_BLUE`
 --- | `DJUI_RAINBOW_COLOR_YELLOW`
+
+--- @type string
+THEMES_DIRECTORY = "themes"
+
+--- @type integer
+MAX_DJUI_THEME_NAME_LEN = 64
+
+--- @type integer
+MAX_DJUI_THEMES = 64
+
+--- @type integer
+DJUI_THEME_CENTERED_WIDTH = 1
+
+--- @type integer
+DJUI_THEME_CENTERED_HEIGHT = 0
+
+DJUI_THEME_LIGHT = 0 --- @type DjuiBuiltinThemes
+DJUI_THEME_DARK  = 1 --- @type DjuiBuiltinThemes
+DJUI_THEME_COUNT = 2 --- @type DjuiBuiltinThemes
+
+--- @alias DjuiBuiltinThemes
+--- | `DJUI_THEME_LIGHT`
+--- | `DJUI_THEME_DARK`
+--- | `DJUI_THEME_COUNT`
+
+DJUI_THEME_ELEMENT_PRIMARY                     =  0 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_HOVER               =  1 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_DOWN                =  2 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_DISABLED            =  3 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_TEXT                =  4 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED       =  5 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER              =  6 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER        =  7 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN         =  8 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED     =  9 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY                   = 10 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_HOVER             = 11 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_DOWN              = 12 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_DISABLED          = 13 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_TEXT              = 14 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_TEXT_DISABLED     = 15 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER            = 16 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_HOVER      = 17 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_DOWN       = 18 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SECONDARY_BORDER_DISABLED   = 19 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX                    = 20 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_HOVER              = 21 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_DOWN               = 22 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_DISABLED           = 23 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_TEXT               = 24 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_TEXT_PLACEHOLDER   = 25 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER             = 26 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_HOVER       = 27 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DOWN        = 28 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DISABLED    = 29 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX                    = 30 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_HOVER              = 31 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_DOWN               = 32 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_DISABLED           = 33 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER             = 34 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER       = 35 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN        = 36 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED    = 37 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER                      = 38 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_HOVER                = 39 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_DOWN                 = 40 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_DISABLED             = 41 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER               = 42 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER         = 43 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN          = 44 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED      = 45 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_TEXT                        = 46 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_TEXT_DISABLED               = 47 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE          = 48 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED = 49 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_THREE_PANEL                 = 50 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_THREE_PANEL_BORDER          = 51 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR          = 52 --- @type DjuiThemeElements
+DJUI_THEME_ELEMENT_COUNT                       = 53 --- @type DjuiThemeElements
+
+--- @alias DjuiThemeElements
+--- | `DJUI_THEME_ELEMENT_PRIMARY`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_HOVER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_DOWN`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_DISABLED`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_TEXT`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_PRIMARY_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_HOVER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_DOWN`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_TEXT`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SECONDARY_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_HOVER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_DOWN`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_DISABLED`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_TEXT`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_TEXT_PLACEHOLDER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_INPUTBOX_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_HOVER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_DOWN`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_DISABLED`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_CHECKBOX_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SLIDER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SLIDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_HOVER`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_DOWN`
+--- | `DJUI_THEME_ELEMENT_SLIDER_BORDER_DISABLED`
+--- | `DJUI_THEME_ELEMENT_TEXT`
+--- | `DJUI_THEME_ELEMENT_TEXT_DISABLED`
+--- | `DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE`
+--- | `DJUI_THEME_ELEMENT_SELECTIONBOX_IMAGE_DISABLED`
+--- | `DJUI_THEME_ELEMENT_THREE_PANEL`
+--- | `DJUI_THEME_ELEMENT_THREE_PANEL_BORDER`
+--- | `DJUI_THEME_ELEMENT_PANEL_HEADER_COLOR`
+--- | `DJUI_THEME_ELEMENT_COUNT`
 
 --- @type integer
 ENVFX_MODE_NONE = 0

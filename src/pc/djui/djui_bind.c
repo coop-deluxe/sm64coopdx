@@ -73,7 +73,8 @@ struct DjuiBind* djui_bind_create(struct DjuiBase* parent, const char* message, 
 
     for (int i = 0; i < MAX_BINDS; i++) {
         unsigned int key = configKey[i];
-        struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key), DJUI_BUTTON_STYLE_NORMAL, djui_bind_button_on_click);
+        struct DjuiButton* button = djui_button_create(&rect->base, translate_bind_to_name(key), DJUI_BUTTON_STYLE_PRIMARY, djui_bind_button_on_click);
+
         djui_base_set_size_type(&button->base, DJUI_SVT_RELATIVE, DJUI_SVT_RELATIVE);
         djui_base_set_size(&button->base, 0.33f, 1.0f);
         button->base.tag = i;

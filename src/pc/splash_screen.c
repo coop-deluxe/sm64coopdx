@@ -84,10 +84,15 @@ static void init_splash_screen(void) {
         struct DjuiText *splashDjuiText = djui_text_create(base, "\\#ff0800\\SM\\#1be700\\64\\#00b3ff\\EX\n\\#ffef00\\COOP");
         djui_base_set_location_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
         djui_base_set_location(&splashDjuiText->base, 0, 0);
-        djui_text_set_font(splashDjuiText, gDjuiFonts[1]);
+        djui_text_set_font(splashDjuiText, gDjuiFonts[configDjuiTheme.headerFont]);
+        // don't use header font scale here, keep font scale consistent, so use what
+        // ex-coop expects
+        djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale);
         djui_text_set_font_scale(splashDjuiText, gDjuiFonts[1]->defaultFontScale);
         djui_text_set_alignment(splashDjuiText, DJUI_HALIGN_CENTER, DJUI_VALIGN_CENTER);
         djui_base_set_size_type(&splashDjuiText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        // don't use header font scale here, keep font scale consistent, so use what
+        // ex-coop expects
         djui_base_set_size(&splashDjuiText->base, 1.0f, gDjuiFonts[1]->defaultFontScale * 3.0f);
 
         splashScreen->splashText = splashDjuiText;
@@ -109,11 +114,11 @@ static void init_splash_screen(void) {
         djui_base_set_location(&text->base, 0, 0);
 
         djui_base_set_size_type(&text->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
-        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[0]->defaultFontScale * 3.0f);
+        djui_base_set_size(&text->base, 1.0f, gDjuiFonts[configDjuiThemeFont]->defaultFontScale * 3.0f);
         djui_base_set_color(&text->base, 220, 220, 220, 255);
         djui_text_set_alignment(text, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-        djui_text_set_font(text, gDjuiFonts[0]);
-        djui_text_set_font_scale(text, gDjuiFonts[0]->defaultFontScale);
+        djui_text_set_font(text, gDjuiFonts[configDjuiThemeFont]);
+        djui_text_set_font_scale(text, gDjuiFonts[configDjuiThemeFont]->defaultFontScale);
 
         splashScreen->statusText = text;
     }
