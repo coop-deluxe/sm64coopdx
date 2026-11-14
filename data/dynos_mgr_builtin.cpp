@@ -1324,12 +1324,18 @@ const char *DynOS_Builtin_Anim_GetFromData(const Animation *aData) {
  // Functions Ptrs //
 ////////////////////
 
-static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
+static void *geo_rotate_3d_coin(s32 callContext, struct GraphNode *node, UNUSED void *c) {
     if (callContext == GEO_CONTEXT_RENDER) {
         struct Object *obj = (struct Object *) gCurGraphNodeObject;
-        struct GraphNodeRotation *rotNode = (struct GraphNodeRotation *) ((struct GraphNode *) node)->next;
+        struct GraphNodeRotation *rotNode = (struct GraphNodeRotation *) node->next;
+        s16 speed = (s16) ((struct GraphNodeGenerated*) node)->parameter;
+
+        if (speed == 0) {
+            speed = 0x0A00;
+        }
+
         rotNode->rotation[0] = 0;
-        rotNode->rotation[1] = obj->oAnimState * 0x0800;
+        rotNode->rotation[1] = obj->oAnimState * speed;
         rotNode->rotation[2] = 0;
         obj->oFaceAnglePitch = 0;
         obj->oMoveAnglePitch = 0;
@@ -1337,6 +1343,7 @@ static void *geo_rotate_3d_coin(s32 callContext, void *node, UNUSED void *c) {
         obj->oMoveAngleRoll = 0;
         obj->header.gfx.node.flags &= ~(GRAPH_RENDER_BILLBOARD | GRAPH_RENDER_CYLBOARD);
     }
+
     return NULL;
 }
 
