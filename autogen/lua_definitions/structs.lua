@@ -2197,6 +2197,9 @@
 --- @field public nametags integer
 --- @field public maxPlayers integer
 --- @field public pauseAnywhere integer
+--- @field public voiceChat integer
+--- @field public voiceChatFullVolRadius integer
+--- @field public voiceChatHearingRadius integer
 
 --- @class SpawnInfo
 --- @field public startPos Vec3s
@@ -2288,6 +2291,14 @@
 --- @field public height integer
 --- @field public format integer
 --- @field public size integer
+
+--- @class VoicePlayer
+--- @field public talking boolean
+--- @field public volume integer
+--- @field public channel integer
+--- @field public error VoiceChatError
+--- @field public clientMutedState VoiceChatMuteState
+--- @field public playerMutedState VoiceChatMuteState
 
 --- @class Vtx
 --- @field public x number

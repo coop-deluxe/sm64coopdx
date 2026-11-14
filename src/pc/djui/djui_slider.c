@@ -70,9 +70,9 @@ static void djui_slider_on_cursor_down(struct DjuiBase* base) {
     f32 x = slider->rect->base.elem.x;
     f32 w = slider->rect->base.elem.width;
     f32 cursorX = gCursorX;
-    cursorX = fmax(cursorX, x);
-    cursorX = fmin(cursorX, x + w);
-    *value = ((cursorX - x) / w) * (max - min) + min;
+    if (cursorX < x) *value = min;
+    else if (cursorX > x + w) *value = max;
+    else *value = ((cursorX - x) / w) * (max - min) + min;
     if (base != NULL && base->interactable != NULL && base->interactable->on_value_change != NULL) {
         base->interactable->on_value_change(base);
     }

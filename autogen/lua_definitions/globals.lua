@@ -104,3 +104,9 @@ gGlobalSyncTable = {}
 --- - This array takes in a local index, however it automatically translates to the global index
 --- - Note: Does not support tables as keys
 gPlayerSyncTable = {}
+
+--- @type VoicePlayer
+--- Voice chat related information for players
+--- - Indexed by the player's local index
+--- - Shouldn't be accessed if `gServerSettings.voiceChat == VOICECHAT_TYPE_DISABLED` is true
+gVoicePlayers = {}

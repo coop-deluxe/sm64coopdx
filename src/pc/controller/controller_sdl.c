@@ -27,6 +27,8 @@
 #include "pc/djui/djui_panel_pause.h"
 #include "pc/djui/djui_hud_utils.h"
 
+#include "pc/voice_chat.h"
+
 #define MAX_JOYBINDS 32
 #define MAX_MOUSEBINDS 32
 #define MAX_MOUSEBUTTONS 8 // arbitrary
@@ -263,6 +265,9 @@ static void controller_sdl_read(OSContPad *pad) {
         }
         sSelectedGamepad = ids[configGamepadNumber];
         SDL_free(ids);
+
+        if (configVoiceChatActivationMode == VOICECHAT_ACTMODE_PUSH_TO_TALK)
+            voicechat_set_mute(true);
 
         if (sSdlHaptic) { SDL_CloseHaptic(sSdlHaptic); sSdlHaptic = NULL; }
         if (sSdlGamepad) { SDL_CloseGamepad(sSdlGamepad); sSdlGamepad = NULL; }

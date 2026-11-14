@@ -50,6 +50,7 @@
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
 #include "pc/mods/mods.h"
+#include "pc/voice_chat.h"
 
 #include "debug_context.h"
 #include "menu/intro_geo.h"
@@ -284,9 +285,11 @@ static void select_graphics_backend(void) {
             break;
     }
 
-    if (!gAudioApi->init()) {
+    if (!gAudioApi->init(configAudioOutputDevice, configAudioInputDevice)) {
         gAudioApi = &audio_null;
     }
+
+    if (gAudioApi->record_start) gAudioApi->record_start();
 }
 
 void produce_interpolation_frames_and_delay(void) {
@@ -377,7 +380,9 @@ inline static void buffer_audio(void) {
     int samplesLeft = gAudioApi->buffered();
     u32 numAudioSamples = samplesLeft < gAudioApi->get_desired_buffered() ? SAMPLES_HIGH : SAMPLES_LOW;
     for (s32 i = 0; i < 2; i++) {
-        create_next_audio_buffer(sAudioBuffer + i * (numAudioSamples * 2), numAudioSamples);
+        s16* buffer = sAudioBuffer + i * (numAudioSamples * 2);
+        create_next_audio_buffer(buffer, numAudioSamples);
+        voicechat_mix(buffer, numAudioSamples);
     }
 
     if (!shouldMute) {
@@ -479,6 +484,7 @@ void produce_one_dummy_frame(void (*callback)(), u8 clearColorR, u8 clearColorG,
 
 void audio_shutdown(void) {
     if (gAudioApi) {
+        if (gAudioApi->record_stop) gAudioApi->record_stop();
         if (gAudioApi->shutdown) gAudioApi->shutdown();
         gAudioApi = NULL;
     }
@@ -709,6 +715,8 @@ int main(int argc, char *argv[]) {
     audio_init();
     sound_init();
     network_player_init();
+
+    voicechat_init();
 
     // initialize djui
     djui_init();
