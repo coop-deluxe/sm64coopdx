@@ -613,6 +613,8 @@ void network_update(void) {
 
     sync_objects_update();
 
+    voicechat_send_frame();
+
     // update level/area request timers
     /*struct NetworkPlayer* np = gNetworkPlayerLocal;
     if (np != NULL && !np->currLevelSyncValid) {

@@ -153,9 +153,6 @@ static void voicechat_callback(const u8* input, u32 bytes) {
     gVoicePlayer->talking = true;
 
     buffer_write(&gVoicePlayer->internal.buffer, bytes, samples);
-
-    if (voicechat_num_frames_in_buffer(&gVoicePlayer->internal.buffer) >= MIN_FRAMES_REQUIRED)
-        network_send_voicechat_frame();
 }
 
 void voicechat_init() {
@@ -223,6 +220,11 @@ bool voicechat_player_is_inited(s32 id) {
     if (id == UNKNOWN_LOCAL_INDEX) return false;
     if (id == 0) return gVoicePlayers[0].internal.encoder;
     else return gVoicePlayers[id].internal.decoder;
+}
+
+void voicechat_send_frame() {
+    if (voicechat_num_frames_in_buffer(&gVoicePlayer->internal.buffer) >= MIN_FRAMES_REQUIRED)
+        network_send_voicechat_frame();
 }
 
 u32 voicechat_encode_audio(u8* packet, u32 max_size) {
@@ -388,7 +390,7 @@ void voicechat_set_deafen(bool muted) {
 
 static void voicechat_channel_grow(s32 index) {
     struct VoiceChannel* channel = &sVoiceChannels[index];
-    if (channel->numAllocated >= sNumVoiceChannels) return;
+    if (channel->numAllocated >= (u32)sNumVoiceChannels) return;
 
     channel->canHear = realloc(channel->canHear, sizeof(bool) * sNumVoiceChannels);
     memset(channel->canHear + channel->numAllocated, 0, sizeof(bool) * (sNumVoiceChannels - channel->numAllocated));

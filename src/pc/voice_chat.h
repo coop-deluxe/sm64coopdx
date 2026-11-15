@@ -71,6 +71,8 @@ void voicechat_shutdown();
 void voicechat_init_player(s32 id);
 bool voicechat_player_is_inited(s32 id);
 
+void voicechat_send_frame();
+
 u32 voicechat_encode_audio(u8* packet, u32 max_size);
 void voicechat_decode_audio(s32 id, u8* packet, u32 packet_size);
 void voicechat_mix(s16* out_pcm, u32 num_samples);
