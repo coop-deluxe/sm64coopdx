@@ -31,6 +31,7 @@ void network_receive_voicechat_frame(struct Packet* p) {
 
     u8 global_index;
     packet_read(p, &global_index, sizeof(u8));
+    if (packet_spoofed(p, global_index)) return;
     struct NetworkPlayer* np = network_player_from_global_index(global_index);
     if (!np || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) return;
 
