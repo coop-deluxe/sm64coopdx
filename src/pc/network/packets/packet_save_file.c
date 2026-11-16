@@ -27,8 +27,8 @@ void network_receive_save_file(struct Packet* p) {
 
     u8 lastBackupSlot = gSaveFileUsingBackupSlot;
 
-    gSaveFileUsingBackupSlot = packet_read_uint8(p);
     s32 fileIndex = packet_read_int32(p);
+    gSaveFileUsingBackupSlot = packet_read_uint8(p);
 
     if (gSaveFileUsingBackupSlot != 0) { gSaveFileUsingBackupSlot = 1; }
 

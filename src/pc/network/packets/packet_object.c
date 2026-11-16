@@ -155,25 +155,31 @@ static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLo
     return so;
 }
 
-// ----- full sync ----- //
+// ----- Full Sync ----- //
 
 static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so || !so->fullObjectSync) { return; }
 
-    // write all of raw data
+    // Write all of raw data
     packet_write(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u32) * OBJECT_NUM_FIELDS);
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so || !so->fullObjectSync) { return; }
 
-    // read all of raw data
+    // Read all of raw data
     packet_read(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
-// ----- standard fields ----- //
+// ----- Standard Fields ----- //
 
 static void packet_write_object_standard_fields(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
@@ -205,6 +211,10 @@ static void packet_write_object_standard_fields(struct Packet* p, struct Object*
 
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u16) + sizeof(s16) + sizeof(s32) + (sizeof(u32) * 7) * (sizeof(f32) * 7));
     
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so || !so->hasStandardFields || so->fullObjectSync) { return; }
@@ -253,6 +263,10 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8));
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
@@ -267,11 +281,12 @@ static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) 
     // Read the extra fields
     for (u8 i = 0; i < extraFieldsCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
+        SOFT_ASSERT(packet_get_remaining_size(p) >= so->extraFieldsSizeBytes[i]);
         packet_read(p, so->extraFields[i], so->extraFieldsSizeBytes[i]);
     }
 }
 
-// ----- Only death ----- //
+// ----- Only Death ----- //
 
 static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
@@ -286,19 +301,23 @@ static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
 static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(s16));
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
     
     s16 activeFlags = packet_read_int16(p);
     if (activeFlags == ACTIVE_FLAG_DEACTIVATED) {
-        // flag the object as dead, the behavior is responsible for clean up
+        // Flag the object as dead, The behavior of the object is responsible for clean up
         so->o->oSyncDeath = 1;
         sync_object_forget(so->id);
     }
 }
 
-// ----- main send/receive ----- //
+// ----- Main Send/Receive ----- //
 
 void network_send_object(struct Object* o) {
     network_send_object_to(PACKET_DESTINATION_BROADCAST, o);
@@ -428,16 +447,18 @@ void network_send_object_reliability_to(u8 sendToLocalIndex, struct Object* o, b
 }
 
 void network_receive_object(struct Packet* p) {
-    // prevent receiving objects during credits sequence
+    if (p == NULL) { return; }
+    
+    // Prevent receiving objects during credits sequence
     if (gCurrActStarNum == 99) { return; }
 
-    // delay any objects received while we're loading the area
+    // Delay any objects received while we're loading the area
     if (!gNetworkAreaLoaded) {
         network_delayed_packet_object_remember(p);
         return;
     }
 
-    // read the header and sanity check the packet
+    // Read the header and sanity check the packet
     u8 fromLocalIndex = 0;
     struct SyncObject* so = packet_read_object_header(p, &fromLocalIndex);
     if (so == NULL) {
@@ -450,16 +471,16 @@ void network_receive_object(struct Packet* p) {
         return;
     }
 
-    // make sure no one can update an object we're holding
+    // Make sure no one can update an object we're holding
     if (gMarioStates[0].heldObj == o) { return; }
 
-    // save old pos for platform displacement
+    // Save old pos for platform displacement
     Vec3f oldPos = { 0 };
     oldPos[0] = o->oPosX;
     oldPos[1] = o->oPosY;
     oldPos[2] = o->oPosZ;
 
-    // trigger on-received callback
+    // Trigger on-received callback
     if (so->on_received_pre != NULL && so->o != NULL) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
@@ -468,22 +489,22 @@ void network_receive_object(struct Packet* p) {
         gCurrentObject = tmp;
     }
 
-    // read the rest of the packet data
+    // Read the rest of the packet data
     packet_read_object_full_sync(p, o);
     packet_read_object_standard_fields(p, o);
     packet_read_object_extra_fields(p, o);
     packet_read_object_only_death(p, o);
 
-    // deactivated
+    // Deactivated
     if (o->activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         o->oSyncDeath = 1; // Force oSyncDeath if deactivated
         sync_object_forget(so->id);
     } else if (p->reliable) {
-        // remember packet
+        // Remember packet
         packet_duplicate(p, &so->lastReliablePacket);
     }
 
-    // trigger on-received callback
+    // Trigger on-received callback
     if (so->on_received_post != NULL && so->o != NULL) {
         extern struct Object* gCurrentObject;
         struct Object* tmp = gCurrentObject;
@@ -492,7 +513,7 @@ void network_receive_object(struct Packet* p) {
         gCurrentObject = tmp;
     }
 
-    // apply platform displacement
+    // Apply platform displacement
     if (o != NULL && o->collisionData) {
         Vec3f deltaPos = { 0 };
         deltaPos[0] = o->oPosX - oldPos[0];
