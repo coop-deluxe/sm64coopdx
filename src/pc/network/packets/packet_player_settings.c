@@ -10,9 +10,9 @@ void network_send_player_settings(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_PLAYER_SETTINGS, true, PLMT_NONE);
-    packet_write(&p, &gNetworkPlayers[0].globalIndex, sizeof(u8));
+    packet_write_uint8(&p, gNetworkPlayers[0].globalIndex);
+    packet_write_uint8(&p, configPlayerModel);
     packet_write(&p, playerName, MAX_CONFIG_STRING * sizeof(u8));
-    packet_write(&p, &configPlayerModel, sizeof(u8));
     packet_write(&p, &configPlayerPalette, sizeof(struct PlayerPalette));
 
     if (gNetworkPlayerLocal != NULL) {
@@ -26,14 +26,19 @@ void network_send_player_settings(void) {
 }
 
 void network_receive_player_settings(struct Packet* p) {
-    u8 globalId;
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 2) + (MAX_CONFIG_STRING * sizeof(u8)) + sizeof(struct PlayerPalette));
+    
+    u8 globalId = packet_read_uint8(p);
+    u8 playerModel = packet_read_uint8(p);
+    
     char playerName[MAX_CONFIG_STRING] = { 0 };
-    u8 playerModel;
-    struct PlayerPalette playerPalette;
-
-    packet_read(p, &globalId, sizeof(u8));
     packet_read(p, &playerName, MAX_CONFIG_STRING * sizeof(u8));
-    packet_read(p, &playerModel, sizeof(u8));
+    
+    struct PlayerPalette playerPalette = { 0 };
     packet_read(p, &playerPalette, sizeof(struct PlayerPalette));
 
     if (globalId == gNetworkPlayers[0].globalIndex || globalId > MAX_PLAYERS) {
@@ -41,22 +46,22 @@ void network_receive_player_settings(struct Packet* p) {
         return;
     }
 
-    // anti spoof
+    // Anti-spoof
     if (packet_spoofed(p, globalId)) {
         LOG_ERROR("rx spoofed player settings");
         return;
     }
 
-    // sanity check
+    // Sanity check
     if (playerModel >= CT_MAX) { playerModel = CT_MARIO; }
 
     struct NetworkPlayer* np = network_player_from_global_index(globalId);
     if (!np) { LOG_ERROR("Failed to retrieve network player."); return; }
     if (snprintf(np->name, MAX_CONFIG_STRING, "%s", playerName) < 0) {
-        LOG_INFO("truncating player name");
+        LOG_INFO("Truncating player name to '%s'", np->name);
     }
 
-    if (np->modelIndex   == np->overrideModelIndex)   { np->overrideModelIndex   = playerModel;   }
+    if (np->modelIndex == np->overrideModelIndex) { np->overrideModelIndex   = playerModel; }
     if (memcmp(&np->palette, &np->overridePalette, sizeof(struct PlayerPalette)) == 0) { np->overridePalette = playerPalette; }
 
     np->modelIndex   = playerModel;

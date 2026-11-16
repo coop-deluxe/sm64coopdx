@@ -50,18 +50,21 @@ void network_delayed_packet_object_execute(void) {
     delayedPacketObjectTail = NULL;
 }
 
-// ----- header ----- //
+// ----- Header ----- //
 
 static void packet_write_object_header(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
+    
     u32 behaviorId = get_id_from_behavior(o->behavior);
-
-    packet_write(p, &gNetworkPlayerLocal->globalIndex, sizeof(u8));
-    packet_write(p, &o->oSyncID, sizeof(u32));
-    packet_write(p, &so->txEventId, sizeof(u16));
-    packet_write(p, &so->randomSeed, sizeof(u16));
-    packet_write(p, &behaviorId, sizeof(u32));
+    
+    packet_write_uint8(p, gNetworkPlayerLocal->globalIndex);
+    packet_write_uint32(p, o->oSyncID);
+    packet_write_uint16(p, so->txEventId);
+    packet_write_uint16(p, so->randomSeed);
+    packet_write_uint32(p, behaviorId);
 }
 
 static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* behavior) {
@@ -84,67 +87,65 @@ static bool allowable_behavior_change(struct SyncObject* so, BehaviorScript* beh
 }
 
 static struct SyncObject* packet_read_object_header(struct Packet* p, u8* fromLocalIndex) {
-    // figure out where the packet came from
-    u8 fromGlobalIndex = 0;
-    packet_read(p, &fromGlobalIndex, sizeof(u8));
+    if (p == NULL || fromLocalIndex == NULL) { return NULL; }
+  
+    // Figure out where the packet came from
+    u8 fromGlobalIndex = packet_read_uint8(p);
     struct NetworkPlayer* np = network_player_from_global_index(fromGlobalIndex);
     *fromLocalIndex = (np != NULL) ? np->localIndex : p->localIndex;
 
-    // get sync ID, sanity check
-    u32 syncId = 0;
-    packet_read(p, &syncId, sizeof(u32));
+    // Get sync ID, sanity check
+    u32 syncId = packet_read_uint32(p);
     struct SyncObject* so = sync_object_get(syncId);
     if (!so) {
-        LOG_ERROR("invalid SyncID: %d", syncId);
+        LOG_ERROR("Invalid SyncID: %d", syncId);
         return NULL;
     }
 
-    // extract object, sanity check
+    // Extract object, Sanity check
     struct Object* o = so->o;
     if (o == NULL) {
-        LOG_ERROR("invalid SyncObject for %d", syncId);
+        LOG_ERROR("Invalid SyncObject for %d", syncId);
         return NULL;
     }
 
-    // retrieve SyncObject, check if we should update using callback
+    // Retrieve SyncObject, Check if we should update using callback
     extern struct Object* gCurrentObject;
     struct Object* tmp = gCurrentObject;
     gCurrentObject = o;
     if ((so->ignore_if_true != NULL) && ((*so->ignore_if_true)() != FALSE)) {
         gCurrentObject = tmp;
-        LOG_INFO("ignored sync object due to callback");
+        LOG_INFO("Ignored sync object due to callback");
         return NULL;
     }
     gCurrentObject = tmp;
     so->clockSinceUpdate = clock_elapsed();
 
-    // make sure this is the newest event possible
-    u16 eventId = 0;
-    packet_read(p, &eventId, sizeof(u16));
+    // Make sure this is the newest event possible
+    u16 eventId = packet_read_uint16(p);
     if (so->rxEventId[*fromLocalIndex] > eventId && (u16)abs(eventId - so->rxEventId[*fromLocalIndex]) < USHRT_MAX / 2) {
-        LOG_INFO("ignored sync object due to eventId");
+        LOG_INFO("Ignored sync object due to eventId");
         return NULL;
     }
     so->rxEventId[*fromLocalIndex] = eventId;
 
-    // update the random seed
-    packet_read(p, &so->randomSeed, sizeof(u16));
+    // Update the random seed
+    so->randomSeed = packet_read_uint16(p);
 
-    // make sure the behaviors match
-    u32 behaviorId;
-    packet_read(p, &behaviorId, sizeof(u32));
+    // Make sure the behaviors match
+    u32 behaviorId = packet_read_uint32(p);
 
     BehaviorScript* behavior = (BehaviorScript*)get_behavior_from_id(behaviorId);
     BehaviorScript* lBehavior = (BehaviorScript*)smlua_override_behavior(behavior);
     if (behavior == NULL) {
-        LOG_ERROR("unable to find behavior %04X for id %d", behaviorId, syncId);
+        LOG_ERROR("Unable to find behavior %04X for id %d", behaviorId, syncId);
         return NULL;
     }
     if (o->behavior != behavior && o->behavior != lBehavior && !allowable_behavior_change(so, behavior)) {
         enum BehaviorId objBehaviorId = get_id_from_behavior(o->behavior);
         enum BehaviorId inBehaviorId = get_id_from_behavior(behavior);
         LOG_ERROR(
-            "during read behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
+            "During read behavior mismatch for %d: %04X (%s) vs %04X (%s)", syncId,
             objBehaviorId, get_behavior_name_from_id(objBehaviorId),
             inBehaviorId,  get_behavior_name_from_id(inBehaviorId)
         );
@@ -175,60 +176,74 @@ static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
 // ----- standard fields ----- //
 
 static void packet_write_object_standard_fields(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (!so) { return; }
-    if (so->fullObjectSync) { return; }
+    if (!so || !so->hasStandardFields || so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS) { return; }
-    if (!so->hasStandardFields) { return; }
 
-    // write the standard fields
-    packet_write(p, &o->oPosX, sizeof(u32) * 7);
-    packet_write(p, &o->oAction, sizeof(u32));
-    packet_write(p, &o->oPrevAction, sizeof(u32));
-    packet_write(p, &o->oSubAction, sizeof(u32));
-    packet_write(p, &o->oInteractStatus, sizeof(u32));
-    packet_write(p, &o->oHeldState, sizeof(u32));
-    packet_write(p, &o->oMoveAngleYaw, sizeof(u32));
-    packet_write(p, &o->oTimer, sizeof(u32));
-    packet_write(p, &o->activeFlags, sizeof(s16));
-    packet_write(p, &o->header.gfx.node.flags, sizeof(s16));
-    packet_write(p, &o->oIntangibleTimer, sizeof(s32));
+    // Write the standard fields
+    packet_write_float32(p, o->oPosX);
+    packet_write_float32(p, o->oPosY);
+    packet_write_float32(p, o->oPosZ);
+    packet_write_float32(p, o->oVelX);
+    packet_write_float32(p, o->oVelY);
+    packet_write_float32(p, o->oVelZ);
+    packet_write_float32(p, o->oForwardVel);
+    packet_write_uint32(p, o->oAction);
+    packet_write_uint32(p, o->oPrevAction);
+    packet_write_uint32(p, o->oSubAction);
+    packet_write_uint32(p, o->oInteractStatus);
+    packet_write_uint32(p, o->oHeldState);
+    packet_write_uint32(p, o->oMoveAngleYaw);
+    packet_write_uint32(p, o->oTimer);
+    packet_write_uint16(p, o->activeFlags);
+    packet_write_int16(p, o->header.gfx.node.flags);
+    packet_write_int32(p, o->oIntangibleTimer);
 }
 
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (!so) { return; }
-    if (so->fullObjectSync) { return; }
+    if (!so || !so->hasStandardFields || so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS) { return; }
-    if (!so->hasStandardFields) { return; }
 
-    // read the standard fields
-    packet_read(p, &o->oPosX, sizeof(u32) * 7);
-    packet_read(p, &o->oAction, sizeof(u32));
-    packet_read(p, &o->oPrevAction, sizeof(u32));
-    packet_read(p, &o->oSubAction, sizeof(u32));
-    packet_read(p, &o->oInteractStatus, sizeof(u32));
-    packet_read(p, &o->oHeldState, sizeof(u32));
-    packet_read(p, &o->oMoveAngleYaw, sizeof(u32));
-    packet_read(p, &o->oTimer, sizeof(u32));
-    packet_read(p, &o->activeFlags, sizeof(u16));
-    packet_read(p, &o->header.gfx.node.flags, sizeof(s16));
-    packet_read(p, &o->oIntangibleTimer, sizeof(s32));
+    // Read the standard fields
+    o->oPosX = packet_read_float32(p);
+    o->oPosY = packet_read_float32(p);
+    o->oPosZ = packet_read_float32(p);
+    o->oVelX = packet_read_float32(p);
+    o->oVelY = packet_read_float32(p);
+    o->oVelZ = packet_read_float32(p);
+    o->oForwardVel = packet_read_float32(p);
+    o->oAction = packet_read_uint32(p);
+    o->oPrevAction = packet_read_uint32(p);
+    o->oSubAction = packet_read_uint32(p);
+    o->oInteractStatus = packet_read_uint32(p);
+    o->oHeldState = packet_read_uint32(p);
+    o->oMoveAngleYaw = packet_read_uint32(p);
+    o->oTimer = packet_read_uint32(p);
+    o->activeFlags = packet_read_uint16(p);
+    o->header.gfx.node.flags = packet_read_int16(p);
+    o->oIntangibleTimer = packet_read_int32(p);
 }
 
-// ----- extra fields ----- //
+// ----- Extra Fields ----- //
 
 static void packet_write_object_extra_fields(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
-    // write the count
-    packet_write(p, &so->extraFieldCount, sizeof(u8));
+    // Write the count
+    packet_write_uint8(p, so->extraFieldCount);
 
-    // write the extra field
+    // Write the extra field
     for (u8 i = 0; i < so->extraFieldCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
         packet_write(p, so->extraFields[i], so->extraFieldsSizeBytes[i]);
@@ -236,40 +251,46 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 }
 
 static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
 
-    // read the count and sanity check
-    u8 extraFieldsCount = 0;
-    packet_read(p, &extraFieldsCount, sizeof(u8));
+    // Read the count and sanity check
+    u8 extraFieldsCount = packet_read_uint8(p);
     if (extraFieldsCount != so->extraFieldCount) {
         LOG_ERROR("mismatching extra fields count");
         return;
     }
 
-    // read the extra fields
+    // Read the extra fields
     for (u8 i = 0; i < extraFieldsCount; i++) {
         SOFT_ASSERT(so->extraFields[i] != NULL);
         packet_read(p, so->extraFields[i], so->extraFieldsSizeBytes[i]);
     }
 }
 
-// ----- only death ----- //
+// ----- Only death ----- //
 
 static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
-    packet_write(p, &o->activeFlags, sizeof(s16));
+
+    packet_write_int16(p, o->activeFlags);
 }
 
 static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
+    if (p == NULL || o == NULL) { return; }
+    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
-    s16 activeFlags;
-    packet_read(p, &activeFlags, sizeof(u16));
+    
+    s16 activeFlags = packet_read_int16(p);
     if (activeFlags == ACTIVE_FLAG_DEACTIVATED) {
         // flag the object as dead, the behavior is responsible for clean up
         so->o->oSyncDeath = 1;

@@ -80,7 +80,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     // Update the current amount of deletions.
     u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    packet_write_uint8(&p, macroDeletionCount);
+    datagram_write_uint8(&p.dg, macroDeletionCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Write the amount of special cases.
@@ -112,7 +112,7 @@ static void network_send_level_macro_area(struct NetworkPlayer* destNp, u8 areaI
     // Update the amount of special cases.
     restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    packet_write_uint8(&p, macroSpecialCount);
+    datagram_write_uint8(&p.dg, macroSpecialCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Send the packet if there are deletions

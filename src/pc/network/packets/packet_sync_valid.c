@@ -27,12 +27,12 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
     u8 forGlobalIndex = toNp->globalIndex;
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SYNC_VALID, true, PLMT_NONE);
-    packet_write(&p, &courseNum,      sizeof(s16));
-    packet_write(&p, &actNum,         sizeof(s16));
-    packet_write(&p, &levelNum,       sizeof(s16));
-    packet_write(&p, &areaIndex,      sizeof(s16));
-    packet_write(&p, &myGlobalIndex,  sizeof(u8));
-    packet_write(&p, &forGlobalIndex, sizeof(u8));
+    packet_write_int16(&p, courseNum);
+    packet_write_int16(&p, actNum);
+    packet_write_int16(&p, levelNum);
+    packet_write_int16(&p, areaIndex);
+    packet_write_uint8(&p, myGlobalIndex);
+    packet_write_uint8(&p, forGlobalIndex);
     network_send_to((informServer ? gNetworkPlayerServer->localIndex : toNp->localIndex), &p);
     packet_clear(&p);
 
@@ -40,14 +40,18 @@ void network_send_sync_valid(struct NetworkPlayer* toNp, s16 courseNum, s16 actN
 }
 
 void network_receive_sync_valid(struct Packet* p) {
-    s16 courseNum, actNum, levelNum, areaIndex;
-    u8 fromGlobalIndex, forGlobalIndex;
-    packet_read(p, &courseNum, sizeof(s16));
-    packet_read(p, &actNum,    sizeof(s16));
-    packet_read(p, &levelNum,  sizeof(s16));
-    packet_read(p, &areaIndex, sizeof(s16));
-    packet_read(p, &fromGlobalIndex, sizeof(u8));
-    packet_read(p, &forGlobalIndex, sizeof(u8));
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 2) + (sizeof(s16) * 4));
+    
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
+    u8 fromGlobalIndex = packet_read_uint8(p);
+    u8 forGlobalIndex = packet_read_uint8(p);
 
     LOG_INFO("rx sync valid: from global %d, for global %d", fromGlobalIndex, forGlobalIndex);
 

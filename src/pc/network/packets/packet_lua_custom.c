@@ -97,7 +97,7 @@ void network_send_lua_custom(bool broadcast) {
     // Update the current key count.
     u32 restoreCursorPosition = datagram_cursor_position(&p.dg);
     datagram_seek(&p.dg, cursorPosition);
-    packet_write_uint8(&p, keyCount);
+    datagram_write_uint8(&p.dg, keyCount);
     datagram_seek(&p.dg, restoreCursorPosition);
 
     // Send packet

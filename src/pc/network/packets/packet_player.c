@@ -20,22 +20,23 @@
 
 #pragma pack(1)
 struct PacketPlayerData {
-    u32 rawData[OBJECT_NUM_FIELDS];
-
-    s16 cRawStickX;
-    s16 cRawStickY;
-    f32 cStickX;
-    f32 cStickY;
-    f32 cStickMag;
+    // Controls and Input
+    u16 input;
     u16 cButtonDown;
     u16 cButtonPressed;
     u16 cButtonReleased;
+    f32 cStickX;
+    f32 cStickY;
+    f32 cStickMag;
+    s16 cRawStickX;
+    s16 cRawStickY;
     s16 cExtStickX;
     s16 cExtStickY;
-
+    
+    // Graph Node
     s16 nodeFlags;
 
-    u16 input;
+    // Player (Mario)
     u32 flags;
     u32 particleFlags;
     u32 action;
@@ -43,14 +44,17 @@ struct PacketPlayerData {
     u16 actionState;
     u16 actionTimer;
     u32 actionArg;
+    s32 dialogId;
     f32 intendedMag;
     s16 intendedYaw;
     s16 invincTimer;
-    u8  framesSinceA;
-    u8  framesSinceB;
-    u8  wallKickTimer;
-    u8  doubleJumpTimer;
-    u8  specialTripleJump;
+    u8 framesSinceA;
+    u8 framesSinceB;
+    u8 wallKickTimer;
+    u8 doubleJumpTimer;
+    u8 squishTimer;
+    u8 knockbackTimer;
+    u8 specialTripleJump;
     Vec3s faceAngle;
     Vec3s angleVel;
     s16 slideYaw;
@@ -60,101 +64,192 @@ struct PacketPlayerData {
     f32 forwardVel;
     f32 slideVelX;
     f32 slideVelZ;
-    s16 health;
-    u8  squishTimer;
     f32 peakHeight;
+    s16 health;
     s16 currentRoom;
     Vec3s headRotation;
-
-    u8  customFlags;
+    
+    // Level Sync
     u32 heldSyncID;
     u32 heldBySyncID;
     u32 riddenSyncID;
     u32 interactSyncID;
     u32 usedSyncID;
     u32 platformSyncID;
-
-    u8 levelSyncValid;
-    u8 areaSyncValid;
-    u8 knockbackTimer;
-
-    s32 dialogId;
+    u8  levelSyncValid;
+    u8  areaSyncValid;
+    u8  customFlags;
+    
+    // Raw Object Fields
+    u32 rawData[OBJECT_NUM_FIELDS];
 };
 #pragma pack()
 
-static void read_packet_data(struct PacketPlayerData* data, struct MarioState* m) {
+OPTIMIZE_O3 void write_packet_data(struct Packet* p, struct MarioState* m) {
+    if (p == NULL || m == NULL) { return; }
+    
+    // Controls and Input
+    packet_write_uint16(p, m->input);
+    packet_write_uint16(p, m->controller->buttonDown);
+    packet_write_uint16(p, m->controller->buttonPressed);
+    packet_write_uint16(p, m->controller->buttonReleased);
+    packet_write_float32(p, m->controller->stickX);
+    packet_write_float32(p, m->controller->stickY);
+    packet_write_float32(p, m->controller->stickMag);
+    packet_write_int16(p, m->controller->rawStickX);
+    packet_write_int16(p, m->controller->rawStickY);
+    packet_write_int16(p, m->controller->extStickX);
+    packet_write_int16(p, m->controller->extStickY);
+    
+    // Graph Node
+    packet_write_int16(p, m->marioObj->header.gfx.node.flags);
+    
+    // Player (Mario)
+    packet_write_uint32(p, m->flags);
+    packet_write_uint32(p, m->particleFlags);
+    packet_write_uint32(p, m->action);
+    packet_write_uint32(p, m->prevAction);
+    packet_write_uint16(p, m->actionState);
+    packet_write_uint16(p, m->actionTimer);
+    packet_write_uint32(p, m->actionArg);
+    packet_write_int32(p, get_dialog_id());
+    packet_write_float32(p, m->intendedMag);
+    packet_write_int16(p, m->intendedYaw);
+    packet_write_int16(p, m->invincTimer);
+    packet_write_uint8(p, m->framesSinceA);
+    packet_write_uint8(p, m->framesSinceB);
+    packet_write_uint8(p, m->wallKickTimer);
+    packet_write_uint8(p, m->doubleJumpTimer);
+    packet_write_uint8(p, m->squishTimer);
+    packet_write_uint8(p, m->knockbackTimer);
+    packet_write_uint8(p, m->specialTripleJump);
+    packet_write_int16(p, m->faceAngle[0]);
+    packet_write_int16(p, m->faceAngle[1]);
+    packet_write_int16(p, m->faceAngle[2]);
+    packet_write_int16(p, m->angleVel[0]);
+    packet_write_int16(p, m->angleVel[1]);
+    packet_write_int16(p, m->angleVel[2]);
+    packet_write_int16(p, m->slideYaw);
+    packet_write_int16(p, m->twirlYaw);
+    packet_write_float32(p, m->pos[0]);
+    packet_write_float32(p, m->pos[1]);
+    packet_write_float32(p, m->pos[2]);
+    packet_write_float32(p, m->vel[0]);
+    packet_write_float32(p, m->vel[1]);
+    packet_write_float32(p, m->vel[2]);
+    packet_write_float32(p, m->forwardVel);
+    packet_write_float32(p, m->slideVelX);
+    packet_write_float32(p, m->slideVelZ);
+    packet_write_float32(p, m->peakHeight);
+    packet_write_int16(p, m->health);
+    packet_write_int16(p, m->currentRoom);
+    packet_write_int16(p, gPlayerCameraState[m->playerIndex].headRotation[0]);
+    packet_write_int16(p, gPlayerCameraState[m->playerIndex].headRotation[1]);
+    packet_write_int16(p, gPlayerCameraState[m->playerIndex].headRotation[2]);
+    
+    // Level Sync
     u32 heldSyncID     = (m->heldObj != NULL)            ? m->heldObj->oSyncID            : 0;
     u32 heldBySyncID   = (m->heldByObj != NULL)          ? m->heldByObj->oSyncID          : 0;
     u32 riddenSyncID   = (m->riddenObj != NULL)          ? m->riddenObj->oSyncID          : 0;
     u32 interactSyncID = (m->interactObj != NULL)        ? m->interactObj->oSyncID        : 0;
     u32 usedSyncID     = (m->usedObj != NULL)            ? m->usedObj->oSyncID            : 0;
     u32 platformSyncID = (m->marioObj->platform != NULL) ? m->marioObj->platform->oSyncID : 0;
-
-    u8 customFlags     = SET_BIT((m->freeze > 0), 0);
-
-    memcpy(data->rawData, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
-    data->nodeFlags    = m->marioObj->header.gfx.node.flags;
-
-    data->cRawStickX      = m->controller->rawStickX;
-    data->cRawStickY      = m->controller->rawStickY;
-    data->cStickX         = m->controller->stickX;
-    data->cStickY         = m->controller->stickY;
-    data->cStickMag       = m->controller->stickMag;
-    data->cButtonDown     = m->controller->buttonDown;
-    data->cButtonPressed  = m->controller->buttonPressed;
-    data->cButtonReleased = m->controller->buttonReleased;
-    data->cExtStickX      = m->controller->extStickX;
-    data->cExtStickY      = m->controller->extStickY;
-
-    data->input           = m->input;
-    data->flags           = m->flags;
-    data->particleFlags   = m->particleFlags;
-    data->action          = m->action;
-    data->prevAction      = m->prevAction;
-    data->actionState     = m->actionState;
-    data->actionTimer     = m->actionTimer;
-    data->actionArg       = m->actionArg;
-    data->intendedMag     = m->intendedMag;
-    data->intendedYaw     = m->intendedYaw;
-    data->invincTimer     = m->invincTimer;
-    data->framesSinceA    = m->framesSinceA;
-    data->framesSinceB    = m->framesSinceB;
-    data->wallKickTimer   = m->wallKickTimer;
-    data->doubleJumpTimer = m->doubleJumpTimer;
-    data->specialTripleJump = m->specialTripleJump;
-    memcpy(data->faceAngle, m->faceAngle, sizeof(s16) * 3);
-    memcpy(data->angleVel,  m->angleVel,  sizeof(s16) * 3);
-    data->slideYaw        = m->slideYaw;
-    data->twirlYaw        = m->twirlYaw;
-    memcpy(data->pos, m->pos, sizeof(f32) * 3);
-    memcpy(data->vel, m->vel, sizeof(f32) * 3);
-    data->forwardVel      = m->forwardVel;
-    data->slideVelX       = m->slideVelX;
-    data->slideVelZ       = m->slideVelZ;
-    data->health          = m->health;
-    data->squishTimer     = m->squishTimer;
-    data->peakHeight      = m->peakHeight;
-    data->currentRoom     = m->currentRoom;
-    memcpy(data->headRotation, gPlayerCameraState[m->playerIndex].headRotation, sizeof(s16) * 3);
-
-    data->customFlags    = customFlags;
-    data->heldSyncID     = heldSyncID;
-    data->heldBySyncID   = heldBySyncID;
-    data->riddenSyncID   = riddenSyncID;
-    data->interactSyncID = interactSyncID;
-    data->usedSyncID     = usedSyncID;
-    data->platformSyncID = platformSyncID;
-
+    
+    packet_write_uint32(p, heldSyncID);
+    packet_write_uint32(p, heldBySyncID);
+    packet_write_uint32(p, riddenSyncID);
+    packet_write_uint32(p, interactSyncID);
+    packet_write_uint32(p, usedSyncID);
+    packet_write_uint32(p, platformSyncID);
+    
     struct NetworkPlayer* np = &gNetworkPlayers[m->playerIndex];
-    data->areaSyncValid  = np->currAreaSyncValid;
-    data->levelSyncValid = np->currLevelSyncValid;
-
-    data->knockbackTimer = m->knockbackTimer;
-
-    data->dialogId = get_dialog_id();
+    packet_write_uint8(p, np->currLevelSyncValid);
+    packet_write_uint8(p, np->currAreaSyncValid);
+    
+    packet_write_uint8(p, SET_BIT((m->freeze > 0), 0));
+    
+    // Raw Object Fields
+    packet_write(p, m->marioObj->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
 }
 
-static void write_packet_data(struct PacketPlayerData* data, struct MarioState* m,
+OPTIMIZE_O3 void read_packet_data(struct Packet* p, struct PacketPlayerData* data) {
+    if (p == NULL || data == NULL) { return; }
+    
+    // Controls and Input
+    data->input = packet_read_uint16(p);
+    data->cButtonDown = packet_read_uint16(p);
+    data->cButtonPressed = packet_read_uint16(p);
+    data->cButtonReleased = packet_read_uint16(p);
+    data->cStickX = packet_read_float32(p);
+    data->cStickY = packet_read_float32(p);
+    data->cStickMag = packet_read_float32(p);
+    data->cRawStickX = packet_read_int16(p);
+    data->cRawStickY = packet_read_int16(p);
+    data->cExtStickX = packet_read_int16(p);
+    data->cExtStickY = packet_read_int16(p);
+    
+    // Graph Node
+    data->nodeFlags = packet_read_int16(p);
+    
+    // Player (Mario)
+    data->flags = packet_read_uint32(p);
+    data->particleFlags = packet_read_uint32(p);
+    data->action = packet_read_uint32(p);
+    data->prevAction = packet_read_uint32(p);
+    data->actionState = packet_read_uint16(p);
+    data->actionTimer = packet_read_uint16(p);
+    data->actionArg = packet_read_uint32(p);
+    data->dialogId = packet_read_int32(p);
+    data->intendedMag = packet_read_float32(p);
+    data->intendedYaw = packet_read_int16(p);
+    data->invincTimer = packet_read_int16(p);
+    data->framesSinceA = packet_read_uint8(p);
+    data->framesSinceB = packet_read_uint8(p);
+    data->wallKickTimer = packet_read_uint8(p);
+    data->doubleJumpTimer = packet_read_uint8(p);
+    data->squishTimer = packet_read_uint8(p);
+    data->knockbackTimer = packet_read_uint8(p);
+    data->specialTripleJump = packet_read_uint8(p);
+    data->faceAngle[0] = packet_read_int16(p);
+    data->faceAngle[1] = packet_read_int16(p);
+    data->faceAngle[2] = packet_read_int16(p);
+    data->angleVel[0] = packet_read_int16(p);
+    data->angleVel[1] = packet_read_int16(p);
+    data->angleVel[2] = packet_read_int16(p);
+    data->slideYaw = packet_read_int16(p);
+    data->twirlYaw = packet_read_int16(p);
+    data->pos[0] = packet_read_float32(p);
+    data->pos[1] = packet_read_float32(p);
+    data->pos[2] = packet_read_float32(p);
+    data->vel[0] = packet_read_float32(p);
+    data->vel[1] = packet_read_float32(p);
+    data->vel[2] = packet_read_float32(p);
+    data->forwardVel = packet_read_float32(p);
+    data->slideVelX = packet_read_float32(p);
+    data->slideVelZ = packet_read_float32(p);
+    data->peakHeight = packet_read_float32(p);
+    data->health = packet_read_int16(p);
+    data->currentRoom = packet_read_int16(p);
+    data->headRotation[0] = packet_read_int16(p);
+    data->headRotation[1] = packet_read_int16(p);
+    data->headRotation[2] = packet_read_int16(p);
+    
+    // Level Sync
+    data->heldSyncID = packet_read_uint32(p);
+    data->heldBySyncID = packet_read_uint32(p);
+    data->riddenSyncID = packet_read_uint32(p);
+    data->interactSyncID = packet_read_uint32(p);
+    data->usedSyncID = packet_read_uint32(p);
+    data->platformSyncID = packet_read_uint32(p);
+    data->levelSyncValid = packet_read_uint8(p);
+    data->areaSyncValid = packet_read_uint8(p);
+    data->customFlags = packet_read_uint8(p);
+    
+    // Raw Object Fields
+    packet_read(p, data->rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
+}
+
+OPTIMIZE_O3 void apply_packet_data(struct PacketPlayerData* data, struct MarioState* m,
                               u8* customFlags, u32* heldSyncID, u32* heldBySyncID,
                               u32* riddenSyncID, u32* interactSyncID, u32* usedSyncID,
                               u32* platformSyncID) {
@@ -227,36 +322,37 @@ void network_send_player(u8 localIndex) {
     if (gDjuiInMainMenu) { return; }
     if (gNetworkPlayerLocal == NULL || !gNetworkPlayerLocal->currAreaSyncValid) { return; }
 
-    struct PacketPlayerData data = { 0 };
-    read_packet_data(&data, &gMarioStates[localIndex]);
-
     struct Packet p = { 0 };
     packet_init(&p, PACKET_PLAYER, false, PLMT_AREA);
     packet_write(&p, &gNetworkPlayers[localIndex].globalIndex, sizeof(u8));
-    packet_write(&p, &data, sizeof(struct PacketPlayerData));
+    write_packet_data(&p, &gMarioStates[localIndex]);
     network_send(&p);
     packet_clear(&p);
 }
 
 void network_receive_player(struct Packet* p) {
-    u8 globalIndex = datagram_read_uint8(&p->dg);
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + sizeof(struct PacketPlayerData));
+    
+    u8 globalIndex = packet_read_uint8(p);
     
     struct NetworkPlayer* np = network_player_from_global_index(globalIndex);
     if (np == NULL || np->localIndex == UNKNOWN_LOCAL_INDEX || !np->connected) { return; }
 
-    // prevent receiving a packet about our player
+    // Prevent receiving a packet about our player
     if (gNetworkPlayerLocal && globalIndex == gNetworkPlayerLocal->globalIndex) { return; }
 
     struct MarioState* m = &gMarioStates[np->localIndex];
     if (m == NULL || m->marioObj == NULL) { return; }
     
-    // Read the current Player action from the Datagram.
-    u32 position = datagram_cursor_position(&p->dg);
-    datagram_seek(&p->dg, position + offsetof(struct PacketPlayerData, action));
-    u32 action = datagram_read_uint32(&p->dg);
-    datagram_seek(&p->dg, position);
+    // Load Mario information from the packet
+    struct PacketPlayerData data = { 0 };
+    read_packet_data(p, &data);
 
-    if (gNetworkType == NT_SERVER && action == ACT_DEBUG_FREE_MOVE) {
+    if (gNetworkType == NT_SERVER && data.action == ACT_DEBUG_FREE_MOVE) {
 #ifdef DEVELOPMENT
         if (m->action != ACT_DEBUG_FREE_MOVE) {
             construct_player_popup(np, DLANG(NOTIF, DEBUG_FLY), NULL);
@@ -268,7 +364,7 @@ void network_receive_player(struct Packet* p) {
 #endif
     }
 
-    // prevent receiving player from other area
+    // Prevent receiving player from other area
     bool levelAreaMismatch = ((gNetworkPlayerLocal == NULL)
         || np->currCourseNum != gNetworkPlayerLocal->currCourseNum
         || np->currActNum    != gNetworkPlayerLocal->currActNum
@@ -276,22 +372,21 @@ void network_receive_player(struct Packet* p) {
         || np->currAreaIndex != gNetworkPlayerLocal->currAreaIndex);
     if (levelAreaMismatch) { np->currPositionValid = false; return; }
 
-    // save previous state
-    struct PacketPlayerData oldData = { 0 };
-    read_packet_data(&oldData, m);
-    u16 playerIndex  = np->localIndex;
+    // Save any needed previous state information.
+    u32 oldAction = m->action;
+    u16 oldActionState = m->actionState;
+    u32 oldActionArg = m->actionArg;
     u32 oldBehParams = m->marioObj->oBehParams;
+    u32 oldParticleFlags = m->marioObj->oActiveParticleFlags;
+    
+    u16 playerIndex  = np->localIndex;
 
-    // load mario information from packet
-    struct PacketPlayerData data = { 0 };
-    packet_read(p, &data, sizeof(struct PacketPlayerData));
-
-    // check to see if we should just drop this packet
-    if (oldData.action == ACT_JUMBO_STAR_CUTSCENE && data.action == ACT_JUMBO_STAR_CUTSCENE) {
+    // Check to see if we should just drop this packet
+    if (oldAction == ACT_JUMBO_STAR_CUTSCENE && data.action == ACT_JUMBO_STAR_CUTSCENE) {
         return;
     }
 
-    // apply data from packet to mario state
+    // Apply data from packet to mario state
     u32 heldSyncID     = 0;
     u32 heldBySyncID   = 0;
     u32 riddenSyncID   = 0;
@@ -299,29 +394,29 @@ void network_receive_player(struct Packet* p) {
     u32 usedSyncID     = 0;
     u32 platformSyncID = 0;
     u8  customFlags    = 0;
-    write_packet_data(&data, m, &customFlags,
+    apply_packet_data(&data, m, &customFlags,
                       &heldSyncID, &heldBySyncID,
                       &riddenSyncID, &interactSyncID,
                       &usedSyncID, &platformSyncID);
 
-    // read custom flags
+    // Read custom flags
     m->freeze = GET_BIT(customFlags, 0);
 
-    // reset player index
+    // Reset player index
     m->playerIndex = playerIndex;
     m->marioObj->oBehParams = oldBehParams;
 
-    // reset mario sound play flag so that their jump sounds work
-    if (m->action != oldData.action) {
+    // Reset Mario sound play flag so that their jump sounds work
+    if (m->action != oldAction) {
         m->flags &= ~(MARIO_ACTION_SOUND_PLAYED | MARIO_MARIO_SOUND_PLAYED);
     }
 
-    // find and set their held object
+    // Find and set their held object
     struct SyncObject* heldSo = sync_object_get(heldSyncID);
     m->heldObj = heldSo ? heldSo->o : NULL;
     if (m->heldObj != NULL) {
         if (gMarioStates[0].heldObj == m->heldObj && np->globalIndex < gNetworkPlayerLocal->globalIndex) {
-            // drop the object if a higher priority player is holding our object
+            // Drop the object if a higher priority player is holding our object
             mario_drop_held_object(&gMarioStates[0]);
             force_idle_state(&gMarioStates[0]);
         }
@@ -329,16 +424,16 @@ void network_receive_player(struct Packet* p) {
         m->heldObj->heldByPlayerIndex = np->localIndex;
     }
 
-    // find and set their held-by object
+    // Find and set their held-by object
     struct SyncObject* heldBySo = sync_object_get(heldBySyncID);
     if (heldBySo && heldBySo->o) {
-        // TODO: do we have to move graphics nodes around to make this visible?
+        // TODO: Do we have to move graphics nodes around to make this visible?
         m->heldByObj = heldBySo->o;
     } else {
         m->heldByObj = NULL;
     }
 
-    // find and set their ridden object
+    // Find and set their ridden object
     struct SyncObject* riddenSo = sync_object_get(riddenSyncID);
     if (riddenSo && riddenSo->o) {
         riddenSo->o->heldByPlayerIndex = np->localIndex;
@@ -347,34 +442,34 @@ void network_receive_player(struct Packet* p) {
         m->riddenObj = NULL;
     }
 
-    // find and set their interact object
+    // Find and set their interact object
     struct SyncObject* interactSo = sync_object_get(interactSyncID);
     if (interactSo && interactSo->o) {
         m->interactObj = interactSo->o;
     }
 
-    // find and set their used object
+    // Find and set their used object
     struct SyncObject* usedSo = sync_object_get(usedSyncID);
     if (usedSo && usedSo->o != NULL) {
         m->usedObj = usedSo->o;
     }
 
-    // place on top of platform
+    // Place on top of platform
     struct SyncObject* platformSo = sync_object_get(platformSyncID);
     if (platformSo && platformSo->o) {
 
-        // search up to 500 units for the platform
+        // Search up to 500 units for the platform
         f32 maxDifference = 500;
 
-        // look for a platform above and below, and a ceiling above the player
+        // Look for a platform above and below, and a ceiling above the player
         gCheckingSurfaceCollisionsForObject = platformSo->o;
         f32 currFloorHeight = find_floor_height(m->pos[0], m->pos[1], m->pos[2]);
         f32 floorHeight = find_floor_height(m->pos[0], m->pos[1] + maxDifference, m->pos[2]);
         f32 ceilHeight = find_ceil_height(m->pos[0], m->pos[1], m->pos[2]);
         gCheckingSurfaceCollisionsForObject = NULL;
 
-        // always prefer the closest floor
-        // use the floor below if there's a ceiling between the player and the floor above
+        // Always prefer the closest floor
+        // Use the floor below if there's a ceiling between the player and the floor above
         // only accept floors 500 units away
         f32 diffAbove = ABS(m->pos[1] - floorHeight);
         f32 diffBelow = ABS(m->pos[1] - currFloorHeight);
@@ -382,39 +477,39 @@ void network_receive_player(struct Packet* p) {
             (currFloorHeight == gLevelValues.floorLowerLimit || diffBelow > diffAbove) &&
             (ceilHeight == gLevelValues.cellHeightLimit || floorHeight < ceilHeight) &&
             diffAbove <= maxDifference) {
-            // place on top of platform
+            // Place on top of platform
             m->pos[1] = floorHeight;
         }
     }
 
-    // jump kicking: restore action state, otherwise it won't play
+    // Jump kicking: Restore action state, otherwise it won't play
     if (m->action == ACT_JUMP_KICK) {
-        m->actionState = oldData.actionState;
+        m->actionState = oldActionState;
     }
 
-    // punching:
+    // Punching:
     if ((m->action == ACT_PUNCHING || m->action == ACT_MOVE_PUNCHING)) {
-        // play first punching sound, otherwise it will be missed
-        if (m->action != oldData.action) {
+        // Play first punching sound, otherwise it will be missed
+        if (m->action != oldAction) {
             play_character_sound(m, CHAR_SOUND_PUNCH_YAH);
         }
-        // make the first punch large, otherwise it will be missed
-        if (m->actionArg == 2 && oldData.actionArg == 1) {
+        // Make the first punch large, otherwise it will be missed
+        if (m->actionArg == 2 && oldActionArg == 1) {
             m->marioBodyState->punchState = (0 << 6) | 4;
         }
     }
 
-    // inform of player death
-    if (oldData.action != ACT_BUBBLED && data.action == ACT_BUBBLED && !data.actionArg) {
+    // Inform of player death
+    if (oldAction != ACT_BUBBLED && data.action == ACT_BUBBLED && !data.actionArg) {
         construct_player_popup(np, DLANG(NOTIF, DIED), NULL);
     }
 
-    // action changed, reset timer
-    if (m->action != oldData.action) {
+    // Action changed, reset timer
+    if (m->action != oldAction) {
         m->actionTimer = 0;
     }
 
-    // mark this player as visible
+    // Mark this player as visible
     if (gNetworkAreaLoaded && !m->wasNetworkVisible) {
         m->wasNetworkVisible = true;
         vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
@@ -427,7 +522,7 @@ void network_receive_player(struct Packet* p) {
     if (np->currLevelNum == LEVEL_BOWSER_3 && m->action == ACT_JUMBO_STAR_CUTSCENE && gMarioStates[0].action != ACT_JUMBO_STAR_CUTSCENE) {
         set_mario_action(&gMarioStates[0], ACT_JUMBO_STAR_CUTSCENE, 0);
     }
-    m->marioObj->oActiveParticleFlags = oldData.rawData[0x16];
+    m->marioObj->oActiveParticleFlags = oldParticleFlags;
 }
 
 void network_update_player(void) {

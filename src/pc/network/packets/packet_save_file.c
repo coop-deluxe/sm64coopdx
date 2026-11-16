@@ -10,18 +10,25 @@ void network_send_save_file(s32 fileIndex) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SAVE_FILE, true, PLMT_NONE);
-    packet_write(&p, &fileIndex,                sizeof(s32));
-    packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
+    packet_write_int32(&p, fileIndex);
+    packet_write_uint8(&p, gSaveFileUsingBackupSlot);
     network_send_to(gNetworkPlayerServer->localIndex, &p);
     packet_clear(&p);
 }
 
 void network_receive_save_file(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + sizeof(s32));
+    
     if (gNetworkType != NT_SERVER) { return; }
-    s32 fileIndex = 0;
+
     u8 lastBackupSlot = gSaveFileUsingBackupSlot;
-    packet_read(p, &fileIndex, sizeof(s32));
-    packet_read(p, &gSaveFileUsingBackupSlot, sizeof(u8));
+
+    gSaveFileUsingBackupSlot = packet_read_uint8(p);
+    s32 fileIndex = packet_read_int32(p);
 
     if (gSaveFileUsingBackupSlot != 0) { gSaveFileUsingBackupSlot = 1; }
 
