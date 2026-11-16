@@ -168,12 +168,12 @@ static void packet_write_object_full_sync(struct Packet* p, struct Object* o) {
 static void packet_read_object_full_sync(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
+    struct SyncObject* so = sync_object_get(o->oSyncID);
+    if (!so || !so->fullObjectSync) { return; }
+    
     // Sanity check for data contents. Read will throw an error anyways,
     // But it's better to catch malformed or maliciously formed packets here.
     SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u32) * OBJECT_NUM_FIELDS);
-    
-    struct SyncObject* so = sync_object_get(o->oSyncID);
-    if (!so || !so->fullObjectSync) { return; }
 
     // Read all of raw data
     packet_read(p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
@@ -212,14 +212,14 @@ static void packet_write_object_standard_fields(struct Packet* p, struct Object*
 static void packet_read_object_standard_fields(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
-    // Sanity check for data contents. Read will throw an error anyways,
-    // But it's better to catch malformed or maliciously formed packets here.
-    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u16) + sizeof(s16) + sizeof(s32) + (sizeof(u32) * 7) * (sizeof(f32) * 7));
-    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so || !so->hasStandardFields || so->fullObjectSync) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_EVENTS) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u16) + sizeof(s16) + sizeof(s32) + (sizeof(u32) * 7) * (sizeof(f32) * 7));
 
     // Read the standard fields
     o->oPosX = packet_read_float32(p);
@@ -263,13 +263,13 @@ static void packet_write_object_extra_fields(struct Packet* p, struct Object* o)
 static void packet_read_object_extra_fields(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
-    // Sanity check for data contents. Read will throw an error anyways,
-    // But it's better to catch malformed or maliciously formed packets here.
-    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8));
-    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance == SYNC_DISTANCE_ONLY_DEATH) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8));
 
     // Read the count and sanity check
     u8 extraFieldsCount = packet_read_uint8(p);
@@ -301,13 +301,13 @@ static void packet_write_object_only_death(struct Packet* p, struct Object* o) {
 static void packet_read_object_only_death(struct Packet* p, struct Object* o) {
     if (p == NULL || o == NULL) { return; }
     
-    // Sanity check for data contents. Read will throw an error anyways,
-    // But it's better to catch malformed or maliciously formed packets here.
-    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(s16));
-    
     struct SyncObject* so = sync_object_get(o->oSyncID);
     if (!so) { return; }
     if (so->maxSyncDistance != SYNC_DISTANCE_ONLY_DEATH) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(s16));
     
     s16 activeFlags = packet_read_int16(p);
     if (activeFlags == ACTIVE_FLAG_DEACTIVATED) {
