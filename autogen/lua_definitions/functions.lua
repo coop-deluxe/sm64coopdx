@@ -4385,6 +4385,20 @@ function djui_menu_get_rainbow_string_color(color)
     -- ...
 end
 
+--- @param panelId string
+--- @param headerTitle? string
+--- @param hideBackButton? boolean
+--- Pushes a new panel to the mod menu using `panelId`. You can change the `headerTitle`<br>
+--- or adjust `hideBackButton`
+function mod_menu_push_panel(panelId, headerTitle, hideBackButton)
+    -- ...
+end
+
+--- Pops the last panel
+function mod_menu_pop_panel()
+    -- ...
+end
+
 --- @param message string
 --- @param lines integer
 --- Creates a popup that says `message` and has `lines`
