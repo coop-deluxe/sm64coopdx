@@ -6191,10 +6191,40 @@ Gets a vanilla mario Animation with `index`
 
 <br />
 
+## smlua_anim_util_register_animation
+
+### Description
+Registers an animation with `name` as the identifier that can be used by objects
+
+### Lua Example
+`smlua_anim_util_register_animation(name, flags, animYTransDivisor, startFrame, loopStart, loopEnd, values, index)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| name | `string` |
+| flags | `integer` |
+| animYTransDivisor | `integer` |
+| startFrame | `integer` |
+| loopStart | `integer` |
+| loopEnd | `integer` |
+| values | `table` |
+| index | `table` |
+
+### Returns
+- None
+
+### C Prototype
+`void smlua_anim_util_register_animation(const char *name, s16 flags, s16 animYTransDivisor, s16 startFrame, s16 loopStart, s16 loopEnd, LuaTable values, LuaTable index);`
+
+[:arrow_up_small:](#)
+
+<br />
+
 ## smlua_anim_util_set_animation
 
 ### Description
-Sets the animation of `obj` to the animation `name` corresponds to
+Sets the animation of `obj` to the animation registered with `name`
 
 ### Lua Example
 `smlua_anim_util_set_animation(obj, name)`
@@ -8091,6 +8121,58 @@ This function is designed for rotating the camera to face Mario's facing angle w
 
 <br />
 
+
+## collision_find_surface_on_ray
+
+### Description
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, bigger `precision` is higher
+
+### Lua Example
+`local rayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ, precision)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+| precision | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ, f32 precision);`
+
+---
+### Description
+Shoots a raycast from `startX`, `startY`, and `startZ` in the direction of `dirX`, `dirY`, and `dirZ`, with default precision (3.0)
+
+### Lua Example
+`local rayIntersectionInfoValue = collision_find_surface_on_ray(startX, startY, startZ, dirX, dirY, dirZ)`
+
+### Parameters
+| Field | Type |
+| ----- | ---- |
+| startX | `number` |
+| startY | `number` |
+| startZ | `number` |
+| dirX | `number` |
+| dirY | `number` |
+| dirZ | `number` |
+
+### Returns
+- [RayIntersectionInfo](structs.md#RayIntersectionInfo)
+
+### C Prototype
+`struct RayIntersectionInfo* collision_find_surface_on_ray_default_precision(f32 startX, f32 startY, f32 startZ, f32 dirX, f32 dirY, f32 dirZ);`
+
+[:arrow_up_small:](#)
+
+<br />
 
 ## collision_find_floor
 

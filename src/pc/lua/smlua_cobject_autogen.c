@@ -2647,11 +2647,12 @@ static struct LuaObjectField sSurfaceFields[LUA_SURFACE_FIELD_COUNT] = {
     { "vertex3",           LVT_COBJECT,   offsetof(struct Surface, vertex3),           true,  LOT_VEC3S  },
 };
 
-#define LUA_TEXTURE_INFO_FIELD_COUNT 6
+#define LUA_TEXTURE_INFO_FIELD_COUNT 7
 static struct LuaObjectField sTextureInfoFields[LUA_TEXTURE_INFO_FIELD_COUNT] = {
     { "format",  LVT_U8,        offsetof(struct TextureInfo, format),  true, LOT_NONE    },
     { "height",  LVT_U32,       offsetof(struct TextureInfo, height),  true, LOT_NONE    },
     { "name",    LVT_STRING_P,  offsetof(struct TextureInfo, name),    true, LOT_NONE    },
+    { "pixels",  LVT_TEXTURE_P, offsetof(struct TextureInfo, pixels),  true, LOT_POINTER },
     { "size",    LVT_U8,        offsetof(struct TextureInfo, size),    true, LOT_NONE    },
     { "texture", LVT_TEXTURE_P, offsetof(struct TextureInfo, texture), true, LOT_POINTER },
     { "width",   LVT_U32,       offsetof(struct TextureInfo, width),   true, LOT_NONE    },

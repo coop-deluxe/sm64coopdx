@@ -72,5 +72,15 @@ audio_stream_set_volume = audio_set_volume
 audio_stream_get_volume_channel = audio_get_volume_channel
 audio_stream_set_volume_channel = audio_set_volume_channel
 
+---------------------------
+-- Old texture functions --
+---------------------------
+
+get_texture_info = smlua_texture_util_get_info
+texture_override_set = smlua_texture_util_override_set
+texture_override_reset = smlua_texture_util_override_reset
+texture_to_lua_table = smlua_texture_util_to_table
+get_texture_name = smlua_texture_util_get_name
+
 -- compatibility band-aid
 function return_self(self) return self end
