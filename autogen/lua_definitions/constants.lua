@@ -7185,53 +7185,40 @@ LAYER_TRANSPARENT_DECAL = 6
 --- @type integer
 LAYER_TRANSPARENT_INTER = 7
 
---- @type integer
-INPUT_NONZERO_ANALOG = 0x0001
+INPUT_NONZERO_ANALOG         =  (1 << 0) --- @type MarioInput
+INPUT_A_PRESSED              =  (1 << 1) --- @type MarioInput
+INPUT_OFF_FLOOR              =  (1 << 2) --- @type MarioInput
+INPUT_ABOVE_SLIDE            =  (1 << 3) --- @type MarioInput
+INPUT_FIRST_PERSON           =  (1 << 4) --- @type MarioInput
+INPUT_ZERO_MOVEMENT          =  (1 << 5) --- @type MarioInput
+INPUT_SQUISHED               =  (1 << 6) --- @type MarioInput
+INPUT_A_DOWN                 =  (1 << 7) --- @type MarioInput
+INPUT_IN_POISON_GAS          =  (1 << 8) --- @type MarioInput
+INPUT_IN_WATER               =  (1 << 9) --- @type MarioInput
+INPUT_STOMPED                = (1 << 10) --- @type MarioInput
+INPUT_INTERACT_OBJ_GRABBABLE = (1 << 11) --- @type MarioInput
+INPUT_UNKNOWN_12             = (1 << 12) --- @type MarioInput
+INPUT_B_PRESSED              = (1 << 13) --- @type MarioInput
+INPUT_Z_DOWN                 = (1 << 14) --- @type MarioInput
+INPUT_Z_PRESSED              = (1 << 15) --- @type MarioInput
 
---- @type integer
-INPUT_A_PRESSED = 0x0002
-
---- @type integer
-INPUT_OFF_FLOOR = 0x0004
-
---- @type integer
-INPUT_ABOVE_SLIDE = 0x0008
-
---- @type integer
-INPUT_FIRST_PERSON = 0x0010
-
---- @type integer
-INPUT_ZERO_MOVEMENT = 0x0020
-
---- @type integer
-INPUT_SQUISHED = 0x0040
-
---- @type integer
-INPUT_A_DOWN = 0x0080
-
---- @type integer
-INPUT_IN_POISON_GAS = 0x0100
-
---- @type integer
-INPUT_IN_WATER = 0x0200
-
---- @type integer
-INPUT_UNKNOWN_10 = 0x0400
-
---- @type integer
-INPUT_INTERACT_OBJ_GRABBABLE = 0x0800
-
---- @type integer
-INPUT_UNKNOWN_12 = 0x1000
-
---- @type integer
-INPUT_B_PRESSED = 0x2000
-
---- @type integer
-INPUT_Z_DOWN = 0x4000
-
---- @type integer
-INPUT_Z_PRESSED = 0x8000
+--- @alias MarioInput
+--- | `INPUT_NONZERO_ANALOG`
+--- | `INPUT_A_PRESSED`
+--- | `INPUT_OFF_FLOOR`
+--- | `INPUT_ABOVE_SLIDE`
+--- | `INPUT_FIRST_PERSON`
+--- | `INPUT_ZERO_MOVEMENT`
+--- | `INPUT_SQUISHED`
+--- | `INPUT_A_DOWN`
+--- | `INPUT_IN_POISON_GAS`
+--- | `INPUT_IN_WATER`
+--- | `INPUT_STOMPED`
+--- | `INPUT_INTERACT_OBJ_GRABBABLE`
+--- | `INPUT_UNKNOWN_12`
+--- | `INPUT_B_PRESSED`
+--- | `INPUT_Z_DOWN`
+--- | `INPUT_Z_PRESSED`
 
 --- @type integer
 GROUND_STEP_LEFT_GROUND = 0

@@ -49,22 +49,24 @@
 #define LAYER_TRANSPARENT_DECAL 6
 #define LAYER_TRANSPARENT_INTER 7
 
-#define INPUT_NONZERO_ANALOG         0x0001
-#define INPUT_A_PRESSED              0x0002
-#define INPUT_OFF_FLOOR              0x0004
-#define INPUT_ABOVE_SLIDE            0x0008
-#define INPUT_FIRST_PERSON           0x0010
-#define INPUT_ZERO_MOVEMENT          0x0020
-#define INPUT_SQUISHED               0x0040
-#define INPUT_A_DOWN                 0x0080
-#define INPUT_IN_POISON_GAS          0x0100
-#define INPUT_IN_WATER               0x0200
-#define INPUT_UNKNOWN_10             0x0400
-#define INPUT_INTERACT_OBJ_GRABBABLE 0x0800
-#define INPUT_UNKNOWN_12             0x1000
-#define INPUT_B_PRESSED              0x2000
-#define INPUT_Z_DOWN                 0x4000
-#define INPUT_Z_PRESSED              0x8000
+enum MarioInput {
+    INPUT_NONZERO_ANALOG         = /* 0x0001 */ (1 <<  0),
+    INPUT_A_PRESSED              = /* 0x0002 */ (1 <<  1),
+    INPUT_OFF_FLOOR              = /* 0x0004 */ (1 <<  2),
+    INPUT_ABOVE_SLIDE            = /* 0x0008 */ (1 <<  3),
+    INPUT_FIRST_PERSON           = /* 0x0010 */ (1 <<  4),
+    INPUT_ZERO_MOVEMENT          = /* 0x0020 */ (1 <<  5),
+    INPUT_SQUISHED               = /* 0x0040 */ (1 <<  6),
+    INPUT_A_DOWN                 = /* 0x0080 */ (1 <<  7),
+    INPUT_IN_POISON_GAS          = /* 0x0100 */ (1 <<  8),
+    INPUT_IN_WATER               = /* 0x0200 */ (1 <<  9),
+    INPUT_STOMPED                = /* 0x0400 */ (1 << 10),
+    INPUT_INTERACT_OBJ_GRABBABLE = /* 0x0800 */ (1 << 11),
+    INPUT_UNKNOWN_12             = /* 0x1000 */ (1 << 12),
+    INPUT_B_PRESSED              = /* 0x2000 */ (1 << 13),
+    INPUT_Z_DOWN                 = /* 0x4000 */ (1 << 14),
+    INPUT_Z_PRESSED              = /* 0x8000 */ (1 << 15),
+};
 
 #define GROUND_STEP_LEFT_GROUND              0
 #define GROUND_STEP_NONE                     1

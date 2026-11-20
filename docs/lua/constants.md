@@ -95,6 +95,7 @@
 - [seq_ids.h](#seq_idsh)
     - [enum SeqId](#enum-SeqId)
 - [sm64.h](#sm64h)
+    - [enum MarioInput](#enum-MarioInput)
 - [smlua_audio_utils.h](#smlua_audio_utilsh)
     - [enum ModAudioType](#enum-ModAudioType)
     - [enum ModAudioFlags](#enum-ModAudioFlags)
@@ -3303,22 +3304,26 @@
 - LAYER_TRANSPARENT
 - LAYER_TRANSPARENT_DECAL
 - LAYER_TRANSPARENT_INTER
-- INPUT_NONZERO_ANALOG
-- INPUT_A_PRESSED
-- INPUT_OFF_FLOOR
-- INPUT_ABOVE_SLIDE
-- INPUT_FIRST_PERSON
-- INPUT_ZERO_MOVEMENT
-- INPUT_SQUISHED
-- INPUT_A_DOWN
-- INPUT_IN_POISON_GAS
-- INPUT_IN_WATER
-- INPUT_UNKNOWN_10
-- INPUT_INTERACT_OBJ_GRABBABLE
-- INPUT_UNKNOWN_12
-- INPUT_B_PRESSED
-- INPUT_Z_DOWN
-- INPUT_Z_PRESSED
+
+### enum MarioInput
+| Identifier | Value |
+| :--------- | :---- |
+| INPUT_NONZERO_ANALOG | (1 << 0) |
+| INPUT_A_PRESSED | (1 << 1) |
+| INPUT_OFF_FLOOR | (1 << 2) |
+| INPUT_ABOVE_SLIDE | (1 << 3) |
+| INPUT_FIRST_PERSON | (1 << 4) |
+| INPUT_ZERO_MOVEMENT | (1 << 5) |
+| INPUT_SQUISHED | (1 << 6) |
+| INPUT_A_DOWN | (1 << 7) |
+| INPUT_IN_POISON_GAS | (1 << 8) |
+| INPUT_IN_WATER | (1 << 9) |
+| INPUT_STOMPED | (1 << 10) |
+| INPUT_INTERACT_OBJ_GRABBABLE | (1 << 11) |
+| INPUT_UNKNOWN_12 | (1 << 12) |
+| INPUT_B_PRESSED | (1 << 13) |
+| INPUT_Z_DOWN | (1 << 14) |
+| INPUT_Z_PRESSED | (1 << 15) |
 - GROUND_STEP_LEFT_GROUND
 - GROUND_STEP_NONE
 - GROUND_STEP_HIT_WALL
