@@ -20,6 +20,10 @@
 - [djui_console.h](#djui_consoleh)
     - [enum ConsoleMessageLevel](#enum-ConsoleMessageLevel)
 - [djui_hud_utils.h](#djui_hud_utilsh)
+    - [enum HudUtilsRotationPivotX](#enum-HudUtilsRotationPivotX)
+    - [enum HudUtilsRotationPivotY](#enum-HudUtilsRotationPivotY)
+    - [enum HudUtilsHorizontalAlign](#enum-HudUtilsHorizontalAlign)
+    - [enum HudUtilsVerticalAlign](#enum-HudUtilsVerticalAlign)
     - [enum HudUtilsResolution](#enum-HudUtilsResolution)
     - [enum HudUtilsFilter](#enum-HudUtilsFilter)
     - [enum DjuiFontType](#enum-DjuiFontType)
@@ -1231,18 +1235,34 @@
 <br />
 
 ## djui_hud_utils.h
-- ROTATION_PIVOT_X_LEFT
-- ROTATION_PIVOT_X_CENTER
-- ROTATION_PIVOT_X_RIGHT
-- ROTATION_PIVOT_Y_TOP
-- ROTATION_PIVOT_Y_CENTER
-- ROTATION_PIVOT_Y_BOTTOM
-- TEXT_HALIGN_LEFT
-- TEXT_HALIGN_CENTER
-- TEXT_HALIGN_RIGHT
-- TEXT_VALIGN_TOP
-- TEXT_VALIGN_CENTER
-- TEXT_VALIGN_BOTTOM
+
+### enum HudUtilsRotationPivotX
+| Identifier | Value |
+| :--------- | :---- |
+| ROTATION_PIVOT_X_LEFT | 0.0 |
+| ROTATION_PIVOT_X_CENTER | 0.5 |
+| ROTATION_PIVOT_X_RIGHT | 1.0 |
+
+### enum HudUtilsRotationPivotY
+| Identifier | Value |
+| :--------- | :---- |
+| ROTATION_PIVOT_Y_TOP | 0.0 |
+| ROTATION_PIVOT_Y_CENTER | 0.5 |
+| ROTATION_PIVOT_Y_BOTTOM | 1.0 |
+
+### enum HudUtilsHorizontalAlign
+| Identifier | Value |
+| :--------- | :---- |
+| TEXT_HALIGN_LEFT | 0.0 |
+| TEXT_HALIGN_CENTER | 0.5 |
+| TEXT_HALIGN_RIGHT | 1.0 |
+
+### enum HudUtilsVerticalAlign
+| Identifier | Value |
+| :--------- | :---- |
+| TEXT_VALIGN_TOP | 0.0 |
+| TEXT_VALIGN_CENTER | 0.5 |
+| TEXT_VALIGN_BOTTOM | 1.0 |
 
 ### enum HudUtilsResolution
 | Identifier | Value |

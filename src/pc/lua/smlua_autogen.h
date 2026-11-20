@@ -35,4 +35,8 @@
 // A macro to tell autogen the function is to be part of a single overloaded function under `name`
 #define OVERLOAD(name)
 
+// A macro to tell autogen to treat the subsequent defines as enums
+#define ENUM(name, count) // for enum definition
+#define enum(name) // for type shadowing
+
 #endif // SMLUA_AUTOGEN_H

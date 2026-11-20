@@ -3940,7 +3940,7 @@ function djui_gfx_get_scale()
     -- ...
 end
 
---- @return integer
+--- @return HudUtilsResolution
 --- Gets the current DJUI HUD resolution
 function djui_hud_get_resolution()
     -- ...
@@ -3952,7 +3952,7 @@ function djui_hud_set_resolution(resolutionType)
     -- ...
 end
 
---- @return integer
+--- @return HudUtilsFilter
 --- Gets the current DJUI HUD texture filter
 function djui_hud_get_filter()
     -- ...
@@ -3964,13 +3964,13 @@ function djui_hud_set_filter(filterType)
     -- ...
 end
 
---- @return integer
+--- @return DjuiFontType
 --- Gets the current DJUI HUD font
 function djui_hud_get_font()
     -- ...
 end
 
---- @param fontType integer
+--- @param fontType DjuiFontType
 --- Sets the current DJUI HUD font
 function djui_hud_set_font(fontType)
     -- ...
@@ -4017,50 +4017,50 @@ function djui_hud_reset_text_color()
 end
 
 --- @return integer rotation
---- @return number pivotX
---- @return number pivotY
+--- @return HudUtilsRotationPivotX pivotX
+--- @return HudUtilsRotationPivotY pivotY
 --- Gets the current DJUI HUD rotation
 function djui_hud_get_rotation()
     -- ...
 end
 
 --- @param rotation integer
---- @param pivotX number
---- @param pivotY number
+--- @param pivotX HudUtilsRotationPivotX
+--- @param pivotY HudUtilsRotationPivotY
 --- Sets the current DJUI HUD rotation
 function djui_hud_set_rotation(rotation, pivotX, pivotY)
     -- ...
 end
 
 --- @param prevRotation integer
---- @param prevPivotX number
---- @param prevPivotY number
+--- @param prevPivotX HudUtilsRotationPivotX
+--- @param prevPivotY HudUtilsRotationPivotY
 --- @param rotation integer
---- @param pivotX number
---- @param pivotY number
+--- @param pivotX HudUtilsRotationPivotX
+--- @param pivotY HudUtilsRotationPivotY
 --- Sets the current DJUI HUD rotation interpolated
 function djui_hud_set_rotation_interpolated(prevRotation, prevPivotX, prevPivotY, rotation, pivotX, pivotY)
     -- ...
 end
 
---- @return number textHAlign
---- @return number textVAlign
+--- @return HudUtilsHorizontalAlign textHAlign
+--- @return HudUtilsVerticalAlign textVAlign
 --- Gets the current DJUI HUD text alignment
 function djui_hud_get_text_alignment()
     -- ...
 end
 
---- @param textHAlign number
---- @param textVAlign number
+--- @param textHAlign HudUtilsHorizontalAlign
+--- @param textVAlign HudUtilsVerticalAlign
 --- Sets the current DJUI HUD text alignment
 function djui_hud_set_text_alignment(textHAlign, textVAlign)
     -- ...
 end
 
---- @param prevTextHAlign number
---- @param prevTextVAlign number
---- @param textHAlign number
---- @param textVAlign number
+--- @param prevTextHAlign HudUtilsHorizontalAlign
+--- @param prevTextVAlign HudUtilsVerticalAlign
+--- @param textHAlign HudUtilsHorizontalAlign
+--- @param textVAlign HudUtilsVerticalAlign
 --- Sets the current DJUI HUD text alignment interpolated
 function djui_hud_set_text_alignment_interpolated(prevTextHAlign, prevTextVAlign, textHAlign, textVAlign)
     -- ...
