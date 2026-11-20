@@ -2,6 +2,8 @@
 #include "coopnet/coopnet.h"
 #include <stdio.h>
 #include "network.h"
+
+#include "badnet.h"
 #include "object_fields.h"
 #include "game/level_update.h"
 #include "object_constants.h"
@@ -101,7 +103,13 @@ void network_set_system(enum NetworkSystemType nsType) {
     network_forget_all_reliable();
 
     switch (nsType) {
-        case NS_SOCKET:  gNetworkSystem = &gNetworkSystemSocket; break;
+        case NS_SOCKET:
+            if (gBadNetEnabled) {
+                gNetworkSystem = &gNetworkSystemBadNet;
+            } else {
+                gNetworkSystem = &gNetworkSystemSocket;
+            }
+            break;
 #ifdef COOPNET
         case NS_COOPNET: gNetworkSystem = &gNetworkSystemCoopNet; break;
 #endif
@@ -645,7 +653,7 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
 }
 
 bool network_allow_mod_dev_mode(void) {
-    return (configModDevMode && gNetworkSystem == &gNetworkSystemSocket && gNetworkType == NT_SERVER);
+    return (configModDevMode && gNetworkSystem != &gNetworkSystemCoopNet && gNetworkType == NT_SERVER);
 }
 
 void network_mod_dev_mode_reload(void) {
