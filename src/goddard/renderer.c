@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "pc/rom_assets.h"
 #include <ultra64.h>
 #include <stdarg.h>
@@ -26,6 +27,12 @@
 
 #include "config.h"
 #include "gfx_dimensions.h"
+#include "gd_config.h"
+
+#include "pc/controller/controller_mouse.h"
+#include "pc/djui/djui.h"
+#include "pc/gfx/gfx.h"
+#include "pc/configfile.h"
 
 #define MAX_GD_DLS 1000
 #define OS_MESG_SI_COMPLETE 0x33333333
@@ -110,7 +117,7 @@ static OSContPad sPrevFrameCont[4]; // @ 801BAE88
 static u8 D_801BAEA0;
 static struct ObjGadget *sTimerGadgets[GD_NUM_TIMERS]; // @ 801BAEA8
 static u32 D_801BAF28;                                 // RAM addr offset?
-static s16 sTriangleBuf[13][8];                          // [[s16; 8]; 13]? vert indices?
+static s16 sTriangleBuf[GD_CFG_TRIANGLE_BUF_SIZE][8];
 static u8 *sMemBlockPoolBase; // @ 801BB00C
 static u32 sAllocMemory;      // @ 801BB010; malloc-ed bytes
 static s32 D_801BB018;
@@ -605,11 +612,11 @@ ROM_ASSET_LOAD_TEXTURE(gd_texture_mario_face_shine, "textures/intro_raw/mario_fa
 
 static Gfx gd_dl_mario_face_shine[] = {
     gsSPSetGeometryMode(G_TEXTURE_GEN),
-    gsSPTexture(0x07C0, 0x07C0, 0, G_TX_RENDERTILE, G_ON),
+    gsSPTexture(0x0280, 0x0280, 0, G_TX_RENDERTILE, G_ON),
     gsDPSetTexturePersp(G_TP_PERSP),
     gsDPSetTextureFilter(G_TF_BILERP),
     gsDPSetCombineMode(G_CC_HILITERGBA, G_CC_HILITERGBA),
-    gsDPLoadTextureBlock(gd_texture_mario_face_shine, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, 0,
+    gsDPLoadTextureBlock(gd_texture_mario_face_shine, G_IM_FMT_IA, G_IM_SIZ_8b, 32, 32, 0, 
                         G_TX_WRAP | G_TX_NOMIRROR, G_TX_WRAP | G_TX_NOMIRROR, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
     gsDPPipeSync(),
     gsSPEndDisplayList(),
@@ -887,9 +894,46 @@ void gd_exit(UNUSED s32 code) {
     }
 }
 
+struct GdAlloc {
+    struct GdAlloc *next;
+    struct GdAlloc *prev;
+    u32 size;
+    u32 pad;
+};
+
+static struct GdAlloc *sGdAllocList = NULL;
+
 /* 24A1D4 -> 24A220; orig name: func_8019BA04 */
 void gd_free(void *ptr) {
-    sAllocMemory -= gd_free_mem(ptr);
+    struct GdAlloc *block;
+
+    if (ptr == NULL) {
+        return;
+    }
+
+    block = (struct GdAlloc *) ptr - 1;
+
+    if (block->prev != NULL) {
+        block->prev->next = block->next;
+    } else {
+        sGdAllocList = block->next;
+    }
+    if (block->next != NULL) {
+        block->next->prev = block->prev;
+    }
+
+    sAllocMemory -= block->size;
+    free(block);
+}
+
+static void gd_free_all(void) {
+    while (sGdAllocList != NULL) {
+        struct GdAlloc *next = sGdAllocList->next;
+        free(sGdAllocList);
+        sGdAllocList = next;
+    }
+
+    sAllocMemory = 0;
 }
 
 /* 24A220 -> 24A318 */
@@ -912,12 +956,13 @@ void *gd_allocblock(u32 size) {
 }
 
 /* 24A318 -> 24A3E8 */
-void *gd_malloc(u32 size, u8 perm) {
-    void *ptr; // 1c
-    size = ALIGN(size, 8);
-    ptr = gd_request_mem(size, perm);
+void *gd_malloc(u32 size, UNUSED u8 perm) {
+    struct GdAlloc *block; // 1c
 
-    if (ptr == NULL) {
+    size = ALIGN(size, 8);
+    block = malloc(sizeof(struct GdAlloc) + size);
+
+    if (block == NULL) {
         gd_printf("gd_malloc(): Failed request: %dk (%d bytes)\n", size / 1024, size);
         gd_printf("gd_malloc(): Heap usage: %dk (%d bytes) \n", sAllocMemory / 1024, sAllocMemory);
         print_all_memtrackers();
@@ -925,9 +970,17 @@ void *gd_malloc(u32 size, u8 perm) {
         return NULL;
     }
 
+    block->size = size;
+    block->prev = NULL;
+    block->next = sGdAllocList;
+    if (sGdAllocList != NULL) {
+        sGdAllocList->prev = block;
+    }
+    sGdAllocList = block;
+
     sAllocMemory += size;
 
-    return ptr;
+    return block + 1;
 }
 
 /* 24A3E8 -> 24A420; orig name: func_8019BC18 */
@@ -1074,7 +1127,7 @@ void gdm_init(void *blockpool, u32 size) {
     sMemBlockPoolBase = blockpool;
     sMemBlockPoolSize = size;
     sMemBlockPoolUsed = 0;
-    sAllocMemory = 0;
+    gd_free_all();
     init_mem_block_lists();
     gd_reset_sfx();
     imout();
@@ -1194,7 +1247,7 @@ void gd_vblank(void) {
 }
 
 /**
- * Copies the player1 controller data from p1cont to sGdContPads[0].
+ * Copies the player1 controller data from p1cont to sGdContPads[0]. 
  */
 void gd_copy_p1_contpad(OSContPad *p1cont) {
     u32 i;                                    // 24
@@ -1846,7 +1899,7 @@ Vtx *gd_dl_make_vertex(f32 x, f32 y, f32 z, f32 alpha) {
 /* 24E6C0 -> 24E724 */
 void func_8019FEF0(void) {
     sTriangleBufCount++;
-    if (sVertexBufCount >= 12) {
+    if (sVertexBufCount >= GD_CFG_VERTEX_BATCH_SIZE) {
         gd_dl_flush_vertices();
         func_801A0038();
     }
@@ -3133,16 +3186,16 @@ void gd_init(void) {
     remove_all_timers();
 
     start_memtracker("Static DL");
-    sStaticDl = new_gd_dl(0, 1900, 4000, 1, 300, 8);
+    sStaticDl = new_gd_dl(0, GD_CFG_STATIC_DL_GFX, GD_CFG_STATIC_DL_VTX, 1, 300, 8);
     stop_memtracker("Static DL");
 
     start_memtracker("Dynamic DLs");
-    sDynamicMainDls[0] = new_gd_dl(1, 600, 10, 200, 10, 3);
-    sDynamicMainDls[1] = new_gd_dl(1, 600, 10, 200, 10, 3);
+    sDynamicMainDls[0] = new_gd_dl(1, GD_CFG_DYNAMIC_DL_GFX, GD_CFG_DYNAMIC_DL_VTX, 200, 10, 3);
+    sDynamicMainDls[1] = new_gd_dl(1, GD_CFG_DYNAMIC_DL_GFX, GD_CFG_DYNAMIC_DL_VTX, 200, 10, 3);
     stop_memtracker("Dynamic DLs");
 
-    sMHeadMainDls[0] = new_gd_dl(1, 100, 0, 0, 0, 0);
-    sMHeadMainDls[1] = new_gd_dl(1, 100, 0, 0, 0, 0);
+    sMHeadMainDls[0] = new_gd_dl(1, 5000, 0, 0, 0, 0);
+    sMHeadMainDls[1] = new_gd_dl(1, 5000, 0, 0, 0, 0);
 
     for (i = 0; i < ARRAY_COUNT(sViewDls); i++) {
         sViewDls[i][0] = create_child_gdl(1, sDynamicMainDls[0]);
@@ -3656,7 +3709,7 @@ void func_801A71CC(struct ObjNet *net) {
     UNUSED u32 pad50;
     struct ObjPlane *planeL2; // 4c
     UNUSED u32 pad48;
-    struct ObjPlane *planeL3; // 44
+    UNUSED struct ObjPlane *planeL3; // 44
 
     if (net->unk21C == NULL) {
         net->unk21C = make_group(0);
@@ -3722,10 +3775,11 @@ void func_801A71CC(struct ObjNet *net) {
     for (link3 = net->unk1CC->firstMember; link3 != NULL; link3 = link3->next) {
         planeL3 = (struct ObjPlane *) link3->obj;
 
-        if (!planeL3->unk18) {
+        // Crashes on high poly models so keep it commented out
+        /*if (!planeL3->unk18) {
             gd_print_bounding_box("plane=", &planeL3->boundingBox);
             fatal_printf("plane not in any zones\n");
-        }
+        }*/
     }
 }
 

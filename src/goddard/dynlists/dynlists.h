@@ -145,4 +145,17 @@ extern struct DynList dynlist_mario_eyebrow_left_shape[];
 extern struct DynList dynlist_mario_mustache_shape[];
 extern struct DynList dynlist_mario_master[];
 
+extern struct GdVtxData mario_Face_VtxInfo;
+extern struct GdFaceData mario_Face_FaceInfo;
+extern struct GdVtxData vtx_mario_eye_right;
+extern struct GdFaceData faces_mario_eye_right;
+extern struct GdVtxData vtx_mario_eye_left;
+extern struct GdFaceData faces_mario_eye_left;
+extern struct GdVtxData vtx_mario_eyebrow_right;
+extern struct GdFaceData faces_mario_eyebrow_right;
+extern struct GdVtxData vtx_mario_eyebrow_left;
+extern struct GdFaceData faces_mario_eyebrow_left;
+extern struct GdVtxData vtx_mario_mustache;
+extern struct GdFaceData faces_mario_mustache;
+
 #endif // GD_DYNLISTS_H
