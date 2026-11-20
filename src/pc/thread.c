@@ -2,6 +2,14 @@
 
 #include <assert.h>
 #include <string.h>
+#include "pc/debuglog.h"
+
+#define MAX_QUEUED_THREAD_CALLBACKS 32
+
+static ThreadCallbackFunc sThreadCallbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
+static u32 sThreadCallbackCount = 0;
+
+static pthread_mutex_t sThreadCallbackMutex = PTHREAD_MUTEX_INITIALIZER;
 
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
     int err1 = init_mutex(handle);
@@ -63,7 +71,7 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
 
     if (ret != 0) { return ret; }
 
-    handle->state = RUNNING;
+    handle->state = THREAD_STATE_RUNNING;
 
     return ret;
 }
@@ -71,14 +79,16 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
 int join_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
+    if (handle->state != THREAD_STATE_RUNNING) {
         return 0;
     }
 
     // Join the thread and wait for it to finish.
     int ret = pthread_join(handle->thread, NULL);
     if (ret == 0) {
-        handle->state = STOPPED;
+        handle->state = THREAD_STATE_STOPPED;
+    } else {
+        LOG_ERROR("Failed to join thread, error: %d", ret);
     }
 
     return ret;
@@ -87,14 +97,14 @@ int join_thread(struct ThreadHandle *handle) {
 int detach_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
+    if (handle->state != THREAD_STATE_RUNNING) {
         return 0;
     }
 
     // Detach the thread, it will no longer be joinable afterwards.
     int ret = pthread_detach(handle->thread);
     if (ret == 0) {
-        handle->state = STOPPED;
+        handle->state = THREAD_STATE_STOPPED;
     }
 
     return ret;
@@ -109,14 +119,14 @@ void exit_thread() {
 int stop_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
+    if (handle->state != THREAD_STATE_RUNNING) {
         return 0;
     }
 
     // Stop and or cancel the execution of the thread in question.
     int ret = pthread_cancel(handle->thread);
     if (ret == 0) {
-        handle->state = STOPPED;
+        handle->state = THREAD_STATE_STOPPED;
     }
 
     return ret;
@@ -175,4 +185,47 @@ int unlock_mutex(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
     return pthread_mutex_unlock(&handle->mutex);
+}
+
+/**
+ * Queues a thread callback for run
+ * Uses the `callback` function pointer defined in `ThreadHandle`
+ * All queued callbacks are ran at the start of the main loop in the main thread
+ *
+ * Returns `true` in the event the callback is added to the queue
+ * Returns `false` in the event the queue is full or the callback is `NULL`
+ */
+bool queue_thread_callback_call(struct ThreadHandle *handle) {
+    if (handle->callback == NULL) { return false; }
+
+    pthread_mutex_lock(&sThreadCallbackMutex);
+    if (sThreadCallbackCount >= MAX_QUEUED_THREAD_CALLBACKS) {
+        pthread_mutex_unlock(&sThreadCallbackMutex);
+        return false;
+    }
+
+    sThreadCallbacks[sThreadCallbackCount++] = handle->callback;
+    pthread_mutex_unlock(&sThreadCallbackMutex);
+
+    return true;
+}
+
+/**
+ * Calls queued thread callbacks from `queue_thread_callback_call`
+ * The callback count is reset to 0 on completion
+ */
+void call_queued_thread_callbacks(void) {
+    pthread_mutex_lock(&sThreadCallbackMutex);
+
+    ThreadCallbackFunc callbacks[MAX_QUEUED_THREAD_CALLBACKS] = { 0 };
+    u32 callbackCount = sThreadCallbackCount;
+
+    memcpy(callbacks, sThreadCallbacks, callbackCount * sizeof(*callbacks));
+    sThreadCallbackCount = 0;
+
+    pthread_mutex_unlock(&sThreadCallbackMutex);
+
+    for (u32 i = 0; i < callbackCount; i++) {
+        callbacks[i]();
+    }
 }

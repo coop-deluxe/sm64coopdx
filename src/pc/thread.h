@@ -13,16 +13,19 @@
 
 // Types
 enum ThreadState {
-    INVALID = 0,
-    STOPPED = 1,
-    RUNNING = 2
+    THREAD_STATE_INVALID = 0,
+    THREAD_STATE_STOPPED = 1,
+    THREAD_STATE_RUNNING = 2
 };
+
+typedef void (*ThreadCallbackFunc)(void);
 
 struct ThreadHandle {
     pthread_t thread;
     pthread_mutex_t mutex;
     enum ThreadState state;
     bool mutexInited;
+    ThreadCallbackFunc callback;
 };
 
 // Functions
@@ -43,5 +46,9 @@ int destroy_mutex(struct ThreadHandle *handle);
 int lock_mutex(struct ThreadHandle *handle);
 int trylock_mutex(struct ThreadHandle *handle);
 int unlock_mutex(struct ThreadHandle *handle);
+
+//// Callbacks
+bool queue_thread_callback_call(struct ThreadHandle *handle);
+void call_queued_thread_callbacks(void);
 
 #endif // THREADING_H
