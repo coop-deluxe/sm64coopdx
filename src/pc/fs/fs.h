@@ -109,5 +109,6 @@ bool fs_sys_dir_is_empty(const char *name);
 bool fs_sys_mkdir(const char *name); // creates with 0777 by default
 bool fs_sys_rmdir(const char *name); // removes an empty directory
 uint64_t fs_sys_get_modified_time(const char *path);
+bool fs_sys_load_file(const char *path, char **outContents, size_t *outSize); // doesn't push a null-terminated string! Use the out size!
 
 #endif // _SM64_FS_H_

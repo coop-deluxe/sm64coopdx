@@ -198,6 +198,11 @@ void mod_clear(struct Mod* mod) {
         }
     }
 
+    if (mod->name != NULL) {
+        free(mod->name);
+        mod->name = NULL;
+    }
+
     if (mod->incompatible != NULL) {
         free(mod->incompatible);
         mod->incompatible = NULL;
@@ -211,6 +216,11 @@ void mod_clear(struct Mod* mod) {
     if (mod->description != NULL) {
         free(mod->description);
         mod->description = NULL;
+    }
+
+    if (mod->id != NULL) {
+        free(mod->id);
+        mod->id = NULL;
     }
 
     if (mod->files != NULL) {
@@ -361,6 +371,11 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
         return (mod_allocate_file(mod, mod->relativePath) != NULL);
     }
 
+    // deal with manifest
+    if (mod->hasManifest) {
+        if (!mod_allocate_file(mod, MOD_MANIFEST_ENTRY_FILE)) { return false; }
+    }
+
     // deal with mod directory
     {
         const char* fileTypes[] = { ".lua", ".luac", NULL };
@@ -405,13 +420,11 @@ static void mod_set_loading_order(struct Mod* mod) {
         return;
     }
 
-    // TODO: add a way to specify the loading order of a mod's files?
-
     // By default, this is the alphabetical order on relative path
     for (s32 i = 1; i < mod->fileCount; ++i) {
         struct ModFile file = mod->files[i];
         for (s32 j = 0; j < i; ++j) {
-            if (strcmp(file.relativePath, mod->files[j].relativePath) < 0) {
+            if (pathcmp(file.relativePath, mod->files[j].relativePath) < 0) {
                 memmove(mod->files + j + 1, mod->files + j, sizeof(struct ModFile) * (i - j));
                 memcpy(mod->files + j, &file, sizeof(struct ModFile));
                 break;
@@ -420,14 +433,41 @@ static void mod_set_loading_order(struct Mod* mod) {
     }
 }
 
-static void mod_extract_fields(struct Mod* mod) {
+static bool mod_extract_string_lua_field(char **outValue, const char *fieldName, char *buffer) {
+    size_t fullFieldSize = strlen(fieldName) + strlen("-- :") + 1;
+
+    char *fullFieldName = calloc(fullFieldSize, sizeof(char));
+    snprintf(fullFieldName, fullFieldSize, "-- %s:", fieldName);
+
+    const char *extracted = extract_lua_field(fullFieldName, buffer);
+    if (extracted) {
+        free(*outValue);
+        *outValue = strdup(extracted);
+        free(fullFieldName);
+        return true;
+    }
+
+    free(fullFieldName);
+    return false;
+}
+
+static bool mod_extract_bool_lua_field(bool *outValue, const char *fieldName, char *buffer) {
+    char *fieldValue = NULL;
+    if (!mod_extract_string_lua_field(&fieldValue, fieldName, buffer)) { return false; }
+
+    *outValue = (strcmp(fieldValue, "true") == 0);
+    free(fieldValue);
+    return true;
+}
+
+static void mod_extract_fields_from_lua_file(struct Mod *mod) {
     // get full path
     char path[SYS_MAX_PATH] = { 0 };
-    char* relativePath = NULL;
+    char *relativePath = NULL;
     if (mod->isDirectory) {
-        for (int i = 0; i < mod->fileCount; i++) {
-            struct ModFile* file = &mod->files[i];
-            if (!strcmp(file->relativePath, "main.lua")) {
+        for (u32 i = 0; i < mod->fileCount; i++) {
+            struct ModFile *file = &mod->files[i];
+            if (!pathcmp(file->relativePath, mod->relativeEntryPath)) {
                 relativePath = file->relativePath;
             }
         }
@@ -436,25 +476,17 @@ static void mod_extract_fields(struct Mod* mod) {
     }
 
     if (relativePath == NULL || !concat_path(path, mod->basePath, relativePath)) {
-        LOG_ERROR("Failed to find main lua file.");
+        LOG_ERROR("Failed to find entry lua file.");
         return;
     }
 
     // open file
-    FILE* f = fopen(path, "rb");
+    FILE *f = fopen(path, "rb");
     if (f == NULL) {
         LOG_ERROR("Failed to open '%s'", path);
         return;
     }
     fseek(f, 0, SEEK_SET);
-
-    // default to null
-    mod->name[0] = 0;
-    mod->incompatible = NULL;
-    mod->category = NULL;
-    mod->description = NULL;
-    mod->pausable = true;
-    mod->ignoreScriptWarnings = false;
 
     // read line-by-line
     #define BUFFER_SIZE MAX(MAX(MOD_NAME_SIZE, MOD_INCOMPATIBLE_SIZE), MOD_DESCRIPTION_SIZE)
@@ -468,36 +500,114 @@ static void mod_extract_fields(struct Mod* mod) {
             return;
         }
 
-        // extract the field
-        char* extracted = NULL;
-        if (!mod->name[0] && (extracted = extract_lua_field("-- name:", buffer))) {
-            if (snprintf(mod->name, MOD_NAME_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod name field '%s'", mod->name);
-            }
-        } else if (mod->incompatible == NULL && (extracted = extract_lua_field("-- incompatible:", buffer))) {
-            mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
-            if (snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod incompatible field '%s'", mod->incompatible);
-            }
-        } else if (mod->category == NULL && (extracted = extract_lua_field("-- category:", buffer))) {
-            mod->category = calloc(MOD_CATEGORY_SIZE, sizeof(char));
-            if (snprintf(mod->category, MOD_CATEGORY_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod category field '%s'", mod->category);
-            }
-        } else if (mod->description == NULL && (extracted = extract_lua_field("-- description:", buffer))) {
-            mod->description = calloc(MOD_DESCRIPTION_SIZE, sizeof(char));
-            if (snprintf(mod->description, MOD_DESCRIPTION_SIZE, "%s", extracted) < 0) {
-                LOG_INFO("Truncated mod description field '%s'", mod->description);
-            }
-        } else if ((extracted = extract_lua_field("-- pausable:", buffer))) {
-            mod->pausable = !strcmp(extracted, "true");
-        } else if ((extracted = extract_lua_field("-- ignore-script-warnings:", buffer))) {
-            mod->ignoreScriptWarnings = !strcmp(extracted, "true");
-        }
+        // extract strings
+        if (mod_extract_string_lua_field(&mod->name, "name", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->incompatible, "incompatible", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->category, "category", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->description, "description", buffer)) { continue; }
+        if (mod_extract_string_lua_field(&mod->id, "id", buffer)) { continue; }
+
+        // extract bools
+        if (mod_extract_bool_lua_field(&mod->pausable, "pausable", buffer)) { continue; }
+        if (mod_extract_bool_lua_field(&mod->ignoreScriptWarnings, "ignore-script-warnings", buffer)) { continue; }
     }
 
     // close file
     fclose(f);
+}
+
+static void mod_extract_string_manifest_field(char **outValue, const char *fieldName, yyjson_val *root) {
+    const char *name = yyjson_get_str(yyjson_obj_get(root, fieldName));
+    if (name) {
+        free(*outValue);
+        *outValue = strdup(name);
+    }
+}
+
+static void mod_extract_bool_manifest_field(bool *outValue, const char *fieldName, yyjson_val *root) {
+    yyjson_val *jsonObj = yyjson_obj_get(root, fieldName);
+    *outValue = yyjson_is_bool(jsonObj) ? yyjson_get_bool(jsonObj) : *outValue;
+}
+
+static void mod_extract_fields_from_manifest(struct Mod *mod) {
+    if (!mod->hasManifest) { return; }
+
+    char manifestPath[SYS_MAX_PATH] = { 0 };
+    if (!concat_path(manifestPath, mod->basePath, MOD_MANIFEST_ENTRY_FILE)) {
+        LOG_ERROR("Failed to concat path '%s' + '%s'", mod->basePath, MOD_MANIFEST_ENTRY_FILE);
+        return;
+    }
+
+    yyjson_doc *doc = get_yyjson_doc_from_path(manifestPath);
+    if (doc == NULL) { return; }
+    yyjson_val *root = yyjson_doc_get_root(doc);
+
+    // process manifest fields
+    mod_extract_string_manifest_field(&mod->name, "name", root);
+
+    // manually extract incompatible field due to it being able to be a string array or regular string
+    yyjson_val *incompatibleObj = yyjson_obj_get(root, "incompatible");
+    const char *incompatibleStr = yyjson_get_str(incompatibleObj);
+    char incompatible[MOD_INCOMPATIBLE_SIZE] = { 0 };
+
+    if (incompatibleStr) {
+        // load as a string
+        snprintf(incompatible, MOD_INCOMPATIBLE_SIZE, "%s", incompatibleStr);
+    } else if (yyjson_is_arr(incompatibleObj)) {
+        // load as an array
+        u32 writePos = 0;
+
+        // iterate through array
+        u32 idx;
+        u32 max;
+        yyjson_val *hit;
+        yyjson_arr_foreach(incompatibleObj, idx, max, hit) {
+            // get string element
+            const char *string = yyjson_get_str(hit);
+            if (!string) { continue; }
+
+            size_t stringLength = strlen(string);
+
+            const char *spacer = (idx == max - 1 ? "" : " ");
+            size_t spacerLength = strlen(spacer);
+
+            // make sure new string can fit
+            if (stringLength + spacerLength > MOD_INCOMPATIBLE_SIZE - writePos) { continue; }
+
+            // write data using the data string and spacer
+            snprintf(incompatible + writePos, MOD_INCOMPATIBLE_SIZE - writePos, "%s%s", string, spacer);
+
+            // increment write pos
+            writePos += stringLength + spacerLength;
+        }
+    }
+
+    if (incompatible[0] != '\0') {
+        free(mod->incompatible);
+        mod->incompatible = calloc(MOD_INCOMPATIBLE_SIZE, sizeof(char));
+        snprintf(mod->incompatible, MOD_INCOMPATIBLE_SIZE, "%s", incompatible);
+    }
+
+    mod_extract_string_manifest_field(&mod->category, "category", root);
+    mod_extract_string_manifest_field(&mod->description, "description", root);
+    mod_extract_string_manifest_field(&mod->id, "id", root);
+    mod_extract_bool_manifest_field(&mod->pausable, "pausable", root);
+    mod_extract_bool_manifest_field(&mod->ignoreScriptWarnings, "ignoreScriptWarnings", root);
+
+    yyjson_doc_free(doc);
+}
+
+static void mod_extract_fields(struct Mod *mod) {
+    // default to null
+    mod->name = NULL;
+    mod->incompatible = NULL;
+    mod->category = NULL;
+    mod->description = NULL;
+    mod->pausable = true;
+    mod->ignoreScriptWarnings = false;
+
+    mod_extract_fields_from_lua_file(mod);
+    mod_extract_fields_from_manifest(mod);
 }
 
 bool mod_refresh_files(struct Mod* mod) {
@@ -550,7 +660,8 @@ bool mod_refresh_files(struct Mod* mod) {
 }
 
 bool mod_load(struct Mods* mods, char* basePath, char* modName) {
-    bool valid = false;
+    char relativeEntryFilePath[SYS_MAX_PATH] = { 0 };
+    char fullEntryFilePath[SYS_MAX_PATH] =  { 0 };
 
     char fullPath[SYS_MAX_PATH] = { 0 };
     if (!concat_path(fullPath, basePath, modName)) {
@@ -558,21 +669,52 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return true;
     }
 
+    bool hasManifest = false;
+    bool isCustomEntryFile = false;
     bool isDirectory = fs_sys_dir_exists(fullPath);
 
     // make sure mod is valid
     if (path_ends_with(modName, ".lua")) {
-        valid = true;
+        snprintf(fullEntryFilePath, SYS_MAX_PATH, "%s", fullPath);
+        snprintf(relativeEntryFilePath, SYS_MAX_PATH, "%s", modName);
     } else if (fs_sys_dir_exists(fullPath)) {
-        char tmpPath[SYS_MAX_PATH] = { 0 };
-        if (!concat_path(tmpPath, fullPath, "main.lua")) {
-            LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, "main.lua");
+        // get manifest path
+        char manifestPath[SYS_MAX_PATH] = { 0 };
+        if (!concat_path(manifestPath, fullPath, MOD_MANIFEST_ENTRY_FILE)) {
+            LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, MOD_MANIFEST_ENTRY_FILE);
             return true;
         }
-        valid = fs_sys_path_exists(tmpPath);
+
+        // get entry file in the manifest file
+        const char *manifestModEntryPath = NULL;
+        yyjson_doc *doc = get_yyjson_doc_from_path(manifestPath);
+        if (doc) {
+            yyjson_val *root = yyjson_doc_get_root(doc);
+            const char *jsonEntryFilePath = yyjson_get_str(yyjson_obj_get(root, "entryFile"));
+            if (jsonEntryFilePath != NULL && !path_has_traversal(jsonEntryFilePath) && path_ends_with(jsonEntryFilePath, ".lua")) {
+                manifestModEntryPath = jsonEntryFilePath;
+            }
+        }
+
+        snprintf(relativeEntryFilePath, SYS_MAX_PATH, "%s", (manifestModEntryPath != NULL ? manifestModEntryPath : MOD_ENTRY_FILE));
+        hasManifest = fs_sys_file_exists(manifestPath);
+        isCustomEntryFile = (manifestModEntryPath != NULL);
+        yyjson_doc_free(doc);
+
+        // get full entry lua path
+        char fullEntryPath[SYS_MAX_PATH] = { 0 };
+        if (!concat_path(fullEntryPath, fullPath, relativeEntryFilePath)) {
+            LOG_ERROR("Failed to concat path '%s' + '%s'", fullPath, relativeEntryFilePath);
+            return true;
+        }
+
+        snprintf(fullEntryFilePath, SYS_MAX_PATH, "%s", fullEntryPath);
     }
 
-    if (!valid) {
+    normalize_path(relativeEntryFilePath);
+    normalize_path(fullEntryFilePath);
+
+    if (!fs_sys_file_exists(fullEntryFilePath)) {
         LOG_ERROR("Found invalid mod '%s'", fullPath);
         return true;
     }
@@ -580,7 +722,7 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     // make sure mod is unique
     for (int i = 0; i < mods->entryCount; i++) {
         struct Mod* compareMod = mods->entries[i];
-        if (!strcmp(compareMod->relativePath, modName)) {
+        if (!pathcmp(compareMod->relativePath, modName)) {
             return true;
         }
     }
@@ -615,6 +757,15 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
         return false;
     }
 
+    // set relative entry path
+    snprintf(mod->relativeEntryPath, SYS_MAX_PATH, "%s", relativeEntryFilePath);
+
+    // set custom entry path flag
+    mod->isCustomEntryFile = isCustomEntryFile;
+
+    // set manifest
+    mod->hasManifest = hasManifest;
+
     // set directory
     mod->isDirectory = isDirectory;
 
@@ -631,10 +782,8 @@ bool mod_load(struct Mods* mods, char* basePath, char* modName) {
     mod_extract_fields(mod);
 
     // set name
-    if (!mod->name[0]) {
-        if (snprintf(mod->name, MOD_NAME_SIZE, "%s", modName) < 0) {
-            LOG_INFO("Truncated mod name field '%s'", mod->name);
-        }
+    if (mod->name == NULL) {
+        mod->name = strdup(modName);
     }
 
     // set category
