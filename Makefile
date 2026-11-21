@@ -755,6 +755,8 @@ else
   BACKEND_LDFLAGS += -lGL
 endif
 
+BACKEND_LDFLAGS += -lopus
+
 C_DEFINES += $(foreach d,$(DEFINES),-D$(d))
 DEF_INC_CFLAGS := $(foreach i,$(INCLUDE_DIRS),-I$(i)) $(C_DEFINES)
 
@@ -841,7 +843,7 @@ ifeq ($(ASAN),1)
   ifeq ($(COMPILER),gcc)
     EXTRA_CFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
     EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -ggdb
-    LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined -static-libasan
+    LDFLAGS += -fsanitize=address -fsanitize=bounds-strict -fsanitize=undefined
   else ifeq ($(COMPILER),clang)
     EXTRA_CFLAGS += -fsanitize=address -fsanitize=undefined -ggdb
     EXTRA_CPP_FLAGS += -fsanitize=address -fsanitize=undefined -ggdb
@@ -1540,6 +1542,8 @@ ifeq ($(OSX_BUILD),1)
   GLEW_ID  := $(shell otool -D $(GLEW_LIB) | tail -n1)
   SDL_LIB := $(shell find $(BREW_PREFIX)/lib/ | grep "libSDL3\." | sort -n | uniq | head -n 1)
   SDL_ID  := $(shell otool -D $(SDL_LIB) | tail -n1)
+  OPUS_LIB := $(shell find $(BREW_PREFIX)/lib/ | grep libopus | sort -n | uniq | head -n 1)
+  OPUS_ID  := $(shell otool -D $(OPUS_LIB) | tail -n1)
 endif
 
 all:
@@ -1570,6 +1574,10 @@ all:
     install_name_tool -change $(GLEW_ID) @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
 		install_name_tool -id @executable_path/libGLEW.dylib $(APP_MACOS_DIR)/libGLEW.dylib > /dev/null 2>&1; \
     codesign --force --deep --sign - $(APP_MACOS_DIR)/libGLEW.dylib > /dev/null 2>&1; \
+    cp $(OPUS_LIB) $(APP_MACOS_DIR)/libopus.dylib; \
+    install_name_tool -change $(OPUS_ID) @executable_path/libopus.dylib $(APP_MACOS_DIR)/sm64coopdx > /dev/null 2>&1; \
+		install_name_tool -id @executable_path/libopus.dylib $(APP_MACOS_DIR)/libopus.dylib > /dev/null 2>&1; \
+    codesign --force --deep --sign - $(APP_MACOS_DIR)/libopus.dylib > /dev/null 2>&1; \
     mkdir res/build; \
     xcrun actool res/icon.icon --compile res/build --app-icon icon --output-partial-info-plist res/build/Info.plist --minimum-deployment-target $(MIN_MACOS_VERSION) --platform macosx > /dev/null 2>&1; \
     mv res/build/Assets.car $(APP_RESOURCES_DIR)/; \

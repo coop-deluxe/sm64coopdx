@@ -161,3 +161,30 @@ It is indexed by the local `playerIndex`, so `gPlayerSyncTable[0]` is always for
 The underlying networking system will automatically translate the local `playerIndex` so that the field is set for the correct player.
 
 [:arrow_up_small:](#)
+
+<br />
+
+## [gVoicePlayers](#gVoicePlayers)
+The `gVoicePlayers[]` array holds voice chat related information about each player.
+It ranges from 0 to `(MAX_PLAYERS - 1)`.
+
+It is indexed by the local `playerIndex`, so `gVoicePlayers[0]` is always the local player.
+
+`gVoicePlayers`'s fields are listed in [VoicePlayer](structs.md#VoicePlayer).
+
+__**NOTE**__: It shouldn't be read from or modified if the server has voice chat disabled.
+To check if the server has voice chat disabled, you can check if `gServerSettings.voiceChat` is equal to `VOICECHAT_TYPE_DISALBED`.
+
+- `volume` is the player's volume on the client side. Its value is a percentage, so `100` means `100%`.
+- `clientMutedState`: Client side mute flags
+  - `VOICECHAT_MUTE_LOCAL`: For the local player, it is set if they muted themselves, otherwise it is set if the local player muted the other player in the voice chat menu.
+  - `VOICECHAT_MUTE_GLOBAL`: Set if the player was muted by the host or moderators. It cannot be disabled by themselves.
+  - `VOICECHAT_MUTE_DEAFENED`: For the local player, it is set if they deafened themselves, otherwise it is always unset.
+- `playerMutedState`: Server side mute flags
+  - `VOICECHAT_MUTE_LOCAL`: Set if they muted themselves.
+  - `VOICECHAT_MUTE_GLOBAL`: Mirrors the state of `VOICECHAT_MUTE_GLOBAL` in `clientMutedState`
+  - `VOICECHAT_MUTE_DEAFENED`: Set if they deafened themselves.
+
+Mute flags are read-only by mods. If you wish to modify these flags, you can use the various `voicechat_toggle_*` or `voicechat_set_*` functions. You may also want to see the [voice channel API](functions-7.md#voicechat_create_channel).
+
+[:arrow_up_small:](#)

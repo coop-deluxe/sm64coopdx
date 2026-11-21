@@ -23,7 +23,7 @@ static void djui_panel_controls_reset_binds_extra(struct DjuiBase* caller) {
 }
 
 void djui_panel_controls_extra_create(struct DjuiBase* caller) {
-    f32 bindBodyHeight = 28 * 13 + 1 * 12;
+    f32 bindBodyHeight = 28 * 16 + 1 * 12;
 
     struct DjuiThreePanel* panel = djui_panel_menu_create(DLANG(CONTROLS, CONTROLS), false);
     struct DjuiBase* body = djui_three_panel_get_body(panel);
@@ -47,6 +47,9 @@ void djui_panel_controls_extra_create(struct DjuiBase* caller) {
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, PREV),       configKeyPrevPage);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, NEXT),       configKeyNextPage);
             djui_bind_create(&bindBody->base, DLANG(CONTROLS, DISCONNECT), configKeyDisconnect);
+            djui_bind_create(&bindBody->base, DLANG(CONTROLS, MUTE_MIC),     configKeyMuteMic);
+            djui_bind_create(&bindBody->base, DLANG(CONTROLS, DEAFEN),       configKeyDeafen);
+            djui_bind_create(&bindBody->base, DLANG(CONTROLS, PUSH_TO_TALK), configKeyPushToTalk);
         }
         djui_button_create(body, DLANG(MENU, RESET_BINDS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_controls_reset_binds_extra);
         djui_button_create(body, DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);

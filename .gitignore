@@ -92,3 +92,5 @@ todo-old.txt
 tools/ido5.3_compiler/usr/lib/libc.so.1
 /.vs
 tools/audiofile/libaudiofile.a
+
+compile_commands.json
