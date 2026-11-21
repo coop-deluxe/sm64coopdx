@@ -292,6 +292,40 @@ bool fs_sys_filename_is_portable(char const *filename) {
 
 /* these operate on the real file system */
 
+bool fs_sys_copy_file(const char *src, const char *dir) {
+    FILE *fin = fopen(src, "rb");
+    if (fin == NULL) {
+        return false;
+    }
+
+    FILE *fout = fopen(dir, "wb");
+    if (fout == NULL) {
+        fclose(fin);
+        return false;
+    }
+
+    size_t rbytes = 0;
+    size_t wbytes = 0;
+    unsigned char buff[8192];
+    while ((rbytes = fread(buff, 1, sizeof(buff), fin)) > 0) {
+        wbytes = fwrite(buff, 1, rbytes, fout);
+        if (wbytes != rbytes) {
+            fclose(fout);
+            fclose(fin);
+            return false;
+        }
+    }
+
+    fclose(fout);
+    fclose(fin);
+
+    if (ferror(fin) || ferror(fout)) {
+        return false;
+    }
+
+    return true;
+}
+
 bool fs_sys_path_exists(const char *name) {
 #ifdef _WIN32
     return GetFileAttributesA(name) != INVALID_FILE_ATTRIBUTES;

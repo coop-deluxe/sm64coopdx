@@ -2013,6 +2013,14 @@
 
 <br />
 
+- smlua_input_utils.h
+   - [smlua_input_util_get_current_gamepad](functions-7.md#smlua_input_util_get_current_gamepad)
+   - [smlua_input_util_start_text_input](functions-7.md#smlua_input_util_start_text_input)
+   - [smlua_input_util_stop_text_input](functions-7.md#smlua_input_util_stop_text_input)
+   - [smlua_input_util_text_input_active](functions-7.md#smlua_input_util_text_input_active)
+
+<br />
+
 - smlua_level_utils.h
    - [smlua_level_util_change_area](functions-7.md#smlua_level_util_change_area)
    - [smlua_level_util_get_info](functions-7.md#smlua_level_util_get_info)

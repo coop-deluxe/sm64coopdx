@@ -17,6 +17,7 @@
 #include "pc/lua/utils/smlua_misc_utils.h"
 #include "pc/lua/utils/smlua_camera_utils.h"
 #include "pc/lua/utils/smlua_gfx_utils.h"
+#include "pc/lua/utils/smlua_input_utils.h"
 #include "pc/mods/mods.h"
 #include "pc/crash_handler.h"
 #include "pc/debuglog.h"
@@ -144,6 +145,8 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gNametagsSettings.showSelfTag = false;
 
     gPauseMenuHidden = false;
+
+    gModHasInputFocus = false;
 
     // initialize the network system
     gNetworkSentJoin = false;
@@ -670,7 +673,6 @@ void network_mod_dev_mode_reload(void) {
     LOG_CONSOLE("===================================================");
 }
 
-
 void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnecting) {
     smlua_call_event_hooks(HOOK_ON_EXIT);
 
@@ -775,6 +777,8 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
     gFirstPersonCamera.fov = FIRST_PERSON_DEFAULT_FOV;
     vec3f_set(gFirstPersonCamera.offset, 0, 0, 0);
     first_person_reset();
+
+    gModHasInputFocus = false;
 
     le_shutdown();
 
