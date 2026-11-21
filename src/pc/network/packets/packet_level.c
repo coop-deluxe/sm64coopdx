@@ -22,30 +22,32 @@ void network_send_level(struct NetworkPlayer* toNp, bool sendArea) {
         struct Packet p = { 0 };
         packet_init(&p, PACKET_LEVEL, true, PLMT_NONE);
 
-        // level location
-        packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-        packet_write(&p, &gCurrActStarNum, sizeof(s16));
-        packet_write(&p, &gCurrLevelNum,   sizeof(s16));
+        // Level location
+        packet_write_int16(&p, gCurrCourseNum);
+        packet_write_int16(&p, gCurrActStarNum);
+        packet_write_int16(&p, gCurrLevelNum);
 
-        // level variables
-        packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
-        packet_write(&p, &gPssSlideStarted,         sizeof(u8));
-        packet_write(&p, &gTTCSpeedSetting,         sizeof(s16));
+        // Level variables
+        packet_write_int16(&p, gMarioStates[0].numCoins);
+        packet_write_uint8(&p, gPssSlideStarted);
+        packet_write_int16(&p, gTTCSpeedSetting);
 
-        // send level packet
+        // Send our level packet
         network_send_to(toNp->localIndex, &p);
+        
+        packet_clear(&p);
 
-        // send macro deletions
+        // Send macro deletions
         network_send_level_macro(toNp);
 
-        // send spawn info
+        // Send spawn info
         network_send_level_spawn_info(toNp);
 
         if (sendArea) {
-            // send the area
+            // Send the area
             network_send_area(toNp);
         } else {
-            // send sync valid
+            // Send sync valid
             network_send_sync_valid(toNp, gCurrCourseNum, gCurrActStarNum, gCurrLevelNum, -1, false);
         }
     }
@@ -60,14 +62,18 @@ extern s16 gTTCMovingBarDelays[];
 extern f32 gTTCPendulumInitialAccels[];
 extern u8 gTTCRotatingSolidInitialDelays[];
 extern s16 gTTCTreadmillSpeeds[];
+
 void network_receive_level(struct Packet* p) {
     LOG_INFO("rx level");
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + (sizeof(s16) * 5));
 
-    // read level location
-    s16 courseNum, actNum, levelNum;
-    packet_read(p, &courseNum,   sizeof(s16));
-    packet_read(p, &actNum,      sizeof(s16));
-    packet_read(p, &levelNum,    sizeof(s16));
+    // Read the level location
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
 
     extern s16 gCurrCourseNum, gCurrActStarNum, gCurrLevelNum;
     if (courseNum != gCurrCourseNum || actNum != gCurrActStarNum || levelNum != gCurrLevelNum) {
@@ -75,14 +81,14 @@ void network_receive_level(struct Packet* p) {
         return;
     }
 
-    // read level variables
+    // Read level variables
     s16 oldTTCSpeedSetting = gTTCSpeedSetting;
-    packet_read(p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_read(p, &gPssSlideStarted,         sizeof(u8));
-    packet_read(p, &gTTCSpeedSetting,         sizeof(s16));
+    gMarioStates[0].numCoins = packet_read_int16(p);
+    gPssSlideStarted = packet_read_uint8(p);
+    gTTCSpeedSetting = packet_read_int16(p);
     gHudDisplay.coins = gMarioStates[0].numCoins;
 
-    // fix TTC objects by reinitializing values pertaining to speed
+    // Fix TTC objects by reinitializing values pertaining to speed
     if (levelNum == LEVEL_TTC) {
         u32 sanityDepth = 0;
         for (struct Object *obj = obj_get_first(OBJ_LIST_SURFACE); obj != NULL; obj = obj_get_next(obj)) {

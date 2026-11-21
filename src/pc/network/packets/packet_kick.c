@@ -12,8 +12,9 @@ void network_send_kick(u8 localIndex, enum KickReasonType kickReason) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_KICK, true, PLMT_NONE);
     p.keepSendingAfterDisconnect = (kickReason == EKT_REJOIN);
-    packet_write(&p, &kickReasonType, sizeof(u8));
+    packet_write_uint8(&p, kickReasonType);
     network_send_to(localIndex, &p);
+    packet_clear(&p);
 }
 
 void network_receive_kick(struct Packet* p) {
@@ -26,10 +27,12 @@ void network_receive_kick(struct Packet* p) {
         LOG_ERROR("Kick came from non-server... refuse!");
         return;
     }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8));
 
-    u8 kickReasonType;
-    packet_read(p, &kickReasonType, sizeof(u8));
-    enum KickReasonType kickReason = kickReasonType;
+    enum KickReasonType kickReason = packet_read_uint8(p);
 
     f32 now = clock_elapsed();
     if ((now - sLastNotifyTime) > 3) {

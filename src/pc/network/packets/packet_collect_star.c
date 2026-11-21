@@ -52,41 +52,51 @@ void network_send_collect_star(struct Object* o, s16 coinScore, s16 starIndex) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_STAR, true, PLMT_NONE);
-    packet_write(&p, &gCurrSaveFileNum, sizeof(s16));
-    packet_write(&p, &gCurrCourseNum,   sizeof(s16));
-    packet_write(&p, &gCurrActStarNum,  sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,    sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,   sizeof(s16));
-    packet_write(&p, &o->oPosX, sizeof(f32) * 3);
-    packet_write(&p, &behaviorId, sizeof(u32));
-    packet_write(&p, &coinScore,  sizeof(s16));
-    packet_write(&p, &starIndex,  sizeof(s16));
-    packet_write(&p, &gSaveFileUsingBackupSlot, sizeof(u8));
+    packet_write_int16(&p, gCurrSaveFileNum);
+    packet_write_int16(&p, gCurrCourseNum);
+    packet_write_int16(&p, gCurrActStarNum);
+    packet_write_int16(&p, gCurrLevelNum);
+    packet_write_int16(&p, gCurrAreaIndex);
+    packet_write_int16(&p, coinScore);
+    packet_write_int16(&p, starIndex);
+    packet_write_float32(&p, o->oPosX);
+    packet_write_float32(&p, o->oPosY);
+    packet_write_float32(&p, o->oPosZ);
+    packet_write_uint32(&p, behaviorId);
+    packet_write_uint8(&p, gSaveFileUsingBackupSlot);
 
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_star(struct Packet* p) {
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(s16) * 7) + (sizeof(f32) * 3) + sizeof(u32) + sizeof(u8));
+    
     f32 pos[3] = { 0 };
-    u32 behaviorId;
-    s16 coinScore, starIndex;
+    
     s16 lastSaveFileNum = gCurrSaveFileNum;
     s16 lastCourseNum   = gCurrCourseNum;
     s16 lastStarActNum  = gCurrActStarNum;
     s16 lastLevelNum    = gCurrLevelNum;
     s16 lastAreaIndex   = gCurrAreaIndex;
     u8  lastBackupSlot  = gSaveFileUsingBackupSlot;
+    
+    gCurrSaveFileNum = packet_read_int16(p);
+    gCurrCourseNum = packet_read_int16(p);
+    gCurrActStarNum = packet_read_int16(p);
+    gCurrLevelNum = packet_read_int16(p);
+    gCurrAreaIndex = packet_read_int16(p);
+    s16 coinScore = packet_read_int16(p);
+    s16 starIndex = packet_read_int16(p);
+    pos[0] = packet_read_float32(p);
+    pos[1] = packet_read_float32(p);
+    pos[2] = packet_read_float32(p);
+    u32 behaviorId = packet_read_uint32(p);
+    gSaveFileUsingBackupSlot = packet_read_uint8(p);
 
-    packet_read(p, &gCurrSaveFileNum, sizeof(s16));
-    packet_read(p, &gCurrCourseNum,   sizeof(s16));
-    packet_read(p, &gCurrActStarNum,  sizeof(s16));
-    packet_read(p, &gCurrLevelNum,    sizeof(s16));
-    packet_read(p, &gCurrAreaIndex,   sizeof(s16));
-    packet_read(p, &pos, sizeof(f32) * 3);
-    packet_read(p, &behaviorId, sizeof(u32));
-    packet_read(p, &coinScore,  sizeof(s16));
-    packet_read(p, &starIndex,  sizeof(s16));
-    packet_read(p, &gSaveFileUsingBackupSlot, sizeof(u8));
     if (gSaveFileUsingBackupSlot != 0) { gSaveFileUsingBackupSlot = 1; }
 
     const void* behavior = get_behavior_from_id(behaviorId);

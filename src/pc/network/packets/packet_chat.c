@@ -68,25 +68,32 @@ void network_send_chat(char* message, u8 globalIndex) {
     if (sMatched) { return; }
 
     u16 messageLength = strlen(message);
+    if (messageLength >= MAX_CHAT_MSG_LENGTH - 1) { messageLength = MAX_CHAT_MSG_LENGTH - 1; }
+    
     struct Packet p = { 0 };
     packet_init(&p, PACKET_CHAT, true, PLMT_NONE);
-    packet_write(&p, &globalIndex, sizeof(u8));
-    packet_write(&p, &messageLength, sizeof(u16));
+    packet_write_uint8(&p, globalIndex);
+    packet_write_uint16(&p, messageLength);
     packet_write(&p, message, messageLength * sizeof(u8));
+    
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_chat(struct Packet* p) {
-    u16 remoteMessageLength = 0;
     char remoteMessage[MAX_CHAT_MSG_LENGTH] = { 0 };
-    u8 globalIndex;
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + sizeof(u16));
 
-    packet_read(p, &globalIndex, sizeof(u8));
-    packet_read(p, &remoteMessageLength, sizeof(u16));
+    u8 globalIndex = packet_read_uint8(p);
+    u16 remoteMessageLength = packet_read_uint16(p);
     if (remoteMessageLength >= MAX_CHAT_MSG_LENGTH - 1) { remoteMessageLength = MAX_CHAT_MSG_LENGTH - 1; }
     packet_read(p, &remoteMessage, remoteMessageLength * sizeof(u8));
 
-    // anti spoof
+    // Anti spoof
     if (packet_spoofed(p, globalIndex)) {
         LOG_ERROR("rx spoofed chat");
         return;
@@ -97,7 +104,7 @@ void network_receive_chat(struct Packet* p) {
     np->gag = np->gag || found_match(remoteMessage);
     if (np->gag) { return; }
 
-    // add the message
+    // Add the message
     djui_chat_message_create_from(globalIndex, remoteMessage);
 
     if (gNetworkSystem && gNetworkSystem->get_id_str && np->connected && strlen(np->name) > 0) {

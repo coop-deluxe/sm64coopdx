@@ -1,6 +1,8 @@
 #ifndef BAN_LIST_H
 #define BAN_LIST_H
 
+#include "types.h"
+
 #include <stdbool.h>
 
 extern char** gBanAddresses;

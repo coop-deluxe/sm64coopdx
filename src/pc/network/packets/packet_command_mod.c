@@ -10,26 +10,31 @@ void network_send_chat_command(u8 globalIndex, enum ChatConfirmCommand ccc) {
     if (!gNetworkPlayers[0].moderator) return;
 
     u8 cccType = ccc; struct Packet p = { 0 };
-    LOG_INFO("sending chat command to host with type: %d", cccType);
+    LOG_INFO("Sending chat command to host with type: %d", cccType);
     packet_init(&p, PACKET_COMMAND, false, PLMT_NONE);
-    packet_write(&p, &globalIndex, sizeof(u8));
-    packet_write(&p, &cccType, sizeof(u8));
+    packet_write_uint8(&p, globalIndex);
+    packet_write_uint8(&p, cccType);
     network_send_to(gNetworkPlayerServer->localIndex, &p);
+    packet_clear(&p);
 }
 
 void network_receive_chat_command(struct Packet *p) {
     if (gNetworkType != NT_SERVER) {
-        LOG_ERROR("recieved chat command as non server");
+        LOG_ERROR("Recieved chat command as non-server");
         return;
     }
 
     if (!moderator_list_contains(gNetworkSystem->get_id_str(p->localIndex))) {
-        LOG_ERROR("recieved moderator command from non moderator");
+        LOG_ERROR("Recieved moderator command from non-moderator");
         return;
     }
-    u8 CCC; u8 player;
-    packet_read(p, &player, sizeof(u8));
-    packet_read(p, &CCC, sizeof(u8));
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 2));
+    
+    u8 player = packet_read_uint8(p);
+    u8 CCC = packet_read_uint8(p);
 
     if (CCC != CCC_KICK && CCC != CCC_BAN) {
         LOG_ERROR("recieved an invalid chat command: %d", CCC);

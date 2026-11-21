@@ -11,31 +11,36 @@ extern struct Object* gCurrentObject;
 void network_send_spawn_star(struct Object* o, u8 starType, f32 x, f32 y, f32 z, u32 behParams, u8 networkPlayerIndex) {
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR, true, PLMT_AREA);
-    packet_write(&p, &starType, sizeof(u8));
-    packet_write(&p, &x, sizeof(f32));
-    packet_write(&p, &y, sizeof(f32));
-    packet_write(&p, &z, sizeof(f32));
-    packet_write(&p, &behParams, sizeof(u32));
-    packet_write(&p, &networkPlayerIndex, sizeof(u8));
-
-    packet_write(&p, &o->oPosX, sizeof(u32) * 3);
-    packet_write(&p, &o->oHomeX, sizeof(u32) * 3);
+    packet_write_uint8(&p, starType);
+    packet_write_uint8(&p, networkPlayerIndex);
+    packet_write_float32(&p, x);
+    packet_write_float32(&p, y);
+    packet_write_float32(&p, z);
+    packet_write_uint32(&p, behParams);
+    packet_write_float32(&p, o->oPosX);
+    packet_write_float32(&p, o->oPosY);
+    packet_write_float32(&p, o->oPosZ);
+    packet_write_float32(&p, o->oHomeX);
+    packet_write_float32(&p, o->oHomeY);
+    packet_write_float32(&p, o->oHomeZ);
 
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_spawn_star(struct Packet* p) {
-    u8 starType;
-    f32 x, y, z;
-    u32 behParams;
-    u8 networkPlayerIndex = UNKNOWN_GLOBAL_INDEX;
-
-    packet_read(p, &starType, sizeof(u8));
-    packet_read(p, &x, sizeof(f32));
-    packet_read(p, &y, sizeof(f32));
-    packet_read(p, &z, sizeof(f32));
-    packet_read(p, &behParams, sizeof(u32));
-    packet_read(p, &networkPlayerIndex, sizeof(u8));
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 2) + (sizeof(f32) * 9) + sizeof(u32));
+    
+    u8 starType = packet_read_uint8(p);
+    u8 networkPlayerIndex = packet_read_uint8(p);
+    f32 x = packet_read_float32(p);
+    f32 y = packet_read_float32(p);
+    f32 z = packet_read_float32(p);
+    u32 behParams = packet_read_uint32(p);
 
     struct Object* oldObject = gCurrentObject;
     struct Object* o = NULL;
@@ -54,8 +59,12 @@ void network_receive_spawn_star(struct Packet* p) {
     gCurrentObject = oldObject;
 
     if (o != NULL) {
-        packet_read(p, &o->oPosX, sizeof(u32) * 3);
-        packet_read(p, &o->oHomeX, sizeof(u32) * 3);
+        o->oPosX = packet_read_float32(p);
+        o->oPosY = packet_read_float32(p);
+        o->oPosZ = packet_read_float32(p);
+        o->oHomeX = packet_read_float32(p);
+        o->oHomeY = packet_read_float32(p);
+        o->oHomeZ = packet_read_float32(p);
 
         // Here we check if we're supposed to play the cutscene or not depending on if
         // the global player index sent matches us.
@@ -82,21 +91,24 @@ void network_send_spawn_star_nle(struct Object* o, u32 params) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_STAR_NLE, true, PLMT_AREA);
-    packet_write(&p, &globalIndex, sizeof(u8));
-    packet_write(&p, &o->oSyncID, sizeof(u32));
-    packet_write(&p, &params, sizeof(u32));
+    packet_write_uint8(&p, globalIndex);
+    packet_write_uint32(&p, o->oSyncID);
+    packet_write_uint32(&p, params);
 
     network_send(&p);
+    packet_clear(&p);
 }
 
 void network_receive_spawn_star_nle(struct Packet* p) {
-    u8 globalIndex = UNKNOWN_GLOBAL_INDEX;
-    u32 syncId = 0;
-    u32 params = 0;
-
-    packet_read(p, &globalIndex, sizeof(u8));
-    packet_read(p, &syncId, sizeof(u32));
-    packet_read(p, &params, sizeof(u32));
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + (sizeof(u32) * 2));
+  
+    u8 globalIndex = packet_read_uint8(p);
+    u32 syncId = packet_read_uint32(p);
+    u32 params = packet_read_uint32(p);
 
     // grab network player first
     struct Object* object = NULL;

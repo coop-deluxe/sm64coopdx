@@ -17,16 +17,16 @@
 
 #pragma pack(1)
 struct SpawnObjectData {
-    u8 ctx;
     u32 parentId;
     u32 model;
+    u16 extendedModelId;
     u32 behaviorId;
+    u8 ctx;
     s16 activeFlags;
-    s32 rawData[OBJECT_NUM_FIELDS];
+    Vec3f scale;
     u8 setHome;
     u8 globalPlayerIndex;
-    u16 extendedModelId;
-    u8 extraFieldCount;
+    u32 rawData[OBJECT_NUM_FIELDS];
 };
 #pragma pack()
 
@@ -80,9 +80,8 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
     struct Packet p = { 0 };
     packet_init(&p, PACKET_SPAWN_OBJECTS, true, PLMT_AREA);
 
-    // objects
-    packet_write(&p, &objectCount, sizeof(u8));
-
+    // Objects
+    packet_write_uint8(&p, objectCount);
     for (u8 i = 0; i < objectCount; i++) {
         struct Object* o = objects[i];
         if (!o || !o->ctx) {
@@ -94,21 +93,20 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
         u32 parentId = generate_parent_id(objects, i, true);
         u32 behaviorId = get_id_from_behavior(o->behavior);
         struct SyncObject* so = sync_object_get(o->oSyncID);
-        u16 extendedModelId = (so && so->o == o)
-                            ? so->extendedModelId
-                            : 0xFFFF;
-        packet_write(&p, &o->ctx, sizeof(u8));
-        packet_write(&p, &parentId, sizeof(u32));
-        packet_write(&p, &model, sizeof(u32));
-        packet_write(&p, &behaviorId, sizeof(u32));
-        packet_write(&p, &o->activeFlags, sizeof(s16));
+        u16 extendedModelId = (so && so->o == o) ? so->extendedModelId : 0xFFFF;
+        
+        packet_write_uint32(&p, parentId);
+        packet_write_uint32(&p, model);
+        packet_write_uint16(&p, extendedModelId);
+        packet_write_uint32(&p, behaviorId);
+        packet_write_uint8(&p, o->ctx);
+        packet_write_int16(&p, o->activeFlags);
+        packet_write_float32(&p, o->header.gfx.scale[0]);
+        packet_write_float32(&p, o->header.gfx.scale[1]);
+        packet_write_float32(&p, o->header.gfx.scale[2]);
+        packet_write_uint8(&p, o->setHome);
+        packet_write_uint8(&p, o->globalPlayerIndex);
         packet_write(&p, o->rawData.asU32, sizeof(u32) * OBJECT_NUM_FIELDS);
-        packet_write(&p, &o->header.gfx.scale[0], sizeof(f32));
-        packet_write(&p, &o->header.gfx.scale[1], sizeof(f32));
-        packet_write(&p, &o->header.gfx.scale[2], sizeof(f32));
-        packet_write(&p, &o->setHome, sizeof(u8));
-        packet_write(&p, &o->globalPlayerIndex, sizeof(u8));
-        packet_write(&p, &extendedModelId, sizeof(u16));
     }
 
     if (sendToLocalIndex == PACKET_DESTINATION_BROADCAST) {
@@ -122,35 +120,43 @@ void network_send_spawn_objects_to(u8 sendToLocalIndex, struct Object* objects[]
             LOG_INFO("tx spawn objects to %d | %u", gNetworkPlayers[sendToLocalIndex].globalIndex, get_id_from_behavior(objects[0]->behavior));
         }
     }
+    packet_clear(&p);
 }
 
 void network_receive_spawn_objects(struct Packet* p) {
+    if (p == NULL) { return; }
+    
     // prevent receiving spawn objects during credits
     if (gCurrActStarNum == 99) {
         LOG_ERROR("rx failed: in credits");
         return;
     }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8));
 
-    u8 objectCount = 0;
-    packet_read(p, &objectCount, sizeof(u8));
-
+    u8 objectCount = packet_read_uint8(p);
+    
+    SOFT_ASSERT(objectCount < MAX_SPAWN_OBJECTS_PER_PACKET);
+    SOFT_ASSERT(packet_get_remaining_size(p) >= objectCount * sizeof(struct SpawnObjectData));
+    
     struct Object* spawned[MAX_SPAWN_OBJECTS_PER_PACKET] = { 0 };
     for (u8 i = 0; i < objectCount; i++) {
         struct SpawnObjectData data = { 0 };
-        Vec3f scale = { 0 };
-        u8 ctx = 0;
-        packet_read(p, &ctx, sizeof(u8));
-        packet_read(p, &data.parentId, sizeof(u32));
-        packet_read(p, &data.model, sizeof(u32));
-        packet_read(p, &data.behaviorId, sizeof(u32));
-        packet_read(p, &data.activeFlags, sizeof(s16));
+        
+        data.parentId = packet_read_uint32(p);
+        data.model = packet_read_uint32(p);
+        data.extendedModelId = packet_read_uint16(p);
+        data.behaviorId = packet_read_uint32(p);
+        data.ctx = packet_read_uint8(p);
+        data.activeFlags = packet_read_int16(p);
+        data.scale[0] = packet_read_float32(p);
+        data.scale[1] = packet_read_float32(p);
+        data.scale[2] = packet_read_float32(p);
+        data.setHome = packet_read_uint8(p);
+        data.globalPlayerIndex = packet_read_uint8(p);
         packet_read(p, &data.rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
-        packet_read(p, &scale[0], sizeof(f32));
-        packet_read(p, &scale[1], sizeof(f32));
-        packet_read(p, &scale[2], sizeof(f32));
-        packet_read(p, &data.setHome, sizeof(u8));
-        packet_read(p, &data.globalPlayerIndex, sizeof(u8));
-        packet_read(p, &data.extendedModelId, sizeof(u16));
 
         char* id = "unknown";
         char* name = "unknown";
@@ -218,22 +224,22 @@ void network_receive_spawn_objects(struct Packet* p) {
 
         void* behavior = (void*)get_behavior_from_id(data.behaviorId);
         struct Object* o = NULL;
-        if (ctx) { o = spawn_object(parentObj, data.model, behavior); }
+        if (data.ctx) { o = spawn_object(parentObj, data.model, behavior); }
         if (o == NULL) {
             LOG_ERROR("ERROR: failed to allocate object!");
             return;
         }
 
-        o->ctx = ctx;
+        o->ctx = data.ctx;
         o->globalPlayerIndex = data.globalPlayerIndex;
         o->coopFlags |= COOP_OBJ_FLAG_NETWORK;
         o->setHome = data.setHome;
 
         memcpy(o->rawData.asU32, data.rawData, sizeof(u32) * OBJECT_NUM_FIELDS);
 
-        o->header.gfx.scale[0] = scale[0];
-        o->header.gfx.scale[1] = scale[1];
-        o->header.gfx.scale[2] = scale[2];
+        o->header.gfx.scale[0] = data.scale[0];
+        o->header.gfx.scale[1] = data.scale[1];
+        o->header.gfx.scale[2] = data.scale[2];
 
         // correct the temporary parent with the object itself
         if (data.parentId == (u32)-1) { o->parentObj = o; }

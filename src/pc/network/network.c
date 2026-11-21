@@ -250,7 +250,7 @@ bool network_allow_unknown_local_index(enum PacketType packetType) {
 
 void network_send_to(u8 localIndex, struct Packet* p) {
     if (p == NULL) {
-        LOG_ERROR("no data to send");
+        LOG_ERROR("No data to send");
         return;
     }
 
@@ -269,12 +269,12 @@ void network_send_to(u8 localIndex, struct Packet* p) {
                                 : gNetworkPlayers[idx].globalIndex);
     }
 
-    // sanity checks
-    if (gNetworkType == NT_NONE) { LOG_ERROR("network type error none!"); return; }
-    if (p->error) { LOG_ERROR("packet error!"); return; }
-    if (gNetworkSystem == NULL) { LOG_ERROR("no network system attached"); return; }
-    if (localIndex == 0 && !network_allow_unknown_local_index(p->buffer[0])) {
-        LOG_ERROR("\n####################\nsending to myself, packetType: %d\n####################\n", p->packetType);
+    // Sanity checks
+    if (gNetworkType == NT_NONE) { LOG_ERROR("Network type error none!"); return; }
+    if (datagram_has_error(&p->dg)) { LOG_ERROR("Packet error!"); return; }
+    if (gNetworkSystem == NULL) { LOG_ERROR("No network system attached"); return; }
+    if (localIndex == 0 && !network_allow_unknown_local_index(p->packetType)) {
+        LOG_ERROR("\n####################\nSending to myself, packetType: %d\n####################\n", p->packetType);
         // SOFT_ASSERT(false); - Crash?
         return;
     }
@@ -298,29 +298,49 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         }
     }
 
-    // set the flags again
+    // Set the flags again
     packet_set_flags(p);
 
     p->localIndex = localIndex;
 
-    // set ordered data (MUST BE IMMEDITAELY BEFORE network_remember_reliable())
+    // Set ordered data (MUST BE IMMEDITAELY BEFORE network_remember_reliable())
     if (p->orderedGroupId != 0 && !p->sent) {
         packet_set_ordered_data(p);
     }
 
-    // remember reliable packets
+    // Remember reliable packets
     network_remember_reliable(p);
-
-    // save inside packet buffer
+    
+    // Calculate the packets hash.
     u32 hash = packet_hash(p);
-    memcpy(&p->buffer[p->dataLength], &hash, sizeof(u32));
+    
+    // Initalize a new Datagram to work with.
+    struct Datagram dg = { 0 };
+    datagram_init(&dg);
+    
+    // Append the data from the Packet.
+    datagram_append_data(&dg, datagram_data(&p->dg), datagram_length(&p->dg));
+    
+    // Add our hash.
+    datagram_add_uint32(&dg, hash);
+    
+    // Compress the Datagram.
+    if (!datagram_compress(&dg)) {
+        LOG_ERROR("Failed to compress!");
+        datagram_clear(&dg);
+        return;
+    }
 
-    // redirect to server if required
+    // Redirect to server if required
     if (localIndex != 0 && gNetworkType != NT_SERVER && gNetworkSystem->requireServerBroadcast && gNetworkPlayerServer != NULL) {
         localIndex = gNetworkPlayerServer->localIndex;
     }
-
-    SOFT_ASSERT(p->dataLength < PACKET_LENGTH);
+    
+    if (datagram_length(&dg) >= PACKET_LENGTH) {
+        LOG_ERROR("Packet is too large: %u", datagram_length(&dg));
+        datagram_clear(&dg);
+        return;
+    }
 
     // rate limit packets
     bool tooManyPackets = false;
@@ -341,22 +361,22 @@ void network_send_to(u8 localIndex, struct Packet* p) {
         }
     }
 
-    // send
+    // Send
     if (!tooManyPackets) {
         if (p->keepSendingAfterDisconnect) {
             localIndex = 0; // Force this type of packet to use the saved addr
         }
-        u8* buffer = NULL;
-        u32 len = 0;
-        packet_compress(p, &buffer, &len);
-        if (!buffer || len == 0) {
-            LOG_ERROR("Failed to compress!");
-        } else {
-            int rc = gNetworkSystem->send(localIndex, p->addr, buffer, len);
-            if (rc == SOCKET_ERROR) { LOG_ERROR("send error %d", rc); return; }
+        int rc = gNetworkSystem->send(localIndex, p->addr, datagram_data(&dg), datagram_length(&dg));
+        if (rc == SOCKET_ERROR) { 
+            LOG_ERROR("Send error %d", rc);
+            datagram_clear(&dg);
+            return; 
         }
     }
     p->sent = true;
+    
+    // We no longer need the Datagram.
+    datagram_clear(&dg);
 
     network_remember_debug_packet(p->packetType, true);
 
@@ -367,12 +387,12 @@ void network_send_to(u8 localIndex, struct Packet* p) {
 
 void network_send(struct Packet* p) {
     if (p == NULL) {
-        LOG_ERROR("no data to send");
+        LOG_ERROR("No data to send");
         return;
     }
-    // prevent errors during writing from propagating
-    if (p->writeError) {
-        LOG_ERROR("packet has write error: %u", p->packetType);
+    // Prevent errors during writing from propagating
+    if (datagram_has_write_error(&p->dg)) {
+        LOG_ERROR("Packet has write error: %u", p->packetType);
         return;
     }
 
@@ -414,16 +434,25 @@ void network_send(struct Packet* p) {
 
 void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
 
-    // receive packet
+    // Receive packet
     struct Packet p = {
         .localIndex = localIndex,
-        .cursor = 3,
         .addr = addr,
-        .buffer = { 0 },
-        .dataLength = dataLength,
     };
-    if (!packet_decompress(&p, data, dataLength)) {
+    
+    // Initalize the Packets Datagram.
+    datagram_init(&p.dg);
+    
+    // Append the data we received over the network.
+    datagram_append_data(&p.dg, data, dataLength);
+    
+    // Set the compression flag manually.
+    p.dg.flags |= SET_BIT(1, 1);
+    
+    // Decompress the Datagram.
+    if (!datagram_decompress(&p.dg)) {
         LOG_ERROR("Failed to decompress!");
+        datagram_clear(&p.dg);
         return;
     }
 
@@ -431,16 +460,25 @@ void network_receive(u8 localIndex, void* addr, u8* data, u16 dataLength) {
         gNetworkPlayers[localIndex].lastReceived = clock_elapsed();
     }
 
-    // subtract and check hash
+    // Check the hash of the packet we received.
     if (!packet_check_hash(&p)) {
-        LOG_ERROR("invalid packet hash!");
+        LOG_ERROR("Invalid packet hash!");
+        datagram_clear(&p.dg);
         return;
     }
+    // Remove the last 4 bytes containing our hash.
+    datagram_truncate(&p.dg, 4);
+    
+    // Read packet type
+    p.packetType = datagram_read_uint8(&p.dg);
 
-    network_remember_debug_packet(p.buffer[0], false);
+    network_remember_debug_packet(p.packetType, false);
 
-    // execute packet
+    // Execute packet.
     packet_receive(&p);
+    
+    // Clear the now no longer needed Packet.
+    packet_clear(&p);
 }
 
 void* network_duplicate_address(u8 localIndex) {

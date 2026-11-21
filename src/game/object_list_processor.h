@@ -26,6 +26,11 @@
 #define OBJECT_POOL_CAPACITY 1200
 
 /**
+ * The maximum number of Environment Levels.
+ */
+#define ENVIORMENT_LEVEL_CAPACITY 20
+
+/**
  * Every object is categorized into an object list, which controls the order
  * they are processed and which objects they can collide with.
  */
@@ -96,7 +101,7 @@ extern s16 gCheckingSurfaceCollisionsForCamera;
 extern s16 gFindFloorIncludeSurfaceIntangible;
 extern s16 *gEnvironmentRegions;
 extern s32 gEnvironmentRegionsLength;
-extern s32 gEnvironmentLevels[20];
+extern s32 gEnvironmentLevels[ENVIORMENT_LEVEL_CAPACITY];
 extern s8 gDoorAdjacentRooms[60][2];
 extern s16 gMarioCurrentRoom;
 extern s16 gDoorCurrentRoom;

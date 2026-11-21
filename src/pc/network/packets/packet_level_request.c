@@ -13,23 +13,28 @@ void network_send_level_request(struct NetworkPlayer* fromNp, struct NetworkPlay
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_REQUEST, true, PLMT_NONE);
-    packet_write(&p, &fromNp->globalIndex,       sizeof(u8));
-    packet_write(&p, &fromNp->currCourseNum,     sizeof(s16));
-    packet_write(&p, &fromNp->currActNum,        sizeof(s16));
-    packet_write(&p, &fromNp->currLevelNum,      sizeof(s16));
+    packet_write_uint8(&p, fromNp->globalIndex);
+    packet_write_int16(&p, fromNp->currCourseNum);
+    packet_write_int16(&p, fromNp->currActNum);
+    packet_write_int16(&p, fromNp->currLevelNum);
     network_send_to(toNp->localIndex, &p);
+    packet_clear(&p);
     LOG_INFO("tx level request");
 }
 
 void network_receive_level_request(struct Packet* p) {
+    if (p == NULL) { return; }
+    
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u8) + (sizeof(s16) * 3));
+    
     LOG_INFO("rx level request");
 
-    u8 globalIndex;
-    s16 courseNum, actNum, levelNum;
-    packet_read(p, &globalIndex, sizeof(u8));
-    packet_read(p, &courseNum,   sizeof(s16));
-    packet_read(p, &actNum,      sizeof(s16));
-    packet_read(p, &levelNum,    sizeof(s16));
+    u8 globalIndex = packet_read_uint8(p);
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
 
     struct NetworkPlayer* toNp = network_player_from_global_index(globalIndex);
     if (toNp == NULL || toNp->localIndex == UNKNOWN_LOCAL_INDEX || !toNp->connected) {

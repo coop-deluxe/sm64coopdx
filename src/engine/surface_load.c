@@ -675,8 +675,8 @@ static void load_environmental_regions(s16 **data) {
     numRegions = *(*data)++;
     gEnvironmentRegionsLength++;
 
-    if (numRegions > 20) {
-        numRegions = 20;
+    if (numRegions > ENVIORMENT_LEVEL_CAPACITY) {
+        numRegions = ENVIORMENT_LEVEL_CAPACITY;
     }
 
     for (s32 i = 0; i < numRegions; i++) {

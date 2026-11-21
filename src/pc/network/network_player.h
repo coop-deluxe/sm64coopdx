@@ -2,7 +2,6 @@
 #define NETWORK_PLAYER_H
 
 #include <stdbool.h>
-#include "network.h"
 #include "pc/configfile.h"
 
 #define UNKNOWN_LOCAL_INDEX ((u8)-1)

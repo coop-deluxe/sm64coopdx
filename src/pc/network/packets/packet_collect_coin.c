@@ -55,29 +55,35 @@ void network_send_collect_coin(struct Object* o) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_COLLECT_COIN, true, PLMT_LEVEL);
-    packet_write(&p, &behaviorId, sizeof(u32));
-    packet_write(&p, &o->oPosX, sizeof(f32) * 3);
-    packet_write(&p, &gMarioStates[0].numCoins, sizeof(s16));
-    packet_write(&p, &o->oDamageOrCoinValue, sizeof(s32));
-    packet_write(&p, &gCurrAreaIndex, sizeof(s16));
-
+    packet_write_uint32(&p, behaviorId);
+    packet_write_float32(&p, o->oPosX);
+    packet_write_float32(&p, o->oPosY);
+    packet_write_float32(&p, o->oPosZ);
+    packet_write_int32(&p, o->oDamageOrCoinValue);
+    packet_write_int16(&p, gMarioStates[0].numCoins);
+    packet_write_int16(&p, gCurrAreaIndex);
+    
     network_send(&p);
+    
+    packet_clear(&p);
 }
 
 void network_receive_collect_coin(struct Packet* p) {
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= sizeof(u32) + sizeof(s32) + (sizeof(f32) * 3) + (sizeof(s16) * 2));
+
+    f32 pos[3] = { 0.0f };
+    
+    u32 behaviorId = packet_read_uint32(p);
+    pos[0] = packet_read_float32(p);
+    pos[1] = packet_read_float32(p);
+    pos[2] = packet_read_float32(p);
+    s32 coinValue = packet_read_int32(p);
+    s16 numCoins = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
+    
     s16 oldNumCoins = gMarioStates[0].numCoins;
-
-    u32 behaviorId;
-    f32 pos[3] = { 0 };
-    s16 numCoins = 0;
-    s32 coinValue = 0;
-    s16 areaIndex = 0;
-
-    packet_read(p, &behaviorId, sizeof(u32));
-    packet_read(p, &pos, sizeof(f32) * 3);
-    packet_read(p, &numCoins, sizeof(s16));
-    packet_read(p, &coinValue, sizeof(s32));
-    packet_read(p, &areaIndex, sizeof(s16));
 
     if (areaIndex == gCurrAreaIndex) {
         const void* behavior = get_behavior_from_id(behaviorId);

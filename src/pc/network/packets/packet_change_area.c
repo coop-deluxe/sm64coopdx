@@ -41,11 +41,12 @@ void network_send_change_area(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_CHANGE_AREA, true, PLMT_NONE);
-    packet_write(&p, &gCurrCourseNum,  sizeof(s16));
-    packet_write(&p, &gCurrActStarNum, sizeof(s16));
-    packet_write(&p, &gCurrLevelNum,   sizeof(s16));
-    packet_write(&p, &gCurrAreaIndex,  sizeof(s16));
+    packet_write_int16(&p, gCurrCourseNum);
+    packet_write_int16(&p, gCurrActStarNum);
+    packet_write_int16(&p, gCurrLevelNum);
+    packet_write_int16(&p, gCurrAreaIndex);
     network_send_to(gNetworkPlayerServer->localIndex, &p);
+    packet_clear(&p);
 
     struct NetworkPlayer* np = gNetworkPlayerLocal;
     np->currAreaSyncValid  = false;
@@ -56,6 +57,11 @@ void network_send_change_area(void) {
 
 void network_receive_change_area(struct Packet *p) {
     LOG_INFO("rx change area");
+    
+    if (p == NULL) {
+        LOG_ERROR("rx change area: The packet was NULL, Failed to perform the area change.");
+        return;
+    }
 
     SOFT_ASSERT(gNetworkType == NT_SERVER);
     struct NetworkPlayer *np = &gNetworkPlayers[p->localIndex];
@@ -64,11 +70,14 @@ void network_receive_change_area(struct Packet *p) {
         return;
     }
 
-    s16 courseNum, actNum, levelNum, areaIndex;
-    packet_read(p, &courseNum, sizeof(s16));
-    packet_read(p, &actNum,    sizeof(s16));
-    packet_read(p, &levelNum,  sizeof(s16));
-    packet_read(p, &areaIndex, sizeof(s16));
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(s16) * 4));
+    
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
 
     player_changed_area(np, courseNum, actNum, levelNum, areaIndex);
 }

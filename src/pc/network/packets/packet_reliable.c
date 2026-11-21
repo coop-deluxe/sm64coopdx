@@ -3,6 +3,8 @@
 #include "pc/utils/misc.h"
 #include "pc/debuglog.h"
 
+#define PACKET_SEQ_ID_OFFSET             1
+
 #define RELIABLE_RESEND_RATE 0.07f
 #define MAX_RESEND_ATTEMPTS 15
 
@@ -31,6 +33,7 @@ static void remove_node_from_list(struct PacketLinkedList* node) {
     if (node->next != NULL) { node->next->prev = node->prev; }
 
     if (node->p.addr != NULL) { free(node->p.addr); }
+    packet_clear(&node->p);
     if (node != NULL) { free(node); }
 }
 
@@ -62,26 +65,29 @@ void network_forget_all_reliable_from(u8 localIndex) {
 }
 
 void network_send_ack(struct Packet* p) {
-    // grab seq num
-    u16 seqId = 0;
-    memcpy(&seqId, &p->buffer[1], 2);
+    // Read the sequence number from the Datagram.
+    u32 old_pos = datagram_cursor_position(&p->dg);
+    datagram_seek(&p->dg, PACKET_SEQ_ID_OFFSET);
+    u16 seqId = datagram_read_uint16(&p->dg);
+    datagram_seek(&p->dg, old_pos);
+    
     p->seqId = seqId;
     p->reliable = (seqId != 0);
     if (seqId == 0) { return; }
 
-    // send back the ACK
+    // Send back the ACK
     struct Packet ack = { 0 };
     packet_init(&ack, PACKET_ACK, false, PLMT_NONE);
-    packet_write(&ack, &seqId, sizeof(u16));
+    datagram_add_uint16(&ack.dg, seqId);
     network_send_to(0, &ack);
+    packet_clear(&ack);
 }
 
 void network_receive_ack(struct Packet* p) {
-    // grab seq num
-    u16 seqId = 0;
-    packet_read(p, &seqId, sizeof(u16));
+    // Read the sequence number from the Datagram.
+    u16 seqId = datagram_read_uint16(&p->dg);
 
-    // find in list and remove
+    // Find in list and remove.
     struct PacketLinkedList* node = head;
     while (node != NULL) {
         if (node->p.seqId == seqId) {
@@ -95,10 +101,12 @@ void network_receive_ack(struct Packet* p) {
 void network_remember_reliable(struct Packet* p) {
     if (!p->reliable) { return; }
     if (p->sent) { return; }
-    if (p->writeError) { return; }
+    if (datagram_has_write_error(&p->dg)) { return; }
 
     struct PacketLinkedList* node = calloc(1, sizeof(struct PacketLinkedList));
-    node->p = *p;
+    memcpy(&node->p, p, sizeof(struct Packet));
+    datagram_init(&node->p.dg);
+    datagram_copy(&p->dg, &node->p.dg);
     node->p.addr = network_duplicate_address(p->localIndex);
     node->p.sent = true;
     node->lastSend = clock_elapsed();
@@ -109,6 +117,7 @@ void network_remember_reliable(struct Packet* p) {
     if (tail == NULL) {
         // start of the list
         if (head != NULL) {
+            packet_clear(&node->p);
             free(node);
             SOFT_ASSERT(head == NULL);
         }
@@ -120,6 +129,7 @@ void network_remember_reliable(struct Packet* p) {
 
     // add to end of list
     if (tail->next != NULL) {
+        packet_clear(&node->p);
         free(node);
         SOFT_ASSERT(tail->next == NULL);
     }

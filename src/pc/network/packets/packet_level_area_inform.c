@@ -15,32 +15,35 @@ void network_send_level_area_inform(void) {
 
     struct Packet p = { 0 };
     packet_init(&p, PACKET_LEVEL_AREA_INFORM, true, PLMT_NONE);
-    packet_write(&p, &np->currLevelAreaSeqId, sizeof(u16));
-    packet_write(&p, &np->globalIndex,        sizeof(u8));
-    packet_write(&p, &np->currCourseNum,      sizeof(s16));
-    packet_write(&p, &np->currActNum,         sizeof(s16));
-    packet_write(&p, &np->currLevelNum,       sizeof(s16));
-    packet_write(&p, &np->currAreaIndex,      sizeof(s16));
-    packet_write(&p, &np->currLevelSyncValid, sizeof(u8));
-    packet_write(&p, &np->currAreaSyncValid,  sizeof(u8));
+    packet_write_uint16(&p, np->currLevelAreaSeqId);
+    packet_write_uint8(&p, np->globalIndex);
+    packet_write_int16(&p, np->currCourseNum);
+    packet_write_int16(&p, np->currActNum);
+    packet_write_int16(&p, np->currLevelNum);
+    packet_write_int16(&p, np->currAreaIndex);
+    packet_write_uint8(&p, np->currLevelSyncValid);
+    packet_write_uint8(&p, np->currAreaSyncValid);
     network_send(&p);
+    packet_clear(&p);
 
     LOG_INFO("tx level area inform for global %d: (%d, %d, %d, %d)", np->globalIndex, np->currCourseNum, np->currActNum, np->currLevelNum, np->currAreaIndex);
 }
 
 void network_receive_level_area_inform(struct Packet* p) {
-    u16 seq;
-    u8 globalIndex;
-    s16 courseNum, actNum, levelNum, areaIndex;
-    u8 levelSyncValid, areaSyncValid;
-    packet_read(p, &seq,            sizeof(u16));
-    packet_read(p, &globalIndex,    sizeof(u8));
-    packet_read(p, &courseNum,      sizeof(s16));
-    packet_read(p, &actNum,         sizeof(s16));
-    packet_read(p, &levelNum,       sizeof(s16));
-    packet_read(p, &areaIndex,      sizeof(s16));
-    packet_read(p, &levelSyncValid, sizeof(u8));
-    packet_read(p, &areaSyncValid,  sizeof(u8));
+    if (p == NULL) { return; }
+
+    // Sanity check for data contents. Read will throw an error anyways,
+    // But it's better to catch malformed or maliciously formed packets here.
+    SOFT_ASSERT(packet_get_remaining_size(p) >= (sizeof(u8) * 3) + sizeof(u16) + (sizeof(s16) * 4));
+
+    u16 seq = packet_read_uint16(p);
+    u8 globalIndex = packet_read_uint8(p);
+    s16 courseNum = packet_read_int16(p);
+    s16 actNum = packet_read_int16(p);
+    s16 levelNum = packet_read_int16(p);
+    s16 areaIndex = packet_read_int16(p);
+    u8 levelSyncValid = packet_read_uint8(p);
+    u8 areaSyncValid = packet_read_uint8(p);
 
     LOG_INFO("rx level area inform for global %d: (%d, %d, %d, %d)", globalIndex, courseNum, actNum, levelNum, areaIndex);
 
