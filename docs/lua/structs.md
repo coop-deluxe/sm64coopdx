@@ -1585,6 +1585,7 @@
 | ceilNormalMaxY | `number` |  |
 | skipGoddard | `integer` |  |
 | skipFileSelect | `integer` |  |
+| fixAllActs | `integer` |  |
 
 [:arrow_up_small:](#)
 

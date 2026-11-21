@@ -135,6 +135,7 @@ struct LevelValues gDefaultLevelValues = {
     .ceilNormalMaxY                   = -0.01,
     .skipGoddard                      = FALSE,
     .skipFileSelect                   = TRUE,
+    .fixAllActs                       = FALSE,
 };
 
 struct LevelValues gLevelValues = { 0 };
