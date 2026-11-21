@@ -12,14 +12,10 @@
 #include "djui_panel_host.h"
 #include "djui_panel_host_mods.h"
 #include "djui_panel_pause.h"
+#include "mod_category.h"
 #include "pc/thread.h"
 
 #define DJUI_MOD_PANEL_WIDTH (410.0f + (16 * 2.0f))
-
-struct ModCategory {
-    const char* langKey;
-    const char* category;
-};
 
 struct ModCategory sCategories[] = {
 #define MOD_CATEGORY_DEF(key) { #key, NULL },
@@ -46,7 +42,7 @@ static struct DjuiText* sTooltip = NULL;
 static struct DjuiPaginated* sModPaginated = NULL;
 static struct DjuiButton* sBackButton = NULL;
 static struct DjuiButton* sRefreshButton = NULL;
-static struct DjuiInputbox* sSearchInputbox = NULL;
+static struct DjuiSearchbox* sSearchbox = NULL;
 static unsigned int sSelectedCategory = MOD_CATEGORY_ALL;
 static bool sWarned = false;
 
@@ -171,14 +167,7 @@ void djui_panel_host_mods_add_mods(struct DjuiBase* layoutBase) {
         }
 
         if (!should_add_mod_to_list(mod, category)) { continue; }
-
-        // filter results
-        if (sSearchInputbox != NULL &&
-            sSearchInputbox->buffer != NULL &&
-            !strstr_lowercased(djui_text_get_uncolored_string(NULL, strlen(mod->name) + 1, mod->name), sSearchInputbox->buffer)
-        ) {
-            continue;
-        }
+        if (!djui_searchbox_has_string(sSearchbox, mod->name)) { continue; }
 
         struct DjuiCheckbox* checkbox = djui_checkbox_create(layoutBase, mod->name, &mod->enabled, djui_mod_checkbox_on_value_change);
         checkbox->base.tag = i;
@@ -249,7 +238,7 @@ void djui_panel_host_mods_create(struct DjuiBase* caller) {
     struct DjuiBase* body = djui_three_panel_get_body(panel);
     {
         struct DjuiSearchbox* searchbox = djui_searchbox_create(body, djui_panel_rebuild_mods_list);
-        sSearchInputbox = searchbox->inputbox;
+        sSearchbox = searchbox;
 
         char* categoryChoices[MOD_CATEGORY_COUNT];
         for (int i = 0; i < MOD_CATEGORY_COUNT; i++) {
