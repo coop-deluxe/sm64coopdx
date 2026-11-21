@@ -12145,6 +12145,12 @@ function djui_get_playerlist_page_index()
     -- ...
 end
 
+--- @param message string
+--- Creates a chat message that is broadcasted to every client
+function djui_chat_message_create_global(message)
+    -- ...
+end
+
 --- @return boolean
 --- Checks if the DJUI chatbox is open
 function djui_is_chatbox_open()
