@@ -157,8 +157,9 @@ void mods_activate(struct Mods* mods) {
         if (mod->enabled) {
             mod->index = gActiveMods.entryCount;
             gActiveMods.entries[gActiveMods.entryCount++] = mod;
-            gActiveMods.size += mod->size;
+
             mod_activate(mod);
+            gActiveMods.size += mod->size;
         }
     }
 
