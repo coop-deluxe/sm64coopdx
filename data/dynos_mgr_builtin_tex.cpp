@@ -1178,6 +1178,7 @@ static const struct BuiltinTexInfo sDynosBuiltinTexs[] = {
     // Logo
     define_builtin_tex(texture_selectionbox_back_icon, "textures/segment2/custom_selectionbox_back_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(texture_selectionbox_forward_icon, "textures/segment2/custom_selectionbox_forward_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
+    define_builtin_tex(texture_gear_icon, "textures/segment2/custom_gear_icon.rgba16.png", 16, 16, G_IM_FMT_RGBA, G_IM_SIZ_16b),
     define_builtin_tex(texture_coopdx_logo, "textures/segment2/custom_coopdx_logo.rgba32.png", 2048, 1024, G_IM_FMT_RGBA, G_IM_SIZ_32b),
 
     // Playerlist Exclusives

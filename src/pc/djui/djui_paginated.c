@@ -11,10 +11,6 @@
 static bool lTrigDown = false;
 static bool rTrigDown = false;
 
-static struct DjuiButton* sPrevButton = NULL;
-static struct DjuiButton* sNextButton = NULL;
-static struct DjuiText* sPageNumText = NULL;
-
 static s32 djui_paginated_get_count(struct DjuiPaginated* paginated) {
     s32 count = 0;
     struct DjuiBaseChild* dbc = paginated->layout->base.child;
@@ -27,17 +23,19 @@ static s32 djui_paginated_get_count(struct DjuiPaginated* paginated) {
 }
 
 void djui_paginated_update_page_buttons(struct DjuiPaginated* paginated) {
+    if (paginated->prevButton == NULL || paginated->nextButton == NULL || paginated->pageNumText == NULL) { return; }
+
     s32 count = djui_paginated_get_count(paginated);
     paginated->startIndex = (MIN(paginated->startIndex, count) / paginated->showCount) * paginated->showCount;
     if (count != 0 && paginated->startIndex == count) { paginated->startIndex -= paginated->showCount; }
 
     char pageNumString[32] = { 0 };
     snprintf(pageNumString, 32, "%d/%d", paginated->startIndex / paginated->showCount + 1, (count - 1) / paginated->showCount + 1);
-    djui_text_set_text(sPageNumText, pageNumString);
-    djui_base_set_visible(&sPageNumText->base, (count > paginated->showCount));
+    djui_text_set_text(paginated->pageNumText, pageNumString);
+    djui_base_set_visible(&paginated->pageNumText->base, (count > paginated->showCount));
 
-    djui_base_set_enabled(&sPrevButton->base, (paginated->startIndex > 0));
-    djui_base_set_enabled(&sNextButton->base, ((paginated->startIndex + paginated->showCount) < count));
+    djui_base_set_enabled(&paginated->prevButton->base, (paginated->startIndex > 0));
+    djui_base_set_enabled(&paginated->nextButton->base, ((paginated->startIndex + paginated->showCount) < count));
 }
 
 static void djui_paginated_prev(struct DjuiBase* base) {
@@ -164,26 +162,27 @@ struct DjuiPaginated* djui_paginated_create(struct DjuiBase* parent, u32 showCou
         paginated->layout = layout;
     }
 
-    sPrevButton = djui_button_create(&paginated->base, "<", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_prev);
-    djui_base_set_alignment(&sPrevButton->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
-    djui_base_set_size_type(&sPrevButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&sPrevButton->base, 128, 32);
-    djui_base_set_enabled(&sPrevButton->base, false);
-    paginated->prevButton = sPrevButton;
+    struct DjuiButton* prevButton = djui_button_create(&paginated->base, "<", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_prev);
+    djui_base_set_alignment(&prevButton->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_size_type(&prevButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&prevButton->base, 128, 32);
+    djui_base_set_enabled(&prevButton->base, false);
+    paginated->prevButton = prevButton;
 
-    sPageNumText = djui_text_create(&paginated->base, "");
-    djui_base_set_color(&sPageNumText->base, 220, 220, 220, 255);
-    djui_base_set_alignment(&sPageNumText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
-    djui_text_set_alignment(sPageNumText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
-    djui_text_set_drop_shadow(sPageNumText, 64, 64, 64, 100);
-    sPageNumText->base.y.value -= 30;
-    sPageNumText->base.width.value += 30;
+    struct DjuiText* pageNumText = djui_text_create(&paginated->base, "");
+    djui_base_set_color(&pageNumText->base, 220, 220, 220, 255);
+    djui_base_set_alignment(&pageNumText->base, DJUI_HALIGN_CENTER, DJUI_VALIGN_BOTTOM);
+    djui_text_set_alignment(pageNumText, DJUI_HALIGN_CENTER, DJUI_VALIGN_TOP);
+    djui_text_set_drop_shadow(pageNumText, 64, 64, 64, 100);
+    pageNumText->base.y.value -= 30;
+    pageNumText->base.width.value += 30;
+    paginated->pageNumText = pageNumText;
 
-    sNextButton = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
-    djui_base_set_alignment(&sNextButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
-    djui_base_set_size_type(&sNextButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
-    djui_base_set_size(&sNextButton->base, 128, 32);
-    paginated->nextButton = sNextButton;
+    struct DjuiButton* nextButton = djui_button_create(&paginated->base, ">", DJUI_BUTTON_STYLE_NORMAL, djui_paginated_next);
+    djui_base_set_alignment(&nextButton->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_BOTTOM);
+    djui_base_set_size_type(&nextButton->base, DJUI_SVT_ABSOLUTE, DJUI_SVT_ABSOLUTE);
+    djui_base_set_size(&nextButton->base, 128, 32);
+    paginated->nextButton = nextButton;
 
     djui_paginated_update_page_buttons(paginated);
 
