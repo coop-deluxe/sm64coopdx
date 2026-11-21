@@ -21,6 +21,11 @@ void DynOS_Gfx_GenerateModPacks(char* modPath) {
     if (fs_sys_dir_exists(_BehaviorPackFolder.c_str())) {
         DynOS_Bhv_GeneratePack(_BehaviorPackFolder);
     }
+    
+    SysPath _AnimationPackFolder = fstring("%s/anims", modPath);
+    if (fs_sys_dir_exists(_AnimationPackFolder.c_str())) {
+        DynOS_Anim_GeneratePack(_AnimationPackFolder);
+    }
 
     SysPath _TexturePackFolder = fstring("%s", modPath);
     SysPath _TexturePackOutputFolder = fstring("%s/textures", modPath);
@@ -80,6 +85,7 @@ static void ScanPacksFolder(SysPath _DynosPacksFolder) {
                 LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Pack:\n\\#808080\\%s", _PackFolder.c_str()));
                 DynOS_Pack_Add(_PackFolder);
                 DynOS_Actor_GeneratePack(_PackFolder);
+                DynOS_Anim_GeneratePack(_PackFolder);
                 DynOS_Tex_GeneratePack(_PackFolder, _PackFolder, false);
             }
         }

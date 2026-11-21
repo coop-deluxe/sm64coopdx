@@ -145,9 +145,55 @@ static void mod_activate_bhv(struct Mod *mod, struct ModFile *file) {
         g++;
     }
 
-    // Add to levels
+    // Add to behaviors
     LOG_INFO("Activating DynOS bhv: '%s', '%s'", file->cachedPath, bhvName);
     dynos_add_behavior(mod->index, file->cachedPath, bhvName);
+}
+
+static void mod_activate_anim(struct ModFile *file) {
+    // copy anim name
+    char animName[64] = { 0 };
+    if (snprintf(animName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated anim name");
+        return;
+    }
+
+    // remove '.anim'
+    char *g = animName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to animations
+    LOG_INFO("Activating DynOS anim: '%s', '%s'", file->cachedPath, animName);
+    dynos_add_animation(file->cachedPath, animName);
+}
+
+static void mod_activate_atbl(struct ModFile *file) {
+    // copy atbl name
+    char atblName[64] = { 0 };
+    if (snprintf(atblName, 63, "%s", path_basename(file->relativePath)) < 0) {
+        LOG_ERROR("Truncated atbl name");
+        return;
+    }
+
+    // remove '.atbl'
+    char *g = atblName;
+    while (*g != '\0') {
+        if (*g == '.') {
+            *g = '\0';
+            break;
+        }
+        g++;
+    }
+
+    // Add to animation tables
+    LOG_INFO("Activating DynOS atbl: '%s', '%s'", file->cachedPath, atblName);
+    dynos_add_animation_table(file->cachedPath, atblName);
 }
 
 void mod_activate(struct Mod* mod) {
@@ -176,6 +222,12 @@ void mod_activate(struct Mod* mod) {
         }
         if (path_ends_with(file->relativePath, ".tex")) {
             mod_activate_tex(file);
+        }
+        if (path_ends_with(file->relativePath, ".anim")) {
+            mod_activate_anim(file);
+        }
+        if (path_ends_with(file->relativePath, ".atbl")) {
+            mod_activate_atbl(file);
         }
     }
 }
@@ -389,6 +441,12 @@ static bool mod_load_files(struct Mod* mod, char* fullPath) {
     {
         const char* fileTypes[] = { ".lvl", NULL };
         if (!mod_load_files_dir(mod, fullPath, "levels", fileTypes, false)) { return false; }
+    }
+
+    // deal with animations directory
+    {
+        const char* fileTypes[] = { ".anim", ".atbl", NULL };
+        if (!mod_load_files_dir(mod, fullPath, "anims", fileTypes, false)) { return false; }
     }
 
     // deal with sound directory

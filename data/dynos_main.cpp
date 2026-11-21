@@ -40,6 +40,7 @@ void DynOS_Mod_Update() {
     if (sDynosModShutdown) {
         sDynosModShutdown = false;
         DynOS_Actor_ModShutdown();
+        DynOS_Anim_ModShutdown();
         DynOS_Col_ModShutdown();
         DynOS_Lvl_ModShutdown();
         DynOS_Bhv_ModShutdown();
