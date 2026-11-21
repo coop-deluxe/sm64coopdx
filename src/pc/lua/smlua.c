@@ -349,7 +349,6 @@ void smlua_init(void) {
     smlua_init_custom_fields();
 
     // load scripts
-    mods_size_enforce(&gActiveMods);
     LOG_INFO("Loading scripts:");
     for (int i = 0; i < gActiveMods.entryCount; i++) {
         struct Mod* mod = gActiveMods.entries[i];

@@ -5,7 +5,8 @@
 #include "types.h"
 #include "pc/platform.h"
 
-void mods_size_enforce(struct Mods* mods);
+bool mods_has_too_large_mod(void);
+bool mods_exceeds_direct_download_limit(void);
 void mods_update_selectable(void);
 void mods_delete_tmp(void);
 

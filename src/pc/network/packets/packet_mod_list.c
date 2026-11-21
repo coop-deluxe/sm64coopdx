@@ -7,6 +7,7 @@
 #include "pc/debuglog.h"
 #include "pc/pc_main.h"
 #include "pc/mods/mod_cache.h"
+#include "pc/network/coopnet/coopnet.h"
 
 void network_send_mod_list_request(void) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
@@ -163,6 +164,11 @@ void network_receive_mod_list(struct Packet* p) {
     LOG_INFO("received mod list (%u):", gRemoteMods.entryCount);
 }
 
+static void network_disconnect_oversized_download(const char* message) {
+    djui_popup_create(message, 4);
+    network_shutdown(false, false, false, false);
+}
+
 void network_receive_mod_list_entry(struct Packet* p) {
     SOFT_ASSERT(gNetworkType == NT_CLIENT);
 
@@ -236,7 +242,21 @@ void network_receive_mod_list_entry(struct Packet* p) {
     }
 
     // get other fields
-    packet_read(p, &mod->size, sizeof(u64));
+    u64 modSize = 0;
+    packet_read(p, &modSize, sizeof(modSize));
+#ifdef COOPNET
+    if (gNetworkSystem == &gNetworkSystemCoopNet && modSize >= MAX_MOD_SIZE) {
+        LOG_ERROR("Received mod that exceeds the CoopNet size limit");
+        network_disconnect_oversized_download(DLANG(NOTIF, DISCONNECT_BIG_MOD));
+        return;
+    }
+#endif
+    if (modSize > MAX_DIRECT_MOD_SIZE) {
+        LOG_ERROR("Received mod that exceeds the direct-connection size limit");
+        network_disconnect_oversized_download(DLANG(NOTIF, DISCONNECT_DIRECT_MOD));
+        return;
+    }
+    mod->size = (size_t)modSize;
     packet_read(p, &mod->isDirectory, sizeof(u8));
     packet_read(p, &mod->pausable, sizeof(u8));
     packet_read(p, &mod->ignoreScriptWarnings, sizeof(u8));
@@ -255,13 +275,6 @@ void network_receive_mod_list_entry(struct Packet* p) {
             LOG_ERROR("Failed save remote base path!");
             return;
         }
-    }
-
-    // sanity check mod size
-    if (mod->size >= MAX_MOD_SIZE) {
-        djui_popup_create(DLANG(NOTIF, DISCONNECT_BIG_MOD), 4);
-        network_shutdown(false, false, false, false);
-        return;
     }
 
     // get file count and allocate them
@@ -326,7 +339,14 @@ void network_receive_mod_list_file(struct Packet* p) {
     }
 
     // read other fields
-    packet_read(p, &file->size, sizeof(u64));
+    u64 fileSize = 0;
+    packet_read(p, &fileSize, sizeof(fileSize));
+    if (fileSize > MAX_DIRECT_MOD_SIZE) {
+        LOG_ERROR("Received mod file that exceeds the direct-connection size limit");
+        network_disconnect_oversized_download(DLANG(NOTIF, DISCONNECT_DIRECT_MOD));
+        return;
+    }
+    file->size = (size_t)fileSize;
     packet_read(p, &file->dataHash, sizeof(u8) * 16);
     file->fp = NULL;
     LOG_INFO("      '%s': %llu", file->relativePath, (u64)file->size);
@@ -352,12 +372,22 @@ void network_receive_mod_list_done(struct Packet* p) {
         }
     }
 
-    size_t totalSize = 0;
+    u64 totalSize = 0;
     for (u16 i = 0; i < gRemoteMods.entryCount; i++) {
         struct Mod* mod = gRemoteMods.entries[i];
-        totalSize += mod->size;
+        if (mod == NULL) {
+            LOG_ERROR("Missing remote mod entry");
+            network_shutdown(false, false, false, false);
+            return;
+        }
+        if ((u64)mod->size > MAX_DIRECT_MOD_SIZE || totalSize > MAX_DIRECT_MOD_SIZE - (u64)mod->size) {
+            LOG_ERROR("Advertised mod download exceeds the direct-connection size limit");
+            network_disconnect_oversized_download(DLANG(NOTIF, DISCONNECT_DIRECT_MODS));
+            return;
+        }
+        totalSize += (u64)mod->size;
     }
-    gRemoteMods.size = totalSize;
+    gRemoteMods.size = (size_t)totalSize;
 
     network_start_download_requests();
 }

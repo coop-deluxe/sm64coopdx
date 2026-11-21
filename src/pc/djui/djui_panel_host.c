@@ -14,13 +14,83 @@
 #include "pc/configfile.h"
 #include "pc/pc_main.h"
 #include "pc/update_checker.h"
+#include "pc/mods/mods.h"
+#include "pc/mods/mods_utils.h"
+#include "djui_panel_host.h"
+
+extern const Texture exclamation_box_seg8_texture_08015E28[];
 
 static struct DjuiRect* sRectPort = NULL;
 static struct DjuiInputbox* sInputboxPort = NULL;
+static struct DjuiText* sBigModText = NULL;
+static struct DjuiImage* sBigModIcon = NULL;
+static struct DjuiButton* sHostButton = NULL;
+
+enum HostModLimitState {
+    HOST_MOD_LIMIT_UNKNOWN = -1,
+    HOST_MOD_LIMIT_NONE,
+    HOST_MOD_LIMIT_BIG_MOD,
+    HOST_MOD_LIMIT_COOPNET,
+    HOST_MOD_LIMIT_DIRECT,
+};
+
+static enum HostModLimitState sBigModState = HOST_MOD_LIMIT_UNKNOWN;
 #ifdef COOPNET
 static struct DjuiRect* sRectPassword = NULL;
 static struct DjuiInputbox* sInputboxPassword = NULL;
+#endif
 
+bool djui_host_blocked_by_mod_size(void) {
+#ifdef COOPNET
+    return configNetworkSystem == NS_COOPNET && configAmountOfPlayers != 1 && mods_has_too_large_mod();
+#else
+    return false;
+#endif
+}
+
+static void djui_panel_host_set_big_mod_text(const char* message) {
+    char pad[24] = { 0 };
+    char buffer[512] = { 0 };
+    f32 iconSize = sBigModIcon->base.height.value;
+    f32 spaceWidth = sBigModText->font->char_width(" ") * sBigModText->fontScale;
+    int spaces = (int)((iconSize + 6.0f) / spaceWidth + 0.999f);
+    if (spaces > (int)sizeof(pad) - 1) { spaces = (int)sizeof(pad) - 1; }
+    for (int i = 0; i < spaces; i++) { pad[i] = ' '; }
+    snprintf(buffer, sizeof(buffer), "%s%s", pad, message);
+    djui_text_set_text(sBigModText, buffer);
+}
+
+static enum HostModLimitState djui_panel_host_mod_limit_state(void) {
+    if (mods_exceeds_direct_download_limit()) { return HOST_MOD_LIMIT_DIRECT; }
+    if (djui_host_blocked_by_mod_size()) { return HOST_MOD_LIMIT_COOPNET; }
+    if (mods_has_too_large_mod()) { return HOST_MOD_LIMIT_BIG_MOD; }
+    return HOST_MOD_LIMIT_NONE;
+}
+
+static bool djui_panel_host_mod_limit_blocks(enum HostModLimitState state) {
+    return state == HOST_MOD_LIMIT_COOPNET || state == HOST_MOD_LIMIT_DIRECT;
+}
+
+static void djui_panel_host_on_render_pre(struct DjuiBase* base, UNUSED bool* skipRender) {
+    enum HostModLimitState state = djui_panel_host_mod_limit_state();
+    if (state == sBigModState) { return; }
+    sBigModState = state;
+
+    switch (state) {
+        case HOST_MOD_LIMIT_DIRECT:  djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_DIRECT_LIMIT)); break;
+        case HOST_MOD_LIMIT_COOPNET: djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_COOPNET)); break;
+        case HOST_MOD_LIMIT_BIG_MOD: djui_panel_host_set_big_mod_text(DLANG(HOST, BIG_MODS_LOADED)); break;
+        default:                     djui_text_set_text(sBigModText, ""); break;
+    }
+    djui_base_set_visible(&sBigModText->base, state != HOST_MOD_LIMIT_NONE);
+    djui_base_set_enabled(&sHostButton->base, !djui_panel_host_mod_limit_blocks(state));
+
+    struct DjuiThreePanel* panel = (struct DjuiThreePanel*)base;
+    djui_three_panel_set_body_size(panel, 0);
+    djui_three_panel_recalculate_body_size(panel);
+}
+
+#ifdef COOPNET
 static void djui_panel_host_network_system_change(UNUSED struct DjuiBase* base) {
     djui_base_set_visible(&sRectPort->base, (configNetworkSystem == NS_SOCKET));
     djui_base_set_visible(&sRectPassword->base, (configNetworkSystem == NS_COOPNET));
@@ -191,6 +261,19 @@ void djui_panel_host_create(struct DjuiBase* caller) {
         djui_button_create(body, DLANG(HOST, SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_settings_create);
         djui_button_create(body, DLANG(HOST, MODS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_mods_create);
 
+        sBigModText = djui_text_create(body, "");
+        djui_base_set_size_type(&sBigModText->base, DJUI_SVT_RELATIVE, DJUI_SVT_ABSOLUTE);
+        djui_base_set_size(&sBigModText->base, 1.0f, 100);
+        djui_base_set_color(&sBigModText->base, 220, 220, 220, 255);
+        djui_text_set_drop_shadow(sBigModText, 64, 64, 64, 100);
+
+        sBigModIcon = djui_image_create(&sBigModText->base, exclamation_box_seg8_texture_08015E28, 32, 32, G_IM_FMT_RGBA, G_IM_SIZ_16b);
+        f32 cellHeight = sBigModText->font->charHeight * sBigModText->fontScale;
+        f32 iconSize = cellHeight * (10.0f / 16.0f);
+        djui_base_set_size(&sBigModIcon->base, iconSize, iconSize);
+        djui_base_set_alignment(&sBigModIcon->base, DJUI_HALIGN_LEFT, DJUI_VALIGN_TOP);
+        djui_base_set_location(&sBigModIcon->base, 0, (cellHeight - iconSize) / 2.0f);
+
         struct DjuiRect* rect3 = djui_rect_container_create(body, 64);
         {
             struct DjuiButton* button1 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(MENU, CANCEL) : DLANG(MENU, BACK), DJUI_BUTTON_STYLE_BACK, djui_panel_menu_back);
@@ -200,12 +283,16 @@ void djui_panel_host_create(struct DjuiBase* caller) {
             struct DjuiButton* button2 = djui_button_create(&rect3->base, (gNetworkType == NT_SERVER) ? DLANG(HOST, APPLY) : DLANG(HOST, HOST), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_do_host);
             djui_base_set_size(&button2->base, 0.485f, 64);
             djui_base_set_alignment(&button2->base, DJUI_HALIGN_RIGHT, DJUI_VALIGN_TOP);
+            sHostButton = button2;
 
-            defaultBase = (gNetworkType == NT_SERVER)
+            defaultBase = (gNetworkType == NT_SERVER || djui_panel_host_mod_limit_blocks(djui_panel_host_mod_limit_state()))
                         ? &button1->base
                         : &button2->base;
         }
     }
+
+    sBigModState = HOST_MOD_LIMIT_UNKNOWN;
+    panel->base.on_render_pre = djui_panel_host_on_render_pre;
 
     djui_panel_add(caller, panel, defaultBase);
 }

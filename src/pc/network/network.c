@@ -1,5 +1,6 @@
 #include "socket/socket.h"
 #include "coopnet/coopnet.h"
+#include "local/local.h"
 #include <stdio.h>
 #include "network.h"
 #include "object_fields.h"
@@ -11,6 +12,8 @@
 #include "pc/djui/djui_panel.h"
 #include "pc/djui/djui_hud_utils.h"
 #include "pc/djui/djui_panel_main.h"
+#include "pc/djui/djui_panel_host_message.h"
+#include "pc/djui/djui_panel_singleplayer.h"
 #include "pc/utils/misc.h"
 #include "pc/lua/smlua.h"
 #include "pc/lua/utils/smlua_model_utils.h"
@@ -75,6 +78,7 @@ u8 gDebugPacketOnBuffer = 0;
 u32 gNetworkStartupTimer = 0;
 u32 sNetworkReconnectTimer = 0;
 u32 sNetworkRehostTimer = 0;
+static bool sNetworkRehostLocal = false;
 enum NetworkSystemType sNetworkReconnectType = NS_SOCKET;
 
 struct ServerSettings gServerSettings = {
@@ -109,6 +113,15 @@ void network_set_system(enum NetworkSystemType nsType) {
     }
 }
 
+void network_set_system_local(void) {
+    network_forget_all_reliable();
+    gNetworkSystem = &gNetworkSystemLocal;
+}
+
+bool network_is_local_session(void) {
+    return gNetworkType != NT_NONE && gNetworkSystem == &gNetworkSystemLocal;
+}
+
 bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     // reset override hide hud
     extern u8 gOverrideHideHud;
@@ -135,7 +148,7 @@ bool network_init(enum NetworkType inNetworkType, bool reconnecting) {
     gServerSettings.enablePlayersInLevelDisplay = TRUE;
     gServerSettings.enablePlayerList = TRUE;
     gServerSettings.nametags = configNametags;
-    gServerSettings.maxPlayers = configAmountOfPlayers;
+    gServerSettings.maxPlayers = (gNetworkSystem == &gNetworkSystemLocal) ? 1 : configAmountOfPlayers;
     gServerSettings.pauseAnywhere = configPauseAnywhere;
     gServerSettings.pvpType = configPvpType;
     gServerSettings.headlessServer = gCLIOpts.headless && (inNetworkType == NT_SERVER);
@@ -452,6 +465,7 @@ void network_reset_reconnect_and_rehost(void) {
     gNetworkStartupTimer = 0;
     sNetworkReconnectTimer = 0;
     sNetworkRehostTimer = 0;
+    sNetworkRehostLocal = false;
     sNetworkReconnectType = NS_SOCKET;
 }
 
@@ -495,6 +509,9 @@ bool network_is_reconnecting(void) {
 }
 
 void network_rehost_begin(void) {
+    sNetworkRehostLocal = network_is_local_session();
+    if (!sNetworkRehostLocal && !djui_panel_host_check_mod_limits()) { return; }
+
     for (int i = 1; i < MAX_PLAYERS; i++) {
         struct NetworkPlayer* np = &gNetworkPlayers[i];
         if (!np->connected) { continue; }
@@ -513,7 +530,11 @@ static void network_rehost_update(void) {
     if (sNetworkRehostTimer <= 0) { return; }
     if (--sNetworkRehostTimer != 0) { return; }
 
-    djui_panel_do_host(true, true);
+    if (sNetworkRehostLocal) {
+        djui_panel_do_singleplayer(true, true);
+    } else {
+        djui_panel_do_host(true, true);
+    }
 }
 
 static void network_update_area_timer(void) {
@@ -645,7 +666,8 @@ static inline void color_set(Color color, u8 r, u8 g, u8 b) {
 }
 
 bool network_allow_mod_dev_mode(void) {
-    return (configModDevMode && gNetworkSystem == &gNetworkSystemSocket && gNetworkType == NT_SERVER);
+    return configModDevMode && gNetworkType == NT_SERVER &&
+           (gNetworkSystem == &gNetworkSystemSocket || gNetworkSystem == &gNetworkSystemLocal);
 }
 
 void network_mod_dev_mode_reload(void) {
@@ -688,6 +710,9 @@ void network_shutdown(bool sendLeaving, bool exiting, bool popup, bool reconnect
         if (gNetworkPlayerLocal != NULL && sendLeaving) { network_send_leaving(gNetworkPlayerLocal->globalIndex); }
         network_player_shutdown(popup);
         gNetworkSystem->shutdown(reconnecting);
+        if (gNetworkSystem == &gNetworkSystemLocal && !reconnecting) {
+            gNetworkSystem = &gNetworkSystemSocket;
+        }
     }
     if (gNetworkServerAddr != NULL) {
         free(gNetworkServerAddr);

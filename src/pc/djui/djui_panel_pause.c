@@ -5,6 +5,7 @@
 #include "djui_panel_dynos.h"
 #include "djui_panel_options.h"
 #include "djui_panel_host.h"
+#include "djui_panel_singleplayer.h"
 #include "djui_panel_client_server_settings.h"
 #include "djui_panel_menu.h"
 #include "djui_panel_confirm.h"
@@ -39,7 +40,12 @@ void djui_panel_pause_disconnect_key_update(int scancode) {
 static void djui_panel_pause_quit(struct DjuiBase* caller) {
     if (gMarioStates[0].action == ACT_PUSHING_DOOR || gMarioStates[0].action == ACT_PULLING_DOOR) { return; }
 
-    if (gNetworkType == NT_SERVER) {
+    if (network_is_local_session()) {
+        djui_panel_confirm_create(caller,
+                                DLANG(PAUSE, QUIT_TITLE),
+                                DLANG(PAUSE, QUIT_SINGLEPLAYER),
+                                djui_panel_pause_quit_yes);
+    } else if (gNetworkType == NT_SERVER) {
         djui_panel_confirm_create(caller,
                                 DLANG(PAUSE, QUIT_TITLE),
                                 DLANG(PAUSE, QUIT_HOST),
@@ -69,7 +75,9 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
         struct DjuiButton* button3 = djui_button_create(body, DLANG(PAUSE, OPTIONS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_options_create);
         defaultBase = &button3->base;
 
-        if (gNetworkType == NT_SERVER) {
+        if (network_is_local_session()) {
+            djui_button_create(body, DLANG(PAUSE, GAME_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_singleplayer_create);
+        } else if (gNetworkType == NT_SERVER) {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_host_create);
         } else {
             djui_button_create(body, DLANG(PAUSE, SERVER_SETTINGS), DJUI_BUTTON_STYLE_NORMAL, djui_panel_client_server_settings_create);
@@ -109,7 +117,9 @@ void djui_panel_pause_create(struct DjuiBase* caller) {
 
         djui_button_create(body, DLANG(PAUSE, RESUME), DJUI_BUTTON_STYLE_NORMAL, djui_panel_pause_resume);
 
-        if (gNetworkType == NT_SERVER) {
+        if (network_is_local_session()) {
+            djui_button_create(body, DLANG(PAUSE, QUIT_TO_MENU), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
+        } else if (gNetworkType == NT_SERVER) {
             djui_button_create(body, DLANG(PAUSE, STOP_HOSTING), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
         } else {
             djui_button_create(body, DLANG(PAUSE, DISCONNECT), DJUI_BUTTON_STYLE_BACK, djui_panel_pause_quit);
