@@ -4,7 +4,7 @@
 #define STAGE_MUSIC 0
 
 struct MainMenuSounds {
-    char* name;
+    const char *key;
     int sound;
 };
 
