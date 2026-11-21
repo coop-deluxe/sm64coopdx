@@ -18,7 +18,7 @@ void cap_switch_act_0(void) {
 }
 
 void cap_switch_act_1(void) {
-    if (capSwitchForcePress || cur_obj_is_mario_on_platform()) {
+    if (capSwitchForcePress || (cur_obj_is_mario_on_platform() && (gMarioStates[0].action != ACT_BUBBLED))) {
         save_file_set_flags(BHV_ARR(D_8032F0C0, o->oBehParams2ndByte, s32));
         o->oAction = 2;
         cur_obj_play_sound_and_rumble_if_visible(SOUND_GENERAL_ACTIVATE_CAP_SWITCH);

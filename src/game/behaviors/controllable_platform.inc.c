@@ -28,7 +28,7 @@ void bhv_controllable_platform_sub_loop(void) {
             if (o->oTimer < 30)
                 break;
 
-            if (gMarioStates[0].marioObj->platform == o) {
+            if (gMarioStates[0].marioObj->platform == o && gMarioStates[0].action != ACT_BUBBLED) {
                 D_80331694 = o->oBehParams2ndByte;
 #ifdef VERSION_SH
                 if (o->parentObj) { o->parentObj->header.gfx.node.flags &= ~GRAPH_RENDER_INVISIBLE; }
@@ -184,7 +184,7 @@ void controllable_platform_tilt_from_mario(void) {
 
     for (s32 i = 0; i < MAX_PLAYERS; i++) {
         if (gMarioStates[i].marioObj == NULL) { continue; }
-        if (gMarioStates[i].marioObj->platform == o || gMarioStates[i].marioObj->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) {
+        if ((gMarioStates[i].marioObj->platform == o || gMarioStates[i].marioObj->platform == cur_obj_nearest_object_with_behavior(bhvControllablePlatformSub)) && gMarioStates[i].action != ACT_BUBBLED) {
             x += gMarioStates[i].pos[0];
             z += gMarioStates[i].pos[2];
             playerCount++;

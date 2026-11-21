@@ -298,12 +298,13 @@ void bhv_racing_penguin_update(void) {
 void bhv_penguin_race_finish_line_update(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
+    struct MarioState *m = get_mario_state_from_object(player);
     if (!o->parentObj) {
         return;
     }
 
     if (o->parentObj->oRacingPenguinReachedBottom
-        || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f)) {
+        || (player && distanceToPlayer < 1000.0f && player->oPosZ - o->oPosZ < 0.0f && m && m->action != ACT_BUBBLED)) {
         if (!o->parentObj->oRacingPenguinReachedBottom && !o->parentObj->oRacingPenguinMarioWon) {
             o->parentObj->oRacingPenguinMarioWon = TRUE;
             network_send_object(o->parentObj);
@@ -314,7 +315,8 @@ void bhv_penguin_race_finish_line_update(void) {
 void bhv_penguin_race_shortcut_check_update(void) {
     struct Object* player = nearest_player_to_object(o);
     s32 distanceToPlayer = player ? dist_between_objects(o, player) : 10000;
-    if (distanceToPlayer < 500.0f && o->parentObj && !o->parentObj->oRacingPenguinMarioCheated) {
+    struct MarioState *m = get_mario_state_from_object(player);
+    if (distanceToPlayer < 500.0f && o->parentObj && m && m->action != ACT_BUBBLED && !o->parentObj->oRacingPenguinMarioCheated) {
         o->parentObj->oRacingPenguinMarioCheated = TRUE;
         network_send_object(o->parentObj);
     }
