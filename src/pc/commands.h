@@ -25,7 +25,7 @@ It decides by checking where you entered the command, and will output to that so
 It should be used in any function that is ran from `hook_chat_command` or `hook_console_command`.
 If ran independently of any hook, it decides on where to output by checking if the chat box is open. If so, log there, otherwise, log to the console and terminal
 |descriptionEnd| */
-void command_message_create(const char *message, OPTIONAL enum ConsoleMessageLevel level);
+void command_message_create(const char *message, OPTIONAL enum LogType logType);
 
 extern enum ChatConfirmCommand gConfirmingCommandType;
 extern u8 gConfirmPlayerIndex;

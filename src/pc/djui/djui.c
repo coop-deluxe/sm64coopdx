@@ -141,7 +141,6 @@ void djui_init_late(void) {
         djui_panel_language_create(NULL);
     }
 
-    // djui_panel_debug_create();
     djui_cursor_create();
 }
 

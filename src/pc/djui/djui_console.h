@@ -1,13 +1,8 @@
 #pragma once
 #include "djui.h"
+#include "pc/debuglog.h"
 
 #define MAX_CONSOLE_INPUT_LENGTH 500
-
-enum ConsoleMessageLevel {
-    CONSOLE_MESSAGE_INFO,
-    CONSOLE_MESSAGE_WARNING,
-    CONSOLE_MESSAGE_ERROR
-};
 
 struct DjuiConsole {
     struct DjuiBase base;
@@ -25,7 +20,7 @@ extern char gDjuiConsoleTmpBuffer[];
 
 void djui_console_message_dequeue(void);
 void djui_console_clear();
-void djui_console_message_create(const char* message, enum ConsoleMessageLevel level);
+void djui_console_message_create(const char* message, enum LogType logType);
 /* |description|Toggles the visibility of the DJUI console|descriptionEnd| */
 void djui_console_toggle(void);
 /* |description|Returns whether the DJUI console is currently open or not|descriptionEnd| */

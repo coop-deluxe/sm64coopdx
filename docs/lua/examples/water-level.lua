@@ -3,7 +3,7 @@
 
 local function on_get_command(msg)
     if not network_is_server() then
-        command_message_create("You need to be the host!", CONSOLE_MESSAGE_ERROR)
+        command_message_create("You need to be the host!", LOG_TYPE_ERROR)
         return true
     end
 
@@ -14,13 +14,13 @@ end
 
 local function on_set_command(msg)
     if not network_is_server() then
-        command_message_create("You need to be the host!", CONSOLE_MESSAGE_ERROR)
+        command_message_create("You need to be the host!", LOG_TYPE_ERROR)
         return true
     end
 
     local num = tonumber(msg)
     if not num then
-        command_message_create("Not a number!", CONSOLE_MESSAGE_ERROR)
+        command_message_create("Not a number!", LOG_TYPE_ERROR)
         return true
     end
 

@@ -10,6 +10,10 @@ SPECIAL_WARP_GODDARD_GAMEOVER = -3 --- @type integer
 SPECIAL_WARP_TITLE            = -8 --- @type integer
 SPECIAL_WARP_LEVEL_SELECT     = -9 --- @type integer
 
+CONSOLE_MESSAGE_INFO    = 1 --- @type integer
+CONSOLE_MESSAGE_WARNING = 2 --- @type integer
+CONSOLE_MESSAGE_ERROR   = 3 --- @type integer
+
 -----------------------
 -- Renamed functions --
 -----------------------

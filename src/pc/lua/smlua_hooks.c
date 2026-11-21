@@ -1279,7 +1279,7 @@ void smlua_display_chat_commands(bool isConsole) {
         if (!isConsole && hook->isConsoleCommand) continue;
         char msg[256] = { 0 };
         snprintf(msg, 256, "/%s %s", hook->command, hook->description);
-        command_message_create(msg, CONSOLE_MESSAGE_INFO);
+        command_message_create(msg, LOG_TYPE_INFO);
     }
 }
 

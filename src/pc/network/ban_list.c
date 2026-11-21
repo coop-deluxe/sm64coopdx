@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <PR/ultratypes.h>
 #include "ban_list.h"
 #include "pc/debuglog.h"

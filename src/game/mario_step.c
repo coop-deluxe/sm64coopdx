@@ -10,6 +10,7 @@
 #include "mario_step.h"
 #include "pc/lua/smlua.h"
 #include "game/hardcoded.h"
+#include "pc/network/network.h"
 
 static s16 sMovingSandSpeeds[] = { 12, 8, 4, 0 };
 

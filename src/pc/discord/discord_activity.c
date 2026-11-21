@@ -4,6 +4,7 @@
 #include "pc/mods/mods.h"
 #include "pc/debuglog.h"
 #include "pc/utils/misc.h"
+#include "pc/network/network.h"
 #include "pc/djui/djui_panel_join_message.h"
 #ifdef COOPNET
 #include "pc/network/coopnet/coopnet.h"
