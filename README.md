@@ -16,7 +16,7 @@ Interestingly enough though, the goal of the project has slowly evolved over tim
 
 sm64coopdx is moddable via Lua, similar to Roblox and Garry's Mod's Lua APIs. To get started, click [here](docs/lua/lua.md) to see the Lua documentation. If you want to contribute to the repo, see the [contribution document](CONTRIBUTING.md). For documentation on the source code, you can view the C documentation [here](docs/c/c.md).
 
-## Building
+## Building 
 
 For instructions on building the game, head [here](BUILDING.md). Manually compiled builds **cannot** connect to public Coopnet lobbies, so get the game from [releases](https://github.com/coop-deluxe/sm64coopdx/releases/latest) if possible.
 
