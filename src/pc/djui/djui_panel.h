@@ -19,6 +19,5 @@ extern bool gDjuiPanelDisableBack;
 bool djui_panel_is_active(void);
 struct DjuiPanel* djui_panel_add(struct DjuiBase* caller, struct DjuiThreePanel* threePanel, struct DjuiBase* defaultElementBase);
 void djui_panel_back(void);
-void djui_panel_back_no_transition(void);
 void djui_panel_update(void);
 void djui_panel_shutdown(void);

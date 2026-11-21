@@ -4,6 +4,7 @@
 #include "mod_cache.h"
 #include "data/dynos.c.h"
 #include "pc/debuglog.h"
+#include "pc/loading.h"
 #include "pc/fs/fmem.h"
 #include "pc/pc_main.h"
 #include "pc/utils/misc.h"
@@ -198,7 +199,7 @@ static u32 mods_count_directory(char* modsBasePath) {
 }
 
 static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserModPath) {
-    set_loading_message("Generating DynOS Packs In %s Mod Path:\n%s", isUserModPath ? "User" : "Local", modsBasePath);
+    LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Generating DynOS Packs In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath));
 
     // generate bins
     dynos_generate_packs(modsBasePath);
@@ -228,32 +229,34 @@ static void mods_load(struct Mods* mods, char* modsBasePath, UNUSED bool isUserM
     }
     UNUSED f32 count = (f32) mods_count_directory(modsBasePath);
 
-    set_loading_message("Loading Mods In\n%s", modsBasePath);
+    LOADING_SCREEN_MUTEX(
+        loading_screen_reset_progress_bar();
+        snprintf(gCurrLoadingSegment.str, 256, "Loading Mods In %s Mod Path:\n\\#808080\\%s", isUserModPath ? "User" : "Local", modsBasePath);
+    );
 
     // iterate
     char path[SYS_MAX_PATH] = { 0 };
     for (u32 i = 0; (dir = readdir(d)) != NULL; ++i) {
+
         // sanity check / fill path[]
         if (!directory_sanity_check(dir, modsBasePath, path)) { continue; }
 
-        set_loading_message("Loading Mod:\n%s", dir->d_name);
+        LOADING_SCREEN_MUTEX(snprintf(gCurrLoadingSegment.str, 256, "Loading Mod:\n\\#808080\\%s/%s", modsBasePath, dir->d_name));
 
         // load the mod
         if (!mod_load(mods, modsBasePath, dir->d_name)) {
             break;
         }
 
-        set_loading_percentage((f32)i / count);
+        LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = (f32) i / count);
     }
 
     closedir(d);
-
-    set_loading_percentage(1);
+    LOADING_SCREEN_MUTEX(gCurrLoadingSegment.percentage = 1);
 }
 
 void mods_refresh_local(void) {
-    set_loading_message("Refreshing Mod Cache");
-
+    LOADING_SCREEN_MUTEX(loading_screen_set_segment_text("Refreshing Mod Cache"));
     if (gGameInited) { mods_local_store_enabled(); }
 
     // figure out user path

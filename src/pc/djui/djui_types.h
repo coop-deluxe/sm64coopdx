@@ -1,9 +1,6 @@
 #pragma once
 #include "djui.h"
 
-// forward declaration
-struct DjuiBase;
-
 struct DjuiColor {
     u8 r;
     u8 g;
@@ -21,9 +18,3 @@ struct DjuiScreenValue {
 
 enum DjuiHAlign { DJUI_HALIGN_LEFT, DJUI_HALIGN_CENTER, DJUI_HALIGN_RIGHT };
 enum DjuiVAlign { DJUI_VALIGN_TOP, DJUI_VALIGN_CENTER, DJUI_VALIGN_BOTTOM };
-
-struct DjuiHookSlice {
-    void *ptr;
-    size_t size;
-    bool (*on_changed)(struct DjuiBase *);
-};
