@@ -5,17 +5,9 @@
 
 int init_thread_handle(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, void *sp, size_t sp_size) {
     int err1 = init_mutex(handle);
-    if (err1 != 0) {
-        return err1;
-    }
-
     int err2 = init_thread(handle, entry, arg, sp, sp_size);
-    if (err2 != 0) {
-        destroy_mutex(handle);
-        return err2;
-    }
 
-    return 0;
+    return (err1 != 0 || err2 != 0);
 }
 
 void free_thread_handle(struct ThreadHandle *handle) {
@@ -61,8 +53,6 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
     err = pthread_attr_destroy(&thattr);
     assert(err == 0);
 
-    if (ret != 0) { return ret; }
-
     handle->state = RUNNING;
 
     return ret;
@@ -71,33 +61,19 @@ int init_thread(struct ThreadHandle *handle, void *(*entry)(void *), void *arg, 
 int join_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
-        return 0;
-    }
+    handle->state = STOPPED;
 
     // Join the thread and wait for it to finish.
-    int ret = pthread_join(handle->thread, NULL);
-    if (ret == 0) {
-        handle->state = STOPPED;
-    }
-
-    return ret;
+    return pthread_join(handle->thread, NULL);
 }
 
 int detach_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
-        return 0;
-    }
+    handle->state = STOPPED;
 
     // Detach the thread, it will no longer be joinable afterwards.
-    int ret = pthread_detach(handle->thread);
-    if (ret == 0) {
-        handle->state = STOPPED;
-    }
-
-    return ret;
+    return pthread_detach(handle->thread);
 }
 
 // Call from inside the thread you wish to
@@ -109,17 +85,10 @@ void exit_thread() {
 int stop_thread(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (handle->state != RUNNING) {
-        return 0;
-    }
+    handle->state = STOPPED;
 
     // Stop and or cancel the execution of the thread in question.
-    int ret = pthread_cancel(handle->thread);
-    if (ret == 0) {
-        handle->state = STOPPED;
-    }
-
-    return ret;
+    return pthread_cancel(handle->thread);
 }
 
 // Optimally just call init_thread_handle instead.
@@ -139,24 +108,13 @@ int init_mutex(struct ThreadHandle *handle) {
     err = pthread_mutexattr_destroy(&mtattr);
     assert(err == 0);
 
-    handle->mutexInited = (ret == 0);
-
     return ret;
 }
 
 int destroy_mutex(struct ThreadHandle *handle) {
     assert(handle != NULL);
 
-    if (!handle->mutexInited) {
-        return 0;
-    }
-
-    int ret = pthread_mutex_destroy(&handle->mutex);
-    if (ret == 0) {
-        handle->mutexInited = false;
-    }
-
-    return ret;
+    return pthread_mutex_destroy(&handle->mutex);
 }
 
 int lock_mutex(struct ThreadHandle *handle) {

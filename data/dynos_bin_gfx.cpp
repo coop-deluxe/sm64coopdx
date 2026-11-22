@@ -475,6 +475,68 @@ s64 DynOS_Gfx_ParseGfxConstants(const String& _Arg, bool* found) {
     return 0;
 }
 
+#define gfx_blender_cycle(x) if (_Name == #x && _Args.Count() == 4) { return (s64) (x((u32) _Args[0], (u32) _Args[1], (u32) _Args[2], (u32) _Args[3])); }
+#define gfx_function_rm(x) if (_Name == #x && _Args.Count() == 1) { if (_Args[0] == 1) { return (s64) (x(1)); } if (_Args[0] == 2) { return (s64) (x(2)); } }
+
+s64 DynOS_Gfx_ParseGfxFunctions(const String& _Name, const Array<s64>& _Args, bool* found) {
+    *found = true;
+
+    // Blender cycles
+    gfx_blender_cycle(GBL_c1);
+    gfx_blender_cycle(GBL_c2);
+
+    // Render modes
+    gfx_function_rm(RM_AA_ZB_OPA_SURF);
+    gfx_function_rm(RM_RA_ZB_OPA_SURF);
+    gfx_function_rm(RM_AA_ZB_XLU_SURF);
+    gfx_function_rm(RM_AA_ZB_OPA_DECAL);
+    gfx_function_rm(RM_RA_ZB_OPA_DECAL);
+    gfx_function_rm(RM_AA_ZB_XLU_DECAL);
+    gfx_function_rm(RM_AA_ZB_OPA_INTER);
+    gfx_function_rm(RM_RA_ZB_OPA_INTER);
+    gfx_function_rm(RM_AA_ZB_XLU_INTER);
+    gfx_function_rm(RM_AA_ZB_XLU_LINE);
+    gfx_function_rm(RM_AA_ZB_DEC_LINE);
+    gfx_function_rm(RM_AA_ZB_TEX_EDGE);
+    gfx_function_rm(RM_AA_ZB_TEX_INTER);
+    gfx_function_rm(RM_AA_ZB_SUB_SURF);
+    gfx_function_rm(RM_AA_ZB_PCL_SURF);
+    gfx_function_rm(RM_AA_ZB_OPA_TERR);
+    gfx_function_rm(RM_AA_ZB_TEX_TERR);
+    gfx_function_rm(RM_AA_ZB_SUB_TERR);
+    gfx_function_rm(RM_AA_OPA_SURF);
+    gfx_function_rm(RM_RA_OPA_SURF);
+    gfx_function_rm(RM_AA_XLU_SURF);
+    gfx_function_rm(RM_AA_XLU_LINE);
+    gfx_function_rm(RM_AA_DEC_LINE);
+    gfx_function_rm(RM_AA_TEX_EDGE);
+    gfx_function_rm(RM_AA_SUB_SURF);
+    gfx_function_rm(RM_AA_PCL_SURF);
+    gfx_function_rm(RM_AA_OPA_TERR);
+    gfx_function_rm(RM_AA_TEX_TERR);
+    gfx_function_rm(RM_AA_SUB_TERR);
+    gfx_function_rm(RM_ZB_OPA_SURF);
+    gfx_function_rm(RM_ZB_XLU_SURF);
+    gfx_function_rm(RM_ZB_OPA_DECAL);
+    gfx_function_rm(RM_ZB_XLU_DECAL);
+    gfx_function_rm(RM_ZB_CLD_SURF);
+    gfx_function_rm(RM_ZB_OVL_SURF);
+    gfx_function_rm(RM_ZB_PCL_SURF);
+    gfx_function_rm(RM_OPA_SURF);
+    gfx_function_rm(RM_XLU_SURF);
+    gfx_function_rm(RM_TEX_EDGE);
+    gfx_function_rm(RM_CLD_SURF);
+    gfx_function_rm(RM_PCL_SURF);
+    gfx_function_rm(RM_ADD);
+    gfx_function_rm(RM_NOOP);
+    gfx_function_rm(RM_VISCVG);
+    gfx_function_rm(RM_OPA_CI);
+    gfx_function_rm(RM_CUSTOM_AA_ZB_XLU_SURF);
+
+    *found = false;
+    return 0;
+}
+
 template <typename T>
 static DataNode<T> *FindLightNode(GfxData *aGfxData, DataNodes<T> &aDataNodes, String aName) {
     char *_NameStart = aName.begin() + (aName[0] == '&' ? 1 : 0);
@@ -646,7 +708,7 @@ static s64 ParseGfxSymbolArg(GfxData* aGfxData, DataNode<Gfx>* aNode, u64* pToke
     // Recursive descent parsing
     if (GFX_PARAM_TYPE_IS_INT_OR_CONSTANT(aParamType)) {
         bool rdSuccess = false;
-        s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants);
+        s64 rdValue = DynOS_RecursiveDescent_Parse(_Arg.begin(), &rdSuccess, DynOS_Gfx_ParseGfxConstants, DynOS_Gfx_ParseGfxFunctions);
         if (rdSuccess) {
             return rdValue;
         }
@@ -1466,7 +1528,7 @@ static Array<String> TokenizeGfxCommand(const std::string &command) {
         }
 
         // End of an argument
-        else if (c == ',') {
+        else if (c == ',' && scope == 1) {
             if (!token.Empty()) {
                 tokens.Add(token);
                 token.Clear();

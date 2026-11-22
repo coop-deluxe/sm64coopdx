@@ -2,7 +2,6 @@
 #include "djui.h"
 
 extern bool gDjuiPanelJoinMessageVisible;
-extern bool gDjuiPanelJoinMessageStartedConnection;
 extern float gDownloadProgress;
 extern float gDownloadProgressInf;
 #define DOWNLOAD_ESTIMATE_LENGTH 32

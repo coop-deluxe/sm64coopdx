@@ -298,6 +298,7 @@ u32 DynOS_Lua_RememberVariable(GfxData* aGfxData, void* aPtr, const String& toke
 static char* sRdString = NULL;
 static bool sRdError = false;
 static RDConstantFunc sRdConstantFunc = NULL;
+static RDFunctionFunc sRdFunctionFunc = NULL;
 
 static s64 ParseExpression();
 
@@ -425,6 +426,33 @@ static s64 ParseFactor() {
                 return constantValue;
             }
         }
+
+        // check for functions
+        if (sRdFunctionFunc != NULL) {
+            sRdString = cTmp;
+            if (ParseOperator("(")) {
+                Array<s64> args;
+                if (!ParseOperator(")")) {
+                    do {
+                        args.Add(ParseExpression());
+                        if (sRdError) {
+                            return 0;
+                        }
+                    } while (ParseOperator(","));
+
+                    if (!ParseOperator(")")) {
+                        sRdError = true;
+                        return 0;
+                    }
+                }
+
+                bool functionFound = false;
+                s64 functionValue = sRdFunctionFunc(identifier, args, &functionFound);
+                if (functionFound) {
+                    return functionValue;
+                }
+            }
+        }
     }
 
     sRdError = true;
@@ -515,15 +543,17 @@ static s64 ParseExpression() {
     return ParseBitOrExpression();
 }
 
-s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func) {
+s64 DynOS_RecursiveDescent_Parse(const char* expr, bool* success, RDConstantFunc func, RDFunctionFunc funcFunc) {
     sRdString = (char*)expr;
     sRdError = false;
     sRdConstantFunc = func;
+    sRdFunctionFunc = funcFunc;
     s64 value = ParseExpression();
     if (strlen(sRdString) > 0) {
         sRdError = true;
     }
     sRdString = NULL;
+    sRdFunctionFunc = NULL;
     *success = !sRdError;
     return value;
 }

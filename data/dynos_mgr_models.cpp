@@ -1,5 +1,4 @@
 #include <vector>
-#include <pthread.h>
 #include "dynos.cpp.h"
 
 extern "C" {
@@ -82,14 +81,8 @@ static struct GraphNode *DynOS_Model_CheckMap(int index, u32* aId, void* aAsset,
 }
 
 static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool aModelPool, void* aAsset, u8 aLayer, struct GraphNode* aGraphNode, bool aDeDuplicate, enum ModelLoadType mlt) {
-    static pthread_mutex_t sModelLoadMutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&sModelLoadMutex);
-
     // sanity check pool
-    if (aModelPool >= MODEL_POOL_MAX) {
-        pthread_mutex_unlock(&sModelLoadMutex);
-        return NULL;
-    }
+    if (aModelPool >= MODEL_POOL_MAX) { return NULL; }
 
     // allocate pool
     if (!sModelPools[aModelPool]) {
@@ -98,7 +91,7 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
 
     // check maps, permanent pool is always checked
     struct GraphNode *node = NULL;
-    #define CHECK_POOL(pool) if ((node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) != NULL) { pthread_mutex_unlock(&sModelLoadMutex); return node; }
+    #define CHECK_POOL(pool) if ((node = DynOS_Model_CheckMap(pool, aId, aAsset, aDeDuplicate)) != NULL) { return node; }
     CHECK_POOL(MODEL_POOL_PERMANENT);
     if (aModelPool == MODEL_POOL_SESSION) {
         CHECK_POOL(MODEL_POOL_SESSION);
@@ -121,10 +114,7 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
             node = aGraphNode;
             break;
     }
-    if (!node) {
-        pthread_mutex_unlock(&sModelLoadMutex);
-        return NULL;
-    }
+    if (!node) { return NULL; }
 
     // figure out id
     if (!*aId) { *aId = find_empty_id(aModelPool == MODEL_POOL_PERMANENT); }
@@ -140,8 +130,6 @@ static struct GraphNode* DynOS_Model_LoadCommonInternal(u32* aId, enum ModelPool
     // store in maps
     sIdMap[*aId].push_back(info);
     map[aAsset] = info;
-
-    pthread_mutex_unlock(&sModelLoadMutex);
 
     return node;
 }
