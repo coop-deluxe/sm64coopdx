@@ -53,9 +53,9 @@ ROM_ASSET_LOAD_TEXTURE(mario_texture_mustache, "actors/mario/mario_mustache.rgba
 
 ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_front, "actors/mario/mario_eyes_center.rgba16.inc.c", 0x00114750, 78432, 0x00003090, 2048);
 
-ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_half_closed, "actors/mario/mario_eyes_half_closed.rgba16.inc.c", 0x00114750, 78432, 0x00003850, 2048);
+ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_half_closed, "actors/mario/mario_eyes_half_closed.rgba16.inc.c", 0x00114750, 78432, 0x00003890, 2048);
 
-ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_closed, "actors/mario/mario_eyes_closed.rgba16.inc.c", 0x00114750, 78432, 0x00004050, 2048);
+ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_closed, "actors/mario/mario_eyes_closed.rgba16.inc.c", 0x00114750, 78432, 0x00004090, 2048);
 
 ROM_ASSET_LOAD_TEXTURE(mario_texture_eyes_right, "actors/mario/mario_eyes_left_unused.rgba16.inc.c", 0x00114750, 78432, 0x00005890, 2048);
 
