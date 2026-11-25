@@ -1,9 +1,6 @@
 extern ALIGNED8 const Texture waluigi_texture_r_logo[];
-extern ALIGNED8 const Texture waluigi_texture_r_blend[];
-extern ALIGNED8 const Texture waluigi_texture_r_cap[];
+extern ALIGNED8 const Texture waluigi_texture_r_logo_color[];
 extern ALIGNED8 const Texture waluigi_texture_hair_sideburn[];
-extern ALIGNED8 const Texture waluigi_texture_add_sideburn[];
-extern ALIGNED8 const Texture waluigi_texture_skin_sideburn[];
 extern ALIGNED8 const Texture waluigi_texture_mouth[];
 extern ALIGNED8 const Texture waluigi_texture_mouth_dead[];
 extern ALIGNED8 const Texture waluigi_texture_eyes_front[];
